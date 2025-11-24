@@ -1,5 +1,7 @@
 # 📋 Disa AI - Development Roadmap
 
+> Hinweis (24.11.2025): Roadmap spiegelt Planungsstand Q4 2025 wider und wird aktuell nicht aktiv gepflegt. Für neue Prioritäten bitte neu bewerten.
+
 ## Q4 2025 - Critical Stability & Accessibility Fixes
 
 ### Week 1-2: Immediate Critical Issues 🔴

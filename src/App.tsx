@@ -1,15 +1,17 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
 
 import React, { lazy, Suspense, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 import { Button } from "@/ui/Button";
 import { ToastsProvider } from "@/ui/toast";
 import { TooltipProvider } from "@/ui/Tooltip";
 
+import { OnboardingController } from "./app/components/OnboardingController";
+import { AppShell } from "./app/layouts/AppShell";
 import { Router } from "./app/router";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { RolesProvider } from "./contexts/RolesContext";
-import { useOnboarding } from "./hooks/useOnboarding";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
 import { analytics, setAnalyticsEnabled } from "./lib/analytics";
@@ -27,20 +29,11 @@ const FeatureFlagPanel = lazy(() =>
   })),
 );
 
-// AppContent component that runs inside the providers
-function AppWithOnboarding() {
-  const { isFirstVisit } = useOnboarding();
-
-  if (isFirstVisit) {
-    return <Router />;
-  }
-
-  return <AppContent />;
-}
-
-function AppContent() {
+// MainApp component that runs when onboarding is completed
+function MainApp() {
   useServiceWorker(); // Now safely inside ToastsProvider
   const { settings } = useSettings();
+  const location = useLocation();
 
   // Apply analytics opt-in/out
   useEffect(() => {
@@ -61,10 +54,10 @@ function AppContent() {
     if (typeof window !== "undefined" && settings.enableAnalytics) {
       analytics.trackPageView(window.location.pathname);
     }
-  }, [settings.enableAnalytics]);
+  }, [settings.enableAnalytics, location.pathname]);
 
   return (
-    <>
+    <AppShell>
       <SentryErrorBoundary
         fallback={({ error, resetError }) => (
           <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -103,12 +96,13 @@ function AppContent() {
         )}
         showDialog={false}
       >
+        <OnboardingController />
         <Router />
       </SentryErrorBoundary>
       <Suspense fallback={null}>
         <FeatureFlagPanel />
       </Suspense>
-    </>
+    </AppShell>
   );
 }
 
@@ -156,7 +150,7 @@ function AppRoot() {
       <RolesProvider>
         <FavoritesProvider>
           <ToastsProvider>
-            <AppWithOnboarding />
+            <MainApp />
           </ToastsProvider>
         </FavoritesProvider>
       </RolesProvider>

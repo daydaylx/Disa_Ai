@@ -1,10 +1,11 @@
 # 🚀 Disa AI - Cloudflare Deployment Konfiguration
 
-## 🚨 KRITISCHE PROBLEME IDENTIFIZIERT
+## 🚨 Status (24.11.2025)
 
-**Bootstrap-Fehler wurde behoben**, aber die Cloudflare Workers Konfiguration hat kritische Probleme die die **Chat-Funktionalität komplett blockieren**.
+- KV-Namespaces sind in `wrangler.toml` bereits mit echten IDs hinterlegt (Prod/Preview).
+- **Offen/Kritisch:** Secrets `OPENROUTER_API_KEY` und `VITE_OPENROUTER_API_KEY` fehlen weiterhin in den Cloudflare Pages-Umgebungen. Ohne diese ist die Chat-API nicht funktionsfähig.
 
-This document explains how to properly configure the Disa AI application for deployment on Cloudflare Pages/Workers.
+Dieses Dokument beschreibt die korrekte Konfiguration der Disa AI Anwendung für Cloudflare Pages/Workers.
 
 ## Required Steps Before Deployment
 
@@ -28,7 +29,7 @@ You need to create KV namespaces for the rate limiting functionality:
    - Replace `YOUR_PRODUCTION_RATE_LIMIT_KV_NAMESPACE_ID` with the production namespace ID
    - Replace `YOUR_PREVIEW_RATE_LIMIT_KV_NAMESPACE_ID` with the preview namespace ID
 
-**AKTUELLER STATUS:** ❌ Platzhalter-IDs → **Rate Limiting ist komplett defekt**
+**AKTUELLER STATUS:** ✅ IDs gesetzt → Rate Limiting kann funktionieren, sobald Secrets vorhanden sind.
 
 ### 2. Environment Variables
 
@@ -47,7 +48,7 @@ For Preview/Development:
 - `VITE_OPENROUTER_API_KEY` - **❌ FEHLT** - Same test key for frontend
 - `VITE_OPENROUTER_BASE_URL` - ✅ Konfiguriert - Points to OpenRouter API
 
-**AKTUELLER STATUS:** ❌ API-Keys fehlen → **Chat-API ist komplett defekt**
+**AKTUELLER STATUS:** ❌ API-Keys fehlen → Chat-API ist aktuell nicht funktionsfähig. Nachtragen in Pages/Workers Secrets zwingend.
 
 ### 3. Verification Steps
 

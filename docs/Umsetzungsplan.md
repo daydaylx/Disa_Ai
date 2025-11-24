@@ -1,8 +1,10 @@
 # Umsetzungsplan: Disa AI UI-Refresh
 
-**Projekt:** Disa AI UI-Überarbeitung zu Soft-Depth Glassmorphism
-**Branch:** `claude/disa-ui-refresh-design-tokens-011CV3dMB8dGJP6Bp9YycFpC`
-**Zeitraum:** 2025-11-12
+> Status-Notiz (24.11.2025): Phase 1 ist abgeschlossen; Phase 2/3 wurden noch nicht gestartet. Dokument dient als Archiv/Backlog-Referenz.
+
+**Projekt:** Disa AI UI-Überarbeitung zu Soft-Depth Glassmorphism  
+**Branch:** `claude/disa-ui-refresh-design-tokens-011CV3dMB8dGJP6Bp9YycFpC`  
+**Zeitraum:** 2025-11-12  
 **Status:** Phase 1 abgeschlossen, Phase 2 & 3 offen
 
 ## Phasen-Übersicht

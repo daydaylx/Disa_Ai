@@ -1,53 +1,40 @@
-# Motion Specification
+# Motion Specification (Deutsch)
 
-This document outlines the motion guidelines for the application, ensuring a consistent and fluid user experience. All animations and transitions adhere to a defined set of durations and easing curves, preventing jarring or inconsistent visual feedback.
+Dieses Dokument beschreibt die Motion-Guidelines für Disa AI. Alle Animationen nutzen eine kleine, konsistente Menge an Dauer- und Easing-Tokens; `prefers-reduced-motion` wird respektiert.
 
-## Principles
+## Prinzipien
+- **Purposeful Motion:** Animationen leiten Aufmerksamkeit, geben Feedback oder verbessern die wahrgenommene Performance.
+- **Subtil & schnell:** Kurz halten, keine ablenkenden Effekte.
+- **Konsistenz:** Immer die definierten Tokens verwenden.
+- **Accessibility:** Bei reduzierter Bewegung Animationen abschwächen oder deaktivieren.
 
-*   **Purposeful Motion**: Animations should serve a clear purpose, guiding the user's attention, providing feedback, or enhancing the perceived performance.
-*   **Subtle & Fast**: Prioritize quick and subtle transitions to maintain a responsive feel. Avoid overly long or distracting animations.
-*   **Consistency**: Use the defined motion tokens across the entire application for a unified experience.
-*   **Accessibility**: Respect user preferences for reduced motion.
+## Motion-Tokens
 
-## Motion Tokens
+Alle Werte sind als CSS-Variablen definiert und in `tailwind.config.ts` gemappt.
 
-All motion properties are defined using CSS variables and mapped in `tailwind.config.ts` for easy consumption via Tailwind CSS utility classes.
+### Dauern
+| Token                 | Wert   | Einsatz                              |
+| :-------------------- | :----- | :----------------------------------- |
+| `--motion-duration-1` | 120ms  | Schnelle Interaktionen (Chips, Hover) |
+| `--motion-duration-2` | 180ms  | Basis-Interaktionen (Modals, Tooltips) |
+| `--motion-duration-3` | 240ms  | Page-Transitions, komplexe Elemente   |
 
-### Durations
-
-The following durations are available:
-
-| Token                 | Value   | Usage                               |
-| :-------------------- | :------ | :---------------------------------- |
-| `--motion-duration-1` | `120ms` | Quick interactions (e.g., Chips, Hover states) |
-| `--motion-duration-2` | `180ms` | Base interactions (e.g., Modals, Tooltips) |
-| `--motion-duration-3` | `240ms` | Page transitions, complex elements  |
-
-**Tailwind Mapping:**
-*   `duration-1` (120ms)
-*   `duration-2` (180ms)
-*   `duration-3` (240ms)
+Tailwind: `duration-1`, `duration-2`, `duration-3`.
 
 ### Easing
+| Token             | Wert                        | Einsatz                |
+| :---------------- | :-------------------------- | :--------------------- |
+| `--motion-ease-1` | cubic-bezier(.23,1,.32,1)   | Standard für alle Anim. |
 
-A single, consistent easing curve is used for all animations to ensure a cohesive feel.
+Tailwind: `ease-1`.
 
-| Token             | Value                     | Usage                               |
-| :---------------- | :------------------------ | :---------------------------------- |
-| `--motion-ease-1` | `cubic-bezier(.23,1,.32,1)` | Standard easing for all animations  |
+## Anwendungsbeispiele
+- Chips: `transition-all duration-1 ease-1`
+- Modals: `transition-all duration-2 ease-1`
+- Page-Transitions: `transition-all duration-3 ease-1`
+- Hover/Press: `transition-all duration-1 ease-1`
 
-**Tailwind Mapping:**
-*   `ease-1` (cubic-bezier(.23,1,.32,1))
-
-## Usage Examples
-
-*   **Chips**: `transition-all duration-1 ease-1`
-*   **Modals**: `transition-all duration-2 ease-1`
-*   **Page Transitions**: `transition-all duration-3 ease-1`
-*   **Hover/Press States**: `transition-all duration-1 ease-1`
-
-## Implementation Notes
-
-*   Ensure that `prefers-reduced-motion` media query is respected to disable or reduce animations for users who prefer less motion.
-*   Avoid using raw `ms` values or `cubic-bezier` functions directly in components. Always refer to the defined motion tokens.
-*   For complex animations, consider using animation libraries that integrate well with CSS variables and Tailwind, if necessary, but always adhere to the defined tokens.
+## Implementierung
+- `@media (prefers-reduced-motion: reduce)` beachten und Animationen dort reduzieren/abschalten.
+- Keine rohen `ms`/`cubic-bezier` Werte in Komponenten; immer Tokens nutzen.
+- Bei komplexen Animationslibs Tokens weiterverwenden, um Konsistenz zu behalten.

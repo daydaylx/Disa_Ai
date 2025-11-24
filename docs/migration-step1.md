@@ -1,6 +1,8 @@
 /** file: docs/migration-step1.md */
 # Step 1 – Bestandsaufnahme & Lösch-/Migrationsplan
 
+> Hinweis (24.11.2025): Dokument beschreibt den Abschluss von Schritt 1; weitere Schritte bitte neu planen oder aktualisieren.
+
 ## 1. Ziel & Bezug
 - Schritt 1 der Master-Prompt-Roadmap (Audit + Löschliste) abgeschlossen.
 - Dieses Dokument fasst die relevanten Funde zusammen und definiert konkrete Aktionen für die nächsten Schritte.

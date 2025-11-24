@@ -1,5 +1,7 @@
 # DESIGNSYSTEM MIGRATION GUIDE
 
+> Archiv-Hinweis (24.11.2025): Dieser Guide basiert auf alten Radii (6/10/14/18/24) und einer Deadline 15.01.2024. Aktuelle, verbindliche Tokens stehen in `src/styles/design-tokens-consolidated.css` (10/14/18). Für neue Arbeit bitte die konsolidierten Werte nutzen; dieser Guide nur als historische Referenz.
+
 ## Übersicht der Änderungen
 
 Das Designsystem wurde gemäß den verbindlichen Vorgaben komplett überarbeitet:

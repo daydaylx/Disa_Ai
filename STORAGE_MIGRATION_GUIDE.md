@@ -1,163 +1,135 @@
-# Storage Layer Migration Guide
+# Storage Layer Migration Guide (Deutsch)
 
-## Overview
+## Überblick
 
-This guide explains the migration from localStorage to IndexedDB using Dexie for the Disa AI React application. The new storage layer provides better performance, larger storage capacity, and improved reliability.
+Dieses Dokument beschreibt die Migration des Speichers von `localStorage` zu `IndexedDB` (Dexie). Ziel: höhere Kapazität, bessere Zuverlässigkeit, asynchrone Performance.
 
-## What Changed
+## Was hat sich geändert?
 
-### Before (localStorage)
+### Vorher (localStorage)
 
-- **Storage Limit**: ~5-10MB depending on browser
-- **Performance**: Synchronous operations, blocking UI
-- **Reliability**: Prone to quota errors and data corruption
-- **Querying**: No indexing, linear search only
-- **Concurrency**: No built-in transaction support
+- Limit: ~5–10 MB (Browser-abhängig)
+- Synchron, blockiert UI
+- Keine Indizes, lineare Suche
+- Keine Transaktionen
 
-### After (IndexedDB with Dexie)
+### Nachher (IndexedDB + Dexie)
 
-- **Storage Limit**: Hundreds of MB to GB depending on browser
-- **Performance**: Asynchronous operations, non-blocking
-- **Reliability**: ACID transactions, better error handling
-- **Querying**: Indexed queries, fast lookups
-- **Concurrency**: Built-in transaction support
+- Limit: hunderte MB bis GB (Browser-abhängig)
+- Asynchron, blockiert nicht
+- Indizierte Abfragen, schnelle Lookups
+- ACID-Transaktionen, bessere Fehlertoleranz
 
-## Migration Architecture
+## Architektur
 
-### Dual Storage Support
+### Dual-Support
 
-The application maintains backward compatibility with a dual-storage approach:
+1. **Modern Storage Layer** (`storage-layer.ts`): IndexedDB
+2. **Legacy Layer** (`conversation-manager.ts`): localStorage-Fallback
+3. **Migration Tools** (`storage-migration.ts`): Datenübertrag
 
-1. **Modern Storage Layer** (`storage-layer.ts`): IndexedDB implementation
-2. **Legacy Storage Layer** (`conversation-manager.ts`): localStorage fallback
-3. **Migration Tools** (`storage-migration.ts`): Seamless data transfer
-
-### File Structure
+### Dateistruktur
 
 ```
 src/lib/
-├── storage-layer.ts              # Modern IndexedDB implementation
-├── conversation-manager-modern.ts # Modern API wrapper
-└── storage-migration.ts          # Migration utilities
+├─ storage-layer.ts
+├─ conversation-manager-modern.ts
+└─ storage-migration.ts
 
 src/hooks/
-└── use-storage.ts                # React hooks for storage
+└─ use-storage.ts
 
 src/components/
-└── StorageMigration.tsx          # Migration UI component
+└─ StorageMigration.tsx
 
 tests/unit/lib/
-├── storage-layer.test.ts         # Unit tests
-├── conversation-manager-modern.test.ts
-├── storage-migration.test.ts
-└── storage-performance.test.ts   # Performance tests
+├─ storage-layer.test.ts
+├─ conversation-manager-modern.test.ts
+├─ storage-migration.test.ts
+└─ storage-performance.test.ts
 ```
 
-## Migration Process
+## Migrationsablauf
 
-### Automatic Detection
+### Automatische Erkennung
 
-The application automatically detects if migration is needed:
+1. Prüfe vorhandene localStorage-Daten
+2. Prüfe vorhandene IndexedDB-Daten
+3. Biete Migration an, falls nötig
 
-1. Check for existing localStorage data
-2. Check for existing IndexedDB data
-3. Prompt user if migration is available
+### Manuell anstoßen
 
-### Manual Migration
+- Settings → Bereich „Daten“
+- Migration-Prompt (wenn localStorage erkannt)
 
-Users can trigger migration manually from:
+### Schritte
 
-- Settings page → Data section
-- Migration prompt (if localStorage data detected)
+1. Backup localStorage erstellen
+2. Datenvalidierung (Format/Integrität)
+3. IndexedDB initialisieren
+4. Datentransfer durchführen
+5. Erfolg prüfen
+6. Optional: localStorage leeren
 
-### Migration Steps
+## API-Änderungen
 
-1. **Backup Creation**: Create backup of localStorage data
-2. **Data Validation**: Validate conversation format and integrity
-3. **IndexedDB Setup**: Initialize modern storage layer
-4. **Data Transfer**: Move conversations to IndexedDB
-5. **Verification**: Verify migration success
-6. **Cleanup**: Optionally clear localStorage
-
-## API Changes
-
-### Before (localStorage)
+### Vorher (sync)
 
 ```typescript
-// Synchronous operations
 const conversations = getAllConversations();
 const conversation = getConversation(id);
 saveConversation(conversation);
 deleteConversation(id);
 ```
 
-### After (IndexedDB)
+### Nachher (async)
 
 ```typescript
-// Asynchronous operations
 const conversations = await getAllConversations();
 const conversation = await getConversation(id);
 await saveConversation(conversation);
 await deleteConversation(id);
 ```
 
-### Updated Function Signatures
+### Neue Signaturen (alle async)
 
-All storage functions are now async and return Promises:
+- `getConversationStats(): Promise<ConversationStats>`
+- `getAllConversations(): Promise<ConversationMetadata[]>`
+- `getConversation(id): Promise<Conversation | null>`
+- `saveConversation(conversation): Promise<void>`
+- `deleteConversation(id): Promise<void>`
+- `cleanupOldConversations(days): Promise<number>`
+- `exportConversations(): Promise<ExportData>`
+- `importConversations(data, options): Promise<ImportResult>`
 
-- `getConversationStats()` → `Promise<ConversationStats>`
-- `getAllConversations()` → `Promise<ConversationMetadata[]>`
-- `getConversation(id)` → `Promise<Conversation | null>`
-- `saveConversation(conversation)` → `Promise<void>`
-- `deleteConversation(id)` → `Promise<void>`
-- `cleanupOldConversations(days)` → `Promise<number>`
-- `exportConversations()` → `Promise<ExportData>`
-- `importConversations(data, options)` → `Promise<ImportResult>`
+## React-Integration
 
-## React Integration
-
-### Updated Hooks
-
-The `useConversationManager` hook has been updated for async operations:
+### Aktualisierte Hooks
 
 ```typescript
-const {
-  newConversation,
-  setActiveConversationId,
-  refreshConversations, // Now async
-} = useConversationManager({
+const { newConversation, setActiveConversationId, refreshConversations } = useConversationManager({
   setMessages,
   setCurrentSystemPrompt,
   onNewConversation: () => {},
 });
 
-// Usage
-await refreshConversations(); // Now await the refresh
+await refreshConversations();
 ```
 
-### New Storage Hooks
-
-New React hooks provide better integration:
+### Neue Storage-Hooks
 
 ```typescript
-// Conversations list with real-time updates
 const { conversations, loading, error } = useConversations();
-
-// Single conversation with auto-refresh
-const { conversation, loading, error } = useConversation(id);
-
-// Storage statistics
+const { conversation, loading: convLoading, error: convError } = useConversation(id);
 const { stats, refresh: refreshStats } = useConversationStats();
-
-// Migration status and controls
 const { status, migrate, isMigrating, migrationResult } = useStorageMigration();
 ```
 
-## Error Handling
+## Fehlerbehandlung
 
 ### Graceful Degradation
 
-If IndexedDB is unavailable:
+Falls IndexedDB nicht verfügbar ist:
 
 1. Fallback to localStorage
 2. Show warning to user

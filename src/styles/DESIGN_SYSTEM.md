@@ -1,5 +1,7 @@
 # Disa AI Design System
 
+> Hinweis (24.11.2025): Verbindliche Tokens liegen in `src/styles/design-tokens-consolidated.css` (Radii 10/14/18, vereinheitlichte Shadows). Diese Datei beschreibt Prinzipien; konkrete Werte bitte aus den konsolidierten Tokens bzw. `tailwind.config.ts` übernehmen.
+
 ## Übersicht
 
 Das Disa AI Design System basiert auf dem "Aurora Glassmorphism"-Ansatz und ist speziell für mobile Geräte optimiert. Es kombiniert moderne Glaseffekte mit subtilen Schatten und präzisen Abständen, um eine elegante und funktionale Benutzeroberfläche zu schaffen. Das System folgt einem konsistenten Token-basierten Ansatz.

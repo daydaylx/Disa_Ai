@@ -1,42 +1,7 @@
-# Mobile-First Implementation Testing Plan
+# Mobile-First Implementation Testing Plan (Verweis)
 
-## Overview
-
-This document outlines the testing procedures for verifying the mobile-first implementation of the Disa AI application. The goal is to ensure optimal performance, usability, and accessibility on mobile devices while maintaining compatibility with tablet and desktop form factors.
-
-## Test Devices and Environments
-
-### Mobile Devices
-
-- Android smartphones (various screen sizes)
-- iOS devices (iPhone SE, iPhone 12, iPhone 14 Pro Max)
-
-### Tablets
-
-- Android tablets (10-inch and 12-inch)
-- iPad (various generations)
-
-### Desktop Browsers (Mobile Viewports)
-
-- Chrome DevTools mobile emulation
-- Firefox Responsive Design Mode
-- Safari Develop menu mobile simulation
-
-## Testing Criteria
-
-### 1. Layout and Responsiveness
-
-- [ ] App fills entire viewport height on all devices
-- [ ] No horizontal scrolling on mobile devices
-- [ ] Proper safe area insets handling (especially iOS)
-- [ ] Fixed header and bottom navigation don't overlap content
-- [ ] Main content area has appropriate padding for fixed elements
-- [ ] Cards stack vertically on mobile
-- [ ] Grid layouts adapt to screen size (1 column on mobile, 2 on tablet, 3-4 on desktop)
-- [ ] Typography scales appropriately across breakpoints
-- [ ] Touch targets meet minimum size requirements (48px)
-
-### 2. Touch Interactions
+Canonical, gepflegter Testplan liegt in `docs/mobile-first/MOBILE_TESTING_PLAN.md` (deutsch).  
+Diese Datei bleibt nur als Redirect bestehen, damit bestehende Referenzen nicht brechen.
 
 - [ ] All interactive elements have adequate touch targets
 - [ ] Buttons provide visual feedback on tap

@@ -1,5 +1,7 @@
 # UI Improvements for Consistency and Modernization
 
+> Hinweis (24.11.2025): Historischer Ideenkatalog; nur nutzen, wenn mit aktuellem Designstand abgeglichen.
+
 ## Current State Analysis
 
 After reviewing the UI components, I've identified the following key areas that could benefit from visual enhancements:

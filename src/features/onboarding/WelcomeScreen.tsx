@@ -31,7 +31,7 @@ export function WelcomeScreen() {
           Willkommen bei Disa AI
         </Typography>
         <Typography variant="body-lg" className="text-text-secondary mt-2">
-          Liquid Intelligence für deine Ideen
+          Dein KI-Assistent für alle Aufgaben
         </Typography>
       </div>
 
@@ -39,7 +39,7 @@ export function WelcomeScreen() {
       <div className="w-full max-w-md space-y-4">
         <MaterialCard
           variant="hero"
-          className="p-6 cursor-pointer hover:scale-[1.02] transition-all duration-300"
+          className="p-6 cursor-pointer hover:scale-[1.02] transition-all duration-300 ring-2 ring-brand"
           onClick={handleQuickStart}
         >
           <div className="flex items-center gap-4">
@@ -62,10 +62,10 @@ export function WelcomeScreen() {
             </div>
             <div>
               <Typography variant="body-lg" className="font-semibold text-text-primary">
-                Schnellstart
+                Jetzt starten
               </Typography>
               <Typography variant="body-sm" className="text-text-secondary">
-                Direkt loslegen mit einer Standard-Konfiguration
+                Sofort loslegen mit kostenlosen KI-Modellen
               </Typography>
             </div>
           </div>
@@ -99,7 +99,7 @@ export function WelcomeScreen() {
                 Geführte Tour
               </Typography>
               <Typography variant="body-sm" className="text-text-secondary">
-                Schritt-für-Schritt Einführung in alle Funktionen
+                Alle Funktionen entdecken
               </Typography>
             </div>
           </div>
@@ -136,10 +136,10 @@ export function WelcomeScreen() {
             </div>
             <div>
               <Typography variant="body-lg" className="font-semibold text-text-primary">
-                Benutzerdefiniert
+                Erweiterte Verbindung
               </Typography>
               <Typography variant="body-sm" className="text-text-secondary">
-                Vollständige Kontrolle über alle Einstellungen
+                Eigene Modelle hinzufügen (optional)
               </Typography>
             </div>
           </div>

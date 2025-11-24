@@ -1,13 +1,11 @@
-1. Executive Summary
+1. Executive Summary (Update 24.11.2025)
 
-- Chat-Historie existiert in der UI, aber die Route /chat/history fehlt – Button führt ins Leere und die gespeicherten Konversationen sind damit unerreichbar.
-- Chat-Seite ignoriert aktiv ausgewählte Rolle, Memory-Setting und NSFW/Analytics-Einstellungen; Einstellungen haben keinerlei Wirkung auf die Antwortlogik.
-- Retry-Aktion im Chat ist nur ein Console-Warn, kein erneutes Senden; Fehlerfälle lassen sich nicht beheben.
-- Modelle-Seite nutzt lokale Favoriten-State statt FavoritesContext/Storage – Filter „Favoriten“ verliert sich nach Reload und taucht nirgendwo sonst auf.
-- Rollen-Auswahl in /roles setzt StudioContext, der Chat greift aber auf einen unabhängigen useRoles-Hook zu; aktivierte Rollen kommen im Chat nie an.
-- Mobile/erweiterte Models-UI (EnhancedModelsInterface) und Storage-Migration-Dialog sind gebaut, aber nirgends geroutet – Features faktisch tot.
-- CustomRolesContext (Add/Update/Delete) wird nirgends verwendet; Custom-Rollen-Feature fehlt komplett.
-- Settings-Hook speichert Flags (NSFW, Analytics, Notifications, preferredModel), aber keine einzige Stelle liest sie aus oder steuert damit Services.
+- ✅ Route `/chat/history` existiert und wird verlinkt; Verlauf ist erreichbar.
+- ✅ Retry im Chat ist implementiert (VirtualizedMessageList → erneutes Senden der letzten User-Nachricht).
+- ⚠️ Rollen/Settings/Memory: weiterhin unklar, ob `activeRole`, NSFW/Analytics und Memory-Flag in die Prompt-Pipeline einfließen (Codeprüfung noch ausstehend).
+- ⚠️ Modelle-Favoriten: Persistenz/Global-Context nicht verifiziert; UI nutzt ggf. lokalen State.
+- ⚠️ CustomRolesContext bleibt ungenutzt; Feature scheint weiterhin tot.
+- ⚠️ Storage-Migration-UI ist im Settings-Flow eingebunden, aber tatsächliche Nutzung/Status unbekannt.
 
 2. Feature-Matrix
    | Bereich/Seite | Erwartete Funktion | Status (OK/Teil/Missing/Bug) | Fundstelle (Datei:Zeile) | Problemursache | Fix-Vorschlag |
@@ -22,16 +20,13 @@
    | Settings | NSFW/Analytics/Notifications/Model greifen | Missing | src/hooks/useSettings.ts:4-88 | Flags werden nur gespeichert, nirgends ausgelesen | Konsum in Chat/Analytics-Layer/Notifications einbauen; preferredModel ans Request-Routing übergeben |
    | Custom Roles | Eigene Rollen speichern | Missing | src/contexts/CustomRolesContext.tsx:1-86 | Context nie verwendet, keine UI/Store-Anbindung | UI/Hooks anbinden oder Kontext entfernen, um klaren Funktionsumfang zu haben |
 
-3. Liste der nicht implementierten Funktionen (priorisiert)
+3. Liste offener Funktionen (priorisiert)
 
-- P0: Verlauf öffnen (/chat/history) ohne Route → gespeicherte Konversationen unerreichbar.
-- P0: Chat-Settings (Rolle, Memory, NSFW/Analytics) werden nicht angewandt; UI verspricht Funktionen, die nicht existieren.
-- P1: Retry im Chat fehlt → Nutzer können fehlgeschlagene Antworten nicht erneut senden.
-- P1: Rollen-Auswahl wirkt nicht auf Chat, da falscher Kontext genutzt wird.
-- P1: Modelle-Favoriten nicht persistent/geteilt; „Favoriten“-Filter bricht nach Reload.
-- P2: EnhancedModelsInterface/MobileModels ungeroutet (toter Code).
-- P2: StorageMigration UI unmontiert → Migration/Backup-Feature versteckt.
-- P2: CustomRolesContext ungenutzt → Feature-Leiche.
+- P0: Chat-Settings (Rolle, Memory, NSFW/Analytics) werden vermutlich nicht angewandt; Prompt-Pipeline prüfen und schließen.
+- P1: Rollen-Auswahl könnte weiterhin am falschen Context hängen; Verifikation erforderlich.
+- P1: Modelle-Favoriten: Persistenz und geteilter Context sicherstellen.
+- P2: CustomRolesContext anbinden oder entfernen.
+- P2: StorageMigration: tatsächliche Migration/Health-Checks validieren.
 
 4. Konkrete Fix-Roadmap
 

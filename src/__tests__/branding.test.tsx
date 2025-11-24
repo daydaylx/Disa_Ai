@@ -10,13 +10,22 @@ describe("BrandWordmark", () => {
     expect(screen.getByText(/Disa/)).toBeInTheDocument();
     expect(container.firstChild).toMatchInlineSnapshot(`
       <span
-        class="text-text-strong text-lg font-semibold tracking-tight"
+        class="flex flex-col"
       >
-        Disa
         <span
-          class="text-brand"
+          class="text-text-strong text-lg font-semibold tracking-tight leading-none"
         >
-          AI
+          Disa
+          <span
+            class="text-liquid-blue"
+          >
+            AI
+          </span>
+        </span>
+        <span
+          class="text-liquid-turquoise text-xs font-medium tracking-wide leading-none mt-px"
+        >
+          Liquid Intelligence
         </span>
       </span>
     `);

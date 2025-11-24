@@ -85,38 +85,15 @@ Neben den Unit- und E2E-Tests existieren zusätzliche Spezifikationstests, die v
 
 ## 📱 Mobile Navigation & Swipe Gestures
 
-Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
-
-### Öffnen des Panels
-
-- **Edge-Swipe (Mobil)**: Wische vom rechten Bildschirmrand (innerhalb von 20px) nach links, um das Navigations-Panel zu öffnen. Die Geste benötigt mindestens 40px horizontale Bewegung und respektiert eine vertikale Toleranz von 30px, um nicht mit Scroll-Gesten zu kollidieren.
-- **Menu-Button (Desktop/Mobil)**: Tippe auf das Menu-Icon in der rechten oberen Ecke.
-- **Tastatur**: Navigiere mit Tab zum Menu-Button und drücke Enter oder Space.
-
-### Schließen des Panels
-
-- **Swipe nach links**: Wische das geöffnete Panel nach links.
-- **Schließen-Button**: Tippe auf das X-Icon im Panel-Header.
-- **Backdrop-Klick**: Tippe auf den abgedunkelten Bereich außerhalb des Panels.
-- **Escape-Taste**: Drücke Escape zum Schließen (Tastatur-Barrierefreiheit).
-
-### Technische Details
-
-- **Edge-Detection**: 20px breiter, unsichtbarer Touch-Bereich am rechten Rand
-- **Scroll-Sicherheit**: Vertikales Scrolling bleibt unbeeinträchtigt
-- **Browser-Kompatibilität**: Getestet auf iOS Safari und Android Chrome
-- **Barrierefreiheit**: WCAG 2.1 AA konform, vollständige Tastaturnavigation, Screen-Reader-Unterstützung
-- **Performance**: GPU-beschleunigte Animationen, respektiert `prefers-reduced-motion`
-
-Für detaillierte Informationen siehe [docs/MOBILE_NAVIGATION.md](docs/MOBILE_NAVIGATION.md).
+Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann. Details zur Implementierung (Edge-Breite, Gesten-Schwellen, A11y) sind in `docs/work/EDGE_SWIPE_IMPLEMENTATION.md` dokumentiert.
 
 ## 🛠️ Tech Stack
 
 | Kategorie           | Technologien & Begründung                                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**       | **React 19.2.0, TypeScript 5.9.2, Vite 7.1.6**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                             |
+| **Framework**       | **React 19.2.0, TypeScript 5.9.3, Vite 7.2.4**: Aktueller Stack für eine moderne, typsichere und performante Entwicklungsumgebung.                             |
 | **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v7.9.3, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.    |
+| **State & Routing** | **React Hooks, React Router v7.9.6, Zod**: Lokaler State mit Hooks; Router v7; Schema-Validierung mit Zod.                                                     |
 | **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
 | **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
 | **Unit-Testing**    | **Vitest, Happy DOM**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                      |

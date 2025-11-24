@@ -1,6 +1,6 @@
 # Disa AI Design System
 
-This document describes the unified design system for the Disa AI application.
+Canonical token-Werte liegen in `src/styles/design-tokens-consolidated.css` und werden von `tailwind.config.ts` konsumiert (Radii 10/14/18, vereinheitlichte Shadows). Diese README beschreibt nur Struktur und Prinzipien.
 
 ## Architecture
 

@@ -1,5 +1,7 @@
 # Implementation Plan for UI Improvements
 
+> Hinweis (24.11.2025): Archiviert; bitte vor Nutzung gegen aktuellen UI-Status prüfen.
+
 ## Phase 1: Component Standardization
 
 ### 1. Button Component Improvements

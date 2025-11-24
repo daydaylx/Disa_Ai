@@ -14,7 +14,19 @@ import type { ChatMessage } from "../types/chat";
 
 const MODEL_KEY = "disa_model";
 
+// Proxy endpoint configuration
+const PROXY_CHAT_ENDPOINT = "/api/chat";
+
 const { chatEndpoint: ENDPOINT, modelsEndpoint: MODELS_ENDPOINT } = (() => {
+  // In production, use proxy endpoint
+  if (!isTestEnv()) {
+    return {
+      chatEndpoint: PROXY_CHAT_ENDPOINT,
+      modelsEndpoint: buildOpenRouterUrl(DEFAULT_OPENROUTER_BASE_URL, OPENROUTER_MODELS_PATH),
+    } as const;
+  }
+
+  // In test environment, use direct OpenRouter endpoint
   const base = getEnvConfigSafe().VITE_OPENROUTER_BASE_URL || DEFAULT_OPENROUTER_BASE_URL;
   return {
     chatEndpoint: buildOpenRouterUrl(base, OPENROUTER_CHAT_PATH),
@@ -42,29 +54,36 @@ function isTestEnv(): boolean {
 }
 
 function getHeaders() {
-  const apiKey = readApiKey(); // Only use secure keyStore, no localStorage fallback
-
-  // SECURITY: In test environment, require valid API key (no hardcoded fallbacks)
-  // Tests should use mocked fetch instead of real API calls
-  if (!apiKey) {
-    if (isTestEnv()) {
-      throw mapError(new Error("NO_API_KEY_IN_TESTS"));
-    }
-    throw mapError(new Error("NO_API_KEY"));
+  // In production, use proxy endpoint without API key
+  if (!isTestEnv()) {
+    return {
+      "Content-Type": "application/json",
+      "HTTP-Referer": getReferer(),
+      "X-Title": "Disa AI",
+    } satisfies Record<string, string>;
   }
-  const referer = (() => {
-    try {
-      return location.origin;
-    } catch {
-      return "http://localhost";
-    }
-  })();
+
+  // In test environment, require valid API key (no hardcoded fallbacks)
+  // Tests should use mocked fetch instead of real API calls
+  const apiKey = readApiKey();
+  if (!apiKey) {
+    throw mapError(new Error("NO_API_KEY_IN_TESTS"));
+  }
+
   return {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
-    "HTTP-Referer": referer,
+    "HTTP-Referer": getReferer(),
     "X-Title": "Disa AI",
   } satisfies Record<string, string>;
+}
+
+function getReferer(): string {
+  try {
+    return location.origin;
+  } catch {
+    return "http://localhost";
+  }
 }
 
 export function getModelFallback() {
@@ -87,7 +106,11 @@ export async function chatOnce(
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
       const body = { model, messages, stream: false };
-      const data = await fetchJson(ENDPOINT, {
+
+      // In production, use proxy endpoint
+      const endpoint = isTestEnv() ? ENDPOINT : PROXY_CHAT_ENDPOINT;
+
+      const data = await fetchJson(endpoint, {
         method: "POST",
         headers,
         body,
@@ -145,7 +168,11 @@ export async function chatStream(
           }
         }
       }
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
+
+      // In production, use proxy endpoint
+      const endpoint = isTestEnv() ? ENDPOINT : PROXY_CHAT_ENDPOINT;
+
+      const res = await fetchWithTimeoutAndRetry(endpoint, {
         timeoutMs: 45000,
         signal: combinedSignal,
         maxRetries: 1,

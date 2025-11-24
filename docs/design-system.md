@@ -1,6 +1,6 @@
 # Disa AI Design System (Mobile-First)
 
-Kurzreferenz für Implementierung. Alle Komponenten nutzen ausschließlich semantische Tokens und Tailwind-Utilities.
+Kurzreferenz. **Verbindliche Token-Quelle:** `src/styles/design-tokens-consolidated.css` (Radii 10/14/18). Diese Datei fasst nur die Prinzipien zusammen; bei Wert-Konflikten gilt die konsolidierte Token-Datei + `tailwind.config.ts`.
 
 ## 1. Farben
 

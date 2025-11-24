@@ -1,8 +1,9 @@
 # Aurora Glassmorphism Design System
 
-> **Version:** 2.0.0-alpha
-> **Status:** In Konsolidierung
-> **Letztes Update:** November 2025
+> **Version:** 2.0.0  
+> **Letztes Update:** 24.11.2025  
+> **Quelle der Wahrheit für Tokens:** `src/styles/design-tokens-consolidated.css` (Radii 10/14/18, Shadows `--shadow-soft-raise`/`--shadow-strong-raise`/`--shadow-inset`).  
+> Die nachfolgenden Beispielwerte sind historisch – bei Abweichungen gelten die Werte aus der konsolidierten Token-Datei.
 
 ## Übersicht
 
