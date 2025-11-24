@@ -15,49 +15,49 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icons/icon-48.png",
+      "src": "/app-icons/icon-48.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-72.png",
+      "src": "/app-icons/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-96.png",
+      "src": "/app-icons/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-128.png",
+      "src": "/app-icons/icon-128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-192.png",
+      "src": "/app-icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icons/icon-192-maskable.png",
+      "src": "/app-icons/icon-192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/app-icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icons/icon-512-maskable.png",
+      "src": "/app-icons/icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -77,35 +77,35 @@
       "short_name": "Chat",
       "description": "Starte eine neue Unterhaltung",
       "url": "/chat",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Letzte Sitzung",
       "short_name": "Letzte",
       "description": "Zurück zur letzten Unterhaltung",
       "url": "/chat",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Einstellungen",
       "short_name": "Settings",
       "description": "App-Einstellungen öffnen",
       "url": "/settings/api",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Impressum",
       "short_name": "Impressum",
       "description": "Rechtliche Informationen",
       "url": "/impressum",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Datenschutz",
       "short_name": "Datenschutz",
       "description": "Datenschutzerklärung",
       "url": "/datenschutz",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     }
   ],
   "share_target": {
@@ -134,7 +134,7 @@
         "text/plain": [".txt", ".md"],
         "application/json": [".json"]
       },
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [{ "src": "/app-icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
     }
   ],
   "handle_links": "preferred",
