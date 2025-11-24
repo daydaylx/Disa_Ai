@@ -84,7 +84,7 @@
     },
     "E2": {
       "shadow": "0 2px 6px rgba(0, 0, 0, 0.12)",
-      "description": "Medium elevation - bottom nav"
+      "description": "Medium elevation - navigation"
     },
     "E3": {
       "shadow": "0 4px 12px rgba(0, 0, 0, 0.16)",
@@ -119,7 +119,7 @@
     }
   },
   "navigation": {
-    "bottomNav": {
+    "tabs": {
       "container": {
         "height": "56px",
         "paddingBottom": "env(safe-area-inset-bottom)",
@@ -147,7 +147,7 @@
         "color": "var(--color-accent-primary)",
         "transition": "transform 180ms ease-out"
       },
-      "tabs": [
+      "items": [
         {
           "id": "home",
           "icon": "home",

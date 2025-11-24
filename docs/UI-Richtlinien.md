@@ -268,22 +268,6 @@
 - **Border**: `border-glass-accent` für Fokus
 - **Shadow**: `shadow-elevated`
 
-### 3.7 Bottom-Nav
-
-```tsx
-<MobileBottomNav />
-```
-
-**Spezifikationen:**
-- **Fixed Bottom**: `z-bottom-nav` (105)
-- **Safe-Area**: `pb-[max(env(safe-area-inset-bottom),0.35rem)]`
-- **Height**: Min. 56px + Safe-Area
-- **Items**: 3-5 Tabs
-- **Active State**:
-  - Akzentfarbe für Icon/Text
-  - Soft Glow: `shadow-glow-brand-subtle`
-  - Kleiner Balken oben: 4px Höhe, 24px Breite, `bg-accent`
-
 ## 4. Layout-Muster
 
 ### 4.1 Start/Hub-Grid
@@ -589,7 +573,7 @@ function ChatView() {
         ))}
       </div>
 
-      <ChatComposer ... />
+      <ChatComposer />
     </div>
   );
 }

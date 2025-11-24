@@ -17,7 +17,7 @@
 ## 3. Lösch- bzw. Archivkandidaten
 | Kategorie | Dateien/Ordner | Grund |
 | --- | --- | --- |
-| Legacy Shell/Navigation | `src/components/layout/DesktopSidebar.tsx`, `GlobalNav.tsx`, `MobilePageShell.tsx`, `PageLoader.tsx`, `src/components/ui/drawer-sheet.tsx` (partiell) | Ersetzt durch neue AppShell/BottomNav/SideDrawer. |
+| Legacy Shell/Navigation | `src/components/layout/DesktopSidebar.tsx`, `GlobalNav.tsx`, `MobilePageShell.tsx`, `PageLoader.tsx`, `src/components/ui/drawer-sheet.tsx` (partiell) | Ersetzt durch neue AppShell/SideDrawer. |
 | Chat UI Altbestand | `src/components/chat/{ChatList,ChatMessage,ChatComposer,VirtualizedMessageList,ChatHistorySidebar,MobileChatHistorySidebar,WelcomeScreen}.tsx` + `.backup*` | Wird durch neue `features/chat` Komponenten ersetzt. |
 | Styling/Neomorphismus | `src/styles/neomorphic-utilities.css`, `brand-*` Klassen in `index.css`, Button/Card Varianten mit `neo-*` Fokus | Widerspricht neuem Token-System, verursacht WCAG-Probleme. |
 | Seiten (Routen) | `src/pages/*.tsx` (Chat, MobileModels, MobileStudio, Settings*) | Neue Routen liegen künftig in `features/*/routes`. |
@@ -41,7 +41,6 @@ src/
   features/
     shell/
       AppShell.tsx
-      BottomNav.tsx
       SideDrawer.tsx
     chat/
       components/
