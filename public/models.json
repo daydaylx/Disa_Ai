@@ -1,198 +1,142 @@
 [
   {
-    "id": "openrouter/andromeda-alpha",
-    "name": "Andromeda Alpha",
-    "desc": "Versteht Text und Bilder, erklärt Inhalte visuell.",
+    "id": "deepseek/deepseek-chat-v3-0324:free",
+    "name": "DeepSeek Chat V3 (0324)",
+    "desc": "Sehr starkes Chat-Flaggschiff, gut für lange Diskussionen, weitgehend frei im Ton.",
     "price_in": 0.0,
-    "price_out": 0.0
+    "price_out": 0.0,
+    "context_tokens": 163840,
+    "context_k": 164,
+    "quality_score": 85,
+    "censor_score": 35,
+    "openness": 0.65,
+    "tags": ["chat", "discussion", "long_context", "balanced", "multilingual"],
+    "notes": "Top Default für Diskussionen."
   },
   {
-    "id": "alibaba/tongyi-deepresearch-30b-a3b:free",
-    "name": "Tongyi DeepResearch 30B",
-    "desc": "Denkt logisch und gründlich, ideal für lange Fragen.",
+    "id": "qwen/qwen3-235b-a22b-2507:free",
+    "name": "Qwen3 235B A22B Instruct (2507)",
+    "desc": "Extrem großer Allround-Chatbot, sehr stabil, stark im Argumentieren.",
     "price_in": 0.0,
-    "price_out": 0.0
+    "price_out": 0.0,
+    "context_tokens": 262144,
+    "context_k": 262,
+    "quality_score": 84,
+    "censor_score": 50,
+    "openness": 0.5,
+    "tags": ["chat", "discussion", "ultra_long_context", "multilingual", "reasoning"],
+    "notes": "Wenn du richtig lange Threads willst."
+  },
+  {
+    "id": "meta-llama/llama-3.3-70b-instruct:free",
+    "name": "Llama 3.3 70B Instruct",
+    "desc": "Sehr natürliches Dialogmodell, strukturiert, zuverlässig.",
+    "price_in": 0.0,
+    "price_out": 0.0,
+    "context_tokens": 131072,
+    "context_k": 131,
+    "quality_score": 82,
+    "censor_score": 55,
+    "openness": 0.45,
+    "tags": ["chat", "discussion", "multilingual", "reliable"],
+    "notes": "Solider Diskussions-Partner, eher 'standard-safe'."
+  },
+  {
+    "id": "mistralai/mistral-small-3.2-24b-instruct:free",
+    "name": "Mistral Small 3.2 24B",
+    "desc": "Schnell, klar, gut in Mehrfach-Dialogen ohne nervige Aussetzer.",
+    "price_in": 0.0,
+    "price_out": 0.0,
+    "context_tokens": 131072,
+    "context_k": 131,
+    "quality_score": 80,
+    "censor_score": 45,
+    "openness": 0.55,
+    "tags": ["chat", "discussion", "fast", "multilingual"],
+    "notes": "Guter Mix aus Tempo und Gesprächsqualität."
   },
   {
     "id": "meituan/longcat-flash-chat:free",
-    "name": "Longcat Flash Chat",
-    "desc": "Sehr schnelles Chat-Modell, merkt sich lange Gespräche.",
+    "name": "LongCat Flash Chat",
+    "desc": "Sehr schnelles MoE-Chatmodell, überraschend gut bei längeren Diskussionen.",
     "price_in": 0.0,
-    "price_out": 0.0
+    "price_out": 0.0,
+    "context_tokens": 131072,
+    "context_k": 128,
+    "quality_score": 77,
+    "censor_score": 45,
+    "openness": 0.55,
+    "tags": ["chat", "discussion", "fast", "long_context"],
+    "notes": "Fallback, wenn du Speed willst."
   },
   {
-    "id": "deepseek/deepseek-chat-v3-0324:free",
-    "name": "Deepseek Chat V3",
-    "desc": "Redet natürlich, kann aber auch nachdenken, wenn nötig.",
+    "id": "meta-llama/llama-3.3-8b-instruct:free",
+    "name": "Llama 3.3 8B Instruct",
+    "desc": "Kleiner Bruder vom 70B: flott, sauber, aber weniger tief.",
     "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-    "name": "Dolphin Mistral Venice",
-    "desc": "Sehr freies Modell ohne starke Filter, kreativ und offen.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "tencent/hunyuan-a13b-instruct:free",
-    "name": "Hunyuan A13B",
-    "desc": "Allrounder für Gespräche und Erklärungen, ruhig und klar.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "deepseek/deepseek-r1-0528-qwen3-8b:free",
-    "name": "Deepseek R1 Qwen 8B",
-    "desc": "Kleines, logisches Modell, das gut nachdenkt.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "google/gemma-3n-e4b-it:free",
-    "name": "Gemma 3N 4B",
-    "desc": "Leichtes Modell, läuft schnell und spart Ressourcen.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "qwen/qwen3-8b:free",
-    "name": "Qwen 3 8B",
-    "desc": "Freundlicher Mehrsprachler mit klarem Schreibstil.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "shisa-ai/shisa-v2-llama3.3-70b:free",
-    "name": "Shisa Llama 3.3 70B",
-    "desc": "Stark in Japanisch und Englisch, natürlich und höflich.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "arliai/qwq-32b-arliai-rpr-v1:free",
-    "name": "QwQ 32B Arliai",
-    "desc": "Kreatives Modell für Geschichten oder Rollenspiele.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "venice/uncensored:free",
-    "name": "Venice Uncensored",
-    "desc": "Redet frei und ungefiltert, ideal für ehrliche Gespräche.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "nvidia/nemotron-nano-9b-v2:free",
-    "name": "Nemotron Nano 9B",
-    "desc": "Schnell und leicht, versteht einfache Logik.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "z-ai/glm-4-32b",
-    "name": "GLM 4 32B",
-    "desc": "Versteht lange Texte gut und bleibt konzentriert.",
-    "price_in": 0.1,
-    "price_out": 0.1
-  },
-  {
-    "id": "opengvlab/internvl3-78b",
-    "name": "InternVL3 78B",
-    "desc": "Kann Bilder und Text gemeinsam analysieren.",
-    "price_in": 0.07,
-    "price_out": 0.26
-  },
-  {
-    "id": "arcee-ai/afm-4.5b",
-    "name": "AFM 4.5B",
-    "desc": "Kleines, stabiles Modell für einfache Aufgaben.",
-    "price_in": 0.05,
-    "price_out": 0.15
-  },
-  {
-    "id": "baidu/ernie-4.5-21b-a3b",
-    "name": "Ernie 4.5 21B",
-    "desc": "Sehr gut bei logischem Denken und längeren Themen.",
-    "price_in": 0.07,
-    "price_out": 0.28
-  },
-  {
-    "id": "openai/gpt-oss-20b",
-    "name": "GPT OSS 20B",
-    "desc": "Offenes OpenAI-Modell, vielseitig und stabil.",
-    "price_in": 0.03,
-    "price_out": 0.14
-  },
-  {
-    "id": "qwen/qwen-2.5-72b-instruct",
-    "name": "Qwen 2.5 72B",
-    "desc": "Starker Allrounder für lange, natürliche Chats.",
-    "price_in": 0.07,
-    "price_out": 0.26
-  },
-  {
-    "id": "x-ai/grok-4-fast",
-    "name": "Grok 4 Fast",
-    "desc": "Antwortet schnell und kann viel Kontext behalten.",
-    "price_in": 0.2,
-    "price_out": 0.5
-  },
-  {
-    "id": "deepseek/deepseek-chat",
-    "name": "Deepseek Chat",
-    "desc": "Standardmodell, freundlich und zuverlässig.",
-    "price_in": 0.24,
-    "price_out": 0.84
-  },
-  {
-    "id": "meta-llama/llama-4-maverick",
-    "name": "Llama 4 Maverick",
-    "desc": "Großes Modell für vielseitige Gespräche.",
-    "price_in": 0.15,
-    "price_out": 0.6
-  },
-  {
-    "id": "meta-llama/llama-3.1-70b-instruct",
-    "name": "Llama 3.1 70B",
-    "desc": "Bewährtes Chat-Modell mit klaren Antworten.",
-    "price_in": 0.4,
-    "price_out": 0.4
-  },
-  {
-    "id": "mistralai/mistral-nemo",
-    "name": "Mistral Nemo",
-    "desc": "Sehr günstig und flink im Gespräch.",
-    "price_in": 0.02,
-    "price_out": 0.04
-  },
-  {
-    "id": "mistralai/mistral-7b-instruct-v0.3",
-    "name": "Mistral 7B",
-    "desc": "Kleines, schnelles Modell für kurze Chats.",
-    "price_in": 0.03,
-    "price_out": 0.05
-  },
-  {
-    "id": "z-ai/glm-4.5-air:free",
-    "name": "GLM 4.5 Air",
-    "desc": "Leichtes Modell mit optionalem Denkmodus.",
-    "price_in": 0.0,
-    "price_out": 0.0
-  },
-  {
-    "id": "tngtech/deepseek-r1t2-chimera:free",
-    "name": "Deepseek R1T2 Chimera",
-    "desc": "Kombiniert zwei Denkmodelle, gut bei Problemlösungen.",
-    "price_in": 0.0,
-    "price_out": 0.0
+    "price_out": 0.0,
+    "context_tokens": 128000,
+    "context_k": 128,
+    "quality_score": 72,
+    "censor_score": 55,
+    "openness": 0.45,
+    "tags": ["chat", "discussion", "fast", "lightweight"],
+    "notes": "Für schnelle kurze Diskussionen."
   },
   {
     "id": "google/gemma-3-27b-it:free",
-    "name": "Gemma 3 27B",
-    "desc": "Großes, freundliches Modell für vielseitige Chats.",
+    "name": "Gemma 3 27B IT",
+    "desc": "Freundliches, ordentliches Dialogmodell. Eher vorsichtig bei heiklen Themen.",
     "price_in": 0.0,
-    "price_out": 0.0
+    "price_out": 0.0,
+    "context_tokens": 131072,
+    "context_k": 131,
+    "quality_score": 78,
+    "censor_score": 65,
+    "openness": 0.35,
+    "tags": ["chat", "discussion", "polite", "multilingual"],
+    "notes": "Sauberer Ton, aber klar mehr Filter."
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct:free",
+    "name": "Mistral 7B Instruct",
+    "desc": "Kleines, flinkes Modell für kurze Dialoge und leichte Diskussionen.",
+    "price_in": 0.0,
+    "price_out": 0.0,
+    "context_tokens": 32768,
+    "context_k": 33,
+    "quality_score": 70,
+    "censor_score": 45,
+    "openness": 0.55,
+    "tags": ["chat", "discussion", "small", "fast"],
+    "notes": "Kleines, flinkes Modell für kurze Dialoge und leichte Diskussionen."
+  },
+  {
+    "id": "tencent/hunyuan-a13b-instruct:free",
+    "name": "Hunyuan A13B Instruct",
+    "desc": "Allround-Chat, ruhig im Stil, gute Erklärungen.",
+    "price_in": 0.0,
+    "price_out": 0.0,
+    "context_tokens": 32768,
+    "context_k": 33,
+    "quality_score": 74,
+    "censor_score": 50,
+    "openness": 0.5,
+    "tags": ["chat", "discussion", "balanced", "multilingual"],
+    "notes": "Solider Free-Allrounder."
+  },
+  {
+    "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    "name": "Dolphin Mistral 24B Venice (Uncensored)",
+    "desc": "Sehr offen/ungefiltert. Gut für kontroverse Diskussionen, aber braucht deine Leitplanken.",
+    "price_in": 0.0,
+    "price_out": 0.0,
+    "context_tokens": 32768,
+    "context_k": 33,
+    "quality_score": 76,
+    "censor_score": 10,
+    "openness": 0.9,
+    "tags": ["chat", "discussion", "uncensored", "roleplay"],
+    "notes": "NoFilter-Slot. Deutlich markieren."
   }
 ]

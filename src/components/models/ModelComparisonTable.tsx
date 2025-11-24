@@ -8,6 +8,25 @@ interface ModelComparisonTableProps {
 }
 
 export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
+  const formatContext = (model: EnhancedModel) => {
+    const contextK =
+      model.contextK ??
+      (model.context.maxTokens ? Math.round(model.context.maxTokens / 1024) : undefined);
+    return contextK ? `${contextK}K` : "N/A";
+  };
+
+  const formatOpenness = (model: EnhancedModel) => {
+    const openness =
+      model.openness ??
+      (typeof model.censorScore === "number" ? 1 - model.censorScore / 100 : undefined);
+    return typeof openness === "number" ? `${Math.round(openness * 100)}%` : "N/A";
+  };
+
+  const formatQuality = (model: EnhancedModel) => {
+    const quality = model.qualityScore ?? model.performance.quality;
+    return `${Math.round(quality)}/100`;
+  };
+
   const properties = [
     { label: "Anbieter", getValue: (model: EnhancedModel) => model.provider },
     {
@@ -16,19 +35,15 @@ export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
     },
     {
       label: "Qualität",
-      getValue: (model: EnhancedModel) => `${model.performance.quality}/10`,
+      getValue: (model: EnhancedModel) => formatQuality(model),
     },
     {
-      label: "Geschwindigkeit",
-      getValue: (model: EnhancedModel) => `${model.performance.speed}/10`,
+      label: "Kontext",
+      getValue: (model: EnhancedModel) => formatContext(model),
     },
     {
-      label: "Kosten",
-      getValue: (model: EnhancedModel) => `${model.performance.efficiency}/10`,
-    },
-    {
-      label: "Verfügbarkeit",
-      getValue: (model: EnhancedModel) => `${model.performance.reliability}/10`,
+      label: "Offenheit",
+      getValue: (model: EnhancedModel) => formatOpenness(model),
     },
     {
       label: "Tags",
