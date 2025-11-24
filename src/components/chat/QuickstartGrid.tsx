@@ -81,13 +81,25 @@ export function QuickstartGrid({
         </section>
       )}
 
-      <section className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      {/* Horizontal Scroll Carousel mit CSS Scroll-Snap */}
+      <section
+        className="flex gap-3 overflow-x-auto touch-pan-x overscroll-x-contain snap-x snap-mandatory pb-2 -mx-[var(--spacing-3)] px-[var(--spacing-3)]"
+        style={{
+          scrollbarWidth: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        <style>{`
+          section::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
           return (
             <PremiumCard
               key={quickstart.id}
-              className="flex flex-col gap-3"
+              className="flex flex-col gap-3 snap-center shrink-0 w-[85vw] sm:w-[45vw] md:w-[30vw] lg:w-[280px]"
               onClick={() => onStart(quickstart.system, quickstart.user)}
             >
               <div className="flex items-center gap-3">
