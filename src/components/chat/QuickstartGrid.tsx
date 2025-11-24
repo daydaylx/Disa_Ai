@@ -2,13 +2,35 @@ import { Brain, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { PremiumCard } from "@/ui/PremiumCard";
 
-const QUICKSTARTS = [
+type QuickstartCategory = "realpolitik" | "hypothetisch" | "wissenschaft" | "kultur";
+
+interface Quickstart {
+  id: string;
+  title: string;
+  description: string;
+  icon: typeof Brain | typeof PenSquare;
+  system: string;
+  user: string;
+  category?: QuickstartCategory;
+  speculative?: boolean;
+}
+
+const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string }> = {
+  realpolitik: { label: "Realpolitik", color: "bg-blue-500/10 text-blue-600" },
+  hypothetisch: { label: "Gedankenexperiment", color: "bg-purple-500/10 text-purple-600" },
+  wissenschaft: { label: "Wissenschaft", color: "bg-green-500/10 text-green-600" },
+  kultur: { label: "Kultur", color: "bg-orange-500/10 text-orange-600" },
+};
+
+const QUICKSTARTS: Quickstart[] = [
   {
     id: "discussion-aliens",
     title: "Gibt es Außerirdische?",
     description:
       "Diskutiere prägnant, max. 5–6 Sätze pro Antwort. Argumentiere offen pro/contra, ohne so zu tun als gäbe es eine sichere Lösung.",
     icon: Brain,
+    category: "wissenschaft",
+    speculative: true,
     system:
       "Wir führen eine lockere, argumentierende Diskussion. Du gibst ausgewogene Pro- und Contra-Punkte, fragst nach meiner Sicht und reagierst darauf. Keine Fachvorträge, eher Alltagslogik. Wenn etwas unklar ist, sag das offen.",
     user: "Gibt es Außerirdische? Wie siehst du das?",
@@ -19,6 +41,8 @@ const QUICKSTARTS = [
     description:
       "Keine Panikmache, keine Verharmlosung. Diskutiere Nutzen vs. Risiken, mit echten Gegenargumenten.",
     icon: Brain,
+    category: "kultur",
+    speculative: false,
     system:
       "Diskutiere mit mir wie in einem normalen Gespräch. Erst kurze Einordnung, dann Pro- und Contra-Argumente, dann eine Rückfrage an mich. Nutze einfache Beispiele statt Fachjargon. Ziel: echtes Abwägen, kein Predigen.",
     user: "Wie gefährlich ist KI deiner Meinung nach?",
@@ -28,6 +52,8 @@ const QUICKSTARTS = [
     title: "Macht eine Mindestlohn-Erhöhung Sinn?",
     description: "Abwägen statt Parolen: Vorteile, Nachteile, wer gewinnt, wer verliert.",
     icon: PenSquare,
+    category: "realpolitik",
+    speculative: false,
     system:
       "Führe eine ausgewogene Diskussion. Liefere je 2–3 klare Argumente pro und contra, erwähne Unsicherheiten, und frag mich nach meiner Position. Keine Zahlen-Wüste, sondern nachvollziehbare Logik.",
     user: "Sollte der Mindestlohn steigen?",
@@ -37,6 +63,8 @@ const QUICKSTARTS = [
     title: "Sollten soziale Medien stärker reguliert werden?",
     description: "Freiheit vs. Schutz: Wo zieht man Grenzen? Diskutiere beides fair.",
     icon: Brain,
+    category: "realpolitik",
+    speculative: false,
     system:
       "Diskutiere fair und nicht zu technisch. Bring Argumente beider Seiten, zeig Graubereiche, stell mir am Ende eine offene Frage zur Einschätzung.",
     user: "Wie stark sollten soziale Medien reguliert sein?",
@@ -46,9 +74,122 @@ const QUICKSTARTS = [
     title: "Ist Kernenergie sinnvoll für die Energiewende?",
     description: "Pragmatisch diskutieren: Klima, Kosten, Risiken, Realität.",
     icon: Brain,
+    category: "realpolitik",
+    speculative: false,
     system:
       "Kurze, alltagsnahe Diskussion mit echten Gegenargumenten. Kein Experten-Gelaber. Pro/contra, dann Rückfrage an mich. Erkenne an, dass es mehrere vernünftige Sichtweisen gibt.",
     user: "Sollte Kernenergie Teil der Energiewende sein?",
+  },
+  // NEU: 10 zusätzliche Diskussionsrunden mit Fokus auf Hypothesen, Was-wäre-wenn, Theorie-Spin
+  {
+    id: "discussion-ai-laws",
+    title: "KI schreibt Gesetze – gut oder gefährlich?",
+    description: "Gedankenexperiment: Was passiert, wenn Algorithmen Gesetzestexte formulieren?",
+    icon: Brain,
+    category: "hypothetisch",
+    speculative: true,
+    system:
+      "Hypothetisches Szenario-Brainstorming. Diskutiere Chancen (Objektivität, Geschwindigkeit) vs. Risiken (Bias, fehlende Ethik). Trenne klar: Was ist technisch möglich (Fakten), was ist Spekulation über Zukunft. Stelle Gegenfragen, um Annahmen zu testen.",
+    user: "Was wäre, wenn KI unsere Gesetze schreiben würde?",
+  },
+  {
+    id: "discussion-simulation",
+    title: "Leben wir in einer Simulation?",
+    description: "Simulation-Hypothese: Philosophisches Gedankenspiel, keine gesicherte Wahrheit.",
+    icon: Brain,
+    category: "wissenschaft",
+    speculative: true,
+    system:
+      "WICHTIG: Dies ist eine philosophische Hypothese, KEINE bewiesene Tatsache. Diskutiere Argumente (Bostrom, etc.) vs. Gegenargumente. Mache klar, was Spekulation ist. Trenne: 'Das ist ein Gedankenexperiment' vs. 'Das ist gesichert'. Frage nach, welche Annahmen ich für plausibel halte.",
+    user: "Simulation-Hypothese – was hältst du davon?",
+  },
+  {
+    id: "discussion-time-travel",
+    title: "Zeitreisen: Paradoxien und Physik",
+    description: "Theoretisch möglich? Großvater-Paradoxon? Diskutiere wissenschaftlich fundiert.",
+    icon: Brain,
+    category: "wissenschaft",
+    speculative: true,
+    system:
+      "Trenne klar: Was sagt die Physik (Relativitätstheorie, Wurmlöcher = theoretisch möglich, aber praktisch unerreichbar) vs. Science-Fiction. Diskutiere Paradoxien, aber kennzeichne, was Spekulation ist. Biete Gegenargumente und frage nach meiner Intuition.",
+    user: "Sind Zeitreisen jemals möglich?",
+  },
+  {
+    id: "discussion-free-energy",
+    title: "Was wäre bei kostenloser Energie?",
+    description: "Ökonomisches Gedankenexperiment: Gesellschaft, Arbeit, Umwelt – alles neu denken.",
+    icon: Brain,
+    category: "hypothetisch",
+    speculative: true,
+    system:
+      "Hypothetisches Szenario: Angenommen, Energie wäre morgen kostenlos verfügbar. Diskutiere realistische Konsequenzen (Wirtschaft, Verteilung, neue Probleme) vs. utopische Träume. Frage nach, welche Annahmen ich treffe. Zeige Pro/Contra klar auf.",
+    user: "Was würde passieren, wenn Energie kostenlos wäre?",
+  },
+  {
+    id: "discussion-car-free-city",
+    title: "Stadt ohne Autos – Utopie?",
+    description: "Urbanes Experiment: Lebensqualität vs. Praktikabilität. Was geht wirklich?",
+    icon: Brain,
+    category: "hypothetisch",
+    speculative: false,
+    system:
+      "Diskutiere ausgewogen: Erfolgsbeispiele (Kopenhagen, Barcelona Superblocks) vs. Herausforderungen (Mobilität, Akzeptanz). Trenne Idealvorstellung vs. Realpolitik. Stelle Rückfragen: Was ist mir wichtiger – Ruhe oder Flexibilität?",
+    user: "Könnte eine Stadt komplett autofrei funktionieren?",
+  },
+  {
+    id: "discussion-tech-religion",
+    title: "Ist Technik die neue Religion?",
+    description: "Kulturbeobachtung: Tech-Gurus, Heilsversprechen, Glaubenskriege. Übertrieben?",
+    icon: Brain,
+    category: "kultur",
+    speculative: false,
+    system:
+      "Kulturkritische Diskussion. Vergleiche Parallelen (Heilsversprechen, Gurus, Community) vs. Unterschiede (Evidenz, Testbarkeit). Keine Anklage, sondern neugierige Analyse. Frage nach: Wo sehe ich religiöse Muster?",
+    user: "Wird Technik wie eine Religion behandelt?",
+  },
+  {
+    id: "discussion-ubi",
+    title: "Bedingungsloses Grundeinkommen – Traum oder Falle?",
+    description: "Sozialökonomische Kontroverse: Freiheit vs. Faulheit. Was sagen Experimente?",
+    icon: PenSquare,
+    category: "realpolitik",
+    speculative: false,
+    system:
+      "Diskutiere evidenzbasiert: Was zeigen Pilotprojekte (Finnland, Kenia)? Argumente pro (Entlastung, Kreativität) vs. contra (Finanzierung, Arbeitsmoral). Trenne Hoffnungen vs. Daten. Stelle Gegenfragen zu Annahmen.",
+    user: "Sollten wir ein bedingungsloses Grundeinkommen einführen?",
+  },
+  {
+    id: "discussion-trends-manipulation",
+    title: "Trends: organisch oder manipuliert?",
+    description: "Medienkritik: Entstehen Hypes natürlich oder werden sie gemacht? Wo ist die Grenze?",
+    icon: Brain,
+    category: "kultur",
+    speculative: false,
+    system:
+      "Analysiere kritisch: Was ist organisches Interesse vs. Astroturfing/Algorithmen-Boost? Beispiele (TikTok, Memes, Mode). Keine Verschwörungstheorien, sondern nachvollziehbare Mechanismen. Frage: Welche Trends halte ich für echt?",
+    user: "Sind kulturelle Trends echt oder manipuliert?",
+  },
+  {
+    id: "discussion-mars-2050",
+    title: "Menschen auf dem Mars bis 2050?",
+    description: "Technologie-Zukunft: Musk, NASA, Realismus. Was ist machbar, was ist Hype?",
+    icon: Brain,
+    category: "hypothetisch",
+    speculative: true,
+    system:
+      "Trenne klar: Technische Machbarkeit (Raketen, Lebenserhaltung = lösbar) vs. praktische Hürden (Kosten, Strahlung, Psychologie). Diskutiere Musk-Versprechen kritisch, aber respektvoll. Frage nach: Was hältst du für realistisch?",
+    user: "Werden bis 2050 Menschen dauerhaft auf dem Mars leben?",
+  },
+  {
+    id: "discussion-fermi-paradox",
+    title: "Wo sind all die Aliens?",
+    description: "Fermi-Paradoxon: Milliarden Sterne, aber keine Signale. Warum? Diskutiere Theorien.",
+    icon: Brain,
+    category: "wissenschaft",
+    speculative: true,
+    system:
+      "Wissenschaftlich fundierte Spekulation. Diskutiere Lösungsvorschläge: Große Filter, Zoo-Hypothese, Rare Earth. Mache klar: Alles Hypothesen, keine bewiesenen Fakten. Frage nach: Welche Erklärung erscheint mir plausibler?",
+    user: "Fermi-Paradoxon – warum finden wir keine außerirdische Intelligenz?",
   },
 ];
 
@@ -96,17 +237,38 @@ export function QuickstartGrid({
         `}</style>
         {QUICKSTARTS.map((quickstart) => {
           const Icon = quickstart.icon;
+          const categoryInfo = quickstart.category
+            ? CATEGORY_LABELS[quickstart.category]
+            : null;
           return (
             <PremiumCard
               key={quickstart.id}
               className="flex flex-col gap-3 snap-center shrink-0 w-[85vw] sm:w-[45vw] md:w-[30vw] lg:w-[280px]"
               onClick={() => onStart(quickstart.system, quickstart.user)}
             >
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h3 className="text-base font-semibold text-text-primary">{quickstart.title}</h3>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-text-primary leading-tight mb-2">
+                    {quickstart.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {categoryInfo && (
+                      <span
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${categoryInfo.color}`}
+                      >
+                        {categoryInfo.label}
+                      </span>
+                    )}
+                    {quickstart.speculative && (
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                        Hypothese
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
               <p className="text-sm text-text-secondary flex-1 leading-relaxed">
                 {quickstart.description}
