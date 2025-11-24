@@ -1,8 +1,11 @@
+import "@testing-library/jest-dom/vitest";
+
 import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
+import { RolesProvider } from "../../src/contexts/RolesContext";
 import { ToastsProvider } from "../../src/ui/toast";
 
 beforeAll(() => {
@@ -33,10 +36,6 @@ vi.mock("../../src/hooks/useChat", () => ({
 
 vi.mock("../../src/hooks/useConversationManager", () => ({
   useConversationManager: vi.fn(),
-}));
-
-vi.mock("../../src/hooks/useRoles", () => ({
-  useRoles: () => ({ activeRole: { name: "Smoke Role" } }),
 }));
 
 vi.mock("../../src/hooks/useMemory", () => ({
@@ -115,11 +114,13 @@ import SettingsOverviewPage from "../../src/pages/SettingsOverviewPage";
 function renderWithRouter(pathname: string, element: React.ReactElement) {
   return render(
     <ToastsProvider>
-      <MemoryRouter initialEntries={[pathname]}>
-        <Routes>
-          <Route path={pathname} element={element} />
-        </Routes>
-      </MemoryRouter>
+      <RolesProvider>
+        <MemoryRouter initialEntries={[pathname]}>
+          <Routes>
+            <Route path={pathname} element={element} />
+          </Routes>
+        </MemoryRouter>
+      </RolesProvider>
     </ToastsProvider>,
   );
 }
