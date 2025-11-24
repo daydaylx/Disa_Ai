@@ -18,6 +18,8 @@ Diese Implementierung fügt eine neue Kategorie "Verschwörungstheorien" zum Dis
 
 ### 1. `/src/components/chat/QuickstartGrid.tsx`
 
+**Letzte Änderung**: 2025-11-24 (UI-Struktur: Separate Section)
+
 **Änderungen**:
 
 #### a) Neue Kategorie `verschwörungstheorien` hinzugefügt
@@ -94,15 +96,51 @@ Diese Implementierung fügt eine neue Kategorie "Verschwörungstheorien" zum Dis
 
 ## UI-Integration
 
-**Keine zusätzlichen Änderungen nötig**.
+### Separate Section für Verschwörungstheorien (Update 2025-11-24)
 
-Die bestehende Architektur deckt die Integration bereits ab:
+Die Verschwörungstheorien werden **nicht** als normale Unterkategorie zwischen den anderen Diskussionen angezeigt, sondern als **eigene Section unterhalb** der regulären Diskussionen.
 
-1. **Rendering**: `QuickstartGrid` mapped über `QUICKSTARTS` und rendert `PremiumCard`s in horizontalem Carousel
-2. **Kategorie-Badge**: Automatisch gerendert via `CATEGORY_LABELS[quickstart.category]` (Zeilen 258–263)
-3. **Card-Klick**: `onClick={() => onStart(quickstart.system, quickstart.user)}` (Zeile 247)
-4. **Prompt-Setting**: `onStart` → `startWithPreset` → `setCurrentSystemPrompt` (Chat.tsx:185–213)
-5. **Kombinierter Prompt**: `safetyPrompt + discussionPrompt + activeRole?.systemPrompt` (Chat.tsx:121–125)
+#### Implementierung in `QuickstartGrid.tsx` (Zeilen 368–482):
+
+**1. Daten-Filterung** (Zeilen 374–375):
+```typescript
+const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
+const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwörungstheorien");
+```
+- Split der `QUICKSTARTS` in zwei Arrays
+- Verhindert Duplikate: Jedes Quickstart erscheint nur einmal
+
+**2. Helper-Function für Carousel** (Zeilen 378–435):
+```typescript
+const renderCarousel = (quickstarts: Quickstart[]) => (/* ... */)
+```
+- Extrahiert Carousel-Rendering in wiederverwendbare Function
+- Vermeidet Code-Duplikation
+- Nimmt Array von Quickstarts und rendert identisches Carousel wie vorher
+
+**3. Render-Struktur**:
+- **Header** (Zeilen 439–447): Wie bisher (Workflows / Diskussionen)
+- **Reguläre Diskussionen** (Zeile 450): Carousel mit `regularDiscussions`
+- **Verschwörungstheorien-Section** (Zeilen 453–468):
+  - Conditional Rendering: Nur wenn `conspiracyDiscussions.length > 0`
+  - Visuell abgetrennt: `border-t border-surface-2` + `pt-4` (Top-Border + Padding)
+  - Überschrift "Verschwörungstheorien" + Badge "Kritisch prüfen" (roter Hintergrund)
+  - Disclaimer: "Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen."
+  - Carousel mit `conspiracyDiscussions`
+- **Link-Actions** (Zeilen 470–479): Wie bisher (Modelle, Rollen, API-Key)
+
+#### Vorteile dieser Struktur:
+
+- **Klare Trennung**: Nutzer erkennen sofort, dass Verschwörungstheorien eine besondere Kategorie sind
+- **Kein Leerraum**: Wenn `conspiracyDiscussions` leer wäre, wird die Section komplett ausgeblendet
+- **Mobile-First**: Dieselben Carousel-Mechaniken, kein Layout-Chaos
+- **Keine Breaking Changes**: Reguläre Diskussionen funktionieren weiterhin identisch
+
+#### Interaktion (unverändert):
+
+1. **Card-Klick**: `onClick={() => onStart(quickstart.system, quickstart.user)}` (Zeile 398)
+2. **Prompt-Setting**: `onStart` → `startWithPreset` → `setCurrentSystemPrompt` (Chat.tsx:185–213)
+3. **Kombinierter Prompt**: `safetyPrompt + discussionPrompt + activeRole?.systemPrompt` (Chat.tsx:121–125)
 
 **Ergebnis**: Beim Klick auf eine Verschwörungstheorien-Card wird `CONSPIRACY_DISCUSSION_MODE` als System-Prompt gesetzt und die KI folgt dem 7-Schritte-Prozess.
 
@@ -165,11 +203,11 @@ LÄNGE: Halte dich kurz (max. 6–8 Sätze pro Schritt). Nutzer lesen keine Roma
 
 ### Annahmen:
 
-1. **Keine Disclaimer-UI erforderlich**: Der Plan erwähnt "oben in der Kategorie ein sehr kurzes Disclaimer-Snippet". Ich habe das **nicht** implementiert, weil:
-   - Die Kategorie-Badges bereits visuell warnen (roter Rahmen)
-   - Der Systemprompt selbst strikt ist und keine Falschinformationen bestätigt
-   - Ein zusätzlicher Disclaimer das UI überladen würde (mobile-first)
-   - **Wenn gewünscht**: Kann nachträglich als kleiner Banner über den Cards eingefügt werden (z.B. `<p className="text-xs text-red-600">Diese Themen werden kritisch geprüft, nicht bestätigt.</p>`)
+1. **Disclaimer-UI implementiert** ✅ (Update 2025-11-24): Der Plan erwähnt "oben in der Kategorie ein sehr kurzes Disclaimer-Snippet". Dies ist jetzt implementiert:
+   - Separate Section mit Überschrift "Verschwörungstheorien" + Badge "Kritisch prüfen"
+   - Disclaimer: "Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen."
+   - Visuell abgetrennt durch Border-Top + Padding
+   - Mobile-First: Kurz, prägnant, nicht überladen
 
 2. **Keine separaten Follow-up-Buttons**: Der Plan schlägt vor: "Gegenargument", "Alternative Erklärung", etc. als Buttons. Ich habe das **nicht** implementiert, weil:
    - Der Systemprompt bereits alle diese Aspekte abdeckt (Stresstest, Alternativen, etc.)
@@ -246,11 +284,15 @@ LÄNGE: Halte dich kurz (max. 6–8 Sätze pro Schritt). Nutzer lesen keine Roma
 - ✅ Spezieller Diskussionsmodus mit 7-Schritte-Prozess (A–G)
 - ✅ Evidenz-Labeling im Systemprompt verankert
 - ✅ Sokratische Rückfragen als fester Bestandteil
+- ✅ **Separate Section unterhalb regulärer Diskussionen** (Update 2025-11-24)
+  - Überschrift "Verschwörungstheorien" + Badge "Kritisch prüfen"
+  - Disclaimer: "Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen."
+  - Visuell abgetrennt durch Border-Top
+  - Conditional Rendering (nur wenn Conspiracy-Diskussionen vorhanden)
 - ✅ UI-Integration via bestehende Architektur (keine Breaking Changes)
 - ✅ Mobile-first UX beibehalten (horizontal scrollbare Cards)
 
 **Nicht implementiert** (bewusste Entscheidungen):
-- ❌ Separater Disclaimer-Banner (Kategorie-Badge + Systemprompt reichen aus)
 - ❌ Follow-up-Buttons (Systemprompt deckt alles ab, Nutzer kann frei tippen)
 - ❌ Toggle "Moderator vs. Gegenposition" (würde UX komplizieren)
 
