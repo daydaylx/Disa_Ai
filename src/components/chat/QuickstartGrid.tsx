@@ -446,20 +446,28 @@ export function QuickstartGrid({
         </section>
       )}
 
-      {/* Regular Discussions Carousel */}
-      {renderCarousel(regularDiscussions)}
+      {/* Card 1: Regular Discussions */}
+      <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-text-primary">Diskussionen</h3>
+          <p className="text-xs text-text-secondary">
+            Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert.
+          </p>
+        </div>
+        {renderCarousel(regularDiscussions)}
+      </div>
 
-      {/* Conspiracy Theories Section – Separate, below regular discussions */}
+      {/* Card 2: Conspiracy Theories – Separate card below */}
       {conspiracyDiscussions.length > 0 && (
-        <div className="space-y-4 pt-4 border-t border-surface-2">
+        <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3 border border-red-500/20">
           <div className="space-y-1">
-            <h3 className="text-xl font-bold text-text-primary flex items-center gap-2">
+            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
               Verschwörungstheorien
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 border border-red-500/20">
                 Kritisch prüfen
               </span>
             </h3>
-            <p className="text-sm text-text-secondary">
+            <p className="text-xs text-text-secondary">
               Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen.
             </p>
           </div>
