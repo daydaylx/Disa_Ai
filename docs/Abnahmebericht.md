@@ -48,12 +48,6 @@ Die UI-Überarbeitung wurde erfolgreich durchgeführt. Das Design-System wurde v
   - ✅ Spacing optimiert (py-5 → py-4)
   - ✅ Actions kompakter (size="sm" statt "icon")
 
-- **MobileBottomNav** (`/src/components/layout/MobileBottomNav.tsx`)
-  - ✅ Icons hinzugefügt (MessageSquare, Brain, Users, Settings)
-  - ✅ Aktiv-State mit Akzentfarbe + Glow
-  - ✅ Touch-Targets min. 56px
-  - ✅ Safe-Area-Support beibehalten
-
 ### 1.3 Layouts ✅
 
 #### Chat-Ansicht (`/src/pages/Chat.tsx`)
@@ -97,7 +91,7 @@ Die UI-Überarbeitung wurde erfolgreich durchgeführt. Das Design-System wurde v
 
 - ✅ Breakpoints optimiert für 360×800, 390×844, 414×896
 - ✅ Kein horizontales Scrolling (getestet via responsive design)
-- ✅ Safe-Area-Insets in Bottom-Nav und Composer
+- ✅ Safe-Area-Insets im Composer
 - ✅ Visual-Viewport-Hook für iOS-Keyboard-Handling
 
 ### 1.5 Accessibility ⚠️ Teilweise
@@ -133,15 +127,14 @@ Die UI-Überarbeitung wurde erfolgreich durchgeführt. Das Design-System wurde v
 | 2 | Schatten-System auf 2 Ebenen | ✅ | surface, elevated (Legacy-Aliase für BC) |
 | 3 | Spacing konsistent | ✅ | gap-4 (16px) in Grids, p-md (16px) in Cards |
 | 4 | Kein horizontales Scrolling (360-414px) | ✅ | Getestet in responsive view |
-| 5 | Bottom-Nav Safe-Area | ✅ | `pb-[max(env(safe-area-inset-bottom),0.5rem)]` |
-| 6 | Chat-Bubbles max 70% | ✅ | Reduziert von 85% |
-| 7 | Timestamps unter Bubble | ✅ | Neustrukturiert |
-| 8 | Composer verdeckt keine Inhalte | ✅ | Fixed mit Safe-Area |
-| 9 | Lighthouse Perf ≥90 | ⚠️ | Nicht getestet (Build-Fehler) |
-| 10 | Lighthouse A11y ≥90 | ⚠️ | Nicht getestet |
-| 11 | Null ungenutzte Assets | ⚠️ | Nicht bereinigt |
+| 5 | Chat-Bubbles max 70% | ✅ | Reduziert von 85% |
+| 6 | Timestamps unter Bubble | ✅ | Neustrukturiert |
+| 7 | Composer verdeckt keine Inhalte | ✅ | Fixed mit Safe-Area |
+| 8 | Lighthouse Perf ≥90 | ⚠️ | Nicht getestet (Build-Fehler) |
+| 9 | Lighthouse A11y ≥90 | ⚠️ | Nicht getestet |
+| 10 | Null ungenutzte Assets | ⚠️ | Nicht bereinigt |
 
-**Score: 8/11 (73%)**
+**Score: 7/10 (70%)**
 
 ### Weiche Kriterien (Nice-to-Have)
 

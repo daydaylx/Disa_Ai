@@ -24,7 +24,6 @@ A responsive application shell that adapts to different screen sizes:
 
 ### 2. MobileNavigation
 Touch-optimized navigation component:
-- Bottom navigation bar on mobile
 - Sidebar navigation on tablet/desktop
 - Enhanced touch targets (minimum 48px)
 - Visual feedback for interactions
@@ -170,7 +169,6 @@ All styles start with mobile defaults and enhance for larger screens using media
 ```css
 @media (prefers-contrast: high) {
   .app-header,
-  .bottom-navigation,
   .mobile-card,
   .chat-input-container {
     border-width: 2px;

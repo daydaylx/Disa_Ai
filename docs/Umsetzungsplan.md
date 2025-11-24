@@ -11,7 +11,6 @@
 - ✅ Design-Tokens zentralisieren und anpassen
 - ✅ Shared-Komponenten erstellen (TileCard, SectionCard)
 - ✅ Chat-View optimieren
-- ✅ MobileBottomNav mit Icons erweitern
 - ✅ Dokumentation (Ist-Analyse, UI-Richtlinien, Abnahmebericht)
 
 ### ⚠️ Phase 2: Vervollständigung (Optional)
@@ -101,16 +100,6 @@
 
 **Aufwand:** ~60 Min.
 
-### 1.4 MobileBottomNav erweitern ✅
-
-**Änderungen:**
-1. ✅ Icons hinzufügen (MessageSquare, Brain, Users, Settings)
-2. ✅ Aktiv-State mit Akzentfarbe + Glow
-3. ✅ Touch-Targets min. 56px
-
-**Datei:** ✅ `src/components/layout/MobileBottomNav.tsx`
-
-**Aufwand:** ~30 Min.
 
 ### 1.5 Chat Empty-State optimieren ✅
 
@@ -331,14 +320,13 @@ Migriert das Design-System von Neumorphismus zu einem konsistenten Glassmorphism
 - Design-Tokens: Radii, Shadows, Glass-Opazität aktualisiert
 - Neue Komponenten: TileCard, SectionCard
 - Optimiert: ChatMessage (70% Max-Width, Timestamps unter Bubble)
-- Optimiert: MobileBottomNav (Icons, Akzent-Glow)
 - Optimiert: Chat Empty-State (Einheitliche Cards)
 
 ### Betroffene Routen
 - `/chat` (Empty-State, Bubbles)
-- `/models` (Bottom-Nav)
-- `/roles` (Bottom-Nav)
-- `/settings` (Bottom-Nav)
+- `/models`
+- `/roles`
+- `/settings`
 
 ### Lighthouse Scores
 - Performance: [Score]

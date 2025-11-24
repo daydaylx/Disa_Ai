@@ -52,12 +52,6 @@
 - ✅ Fokus-Ringe implementiert (focus-visible:ring-2)
 - ⚠️ Dramatic-Hover könnte subtiler sein (-3px ist viel)
 
-#### MobileBottomNav (`src/components/layout/MobileBottomNav.tsx`)
-- ✅ Safe-Area-Support (`pb-[max(env(safe-area-inset-bottom),0.35rem)]`)
-- ✅ Fixed Positioning mit z-index
-- ✅ Touch-Targets mit `.touch-target`
-- ⚠️ Icons fehlen (nutzt nur Text-Labels)
-- ⚠️ Aktiv-State könnte deutlicher sein (Akzentfarbe + Glow)
 
 #### ChatComposer (`src/components/chat/ChatComposer.tsx`)
 - ✅ Safe-Area-aware Padding
@@ -94,7 +88,6 @@
 ✅ **Bereits implementiert:**
 - Safe-Area-Variablen in theme.css
 - Tailwind-Utilities für safe-area-inset-*
-- MobileBottomNav nutzt Safe-Area
 - ChatComposer nutzt Safe-Area
 
 ⚠️ **Verbesserungsbedarf:**

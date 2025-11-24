@@ -21,7 +21,6 @@ The system uses CSS custom properties (variables) for consistent design:
   /* Mobile layout variables */
   --layout-sidebar-width: 0px; /* Hidden on mobile */
   --layout-header-height: 4rem;
-  --layout-bottom-nav-height: 4rem;
   --layout-content-padding-x: 1rem;
   --layout-content-padding-y: 1rem;
   
