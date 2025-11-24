@@ -2,7 +2,12 @@ import { Brain, Link2, PenSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { PremiumCard } from "@/ui/PremiumCard";
 
-type QuickstartCategory = "realpolitik" | "hypothetisch" | "wissenschaft" | "kultur";
+type QuickstartCategory =
+  | "realpolitik"
+  | "hypothetisch"
+  | "wissenschaft"
+  | "kultur"
+  | "verschwörungstheorien";
 
 interface Quickstart {
   id: string;
@@ -20,7 +25,58 @@ const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string
   hypothetisch: { label: "Gedankenexperiment", color: "bg-purple-500/10 text-purple-600" },
   wissenschaft: { label: "Wissenschaft", color: "bg-green-500/10 text-green-600" },
   kultur: { label: "Kultur", color: "bg-orange-500/10 text-orange-600" },
+  verschwörungstheorien: {
+    label: "Verschwörungstheorien",
+    color: "bg-red-500/10 text-red-600 border border-red-500/20",
+  },
 };
+
+// Strikter Diskussionsmodus für Verschwörungstheorien
+// Implementiert 7-Schritte-Prozess: Rephrase → Steelman → Psychologie → Claims → Evidenz → Stresstest → Fazit
+const CONSPIRACY_DISCUSSION_MODE = `Du führst eine kritische, sokratische Diskussion zu einer Verschwörungstheorie. Ziel ist NICHT, den Nutzer zu belehren, sondern gemeinsam Behauptungen zu prüfen und evidenzbasiert zu denken.
+
+WICHTIGE LEITPLANKEN:
+- Trenne IMMER sichtbar: Behauptung ≠ Beleg
+- Vermeide unnötige Wiederholung der falschen Behauptung (Illusory-Truth-Effekt)
+- Keine Quellen erfinden, keine dramatische Ausschmückung
+- Evidenz-Labeling Pflicht: "gut belegt" / "unklar" / "widerlegt" / "Spekulation"
+- Sokratisch statt predigend: Fragen stellen, Logik testen, Selbst-Denken fördern
+- Keine Both-Sides-Gleichwertigkeit: Wenn Evidenz klar ist, sag das klar (aber erkläre es)
+
+ABLAUF JEDER RUNDE (strikt einhalten):
+
+**A. Rephrase & Verständnischeck**
+Paraphrasiere neutral, was der Nutzer meint. Kein Urteil. "Du meinst X, korrekt?"
+
+**B. Steelman (kurz, max 4–5 Sätze)**
+Formuliere die Theorie als Behauptung. Nutze Warn-Marker: "Folgende Behauptung kursiert..." oder "Die Theorie behauptet..."
+NICHT ausschmücken oder Details erfinden.
+
+**C. Warum überzeugt das Menschen?**
+Erkläre psychologische/soziale Mechanismen (Muster-Erkennung, Kontrollbedürfnis, Misstrauen), OHNE die Theorie zu legitimieren.
+
+**D. Typische Claims sammeln**
+Liste 3–5 zentrale Behauptungen auf. Kennzeichne sie explizit als "Behauptungen", nicht als Fakten.
+
+**E. Evidenz sortieren + Labels**
+Pro Claim:
+- Label vergeben: gut belegt / unklar / widerlegt / Spekulation
+- Alternative Erklärung anbieten (Debunking braucht eine Alternative, sonst bleibt ein Vakuum)
+- Kurz halten, nicht wiederholen
+
+**F. Sokratischer Stresstest**
+Stelle 2–3 Rückfragen:
+- "Ist das falsifizierbar? Welche Beobachtung würde die Theorie widerlegen?"
+- "Gibt es innere Widersprüche?"
+- "Welche alternative Erklärung ist simpler/plausibler?"
+
+**G. Gemeinsames Fazit**
+Fasse die Evidenzlage zusammen (nicht als Urteil, sondern als Ergebnis).
+Lade den Nutzer ein, weitere Fragen zu stellen oder Gegenargumente zu bringen.
+
+TONFALL: Ruhig, neugierig, respektvoll. Keine Anklage, kein Predigen. Ziel ist gemeinsames Denken.
+
+LÄNGE: Halte dich kurz (max. 6–8 Sätze pro Schritt). Nutzer lesen keine Romane.`;
 
 const QUICKSTARTS: Quickstart[] = [
   {
@@ -190,6 +246,110 @@ const QUICKSTARTS: Quickstart[] = [
     system:
       "Wissenschaftlich fundierte Spekulation. Diskutiere Lösungsvorschläge: Große Filter, Zoo-Hypothese, Rare Earth. Mache klar: Alles Hypothesen, keine bewiesenen Fakten. Frage nach: Welche Erklärung erscheint mir plausibler?",
     user: "Fermi-Paradoxon – warum finden wir keine außerirdische Intelligenz?",
+  },
+
+  // ============================================================================
+  // VERSCHWÖRUNGSTHEORIEN – Kritisch diskutieren (10 kuratierte Themen)
+  // ============================================================================
+  {
+    id: "conspiracy-flat-earth",
+    title: "Flache Erde",
+    description: "Diskutiere die Behauptung kritisch. Was sagt die Evidenz?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Ist die Erde flach? Was spricht dafür, was dagegen?",
+  },
+  {
+    id: "conspiracy-reptilians",
+    title: "Reptiloiden",
+    description: "Menschen-Echsen in Machtpositionen? Prüfen wir das gemeinsam.",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Gibt es Reptiloiden, die die Welt regieren?",
+  },
+  {
+    id: "conspiracy-moon-landing",
+    title: "Mondlandung gefälscht",
+    description: "War die Apollo 11-Landung ein Hollywood-Fake?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "War die Mondlandung ein Fake?",
+  },
+  {
+    id: "conspiracy-chemtrails",
+    title: "Chemtrails",
+    description: "Kondensstreifen oder Gift? Was sagt die Wissenschaft?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Sind Chemtrails real?",
+  },
+  {
+    id: "conspiracy-bermuda-triangle",
+    title: "Bermuda-Dreieck",
+    description: "Mysteriöse Schiffs- und Flugzeugverluste – oder statistische Normalität?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Was ist dran am Bermuda-Dreieck?",
+  },
+  {
+    id: "conspiracy-ancient-aliens",
+    title: "Ancient Aliens / Pyramiden",
+    description: "Haben Außerirdische die Pyramiden gebaut?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Wurden die Pyramiden von Aliens gebaut?",
+  },
+  {
+    id: "conspiracy-area51",
+    title: "Area 51 / UFO-Vertuschung",
+    description: "Geheime Alien-Technologie oder Militärforschung?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Was wird in Area 51 wirklich verheimlicht?",
+  },
+  {
+    id: "conspiracy-denver-airport",
+    title: "Denver Airport / Geheimanlage",
+    description: "Illuminati-Symbolik und unterirdische Bunker?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Ist der Denver Airport eine geheime Illuminati-Anlage?",
+  },
+  {
+    id: "conspiracy-mkultra",
+    title: "MK-Ultra",
+    description: "CIA-Gedankenkontrolle: historisch belegt, aber wie weit ging es?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: false,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Was war MK-Ultra und wie weit gingen die Experimente?",
+  },
+  {
+    id: "conspiracy-simulation",
+    title: "Simulation-Hypothese",
+    description: "Philosophisches Gedankenexperiment: Leben wir in einer Matrix?",
+    icon: Brain,
+    category: "verschwörungstheorien",
+    speculative: true,
+    system: CONSPIRACY_DISCUSSION_MODE,
+    user: "Leben wir in einer Simulation?",
   },
 ];
 
