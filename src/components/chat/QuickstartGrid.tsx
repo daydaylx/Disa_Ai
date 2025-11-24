@@ -370,6 +370,70 @@ export function QuickstartGrid({
   title = "Schnellstart-Flows",
   description = "Vorgefertigte Prompts für typische Aufgaben – tippe und starte direkt fokussiert.",
 }: QuickstartGridProps) {
+  // Split discussions: Regular vs. Conspiracy Theories
+  const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
+  const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwörungstheorien");
+
+  // Helper: Render carousel for a given set of quickstarts
+  const renderCarousel = (quickstarts: Quickstart[]) => (
+    <section
+      className="flex gap-3 overflow-x-auto touch-pan-x overscroll-x-contain snap-x snap-mandatory pb-2 -mx-[var(--spacing-3)] px-[var(--spacing-3)]"
+      style={{
+        scrollbarWidth: "none",
+        WebkitOverflowScrolling: "touch",
+      }}
+    >
+      <style>{`
+        section::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+      {quickstarts.map((quickstart) => {
+        const Icon = quickstart.icon;
+        const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
+        return (
+          <PremiumCard
+            key={quickstart.id}
+            className="flex flex-col gap-3 snap-center shrink-0 w-[85vw] sm:w-[45vw] md:w-[30vw] lg:w-[280px]"
+            onClick={() => onStart(quickstart.system, quickstart.user)}
+          >
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
+                <Icon className="h-5 w-5" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-semibold text-text-primary leading-tight mb-2">
+                  {quickstart.title}
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {categoryInfo && (
+                    <span
+                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${categoryInfo.color}`}
+                    >
+                      {categoryInfo.label}
+                    </span>
+                  )}
+                  {quickstart.speculative && (
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                      Hypothese
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-text-secondary flex-1 leading-relaxed">
+              {quickstart.description}
+            </p>
+            <span className="text-xs font-semibold text-brand flex items-center gap-1">
+              Starten
+              <span className="text-brand-bright">→</span>
+            </span>
+          </PremiumCard>
+        );
+      })}
+    </section>
+  );
+
   return (
     <div className="space-y-6">
       {(title || description) && (
@@ -382,65 +446,34 @@ export function QuickstartGrid({
         </section>
       )}
 
-      {/* Horizontal Scroll Carousel mit CSS Scroll-Snap */}
-      <section
-        className="flex gap-3 overflow-x-auto touch-pan-x overscroll-x-contain snap-x snap-mandatory pb-2 -mx-[var(--spacing-3)] px-[var(--spacing-3)]"
-        style={{
-          scrollbarWidth: "none",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
-        <style>{`
-          section::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
-        {QUICKSTARTS.map((quickstart) => {
-          const Icon = quickstart.icon;
-          const categoryInfo = quickstart.category
-            ? CATEGORY_LABELS[quickstart.category]
-            : null;
-          return (
-            <PremiumCard
-              key={quickstart.id}
-              className="flex flex-col gap-3 snap-center shrink-0 w-[85vw] sm:w-[45vw] md:w-[30vw] lg:w-[280px]"
-              onClick={() => onStart(quickstart.system, quickstart.user)}
-            >
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand/10 text-brand shadow-brandGlow">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-text-primary leading-tight mb-2">
-                    {quickstart.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {categoryInfo && (
-                      <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${categoryInfo.color}`}
-                      >
-                        {categoryInfo.label}
-                      </span>
-                    )}
-                    {quickstart.speculative && (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20">
-                        Hypothese
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <p className="text-sm text-text-secondary flex-1 leading-relaxed">
-                {quickstart.description}
-              </p>
-              <span className="text-xs font-semibold text-brand flex items-center gap-1">
-                Starten
-                <span className="text-brand-bright">→</span>
+      {/* Card 1: Regular Discussions */}
+      <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-text-primary">Diskussionen</h3>
+          <p className="text-xs text-text-secondary">
+            Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert.
+          </p>
+        </div>
+        {renderCarousel(regularDiscussions)}
+      </div>
+
+      {/* Card 2: Conspiracy Theories – Separate card below */}
+      {conspiracyDiscussions.length > 0 && (
+        <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3 border border-red-500/20">
+          <div className="space-y-1">
+            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              Verschwörungstheorien
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 border border-red-500/20">
+                Kritisch prüfen
               </span>
-            </PremiumCard>
-          );
-        })}
-      </section>
+            </h3>
+            <p className="text-xs text-text-secondary">
+              Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen.
+            </p>
+          </div>
+          {renderCarousel(conspiracyDiscussions)}
+        </div>
+      )}
 
       <section className="flex flex-wrap gap-2">
         {LINK_ACTIONS.map((action) => (
