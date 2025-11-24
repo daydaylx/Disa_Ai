@@ -241,29 +241,8 @@ export default defineConfig(({ mode }) => {
                   },
                 ],
               },
-              includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
-              manifest: {
-                name: "Disa AI",
-                short_name: "Disa",
-                description: "AI-powered chat assistant with offline-first architecture",
-                theme_color: "#007AFF",
-                background_color: "#0b0f14",
-                display: "standalone",
-                scope: "/",
-                start_url: "/",
-                icons: [
-                  {
-                    src: "icons/icon-192.png",
-                    sizes: "192x192",
-                    type: "image/png",
-                  },
-                  {
-                    src: "icons/icon-512.png",
-                    sizes: "512x512",
-                    type: "image/png",
-                  },
-                ],
-              },
+              includeAssets: ["favicon.ico", "app-icons/*.png", "masked-icon.svg"],
+              manifest: false, // Use the manual manifest from public/manifest.webmanifest
               devOptions: {
                 enabled: true,
                 type: "module",
