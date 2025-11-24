@@ -87,6 +87,7 @@ export interface EnhancedModel {
 
   // Optional quality/openness scores from catalog
   qualityScore?: number;
+  contextScore?: number; // 0-100 normalized context score
   openness?: number;
   censorScore?: number;
 

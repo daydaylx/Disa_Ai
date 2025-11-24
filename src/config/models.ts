@@ -37,6 +37,10 @@ export type ModelEntry = {
   openness?: number;
   /** Censor Score 0-100 (optional) */
   censorScore?: number;
+  /** Empfohlenes Modell? */
+  recommended?: boolean;
+  /** Tier (z.B. free, premium) aus JSON */
+  tier?: string;
   /** Zusätzliche Hinweise aus JSON */
   notes?: string;
   /** Sampling Capabilities: best-effort heuristics, optional in JSON */
@@ -64,6 +68,8 @@ type JsonModel = {
   censor_score?: number;
   openness?: number;
   tags?: string[];
+  recommended?: boolean;
+  tier?: string;
   notes?: string;
   capabilities?: {
     temperature?: boolean;
@@ -126,6 +132,8 @@ function jsonModelToEntry(m: JsonModel): ModelEntry {
     qualityScore: m.quality_score,
     openness,
     censorScore: m.censor_score,
+    recommended: m.recommended,
+    tier: m.tier,
     notes: m.notes,
     ...(prov ? { provider: prov } : {}),
     ...(pricing ? { pricing } : {}),
