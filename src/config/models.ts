@@ -21,12 +21,24 @@ export type ModelEntry = {
   provider?: string | undefined;
   /** Kontextlänge (Tokens) */
   ctx?: number | undefined;
+  /** Kontextlänge in K (aus JSON abgeleitet) */
+  contextK?: number | undefined;
+  /** Rohwert der Kontextlänge in Tokens (aus JSON) */
+  contextTokens?: number | undefined;
   /** zusätzliche Tags/Hint */
   tags: string[];
   /** Preisschätzung (prompt/completion je 1k Tokens) */
   pricing?: Price | undefined;
   /** grobe Einordnung (nur für Heuristiken/Filter) */
   safety: ModelSafety;
+  /** Qualitäts-Score 0-100 aus JSON */
+  qualityScore?: number;
+  /** Offenheits-Score 0-1 (oder abgeleitet aus censor_score) */
+  openness?: number;
+  /** Censor Score 0-100 (optional) */
+  censorScore?: number;
+  /** Zusätzliche Hinweise aus JSON */
+  notes?: string;
   /** Sampling Capabilities: best-effort heuristics, optional in JSON */
   capabilities?: {
     temperature?: boolean;
@@ -46,6 +58,13 @@ type JsonModel = {
   desc: string;
   price_in: number;
   price_out: number;
+  context_tokens?: number;
+  context_k?: number;
+  quality_score?: number;
+  censor_score?: number;
+  openness?: number;
+  tags?: string[];
+  notes?: string;
   capabilities?: {
     temperature?: boolean;
     top_p?: boolean;
@@ -70,14 +89,14 @@ function deriveModelSafety(model: JsonModel): ModelSafety {
 }
 
 function deriveTags(model: JsonModel): string[] {
-  const tags: string[] = [];
+  const tags = new Set<string>(model.tags ?? []);
   if (model.price_in === 0 && model.price_out === 0) {
-    tags.push("free");
+    tags.add("free");
   }
   if (/:free$/.test(model.id)) {
-    tags.push("free");
+    tags.add("free");
   }
-  return tags;
+  return Array.from(tags);
 }
 
 function jsonModelToEntry(m: JsonModel): ModelEntry {
@@ -92,10 +111,22 @@ function jsonModelToEntry(m: JsonModel): ModelEntry {
     };
   }
 
+  const contextTokens =
+    m.context_tokens ?? (m.context_k ? Math.round(m.context_k * 1024) : undefined);
+  const openness =
+    m.openness ?? (typeof m.censor_score === "number" ? 1 - m.censor_score / 100 : undefined);
+
   return {
     id: m.id,
     label: m.name,
     description: m.desc,
+    ctx: contextTokens,
+    contextTokens,
+    contextK: m.context_k,
+    qualityScore: m.quality_score,
+    openness,
+    censorScore: m.censor_score,
+    notes: m.notes,
     ...(prov ? { provider: prov } : {}),
     ...(pricing ? { pricing } : {}),
     tags: deriveTags(m),

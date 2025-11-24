@@ -98,9 +98,11 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
   const outputPrice = coercePrice(entry.pricing?.out);
   const isFree = inputPrice === 0 || outputPrice === 0 || entry.tags.includes("free");
   const { heuristics } = MODEL_POLICY;
-  const maxTokens = entry.ctx ?? heuristics.defaultContextTokens;
+  const maxTokens = entry.ctx ?? entry.contextTokens ?? heuristics.defaultContextTokens;
+  const contextK = entry.contextK ?? (maxTokens ? Math.round(maxTokens / 1024) : undefined);
   const effectiveTokens = Math.floor(maxTokens * heuristics.effectiveContextRatio);
   const performanceProfile = isFree ? heuristics.performance.free : heuristics.performance.paid;
+  const qualityScore = entry.qualityScore ?? performanceProfile.quality;
 
   return {
     // Core properties from ModelEntry
@@ -122,19 +124,25 @@ function modelEntryToEnhanced(entry: ModelEntry): EnhancedModel {
       maxTokens,
       effectiveTokens,
     },
+    contextK,
+    contextTokens: maxTokens,
 
     // Performance scores (estimated based on model characteristics)
     performance: {
       speed: performanceProfile.speed,
       reliability: performanceProfile.reliability,
-      quality: performanceProfile.quality,
+      quality: qualityScore,
       efficiency: performanceProfile.efficiency,
     },
+    qualityScore,
+    openness: entry.openness,
+    censorScore: entry.censorScore,
 
     // Enhanced categorization
     tags: entry.tags,
     category: categorizeModelFromTags(entry.tags, isFree),
     tier: isFree ? "free" : determineTierFromPrice(inputPrice),
+    notes: entry.notes,
 
     // Favorites & Usage (default values)
     isFavorite: false,
