@@ -34,7 +34,6 @@ export function Chip({ children, variant = "default", size = "sm", className }: 
         "inline-flex items-center rounded-sm font-medium",
         "transition-all duration-fast",
         "select-none touch-manipulation",
-        "active:scale-[0.97] active:shadow-inset",
         variantClasses[variant],
         sizeClasses[size],
         className,

@@ -12,7 +12,6 @@ dist/
 .env.build
 
 # Test/Reports/Logs (Never commit these!)
-*.log
 # Playwright
 playwright-report/
 test-results/

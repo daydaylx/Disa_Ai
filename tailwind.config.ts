@@ -195,20 +195,6 @@ export default {
         "safe-left": "env(safe-area-inset-left)",
         "safe-right": "env(safe-area-inset-right)",
       },
-      keyframes: {
-        "liquid-gradient": {
-          "0%, 100%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-        },
-        "card-float": {
-          "0%, 100%": { transform: "translateY(-2px)" },
-          "50%": { transform: "translateY(2px)" },
-        },
-      },
-      animation: {
-        "liquid-gradient": "liquid-gradient 15s ease-in-out infinite",
-        "card-float": "card-float 8s ease-in-out infinite",
-      },
     },
   },
   plugins: [],

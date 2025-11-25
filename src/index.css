@@ -42,12 +42,6 @@
     color-scheme: dark;
   }
 
-  body {
-    background: linear-gradient(-45deg, #0f172a, #1e293b, #3b2864, #581c87);
-    background-size: 400% 400%;
-    animation: liquid-gradient 15s ease-in-out infinite;
-  }
-
   body::after {
     content: "";
     position: fixed;
@@ -107,14 +101,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    body {
-      animation: none !important;
-    }
-
-    .animate-card-float {
-      animation: none !important;
-    }
-
     .surface-card,
     .card-depth {
       transform: none !important;
