@@ -8,6 +8,15 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { RolesProvider } from "../../src/contexts/RolesContext";
 import { ToastsProvider } from "../../src/ui/toast";
 
+vi.mock("../../src/ui/SectionHeader", () => ({
+  SectionHeader: ({ title, subtitle }: { title: string; subtitle?: string }) => (
+    <div data-testid="section-header">
+      <h2>{title}</h2>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  ),
+}));
+
 beforeAll(() => {
   if (!("CSS" in window)) {
     Object.defineProperty(window, "CSS", { value: {}, writable: true });

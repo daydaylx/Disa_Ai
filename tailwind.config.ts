@@ -178,6 +178,11 @@ export default {
       },
       transitionDuration: motionDurations,
       transitionTimingFunction: motionEasings,
+      backdropBlur: {
+        subtle: "var(--backdrop-blur-subtle)", // 4px
+        medium: "var(--backdrop-blur-medium)", // 8px
+        strong: "var(--backdrop-blur-strong)", // 12px
+      },
       padding: {
         "safe-top": "env(safe-area-inset-top)",
         "safe-bottom": "env(safe-area-inset-bottom)",

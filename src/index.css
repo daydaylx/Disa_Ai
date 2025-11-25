@@ -28,6 +28,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tailwind CSS - after base imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================================================
    PROJECT-SPECIFIC STYLES
    ============================================================================ */

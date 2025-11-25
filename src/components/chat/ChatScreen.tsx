@@ -25,7 +25,7 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
   }, [messages]);
 
   return (
-    <div className="flex h-full flex-1 flex-col gap-4">
+    <div className="flex h-full max-h-[100dvh] flex-1 flex-col gap-4 overflow-hidden">
       <MaterialCard className="relative flex-1 overflow-hidden">
         <VirtualizedMessageList
           messages={messages}
@@ -34,7 +34,6 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
           isLoading={isLoading}
           className="px-2 py-4 sm:px-4"
         />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--bg0)] via-transparent to-transparent" />
       </MaterialCard>
 
       <ChatComposer

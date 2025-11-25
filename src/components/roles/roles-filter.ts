@@ -39,7 +39,7 @@ export function roleFilterFn(
   // WCAG: Filter mature content for age-appropriate display
   if (filters.hideMatureContent) {
     const tags = (role.tags || []).map((t) => t.toLowerCase());
-    const nsfwTags = ["mature", "nsfw", "adult", "erotic", "kink", "fetish", "18+"]; // conservative blocklist
+    const nsfwTags = ["mature", "nsfw", "adult", "erotic", "kink", "fetish", "18+", "bdsm"]; // conservative blocklist
     const hasBlockedTag = tags.some((tag) => nsfwTags.includes(tag));
     const hasAdultRating =
       typeof (role as any).ageRating === "string" &&

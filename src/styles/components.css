@@ -309,4 +309,21 @@
       transform: translateX(0);
     }
   }
+
+  /* Chat scroll container - fixes jumping and overlapping */
+  .chat-scroll-area {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Chat message stack - prevents layout shifts */
+  .chat-stack {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
 }

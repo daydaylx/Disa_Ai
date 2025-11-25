@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { Button, MaterialCard } from "@/ui";
 
@@ -42,12 +42,6 @@ export function VirtualizedMessageList({
     },
     [scrollRef],
   );
-
-  useEffect(() => {
-    if (isSticking && messages.length > 0) {
-      setTimeout(() => scrollToBottom(), 50);
-    }
-  }, [messages.length, isSticking, scrollToBottom]);
 
   const { visibleMessages, shouldVirtualize, hiddenCount } = useMemo(() => {
     const shouldVirtualize = messages.length > virtualizationThreshold;
@@ -106,7 +100,7 @@ export function VirtualizedMessageList({
         data-testid="virtualized-chat-log"
       >
         {shouldVirtualize && hiddenCount > 0 && (
-          <div className="sticky top-0 z-10 flex justify-center py-2">
+          <div className="sticky top-0 z-10 flex justify-center bg-[var(--bg0)] py-2">
             <Button
               onClick={loadOlderMessages}
               variant="secondary"

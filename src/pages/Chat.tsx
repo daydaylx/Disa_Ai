@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
+import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
@@ -260,21 +261,16 @@ export default function Chat() {
   );
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
+    <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
       {!isEmpty && infoBar}
       {isEmpty ? (
-        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)]">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-text-primary">
-                Was möchtest du heute mit Disa AI erledigen?
-              </h1>
-              <p className="text-sm text-text-secondary max-w-xl">
-                Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA
-                und ruhiges, fokussiertes Arbeiten.
-              </p>
-            </div>
-
+        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">
+          <div className="flex items-start justify-between gap-3">
+            <SectionHeader
+              variant="compact"
+              title="Chat-Start"
+              subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
+            />
             <button
               type="button"
               onClick={() => navigate("/chat/history")}
@@ -344,9 +340,9 @@ export default function Chat() {
         </div>
       )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] pb-[calc(var(--spacing-4)+env(safe-area-inset-bottom))] z-10">
+      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-10">
         <div
-          className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95"
+          className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
           ref={composerContainerRef}
         >
           <ChatComposer
