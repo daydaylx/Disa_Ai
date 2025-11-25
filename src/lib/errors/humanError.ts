@@ -66,9 +66,19 @@ export function humanError(error: unknown): HumanError {
 
   if (err.message.includes("NO_API_KEY")) {
     return {
-      title: "API-Key erforderlich",
-      message: "Kein API-Key konfiguriert.",
-      action: "Gehen Sie zu den Einstellungen und fügen Sie Ihren API-Key hinzu.",
+      title: "Verbindungsproblem",
+      message: "Die App konnte keine Verbindung zum öffentlichen Proxy herstellen.",
+      action:
+        "Prüfen Sie Ihre Internetverbindung oder fügen Sie einen eigenen API-Key in den Einstellungen hinzu.",
+    };
+  }
+
+  // Check for proxy-related errors
+  if (err.message.includes("Proxy-Fehler") || err.message.includes("proxy")) {
+    return {
+      title: "Proxy nicht erreichbar",
+      message: "Der öffentliche Proxy ist momentan nicht verfügbar.",
+      action: "Versuchen Sie es später erneut oder fügen Sie einen eigenen API-Key hinzu.",
     };
   }
 

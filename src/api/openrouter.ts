@@ -9,8 +9,9 @@ import { mapError } from "../lib/errors";
 import { fetchJson } from "../lib/http";
 import { chatConcurrency } from "../lib/net/concurrency";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
-import { readApiKey } from "../lib/openrouter/key";
+import { hasApiKey, readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
+import { chatOnceViaProxy, chatStreamViaProxy } from "./proxyClient";
 
 const MODEL_KEY = "disa_model";
 
@@ -76,7 +77,10 @@ export function getModelFallback() {
   }
 }
 
-export async function chatOnce(
+/**
+ * Direct call to OpenRouter API (requires user API key)
+ */
+async function chatOnceDirect(
   messages: ChatMessage[],
   opts?: { model?: string; signal?: AbortSignal; requestKey?: string },
 ) {
@@ -104,6 +108,25 @@ export async function chatOnce(
   });
 }
 
+/**
+ * Chat once - auto-routes to proxy or direct based on API key presence
+ * No API key needed when using proxy mode
+ */
+export async function chatOnce(
+  messages: ChatMessage[],
+  opts?: { model?: string; signal?: AbortSignal; requestKey?: string },
+) {
+  // AUTO-ROUTING: Use proxy if no user API key, otherwise direct
+  if (!hasApiKey()) {
+    return chatOnceViaProxy(messages, {
+      model: opts?.model,
+      signal: opts?.signal,
+    });
+  }
+
+  return chatOnceDirect(messages, opts);
+}
+
 type ChatRequestTuning = {
   temperature?: number;
   top_p?: number;
@@ -111,7 +134,10 @@ type ChatRequestTuning = {
   max_tokens?: number;
 };
 
-export async function chatStream(
+/**
+ * Direct streaming call to OpenRouter API (requires user API key)
+ */
+async function chatStreamDirect(
   messages: ChatMessage[],
   onDelta: (
     textDelta: string,
@@ -220,6 +246,39 @@ export async function chatStream(
       throw mapError(error);
     }
   });
+}
+
+/**
+ * Chat stream - auto-routes to proxy or direct based on API key presence
+ * No API key needed when using proxy mode
+ */
+export async function chatStream(
+  messages: ChatMessage[],
+  onDelta: (
+    textDelta: string,
+    messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
+  ) => void,
+  opts?: {
+    model?: string;
+    params?: ChatRequestTuning;
+    signal?: AbortSignal;
+    onStart?: () => void;
+    onDone?: (full: string) => void;
+    requestKey?: string;
+  },
+) {
+  // AUTO-ROUTING: Use proxy if no user API key, otherwise direct
+  if (!hasApiKey()) {
+    return chatStreamViaProxy(messages, onDelta, {
+      model: opts?.model,
+      params: opts?.params,
+      signal: opts?.signal,
+      onStart: opts?.onStart,
+      onDone: opts?.onDone,
+    });
+  }
+
+  return chatStreamDirect(messages, onDelta, opts);
 }
 
 /**
