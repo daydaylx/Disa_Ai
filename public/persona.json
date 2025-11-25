@@ -83,7 +83,7 @@
         "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
         "deepseek/deepseek-r1:free"
       ],
-      "tags": ["expert", "uncensored"]
+      "tags": ["expert", "uncensored", "mature"]
     },
     {
       "id": "nsfw_roleplay",
