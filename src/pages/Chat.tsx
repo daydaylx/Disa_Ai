@@ -27,7 +27,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
-  const { activeRole } = useRoles();
+  const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
@@ -124,6 +124,23 @@ export default function Chat() {
   useEffect(() => {
     setRequestOptions(requestOptions);
   }, [requestOptions, setRequestOptions]);
+
+  useEffect(() => {
+    if (!settings.showNSFWContent && activeRole) {
+      const isMature =
+        activeRole.category === "erwachsene" ||
+        activeRole.tags?.some((t) => ["nsfw", "adult", "18+", "erotic"].includes(t.toLowerCase()));
+
+      if (isMature) {
+        setActiveRole(null);
+        toasts.push({
+          kind: "warning",
+          title: "Rolle deaktiviert",
+          message: "Diese Rolle ist aufgrund deiner Jugendschutz-Einstellungen nicht verfügbar.",
+        });
+      }
+    }
+  }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
 
   useConversationManager({
     messages,

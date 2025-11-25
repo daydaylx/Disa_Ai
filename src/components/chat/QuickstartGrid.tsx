@@ -31,7 +31,7 @@ const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string
   kultur: { label: "Kultur", color: "bg-orange-500/10 text-orange-600" },
   verschwörungstheorien: {
     label: "Verschwörungstheorien",
-    color: "bg-orange-500/10 text-orange-600",
+    color: "bg-indigo-500/10 text-indigo-600",
   },
 };
 
@@ -412,7 +412,7 @@ export function QuickstartGrid({
           <div className="space-y-1">
             <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
               Verschwörungstheorien
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600">
                 Kontrovers
               </span>
             </h3>

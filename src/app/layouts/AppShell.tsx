@@ -42,13 +42,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
   return (
     <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[var(--bg0)]" />
-        <div
-          className="absolute inset-0 opacity-90"
-          style={{ backgroundImage: "var(--bg-gradient)" }}
-        />
+      {/* Aurora Background - Restore animated identity */}
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden brand-aurora aurora-animated">
+        {/* Fallback/Overlay for depth */}
+        <div className="absolute inset-0 bg-[var(--bg0)]/30 mix-blend-overlay" />
       </div>
+
       <div
         className="relative flex min-h-screen flex-col"
         style={{

@@ -166,7 +166,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     if (!selectedRoleId) return;
     const el = detailRefs.current[selectedRoleId];
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [selectedRoleId]);
 

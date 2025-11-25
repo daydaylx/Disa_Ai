@@ -200,7 +200,13 @@ async function chatStreamDirect(
 
       try {
         while (true) {
-          const { value, done } = await reader.read();
+          // CRITICAL FIX: Race reader against a timeout to prevent mobile hangs
+          const readPromise = reader.read();
+          const timeoutPromise = new Promise<ReadableStreamReadResult<Uint8Array>>((_, reject) => {
+            setTimeout(() => reject(new Error("STREAM_INACTIVITY_TIMEOUT")), 20000);
+          });
+
+          const { value, done } = await Promise.race([readPromise, timeoutPromise]);
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });

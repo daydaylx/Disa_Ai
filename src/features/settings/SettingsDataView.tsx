@@ -6,7 +6,7 @@ import { Button, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 import { StorageMigration } from "../../components/StorageMigration";
 import { useConversationStats } from "../../hooks/use-storage";
 import { useSettings } from "../../hooks/useSettings";
-import { Download, HardDrive, Upload } from "../../lib/icons";
+import { Download, HardDrive, Trash2, Upload } from "../../lib/icons";
 import type { ExportData } from "../../lib/storage-layer";
 import { ModernStorageLayer } from "../../lib/storage-layer";
 
@@ -20,6 +20,31 @@ export function SettingsDataView() {
   const [isImporting, setIsImporting] = useState(false);
   const [showMigration, setShowMigration] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDeleteAllConversations = async () => {
+    if (
+      confirm(
+        "ACHTUNG: Wirklich ALLE Gespräche unwiderruflich löschen? Dies kann nicht rückgängig gemacht werden.",
+      )
+    ) {
+      try {
+        await storageLayer.clearAllData();
+        await refresh();
+        toasts.push({
+          kind: "success",
+          title: "Daten gelöscht",
+          message: "Alle Gespräche wurden erfolgreich gelöscht.",
+        });
+      } catch (error) {
+        console.error("Delete all failed:", error);
+        toasts.push({
+          kind: "error",
+          title: "Fehler",
+          message: "Konnte Daten nicht löschen.",
+        });
+      }
+    }
+  };
 
   const handleExportConversations = async () => {
     setIsExporting(true);
@@ -311,6 +336,29 @@ export function SettingsDataView() {
                   Setzt Theme, Modellwahl, Kreativität und alle anderen Einstellungen auf
                   Standardwerte zurück. Gespräche und Daten werden nicht gelöscht.
                 </p>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="space-y-4 border-t border-red-200 dark:border-red-900/30 pt-4 mt-8">
+              <h3 className="text-sm font-semibold text-red-600 dark:text-red-400">Danger Zone</h3>
+
+              <div className="space-y-3 p-4 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/10 dark:border-red-900/30">
+                <h4 className="text-sm font-medium text-red-800 dark:text-red-300">
+                  Alle Gespräche löschen
+                </h4>
+                <p className="text-xs text-red-600/80 dark:text-red-400/80 leading-relaxed mb-3">
+                  Dies löscht unwiderruflich alle gespeicherten Gespräche und Metadaten aus der
+                  lokalen Datenbank.
+                </p>
+                <Button
+                  variant="secondary"
+                  onClick={handleDeleteAllConversations}
+                  className="w-full sm:w-auto flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-100 border-red-200"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Alle Gespräche endgültig löschen
+                </Button>
               </div>
             </div>
 
