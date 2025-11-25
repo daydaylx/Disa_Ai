@@ -29,7 +29,7 @@ const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string
   kultur: { label: "Kultur", color: "bg-orange-500/10 text-orange-600" },
   verschwörungstheorien: {
     label: "Verschwörungstheorien",
-    color: "bg-red-500/10 text-red-600 border border-red-500/20",
+    color: "bg-orange-500/10 text-orange-600",
   },
 };
 
@@ -474,16 +474,16 @@ export function QuickstartGrid({
 
       {/* Card 2: Conspiracy Theories – Separate card below */}
       {conspiracyDiscussions.length > 0 && (
-        <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3 border border-red-500/20">
+        <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)] space-y-3">
           <div className="space-y-1">
             <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
               Verschwörungstheorien
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 border border-red-500/20">
-                Kritisch prüfen
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600">
+                Kontrovers
               </span>
             </h3>
             <p className="text-xs text-text-secondary">
-              Kritisch diskutieren, nicht bestätigen. Evidenzbasiert Behauptungen prüfen.
+              Diskutiere kontroverse Theorien in strukturierten Antworten. Pro & Contra abwägen.
             </p>
           </div>
           {renderCarousel(conspiracyDiscussions)}
