@@ -30,10 +30,14 @@ export function useServiceWorker() {
     }
 
     const handleStateChange = (state: ServiceWorkerState) => {
-      if (state.needRefresh && !refreshToastShown.current) {
+      const hasShownUpdate = sessionStorage.getItem("disa-pwa-update-shown");
+
+      if (state.needRefresh && !refreshToastShown.current && !hasShownUpdate) {
         refreshToastShown.current = true;
+        sessionStorage.setItem("disa-pwa-update-shown", "true");
+
         push({
-          kind: "info",
+          kind: "warning", // Higher contrast/visibility for important updates
           title: "Update verfügbar",
           message: "Eine neue Version ist verfügbar. Jetzt aktualisieren?",
           duration: 0,
