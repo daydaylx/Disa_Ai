@@ -21,6 +21,7 @@
 @import "./styles/vertical-rhythm.css"; /* NEW: Vertical Rhythm and Typography System */
 @import "./styles/interactive-states.css"; /* NEW: Interactive States System */
 @import "./styles/ui-state-animations.css"; /* Universal State System animations */
+@import "./styles/logo-animations.css"; /* Logo animations for DISA AI branding */
 
 /* Tailwind CSS - after base imports */
 @tailwind base;
