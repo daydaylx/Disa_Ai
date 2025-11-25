@@ -62,7 +62,7 @@ export function AnimatedLogo({
         <span className="inline-block w-[0.25em]" aria-hidden="true" />
 
         {/* AI part with brand color */}
-        <span className="logo-ai-part text-brand inline-flex">
+        <span className="logo-ai-part text-brand">
           <span className="logo-letter">A</span>
           <span className="logo-letter">I</span>
         </span>
