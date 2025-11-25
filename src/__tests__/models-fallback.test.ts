@@ -1,98 +1,119 @@
 /**
- * Modelle werden ausschließlich aus der statischen Konfiguration geladen.
- * Diese Suite stellt sicher, dass /public/models.json die einzige Quelle ist
- * und Fehlerszenarien sauber abgefangen werden.
+ * Hybrid-Katalog: Live-Daten von OpenRouter + kuratierte Metadaten.
+ * Diese Suite stellt sicher, dass nur kostenlose Modelle angezeigt werden und
+ * Metadaten korrekt gemergt werden.
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadModelCatalog } from "../config/models";
 import { resolvePublicAssetUrl } from "../lib/publicAssets";
+import { getRawModels } from "../services/openrouter";
+
+vi.mock("../services/openrouter", () => ({
+  getRawModels: vi.fn(),
+}));
 
 const mockFetch = vi.fn();
 
-global.fetch = mockFetch;
+global.fetch = mockFetch as unknown as typeof fetch;
 
-describe("loadModelCatalog", () => {
+describe("loadModelCatalog (Hybrid)", () => {
+  const mockedGetRawModels = getRawModels as unknown as ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
+    mockedGetRawModels.mockReset();
     mockFetch.mockReset();
   });
 
-  it("lädt und normalisiert Einträge aus models.json", async () => {
+  it("kombiniert Live-Modelle mit Metadaten und filtert Non-Free Modelle heraus", async () => {
+    mockedGetRawModels.mockResolvedValueOnce([
+      {
+        id: "meta-llama/llama-3.3-70b-instruct:free",
+        name: "Llama 3.3 70B",
+        description: "API Beschreibung",
+        pricing: { prompt: 0, completion: 0 },
+        context_length: 131072,
+        tags: ["coding"],
+      },
+      {
+        id: "acme/paid-model",
+        name: "Acme Paid",
+        description: "Premium",
+        pricing: { prompt: 0.1, completion: 0.2 },
+        context_length: 4096,
+      },
+    ]);
+
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => {
-        await Promise.resolve();
-        return [
-          {
-            id: "openrouter/demo-free:free",
-            name: "Demo Free",
-            desc: "Kostenloses Testmodell",
-            price_in: 0,
-            price_out: 0,
+      json: () =>
+        Promise.resolve({
+          "meta-llama/llama-3.3-70b-instruct:free": {
+            qualityScore: 95,
+            openness: 0.8,
+            label: "Llama 3.3 70B (Gratis)",
+            description: "Kuratiert",
+            tags: ["logic"],
           },
-          {
-            id: "acme/paid-model",
-            name: "Acme Paid",
-            desc: "Premium Variante",
-            price_in: 0.1,
-            price_out: 0.2,
-          },
-        ];
-      },
+        }),
     });
 
     const models = await loadModelCatalog();
 
-    expect(mockFetch).toHaveBeenCalledWith(resolvePublicAssetUrl("models.json"), {
+    expect(mockedGetRawModels).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith(resolvePublicAssetUrl("models_metadata.json"), {
       cache: "no-store",
     });
-    expect(models).toHaveLength(2);
-    const freeModel = models.find((m) => m.id === "openrouter/demo-free:free");
-    const paidModel = models.find((m) => m.id === "acme/paid-model");
-
-    expect(freeModel).toMatchObject({
-      id: "openrouter/demo-free:free",
-      label: "Demo Free",
+    expect(models).toHaveLength(1);
+    expect(models[0]).toMatchObject({
+      id: "meta-llama/llama-3.3-70b-instruct:free",
+      label: "Llama 3.3 70B (Gratis)",
+      description: "Kuratiert",
+      qualityScore: 95,
+      openness: 0.8,
+      pricing: { in: 0, out: 0 },
+      provider: "meta-llama",
       safety: "free",
     });
-    expect(freeModel?.tags).toContain("free");
-    expect(freeModel?.pricing).toBeUndefined();
-    expect(paidModel).toMatchObject({
-      id: "acme/paid-model",
-      label: "Acme Paid",
-      description: "Premium Variante",
-      pricing: { in: 0.1, out: 0.2 },
-      safety: "moderate",
-    });
+    expect(models[0].tags).toEqual(expect.arrayContaining(["free", "coding", "logic"]));
+    expect(models[0].contextTokens).toBe(131072);
+    expect(models[0].contextK).toBe(128);
   });
 
-  it("gibt ein leeres Array zurück, wenn models.json leer ist", async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => {
-        await Promise.resolve();
-        return [];
+  it("nutzt API-Daten und Default-Werte, wenn Metadaten fehlen", async () => {
+    mockedGetRawModels.mockResolvedValueOnce([
+      {
+        id: "openrouter/new-free:free",
+        name: "New Free",
+        description: "API desc",
+        pricing: { prompt: 0, completion: 0 },
+        context_length: 2048,
       },
-    });
+    ]);
 
-    await expect(loadModelCatalog()).rejects.toThrow(/leer oder ungültig/);
+    mockFetch.mockResolvedValueOnce({ ok: false });
+
+    const models = await loadModelCatalog();
+
+    expect(models).toHaveLength(1);
+    expect(models[0]).toMatchObject({
+      id: "openrouter/new-free:free",
+      label: "New Free",
+      description: "API desc",
+      qualityScore: 50,
+      openness: 0.5,
+      pricing: { in: 0, out: 0 },
+    });
   });
 
-  it("fängt HTTP-Fehler ab und liefert eine leere Liste", async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-      statusText: "Server Error",
-    });
+  it("gibt eine leere Liste zurück, wenn Live-Daten nicht geladen werden können", async () => {
+    mockedGetRawModels.mockRejectedValueOnce(new Error("Network down"));
+    mockFetch.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({}) });
 
-    await expect(loadModelCatalog()).rejects.toThrow(/HTTP 500/);
-  });
+    const models = await loadModelCatalog();
 
-  it("behandelt Netzwerkfehler und liefert eine leere Liste", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Network down"));
-
-    await expect(loadModelCatalog()).rejects.toThrow(/Network down/);
+    expect(models).toEqual([]);
   });
 });

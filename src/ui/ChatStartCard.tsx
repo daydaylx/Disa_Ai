@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { History, MessageCircle } from "../lib/icons";
-import { Button } from "./Button";
+import { buttonVariants } from "./Button";
 import { PremiumCard } from "./PremiumCard";
 import { PrimaryButton } from "./PrimaryButton";
 
@@ -43,16 +43,17 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
           </PrimaryButton>
 
           {conversationCount > 0 && (
-            <Button
-              variant="secondary"
-              size="lg"
-              className="flex items-center justify-center gap-2 w-full sm:w-auto"
+            <Link
+              to="/chat/history"
+              className={buttonVariants({
+                variant: "secondary",
+                size: "lg",
+                className: "flex items-center justify-center gap-2 w-full sm:w-auto",
+              })}
             >
-              <Link to="/chat/history" className="flex items-center gap-2">
-                <History className="h-4 w-4" />
-                Verlauf ({conversationCount})
-              </Link>
-            </Button>
+              <History className="h-4 w-4" />
+              Verlauf ({conversationCount})
+            </Link>
           )}
         </div>
       </div>

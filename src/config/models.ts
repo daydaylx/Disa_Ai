@@ -1,4 +1,5 @@
 import { resolvePublicAssetUrl } from "../lib/publicAssets";
+import { getRawModels, type ORModel } from "../services/openrouter";
 
 /** Policy-Typ (wird von rolePolicy/roleStore/Settings importiert) */
 export type Safety = "any" | "moderate" | "strict" | "loose";
@@ -21,9 +22,9 @@ export type ModelEntry = {
   provider?: string | undefined;
   /** Kontextlänge (Tokens) */
   ctx?: number | undefined;
-  /** Kontextlänge in K (aus JSON abgeleitet) */
+  /** Kontextlänge in K (abgeleitet) */
   contextK?: number | undefined;
-  /** Rohwert der Kontextlänge in Tokens (aus JSON) */
+  /** Rohwert der Kontextlänge in Tokens */
   contextTokens?: number | undefined;
   /** zusätzliche Tags/Hint */
   tags: string[];
@@ -31,9 +32,9 @@ export type ModelEntry = {
   pricing?: Price | undefined;
   /** grobe Einordnung (nur für Heuristiken/Filter) */
   safety: ModelSafety;
-  /** Qualitäts-Score 0-100 aus JSON */
+  /** Qualitäts-Score 0-100 (kuratiert) */
   qualityScore?: number;
-  /** Offenheits-Score 0-1 (oder abgeleitet aus censor_score) */
+  /** Offenheits-Score 0-1 (kuratiert oder abgeleitet) */
   openness?: number;
   /** Censor Score 0-100 (optional) */
   censorScore?: number;
@@ -43,7 +44,7 @@ export type ModelEntry = {
   tier?: string;
   /** Zusätzliche Hinweise aus JSON */
   notes?: string;
-  /** Sampling Capabilities: best-effort heuristics, optional in JSON */
+  /** Sampling Capabilities: best-effort heuristics, optional */
   capabilities?: {
     temperature?: boolean;
     top_p?: boolean;
@@ -55,27 +56,12 @@ export type CatalogOptions = {
   preferOnline?: boolean;
 };
 
-/* ---- JSON Model Type ---- */
-type JsonModel = {
-  id: string;
-  name: string;
-  desc: string;
-  price_in: number;
-  price_out: number;
-  context_tokens?: number;
-  context_k?: number;
-  quality_score?: number;
-  censor_score?: number;
+type ModelMetadata = {
+  qualityScore?: number;
   openness?: number;
+  label?: string;
+  description?: string;
   tags?: string[];
-  recommended?: boolean;
-  tier?: string;
-  notes?: string;
-  capabilities?: {
-    temperature?: boolean;
-    top_p?: boolean;
-    presence_penalty?: boolean;
-  };
 };
 
 /* ---- interne Helfer ---- */
@@ -85,101 +71,77 @@ function deriveProvider(id: string): string | undefined {
   return ix > 0 ? id.slice(0, ix) : undefined;
 }
 
-function deriveModelSafety(model: JsonModel): ModelSafety {
-  const id = model.id.toLowerCase();
-  // Wenn beide Preise 0 sind oder :free im Namen → "free"
-  if ((model.price_in === 0 && model.price_out === 0) || /:free$/.test(id)) {
-    return "free";
-  }
-  return "moderate";
+/** Filtert strikt nach kostenlosen Modellen */
+function isFreeModel(model: ORModel): boolean {
+  if (model.id.endsWith(":free")) return true;
+
+  const promptPrice = parseFloat(String(model.pricing?.prompt ?? "0"));
+  const completionPrice = parseFloat(String(model.pricing?.completion ?? "0"));
+
+  return promptPrice === 0 && completionPrice === 0;
 }
 
-function deriveTags(model: JsonModel): string[] {
-  const tags = new Set<string>(model.tags ?? []);
-  if (model.price_in === 0 && model.price_out === 0) {
-    tags.add("free");
-  }
-  if (/:free$/.test(model.id)) {
-    tags.add("free");
-  }
-  return Array.from(tags);
+function deriveContextTokens(model: ORModel): number | undefined {
+  return model.context_length ?? model.top_provider?.context_length;
 }
 
-function jsonModelToEntry(m: JsonModel): ModelEntry {
-  const prov = deriveProvider(m.id);
-  let pricing: Price | undefined;
-
-  // Nur Pricing setzen wenn nicht beide 0 sind
-  if (m.price_in !== 0 || m.price_out !== 0) {
-    pricing = {
-      in: m.price_in,
-      out: m.price_out,
-    };
-  }
-
-  const contextTokens =
-    m.context_tokens ?? (m.context_k ? Math.round(m.context_k * 1024) : undefined);
-  const openness =
-    m.openness ?? (typeof m.censor_score === "number" ? 1 - m.censor_score / 100 : undefined);
-
-  return {
-    id: m.id,
-    label: m.name,
-    description: m.desc,
-    ctx: contextTokens,
-    contextTokens,
-    contextK: m.context_k,
-    qualityScore: m.quality_score,
-    openness,
-    censorScore: m.censor_score,
-    recommended: m.recommended,
-    tier: m.tier,
-    notes: m.notes,
-    ...(prov ? { provider: prov } : {}),
-    ...(pricing ? { pricing } : {}),
-    tags: deriveTags(m),
-    safety: deriveModelSafety(m),
-    ...(m.capabilities ? { capabilities: m.capabilities } : {}),
-  };
+function mergeTags(metaTags?: string[], apiTags?: string[]): string[] {
+  return Array.from(new Set(["free", ...(metaTags ?? []), ...(apiTags ?? [])]));
 }
 
-function byLabel(a: ModelEntry, b: ModelEntry) {
-  const A = (a.label ?? a.id).toLowerCase();
-  const B = (b.label ?? b.id).toLowerCase();
-  return A.localeCompare(B);
+function sortKnownFirst(
+  metadata: Record<string, ModelMetadata>,
+  a: ModelEntry,
+  b: ModelEntry,
+): number {
+  const knownA = metadata[a.id] ? 1 : 0;
+  const knownB = metadata[b.id] ? 1 : 0;
+  if (knownA !== knownB) return knownB - knownA;
+  return (a.label || a.id).localeCompare(b.label || b.id);
 }
 
 /* ---- Public API ---- */
 
 /**
- * Lädt Modelle aus /public/models.json
+ * Lädt den Hybrid-Katalog: Live-Modelle von OpenRouter + kuratierte Metadaten.
  */
 export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
-  const url = resolvePublicAssetUrl("models.json");
-
   try {
-    const response = await fetch(url, {
-      cache: "no-store",
+    const [apiModels, metadataResponse] = await Promise.all([
+      getRawModels(), // Live-Daten (lokal gecached im Service)
+      fetch(resolvePublicAssetUrl("models_metadata.json"), { cache: "no-store" }).catch(() => null),
+    ]);
+
+    let metadata: Record<string, ModelMetadata> = {};
+    if (metadataResponse?.ok) {
+      metadata = (await metadataResponse.json()) as Record<string, ModelMetadata>;
+    }
+
+    const mergedModels = apiModels.filter(isFreeModel).map((apiModel) => {
+      const meta = metadata[apiModel.id] ?? {};
+      const contextTokens = deriveContextTokens(apiModel);
+
+      const entry: ModelEntry = {
+        id: apiModel.id,
+        label: meta.label ?? apiModel.name ?? apiModel.id,
+        description: meta.description ?? apiModel.description ?? "Keine Beschreibung verfügbar.",
+        provider: deriveProvider(apiModel.id),
+        ctx: contextTokens,
+        contextTokens,
+        contextK: contextTokens ? Math.round(contextTokens / 1024) : undefined,
+        qualityScore: meta.qualityScore ?? 50,
+        openness: meta.openness ?? 0.5,
+        pricing: { in: 0, out: 0 },
+        tags: mergeTags(meta.tags, apiModel.tags),
+        safety: "free",
+      };
+
+      return entry;
     });
 
-    if (!response.ok) {
-      throw new Error(
-        `models.json konnte nicht geladen werden (HTTP ${response.status}: ${response.statusText})`,
-      );
-    }
-
-    const data: JsonModel[] = await response.json();
-
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("models.json ist leer oder ungültig (public/models.json)");
-    }
-
-    const models = data.map(jsonModelToEntry).sort(byLabel);
-    return models;
+    return mergedModels.sort((a, b) => sortKnownFirst(metadata, a, b));
   } catch (error) {
-    console.error(`[Models] Failed to load ${url}:`, error);
-    throw error instanceof Error
-      ? error
-      : new Error("Model-Katalog konnte nicht geladen werden (public/models.json)");
+    console.error("Fehler beim Laden des Hybrid-Katalogs:", error);
+    return [];
   }
 }

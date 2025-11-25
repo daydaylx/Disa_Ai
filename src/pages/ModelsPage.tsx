@@ -31,7 +31,7 @@ const formatContext = (k?: number, tokens?: number) => {
 };
 
 /**
- * Konvertiert ModelEntry aus models.json zu UI Model Format
+ * Konvertiert ModelEntry aus dem Hybrid-Katalog zu UI Model Format
  * Generiert heuristische Metriken basierend auf Preis und Modellgröße
  */
 function convertToUIModel(entry: ModelEntry): Model {

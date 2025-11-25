@@ -2,57 +2,109 @@
 
 ## Project Overview
 
-This is a professional, mobile-first AI chat Progressive Web App (PWA) built with React, Vite, TypeScript, and Tailwind CSS. The project emphasizes a clean codebase, robust build processes, and production-ready performance. It features a glassmorphism design and is optimized for mobile, particularly Android devices.
+Disa AI is a professional, mobile-first AI chat Progressive Web App (PWA). It is built with **React 19**, **Vite**, **TypeScript**, and **Tailwind CSS**, emphasizing a clean codebase, robust build processes, and production-ready performance. The application features a glassmorphism design and is optimized for mobile devices, particularly Android.
 
-The application is designed with a strong focus on security, with API keys managed via `sessionStorage` and a comprehensive Content Security Policy (CSP). It also includes a full suite of testing tools, including Vitest for unit tests and Playwright for end-to-end tests.
+### Key Features
+- **Mobile-First & PWA**: Optimized touch interactions, offline support, and installability.
+- **Modern Stack**: React 19, Vite 7, TypeScript 5.
+- **Security**: Ephemeral API key management (sessionStorage), comprehensive Content Security Policy (CSP).
+- **Architecture**: Modular, feature-based architecture.
+- **Cloud-Ready**: Configured for Cloudflare Pages/Workers.
 
-## Building and Running
+## Getting Started
 
-### Development
+### Prerequisites
+- Node.js (v20.19.0 - v24)
+- npm
 
-To run the development server:
-
+### Development Server
+Start the local development environment:
 ```bash
 npm run dev
 ```
 
-### Building
-
-To create a production build:
-
+### Production Build
+Create a production-ready build:
 ```bash
 npm run build
 ```
 
-### Testing
+Preview the production build locally:
+```bash
+npm run preview
+```
 
-To run unit tests:
+## Quality Assurance & Verification
 
+The project enforces strict code quality standards. It is recommended to run the verification script before pushing changes.
+
+### Verify All (Recommended)
+Runs type checking, linting, and unit tests in one command:
+```bash
+npm run verify
+```
+
+### Individual Checks
+- **Type Check**: `npm run typecheck`
+- **Linting**: `npm run lint` (or `npm run lint:fix` to autofix)
+- **Formatting**: `npm run format` (Prettier)
+
+## Testing
+
+The project employs a multi-layered testing strategy:
+
+### Unit Tests
+Powered by **Vitest**. Located in `src/__tests__` and co-located test files.
 ```bash
 npm run test:unit
 ```
 
-To run end-to-end tests:
+### Smoke Tests
+Fast verification of core paths.
+```bash
+npm run test:smoke
+```
 
+### End-to-End (E2E) Tests
+Powered by **Playwright**. Located in `tests/e2e`.
 ```bash
 npm run e2e
 ```
 
-## Development Conventions
+## Project Architecture
 
-### Coding Style
+The source code (`src/`) is organized by feature and responsibility:
 
-The project enforces a strict coding style using ESLint and Prettier. Configuration for these tools can be found in `eslint.config.mjs` and `.prettierrc.json` respectively. The project also uses `lint-staged` to automatically format and lint files before they are committed.
+- **`features/`**: Self-contained feature modules containing logic, state, and specific UI components.
+- **`ui/`**: Reusable, atomic design system components (Buttons, Cards, Inputs, etc.).
+- **`components/`**: Shared application-level components.
+- **`pages/`**: Route definitions and page-level views.
+- **`hooks/`**: Shared custom React hooks.
+- **`contexts/`**: Global state management (React Context).
+- **`services/`**: API clients and external service integrations.
+- **`lib/`**: Utility functions, helpers, and library configurations.
+- **`types/`**: Shared TypeScript definitions.
+- **`styles/`**: Global styles and Tailwind configuration.
+- **`api/`**: Backend logic (Cloudflare Workers/Pages Functions).
 
-### Testing
+## Deployment
 
-- **Unit Tests:** Vitest is used for unit testing. Test files are located in the `src/__tests__` directory.
-- **End-to-End Tests:** Playwright is used for E2E testing. E2E tests are located in the `tests/e2e` directory. The tests are designed to run offline, with network requests intercepted and mocked.
+The application is configured for deployment on **Cloudflare Pages**.
+Configuration is managed via `wrangler.toml`.
 
-### Commits and Contributions
+## Contribution Guidelines
 
-The project follows the **Conventional Commits** specification. This is enforced through commit hooks. The development model is **Trunk-Based Development**, with short-lived feature branches that are merged into the `main` branch.
+### Commits
+This project follows the **Conventional Commits** specification.
+Changesets are used for versioning and changelog generation.
 
-### Architecture
+To add a changeset for a PR:
+```bash
+npm run changeset
+```
 
-The project follows a clean architecture, with a clear separation of concerns. The main application entry point is `src/App.tsx`, which sets up the routing and providers. The application's features are organized into components, hooks, services, and views.
+### Directory Structure Highlights
+- `.github/workflows`: CI/CD pipelines (GitHub Actions).
+- `docs/`: Project documentation.
+- `tests/`: E2E and integration test configurations.
+- `scripts/`: Build and maintenance scripts.

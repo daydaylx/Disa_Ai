@@ -21,7 +21,6 @@ import { humanErrorToToast } from "../lib/errors/humanError";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 import { discussionPresets } from "../prompts/discussion/presets";
-import type { ChatMessageType } from "../types/chatMessage";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -181,33 +180,16 @@ export default function Chat() {
   }, [append, input, isLoading, setInput, toasts]);
 
   const startWithPreset = (system: string, user?: string) => {
-    // Setze System-Prompt für nachfolgende Requests, ohne sofort API-Calls zu triggern
+    // Setze System-Prompt für nachfolgende Requests (unsichtbar für Nutzer)
     setCurrentSystemPrompt(system);
 
-    const now = Date.now();
-    const presetMessages: ChatMessageType[] = [];
-
-    if (system) {
-      presetMessages.push({
-        id: `preset-system-${now}`,
-        role: "system",
-        content: system,
-        timestamp: now,
-      });
-    }
-
+    // Trigger sofort den Start der Diskussion, wenn eine User-Nachricht vorliegt
     if (user) {
-      presetMessages.push({
-        id: `preset-user-${now + 1}`,
+      void append({
         role: "user",
         content: user,
-        timestamp: now + 1,
       });
     }
-
-    // Zeige die kontextuellen Nachrichten an, aber warte auf echte User-Eingaben zum Senden
-    setMessages(presetMessages);
-    setInput("");
   };
 
   const focusComposer = () => {

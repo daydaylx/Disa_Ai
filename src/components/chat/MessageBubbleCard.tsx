@@ -33,7 +33,7 @@ export function MessageBubbleCard({
       variant={isUser ? "inset" : "raised"}
       spineSide={isUser ? "right" : "left"}
       className={cn(
-        "px-4 py-3 text-left animate-bubble-in",
+        "w-full max-w-[92vw] sm:max-w-3xl px-4 py-3 sm:px-5 sm:py-4 text-left animate-bubble-in",
         isUser ? "bg-surface-inset" : "bg-surface-2",
         className,
       )}
@@ -47,7 +47,7 @@ export function MessageBubbleCard({
         <span>{author}</span>
         <span className="text-[var(--text-muted)]">{formattedTime}</span>
       </div>
-      <p className="whitespace-pre-wrap text-sm leading-relaxed">{body}</p>
+      <p className="whitespace-pre-wrap text-base leading-7 sm:text-[17px] sm:leading-8">{body}</p>
     </MaterialCard>
   );
 }

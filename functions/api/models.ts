@@ -143,7 +143,7 @@ export const onRequestOptions: PagesFunction = async ({ request }) => {
   return new Response(null, { status: 204, headers: corsHeaders });
 };
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
   const origin = request.headers.get("Origin");
   const corsHeaders = createCorsHeaders(origin);
 

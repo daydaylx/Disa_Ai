@@ -409,62 +409,54 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         {role.description}
                       </p>
                     </div>
-
-                    {/* CARD FOOTER */}
-                    <div className="flex items-center justify-between pt-2 border-t border-surface-1">
-                      {/* Category Badge */}
-                      <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
-                        {role.category || "Spezial"}
-                      </span>
-                      {/* Usage indicator */}
-                      <div className="flex items-center gap-2">
-                        {isActive && (
-                          <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
-                            Aktiv
-                          </Badge>
-                        )}
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (isActive) {
-                              setActiveRole(null);
-                            } else {
-                              handleActivateRole(role);
-                            }
-                          }}
-                        >
-                          {isActive ? "Deaktivieren" : "Aktivieren"}
-                        </Button>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleRoleExpansion(role.id);
-                      }}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 -ml-2 min-h-[32px] touch-manipulation"
-                      aria-expanded={isExpanded}
-                      aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
-                    >
-                      <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
-                      <svg
-                        className={cn(
-                          "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
-                          isExpanded && "rotate-180",
-                        )}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
                   </PremiumCard>
+
+                  <div className="flex items-center justify-between gap-2 px-1">
+                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
+                      {role.category || "Spezial"}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {isActive && (
+                        <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
+                          Aktiv
+                        </Badge>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        onClick={() => {
+                          if (isActive) {
+                            setActiveRole(null);
+                          } else {
+                            handleActivateRole(role);
+                          }
+                        }}
+                      >
+                        {isActive ? "Deaktivieren" : "Aktivieren"}
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={() => toggleRoleExpansion(role.id)}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 min-h-[32px] touch-manipulation"
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+                      >
+                        <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
+                        <svg
+                          className={cn(
+                            "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
+                            isExpanded && "rotate-180",
+                          )}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
 
                   {isSelected && (
                     <div

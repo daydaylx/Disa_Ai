@@ -32,8 +32,10 @@ describe("humanError", () => {
     const error = new Error("NO_API_KEY");
     const result = humanError(error);
 
-    expect(result.title).toBe("API-Key erforderlich");
-    expect(result.message).toBe("Kein API-Key konfiguriert.");
+    expect(result.title).toBe("Verbindungsproblem");
+    expect(result.message).toBe(
+      "Die App konnte keine Verbindung zum öffentlichen Proxy herstellen.",
+    );
   });
 
   it("should convert to toast format", () => {

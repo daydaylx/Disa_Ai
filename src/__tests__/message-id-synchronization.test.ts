@@ -36,28 +36,40 @@ describe("Message ID Synchronization", () => {
         model: "test-model",
       };
 
-      // Mock chatStream to simulate server behavior
-      mockChatStream.mockImplementation((_messages, onDelta, opts) => {
-        // Simulate onStart callback
-        opts?.onStart?.();
+      // Mock fetch globally for this test
+      const mockFetch = vi.fn();
+      global.fetch = mockFetch;
 
-        // Simulate streaming with message metadata
-        onDelta("Hello", {
-          id: "assistant-123-456",
-          role: "assistant",
-          timestamp: Date.now(),
-          model: "test-model",
-        });
+      // Mock the worker response
+      const mockWorkerResponse = new Response(
+        new ReadableStream({
+          start(controller) {
+            const encoder = new TextEncoder();
 
-        onDelta(" world", {
-          id: "assistant-123-456",
-          role: "assistant",
-          timestamp: Date.now(),
-        });
+            // Simulate streaming response with choices
+            controller.enqueue(
+              encoder.encode(
+                'data: {"choices":[{"delta":{"content":"Hello"},"message":{"id":"assistant-123-456","role":"assistant"}}]}\n\n',
+              ),
+            );
+            controller.enqueue(
+              encoder.encode(
+                'data: {"choices":[{"delta":{"content":" world"},"message":{"id":"assistant-123-456","role":"assistant"}}]}\n\n',
+              ),
+            );
+            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
 
-        // Simulate completion
-        opts?.onDone?.("Hello world");
-      });
+            controller.close();
+          },
+        }),
+        {
+          headers: {
+            "Content-Type": "text/event-stream",
+          },
+        },
+      );
+
+      mockFetch.mockResolvedValue(mockWorkerResponse);
 
       const response = handleChatRequest(request);
       const reader = response.body?.getReader();

@@ -17,6 +17,7 @@ export interface HumanError {
 export function humanError(error: unknown): HumanError {
   const err = mapError(error);
 
+  // Authentication errors
   if (err instanceof AuthenticationError) {
     return {
       title: "Authentifizierung fehlgeschlagen",
@@ -25,6 +26,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // Permission and access errors
   if (err instanceof PermissionError) {
     return {
       title: "Zugriff verweigert",
@@ -33,6 +35,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // Rate limiting errors
   if (err instanceof RateLimitError) {
     return {
       title: "Rate-Limit erreicht",
@@ -41,6 +44,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // Server errors
   if (err instanceof ApiServerError) {
     return {
       title: "Serverfehler beim Anbieter",
@@ -49,6 +53,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // Network connectivity errors
   if (err instanceof NetworkError) {
     return {
       title: "Netzwerkfehler",
@@ -57,6 +62,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // User-initiated abort errors
   if (err instanceof AbortError) {
     return {
       title: "Anfrage abgebrochen",
@@ -64,6 +70,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
+  // API key and proxy related errors
   if (err.message.includes("NO_API_KEY")) {
     return {
       title: "Verbindungsproblem",
@@ -73,7 +80,7 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
-  // Check for proxy-related errors
+  // Proxy-related errors
   if (err.message.includes("Proxy-Fehler") || err.message.includes("proxy")) {
     return {
       title: "Proxy nicht erreichbar",
@@ -82,11 +89,11 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
-  // Fallback für ApiClientError und UnknownError
+  // Unknown or unhandled errors
   return {
-    title: "Ein Fehler ist aufgetreten",
-    message: err.message,
-    action: "Bitte versuchen Sie es erneut.",
+    title: "Ein unerwarteter Fehler ist aufgetreten",
+    message: "Die Anwendung hat einen Fehler, den sie nicht genau bestimmen kann.",
+    action: "Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
   };
 }
 

@@ -84,9 +84,9 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   const parsedContent = parseMessageContent(message.content);
 
   const bubbleClass = cn(
-    "max-w-[85%] text-left",
+    "w-full max-w-[92vw] sm:max-w-3xl text-left",
     isUser && "ml-auto text-right",
-    isSystem && "mx-auto max-w-[70%] text-center",
+    isSystem && "mx-auto max-w-[88vw] sm:max-w-2xl text-center",
   );
 
   const handleCopy = () => {
@@ -145,14 +145,14 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
 
         <MaterialCard
           variant={isUser ? "inset" : "raised"}
-          className={cn(bubbleClass, "p-4")}
+          className={cn(bubbleClass, "p-4 sm:p-5")}
           data-testid="message-bubble"
         >
           <div className="space-y-3">
             {parsedContent.map((part, index) => (
               <div key={index}>
                 {part.type === "text" ? (
-                  <div className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                  <div className="whitespace-pre-wrap text-base leading-7 sm:text-[17px] sm:leading-8">
                     {part.content}
                   </div>
                 ) : (

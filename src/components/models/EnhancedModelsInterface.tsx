@@ -568,110 +568,110 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             {filteredModels.map((model) => {
               const isActive = settings.preferredModelId === model.id;
               return (
-                <MaterialCard
-                  key={model.id}
-                  variant="raised"
-                  className={cn(
-                    "p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter",
-                    isActive && "ring-2 ring-brand shadow-raiseLg",
-                  )}
-                  onClick={() => handleSelectModel(model)}
-                >
-                  {/* CARD HEADER */}
-                  <div className="flex flex-col gap-2 mb-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
-                        <span className="truncate inline-block max-w-full" title={model.label}>
-                          {model.label}
-                        </span>
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        {isActive && (
-                          <Badge variant="secondary" className="text-[11px] bg-brand/10 text-brand">
-                            Aktiv
-                          </Badge>
-                        )}
-                        {model.pricing.isFree && (
-                          <Badge variant="secondary" className="text-xs">
-                            <Zap className="w-3 h-3 mr-1" />
-                            FREE
-                          </Badge>
-                        )}
+                <div key={model.id} className="space-y-2">
+                  <MaterialCard
+                    variant="raised"
+                    className={cn(
+                      "p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter",
+                      isActive && "ring-2 ring-brand shadow-raiseLg",
+                    )}
+                    onClick={() => handleSelectModel(model)}
+                  >
+                    {/* CARD HEADER */}
+                    <div className="flex flex-col gap-2 mb-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
+                          <span className="truncate inline-block max-w-full" title={model.label}>
+                            {model.label}
+                          </span>
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          {isActive && (
+                            <Badge
+                              variant="secondary"
+                              className="text-[11px] bg-brand/10 text-brand"
+                            >
+                              Aktiv
+                            </Badge>
+                          )}
+                          {model.pricing.isFree && (
+                            <Badge variant="secondary" className="text-xs">
+                              <Zap className="w-3 h-3 mr-1" />
+                              FREE
+                            </Badge>
+                          )}
+                        </div>
                       </div>
+
+                      <p className="text-sm text-text-secondary" title={model.provider}>
+                        {model.provider}
+                      </p>
                     </div>
 
-                    <p className="text-sm text-text-secondary" title={model.provider}>
-                      {model.provider}
-                    </p>
-                  </div>
+                    {/* Performance Bars */}
+                    <div className="space-y-2 mb-4">
+                      <PerformanceBar
+                        label="Qualität"
+                        value={model.qualityScore ?? 70}
+                        color="primary"
+                      />
+                      <PerformanceBar
+                        label="Kontext"
+                        value={model.contextScore ?? 0}
+                        color="success"
+                      />
+                      <PerformanceBar
+                        label="Offenheit"
+                        value={(model.openness ?? 0) * 100}
+                        color="warning"
+                      />
+                    </div>
 
-                  {/* Performance Bars */}
-                  <div className="space-y-2 mb-4">
-                    <PerformanceBar
-                      label="Qualität"
-                      value={model.qualityScore ?? 70}
-                      color="primary"
-                    />
-                    <PerformanceBar
-                      label="Kontext"
-                      value={model.contextScore ?? 0}
-                      color="success"
-                    />
-                    <PerformanceBar
-                      label="Offenheit"
-                      value={(model.openness ?? 0) * 100}
-                      color="warning"
-                    />
-                  </div>
+                    {/* Badges Row */}
+                    <div className="flex flex-wrap gap-2">
+                      {/* Price Info */}
+                      {!model.pricing.isFree && (
+                        <Badge variant="secondary" className="text-xs">
+                          <DollarSign className="w-3 h-3 mr-1" />
+                          {formatPricePerK(model.pricing.inputPrice)}
+                        </Badge>
+                      )}
 
-                  {/* Badges Row */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {/* Price Info */}
-                    {!model.pricing.isFree && (
                       <Badge variant="secondary" className="text-xs">
-                        <DollarSign className="w-3 h-3 mr-1" />
-                        {formatPricePerK(model.pricing.inputPrice)}
+                        {formatContext(model.context.maxTokens)} context
                       </Badge>
-                    )}
 
-                    <Badge variant="secondary" className="text-xs">
-                      {formatContext(model.context.maxTokens)} context
-                    </Badge>
+                      {/* Primary Tag */}
+                      {model.tags[0] && (
+                        <Badge
+                          variant="secondary"
+                          className="max-w-[100px] truncate text-xs"
+                          title={model.tags[0]}
+                        >
+                          {model.tags[0]}
+                        </Badge>
+                      )}
 
-                    {/* Primary Tag */}
-                    {model.tags[0] && (
-                      <Badge
-                        variant="secondary"
-                        className="max-w-[100px] truncate text-xs"
-                        title={model.tags[0]}
-                      >
-                        {model.tags[0]}
-                      </Badge>
-                    )}
+                      {/* Capabilities */}
+                      {model.capabilities.multimodal && (
+                        <Badge variant="secondary" className="text-xs" title="Multimodal">
+                          🖼️
+                        </Badge>
+                      )}
+                      {model.capabilities.codeGeneration && (
+                        <Badge variant="secondary" className="text-xs" title="Code Generation">
+                          💻
+                        </Badge>
+                      )}
+                    </div>
+                  </MaterialCard>
 
-                    {/* Capabilities */}
-                    {model.capabilities.multimodal && (
-                      <Badge variant="secondary" className="text-xs" title="Multimodal">
-                        🖼️
-                      </Badge>
-                    )}
-                    {model.capabilities.codeGeneration && (
-                      <Badge variant="secondary" className="text-xs" title="Code Generation">
-                        💻
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Action buttons row at bottom */}
-                  <div className="flex justify-end gap-2 mt-2">
+                  <div className="flex justify-end gap-2">
                     <Button
                       variant={isActive ? "secondary" : "primary"}
                       size="sm"
                       disabled={isActive}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleActivateModel(model);
-                      }}
+                      onClick={() => handleActivateModel(model)}
                     >
                       {isActive ? "Aktiv" : "Aktivieren"}
                     </Button>
@@ -684,10 +684,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                           ? "Von Favoriten entfernen"
                           : "Zu Favoriten hinzufügen"
                       }
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleFavorite(model);
-                      }}
+                      onClick={() => handleToggleFavorite(model)}
                     >
                       <Star
                         className={`w-4 h-4 ${
@@ -702,15 +699,12 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                       size="sm"
                       className="p-2 h-auto"
                       aria-label="Modelldetails anzeigen"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDetailsModel(model);
-                      }}
+                      onClick={() => setDetailsModel(model)}
                     >
                       <ChevronDown className="w-4 h-4" />
                     </Button>
                   </div>
-                </MaterialCard>
+                </div>
               );
             })}
           </div>
@@ -743,11 +737,11 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               </h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{modelLoadError}</p>
               <p className="text-sm text-text-meta">
-                Stelle sicher, dass{" "}
+                Prüfe deine Verbindung zur OpenRouter-API und ob die optionale Datei{" "}
                 <code className="px-2 py-1 bg-surface-inset shadow-inset rounded-sm">
-                  public/models.json
+                  public/models_metadata.json
                 </code>{" "}
-                existiert und korrekt formatiert ist.
+                vorhanden ist.
               </p>
             </div>
           )}

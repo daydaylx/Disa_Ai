@@ -1,0 +1,23 @@
+{
+  "deepseek/deepseek-r1:free": {
+    "label": "DeepSeek R1 (Reasoning)",
+    "description": "Kostenloses Reasoning-Flaggschiff. Denkt 'laut' nach und löst hochkomplexe Logik-Probleme. Aktuell eines der intelligentesten Modelle der Welt.",
+    "qualityScore": 98,
+    "openness": 0.7,
+    "tags": ["reasoning", "logic", "coding", "top-tier"]
+  },
+  "google/gemini-2.0-flash-exp:free": {
+    "label": "Gemini 2.0 Flash (Experimental)",
+    "description": "Experimentelles High-Speed Modell von Google. Extrem riesiger Kontext (1M Tokens) und sehr schnell. Perfekt für große Dokumente.",
+    "qualityScore": 94,
+    "openness": 0.4,
+    "tags": ["fast", "huge-context", "multimodal", "google"]
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "label": "Llama 3.3 70B Instruct",
+    "description": "Der Open-Source Standard. Sehr stabil, zuverlässig und gut im Befolgen von Anweisungen. Ein perfekter Allrounder.",
+    "qualityScore": 92,
+    "openness": 0.5,
+    "tags": ["balanced", "reliable", "chat", "standard"]
+  }
+}

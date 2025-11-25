@@ -226,12 +226,12 @@ export default defineConfig(({ mode }) => {
                       networkTimeoutSeconds: 10,
                     },
                   },
-                  // Cache models.json for offline use, always try network first
+                  // Cache kuratierte Metadaten für Offline-Use, immer erst Netzwerk
                   {
-                    urlPattern: /\/models\.json$/i,
+                    urlPattern: /\/models_metadata\.json$/i,
                     handler: "NetworkFirst",
                     options: {
-                      cacheName: "models-cache",
+                      cacheName: "models-metadata-cache",
                       expiration: {
                         maxEntries: 1,
                         maxAgeSeconds: 60 * 60 * 24, // 24 hours

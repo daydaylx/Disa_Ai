@@ -22,7 +22,7 @@ Das Projekt ist funktional und auf einer professionellen technischen Basis aufge
   - `styles/mobile-enhanced.css`
   - `styles/mobile-components.css`
   - `theme/tokens.css`
-- **Zentrale Konfiguration sicherstellen:** Verifiziere, dass alle Konfigurationen (`public/models.json`, `public/persona.json`) über einen zentralen Service oder Hook geladen und an die Komponenten weitergegeben werden, anstatt dass Komponenten diese direkt laden.
+- **Zentrale Konfiguration sicherstellen:** Verifiziere, dass alle Konfigurationen (Hybrid-Modellkatalog via OpenRouter + `public/models_metadata.json`, `public/persona.json`) über einen zentralen Service oder Hook geladen und an die Komponenten weitergegeben werden, anstatt dass Komponenten diese direkt laden.
 - **Namenskonventionen durchsetzen:** Benenne die Datei `src/components/Glass.tsx` zu `src/components/SoftDepthSurface.tsx` um, damit sie mit dem darin exportierten Komponentennamen (`SoftDepthSurface`) übereinstimmt.
 
 ## Phase 2: UI/UX Konsolidierung
@@ -30,13 +30,13 @@ Das Projekt ist funktional und auf einer professionellen technischen Basis aufge
 - **Primäres Designsystem festlegen:** Lege "Fluent 2 Soft-Depth" (basierend auf `theme/tokens.css` und `SoftDepthSurface.tsx`) als das einzige primäre Designsystem fest. Entferne alle CSS-Klassen und -Variablen, die diesem System widersprechen oder von einem anderen System (z.B. reines Glassmorphism) stammen.
 - **Globale Layout-Komponenten vereinheitlichen:** Überprüfe, ob die `MobileAppShell` (`src/app/layouts/MobileAppShell.tsx`) konsistent auf allen Seiten in `src/app/router.tsx` als Haupt-Layout-Wrapper verwendet wird. Extrahiere die Navigationsleiste aus der Shell in eine eigene, wiederverwendbare Komponente `src/components/layout/GlobalNav.tsx`.
 - **Mobile Navigation reparieren:** Stelle sicher, dass die mobile Navigation (vermutlich ein Hamburger-Menü in `GlobalNav.tsx`) korrekt über allen Inhalten als Overlay angezeigt wird und das Scrollen der darunterliegenden Seite unterbindet, wenn sie geöffnet ist.
-- **Seiten für Rollen/Modelle entwirren:** Überarbeite die Seiten `src/pages/MobileModels.tsx` und `src/pages/MobileStudio.tsx`. Füge clientseitige Filter- und Suchfunktionen hinzu. Implementiere eine Gruppierung der Einträge (z.B. nach Anbieter in `models.json` oder nach `tags` in `persona.json`), um die Übersichtlichkeit zu verbessern.
+- **Seiten für Rollen/Modelle entwirren:** Überarbeite die Seiten `src/pages/MobileModels.tsx` und `src/pages/MobileStudio.tsx`. Füge clientseitige Filter- und Suchfunktionen hinzu. Implementiere eine Gruppierung der Einträge (z.B. nach Anbieter aus dem Live-Katalog oder nach `tags` in `persona.json`), um die Übersichtlichkeit zu verbessern.
 
 ## Phase 3: Funktionale Schicht stabilisieren
 
 - **API-/Service-Layer zentralisieren:** Bestätige, dass alle externen API-Aufrufe ausschließlich über die Funktionen in `src/api/` (z.B. `openrouter.ts`) laufen. Refaktoriere eventuelle direkte `fetch`-Aufrufe in Komponenten in diese Service-Schicht.
 - **Fehlerbehandlung und Ladezustände vervollständigen:** Ergänze in der zentralen Chat-Logik (`useChat`-Hook) spezifische `catch`-Blöcke, um API-Fehler an die UI zu melden (z.B. über einen Toast-Service). Stelle sicher, dass alle Daten-ladenden Komponenten klare Lade-Indikatoren (Spinner, Skeleton) anzeigen.
-- **Konfiguration von der UI trennen:** Verifiziere, dass die UI-Komponenten zur Modell- und Persona-Auswahl ihre Daten ausschließlich aus dem globalen Zustand (geladen aus `models.json` und `persona.json`) beziehen und keine Konfigurationen hartcodiert sind.
+- **Konfiguration von der UI trennen:** Verifiziere, dass die UI-Komponenten zur Modell- und Persona-Auswahl ihre Daten ausschließlich aus dem globalen Zustand (Hybrid-Katalog + `persona.json`) beziehen und keine Konfigurationen hartcodiert sind.
 - **Sichere Speicherung von API-Keys:** Bestätige, dass die `readApiKey()`-Funktion in `src/lib/openrouter/key.ts` den Key ausschließlich aus dem `sessionStorage` liest und es keine Fallbacks auf `localStorage` oder hartcodierte Werte im Code gibt.
 
 ## Phase 4: DX / KI-Weiterverwendung

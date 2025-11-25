@@ -1,5 +1,7 @@
 import React from "react";
 
+import { CONSPIRACY_SYSTEM_PROMPT } from "@/features/conspiracy/prompts";
+import { DISCUSSION_SYSTEM_PROMPT } from "@/features/discussion/prompts";
 import { Brain, Link2, PenSquare } from "@/lib/icons";
 import { buttonVariants } from "@/ui/Button";
 import { PremiumCard } from "@/ui/PremiumCard";
@@ -33,328 +35,260 @@ const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string
   },
 };
 
-// Strikter Diskussionsmodus für Verschwörungstheorien
-// Implementiert 7-Schritte-Prozess: Rephrase → Steelman → Psychologie → Claims → Evidenz → Stresstest → Fazit
-const CONSPIRACY_DISCUSSION_MODE = `Du führst eine kritische, sokratische Diskussion zu einer Verschwörungstheorie. Ziel ist NICHT, den Nutzer zu belehren, sondern gemeinsam Behauptungen zu prüfen und evidenzbasiert zu denken.
-
-WICHTIGE LEITPLANKEN:
-- Trenne IMMER sichtbar: Behauptung ≠ Beleg
-- Vermeide unnötige Wiederholung der falschen Behauptung (Illusory-Truth-Effekt)
-- Keine Quellen erfinden, keine dramatische Ausschmückung
-- Evidenz-Labeling Pflicht: "gut belegt" / "unklar" / "widerlegt" / "Spekulation"
-- Sokratisch statt predigend: Fragen stellen, Logik testen, Selbst-Denken fördern
-- Keine Both-Sides-Gleichwertigkeit: Wenn Evidenz klar ist, sag das klar (aber erkläre es)
-
-ABLAUF JEDER RUNDE (strikt einhalten):
-
-**A. Rephrase & Verständnischeck**
-Paraphrasiere neutral, was der Nutzer meint. Kein Urteil. "Du meinst X, korrekt?"
-
-**B. Steelman (kurz, max 4–5 Sätze)**
-Formuliere die Theorie als Behauptung. Nutze Warn-Marker: "Folgende Behauptung kursiert..." oder "Die Theorie behauptet..."
-NICHT ausschmücken oder Details erfinden.
-
-**C. Warum überzeugt das Menschen?**
-Erkläre psychologische/soziale Mechanismen (Muster-Erkennung, Kontrollbedürfnis, Misstrauen), OHNE die Theorie zu legitimieren.
-
-**D. Typische Claims sammeln**
-Liste 3–5 zentrale Behauptungen auf. Kennzeichne sie explizit als "Behauptungen", nicht als Fakten.
-
-**E. Evidenz sortieren + Labels**
-Pro Claim:
-- Label vergeben: gut belegt / unklar / widerlegt / Spekulation
-- Alternative Erklärung anbieten (Debunking braucht eine Alternative, sonst bleibt ein Vakuum)
-- Kurz halten, nicht wiederholen
-
-**F. Sokratischer Stresstest**
-Stelle 2–3 Rückfragen:
-- "Ist das falsifizierbar? Welche Beobachtung würde die Theorie widerlegen?"
-- "Gibt es innere Widersprüche?"
-- "Welche alternative Erklärung ist simpler/plausibler?"
-
-**G. Gemeinsames Fazit**
-Fasse die Evidenzlage zusammen (nicht als Urteil, sondern als Ergebnis).
-Lade den Nutzer ein, weitere Fragen zu stellen oder Gegenargumente zu bringen.
-
-TONFALL: Ruhig, neugierig, respektvoll. Keine Anklage, kein Predigen. Ziel ist gemeinsames Denken.
-
-LÄNGE: Halte dich kurz (max. 6–8 Sätze pro Schritt). Nutzer lesen keine Romane.`;
-
 const QUICKSTARTS: Quickstart[] = [
   {
     id: "discussion-aliens",
     title: "Gibt es Außerirdische?",
-    description:
-      "Diskutiere prägnant, max. 5–6 Sätze pro Antwort. Argumentiere offen pro/contra, ohne so zu tun als gäbe es eine sichere Lösung.",
+    description: "Diskutiere Pro und Contra über außerirdisches Leben.",
     icon: Brain,
     category: "wissenschaft",
     speculative: true,
-    system:
-      "Wir führen eine lockere, argumentierende Diskussion. Du gibst ausgewogene Pro- und Contra-Punkte, fragst nach meiner Sicht und reagierst darauf. Keine Fachvorträge, eher Alltagslogik. Wenn etwas unklar ist, sag das offen.",
-    user: "Gibt es Außerirdische? Wie siehst du das?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Gibt es außerirdisches Leben?",
   },
   {
     id: "discussion-ai-risk",
-    title: "Wie gefährlich ist KI wirklich?",
-    description:
-      "Keine Panikmache, keine Verharmlosung. Diskutiere Nutzen vs. Risiken, mit echten Gegenargumenten.",
+    title: "Wie gefährlich ist KI?",
+    description: "Nutzen vs. Risiken – sachlich abwägen.",
     icon: Brain,
     category: "kultur",
     speculative: false,
-    system:
-      "Diskutiere mit mir wie in einem normalen Gespräch. Erst kurze Einordnung, dann Pro- und Contra-Argumente, dann eine Rückfrage an mich. Nutze einfache Beispiele statt Fachjargon. Ziel: echtes Abwägen, kein Predigen.",
-    user: "Wie gefährlich ist KI deiner Meinung nach?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Wie gefährlich ist Künstliche Intelligenz wirklich?",
   },
   {
     id: "discussion-minimum-wage",
-    title: "Macht eine Mindestlohn-Erhöhung Sinn?",
-    description: "Abwägen statt Parolen: Vorteile, Nachteile, wer gewinnt, wer verliert.",
+    title: "Mindestlohn erhöhen?",
+    description: "Ökonomische Vor- und Nachteile beleuchten.",
     icon: PenSquare,
     category: "realpolitik",
     speculative: false,
-    system:
-      "Führe eine ausgewogene Diskussion. Liefere je 2–3 klare Argumente pro und contra, erwähne Unsicherheiten, und frag mich nach meiner Position. Keine Zahlen-Wüste, sondern nachvollziehbare Logik.",
-    user: "Sollte der Mindestlohn steigen?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Macht eine starke Erhöhung des Mindestlohns Sinn?",
   },
   {
     id: "discussion-social-media",
-    title: "Sollten soziale Medien stärker reguliert werden?",
-    description: "Freiheit vs. Schutz: Wo zieht man Grenzen? Diskutiere beides fair.",
+    title: "Social Media Regulierung",
+    description: "Freiheit vs. Schutz im digitalen Raum.",
     icon: Brain,
     category: "realpolitik",
     speculative: false,
-    system:
-      "Diskutiere fair und nicht zu technisch. Bring Argumente beider Seiten, zeig Graubereiche, stell mir am Ende eine offene Frage zur Einschätzung.",
-    user: "Wie stark sollten soziale Medien reguliert sein?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Sollten soziale Medien stärker reguliert werden?",
   },
   {
     id: "discussion-nuclear-energy",
-    title: "Ist Kernenergie sinnvoll für die Energiewende?",
-    description: "Pragmatisch diskutieren: Klima, Kosten, Risiken, Realität.",
+    title: "Kernenergie & Energiewende",
+    description: "Pragmatischer Blick auf Atomkraft.",
     icon: Brain,
     category: "realpolitik",
     speculative: false,
-    system:
-      "Kurze, alltagsnahe Diskussion mit echten Gegenargumenten. Kein Experten-Gelaber. Pro/contra, dann Rückfrage an mich. Erkenne an, dass es mehrere vernünftige Sichtweisen gibt.",
-    user: "Sollte Kernenergie Teil der Energiewende sein?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Ist Kernenergie sinnvoll für die Energiewende?",
   },
-  // NEU: 10 zusätzliche Diskussionsrunden mit Fokus auf Hypothesen, Was-wäre-wenn, Theorie-Spin
   {
     id: "discussion-ai-laws",
-    title: "KI schreibt Gesetze – gut oder gefährlich?",
-    description: "Gedankenexperiment: Was passiert, wenn Algorithmen Gesetzestexte formulieren?",
+    title: "KI als Gesetzgeber?",
+    description: "Was wäre, wenn Algorithmen Gesetze schreiben?",
     icon: Brain,
     category: "hypothetisch",
     speculative: true,
-    system:
-      "Hypothetisches Szenario-Brainstorming. Diskutiere Chancen (Objektivität, Geschwindigkeit) vs. Risiken (Bias, fehlende Ethik). Trenne klar: Was ist technisch möglich (Fakten), was ist Spekulation über Zukunft. Stelle Gegenfragen, um Annahmen zu testen.",
-    user: "Was wäre, wenn KI unsere Gesetze schreiben würde?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Was wäre, wenn eine KI unsere Gesetze schreiben würde?",
   },
   {
     id: "discussion-simulation",
     title: "Leben wir in einer Simulation?",
-    description: "Simulation-Hypothese: Philosophisches Gedankenspiel, keine gesicherte Wahrheit.",
+    description: "Philosophisches Gedankenexperiment.",
     icon: Brain,
     category: "wissenschaft",
     speculative: true,
-    system:
-      "WICHTIG: Dies ist eine philosophische Hypothese, KEINE bewiesene Tatsache. Diskutiere Argumente (Bostrom, etc.) vs. Gegenargumente. Mache klar, was Spekulation ist. Trenne: 'Das ist ein Gedankenexperiment' vs. 'Das ist gesichert'. Frage nach, welche Annahmen ich für plausibel halte.",
-    user: "Simulation-Hypothese – was hältst du davon?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Die Hypothese, dass wir in einer Simulation leben.",
   },
   {
     id: "discussion-time-travel",
-    title: "Zeitreisen: Paradoxien und Physik",
-    description: "Theoretisch möglich? Großvater-Paradoxon? Diskutiere wissenschaftlich fundiert.",
+    title: "Sind Zeitreisen möglich?",
+    description: "Physik vs. Science-Fiction Paradoxien.",
     icon: Brain,
     category: "wissenschaft",
     speculative: true,
-    system:
-      "Trenne klar: Was sagt die Physik (Relativitätstheorie, Wurmlöcher = theoretisch möglich, aber praktisch unerreichbar) vs. Science-Fiction. Diskutiere Paradoxien, aber kennzeichne, was Spekulation ist. Biete Gegenargumente und frage nach meiner Intuition.",
-    user: "Sind Zeitreisen jemals möglich?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Sind Zeitreisen theoretisch möglich?",
   },
   {
     id: "discussion-free-energy",
-    title: "Was wäre bei kostenloser Energie?",
-    description:
-      "Ökonomisches Gedankenexperiment: Gesellschaft, Arbeit, Umwelt – alles neu denken.",
+    title: "Szenario: Kostenlose Energie",
+    description: "Was würde sich gesellschaftlich ändern?",
     icon: Brain,
     category: "hypothetisch",
     speculative: true,
-    system:
-      "Hypothetisches Szenario: Angenommen, Energie wäre morgen kostenlos verfügbar. Diskutiere realistische Konsequenzen (Wirtschaft, Verteilung, neue Probleme) vs. utopische Träume. Frage nach, welche Annahmen ich treffe. Zeige Pro/Contra klar auf.",
-    user: "Was würde passieren, wenn Energie kostenlos wäre?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Was würde passieren, wenn Energie plötzlich kostenlos wäre?",
   },
   {
     id: "discussion-car-free-city",
-    title: "Stadt ohne Autos – Utopie?",
-    description: "Urbanes Experiment: Lebensqualität vs. Praktikabilität. Was geht wirklich?",
+    title: "Autofreie Städte",
+    description: "Lebensqualität vs. Mobilität.",
     icon: Brain,
     category: "hypothetisch",
     speculative: false,
-    system:
-      "Diskutiere ausgewogen: Erfolgsbeispiele (Kopenhagen, Barcelona Superblocks) vs. Herausforderungen (Mobilität, Akzeptanz). Trenne Idealvorstellung vs. Realpolitik. Stelle Rückfragen: Was ist mir wichtiger – Ruhe oder Flexibilität?",
-    user: "Könnte eine Stadt komplett autofrei funktionieren?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Könnte eine Großstadt komplett autofrei funktionieren?",
   },
   {
     id: "discussion-tech-religion",
-    title: "Ist Technik die neue Religion?",
-    description: "Kulturbeobachtung: Tech-Gurus, Heilsversprechen, Glaubenskriege. Übertrieben?",
+    title: "Technik als Religion",
+    description: "Glaube an den Fortschritt vs. Spiritualität.",
     icon: Brain,
     category: "kultur",
     speculative: false,
-    system:
-      "Kulturkritische Diskussion. Vergleiche Parallelen (Heilsversprechen, Gurus, Community) vs. Unterschiede (Evidenz, Testbarkeit). Keine Anklage, sondern neugierige Analyse. Frage nach: Wo sehe ich religiöse Muster?",
-    user: "Wird Technik wie eine Religion behandelt?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Nimmt Technologie mittlerweile religiöse Züge an?",
   },
   {
     id: "discussion-ubi",
-    title: "Bedingungsloses Grundeinkommen – Traum oder Falle?",
-    description: "Sozialökonomische Kontroverse: Freiheit vs. Faulheit. Was sagen Experimente?",
+    title: "Bedingungsloses Grundeinkommen",
+    description: "Soziales Experiment oder Notwendigkeit?",
     icon: PenSquare,
     category: "realpolitik",
     speculative: false,
-    system:
-      "Diskutiere evidenzbasiert: Was zeigen Pilotprojekte (Finnland, Kenia)? Argumente pro (Entlastung, Kreativität) vs. contra (Finanzierung, Arbeitsmoral). Trenne Hoffnungen vs. Daten. Stelle Gegenfragen zu Annahmen.",
-    user: "Sollten wir ein bedingungsloses Grundeinkommen einführen?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Sollten wir ein bedingungsloses Grundeinkommen einführen?",
   },
   {
     id: "discussion-trends-manipulation",
-    title: "Trends: organisch oder manipuliert?",
-    description:
-      "Medienkritik: Entstehen Hypes natürlich oder werden sie gemacht? Wo ist die Grenze?",
+    title: "Hypes & Manipulation",
+    description: "Wie natürlich sind Internet-Trends?",
     icon: Brain,
     category: "kultur",
     speculative: false,
-    system:
-      "Analysiere kritisch: Was ist organisches Interesse vs. Astroturfing/Algorithmen-Boost? Beispiele (TikTok, Memes, Mode). Keine Verschwörungstheorien, sondern nachvollziehbare Mechanismen. Frage: Welche Trends halte ich für echt?",
-    user: "Sind kulturelle Trends echt oder manipuliert?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Sind kulturelle Trends echt oder manipuliert?",
   },
   {
     id: "discussion-mars-2050",
-    title: "Menschen auf dem Mars bis 2050?",
-    description: "Technologie-Zukunft: Musk, NASA, Realismus. Was ist machbar, was ist Hype?",
+    title: "Menschen auf dem Mars",
+    description: "Realismus der Raumfahrt-Pläne.",
     icon: Brain,
     category: "hypothetisch",
     speculative: true,
-    system:
-      "Trenne klar: Technische Machbarkeit (Raketen, Lebenserhaltung = lösbar) vs. praktische Hürden (Kosten, Strahlung, Psychologie). Diskutiere Musk-Versprechen kritisch, aber respektvoll. Frage nach: Was hältst du für realistisch?",
-    user: "Werden bis 2050 Menschen dauerhaft auf dem Mars leben?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Werden bis 2050 Menschen dauerhaft auf dem Mars leben?",
   },
   {
     id: "discussion-fermi-paradox",
-    title: "Wo sind all die Aliens?",
-    description:
-      "Fermi-Paradoxon: Milliarden Sterne, aber keine Signale. Warum? Diskutiere Theorien.",
+    title: "Das Fermi-Paradoxon",
+    description: "Warum hören wir nichts von Aliens?",
     icon: Brain,
     category: "wissenschaft",
     speculative: true,
-    system:
-      "Wissenschaftlich fundierte Spekulation. Diskutiere Lösungsvorschläge: Große Filter, Zoo-Hypothese, Rare Earth. Mache klar: Alles Hypothesen, keine bewiesenen Fakten. Frage nach: Welche Erklärung erscheint mir plausibler?",
-    user: "Fermi-Paradoxon – warum finden wir keine außerirdische Intelligenz?",
+    system: DISCUSSION_SYSTEM_PROMPT,
+    user: "Lass uns diskutieren: Das Fermi-Paradoxon – wo sind alle?",
   },
 
   // ============================================================================
-  // VERSCHWÖRUNGSTHEORIEN – Kritisch diskutieren (10 kuratierte Themen)
+  // VERSCHWÖRUNGSTHEORIEN
   // ============================================================================
   {
     id: "conspiracy-flat-earth",
     title: "Flache Erde",
-    description: "Diskutiere die Behauptung kritisch. Was sagt die Evidenz?",
+    description: "Kritische Einordnung der Flat-Earth-Theorie.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Ist die Erde flach? Was spricht dafür, was dagegen?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Die Theorie der flachen Erde.",
   },
   {
     id: "conspiracy-reptilians",
     title: "Reptiloiden",
-    description: "Menschen-Echsen in Machtpositionen? Prüfen wir das gemeinsam.",
+    description: "Analyse der Theorie über Echsenmenschen.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Gibt es Reptiloiden, die die Welt regieren?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Die Theorie, dass Reptiloiden die Welt regieren.",
   },
   {
     id: "conspiracy-moon-landing",
-    title: "Mondlandung gefälscht",
-    description: "War die Apollo 11-Landung ein Hollywood-Fake?",
+    title: "Mondlandung",
+    description: "Faktencheck zur angeblichen Fälschung.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "War die Mondlandung ein Fake?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Die Theorie, dass die Mondlandung gefälscht war.",
   },
   {
     id: "conspiracy-chemtrails",
     title: "Chemtrails",
-    description: "Kondensstreifen oder Gift? Was sagt die Wissenschaft?",
+    description: "Wettermanipulation oder Kondensstreifen?",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Sind Chemtrails real?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Chemtrails.",
   },
   {
     id: "conspiracy-bermuda-triangle",
     title: "Bermuda-Dreieck",
-    description: "Mysteriöse Schiffs- und Flugzeugverluste – oder statistische Normalität?",
+    description: "Mythos und statistische Realität.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Was ist dran am Bermuda-Dreieck?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Das Geheimnis des Bermuda-Dreiecks.",
   },
   {
     id: "conspiracy-ancient-aliens",
-    title: "Ancient Aliens / Pyramiden",
-    description: "Haben Außerirdische die Pyramiden gebaut?",
+    title: "Ancient Aliens",
+    description: "Pyramiden und außerirdische Besucher.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Wurden die Pyramiden von Aliens gebaut?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Die Theorie der Ancient Aliens und Pyramidenbau.",
   },
   {
     id: "conspiracy-area51",
-    title: "Area 51 / UFO-Vertuschung",
-    description: "Geheime Alien-Technologie oder Militärforschung?",
+    title: "Area 51",
+    description: "Was verbirgt das US-Militär wirklich?",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Was wird in Area 51 wirklich verheimlicht?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Verschwörungstheorien um Area 51.",
   },
   {
     id: "conspiracy-denver-airport",
-    title: "Denver Airport / Geheimanlage",
-    description: "Illuminati-Symbolik und unterirdische Bunker?",
+    title: "Denver Airport",
+    description: "Symbolik und Bunker-Theorien.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Ist der Denver Airport eine geheime Illuminati-Anlage?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Verschwörungstheorien zum Denver Airport.",
   },
   {
     id: "conspiracy-mkultra",
     title: "MK-Ultra",
-    description: "CIA-Gedankenkontrolle: historisch belegt, aber wie weit ging es?",
+    description: "Fakten vs. Mythen zur Gedankenkontrolle.",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: false,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Was war MK-Ultra und wie weit gingen die Experimente?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Das MK-Ultra Programm.",
   },
   {
     id: "conspiracy-simulation",
-    title: "Simulation-Hypothese",
-    description: "Philosophisches Gedankenexperiment: Leben wir in einer Matrix?",
+    title: "Simulation-Theorie",
+    description: "Leben wir in einer Matrix? (Kritischer Blick)",
     icon: Brain,
     category: "verschwörungstheorien",
     speculative: true,
-    system: CONSPIRACY_DISCUSSION_MODE,
-    user: "Leben wir in einer Simulation?",
+    system: CONSPIRACY_SYSTEM_PROMPT,
+    user: "Thema: Die Simulation-Theorie als Verschwörungsmythos.",
   },
 ];
 
@@ -466,7 +400,7 @@ export function QuickstartGrid({
         <div className="space-y-1">
           <h3 className="text-lg font-bold text-text-primary">Diskussionen</h3>
           <p className="text-xs text-text-secondary">
-            Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert.
+            Wähle ein Thema und starte eine Diskussion mit der KI.
           </p>
         </div>
         {renderCarousel(regularDiscussions)}
@@ -483,7 +417,7 @@ export function QuickstartGrid({
               </span>
             </h3>
             <p className="text-xs text-text-secondary">
-              Diskutiere kontroverse Theorien in strukturierten Antworten. Pro & Contra abwägen.
+              Hier kannst du kontroverse Themen kritisch mit einer KI besprechen.
             </p>
           </div>
           {renderCarousel(conspiracyDiscussions)}

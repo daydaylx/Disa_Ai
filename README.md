@@ -218,9 +218,9 @@ Die Anwendung ist hochgradig konfigurierbar, um Flexibilität und einfache Wartu
   - `getVirtualListEnabled()` / `setVirtualListEnabled()`: Aktiviert/deaktiviert die Virtualisierung der Modell-Liste.
 
   - **Modell-Katalog (`src/config/models.ts`)**
-    Diese Datei lädt den Modellkatalog aus der statischen Quelle `public/models.json` (Single Source of Truth für die UI) und passt ihn für die Oberflächen an.
-    - `loadModelCatalog()`: Holt `models.json` immer relativ zu `import.meta.env.BASE_URL`, um Deployments unter Unterpfaden zu unterstützen, und nutzt `cache: "no-store"`, damit PWA-/SW-Caches keine veralteten Daten ausliefern.
-    - `GERMAN_DESCRIPTIONS`: Ein großes Mapping, das den oft kryptischen API-Beschreibungen verständliche deutsche Erklärungen zuweist.
+    Hybrid-Ansatz: Live-Liste von OpenRouter + optionale kuratierte Metadaten aus `public/models_metadata.json`.
+    - `loadModelCatalog()`: Lädt parallel die OpenRouter-Modelle (`getRawModels()`) und die Metadaten-Datei, filtert strikt kostenlose Modelle (`:free` oder Preis 0) und merged Beschreibungen/Labels/Quality-Scores.
+    - Fallbacks: Wenn Metadaten fehlen, werden API-Beschreibungen und Default-Werte (`qualityScore` 50, `openness` 0.5) verwendet.
 
   - **Personas / Rollen (`public/persona.json`)**
     Eine zentrale JSON-Datei, die die verschiedenen "Persönlichkeiten" definiert, die die KI annehmen kann.

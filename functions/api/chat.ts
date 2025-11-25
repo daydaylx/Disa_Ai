@@ -11,8 +11,8 @@ import {
 } from "../../shared/openrouter";
 
 const ALLOWED_ORIGIN = "https://disaai.de";
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX_REQUESTS = 20;
+const _RATE_LIMIT_WINDOW_MS = 60_000;
+const _RATE_LIMIT_MAX_REQUESTS = 20;
 
 // Import allowed models from models.ts to avoid duplication
 import { ALLOWED_FREE_MODEL_IDS } from "./models";
@@ -28,7 +28,7 @@ const MIN_TEMPERATURE = 0.0;
 // Soft rate limiting
 const BURST_LIMIT_MS = 3000; // Minimum 3 seconds between requests
 const DAILY_BUDGET = 40; // 40 requests per day per IP
-const SOFT_THROTTLE_COOLDOWN_MS = 90000; // 90 seconds cooldown
+const _SOFT_THROTTLE_COOLDOWN_MS = 90000; // 90 seconds cooldown
 
 interface Env {
   OPENROUTER_API_KEY: string;
