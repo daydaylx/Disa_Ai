@@ -1,0 +1,295 @@
+/**
+ * DISA AI Logo Animations
+ *
+ * Brand-focused animations for the DISA AI wordmark.
+ * Features breathing effects, hover interactions, and state-based animations.
+ */
+
+/* ============================================================================
+   ANIMATION TOKENS
+   ============================================================================ */
+
+:root {
+  /* Logo Animation Durations */
+  --logo-breath-duration: 3000ms;
+  --logo-hover-duration: 200ms;
+  --logo-loading-duration: 1800ms;
+  --logo-letter-stagger: 60ms;
+
+  /* Logo Animation Easings */
+  --logo-ease-breath: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  --logo-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --logo-ease-smooth: cubic-bezier(0.33, 0.85, 0.36, 0.99);
+
+  /* Brand Glow Colors */
+  --logo-glow-brand: rgba(139, 92, 246, 0.4); /* Lila */
+  --logo-glow-ai: rgba(139, 92, 246, 0.6); /* Stronger for AI part */
+}
+
+/* ============================================================================
+   KEYFRAME ANIMATIONS
+   ============================================================================ */
+
+/* Breathing effect - subtle opacity pulse */
+@keyframes logo-breathe {
+  0%, 100% {
+    opacity: 0.92;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Individual letter hover bounce */
+@keyframes logo-letter-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
+/* Glow pulse for AI part */
+@keyframes logo-ai-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px var(--logo-glow-ai));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px var(--logo-glow-ai));
+  }
+}
+
+/* Loading wave effect */
+@keyframes logo-loading-wave {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-3px);
+  }
+  40% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Typing effect stagger */
+@keyframes logo-type-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Cursor blink for thinking state */
+@keyframes logo-cursor-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   LOGO COMPONENT CLASSES
+   ============================================================================ */
+
+/* Base logo wrapper */
+.logo-animated {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  will-change: transform, opacity;
+}
+
+/* Individual letter wrapper */
+.logo-letter {
+  display: inline-block;
+  transition: transform var(--logo-hover-duration) var(--logo-ease-smooth);
+  will-change: transform;
+}
+
+/* ============================================================================
+   STATE: IDLE (Default breathing)
+   ============================================================================ */
+
+.logo-state-idle .logo-animated {
+  animation: logo-breathe var(--logo-breath-duration) var(--logo-ease-breath) infinite;
+}
+
+.logo-state-idle .logo-ai-part {
+  animation: logo-ai-glow-pulse calc(var(--logo-breath-duration) * 1.5) var(--logo-ease-breath) infinite;
+}
+
+/* ============================================================================
+   STATE: HOVER (Interactive bounce per letter)
+   ============================================================================ */
+
+.logo-state-idle:hover .logo-letter {
+  cursor: pointer;
+}
+
+/* Staggered hover effect for each letter */
+.logo-state-idle:hover .logo-letter:nth-child(1) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: 0ms;
+}
+
+.logo-state-idle:hover .logo-letter:nth-child(2) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: calc(var(--logo-letter-stagger) * 1);
+}
+
+.logo-state-idle:hover .logo-letter:nth-child(3) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: calc(var(--logo-letter-stagger) * 2);
+}
+
+.logo-state-idle:hover .logo-letter:nth-child(4) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: calc(var(--logo-letter-stagger) * 3);
+}
+
+/* AI part bounces together but delayed */
+.logo-state-idle:hover .logo-ai-part .logo-letter:nth-child(1) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: calc(var(--logo-letter-stagger) * 4);
+}
+
+.logo-state-idle:hover .logo-ai-part .logo-letter:nth-child(2) {
+  animation: logo-letter-bounce var(--logo-hover-duration) var(--logo-ease-bounce);
+  animation-delay: calc(var(--logo-letter-stagger) * 5);
+}
+
+/* ============================================================================
+   STATE: LOADING (Wave animation)
+   ============================================================================ */
+
+.logo-state-loading .logo-letter {
+  animation: logo-loading-wave var(--logo-loading-duration) var(--logo-ease-smooth) infinite;
+}
+
+.logo-state-loading .logo-letter:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.logo-state-loading .logo-letter:nth-child(2) {
+  animation-delay: calc(var(--logo-letter-stagger) * 1);
+}
+
+.logo-state-loading .logo-letter:nth-child(3) {
+  animation-delay: calc(var(--logo-letter-stagger) * 2);
+}
+
+.logo-state-loading .logo-letter:nth-child(4) {
+  animation-delay: calc(var(--logo-letter-stagger) * 3);
+}
+
+.logo-state-loading .logo-ai-part .logo-letter:nth-child(1) {
+  animation-delay: calc(var(--logo-letter-stagger) * 4);
+}
+
+.logo-state-loading .logo-ai-part .logo-letter:nth-child(2) {
+  animation-delay: calc(var(--logo-letter-stagger) * 5);
+}
+
+/* ============================================================================
+   STATE: THINKING (Cursor blink after AI)
+   ============================================================================ */
+
+.logo-state-thinking .logo-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: var(--accent-primary);
+  margin-left: 2px;
+  animation: logo-cursor-blink 1000ms step-end infinite;
+  vertical-align: text-bottom;
+}
+
+/* ============================================================================
+   STATE: SUCCESS (Green glow pulse)
+   ============================================================================ */
+
+.logo-state-success .logo-ai-part {
+  animation: logo-ai-glow-pulse 600ms var(--logo-ease-smooth);
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6)); /* Green glow */
+}
+
+/* ============================================================================
+   STATE: ERROR (Red shake)
+   ============================================================================ */
+
+@keyframes logo-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.logo-state-error .logo-animated {
+  animation: logo-shake 300ms var(--ease-out);
+}
+
+.logo-state-error .logo-ai-part {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6)); /* Red glow */
+}
+
+/* ============================================================================
+   ACCESSIBILITY: REDUCED MOTION
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animations except instant transitions */
+  .logo-animated,
+  .logo-letter,
+  .logo-ai-part {
+    animation: none !important;
+  }
+
+  /* Keep only hover scale for feedback */
+  .logo-state-idle:hover .logo-letter {
+    transform: scale(1.05);
+    transition: transform 100ms ease-out;
+  }
+
+  /* Instant state changes */
+  .logo-state-thinking .logo-cursor {
+    animation-duration: 500ms;
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+/* Reduce animation intensity on mobile */
+@media (max-width: 640px) {
+  :root {
+    --logo-breath-duration: 4000ms; /* Slower on mobile */
+    --logo-hover-duration: 150ms; /* Faster feedback */
+  }
+
+  /* Smaller bounce amplitude */
+  @keyframes logo-letter-bounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-1px) scale(1.03);
+    }
+  }
+}

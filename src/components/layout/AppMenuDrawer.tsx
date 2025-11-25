@@ -7,6 +7,7 @@ import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
 import { Typography } from "@/ui/Typography";
 
+import { BrandWordmark } from "../../app/components/BrandWordmark";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
@@ -137,9 +138,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           />
           {/* Header with Close Button */}
           <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
-            <Typography variant="body-lg" className="text-text-primary font-semibold">
-              Disa AI
-            </Typography>
+            <BrandWordmark className="text-lg" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
