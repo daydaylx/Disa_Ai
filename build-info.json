@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-8575ca9",
-  "buildTime": "2025-11-25T01:22:27.055Z",
-  "gitSha": "8575ca9d17c483e105a74b081276c2520229e528",
-  "gitBranch": "claude/review-commits-release-011UDusYpBcD9RXVEcT7VHot",
+  "buildId": "v1.0.0-1fb731e",
+  "buildTime": "2025-11-25T10:53:07.625Z",
+  "gitSha": "1fb731ecfdfe1f4aeb55023ba04749381faf20d1",
+  "gitBranch": "claude/remove-api-key-notice-019ZeBTTGWSNDuS5uqawWFjL",
   "version": "1.0.0"
 }
