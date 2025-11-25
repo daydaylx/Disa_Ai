@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
+import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
