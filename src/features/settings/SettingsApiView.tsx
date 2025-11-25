@@ -88,15 +88,25 @@ export function SettingsApiView() {
             <div className="space-y-2">
               <h2 className="text-xl font-bold text-text-primary">API-Key & Verbindung</h2>
               <p className="text-sm text-text-secondary leading-relaxed">
-                Optionaler OpenRouter-API-Key für persönliche Limits.
+                Disa AI funktioniert ohne eigenen API-Key über den öffentlichen Proxy. Power-User
+                können hier ihren eigenen OpenRouter-Key für höhere Limits hinterlegen.
               </p>
             </div>
 
             {/* Status Indicator */}
-            {hasApiKey && (
+            {hasApiKey ? (
               <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-brand/10 border border-brand/20">
                 <div className="w-2 h-2 rounded-full bg-brand shadow-brandGlow" />
-                <span className="text-sm font-medium text-brand">API-Key aktiv</span>
+                <span className="text-sm font-medium text-brand">
+                  Eigener API-Key aktiv (direkte Verbindung)
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500/10 border border-green-500/20">
+                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                  Öffentlicher Proxy aktiv (kein Key erforderlich)
+                </span>
               </div>
             )}
 
@@ -138,10 +148,18 @@ export function SettingsApiView() {
             </div>
 
             {/* Info Notice */}
-            <div className="rounded-md bg-surface-inset shadow-inset p-3">
+            <div className="rounded-md bg-surface-inset shadow-inset p-3 space-y-2">
               <p className="text-xs text-text-secondary leading-relaxed">
-                🔒 Der API-Key wird nur lokal im Browser gespeichert und nie an externe Server
-                übertragen.
+                ✓ <strong>Ohne API-Key:</strong> Die App nutzt den öffentlichen Proxy mit fairen
+                Limits für alle Benutzer.
+              </p>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                ✓ <strong>Mit eigenem Key:</strong> Direkte Verbindung zu OpenRouter mit Ihren
+                persönlichen Limits.
+              </p>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                🔒 API-Keys werden nur lokal im Browser (Session Storage) gespeichert und nie an
+                externe Server übertragen.
               </p>
             </div>
           </div>

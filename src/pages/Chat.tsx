@@ -17,6 +17,7 @@ import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
+import { humanErrorToToast } from "../lib/errors/humanError";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 import { discussionPresets } from "../prompts/discussion/presets";
@@ -110,11 +111,7 @@ export default function Chat() {
     setRequestOptions,
   } = useChat({
     onError: (error) => {
-      toasts.push({
-        kind: "error",
-        title: "Fehler",
-        message: error.message || "Ein Fehler ist aufgetreten",
-      });
+      toasts.push(humanErrorToToast(error));
     },
   });
 
