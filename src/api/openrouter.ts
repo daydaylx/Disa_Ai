@@ -71,9 +71,12 @@ function getHeaders() {
 export function getModelFallback() {
   try {
     // Model selection is non-sensitive, localStorage is acceptable here
-    return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
+    return (
+      localStorage.getItem(MODEL_KEY) ||
+      "cognitivecomputations/dolphin-mistral-24b-venice-edition:free"
+    );
   } catch {
-    return "meta-llama/llama-3.3-70b-instruct:free";
+    return "cognitivecomputations/dolphin-mistral-24b-venice-edition:free";
   }
 }
 
