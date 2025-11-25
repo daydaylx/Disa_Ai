@@ -12,10 +12,12 @@ import React from "react";
  * - inset: Pressed/inset appearance (NO bevel)
  * - hero: Strong raised shadow + stronger bevel for focal elements
  */
-const cardVariants = cva("relative rounded-md transition-all duration-fast overflow-hidden", {
-  variants: {
-    variant: {
-      raised:
+const cardVariants = cva(
+  "relative rounded-md transition-all duration-fast overflow-hidden hover:scale-[1.03] hover:shadow-raiseLg",
+  {
+    variants: {
+      variant: {
+        raised:
         "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
       inset: "bg-surface-inset shadow-inset border border-white/5",
       hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
