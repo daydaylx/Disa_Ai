@@ -11,7 +11,7 @@
 
 :root {
   /* Logo Animation Durations */
-  --logo-breath-duration: 2000ms; /* Faster for more visible movement */
+  --logo-breath-duration: 3000ms;
   --logo-hover-duration: 200ms;
   --logo-loading-duration: 1800ms;
   --logo-letter-stagger: 60ms;
@@ -30,14 +30,12 @@
    KEYFRAME ANIMATIONS
    ============================================================================ */
 
-/* Breathing effect - visible float and scale */
+/* Breathing effect - subtle opacity pulse */
 @keyframes logo-breathe {
   0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.95;
+    opacity: 0.92;
   }
   50% {
-    transform: translateY(-3px) scale(1.02);
     opacity: 1;
   }
 }
@@ -52,15 +50,13 @@
   }
 }
 
-/* Glow pulse for AI part - stronger and more visible */
+/* Glow pulse for AI part */
 @keyframes logo-ai-glow-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 4px var(--logo-glow-ai));
-    transform: scale(1);
+    filter: drop-shadow(0 0 2px var(--logo-glow-ai));
   }
   50% {
-    filter: drop-shadow(0 0 12px var(--logo-glow-ai));
-    transform: scale(1.05);
+    filter: drop-shadow(0 0 6px var(--logo-glow-ai));
   }
 }
 
@@ -121,12 +117,6 @@
   will-change: transform;
 }
 
-/* AI part wrapper needs to be transformable */
-.logo-ai-part {
-  display: inline-block;
-  will-change: transform, filter;
-}
-
 /* ============================================================================
    STATE: IDLE (Default breathing)
    ============================================================================ */
@@ -136,7 +126,7 @@
 }
 
 .logo-state-idle .logo-ai-part {
-  animation: logo-ai-glow-pulse var(--logo-breath-duration) var(--logo-ease-breath) infinite;
+  animation: logo-ai-glow-pulse calc(var(--logo-breath-duration) * 1.5) var(--logo-ease-breath) infinite;
 }
 
 /* ============================================================================
