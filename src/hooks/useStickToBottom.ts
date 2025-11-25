@@ -54,15 +54,15 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
   useEffect(() => {
     if (!enabled || !shouldAutoScroll || !scrollRef.current) return;
 
-    let timeoutId: number | null = null;
+    let rafId: number | null = null;
 
     const observer = new MutationObserver(() => {
       if (shouldAutoScroll && scrollRef.current) {
-        if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(() => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
           if (scrollRef.current) scrollToBottomInstant();
-          timeoutId = null;
-        }, 0);
+          rafId = null;
+        });
       }
     });
 
@@ -73,7 +73,7 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
     });
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
     };
   }, [enabled, shouldAutoScroll, scrollToBottomInstant]);
