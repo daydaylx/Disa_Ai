@@ -300,7 +300,8 @@ export function SettingsApiDataView() {
               <div className="rounded-md bg-surface-inset shadow-inset p-3">
                 <p className="text-xs text-text-secondary leading-relaxed">
                   🔒 Der API-Key bleibt lokal (Session Storage). Ohne Key nutzt Disa AI den
-                  öffentlichen Proxy.
+                  kostenlosen Service. Für fortgeschrittene Nutzer: eigene Modelle und höhere
+                  Limits.
                 </p>
               </div>
             </section>

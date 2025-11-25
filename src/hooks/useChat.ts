@@ -156,6 +156,7 @@ export function useChat({
 
         const requestOptions = stateRef.current.requestOptions || getRequestOptions?.();
 
+        // Use the new Cloudflare Worker endpoint instead of direct OpenRouter call
         await chatStream(
           apiMessages,
           (

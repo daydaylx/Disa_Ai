@@ -8,7 +8,6 @@ import { getEnvConfigSafe } from "../config/env";
 import { mapError } from "../lib/errors";
 import { fetchJson } from "../lib/http";
 import { chatConcurrency } from "../lib/net/concurrency";
-import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
 
@@ -70,10 +69,129 @@ function getHeaders() {
 export function getModelFallback() {
   try {
     // Model selection is non-sensitive, localStorage is acceptable here
-    return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
+    return (
+      localStorage.getItem(MODEL_KEY) ||
+      "cognitivecomputations/dolphin-mistral-24b-venice-edition:free"
+    );
   } catch {
-    return "meta-llama/llama-3.3-70b-instruct:free";
+    return "cognitivecomputations/dolphin-mistral-24b-venice-edition:free";
   }
+}
+
+// Proxy function that forwards to Cloudflare Worker
+export async function chatStreamProxy(
+  messages: ChatMessage[],
+  onDelta: (
+    textDelta: string,
+    messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
+  ) => void,
+  opts?: {
+    model?: string;
+    params?: ChatRequestTuning;
+    signal?: AbortSignal;
+    onStart?: () => void;
+    onDone?: (full: string) => void;
+    requestKey?: string;
+  },
+) {
+  const key = opts?.requestKey ?? "chat-stream-proxy";
+
+  return new Promise<void>((resolve, reject) => {
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let full = "";
+    let started = false;
+
+    const controller = new AbortController();
+    const signal = opts?.signal
+      ? AbortSignal.any([opts.signal, controller.signal])
+      : controller.signal;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages,
+            model: opts?.model,
+            temperature: opts?.params?.temperature,
+            max_tokens: opts?.params?.max_tokens,
+            top_p: opts?.params?.top_p,
+            presence_penalty: opts?.params?.presence_penalty,
+          }),
+          signal,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error("No response body from chat service");
+        }
+
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            let idx: number;
+            while ((idx = buffer.indexOf("\n")) >= 0) {
+              const line = buffer.slice(0, idx).trim();
+              buffer = buffer.slice(idx + 1);
+              if (!line || line.startsWith(":")) continue;
+
+              const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
+              if (/^OPENROUTER\b/i.test(payload)) continue;
+
+              if (payload === "[DONE]") {
+                opts?.onDone?.(full);
+                resolve();
+                return;
+              }
+
+              if (payload.startsWith("{")) {
+                try {
+                  const json = JSON.parse(payload);
+                  if (json?.error) {
+                    throw new Error(json.error?.message || "Unbekannter API-Fehler");
+                  }
+                  const delta = json?.choices?.[0]?.delta?.content ?? "";
+                  const messageData = json?.choices?.[0]?.message;
+                  if (!started) {
+                    started = true;
+                    opts?.onStart?.();
+                  }
+                  if (delta || messageData) {
+                    onDelta(delta, messageData);
+                    full += delta;
+                  }
+                } catch (err) {
+                  console.warn("Failed to parse SSE chunk:", err);
+                }
+              }
+            }
+          }
+          opts?.onDone?.(full);
+          resolve();
+        } finally {
+          reader.releaseLock();
+        }
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    // Use void to suppress linting error for floating promise
+    void fetchData();
+  });
 }
 
 export async function chatOnce(
@@ -111,116 +229,8 @@ type ChatRequestTuning = {
   max_tokens?: number;
 };
 
-export async function chatStream(
-  messages: ChatMessage[],
-  onDelta: (
-    textDelta: string,
-    messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
-  ) => void,
-  opts?: {
-    model?: string;
-    params?: ChatRequestTuning;
-    signal?: AbortSignal;
-    onStart?: () => void;
-    onDone?: (full: string) => void;
-    requestKey?: string;
-  },
-) {
-  const key = opts?.requestKey ?? "chat-stream";
-  return chatConcurrency.startRequest(key, async (signal) => {
-    const combinedSignal = opts?.signal ? combineSignals([opts.signal, signal]) : signal;
-    try {
-      const headers = getHeaders();
-      const model = opts?.model ?? getModelFallback();
-      const payload: Record<string, unknown> = {
-        model,
-        messages,
-        stream: true,
-      };
-
-      if (opts?.params) {
-        for (const [key, value] of Object.entries(opts.params)) {
-          if (value !== undefined) {
-            payload[key] = value;
-          }
-        }
-      }
-      const res = await fetchWithTimeoutAndRetry(ENDPOINT, {
-        timeoutMs: 45000,
-        signal: combinedSignal,
-        maxRetries: 1,
-        retryDelayMs: 2000,
-        fetchOptions: {
-          method: "POST",
-          headers,
-          body: JSON.stringify(payload),
-        },
-      });
-
-      if (!res.ok) {
-        throw mapError(res);
-      }
-
-      const reader = res.body?.getReader();
-      if (!reader) return;
-
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let started = false;
-      let full = "";
-
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          let idx: number;
-          while ((idx = buffer.indexOf("\n")) >= 0) {
-            const line = buffer.slice(0, idx).trim();
-            buffer = buffer.slice(idx + 1);
-            if (!line || line.startsWith(":")) continue;
-
-            const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
-            if (/^OPENROUTER\b/i.test(payload)) continue;
-
-            if (payload === "[DONE]") {
-              opts?.onDone?.(full);
-              return;
-            }
-
-            if (payload.startsWith("{")) {
-              try {
-                const json = JSON.parse(payload);
-                if (json?.error) {
-                  throw new Error(json.error?.message || "Unbekannter API-Fehler");
-                }
-                const delta = json?.choices?.[0]?.delta?.content ?? "";
-                const messageData = json?.choices?.[0]?.message;
-                if (!started) {
-                  started = true;
-                  opts?.onStart?.();
-                }
-                if (delta || messageData) {
-                  onDelta(delta, messageData);
-                  full += delta;
-                }
-              } catch (err) {
-                throw mapError(err);
-              }
-            }
-          }
-        }
-        opts?.onDone?.(full);
-      } finally {
-        reader.releaseLock();
-        res.body?.cancel().catch(() => {});
-      }
-    } catch (error) {
-      throw mapError(error);
-    }
-  });
-}
+// Use the proxy function instead of direct OpenRouter call
+export { chatStreamProxy as chatStream };
 
 /**
  * Check API connectivity by fetching the models endpoint
