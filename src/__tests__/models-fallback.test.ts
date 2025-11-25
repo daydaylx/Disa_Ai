@@ -77,9 +77,9 @@ describe("loadModelCatalog (Hybrid)", () => {
       provider: "meta-llama",
       safety: "free",
     });
-    expect(models[0].tags).toEqual(expect.arrayContaining(["free", "coding", "logic"]));
-    expect(models[0].contextTokens).toBe(131072);
-    expect(models[0].contextK).toBe(128);
+    expect(models[0]!.tags).toEqual(expect.arrayContaining(["free", "coding", "logic"]));
+    expect(models[0]!.contextTokens).toBe(131072);
+    expect(models[0]!.contextK).toBe(128);
   });
 
   it("nutzt API-Daten und Default-Werte, wenn Metadaten fehlen", async () => {
