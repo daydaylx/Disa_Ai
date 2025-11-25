@@ -52,11 +52,11 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
     if (event.shiftKey) {
       if (document.activeElement === first) {
         event.preventDefault();
-        last.focus();
+        last?.focus();
       }
     } else if (document.activeElement === last) {
       event.preventDefault();
-      first.focus();
+      first?.focus();
     }
   };
 
