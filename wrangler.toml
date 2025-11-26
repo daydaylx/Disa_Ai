@@ -78,4 +78,3 @@ VITE_VERSION = ""
 # 3. KV-Namespaces erstellen: Workers & Pages → KV → Create namespace
 # 4. KV-IDs in dieser Datei ersetzen
 # 5. Cache purging und deploy hooks über Pages Dashboard verwalten
-
