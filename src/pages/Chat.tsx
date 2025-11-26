@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useToasts } from "@/ui";
+import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
@@ -229,10 +229,6 @@ export default function Chat() {
       • Kein Autosave
     </span>
   );
-
-  import { Button } from "@/ui";
-
-  // ... (inside component)
 
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
