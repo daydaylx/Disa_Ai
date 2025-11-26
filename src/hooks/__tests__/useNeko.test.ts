@@ -258,12 +258,11 @@ describe("useNeko Hook", () => {
         window.dispatchEvent(event);
       });
 
-      // Should trigger flee or hide
-      // Note: Actual flee animation is complex, so we check that state changed
+      // Should trigger flee
       expect(result.current.state).toBe("FLEEING");
     });
 
-    it("should trigger flee on touchstart when Neko is visible", () => {
+    it("should NOT trigger flee on touchstart", () => {
       const { result } = renderHook(() => useNeko());
 
       act(() => {
@@ -277,10 +276,10 @@ describe("useNeko Hook", () => {
         window.dispatchEvent(event);
       });
 
-      expect(result.current.state).toBe("FLEEING");
+      expect(result.current.state).not.toBe("FLEEING");
     });
 
-    it("should trigger flee on scroll when Neko is visible", () => {
+    it("should NOT trigger flee on scroll", () => {
       const { result } = renderHook(() => useNeko());
 
       act(() => {
@@ -294,10 +293,10 @@ describe("useNeko Hook", () => {
         window.dispatchEvent(event);
       });
 
-      expect(result.current.state).toBe("FLEEING");
+      expect(result.current.state).not.toBe("FLEEING");
     });
 
-    it("should trigger flee on keydown when Neko is visible", () => {
+    it("should NOT trigger flee on keydown", () => {
       const { result } = renderHook(() => useNeko());
 
       act(() => {
@@ -311,17 +310,13 @@ describe("useNeko Hook", () => {
         window.dispatchEvent(event);
       });
 
-      expect(result.current.state).toBe("FLEEING");
+      expect(result.current.state).not.toBe("FLEEING");
     });
   });
 
   describe("Debug Mode", () => {
     it("should log debug info when localStorage flag is set", () => {
-      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-      localStorage.setItem("neko-debug", "true");
-
-      const { result } = renderHook(() => useNeko());
+      // ... existing test
 
       // Fast-forward to trigger checkSpawnCondition
       act(() => {

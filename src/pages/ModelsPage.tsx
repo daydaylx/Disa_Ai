@@ -86,10 +86,28 @@ function convertToUIModel(entry: ModelEntry): Model {
 export default function ModelsPage() {
   const [models, setModels] = useState<Model[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Persistent Filter State
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("disa:models-filter-favorites") === "true";
+  });
+
+  const [showFreeOnly, setShowFreeOnly] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("disa:models-filter-free") === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("disa:models-filter-favorites", String(showFavoritesOnly));
+  }, [showFavoritesOnly]);
+
+  useEffect(() => {
+    localStorage.setItem("disa:models-filter-free", String(showFreeOnly));
+  }, [showFreeOnly]);
+
   const { isModelFavorite, toggleModelFavorite, trackModelUsage } = useFavorites();
   const { settings, setPreferredModel } = useSettings();
   const activeModelName = useMemo(

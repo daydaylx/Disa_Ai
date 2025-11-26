@@ -4,10 +4,16 @@ import { describe, expect, it, vi } from "vitest";
 import { NekoLayer } from "../NekoLayer";
 
 // Mock dependencies
-const mockNekoStatus = {
-  state: "HIDDEN" as const,
+interface MockNekoStatus {
+  state: "HIDDEN" | "SPAWNING" | "WALKING" | "FLEEING";
+  x: number;
+  direction: "left" | "right";
+}
+
+const mockNekoStatus: MockNekoStatus = {
+  state: "HIDDEN",
   x: -10,
-  direction: "right" as const,
+  direction: "right",
 };
 
 vi.mock("@/hooks/useNeko", () => ({

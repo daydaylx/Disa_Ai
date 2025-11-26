@@ -45,19 +45,18 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
             Neuer Chat
           </PrimaryButton>
 
-          {conversationCount > 0 && (
-            <Link
-              to="/chat/history"
-              className={buttonVariants({
-                variant: "secondary",
-                size: "lg",
-                className: "flex items-center justify-center gap-2 w-full sm:w-auto",
-              })}
-            >
-              <History className="h-4 w-4" />
-              Verlauf ({conversationCount})
-            </Link>
-          )}
+          <Link
+            to="/chat/history"
+            className={buttonVariants({
+              variant: "secondary",
+              size: "lg",
+              className: "flex items-center justify-center gap-2 w-full sm:w-auto",
+            })}
+          >
+            <History className="h-4 w-4" />
+            Verlauf
+            {conversationCount > 0 && <span className="opacity-60">({conversationCount})</span>}
+          </Link>
         </div>
       </div>
     </PremiumCard>

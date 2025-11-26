@@ -308,6 +308,10 @@ export default function Chat() {
               if (messageIndex === -1) return;
 
               const targetUserIndex = (() => {
+                // If the retried message is a user message, retry from there
+                const targetMsg = messages[messageIndex];
+                if (targetMsg && targetMsg.role === "user") return messageIndex;
+                // If it's an assistant message, find the preceding user message
                 for (let i = messageIndex; i >= 0; i -= 1) {
                   const candidate = messages[i];
                   if (candidate && candidate.role === "user") return i;
@@ -326,10 +330,15 @@ export default function Chat() {
 
               const userMessage = messages[targetUserIndex];
               if (!userMessage) return;
-              void append(
-                { role: "user", content: userMessage.content },
-                messages.slice(0, targetUserIndex),
-              );
+
+              // Slice history up to (but not including) the user message we want to retry
+              // The append function will add the user message back as a new message
+              const historyContext = messages.slice(0, targetUserIndex);
+
+              // Reset messages to this point immediately to prevent UI flicker
+              setMessages(historyContext);
+
+              void append({ role: "user", content: userMessage.content }, historyContext);
             }}
             className="h-full"
           />

@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { useSettings } from "./useSettings";
 
 // Configuration
-const SPAWN_DURATION_MS = 6000; // Base duration, overridden by adaptive logic
 const MIN_SPAWN_INTERVAL_MS = 60000; // 1 minute cooldown
 const MAX_SPAWNS_PER_SESSION = 5;
 const CHECK_INTERVAL_MS = 5000; // Check every 5s

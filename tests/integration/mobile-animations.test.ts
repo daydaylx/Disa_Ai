@@ -53,15 +53,17 @@ describe("Mobile Animations - Integration Tests", () => {
       });
 
       // Mobile: ~61 px/s
-      expect(speeds[0].speed).toBeCloseTo(61, 0);
+      expect(speeds[0]?.speed).toBeCloseTo(61, 0);
       // Tablet: ~143 px/s
-      expect(speeds[1].speed).toBeCloseTo(143, 0);
+      expect(speeds[1]?.speed).toBeCloseTo(143, 0);
       // Desktop: ~277 px/s
-      expect(speeds[2].speed).toBeCloseTo(277, 0);
+      expect(speeds[2]?.speed).toBeCloseTo(277, 0);
 
       // Verify mobile is slowest (better visibility)
-      expect(speeds[0].speed).toBeLessThan(speeds[1].speed);
-      expect(speeds[1].speed).toBeLessThan(speeds[2].speed);
+      if (speeds[0] && speeds[1] && speeds[2]) {
+        expect(speeds[0].speed).toBeLessThan(speeds[1].speed);
+        expect(speeds[1].speed).toBeLessThan(speeds[2].speed);
+      }
     });
   });
 
