@@ -9,16 +9,8 @@ const SPAWN_DURATION_MS = 6000; // 6s visible duration
 const MIN_SPAWN_INTERVAL_MS = 120000; // 2 minutes cooldown between spawns
 const MAX_SPAWNS_PER_SESSION = 3;
 
-// Allowed routes (whitelist)
-const ALLOWED_ROUTES = [
-  "/",
-  "/about",
-  "/impressum",
-  "/datenschutz",
-  "/settings",
-  "/settings/extras",
-];
-const BLOCKED_ROUTES_PREFIX = ["/chat"];
+// Blocked routes (blacklist) - empty array means all routes are allowed
+const BLOCKED_ROUTES_PREFIX: string[] = [];
 
 type NekoState = "HIDDEN" | "SPAWNING" | "WALKING" | "FLEEING";
 
@@ -181,9 +173,9 @@ export function useNeko() {
       const isIdle = now - lastUserActionRef.current > IDLE_THRESHOLD_MS;
       const isCooldownOver = now - lastSpawnTimeRef.current > MIN_SPAWN_INTERVAL_MS;
       const isBelowLimit = spawnCountRef.current < MAX_SPAWNS_PER_SESSION;
-      const isAllowedRoute =
-        ALLOWED_ROUTES.includes(location.pathname) &&
-        !BLOCKED_ROUTES_PREFIX.some((prefix) => location.pathname.startsWith(prefix));
+      const isAllowedRoute = !BLOCKED_ROUTES_PREFIX.some((prefix) =>
+        location.pathname.startsWith(prefix),
+      );
 
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
