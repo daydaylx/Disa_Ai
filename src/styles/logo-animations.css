@@ -45,7 +45,8 @@
 
 /* Individual letter hover bounce */
 @keyframes logo-letter-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) scale(1);
   }
   50% {
@@ -96,10 +97,12 @@
 
 /* Cursor blink for thinking state */
 @keyframes logo-cursor-blink {
-  0%, 49% {
+  0%,
+  49% {
     opacity: 1;
   }
-  50%, 100% {
+  50%,
+  100% {
     opacity: 0;
   }
 }
@@ -241,7 +244,8 @@
    ============================================================================ */
 
 @keyframes logo-shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -297,7 +301,8 @@
 
   /* Smaller bounce amplitude */
   @keyframes logo-letter-bounce {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0) scale(1);
     }
     50% {
