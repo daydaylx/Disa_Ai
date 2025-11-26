@@ -60,21 +60,23 @@ const createCorsHeaders = (origin: string | null) => {
   return headers;
 };
 
-const getClientIdentifier = (request: Request<unknown, IncomingRequestCfProperties<unknown>>) => {
+const getClientIdentifier = async (
+  request: Request<unknown, IncomingRequestCfProperties<unknown>>,
+  salt: string = "disaai-rate-limit-v1", // Default salt for privacy
+) => {
   const ip =
     request.headers.get("cf-connecting-ip") ??
     request.headers.get("x-forwarded-for") ??
     "anonymous";
-  // Create a simple hash for privacy
+
+  // Use crypto.subtle for secure, GDPR-compliant hashing
   const encoder = new TextEncoder();
-  return encoder
-    .encode(ip)
-    .reduce((hash, byte) => {
-      hash = (hash << 5) - hash + byte;
-      return hash & hash; // Convert to 32-bit integer
-    }, 0)
-    .toString(36)
-    .substring(0, 16);
+  const data = encoder.encode(ip + salt);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  return hashHex.substring(0, 16);
 };
 
 // Enhanced rate limiting with soft throttling
@@ -234,7 +236,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     });
   }
 
-  const clientId = getClientIdentifier(request);
+  const clientId = await getClientIdentifier(request);
 
   // Check enhanced rate limits
   const rateLimitResult = await checkRateLimits(clientId, env.RATE_LIMIT_KV);
