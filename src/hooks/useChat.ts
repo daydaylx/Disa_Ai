@@ -174,8 +174,9 @@ export function useChat({
                   timestamp: messageData.timestamp || Date.now(),
                   model: messageData.model,
                 };
-              } else if (delta) {
-                // Fallback: create with client-generated ID if we have content but no server metadata
+              } else {
+                // CRITICAL FIX: Always create a message, even if first delta is empty
+                // This ensures "KI schreibt" doesn't show without a message being created
                 assistantMessage = {
                   id: `fallback-${nanoid()}`,
                   role: "assistant",
