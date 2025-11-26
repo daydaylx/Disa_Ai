@@ -80,7 +80,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
         </a>
 
         {/* Compact Top Header */}
-        <header className="sticky top-0 z-30 border-b border-surface-2 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 shadow-raise">
+        <header className="sticky top-0 z-header border-b border-surface-2 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 shadow-raise">
           <div
             className="flex items-center gap-3 px-4 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}

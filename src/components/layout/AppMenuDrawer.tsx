@@ -277,7 +277,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
       onClick={onClick}
       variant="secondary"
       size="icon"
-      className={cn("relative group", className)}
+      className={cn("relative group touch-target", className)}
       aria-label="Menü öffnen"
     >
       {/* Hamburger Icon */}
