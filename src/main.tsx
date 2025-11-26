@@ -8,7 +8,6 @@ import ReactDOM from "react-dom/client";
 
 import App from "./App";
 import { initEnvironment } from "./config/env";
-import { CustomRolesProvider } from "./contexts/CustomRolesContext";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
@@ -62,9 +61,7 @@ function initializeApp() {
 
   return _appRoot.render(
     <React.StrictMode>
-      <CustomRolesProvider>
-        <App />
-      </CustomRolesProvider>
+      <App />
     </React.StrictMode>,
   );
 }

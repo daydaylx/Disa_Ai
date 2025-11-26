@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /**
  * Integration tests for CSS animations and media queries
@@ -16,10 +16,7 @@ describe("CSS Animations - Integration Tests", () => {
         try {
           const rules = Array.from(sheet.cssRules || []);
           for (const rule of rules) {
-            if (
-              rule instanceof CSSKeyframesRule &&
-              rule.name === "neko-bob"
-            ) {
+            if (rule instanceof CSSKeyframesRule && rule.name === "neko-bob") {
               hasNekoBobAnimation = true;
               // Verify keyframe steps
               expect(rule.cssRules.length).toBeGreaterThan(0);
