@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useSettings } from "./useSettings";
 
 // Configuration
-const IDLE_THRESHOLD_MS = 25000; // 25s idle before chance to spawn
+const IDLE_THRESHOLD_MS = 7000; // 7s idle before chance to spawn
 const SPAWN_DURATION_MS = 6000; // 6s visible duration
 const MIN_SPAWN_INTERVAL_MS = 120000; // 2 minutes cooldown between spawns
 const MAX_SPAWNS_PER_SESSION = 3;

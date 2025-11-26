@@ -38,7 +38,7 @@ const DEFAULT_SETTINGS: Settings = {
   showNSFWContent: false,
   enableAnalytics: true,
   enableNotifications: true,
-  enableNeko: false, // Default off
+  enableNeko: true, // Default on
   theme: "auto",
   language: "de",
   preferredModelId: "openai/gpt-4o-mini",
