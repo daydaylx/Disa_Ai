@@ -13,11 +13,13 @@ export type { LucideIcon } from "lucide-react";
 export {
   AlertCircle,
   AlertTriangle,
+  AppWindow, // Added
   ArrowLeft,
   Book,
   BookOpenCheck,
   Bot,
   Brain,
+  Cat, // Added
   Check,
   CheckCircle,
   ChevronDown,

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { PremiumCard, QuickStartCard, SectionHeader } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
-import { BookOpenCheck, Database, Shield, SlidersHorizontal } from "../../lib/icons";
+import { BookOpenCheck, Cat, Database, Shield, SlidersHorizontal } from "../../lib/icons";
 
 export function SettingsView() {
   const { settings, toggleNSFWContent } = useSettings();
@@ -42,6 +42,13 @@ export function SettingsView() {
       description: "Jugendschutz / NSFW-Anzeige zentral steuern",
       to: "/settings/youth",
       icon: Shield,
+    },
+    {
+      id: "extras",
+      title: "Extras & Spielereien",
+      description: "Optionale Funktionen und Deko (Neko)",
+      to: "/settings/extras",
+      icon: Cat,
     },
     {
       id: "api-data",

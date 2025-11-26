@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
+import { NekoLayer } from "../../components/neko/NekoLayer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
@@ -116,6 +117,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
 
         <NetworkBanner />
         {location.pathname === "/" && <PWAInstallPrompt />}
+        <NekoLayer />
         {process.env.NODE_ENV === "development" && <PWADebugInfo />}
 
         <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />

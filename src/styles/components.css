@@ -300,7 +300,28 @@
     }
   }
 
-  /* Animations */
+
+  /* ========================================================================
+   NEKO ANIMATIONS (Extras)
+   ======================================================================== */
+
+  @keyframes neko-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  .animate-neko-walk {
+    animation: neko-bob 0.4s steps(2) infinite;
+  }
+
+  .animate-neko-run {
+    animation: neko-bob 0.15s steps(2) infinite;
+  }
   @keyframes slideInLeft {
     0% {
       transform: translateX(-100%);

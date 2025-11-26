@@ -20,6 +20,7 @@ interface Settings {
   showNSFWContent: boolean;
   enableAnalytics: boolean;
   enableNotifications: boolean;
+  enableNeko: boolean; // New Neko Feature
   theme: "light" | "dark" | "auto";
   language: string;
   preferredModelId: string;
@@ -37,6 +38,7 @@ const DEFAULT_SETTINGS: Settings = {
   showNSFWContent: false,
   enableAnalytics: true,
   enableNotifications: true,
+  enableNeko: false, // Default off
   theme: "auto",
   language: "de",
   preferredModelId: "openai/gpt-4o-mini",
@@ -154,6 +156,10 @@ export function useSettings() {
     saveSettings((prev) => ({ enableNotifications: !prev.enableNotifications }));
   }, [saveSettings]);
 
+  const toggleNeko = useCallback(() => {
+    saveSettings((prev) => ({ enableNeko: !prev.enableNeko }));
+  }, [saveSettings]);
+
   const setTheme = useCallback(
     (theme: Settings["theme"]) => {
       saveSettings({ theme });
@@ -260,6 +266,7 @@ export function useSettings() {
     toggleNSFWContent,
     toggleAnalytics,
     toggleNotifications,
+    toggleNeko,
     setTheme,
     setLanguage,
     saveSettings,

@@ -104,7 +104,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
 
   const drawer = (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-sm"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
@@ -120,7 +120,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         <MaterialCard
           variant="hero"
           className={cn(
-            "h-full w-[clamp(18rem,80vw,24rem)] sm:w-[clamp(22rem,70vw,28rem)] sm:rounded-3xl rounded-none overflow-y-auto relative bg-surface-1 shadow-raiseLg with-spine",
+            "h-[100dvh] w-[clamp(18rem,80vw,24rem)] sm:w-[clamp(22rem,70vw,28rem)] sm:rounded-3xl rounded-none overflow-y-auto overscroll-contain relative bg-surface-1 shadow-raiseLg with-spine",
             "transition-transform duration-220 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
@@ -289,7 +289,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
 
       {/* Badge */}
       {badge && (
-        <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[var(--color-primary-500)] text-white text-xs font-medium flex items-center justify-center">
+        <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-brand text-white text-xs font-medium flex items-center justify-center shadow-sm">
           {badge}
         </span>
       )}
