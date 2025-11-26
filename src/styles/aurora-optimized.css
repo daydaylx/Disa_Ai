@@ -57,7 +57,7 @@
 
   /* Apply optimizations only on supported devices */
   @supports (animation: aurora-flow-optimized 10s ease infinite) {
-    .aurora-animated .brand-aurora::before {
+    .brand-aurora.aurora-animated::before {
       animation: aurora-flow-optimized 25s ease-in-out infinite,
         aurora-glow-optimized 12s ease-in-out infinite;
     }
@@ -176,7 +176,7 @@
   /* Reduced motion support for animations */
   @media (prefers-reduced-motion: reduce) {
     .brand-aurora::before,
-    .aurora-animated .brand-aurora::before,
+    .brand-aurora.aurora-animated::before,
     .aurora-shimmer,
     .aurora-pulse-optimized,
     .aurora-text-glow-optimized {
@@ -192,7 +192,7 @@
       opacity: 0.4; /* Reduce visual complexity on small devices */
     }
 
-    .aurora-animated .brand-aurora::before {
+    .brand-aurora.aurora-animated::before {
       animation-duration: 40s, 20s; /* Slower animations on mobile */
     }
   }

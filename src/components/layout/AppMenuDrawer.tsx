@@ -150,7 +150,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           </div>
 
           {/* Navigation Section */}
-          <div className="space-y-6">
+          <div className="space-y-6 px-4 sm:px-5 py-6">
             <div>
               <Typography
                 variant="body-xs"
@@ -243,7 +243,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           </div>
 
           {/* Footer */}
-          <div className="mt-6 pt-4 border-t border-surface-1">
+          <div className="px-4 sm:px-5 pb-6 pt-4 border-t border-surface-1">
             <Typography variant="body-xs" className="text-text-secondary text-center">
               © 2025 Disa AI
             </Typography>
