@@ -230,25 +230,31 @@ export default function Chat() {
     </span>
   );
 
+  import { Button } from "@/ui";
+
+  // ... (inside component)
+
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => navigate("/models")}
-        className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/70"
+        className="h-auto py-1 px-2 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover"
       >
         Modell: {settings.preferredModelId}
-      </button>
-      <button
-        type="button"
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => navigate("/settings/behavior")}
-        className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/70"
+        className="h-auto py-1 px-2 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover"
       >
         Kreativität: {settings.creativity ?? 45}
-      </button>
+      </Button>
       {activeRole && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary">
+        <span className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary min-h-[24px]">
           Rolle: {activeRole.name}
         </span>
       )}
@@ -267,14 +273,15 @@ export default function Chat() {
               title="Chat-Start"
               subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
             />
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => navigate("/chat/history")}
-              className="inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-1 px-3 py-2 text-sm font-medium text-text-secondary shadow-raise hover:text-text-primary hover:shadow-raiseLg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand self-start"
+              className="self-start gap-2"
             >
               <History className="h-4 w-4" />
               Verlauf
-            </button>
+            </Button>
           </div>
 
           <ChatStartCard
