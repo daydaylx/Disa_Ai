@@ -244,7 +244,7 @@ export default defineConfig(({ mode }) => {
               includeAssets: ["favicon.ico", "icons/icon-180.png", "icons/icon.svg"],
               manifest: false, // Use public/manifest.webmanifest as single source of truth
               devOptions: {
-                enabled: true,
+                enabled: false,
                 type: "module",
               },
             }),
