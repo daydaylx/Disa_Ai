@@ -33,6 +33,7 @@ export default [
       "*.md",
       ".env",
       "docs/archive/**", // Archive directories
+      "tools/**", // Ignore standalone tools
     ],
   }, // Configuration files (Node.js environment)
   {

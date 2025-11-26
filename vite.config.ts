@@ -275,14 +275,14 @@ export default defineConfig(({ mode }) => {
         ],
       },
       // Proxy configuration for local development
-      proxy: {
+      /* proxy: {
         "/api": {
           target: "https://disaai.de", // Fallback to live backend for local dev
           changeOrigin: true,
           secure: false,
           // Optionally rewrite if needed, but /api matches /api on prod
         },
-      },
+      }, */
     },
     resolve: {
       alias: {

@@ -45,7 +45,8 @@
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged",
     "verify:dist": "node scripts/verify-dist.mjs",
-    "validate:deploy": "node scripts/validate-deploy.js"
+    "validate:deploy": "node scripts/validate-deploy.js",
+    "mcp:visual": "npx tsx tools/visual-mcp.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -60,6 +61,7 @@
     ]
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -85,7 +87,8 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "7.9.6",
     "tailwind-merge": "^3.4.0",
-    "wrangler": "^4.50.0"
+    "wrangler": "^4.50.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

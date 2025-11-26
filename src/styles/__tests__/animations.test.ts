@@ -22,7 +22,7 @@ describe("CSS Animations - Integration Tests", () => {
               expect(rule.cssRules.length).toBeGreaterThan(0);
             }
           }
-        } catch (e) {
+        } catch {
           // CORS-protected stylesheets can't be accessed
           continue;
         }
