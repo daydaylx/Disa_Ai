@@ -214,6 +214,21 @@
     touch-action: manipulation;
   }
 
+  /* Scrollable card containers - optimized for touch */
+  .overflow-auto,
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Cards in scrollable containers should allow vertical pan */
+  .overflow-auto [role="button"],
+  .overflow-y-auto [role="button"],
+  .overflow-auto [role="group"],
+  .overflow-y-auto [role="group"] {
+    touch-action: pan-y;
+  }
+
   /* Mobile Chat Container */
   .mobile-chat-container {
     min-height: 100dvh;
