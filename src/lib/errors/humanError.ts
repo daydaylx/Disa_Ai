@@ -16,6 +16,7 @@ export interface HumanError {
 
 export function humanError(error: unknown): HumanError {
   const err = mapError(error);
+  const lowerMsg = err.message.toLowerCase();
 
   // Authentication errors
   if (err instanceof AuthenticationError) {
@@ -41,6 +42,20 @@ export function humanError(error: unknown): HumanError {
       title: "Rate-Limit erreicht",
       message: "Zu viele Anfragen in kurzer Zeit.",
       action: "Warten Sie einen Moment und versuchen Sie es dann erneut.",
+    };
+  }
+
+  // Specific OpenRouter/LLM errors (Credit/Quota)
+  if (
+    lowerMsg.includes("credit") ||
+    lowerMsg.includes("quota") ||
+    lowerMsg.includes("balance") ||
+    lowerMsg.includes("payment")
+  ) {
+    return {
+      title: "Guthaben aufgebraucht",
+      message: "Das Guthaben für den API-Dienst ist erschöpft.",
+      action: "Bitte API-Key prüfen oder Guthaben aufladen.",
     };
   }
 
@@ -80,8 +95,13 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
-  // Proxy-related errors
-  if (err.message.includes("Proxy-Fehler") || err.message.includes("proxy")) {
+  // Proxy-related errors - Only if it's a generic connection/status error
+  // If it has specific details (which don't match above), we might want to show them?
+  // For now, we keep the generic catch for "Proxy-Fehler"/500s/404s that originated from proxyClient's fallback
+  if (
+    lowerMsg.includes("proxy-fehler") ||
+    (lowerMsg.includes("proxy") && lowerMsg.includes("unavailable"))
+  ) {
     return {
       title: "Proxy nicht erreichbar",
       message: "Der öffentliche Proxy ist momentan nicht verfügbar.",
@@ -89,7 +109,18 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
-  // Unknown or unhandled errors
+  // Unknown or unhandled errors - but if we have a message, show it if it looks like a sentence
+  if (err.message && err.message !== "Ein unbekannter Fehler ist aufgetreten.") {
+    // If the error message is relatively short, show it
+    if (err.message.length < 100) {
+      return {
+        title: "Fehler aufgetreten",
+        message: err.message,
+        action: "Bitte versuchen Sie es erneut.",
+      };
+    }
+  }
+
   return {
     title: "Ein unerwarteter Fehler ist aufgetreten",
     message: "Die Anwendung hat einen Fehler, den sie nicht genau bestimmen kann.",

@@ -10,7 +10,14 @@ import {
   OPENROUTER_CHAT_PATH,
 } from "../../shared/openrouter";
 
-const ALLOWED_ORIGIN = "https://disaai.de";
+// Allowed origins
+const ALLOWED_ORIGINS = [
+  "https://disaai.de",
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "http://127.0.0.1:5173",
+];
+
 const _RATE_LIMIT_WINDOW_MS = 60_000;
 const _RATE_LIMIT_MAX_REQUESTS = 20;
 
@@ -53,9 +60,13 @@ const createCorsHeaders = (origin: string | null) => {
   headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
   headers.set("Access-Control-Allow-Headers", "content-type, accept");
   headers.set("Access-Control-Max-Age", "86400");
-  if (origin === ALLOWED_ORIGIN) {
+
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
     headers.set("Access-Control-Allow-Origin", origin);
     headers.set("Vary", "Origin");
+  } else {
+    // Default safe fallback (or restrictive)
+    headers.set("Access-Control-Allow-Origin", "https://disaai.de");
   }
   return headers;
 };
@@ -301,17 +312,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       headers: upstreamHeaders,
     });
 
-    // Log request metadata
-    const tokenUsage = await upstreamResponse
-      .clone()
-      .json()
-      .then((data) => data?.usage?.total_tokens || 0)
-      .catch(() => 0);
+    // Error Handling for Upstream API
+    if (!upstreamResponse.ok) {
+      const errorBody = await upstreamResponse.text();
+      let errorJson;
+      try {
+        errorJson = JSON.parse(errorBody);
+      } catch {
+        errorJson = { error: { message: errorBody || "Upstream Error" } };
+      }
 
+      console.error("OpenRouter Upstream Error:", upstreamResponse.status, errorBody);
+
+      corsHeaders.set("Content-Type", "application/json");
+      return new Response(
+        JSON.stringify({
+          error: errorJson?.error?.message || `OpenRouter Error: ${upstreamResponse.status}`,
+        }),
+        {
+          status: upstreamResponse.status,
+          headers: corsHeaders,
+        },
+      );
+    }
+
+    // Log request metadata
+    // Note: We cannot easily count tokens in streaming response without buffering
+    // So we log successful initiation here.
     await logRequest(
       clientId,
       validatedRequest.model,
-      tokenUsage,
+      0, // Token usage unknown for stream
       upstreamResponse.status,
       env.RATE_LIMIT_KV,
     );

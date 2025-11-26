@@ -1,11 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { useSettings } from "./useSettings";
 
 // Configuration
-const IDLE_THRESHOLD_MS = 5000; // 5s idle before chance to spawn
-const MIN_SPAWN_INTERVAL_MS = 120000; // 2 minutes cooldown between spawns
-const MAX_SPAWNS_PER_SESSION = 3;
+const SPAWN_DURATION_MS = 6000; // Base duration, overridden by adaptive logic
+const MIN_SPAWN_INTERVAL_MS = 60000; // 1 minute cooldown
+const MAX_SPAWNS_PER_SESSION = 5;
+const CHECK_INTERVAL_MS = 5000; // Check every 5s
+const SPAWN_CHANCE = 0.2; // 20% chance every check if cooldown ready
+
+// Allowed routes (whitelist)
+const ALLOWED_ROUTES = [
+  "/",
+  "/about",
+  "/impressum",
+  "/datenschutz",
+  "/settings",
+  "/settings/behavior",
+  "/settings/appearance",
+  "/settings/extras",
+  "/models",
+];
+const BLOCKED_ROUTES_PREFIX = ["/chat"];
 
 /**
  * Calculate adaptive animation duration based on viewport width
@@ -33,6 +50,7 @@ interface NekoStatus {
 
 export function useNeko() {
   const { settings } = useSettings();
+  const location = useLocation();
   const [status, setStatus] = useState<NekoStatus>({
     state: "HIDDEN",
     x: -10,
@@ -40,7 +58,6 @@ export function useNeko() {
   });
 
   // Session state (refs to persist without re-renders)
-  const lastUserActionRef = useRef<number>(Date.now());
   const lastSpawnTimeRef = useRef<number>(0);
   const spawnCountRef = useRef<number>(0);
   const isVisibleRef = useRef<boolean>(false);
@@ -54,6 +71,7 @@ export function useNeko() {
   const animateWalk = useCallback(
     (route: string) => {
       let startTimestamp: number | null = null;
+      // Use adaptive duration from incoming changes
       const duration = getAdaptiveAnimationDuration();
       const startX = route === "A" ? -10 : 110;
       const targetX = route === "A" ? 120 : -20; // Move across screen
@@ -145,77 +163,69 @@ export function useNeko() {
     });
   }, [despawn]);
 
-  // User Interaction Tracking
+  // Interaction Tracking - Only for fleeing, not for preventing spawn
   useEffect(() => {
     if (!settings.enableNeko) return;
 
-    const updateActivity = () => {
-      lastUserActionRef.current = Date.now();
-
-      // Trigger flee if visible
+    // Explicit tap to scare
+    const handleTap = (_e: PointerEvent) => {
+      // If visible, maybe flee?
       if (isVisibleRef.current && status.state === "WALKING") {
         triggerFlee();
       }
     };
 
-    window.addEventListener("pointerdown", updateActivity);
-    window.addEventListener("keydown", updateActivity);
-    window.addEventListener("scroll", updateActivity, { passive: true });
-    window.addEventListener("touchstart", updateActivity, { passive: true });
+    window.addEventListener("pointerdown", handleTap);
 
     return () => {
-      window.removeEventListener("pointerdown", updateActivity);
-      window.removeEventListener("keydown", updateActivity);
-      window.removeEventListener("scroll", updateActivity);
-      window.removeEventListener("touchstart", updateActivity);
+      window.removeEventListener("pointerdown", handleTap);
     };
   }, [settings.enableNeko, status.state, triggerFlee]);
 
+  // Cleanup Effect: Handle disabling Neko
+  useEffect(() => {
+    if (!settings.enableNeko && status.state !== "HIDDEN") {
+      setStatus((prev) => ({ ...prev, state: "HIDDEN" }));
+      isVisibleRef.current = false;
+    }
+  }, [settings.enableNeko, status.state]);
+
   // Main Loop (Scheduler)
   useEffect(() => {
-    if (!settings.enableNeko) {
-      setStatus((prev) => ({ ...prev, state: "HIDDEN" }));
-      return;
-    }
-
-    // Optional debug mode: localStorage.setItem('neko-debug', 'true')
-    const DEBUG =
-      typeof window !== "undefined" && localStorage.getItem("neko-debug") === "true";
+    if (!settings.enableNeko) return;
 
     const checkSpawnCondition = () => {
       const now = Date.now();
-      const isIdle = now - lastUserActionRef.current > IDLE_THRESHOLD_MS;
       const isCooldownOver = now - lastSpawnTimeRef.current > MIN_SPAWN_INTERVAL_MS;
       const isBelowLimit = spawnCountRef.current < MAX_SPAWNS_PER_SESSION;
 
+      // Check if current path is allowed
+      const isAllowedRoute =
+        ALLOWED_ROUTES.includes(location.pathname) &&
+        !BLOCKED_ROUTES_PREFIX.some((prefix) => location.pathname.startsWith(prefix));
+
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const appReducedMotion = document.body.classList.contains("reduce-motion");
 
-      const willSpawn =
-        isIdle && isCooldownOver && isBelowLimit && !isVisibleRef.current && !prefersReducedMotion;
-
-      if (DEBUG) {
-        console.log("[Neko Debug]", {
-          timestamp: new Date().toISOString(),
-          isIdle: `${isIdle} (idle for ${Math.round((now - lastUserActionRef.current) / 1000)}s / ${IDLE_THRESHOLD_MS / 1000}s)`,
-          isCooldownOver: `${isCooldownOver} (cooldown: ${Math.round((now - lastSpawnTimeRef.current) / 1000)}s / ${MIN_SPAWN_INTERVAL_MS / 1000}s)`,
-          isBelowLimit: `${isBelowLimit} (${spawnCountRef.current}/${MAX_SPAWNS_PER_SESSION} spawns)`,
-          isVisible: isVisibleRef.current,
-          prefersReducedMotion,
-          willSpawn,
-          viewportWidth: window.innerWidth,
-          animationDuration: `${getAdaptiveAnimationDuration()}ms`,
-        });
-      }
-
-      if (willSpawn) {
-        spawnNeko();
+      if (
+        isCooldownOver &&
+        isBelowLimit &&
+        isAllowedRoute &&
+        !isVisibleRef.current &&
+        !prefersReducedMotion &&
+        !appReducedMotion
+      ) {
+        // Random Chance Check (My logic)
+        if (Math.random() < SPAWN_CHANCE) {
+          spawnNeko();
+        }
       }
     };
 
-    const interval = setInterval(checkSpawnCondition, 3000);
+    const interval = setInterval(checkSpawnCondition, CHECK_INTERVAL_MS);
     return () => clearInterval(interval);
-  }, [settings.enableNeko, spawnNeko]);
+  }, [settings.enableNeko, location.pathname, spawnNeko]);
 
   return status;
 }

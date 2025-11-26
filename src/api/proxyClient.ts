@@ -50,15 +50,24 @@ export async function chatStreamViaProxy(
     });
 
     if (!response.ok) {
-      // Parse error response
+      // Try to parse detailed error from JSON, fallback to text, then status
+      let errorMessage = `Proxy-Fehler: ${response.status} ${response.statusText}`;
       try {
-        const errorData = await response.json();
-        const errorMessage =
-          errorData?.error || `Proxy-Fehler: ${response.status} ${response.statusText}`;
-        throw new Error(errorMessage);
-      } catch {
-        throw new Error(`Proxy-Fehler: ${response.status} ${response.statusText}`);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          if (errorData?.error) {
+            errorMessage =
+              typeof errorData.error === "string" ? errorData.error : errorData.error.message;
+          }
+        } else {
+          const text = await response.text();
+          if (text) errorMessage = text;
+        }
+      } catch (e) {
+        console.error("Error parsing proxy error response:", e);
       }
+      throw new Error(errorMessage);
     }
 
     const reader = response.body?.getReader();
@@ -86,27 +95,31 @@ export async function chatStreamViaProxy(
         buffer += decoder.decode(value, { stream: true });
         let idx: number;
 
+        // Process complete lines only
         while ((idx = buffer.indexOf("\n")) >= 0) {
           const line = buffer.slice(0, idx).trim();
           buffer = buffer.slice(idx + 1);
 
           if (!line || line.startsWith(":")) continue;
 
+          // Standard SSE format: data: { ... }
           const payload = line.startsWith("data:") ? line.slice(5).trim() : line;
 
-          if (/^OPENROUTER\b/i.test(payload)) continue;
-
+          // Filter out OpenRouter keep-alive or internal markers if strictly needed
           if (payload === "[DONE]") {
             opts?.onDone?.(full);
             return;
           }
 
+          // Try parsing JSON
           if (payload.startsWith("{")) {
             try {
               const json = JSON.parse(payload);
 
+              // Handle embedded errors in the stream
               if (json?.error) {
-                throw new Error(json.error?.message || "Unbekannter Proxy-Fehler");
+                const errMsg = json.error?.message || "Stream Error";
+                throw new Error(errMsg);
               }
 
               const delta = json?.choices?.[0]?.delta?.content ?? "";
@@ -122,7 +135,12 @@ export async function chatStreamViaProxy(
                 full += delta;
               }
             } catch (err) {
-              throw mapError(err);
+              // If we are processing a legitimate line but JSON fails, log warning but don't crash stream unless critical
+              // console.warn("Failed to parse SSE payload:", payload, err);
+              // However, if it's an explicit error object, we want to throw.
+              if (err instanceof Error && !err.message.includes("JSON")) {
+                throw mapError(err);
+              }
             }
           }
         }
@@ -159,14 +177,23 @@ export async function chatOnceViaProxy(
     });
 
     if (!response.ok) {
+      let errorMessage = `Proxy-Fehler: ${response.status} ${response.statusText}`;
       try {
-        const errorData = await response.json();
-        const errorMessage =
-          errorData?.error || `Proxy-Fehler: ${response.status} ${response.statusText}`;
-        throw new Error(errorMessage);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          if (errorData?.error) {
+            errorMessage =
+              typeof errorData.error === "string" ? errorData.error : errorData.error.message;
+          }
+        } else {
+          const text = await response.text();
+          if (text) errorMessage = text;
+        }
       } catch {
-        throw new Error(`Proxy-Fehler: ${response.status} ${response.statusText}`);
+        // Fallback to default message
       }
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();

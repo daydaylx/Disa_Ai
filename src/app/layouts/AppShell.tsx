@@ -42,7 +42,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen bg-[var(--surface-base)] text-text-primary">
+    <div className="relative min-h-screen text-text-primary">
       {/* Aurora Background - Restore animated identity */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden brand-aurora aurora-animated">
         {/* Fallback/Overlay for depth */}
