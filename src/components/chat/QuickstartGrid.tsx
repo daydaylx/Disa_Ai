@@ -324,7 +324,7 @@ export function QuickstartGrid({
   // Helper: Render carousel for a given set of quickstarts
   const renderCarousel = (quickstarts: Quickstart[]) => (
     <section
-      className="flex gap-3 overflow-x-auto touch-pan-y overscroll-x-contain snap-x snap-mandatory pb-2 -mx-[var(--spacing-3)] px-[var(--spacing-3)]"
+      className="flex gap-3 overflow-x-auto touch-pan-x overscroll-x-contain snap-x snap-mandatory pb-2 -mx-[var(--spacing-3)] px-[var(--spacing-3)]"
       style={{
         scrollbarWidth: "none",
         WebkitOverflowScrolling: "touch",
