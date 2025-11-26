@@ -163,31 +163,18 @@ export function useChat({
             delta: string,
             messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
           ) => {
-            // Initialize assistant message with server-provided metadata on first delta
+            // CRITICAL FIX: Always create assistant message on first delta, even if empty
+            // This ensures "KI schreibt" doesn't show without a message being created
             if (!assistantMessage) {
-              if (messageData?.id) {
-                // Use server-provided ID and metadata
-                assistantMessage = {
-                  id: messageData.id,
-                  role: "assistant",
-                  content: "",
-                  timestamp: messageData.timestamp || Date.now(),
-                  model: messageData.model,
-                };
-              } else {
-                // CRITICAL FIX: Always create a message, even if first delta is empty
-                // This ensures "KI schreibt" doesn't show without a message being created
-                assistantMessage = {
-                  id: `fallback-${nanoid()}`,
-                  role: "assistant",
-                  content: "",
-                  timestamp: Date.now(),
-                };
-              }
+              assistantMessage = {
+                id: messageData?.id || `assistant-${nanoid()}`,
+                role: "assistant",
+                content: "",
+                timestamp: messageData?.timestamp || Date.now(),
+                model: messageData?.model,
+              };
 
-              if (assistantMessage) {
-                dispatch({ type: "ADD_MESSAGE", message: assistantMessage });
-              }
+              dispatch({ type: "ADD_MESSAGE", message: assistantMessage });
             }
 
             if (delta) {
@@ -261,7 +248,7 @@ export function useChat({
 
           const friendlyError = new RateLimitError(
             retryAfterWithBackoff > 1
-              ? `Rate-Limit aktiv. Bitte warte ${retryAfterWithBackoff} Sekunden.`
+              ? `Rate-Limit aktiv. Warte bitte ${retryAfterWithBackoff} Sekunden.`
               : "Rate-Limit aktiv. Einen Moment bitte …",
             mappedError.status,
             mappedError.statusText,

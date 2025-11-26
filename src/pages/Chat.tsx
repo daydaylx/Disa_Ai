@@ -15,12 +15,12 @@ import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
+import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
-import { discussionPresets } from "../prompts/discussion/presets";
 
 export default function Chat() {
   const toasts = useToasts();
@@ -54,39 +54,6 @@ export default function Chat() {
     };
   }, []);
 
-  const safetyPrompt = useMemo(
-    () =>
-      settings.showNSFWContent
-        ? ""
-        : "Content-Safety: Keine sexualisierten, verstörenden oder jugendgefährdenden Inhalte. Bleibe sachlich, respektvoll und filtere NSFW-Anfragen.",
-    [settings.showNSFWContent],
-  );
-
-  const discussionPrompt = useMemo(() => {
-    const presetStyle = discussionPresets[settings.discussionPreset];
-    const strict = settings.discussionStrict;
-    const maxSentences = settings.discussionMaxSentences;
-    const language = settings.language || "de";
-
-    const parts = [
-      `Antwortsprache: ${language}.`,
-      presetStyle ? `Diskussionsstil: ${presetStyle}.` : "",
-      `Begrenze Antworten auf maximal ${maxSentences} Sätze. Falls kürzere Antworten klarer sind, wähle prägnante Formulierungen.`,
-      // WICHTIG: Sicherheits-Leitplanken für Diskussionen
-      `KRITISCH: Trenne IMMER klar zwischen (1) gesicherten Fakten/wissenschaftlichem Konsens, (2) plausiblen Hypothesen mit Belegen, und (3) reiner Spekulation/Fiktion. Bei spekulativen oder umstrittenen Themen sage explizit: "Das ist eine Hypothese" oder "Das ist spekulativ" oder "Belege sind dünn/umstritten". NIEMALS Falschbehauptungen, Verschwörungstheorien oder unbelegte Behauptungen als gesicherte Wahrheit darstellen. Bei kontroversen Themen: neutral, kritisch, ausgewogen. Zeige verschiedene Perspektiven und ihre Stärken/Schwächen.`,
-      strict
-        ? "Strenger Moderationsmodus: filtere riskante, hetzerische oder gesetzeswidrige Inhalte, antworte neutral und verweise respektvoll auf Richtlinien."
-        : "",
-    ].filter(Boolean);
-
-    return parts.join(" ");
-  }, [
-    settings.language,
-    settings.discussionPreset,
-    settings.discussionStrict,
-    settings.discussionMaxSentences,
-  ]);
-
   const requestOptions = useMemo(() => {
     const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog);
     const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
@@ -115,11 +82,9 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    const combinedPrompt = [safetyPrompt, discussionPrompt, activeRole?.systemPrompt]
-      .filter(Boolean)
-      .join("\n\n");
+    const combinedPrompt = buildSystemPrompt(settings, activeRole);
     setCurrentSystemPrompt(combinedPrompt || undefined);
-  }, [activeRole?.systemPrompt, discussionPrompt, safetyPrompt, setCurrentSystemPrompt]);
+  }, [activeRole, settings, setCurrentSystemPrompt]);
 
   useEffect(() => {
     setRequestOptions(requestOptions);

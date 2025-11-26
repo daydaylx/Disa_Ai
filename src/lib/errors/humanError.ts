@@ -95,17 +95,28 @@ export function humanError(error: unknown): HumanError {
     };
   }
 
-  // Proxy-related errors - Only if it's a generic connection/status error
-  // If it has specific details (which don't match above), we might want to show them?
-  // For now, we keep the generic catch for "Proxy-Fehler"/500s/404s that originated from proxyClient's fallback
+  // Proxy-related errors with specific timeout handling
+  if (lowerMsg.includes("stream_timeout") || lowerMsg.includes("response took too long")) {
+    return {
+      title: "Zeitüberschreitung",
+      message: "Die KI-Antwort benötigt länger als erwartet.",
+      action:
+        "Bitte versuchen Sie es erneut. Wenn das Problem weiterhin besteht, fügen Sie einen eigenen API-Key hinzu.",
+    };
+  }
+
+  // Enhanced proxy-related errors
   if (
     lowerMsg.includes("proxy-fehler") ||
-    (lowerMsg.includes("proxy") && lowerMsg.includes("unavailable"))
+    (lowerMsg.includes("proxy") && lowerMsg.includes("unavailable")) ||
+    lowerMsg.includes("unable to reach the chat service") ||
+    lowerMsg.includes("failed to reach openrouter")
   ) {
     return {
-      title: "Proxy nicht erreichbar",
-      message: "Der öffentliche Proxy ist momentan nicht verfügbar.",
-      action: "Versuchen Sie es später erneut oder fügen Sie einen eigenen API-Key hinzu.",
+      title: "Verbindungsproblem",
+      message: "Der Chat-Server ist vorübergehend nicht erreichbar.",
+      action:
+        "Bitte versuchen Sie es in einigen Sekunden erneut oder fügen Sie einen eigenen API-Key in den Einstellungen hinzu.",
     };
   }
 

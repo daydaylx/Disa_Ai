@@ -7,7 +7,6 @@ import { RouteWrapper } from "./components/RouteWrapper";
 const ChatPage = lazy(() => import("../pages/Chat"));
 const ChatHistoryPage = lazy(() => import("../pages/ChatHistoryPage"));
 const ModelsPage = lazy(() => import("../pages/ModelsPage"));
-const MobileModelsPage = lazy(() => import("../pages/MobileModels"));
 const RolesPage = lazy(() => import("../pages/RolesPage"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
 const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
@@ -63,14 +62,6 @@ export const appRouter = createBrowserRouter(
       element: (
         <RouteWrapper>
           <ModelsPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/models/mobile",
-      element: (
-        <RouteWrapper>
-          <MobileModelsPage />
         </RouteWrapper>
       ),
     },

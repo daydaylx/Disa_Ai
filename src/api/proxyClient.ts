@@ -66,6 +66,9 @@ export async function chatStreamViaProxy(
         }
       } catch (e) {
         console.error("Error parsing proxy error response:", e);
+        // If we can't parse the error, provide a user-friendly fallback
+        errorMessage =
+          "Verbindungsfehler: Der Chat-Server ist vorübergehend nicht erreichbar. Bitte versuche es in einigen Sekunden erneut.";
       }
       throw new Error(errorMessage);
     }
@@ -86,7 +89,7 @@ export async function chatStreamViaProxy(
         // This prevents "KI schreibt" from staying visible forever
         const readPromise = reader.read();
         const timeoutPromise = new Promise<ReadableStreamReadResult<Uint8Array>>((_, reject) => {
-          setTimeout(() => reject(new Error("STREAM_INACTIVITY_TIMEOUT")), 20000);
+          setTimeout(() => reject(new Error("STREAM_TIMEOUT: Response took too long")), 60000);
         });
 
         const { value, done } = await Promise.race([readPromise, timeoutPromise]);
@@ -191,7 +194,9 @@ export async function chatOnceViaProxy(
           if (text) errorMessage = text;
         }
       } catch {
-        // Fallback to default message
+        // Fallback to user-friendly message
+        errorMessage =
+          "Verbindungsfehler: Der Chat-Server ist vorübergehend nicht erreichbar. Bitte versuche es in einigen Sekunden erneut.";
       }
       throw new Error(errorMessage);
     }

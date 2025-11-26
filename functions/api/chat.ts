@@ -33,8 +33,8 @@ const MAX_TEMPERATURE = 1.2;
 const MIN_TEMPERATURE = 0.0;
 
 // Soft rate limiting
-const BURST_LIMIT_MS = 3000; // Minimum 3 seconds between requests
-const DAILY_BUDGET = 40; // 40 requests per day per IP
+const BURST_LIMIT_MS = 2000; // Minimum 2 seconds between requests (reduced from 3s)
+const DAILY_BUDGET = 60; // 60 requests per day per IP (increased from 40)
 const _SOFT_THROTTLE_COOLDOWN_MS = 90000; // 90 seconds cooldown
 
 interface Env {
@@ -292,7 +292,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const acceptHeader = request.headers.get("Accept") || undefined;
     const upstreamUrl = buildOpenRouterUrl(
-      env.OPENROUTER_BASE_URL ?? DEFAULT_OPENROUTER_BASE_URL,
+      env.OPENROUTER_BASE_URL || DEFAULT_OPENROUTER_BASE_URL,
       OPENROUTER_CHAT_PATH,
     );
 

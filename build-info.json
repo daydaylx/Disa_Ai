@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-280501c",
-  "buildTime": "2025-11-25T18:47:58.510Z",
-  "gitSha": "280501c4261bc0adb1206935d3127c2e8cc07a25",
-  "gitBranch": "claude/review-no-api-key-flow-012XLLvwGbXZy2hRsGtCPUXT",
+  "buildId": "v1.0.0-c7a1a52",
+  "buildTime": "2025-11-26T18:49:24.291Z",
+  "gitSha": "c7a1a52ecba9a349d25224a4b46e68e4621eaaa9",
+  "gitBranch": "main",
   "version": "1.0.0"
 }

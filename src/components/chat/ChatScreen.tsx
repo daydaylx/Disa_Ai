@@ -24,6 +24,13 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
     return last?.content ?? null;
   }, [messages]);
 
+  // Check for recent errors to show user feedback
+  const hasRecentError = useMemo(() => {
+    const reversed = [...messages].reverse();
+    const lastMessage = reversed[0];
+    return lastMessage?.role === "assistant" && !lastMessage.content.trim() && !isLoading;
+  }, [messages, isLoading]);
+
   return (
     <div className="flex h-full max-h-[100dvh] flex-1 flex-col gap-4 overflow-hidden">
       <MaterialCard className="relative flex-1 overflow-hidden">
@@ -49,6 +56,18 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
       />
 
       <ChatLiveRegion message={lastAssistantChunk} />
+
+      {hasRecentError && (
+        <div className="px-4 py-2">
+          <div className="border-border bg-surface-subtle text-text-secondary flex items-center gap-3 rounded-lg border p-3 text-sm">
+            <span className="text-text-primary font-medium">⚠️</span>
+            <span>
+              Verbindungsproblem erkannt. Bitte versuche es erneut oder überprüfe deine
+              Internetverbindung.
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
