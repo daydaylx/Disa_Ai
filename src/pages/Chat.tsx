@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useToasts } from "@/ui";
+import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
@@ -195,10 +195,6 @@ export default function Chat() {
     </span>
   );
 
-  import { Button } from "@/ui";
-
-  // ... (inside component)
-
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
@@ -229,6 +225,7 @@ export default function Chat() {
 
   return (
     <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
+      <h1 className="sr-only">Disa AI – Chat</h1>
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">

@@ -43,6 +43,9 @@ Diese Referenz listet alle Umgebungsvariablen auf, die das Projekt aktuell auswe
 | `DEBUG_PREVIEW` | optional | Zusätzliche Logs im Preview-Skript. | [`scripts/run-preview.mjs`](../scripts/run-preview.mjs) |
 | `LHCI_HOST`, `LHCI_PORT`, `LHCI_SKIP_SERVER` | optional | Steuerung für Lighthouse CI. | [`lighthouserc.cjs`](../lighthouserc.cjs) |
 | `PLAYWRIGHT_BASE_URL`, `PLAYWRIGHT_PORT`, `PLAYWRIGHT_WEB_SERVER`, `PLAYWRIGHT_WEB_PORT` | optional | Playwright Test-Setup (lokaler Server). | [`playwright.config.ts`](../playwright.config.ts), [`scripts/setup_disaai.sh`](../scripts/setup_disaai.sh) |
+| `PLAYWRIGHT_LIVE` | optional | Schaltet Playwright in Live-Modus (kein Dev-Server, nutzt `LIVE_BASE_URL`). | [`playwright.config.ts`](../playwright.config.ts), [`tests/e2e/live`](../tests/e2e/live) |
+| `LIVE_BASE_URL` | optional | Basis-URL für Live-E2E-Checks (`https://disaai.de` als Default). | [`playwright.config.ts`](../playwright.config.ts), [`tests/e2e/live`](../tests/e2e/live) |
+| `LIVE_PATHS` | optional | Komma-separierte Pfade für die Live-Analyse (Default `/`). | [`tests/e2e/live/live-visual.spec.ts`](../tests/e2e/live/live-visual.spec.ts) |
 | `CI` | automatisch | Anpassung von Timeouts/Worker-Anzahl in CI. | [`playwright.config.ts`](../playwright.config.ts) |
 
 ## Deployment Default Values

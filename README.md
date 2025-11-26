@@ -310,16 +310,17 @@ Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche E
 
 Die wichtigsten Skripte aus `package.json`:
 
-| Befehl              | Beschreibung                                                            |
-| ------------------- | ----------------------------------------------------------------------- |
-| `npm run dev`       | Startet den Vite-Entwicklungsserver mit Hot-Reloading.                  |
-| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.          |
-| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.       |
-| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                    |
-| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                      |
-| `npm run test:unit` | Führt alle Unit-Tests mit Vitest aus.                                   |
-| `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                         |
-| `npm run verify`    | Führt `typecheck`, `lint` und `test:unit` nacheinander aus (CI-Skript). |
+| Befehl              | Beschreibung                                                                                                      |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`       | Startet den Vite-Entwicklungsserver mit Hot-Reloading.                                                            |
+| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.                                                    |
+| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.                                                 |
+| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                                                              |
+| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                                                                |
+| `npm run test:unit` | Führt alle Unit-Tests mit Vitest aus.                                                                             |
+| `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                                                                   |
+| `npm run e2e:live`  | Testet die Live-Seite (Default `https://disaai.de`), erzeugt Screenshots & Axe-Reports unter `test-results/live`. |
+| `npm run verify`    | Führt `typecheck`, `lint` und `test:unit` nacheinander aus (CI-Skript).                                           |
 
 ## 🔐 Architektur- und Qualitätsregeln
 

@@ -177,12 +177,12 @@ describe("Message ID Synchronization", () => {
 
       const assistantMessage = result.current.messages[1];
 
-      // Should have fallback ID starting with "fallback-"
-      expect(assistantMessage?.id).toMatch(/^fallback-/);
+      // Should have fallback ID starting with "assistant-"
+      expect(assistantMessage?.id).toMatch(/^assistant-/);
       expect(assistantMessage?.content).toBe("Fallback response");
     });
 
-    it("should handle message updates with correct ID", async () => {
+    it("should update existing message when server ID arrives later", async () => {
       mockChatStream.mockImplementation((_messages, onDelta, opts) => {
         opts?.onStart?.();
 
@@ -310,7 +310,7 @@ describe("Message ID Synchronization", () => {
       expect(result.current.messages).toHaveLength(2);
 
       const assistantMessage = result.current.messages[1];
-      expect(assistantMessage?.id).toMatch(/^fallback-/);
+      expect(assistantMessage?.id).toMatch(/^assistant-/);
       expect(assistantMessage?.content).toBe("Content continues");
     });
   });

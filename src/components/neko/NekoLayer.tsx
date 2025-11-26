@@ -20,8 +20,9 @@ export function NekoLayer() {
 
   return createPortal(
     <div
-      className="fixed bottom-0 left-0 right-0 h-40 pointer-events-none z-toast overflow-hidden select-none"
-      aria-hidden="true" // Purely decorative - increased height for better mobile visibility
+      className="fixed bottom-0 left-0 right-0 h-32 pointer-events-none z-toast overflow-hidden select-none"
+      aria-hidden="true" // Purely decorative
+      data-testid="neko-container"
     >
       <div
         className="absolute bottom-0 transition-transform duration-100 ease-linear will-change-transform"
