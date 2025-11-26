@@ -337,6 +337,15 @@
   .animate-neko-run {
     animation: neko-bob 0.15s steps(2) infinite;
   }
+
+  /* Respect reduced motion preferences for Neko animations */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-neko-walk,
+    .animate-neko-run {
+      animation: none !important;
+    }
+  }
+
   @keyframes slideInLeft {
     0% {
       transform: translateX(-100%);

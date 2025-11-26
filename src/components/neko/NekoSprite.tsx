@@ -11,7 +11,7 @@ export function NekoSprite({ state, direction }: NekoSpriteProps) {
   return (
     <div
       className={cn(
-        "w-12 h-12 transition-transform duration-100 relative",
+        "w-12 h-12 md:w-16 md:h-16 transition-transform duration-100 relative",
         direction === "left" && "scale-x-[-1]", // Mirror for left direction
       )}
     >
