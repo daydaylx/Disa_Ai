@@ -1,24 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 
 import { useSettings } from "./useSettings";
 
 // Configuration
-const IDLE_THRESHOLD_MS = 7000; // 7s idle before chance to spawn
+const IDLE_THRESHOLD_MS = 5000; // 5s idle before chance to spawn
 const SPAWN_DURATION_MS = 6000; // 6s visible duration
 const MIN_SPAWN_INTERVAL_MS = 120000; // 2 minutes cooldown between spawns
 const MAX_SPAWNS_PER_SESSION = 3;
-
-// Allowed routes (whitelist)
-const ALLOWED_ROUTES = [
-  "/",
-  "/about",
-  "/impressum",
-  "/datenschutz",
-  "/settings",
-  "/settings/extras",
-];
-const BLOCKED_ROUTES_PREFIX = ["/chat"];
 
 type NekoState = "HIDDEN" | "SPAWNING" | "WALKING" | "FLEEING";
 
@@ -30,7 +18,6 @@ interface NekoStatus {
 
 export function useNeko() {
   const { settings } = useSettings();
-  const location = useLocation();
   const [status, setStatus] = useState<NekoStatus>({
     state: "HIDDEN",
     x: -10,
@@ -181,9 +168,6 @@ export function useNeko() {
       const isIdle = now - lastUserActionRef.current > IDLE_THRESHOLD_MS;
       const isCooldownOver = now - lastSpawnTimeRef.current > MIN_SPAWN_INTERVAL_MS;
       const isBelowLimit = spawnCountRef.current < MAX_SPAWNS_PER_SESSION;
-      const isAllowedRoute =
-        ALLOWED_ROUTES.includes(location.pathname) &&
-        !BLOCKED_ROUTES_PREFIX.some((prefix) => location.pathname.startsWith(prefix));
 
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -192,7 +176,6 @@ export function useNeko() {
         isIdle &&
         isCooldownOver &&
         isBelowLimit &&
-        isAllowedRoute &&
         !isVisibleRef.current &&
         !prefersReducedMotion
       ) {
@@ -202,7 +185,7 @@ export function useNeko() {
 
     const interval = setInterval(checkSpawnCondition, 3000);
     return () => clearInterval(interval);
-  }, [settings.enableNeko, location.pathname, spawnNeko]);
+  }, [settings.enableNeko, spawnNeko]);
 
   return status;
 }
