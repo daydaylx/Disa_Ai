@@ -22,6 +22,7 @@
 @import "./styles/interactive-states.css"; /* NEW: Interactive States System */
 @import "./styles/ui-state-animations.css"; /* Universal State System animations */
 @import "./styles/logo-animations.css"; /* Logo animations for DISA AI branding */
+@import "./styles/aurora-optimized.css"; /* Aurora background animations */
 
 /* Tailwind CSS - after base imports */
 @tailwind base;
