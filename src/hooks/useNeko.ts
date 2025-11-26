@@ -4,9 +4,24 @@ import { useSettings } from "./useSettings";
 
 // Configuration
 const IDLE_THRESHOLD_MS = 5000; // 5s idle before chance to spawn
-const SPAWN_DURATION_MS = 6000; // 6s visible duration
 const MIN_SPAWN_INTERVAL_MS = 120000; // 2 minutes cooldown between spawns
 const MAX_SPAWNS_PER_SESSION = 3;
+
+/**
+ * Calculate adaptive animation duration based on viewport width
+ * Mobile devices get longer durations for better visibility and consistent visual speed
+ * @returns Duration in milliseconds
+ */
+function getAdaptiveAnimationDuration(): number {
+  if (typeof window === "undefined") return 6000; // SSR fallback
+  const vw = window.innerWidth;
+  // Mobile (< 640px): 8s - slower for better visibility
+  // Tablet (640-1024px): 7s - moderate speed
+  // Desktop (> 1024px): 6s - original speed
+  if (vw < 640) return 8000;
+  if (vw < 1024) return 7000;
+  return 6000;
+}
 
 type NekoState = "HIDDEN" | "SPAWNING" | "WALKING" | "FLEEING";
 
@@ -39,7 +54,7 @@ export function useNeko() {
   const animateWalk = useCallback(
     (route: string) => {
       let startTimestamp: number | null = null;
-      const duration = SPAWN_DURATION_MS;
+      const duration = getAdaptiveAnimationDuration();
       const startX = route === "A" ? -10 : 110;
       const targetX = route === "A" ? 120 : -20; // Move across screen
 
@@ -163,6 +178,10 @@ export function useNeko() {
       return;
     }
 
+    // Optional debug mode: localStorage.setItem('neko-debug', 'true')
+    const DEBUG =
+      typeof window !== "undefined" && localStorage.getItem("neko-debug") === "true";
+
     const checkSpawnCondition = () => {
       const now = Date.now();
       const isIdle = now - lastUserActionRef.current > IDLE_THRESHOLD_MS;
@@ -172,13 +191,24 @@ export function useNeko() {
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (
-        isIdle &&
-        isCooldownOver &&
-        isBelowLimit &&
-        !isVisibleRef.current &&
-        !prefersReducedMotion
-      ) {
+      const willSpawn =
+        isIdle && isCooldownOver && isBelowLimit && !isVisibleRef.current && !prefersReducedMotion;
+
+      if (DEBUG) {
+        console.log("[Neko Debug]", {
+          timestamp: new Date().toISOString(),
+          isIdle: `${isIdle} (idle for ${Math.round((now - lastUserActionRef.current) / 1000)}s / ${IDLE_THRESHOLD_MS / 1000}s)`,
+          isCooldownOver: `${isCooldownOver} (cooldown: ${Math.round((now - lastSpawnTimeRef.current) / 1000)}s / ${MIN_SPAWN_INTERVAL_MS / 1000}s)`,
+          isBelowLimit: `${isBelowLimit} (${spawnCountRef.current}/${MAX_SPAWNS_PER_SESSION} spawns)`,
+          isVisible: isVisibleRef.current,
+          prefersReducedMotion,
+          willSpawn,
+          viewportWidth: window.innerWidth,
+          animationDuration: `${getAdaptiveAnimationDuration()}ms`,
+        });
+      }
+
+      if (willSpawn) {
         spawnNeko();
       }
     };

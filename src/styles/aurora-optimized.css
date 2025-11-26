@@ -189,11 +189,11 @@
   /* Performance optimization for lower-end devices */
   @media (max-width: 768px) and (max-height: 800px) {
     .brand-aurora::before {
-      opacity: 0.4; /* Reduce visual complexity on small devices */
+      opacity: 0.55; /* Balanced visibility and performance on mobile devices */
     }
 
     .brand-aurora.aurora-animated::before {
-      animation-duration: 40s, 20s; /* Slower animations on mobile */
+      animation-duration: 32s, 16s; /* Moderate animation speed on mobile - balanced performance */
     }
   }
 
