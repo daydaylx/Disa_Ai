@@ -1,7 +1,7 @@
 # Cloudflare Pages Konfiguration - Konsolidierte Version
 # Bootstrap-Fix & Deployment-Härtung
 
-name = "disa-ai"
+name = "disaai"
 compatibility_date = "2025-11-16"
 pages_build_output_dir = "dist"
 
