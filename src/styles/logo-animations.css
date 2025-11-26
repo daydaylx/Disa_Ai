@@ -24,73 +24,82 @@
   /* Brand Glow Colors */
   --logo-glow-brand: rgba(139, 92, 246, 0.4); /* Lila */
   --logo-glow-ai: rgba(139, 92, 246, 0.6); /* Stronger for AI part */
+
+  /* Responsive Animation Values - Desktop defaults */
+  --logo-breathe-y: -10px;
+  --logo-breathe-scale: 1.12;
+  --logo-breathe-opacity-min: 0.85;
+  --logo-breathe-opacity-max: 1;
+  --logo-ai-glow-enable: 1; /* 1 = enabled, 0 = disabled */
 }
 
 /* ============================================================================
    KEYFRAME ANIMATIONS
    ============================================================================ */
 
-/* Breathing effect - VERY visible float and scale */
+/* Breathing effect - Uses CSS Custom Properties for responsive values */
 @keyframes logo-breathe {
   0%,
   100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.85;
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--logo-breathe-opacity-min);
   }
   50% {
-    transform: translateY(-10px) scale(1.12);
-    opacity: 1;
+    transform: translate3d(0, var(--logo-breathe-y), 0) scale(var(--logo-breathe-scale));
+    opacity: var(--logo-breathe-opacity-max);
   }
 }
 
-/* Individual letter hover bounce */
+/* Individual letter hover bounce - GPU accelerated */
 @keyframes logo-letter-bounce {
   0%, 100% {
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translateY(-2px) scale(1.05);
+    transform: translate3d(0, -2px, 0) scale(1.05);
   }
 }
 
-/* Glow pulse for AI part - MAXIMUM visibility */
+/* Glow pulse for AI part - Conditional based on --logo-ai-glow-enable */
 @keyframes logo-ai-glow-pulse {
   0%,
   100% {
-    filter: drop-shadow(0 0 12px var(--logo-glow-ai)) drop-shadow(0 0 4px var(--logo-glow-ai));
-    transform: scale(1);
+    filter: drop-shadow(0 0 calc(12px * var(--logo-ai-glow-enable)) var(--logo-glow-ai))
+            drop-shadow(0 0 calc(4px * var(--logo-ai-glow-enable)) var(--logo-glow-ai));
+    transform: scale(1) translateZ(0);
   }
   50% {
-    filter: drop-shadow(0 0 24px var(--logo-glow-ai)) drop-shadow(0 0 8px var(--logo-glow-ai));
-    transform: scale(1.15);
+    filter: drop-shadow(0 0 calc(24px * var(--logo-ai-glow-enable)) var(--logo-glow-ai))
+            drop-shadow(0 0 calc(8px * var(--logo-ai-glow-enable)) var(--logo-glow-ai));
+    transform: scale(1.15) translateZ(0);
   }
 }
 
-/* Loading wave effect */
+/* Loading wave effect - GPU accelerated */
 @keyframes logo-loading-wave {
   0% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
   20% {
-    transform: translateY(-3px);
+    transform: translate3d(0, -3px, 0);
   }
   40% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-/* Typing effect stagger */
+/* Typing effect stagger - GPU accelerated */
 @keyframes logo-type-in {
   from {
     opacity: 0;
-    transform: translateX(-4px);
+    transform: translate3d(-4px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -113,20 +122,20 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0;
-  will-change: transform, opacity;
+  /* will-change removed - only set when animating */
 }
 
 /* Individual letter wrapper */
 .logo-letter {
   display: inline-block;
   transition: transform var(--logo-hover-duration) var(--logo-ease-smooth);
-  will-change: transform;
+  /* will-change removed - only set when animating */
 }
 
 /* AI part wrapper needs to be transformable */
 .logo-ai-part {
   display: inline-block;
-  will-change: transform, filter;
+  /* will-change removed - only set when animating */
 }
 
 /* ============================================================================
@@ -135,10 +144,12 @@
 
 .logo-state-idle .logo-animated {
   animation: logo-breathe var(--logo-breath-duration) var(--logo-ease-breath) infinite;
+  will-change: transform, opacity; /* Only set during animation */
 }
 
 .logo-state-idle .logo-ai-part {
   animation: logo-ai-glow-pulse var(--logo-breath-duration) var(--logo-ease-breath) infinite;
+  will-change: transform; /* Only transform, filter is too expensive */
 }
 
 /* ============================================================================
@@ -187,6 +198,7 @@
 
 .logo-state-loading .logo-letter {
   animation: logo-loading-wave var(--logo-loading-duration) var(--logo-ease-smooth) infinite;
+  will-change: transform; /* Only set during animation */
 }
 
 .logo-state-loading .logo-letter:nth-child(1) {
@@ -242,18 +254,19 @@
 
 @keyframes logo-shake {
   0%, 100% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   25% {
-    transform: translateX(-4px);
+    transform: translate3d(-4px, 0, 0);
   }
   75% {
-    transform: translateX(4px);
+    transform: translate3d(4px, 0, 0);
   }
 }
 
 .logo-state-error .logo-animated {
   animation: logo-shake 300ms var(--ease-out);
+  will-change: transform; /* Only set during animation */
 }
 
 .logo-state-error .logo-ai-part {
@@ -285,36 +298,41 @@
 }
 
 /* ============================================================================
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE ADJUSTMENTS - MOBILE OPTIMIZATION
    ============================================================================ */
 
-/* Keep animation visible on mobile */
+/* Mobile optimization: Simplified animation for better performance */
 @media (max-width: 640px) {
   :root {
-    --logo-breath-duration: 2000ms; /* Faster for visibility on mobile */
+    /* Adjusted animation values via CSS Custom Properties */
+    --logo-breath-duration: 2000ms; /* Slower, smoother on mobile */
     --logo-hover-duration: 150ms; /* Faster feedback */
+    --logo-breathe-y: -6px; /* Reduced movement for mobile */
+    --logo-breathe-scale: 1.08; /* Reduced scale for mobile */
+    --logo-breathe-opacity-min: 0.9; /* Higher minimum opacity */
+    --logo-breathe-opacity-max: 1;
+    --logo-ai-glow-enable: 0; /* DISABLE expensive drop-shadow on mobile */
   }
 
-  /* Keep noticeable bounce amplitude on mobile */
-  @keyframes logo-letter-bounce {
-    0%, 100% {
-      transform: translateY(0) scale(1);
-    }
-    50% {
-      transform: translateY(-2px) scale(1.05);
-    }
+  /* Disable AI glow animation on mobile - too expensive */
+  .logo-state-idle .logo-ai-part {
+    animation: none;
+    filter: none;
+    will-change: auto; /* Remove will-change on mobile */
   }
 
-  /* Enhanced breathing on mobile */
-  @keyframes logo-breathe {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-      opacity: 0.85;
-    }
-    50% {
-      transform: translateY(-8px) scale(1.1);
-      opacity: 1;
-    }
+  /* Simplify to single animation on main element only */
+  .logo-state-idle .logo-animated {
+    will-change: transform; /* Only transform, no opacity change needed */
+  }
+
+  /* Disable letter animations during hover on mobile - not needed for touch */
+  .logo-state-idle:hover .logo-letter {
+    animation: none;
+  }
+
+  /* Keep loading state simple on mobile */
+  .logo-state-loading .logo-letter {
+    will-change: transform;
   }
 }
