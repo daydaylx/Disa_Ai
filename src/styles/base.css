@@ -128,9 +128,17 @@ textarea {
 }
 
 button,
-[role="button"],
 a {
   touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Allow vertical scrolling on role="button" elements in scrollable containers */
+[role="button"],
+[role="group"] {
+  touch-action: pan-y;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;

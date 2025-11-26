@@ -61,6 +61,8 @@ export const PremiumCard = React.memo(
           // Focus
           onClick &&
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
+          // Ensure scrollability - touch-action handled by CSS
+          onClick && "[touch-action:pan-y]",
           className,
         )}
       >

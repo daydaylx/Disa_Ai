@@ -41,7 +41,17 @@ export function MaterialCard({
     spineSide === "none" ? "with-spine-none" : spineSide === "right" ? "with-spine-right" : "";
 
   return (
-    <div className={cn(baseStyles, variantStyles[variant], spineSideClass, className)} {...props}>
+    <div
+      className={cn(
+        baseStyles,
+        variantStyles[variant],
+        spineSideClass,
+        // Ensure scrollability when interactive
+        props.onClick && "[touch-action:pan-y] cursor-pointer",
+        className,
+      )}
+      {...props}
+    >
       <div className="relative z-10">{children}</div>
     </div>
   );
