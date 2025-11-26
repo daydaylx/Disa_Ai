@@ -89,8 +89,8 @@ export function SettingsExtrasView() {
               <div className="space-y-1">
                 <p className="text-sm font-medium text-text-primary">Wie funktioniert das?</p>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Die Katze erscheint nur auf Startseiten und Infoseiten (nie im Chat), wenn du
-                  länger als 30 Sekunden inaktiv bist. Sie taucht maximal 3x pro Sitzung auf.
+                  Die Katze erscheint auf allen Seiten (auch im Chat), wenn du länger als 5
+                  Sekunden inaktiv bist. Sie taucht maximal 3x pro Sitzung auf.
                 </p>
               </div>
             </div>
