@@ -47,9 +47,15 @@ export function useBreadcrumbs(): BreadcrumbItem[] {
     if (pathname !== "/settings") {
       const pageLabel = SETTINGS_PAGES[pathname as keyof typeof SETTINGS_PAGES] || "Unbekannt";
       breadcrumbs.push({ label: pageLabel, path: pathname, current: true });
-      breadcrumbs[1].current = false; // Remove current from parent
+      const settingsCrumb = breadcrumbs[1];
+      if (settingsCrumb) {
+        settingsCrumb.current = false; // Remove current from parent
+      }
     } else {
-      breadcrumbs[1].current = true;
+      const settingsCrumb = breadcrumbs[1];
+      if (settingsCrumb) {
+        settingsCrumb.current = true;
+      }
     }
 
     return breadcrumbs;

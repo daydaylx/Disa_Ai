@@ -6,24 +6,6 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ChatComposer } from "./ChatComposer";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
-// Type definitions
-interface ChatComposerProps {
-  value: string;
-  onChange: (value: string) => void;
-  onSend: (message: string) => void;
-  disabled?: boolean;
-}
-
-// Message type
-interface ChatMessage {
-  id: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-  timestamp: number;
-  model?: string;
-  tokens?: number;
-}
-
 // Lazy-loaded mobile-specific components
 const MobileChatComposer = lazy(() =>
   import("./MobileChatComposer").then((module) => ({
@@ -36,10 +18,10 @@ interface MobileOptimizedChatProps {
   children?: React.ReactNode;
   // Chat props
   messages?: any[];
-  onSend?: ChatComposerProps["onSend"];
+  onSend?: (message: string) => void;
   isLoading?: boolean;
   input?: string;
-  onInputChange?: ChatComposerProps["onChange"];
+  onInputChange?: (value: string) => void;
 }
 
 export function MobileOptimizedChat({
@@ -56,6 +38,10 @@ export function MobileOptimizedChat({
 
   const handleSend = (message: string) => {
     onSend?.(message);
+  };
+
+  const handleDesktopSend = () => {
+    onSend?.(input);
   };
 
   const handleChange = (value: string) => {
@@ -80,7 +66,7 @@ export function MobileOptimizedChat({
         <ChatComposer
           value={input}
           onChange={handleChange}
-          onSend={handleSend}
+          onSend={handleDesktopSend}
           disabled={isLoading}
         />
       )}
@@ -113,11 +99,11 @@ function MobileComposerSkeleton() {
 // Mobile-specific features component
 function MobileFeatures() {
   const handleQuickAction = (action: string) => () => {
-    console.log(`Mobile action: ${action}`);
+    console.warn(`Mobile action not implemented: ${action}`);
   };
 
   const handleEmoji = (emoji: string) => () => {
-    console.log(`Emoji: ${emoji}`);
+    console.warn(`Emoji picker not implemented, selected: ${emoji}`);
   };
 
   return (

@@ -38,7 +38,8 @@ export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
     { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", description: "Schnell & Günstig" },
   ];
 
-  const currentModelOption = modelOptions.find((m) => m.id === currentModel) || modelOptions[0];
+  const currentModelOption = modelOptions.find((m) => m.id === currentModel) ?? modelOptions[0];
+  if (!currentModelOption) return null;
 
   return (
     <div className={cn("bg-surface-2/50 rounded-xl border border-surface-1", className)}>

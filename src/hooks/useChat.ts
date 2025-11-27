@@ -37,6 +37,11 @@ export interface UseChatOptions {
   getRequestOptions?: () => ChatRequestOptions;
 }
 
+type AppendOverrides = {
+  systemPrompt?: string;
+  requestOptions?: ChatRequestOptions | null;
+};
+
 export function useChat({
   api: _api = "/api/chat",
   id: _id,
@@ -94,6 +99,7 @@ export function useChat({
     async (
       message: Omit<ChatMessageType, "id" | "timestamp">,
       customMessages?: ChatMessageType[],
+      overrides?: AppendOverrides,
     ) => {
       // Handle rate limiting with exponential backoff
       const now = Date.now();
@@ -156,12 +162,16 @@ export function useChat({
         }));
 
         // Add system prompt as the first message if it exists and not already present
-        const systemPrompt = stateRef.current.currentSystemPrompt || systemPromptRef.current;
+        const systemPrompt =
+          overrides?.systemPrompt ||
+          stateRef.current.currentSystemPrompt ||
+          systemPromptRef.current;
         if (systemPrompt && apiMessages.length > 0 && apiMessages[0]?.role !== "system") {
           apiMessages = [{ role: "system", content: systemPrompt }, ...apiMessages];
         }
 
-        const requestOptions = stateRef.current.requestOptions || getRequestOptions?.();
+        const requestOptions =
+          overrides?.requestOptions ?? stateRef.current.requestOptions ?? getRequestOptions?.();
 
         // Use the new Cloudflare Worker endpoint instead of direct OpenRouter call
         await chatStream(
@@ -328,6 +338,9 @@ export function useChat({
   }, []);
 
   const reload = useCallback(async () => {
+    const currentSystemPrompt = state.currentSystemPrompt ?? systemPromptRef.current;
+    const currentRequestOptions = state.requestOptions;
+
     try {
       // ATOMIC OPERATION: Capture current messages at function start
       const currentMessages = [...state.messages];
@@ -352,13 +365,17 @@ export function useChat({
 
       dispatch({ type: "SET_MESSAGES", messages: messagesToRetry });
 
-      // Pass the captured and sliced messages to append for consistency
+      // Pass the captured messages plus fresh options to append
       await append(
         {
           role: lastUserMessage.role,
           content: lastUserMessage.content,
         },
         messagesToRetry,
+        {
+          systemPrompt: currentSystemPrompt,
+          requestOptions: currentRequestOptions,
+        },
       );
     } catch (error) {
       const mappedError = mapError(error);
@@ -367,7 +384,7 @@ export function useChat({
         onError(mappedError);
       }
     }
-  }, [append, onError, state.messages]); // Include state.messages dependency as required
+  }, [append, onError, state.messages, state.currentSystemPrompt, state.requestOptions]); // Include state.messages dependency as required
 
   const setMessages = useCallback((messages: ChatMessageType[]) => {
     dispatch({ type: "SET_MESSAGES", messages });

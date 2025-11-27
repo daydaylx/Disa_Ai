@@ -25,15 +25,16 @@ const DEFAULT_CONFIG: TouchGestureConfig = {
 };
 
 export function useTouchGestures(gestures: TouchGesture, config: TouchGestureConfig = {}) {
-  const { threshold, longPressDelay, doubleTapDelay, enableHaptics } = {
+  const resolvedConfig: Required<TouchGestureConfig> = {
     ...DEFAULT_CONFIG,
     ...config,
-  };
+  } as Required<TouchGestureConfig>;
+
+  const { threshold, longPressDelay, doubleTapDelay, enableHaptics } = resolvedConfig;
 
   const [touchStart, setTouchStart] = useState<{ x: number; y: number; time: number } | null>(null);
   const [isLongPressActive, setIsLongPressActive] = useState(false);
-  const longPressTimer = useRef<number>();
-  const doubleTapTimer = useRef<number>();
+  const longPressTimer = useRef<number | null>(null);
   const lastTapTime = useRef<number>(0);
 
   const triggerHaptic = useCallback(
@@ -53,6 +54,7 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
   const handleTouchStart = useCallback(
     (event: TouchEvent) => {
       const touch = event.touches[0];
+      if (!touch) return;
       setTouchStart({
         x: touch.clientX,
         y: touch.clientY,
@@ -71,7 +73,9 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
       if (now - lastTapTime.current < doubleTapDelay) {
         gestures.onDoubleTap?.(event);
         triggerHaptic("light");
-        clearTimeout(longPressTimer.current);
+        if (longPressTimer.current) {
+          clearTimeout(longPressTimer.current);
+        }
       }
       lastTapTime.current = now;
     },
@@ -83,6 +87,7 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
       if (!touchStart) return;
 
       const touch = event.touches[0];
+      if (!touch) return;
       const deltaX = touch.clientX - touchStart.x;
       const deltaY = touch.clientY - touchStart.y;
       const distanceX = Math.abs(deltaX);
@@ -90,7 +95,9 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
 
       // Clear long press timer on movement
       if (distanceX > 10 || distanceY > 10) {
-        clearTimeout(longPressTimer.current);
+        if (longPressTimer.current) {
+          clearTimeout(longPressTimer.current);
+        }
       }
 
       // Detect swipe direction
@@ -120,13 +127,16 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
       if (!touchStart) return;
 
       const touch = event.changedTouches[0];
+      if (!touch) return;
       const deltaX = touch.clientX - touchStart.x;
       const deltaY = touch.clientY - touchStart.y;
       const distanceX = Math.abs(deltaX);
       const distanceY = Math.abs(deltaY);
 
       // Clear long press timer
-      clearTimeout(longPressTimer.current);
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+      }
 
       // If no significant movement, it's a tap
       if (distanceX < threshold && distanceY < threshold) {
@@ -142,7 +152,9 @@ export function useTouchGestures(gestures: TouchGesture, config: TouchGestureCon
   );
 
   const handleTouchCancel = useCallback(() => {
-    clearTimeout(longPressTimer.current);
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
     setTouchStart(null);
     setIsLongPressActive(false);
   }, []);

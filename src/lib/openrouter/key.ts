@@ -17,23 +17,6 @@ function safeGet(key: string): string | null {
       const trimmed = sessionVal.replace(/^"+|"+$/g, "").trim();
       return trimmed.length ? trimmed : null;
     }
-
-    // Fallback: localStorage (migrate to session)
-    const localVal = localStorage.getItem(key);
-    if (localVal) {
-      const trimmed = localVal.replace(/^"+|"+$/g, "").trim();
-      if (trimmed.length) {
-        // Migrate to sessionStorage and remove from localStorage
-        try {
-          sessionStorage.setItem(key, trimmed);
-          localStorage.removeItem(key);
-        } catch {
-          /* Migration failed, keep in localStorage */
-        }
-        return trimmed;
-      }
-    }
-
     return null;
   } catch {
     return null;
@@ -52,11 +35,12 @@ function safeGetLocal(key: string): string | null {
 }
 
 export function readApiKey(): string | null {
-  // Persisted (localStorage) value wins to survive reloads/navigation
+  // MIGRATION: If a legacy localStorage value exists, migrate to sessionStorage and delete the local copy
   const local = safeGetLocal(CANONICAL_KEY);
   if (local) {
     try {
       sessionStorage.setItem(CANONICAL_KEY, local);
+      localStorage.removeItem(CANONICAL_KEY);
     } catch {
       /* ignore */
     }
@@ -69,7 +53,7 @@ export function readApiKey(): string | null {
 
   // For backward compatibility, check legacy keys and migrate
   for (const legacyKey of LEGACY_CANDIDATES) {
-    const legacyValue = safeGet(legacyKey);
+    const legacyValue = safeGet(legacyKey) ?? safeGetLocal(legacyKey);
     if (legacyValue) {
       // Migrate to canonical key and clean up legacy keys
       try {
@@ -77,6 +61,7 @@ export function readApiKey(): string | null {
         // Clear the legacy key after successful migration
         sessionStorage.removeItem(legacyKey);
         localStorage.removeItem(legacyKey);
+        localStorage.removeItem(CANONICAL_KEY);
       } catch {
         // If migration fails, continue using the legacy value
       }

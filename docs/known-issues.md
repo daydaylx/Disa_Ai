@@ -97,9 +97,9 @@ Diese Datei listet bekannte Probleme auf, die während der Beta-Phase auftreten 
 ## 🔒 Sicherheit & Privacy
 
 ### OpenRouter API Key Storage
-- **Beschreibung**: API-Key wird in localStorage gespeichert (verschlüsselt geplant)
-- **Status**: Sichere Speicherung in Planung
-- **Workaround**: Nutzer sollten Keys regelmäßig rotieren
+- **Beschreibung**: API-Key wurde bisher in localStorage persistiert.
+- **Status**: Ab 27.11.2025 Migration auf sessionStorage-only; Legacy-Keys werden beim Laden nach sessionStorage migriert und aus localStorage entfernt. Verschlüsselung bleibt Roadmap-Item.
+- **Workaround**: Keys regelmäßig rotieren; Tab schließen entfernt gespeicherten Key.
 
 ---
 

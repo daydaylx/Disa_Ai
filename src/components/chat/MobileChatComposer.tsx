@@ -16,7 +16,6 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
-  const [isComposing, setIsComposing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -46,6 +45,7 @@ export function MobileChatComposer({
       textarea.addEventListener("focus", handleFocus);
       return () => textarea.removeEventListener("focus", handleFocus);
     }
+    return undefined;
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -70,17 +70,17 @@ export function MobileChatComposer({
 
   const handleVoiceInput = () => {
     // TODO: Implement Web Speech API
-    console.log("Voice input not yet implemented");
+    console.warn("Voice input not yet implemented");
   };
 
   const handleAttachment = () => {
     // TODO: Implement file attachment
-    console.log("Attachment not yet implemented");
+    console.warn("Attachment not yet implemented");
   };
 
   const handleEmoji = () => {
     // TODO: Implement emoji picker
-    console.log("Emoji picker not yet implemented");
+    console.warn("Emoji picker not yet implemented");
   };
 
   return (
