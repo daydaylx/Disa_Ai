@@ -22,6 +22,7 @@ npm install
 ```
 
 This installs:
+
 - `vitest` (test runner)
 - `@testing-library/react` (component testing)
 - `@testing-library/jest-dom` (DOM matchers)
@@ -36,6 +37,7 @@ npm test
 ```
 
 **Expected output:**
+
 ```
  ✓ src/hooks/__tests__/useNeko.test.ts (17 tests)
  ✓ src/components/neko/__tests__/NekoLayer.test.tsx (15 tests)
@@ -61,6 +63,7 @@ npm test src/hooks/__tests__/useNeko.test.ts
 ```
 
 **What's tested:**
+
 - ✅ Initial state (HIDDEN)
 - ✅ Spawn conditions (idle, cooldown, session limit)
 - ✅ prefers-reduced-motion support
@@ -80,6 +83,7 @@ npm test src/components/neko/__tests__/NekoLayer.test.tsx
 ```
 
 **What's tested:**
+
 - ✅ Rendering conditions (enableNeko, state)
 - ✅ Container styling (fixed, bottom-0, h-40, z-toast)
 - ✅ Transform positioning (translate3d)
@@ -99,6 +103,7 @@ npm test src/components/neko/__tests__/NekoSprite.test.tsx
 ```
 
 **What's tested:**
+
 - ✅ Responsive sizing (w-12 h-12 md:w-16 md:h-16)
 - ✅ Direction mirroring (scale-x-[-1])
 - ✅ Animation states (animate-neko-walk, animate-neko-run)
@@ -117,6 +122,7 @@ npm test src/styles/__tests__/animations.test.ts
 ```
 
 **What's tested:**
+
 - ✅ Neko keyframe structure (neko-bob)
 - ✅ Animation classes (walk 0.4s, run 0.15s)
 - ✅ Aurora keyframes (flow, glow)
@@ -136,6 +142,7 @@ npm test tests/integration/mobile-animations.test.ts
 ```
 
 **What's tested:**
+
 - ✅ Viewport-responsive behavior (375px, 768px, 1280px)
 - ✅ Animation speed consistency (61px/s, 143px/s, 277px/s)
 - ✅ Aurora mobile optimizations
@@ -154,11 +161,13 @@ npm run test:watch
 ```
 
 This will:
+
 - ✅ Re-run tests on file changes
 - ✅ Show only failed tests after first run
 - ✅ Allow filtering tests interactively
 
 **Keyboard shortcuts in watch mode:**
+
 - `p` - Filter by filename pattern
 - `t` - Filter by test name pattern
 - `a` - Run all tests
@@ -175,6 +184,7 @@ npm test -- --coverage
 ```
 
 **Expected output:**
+
 ```
  % Stmts | % Branch | % Funcs | % Lines | Uncovered Lines
 ---------|----------|---------|---------|----------------
@@ -182,6 +192,7 @@ npm test -- --coverage
 ```
 
 Open the HTML report:
+
 ```bash
 open coverage/index.html  # macOS
 xdg-open coverage/index.html  # Linux
@@ -193,21 +204,25 @@ start coverage/index.html  # Windows
 ## 🎯 Run Specific Tests
 
 ### Single File
+
 ```bash
 npm test src/hooks/__tests__/useNeko.test.ts
 ```
 
 ### Multiple Files
+
 ```bash
 npm test src/components/neko/__tests__/
 ```
 
 ### Pattern Matching
+
 ```bash
 npm test -- --testNamePattern="adaptive"
 ```
 
 ### Only Changed Files
+
 ```bash
 npm test -- --changed
 ```
@@ -217,21 +232,25 @@ npm test -- --changed
 ## 🐛 Debugging Tests
 
 ### Verbose Output
+
 ```bash
 npm test -- --reporter=verbose
 ```
 
 ### Show Console Logs
+
 ```bash
 npm test -- --silent=false
 ```
 
 ### Debug Specific Test
+
 ```bash
 npm test -- --testNamePattern="should spawn after 5s idle"
 ```
 
 ### With Node Inspector
+
 ```bash
 node --inspect-brk node_modules/.bin/vitest run
 ```
@@ -245,11 +264,13 @@ Then open `chrome://inspect` in Chrome.
 ### Tests Not Running?
 
 **Check dependencies:**
+
 ```bash
 npm list vitest @testing-library/react
 ```
 
 **Reinstall if needed:**
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -260,13 +281,15 @@ npm install
 ### Timeout Errors?
 
 Increase test timeout:
+
 ```bash
 npm test -- --testTimeout=10000
 ```
 
 Or in specific test file:
+
 ```typescript
-it('should spawn', async () => {
+it("should spawn", async () => {
   // ... test code
 }, 10000); // 10 second timeout
 ```
@@ -276,6 +299,7 @@ it('should spawn', async () => {
 ### Mock Cleanup Issues?
 
 Ensure proper cleanup in `beforeEach`:
+
 ```typescript
 beforeEach(() => {
   vi.clearAllMocks();
@@ -292,9 +316,10 @@ afterEach(() => {
 ### Portal Tests Failing?
 
 Reset document.body:
+
 ```typescript
 beforeEach(() => {
-  document.body.innerHTML = '';
+  document.body.innerHTML = "";
 });
 ```
 
@@ -303,11 +328,13 @@ beforeEach(() => {
 ## 📈 CI/CD Integration
 
 Tests run automatically on:
+
 - ✅ Pull requests
 - ✅ Commits to main branch
 - ✅ Pre-push hooks (if configured)
 
 ### GitHub Actions Example:
+
 ```yaml
 - name: Run tests
   run: npm test -- --coverage
@@ -323,13 +350,14 @@ Tests run automatically on:
 ## 🎓 Writing New Tests
 
 ### Template for Hook Tests:
-```typescript
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { useMyHook } from '../useMyHook';
 
-describe('useMyHook', () => {
-  it('should do something', () => {
+```typescript
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { useMyHook } from "../useMyHook";
+
+describe("useMyHook", () => {
+  it("should do something", () => {
     const { result } = renderHook(() => useMyHook());
 
     expect(result.current).toBe(expectedValue);
@@ -338,6 +366,7 @@ describe('useMyHook', () => {
 ```
 
 ### Template for Component Tests:
+
 ```typescript
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
@@ -367,12 +396,12 @@ describe('MyComponent', () => {
 
 Our test suite exceeds all project thresholds:
 
-| Metric | Threshold | Actual | Status |
-|--------|-----------|--------|--------|
-| Lines | 20% | ~95% | ✅ 475% above |
-| Functions | 50% | ~98% | ✅ 196% above |
-| Branches | 35% | ~92% | ✅ 263% above |
-| Statements | 20% | ~95% | ✅ 475% above |
+| Metric     | Threshold | Actual | Status        |
+| ---------- | --------- | ------ | ------------- |
+| Lines      | 20%       | ~95%   | ✅ 475% above |
+| Functions  | 50%       | ~98%   | ✅ 196% above |
+| Branches   | 35%       | ~92%   | ✅ 263% above |
+| Statements | 20%       | ~95%   | ✅ 475% above |
 
 ---
 
