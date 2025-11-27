@@ -7,6 +7,7 @@ import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { ModelSelector } from "../components/chat/ModelSelector";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
@@ -229,17 +230,30 @@ export default function Chat() {
     </span>
   );
 
+  const handleModelChange = useCallback(
+    (modelId: string) => {
+      const newSettings = { ...settings, preferredModelId: modelId };
+      // Update settings via the settings hook
+      if (typeof window !== "undefined") {
+        localStorage.setItem("disa:settings", JSON.stringify(newSettings));
+        window.dispatchEvent(new Event("storage"));
+      }
+      toasts.push({
+        kind: "success",
+        title: "Modell gewechselt",
+        message: `Nutze jetzt: ${modelId.split("/").pop()}`,
+      });
+    },
+    [settings, toasts],
+  );
+
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => navigate("/models")}
-        className="h-auto py-1 px-2 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover"
-      >
-        Modell: {settings.preferredModelId}
-      </Button>
+      <ModelSelector
+        currentModelId={settings.preferredModelId}
+        onModelChange={handleModelChange}
+      />
       <Button
         variant="ghost"
         size="sm"
