@@ -37,7 +37,13 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
       {/* Mobile Header & Navigation */}
       <div className="md:hidden bg-surface-1 border-b border-surface-2 sticky top-0 z-20">
         <div className="flex items-center gap-2 px-4 pt-3 pb-1">
-          <Button variant="ghost" size="sm" onClick={() => navigate("/settings")} className="-ml-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/settings")}
+            className="-ml-2"
+            aria-label="Zurück zu Einstellungen"
+          >
             <ChevronLeft className="h-5 w-5 mr-1" />
             <span className="text-base font-semibold">Einstellungen</span>
           </Button>

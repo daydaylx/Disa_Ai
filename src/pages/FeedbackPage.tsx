@@ -45,7 +45,7 @@ export default function FeedbackPage() {
     <div className="relative flex flex-col text-text-primary h-full bg-bg-base safe-area-top">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} aria-label="Zurück">
           <ArrowLeft className="h-4 w-4 mr-1" />
           Zurück
         </Button>
