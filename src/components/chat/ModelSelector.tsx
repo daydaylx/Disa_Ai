@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+
 import { ChevronDown, Zap } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
-import { cn } from "@/lib/utils";
 
 interface Model {
   id: string;
@@ -88,6 +89,7 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
       document.addEventListener("keydown", handleEscape);
       return () => document.removeEventListener("keydown", handleEscape);
     }
+    return undefined;
   }, [isOpen]);
 
   return (

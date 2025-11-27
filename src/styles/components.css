@@ -355,6 +355,15 @@
     }
   }
 
+  @keyframes slideInRight {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
   /* Chat scroll container - fixes jumping and overlapping */
   .chat-scroll-area {
     display: flex;

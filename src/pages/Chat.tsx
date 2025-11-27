@@ -6,6 +6,7 @@ import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatHistoryDrawer } from "../components/chat/ChatHistoryDrawer";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { ModelSelector } from "../components/chat/ModelSelector";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
@@ -112,12 +113,16 @@ export default function Chat() {
     }
   }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
 
-  useConversationManager({
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const { activeConversationId } = useConversationManager({
     messages,
     isLoading,
     setMessages,
     setCurrentSystemPrompt,
-    onNewConversation: () => {},
+    onNewConversation: () => {
+      setInput("");
+    },
     saveEnabled: memoryEnabled,
     restoreEnabled: settings.restoreLastConversation && memoryEnabled,
   });
@@ -245,10 +250,7 @@ export default function Chat() {
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
-      <ModelSelector
-        currentModelId={settings.preferredModelId}
-        onModelChange={handleModelChange}
-      />
+      <ModelSelector currentModelId={settings.preferredModelId} onModelChange={handleModelChange} />
       <Button
         variant="ghost"
         size="sm"
@@ -262,7 +264,18 @@ export default function Chat() {
           Rolle: {activeRole.name}
         </span>
       )}
-      <div className="ml-auto">{memoryBadge}</div>
+      <div className="ml-auto flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsHistoryOpen(true)}
+          className="h-8 w-8 text-text-secondary hover:text-text-primary hover:bg-surface-2 rounded-full"
+          title="Verlauf öffnen"
+        >
+          <History className="h-4 w-4" />
+        </Button>
+        {memoryBadge}
+      </div>
     </div>
   );
 
@@ -282,7 +295,7 @@ export default function Chat() {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => navigate("/chat/history")}
+              onClick={() => setIsHistoryOpen(true)}
               className="self-start gap-2"
             >
               <History className="h-4 w-4" />
@@ -378,6 +391,12 @@ export default function Chat() {
       </div>
 
       <div ref={messagesEndRef} />
+
+      <ChatHistoryDrawer
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        currentConversationId={activeConversationId ?? undefined}
+      />
     </div>
   );
 }
