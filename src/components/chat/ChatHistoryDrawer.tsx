@@ -12,6 +12,7 @@ import { ChatHistoryItem } from "./components/ChatHistoryItem";
 import { ChatHistoryLoading } from "./components/ChatHistoryLoading";
 import { useChatHistory } from "./hooks/useChatHistory";
 import { useDrawerEffects } from "./hooks/useDrawerEffects";
+import { QuickSettingsPanel } from "./QuickSettingsPanel";
 
 interface ChatHistoryDrawerProps {
   isOpen: boolean;
@@ -82,6 +83,11 @@ export function ChatHistoryDrawer({
               <Plus className="h-4 w-4" />
               Neuer Chat
             </Button>
+          </div>
+
+          {/* Quick Settings Panel */}
+          <div className="px-4 pb-2 shrink-0">
+            <QuickSettingsPanel />
           </div>
 
           {/* Content List */}

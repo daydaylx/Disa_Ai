@@ -4,6 +4,8 @@ import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
+import { AutoBreadcrumbs } from "../../components/navigation/Breadcrumbs";
+import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { NekoLayer } from "../../components/neko/NekoLayer";
 import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
@@ -85,6 +87,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             className="flex items-center gap-3 px-4 py-3"
             style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
           >
+            <MobileBackButton />
             <BrandWordmark />
             <span className="h-6 w-px bg-surface-1 shadow-inset" aria-hidden />
             <span className="text-base font-semibold text-text-primary truncate">{pageTitle}</span>
@@ -93,6 +96,13 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             </div>
           </div>
         </header>
+
+        {/* Breadcrumb Navigation */}
+        <div className="border-b border-surface-1/50 bg-surface-1/30 backdrop-blur supports-[backdrop-filter]:bg-surface-1/20">
+          <div className="px-4 py-2 max-w-6xl mx-auto">
+            <AutoBreadcrumbs className="text-xs md:text-sm" />
+          </div>
+        </div>
 
         <div
           id="main"

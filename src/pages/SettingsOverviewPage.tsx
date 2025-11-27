@@ -1,5 +1,5 @@
-import { SettingsView } from "../features/settings/SettingsView";
+import { TabbedSettingsView } from "../features/settings/TabbedSettingsView";
 
 export default function SettingsOverviewPage() {
-  return <SettingsView />;
+  return <TabbedSettingsView />;
 }
