@@ -7,6 +7,7 @@ import { ToastsProvider } from "@/ui/toast";
 import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
+import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { RolesProvider } from "./contexts/RolesContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
@@ -29,7 +30,7 @@ const FeatureFlagPanel = lazy(() =>
 // AppContent component that runs inside the providers
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
-  const { settings } = useSettings();
+  const { settings, completeOnboarding } = useSettings();
 
   // Apply analytics opt-in/out
   useEffect(() => {
@@ -97,6 +98,7 @@ function AppContent() {
       <Suspense fallback={null}>
         <FeatureFlagPanel />
       </Suspense>
+      {!settings.hasCompletedOnboarding && <OnboardingOverlay onComplete={completeOnboarding} />}
     </>
   );
 }

@@ -18,6 +18,7 @@ const SettingsExtrasPage = lazy(() => import("../pages/SettingsExtras")); // New
 const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
+const FeedbackPage = lazy(() => import("../pages/FeedbackPage"));
 
 export const appRouter = createBrowserRouter(
   [
@@ -62,6 +63,14 @@ export const appRouter = createBrowserRouter(
       element: (
         <RouteWrapper>
           <ModelsPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/feedback",
+      element: (
+        <RouteWrapper>
+          <FeedbackPage />
         </RouteWrapper>
       ),
     },

@@ -8,6 +8,7 @@ import {
   Cat,
   ChevronLeft,
   Database,
+  MessageSquare,
   Settings as SettingsIcon,
   Shield,
   SlidersHorizontal,
@@ -98,6 +99,17 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
               );
             })}
           </nav>
+
+          {/* Sidebar Footer */}
+          <div className="p-4 border-t border-surface-2">
+            <Link
+              to="/feedback"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
+            >
+              <MessageSquare className="h-4 w-4" />
+              Feedback & Bugs
+            </Link>
+          </div>
         </aside>
 
         {/* Main Content */}

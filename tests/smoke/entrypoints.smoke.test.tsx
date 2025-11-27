@@ -44,7 +44,9 @@ vi.mock("../../src/hooks/useChat", () => ({
 }));
 
 vi.mock("../../src/hooks/useConversationManager", () => ({
-  useConversationManager: vi.fn(),
+  useConversationManager: () => ({
+    activeConversationId: null,
+  }),
 }));
 
 vi.mock("../../src/hooks/useMemory", () => ({
