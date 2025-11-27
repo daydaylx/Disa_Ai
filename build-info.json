@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-696a8c3",
-  "buildTime": "2025-11-26T20:13:28.828Z",
-  "gitSha": "696a8c3bddf7fe3c7b2b826be391166debe2750d",
-  "gitBranch": "main",
+  "buildId": "v1.0.0-a9dfb50",
+  "buildTime": "2025-11-27T12:31:17.610Z",
+  "gitSha": "a9dfb5090dbadda50a86387f348816bc2f0a2966",
+  "gitBranch": "claude/fix-openrouter-api-key-01AR1tfyVdNZHPfVTsn5hoF1",
   "version": "1.0.0"
 }
