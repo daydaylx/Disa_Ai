@@ -2,9 +2,11 @@ import { expect, test } from "@playwright/test";
 
 import { setupApiKeyStorage, setupChatApiStreamingMock } from "./api-mock";
 import { AppHelpers } from "./helpers/app-helpers";
+import { skipOnboarding } from "./utils";
 
 test.describe("Chat Smoke", () => {
   test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
     await setupApiKeyStorage(page);
     await setupChatApiStreamingMock(page);
   });
@@ -15,7 +17,7 @@ test.describe("Chat Smoke", () => {
     await helpers.verifyChatInterface();
 
     await expect(
-      page.getByRole("heading", { name: "Was möchtest du heute mit Disa AI erledigen?" }),
+      page.getByText("Deine intelligente Assistentin für produktive Gespräche."),
     ).toBeVisible();
 
     const composer = page.getByTestId("composer-input");

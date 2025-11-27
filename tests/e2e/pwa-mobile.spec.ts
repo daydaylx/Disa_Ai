@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { AppHelpers } from "./helpers/app-helpers";
+import { skipOnboarding } from "./utils";
 
 test.describe("PWA and Mobile Features Integration Tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
+  });
+
   test("PWA manifest and installation prompt", async ({ page }) => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/");

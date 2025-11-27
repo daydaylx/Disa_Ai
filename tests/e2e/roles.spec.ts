@@ -2,8 +2,13 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 import { AppHelpers } from "./helpers/app-helpers";
+import { skipOnboarding } from "./utils";
 
 test.describe("Rollen-Screen", () => {
+  test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
+  });
+
   test("cards are accessible and have interactive states", async ({ page }) => {
     const helpers = new AppHelpers(page);
     const monitor = helpers.setupConsoleMonitoring();

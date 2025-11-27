@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { AppHelpers } from "./helpers/app-helpers";
+import { skipOnboarding } from "./utils";
 
 test.describe("Error Handling and Recovery Flow Tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
+  });
+
   test("Network error handling and offline functionality", async ({ page }) => {
     const helpers = new AppHelpers(page);
 

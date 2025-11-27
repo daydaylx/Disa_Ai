@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 test("Feedback Formular ausfüllen und absenden", async ({ page }) => {
+  // Skip Onboarding
+  await page.addInitScript(() => {
+    localStorage.setItem("disa-ai-settings", JSON.stringify({ hasCompletedOnboarding: true }));
+  });
+
   await page.goto("/feedback");
 
   // Header prüfen

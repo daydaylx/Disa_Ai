@@ -1,8 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { setupApiKeyStorage, setupChatApiStreamingMock } from "./api-mock";
+import { skipOnboarding } from "./utils";
 
 test.describe("Smoke Tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
+  });
+
   test("App loads, shows hero, and quickstart overview", async ({ page }) => {
     // Set up API key storage to prevent NO_API_KEY error
     await setupApiKeyStorage(page);

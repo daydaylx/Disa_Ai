@@ -1,8 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+import { skipOnboarding } from "./utils";
+
 test.describe("AppShell Layout & Navigation", () => {
   test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
     await page.goto("/");
     await expect(page.locator('[data-testid="app-main"]')).toBeVisible({ timeout: 10000 });
   });
@@ -17,13 +20,13 @@ test.describe("AppShell Layout & Navigation", () => {
     await expect(page.locator('[data-testid="app-main"]')).toBeVisible();
   });
 
-  test("PRIMARY_NAV_ITEMS rendered correctly (5 items)", async ({ page }) => {
+  test("PRIMARY_NAV_ITEMS rendered correctly (3 items)", async ({ page }) => {
     const nav = page.locator('nav[aria-label="Primäre Navigation"]');
     await expect(nav).toBeVisible();
     const navLinks = nav.locator("a");
-    await expect(navLinks).toHaveCount(5);
+    await expect(navLinks).toHaveCount(3);
 
-    const expectedPaths = ["/studio", "/chat", "/models", "/roles", "/settings"] as const;
+    const expectedPaths = ["/", "/roles", "/settings"] as const;
     for (const [index, path] of expectedPaths.entries()) {
       const link = navLinks.nth(index);
       await expect(link).toBeVisible();
