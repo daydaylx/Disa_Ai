@@ -201,7 +201,7 @@ export function ChatMessage({
               {parsedContent.map((part, index) => (
                 <div key={index}>
                   {part.type === "text" ? (
-                    <div className="whitespace-pre-wrap text-base leading-7 sm:text-[17px] sm:leading-8">
+                    <div className="whitespace-pre-wrap text-base leading-relaxed sm:text-lg sm:leading-relaxed">
                       {part.content}
                     </div>
                   ) : (
