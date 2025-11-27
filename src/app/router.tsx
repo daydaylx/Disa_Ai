@@ -13,7 +13,6 @@ const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
 const SettingsBehaviorPage = lazy(() => import("../pages/SettingsBehavior"));
 const SettingsYouthFilterPage = lazy(() => import("../pages/SettingsYouthFilter"));
 const SettingsApiDataPage = lazy(() => import("../pages/SettingsApiData"));
-const SettingsFiltersPage = lazy(() => import("../pages/SettingsFilters"));
 const SettingsExtrasPage = lazy(() => import("../pages/SettingsExtras")); // New Page
 const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
@@ -116,11 +115,7 @@ export const appRouter = createBrowserRouter(
     },
     {
       path: "/settings/filters",
-      element: (
-        <RouteWrapper>
-          <SettingsFiltersPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings/youth" replace />,
     },
     {
       path: "/settings/extras",

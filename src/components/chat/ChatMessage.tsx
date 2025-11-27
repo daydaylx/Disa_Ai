@@ -92,6 +92,9 @@ export function ChatMessage({
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
+  // Mobile detection for conditional autoFocus
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+
   const parsedContent = parseMessageContent(message.content);
 
   const bubbleClass = cn(
@@ -182,7 +185,7 @@ export function ChatMessage({
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 className="w-full min-h-[100px] p-3 rounded-lg bg-surface-2 border border-surface-3 focus:outline-none focus:ring-2 focus:ring-accent-primary text-text-primary"
-                autoFocus
+                autoFocus={isMobile && isEditing}
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>

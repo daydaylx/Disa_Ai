@@ -189,6 +189,15 @@ export default function Chat() {
 
   const handleFollowUp = useCallback(
     (prompt: string) => {
+      if (isLoading) {
+        toasts.push({
+          kind: "warning",
+          title: "Antwort läuft",
+          message: "Warte kurz, bis die aktuelle Antwort fertig ist.",
+        });
+        return;
+      }
+
       setInput(prompt);
       // Automatically send after a brief delay
       setTimeout(() => {
@@ -199,7 +208,7 @@ export default function Chat() {
         }
       }, 100);
     },
-    [setInput, append],
+    [setInput, append, isLoading, toasts],
   );
 
   const startWithPreset = (system: string, user?: string) => {

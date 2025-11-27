@@ -105,6 +105,11 @@ export default defineConfig(({ mode }) => {
     }
   }
 
+  const devPort = Number.parseInt(env.VITE_PORT || "5173", 10);
+  const hmrPort = Number.parseInt(env.VITE_HMR_PORT || `${devPort}`, 10);
+  const hmrHost = env.VITE_HMR_HOST || "localhost";
+  const hmrProtocol = env.VITE_HMR_PROTOCOL || (env.HTTPS ? "wss" : "ws");
+
   return {
     // Optimized dependency bundling - less aggressive for faster builds
     optimizeDeps: {
@@ -261,8 +266,15 @@ export default defineConfig(({ mode }) => {
     server: {
       force: true,
       // Vite handles SPA routing automatically, no need for historyApiFallback
-      port: parseInt(env.VITE_PORT || "5173"),
+      host: env.VITE_HOST || "0.0.0.0",
+      port: devPort,
       strictPort: false,
+      hmr: {
+        host: hmrHost,
+        port: hmrPort,
+        clientPort: hmrPort,
+        protocol: hmrProtocol,
+      },
       // Development warmup for faster initial loads
       warmup: {
         clientFiles: [

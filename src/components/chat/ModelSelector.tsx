@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { ChevronDown, Zap } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -59,6 +60,7 @@ const COMMON_MODELS: Model[] = [
 ];
 
 export function ModelSelector({ currentModelId, onModelChange, className }: ModelSelectorProps) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -178,8 +180,8 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  // Navigate to settings where models can be configured
-                  window.location.href = "/settings/api-data";
+                  // Navigate to settings where models can be configured without full reload
+                  void navigate("/settings/api-data");
                 }}
                 className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-lg transition-colors"
               >
