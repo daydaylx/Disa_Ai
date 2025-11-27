@@ -6,6 +6,7 @@ import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
@@ -75,6 +76,9 @@ export default function Chat() {
     stop,
     setCurrentSystemPrompt,
     setRequestOptions,
+    apiStatus,
+    rateLimitInfo,
+    error,
   } = useChat({
     onError: (error) => {
       toasts.push(humanErrorToToast(error));
@@ -226,6 +230,7 @@ export default function Chat() {
   return (
     <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
       <h1 className="sr-only">Disa AI – Chat</h1>
+      <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">
