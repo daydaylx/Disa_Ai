@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Bot, Copy, Edit2, MoreHorizontal, RotateCcw, User } from "@/lib/icons";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
@@ -87,13 +87,21 @@ export function ChatMessage({
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
   const [showFollowUps, setShowFollowUps] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  // Mobile detection for conditional autoFocus
+  // Mobile detection for conditional focus
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+
+  // Handle textarea focus when entering edit mode (accessibility improvement)
+  useEffect(() => {
+    if (isMobile && isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isMobile, isEditing]);
 
   const parsedContent = parseMessageContent(message.content);
 
@@ -182,10 +190,10 @@ export function ChatMessage({
           {isEditing ? (
             <div className="space-y-3">
               <textarea
+                ref={textareaRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 className="w-full min-h-[100px] p-3 rounded-lg bg-surface-2 border border-surface-3 focus:outline-none focus:ring-2 focus:ring-accent-primary text-text-primary"
-                autoFocus={isMobile && isEditing}
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
