@@ -6,6 +6,7 @@ import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
@@ -69,6 +70,9 @@ export default function Chat() {
     messages,
     append,
     isLoading,
+    status,
+    error,
+    reload,
     setMessages,
     input,
     setInput,
@@ -319,6 +323,12 @@ export default function Chat() {
           className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
           ref={composerContainerRef}
         >
+          <ChatStatusBanner
+            status={status}
+            error={error}
+            onRetry={reload}
+            onOpenSettings={() => navigate("/settings/api")}
+          />
           <ChatComposer
             value={input}
             onChange={setInput}

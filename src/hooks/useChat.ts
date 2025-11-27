@@ -3,7 +3,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
 import { mapError } from "../lib/errors";
-import { RateLimitError } from "../lib/errors/types";
+import { AuthenticationError, RateLimitError } from "../lib/errors/types";
 import { chatReducer } from "../state/chatReducer";
 import type { ChatRequestOptions } from "../types";
 import type { ChatMessageType } from "../types/chatMessage";
@@ -65,6 +65,7 @@ export function useChat({
     messages: initialMessages,
     input: "",
     isLoading: false,
+    status: "idle",
     error: null,
     abortController: null,
     currentSystemPrompt: _systemPrompt,
@@ -126,6 +127,7 @@ export function useChat({
 
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
       dispatch({ type: "SET_LOADING", isLoading: true });
+      dispatch({ type: "SET_STATUS", status: "streaming" });
       dispatch({ type: "SET_ERROR", error: null });
       dispatch({ type: "SET_INPUT", input: "" });
 
@@ -221,6 +223,8 @@ export function useChat({
                   content: accumulatedContent,
                 };
 
+                dispatch({ type: "SET_STATUS", status: "ok" });
+
                 if (onFinish) {
                   onFinish(finalMessage);
                 }
@@ -234,6 +238,7 @@ export function useChat({
         const mappedError = mapError(error);
 
         if (mappedError instanceof RateLimitError) {
+          dispatch({ type: "SET_STATUS", status: "rate_limited" });
           // Get retry-after header value if available
           const retryAfterHeader = mappedError.headers?.get("retry-after");
           const parsedHeader = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : undefined;
@@ -276,7 +281,12 @@ export function useChat({
             type: "SET_MESSAGES",
             messages: customMessages || [...stateRef.current.messages],
           });
+          // Status stays/reverts to idle effectively via isLoading check or explicit set
+          // dispatch({ type: "SET_STATUS", status: "idle" }); // Optional: reset status on abort
         } else {
+          const isMissingKey =
+            mappedError instanceof AuthenticationError || mappedError.message === "NO_API_KEY";
+          dispatch({ type: "SET_STATUS", status: isMissingKey ? "missing_key" : "error" });
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
             onError(mappedError);
@@ -370,6 +380,7 @@ export function useChat({
     stop,
     setMessages,
     isLoading: state.isLoading,
+    status: state.status,
     error: state.error,
     setCurrentSystemPrompt,
     setRequestOptions,
