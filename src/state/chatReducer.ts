@@ -1,10 +1,12 @@
 import type { ChatRequestOptions } from "../types";
+import type { ChatStatus } from "../types/chat";
 import type { ChatMessageType } from "../types/chatMessage";
 
 export interface ChatState {
   messages: ChatMessageType[];
   input: string;
   isLoading: boolean;
+  status: ChatStatus;
   error: Error | null;
   abortController: AbortController | null;
   currentSystemPrompt: string | undefined;
@@ -17,6 +19,7 @@ export type ChatAction =
   | { type: "UPDATE_MESSAGE"; id: string; content: string }
   | { type: "SET_INPUT"; input: string }
   | { type: "SET_LOADING"; isLoading: boolean }
+  | { type: "SET_STATUS"; status: ChatStatus }
   | { type: "SET_ERROR"; error: Error | null }
   | { type: "SET_ABORT_CONTROLLER"; controller: AbortController | null }
   | { type: "SET_CURRENT_SYSTEM_PROMPT"; prompt: string | undefined }
@@ -55,6 +58,8 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return { ...state, input: action.input };
     case "SET_LOADING":
       return { ...state, isLoading: action.isLoading };
+    case "SET_STATUS":
+      return { ...state, status: action.status };
     case "SET_ERROR":
       return { ...state, error: action.error };
     case "SET_ABORT_CONTROLLER":
@@ -69,6 +74,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages: [],
         input: "",
         isLoading: false,
+        status: "idle",
         error: null,
         abortController: null,
         currentSystemPrompt: undefined,

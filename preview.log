@@ -1,0 +1,6 @@
+npm warn config production Use `--omit=dev` instead.
+
+> disa-ai@1.0.0 preview
+> node ./scripts/run-preview.mjs
+
+[preview] Serving dist on http://127.0.0.1:4173/
