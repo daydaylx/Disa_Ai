@@ -165,6 +165,36 @@ export default function Chat() {
     setInput("");
   }, [append, input, isLoading, setInput, toasts]);
 
+  const handleEdit = useCallback(
+    (messageId: string, newContent: string) => {
+      const messageIndex = messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return;
+
+      // Remove all messages after the edited one
+      const newMessages = messages.slice(0, messageIndex);
+      setMessages(newMessages);
+
+      // Re-send with new content
+      void append({ role: "user", content: newContent }, newMessages);
+    },
+    [messages, setMessages, append],
+  );
+
+  const handleFollowUp = useCallback(
+    (prompt: string) => {
+      setInput(prompt);
+      // Automatically send after a brief delay
+      setTimeout(() => {
+        const validation = validatePrompt(prompt);
+        if (validation.valid) {
+          void append({ role: "user", content: validation.sanitized });
+          setInput("");
+        }
+      }, 100);
+    },
+    [setInput, append],
+  );
+
   const startWithPreset = (system: string, user?: string) => {
     // Setze System-Prompt für nachfolgende Requests (unsichtbar für Nutzer)
     setCurrentSystemPrompt(system);
@@ -277,6 +307,8 @@ export default function Chat() {
                 console.error("Failed to copy content:", err);
               });
             }}
+            onEdit={handleEdit}
+            onFollowUp={handleFollowUp}
             onRetry={(messageId) => {
               const messageIndex = messages.findIndex((m) => m.id === messageId);
               if (messageIndex === -1) return;

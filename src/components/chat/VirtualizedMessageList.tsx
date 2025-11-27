@@ -11,6 +11,8 @@ interface VirtualizedMessageListProps {
   messages: ChatMessageType[];
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
+  onEdit?: (messageId: string, newContent: string) => void;
+  onFollowUp?: (prompt: string) => void;
   isLoading?: boolean;
   className?: string;
   initialRenderCount?: number;
@@ -22,6 +24,8 @@ export function VirtualizedMessageList({
   messages,
   onRetry,
   onCopy,
+  onEdit,
+  onFollowUp,
   isLoading = false,
   className,
   initialRenderCount = 50,
@@ -121,6 +125,8 @@ export function VirtualizedMessageList({
                 isLast={index === visibleMessages.length - 1 && !isLoading}
                 onRetry={handleRetry}
                 onCopy={handleCopy}
+                onEdit={onEdit}
+                onFollowUp={onFollowUp}
               />
             </div>
           ))}
