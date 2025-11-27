@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import { Button, Input, Label, PremiumCard, useToasts } from "@/ui";
 
@@ -7,6 +6,7 @@ import { useSettings } from "../../hooks/useSettings";
 import { SlidersHorizontal, Smartphone } from "../../lib/icons";
 import type { DiscussionPresetKey } from "../../prompts/discussion/presets";
 import { discussionPresetOptions } from "../../prompts/discussion/presets";
+import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsBehaviorView() {
   const toasts = useToasts();
@@ -99,28 +99,14 @@ export function SettingsBehaviorView() {
   );
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Link to="/settings">
-          <Button variant="ghost" size="sm">
-            ← Zurück zu Einstellungen
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4 px-4 py-4 sm:px-6">
-        <PremiumCard variant="default" className="max-w-2xl mx-auto">
+    <SettingsLayout
+      activeTab="behavior"
+      title="KI-Verhalten"
+      description="Gesprächsstil, Sicherheitsniveau, Darstellung und Filter steuern."
+    >
+      <div className="space-y-4">
+        <PremiumCard variant="default" className="max-w-3xl mx-auto">
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">
-                KI-Verhalten, Darstellung &amp; Filter
-              </h2>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                Gesprächsstil, Sicherheitsniveau, Darstellung und Filter steuern. Änderungen gelten
-                sofort für neue Antworten.
-              </p>
-            </div>
-
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -403,6 +389,6 @@ export function SettingsBehaviorView() {
           </div>
         </PremiumCard>
       </div>
-    </div>
+    </SettingsLayout>
   );
 }

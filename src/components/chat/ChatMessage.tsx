@@ -84,7 +84,6 @@ export function ChatMessage({
   onEdit,
   onFollowUp,
 }: ChatMessageProps) {
-  const [showActions, setShowActions] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
   const [showFollowUps, setShowFollowUps] = useState(false);
@@ -137,8 +136,6 @@ export function ChatMessage({
         isSystem && "justify-center opacity-70",
       )}
       data-testid="message.item"
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
     >
       <div className={cn("relative", isSystem && "hidden")}>
         <Avatar className="border-border h-9 w-9 border">

@@ -1,4 +1,4 @@
-import { SettingsBehaviorView } from "./SettingsFiltersView";
+import { SettingsBehaviorView } from "./SettingsBehaviorView";
 
 export function SettingsAppearanceView() {
   return <SettingsBehaviorView />;

@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
-
-import { Button, Label, PremiumCard, useToasts } from "@/ui";
+import { Label, PremiumCard, useToasts } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
 import { Cat } from "../../lib/icons";
+import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsExtrasView() {
   const toasts = useToasts();
@@ -21,29 +20,14 @@ export function SettingsExtrasView() {
   };
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Link to="/settings">
-          <Button variant="ghost" size="sm">
-            ← Zurück zu Einstellungen
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4 px-4 py-4 sm:px-6">
+    <SettingsLayout
+      activeTab="extras"
+      title="Extras & Spielereien"
+      description="Optionale Funktionen und Easter-Eggs, die keinen Einfluss auf die Kernfunktionen haben."
+    >
+      <div className="space-y-4">
         <PremiumCard variant="default" className="max-w-2xl mx-auto">
           <div className="space-y-6">
-            {/* Header */}
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
-                <span className="text-2xl">🧪</span> Extras & Spielereien
-              </h2>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                Optionale Funktionen und Easter-Eggs, die keinen Einfluss auf die Kernfunktionen
-                haben.
-              </p>
-            </div>
-
             {/* Neko Toggle */}
             <div className="flex items-center justify-between p-4 rounded-md border bg-surface-inset">
               <div className="space-y-1 flex-1 mr-4">
@@ -97,6 +81,6 @@ export function SettingsExtrasView() {
           </div>
         </PremiumCard>
       </div>
-    </div>
+    </SettingsLayout>
   );
 }

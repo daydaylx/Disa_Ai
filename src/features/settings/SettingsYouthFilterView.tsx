@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
-
-import { Button, Label, PremiumCard, useToasts } from "@/ui";
+import { Label, PremiumCard, useToasts } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
 import { Shield } from "../../lib/icons";
+import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsYouthFilterView() {
   const { settings, toggleNSFWContent } = useSettings();
@@ -59,26 +58,14 @@ export function SettingsYouthFilterView() {
   };
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Link to="/settings">
-          <Button variant="ghost" size="sm">
-            ← Zurück zu Einstellungen
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4 px-4 py-4 sm:px-6">
+    <SettingsLayout
+      activeTab="youth"
+      title="Jugendfilter"
+      description="Einfacher Schalter für NSFW-Inhalte. Jugendschutz AN blendet Erwachsenen-Content aus."
+    >
+      <div className="space-y-4">
         <PremiumCard variant="default" className="max-w-2xl mx-auto">
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">Jugendfilter</h2>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                Einfacher Schalter für NSFW-Inhalte. Jugendschutz AN blendet Erwachsenen-Content
-                aus.
-              </p>
-            </div>
-
             <div className="flex items-center justify-between p-4 rounded-md border bg-surface-inset">
               <div className="space-y-1">
                 <Label className="text-base font-semibold text-text-primary">
@@ -121,6 +108,6 @@ export function SettingsYouthFilterView() {
           </div>
         </PremiumCard>
       </div>
-    </div>
+    </SettingsLayout>
   );
 }

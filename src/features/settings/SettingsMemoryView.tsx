@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
@@ -7,6 +6,7 @@ import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { History, Shield, Trash2 } from "../../lib/icons";
+import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsMemoryView() {
   const toasts = useToasts();
@@ -85,28 +85,14 @@ export function SettingsMemoryView() {
   }, [isEnabled, refresh]);
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Link to="/settings">
-          <Button variant="ghost" size="sm">
-            ← Zurück zu Einstellungen
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4 px-4 py-4 sm:px-6">
-        <PremiumCard variant="default" className="max-w-2xl mx-auto">
+    <SettingsLayout
+      activeTab="memory"
+      title="Verlauf, Erinnerung & Memory"
+      description="Kontextuelles Gedächtnis für personalisierte Gespräche verwalten"
+    >
+      <div className="space-y-4">
+        <PremiumCard variant="default" className="max-w-3xl mx-auto">
           <div className="space-y-6">
-            {/* Header */}
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-text-primary">
-                Verlauf, Erinnerung &amp; Memory
-              </h2>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                Kontextuelles Gedächtnis für personalisierte Gespräche verwalten
-              </p>
-            </div>
-
             {/* Memory Toggle */}
             <div className="flex items-center justify-between p-4 rounded-md border bg-surface-inset">
               <div className="space-y-1">
@@ -305,6 +291,6 @@ export function SettingsMemoryView() {
           </div>
         </PremiumCard>
       </div>
-    </div>
+    </SettingsLayout>
   );
 }

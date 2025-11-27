@@ -1,5 +1,5 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Cpu, Home, Settings, Users } from "@/lib/icons";
+import { Home, Settings, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;

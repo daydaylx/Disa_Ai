@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 
 import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
@@ -9,6 +8,7 @@ import { Download, Eye, EyeOff, HardDrive, KeyRound, Upload } from "../../lib/ic
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
 import type { ExportData } from "../../lib/storage-layer";
 import { ModernStorageLayer } from "../../lib/storage-layer";
+import { SettingsLayout } from "./SettingsLayout";
 
 const storageLayer = new ModernStorageLayer();
 
@@ -205,25 +205,14 @@ export function SettingsApiDataView() {
   };
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Link to="/settings">
-          <Button variant="ghost" size="sm">
-            ← Zurück zu Einstellungen
-          </Button>
-        </Link>
-      </div>
-
-      <div className="space-y-4 px-4 py-4 sm:px-6">
+    <SettingsLayout
+      activeTab="api-data"
+      title="API & Daten"
+      description="OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen."
+    >
+      <div className="space-y-4">
         <PremiumCard variant="default" className="max-w-3xl mx-auto">
           <div className="space-y-8">
-            <div className="space-y-2">
-              <h1 className="text-xl font-bold text-text-primary">API &amp; Daten</h1>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen.
-              </p>
-            </div>
-
             <section className="space-y-4">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-4 h-4 text-brand" />
@@ -408,6 +397,6 @@ export function SettingsApiDataView() {
           </div>
         </PremiumCard>
       </div>
-    </div>
+    </SettingsLayout>
   );
 }

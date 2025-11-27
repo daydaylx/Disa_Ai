@@ -1,10 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
+import type { ChatApiStatus } from "@/hooks/useChat";
+import { AlertCircle, AlertTriangle, XCircle } from "@/lib/icons";
+import { hasApiKey } from "@/lib/openrouter/key";
 import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
 import { Typography } from "@/ui/Typography";
-import { AlertCircle, AlertTriangle, Info, XCircle } from "@/lib/icons";
-import type { ChatApiStatus } from "@/hooks/useChat";
-import { hasApiKey } from "@/lib/openrouter/key";
-import { useNavigate } from "react-router-dom";
 
 interface ChatStatusBannerProps {
   status: ChatApiStatus;
@@ -16,12 +17,7 @@ interface ChatStatusBannerProps {
   onDismiss?: () => void;
 }
 
-export function ChatStatusBanner({
-  status,
-  error,
-  rateLimitInfo,
-  onDismiss,
-}: ChatStatusBannerProps) {
+export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBannerProps) {
   const navigate = useNavigate();
   const userHasKey = hasApiKey();
 

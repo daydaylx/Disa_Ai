@@ -1,5 +1,0 @@
-import { SettingsApiDataView } from "../features/settings/SettingsApiDataView";
-
-export default function SettingsApiPage() {
-  return <SettingsApiDataView />;
-}
