@@ -6,6 +6,8 @@ import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { ModelSelector } from "../components/chat/ModelSelector";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
@@ -28,7 +30,7 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
-  const { settings } = useSettings();
+  const { settings, setPreferredModel } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
@@ -75,6 +77,9 @@ export default function Chat() {
     stop,
     setCurrentSystemPrompt,
     setRequestOptions,
+    apiStatus,
+    rateLimitInfo,
+    error,
   } = useChat({
     onError: (error) => {
       toasts.push(humanErrorToToast(error));
@@ -161,6 +166,36 @@ export default function Chat() {
     setInput("");
   }, [append, input, isLoading, setInput, toasts]);
 
+  const handleEdit = useCallback(
+    (messageId: string, newContent: string) => {
+      const messageIndex = messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return;
+
+      // Remove all messages after the edited one
+      const newMessages = messages.slice(0, messageIndex);
+      setMessages(newMessages);
+
+      // Re-send with new content
+      void append({ role: "user", content: newContent }, newMessages);
+    },
+    [messages, setMessages, append],
+  );
+
+  const handleFollowUp = useCallback(
+    (prompt: string) => {
+      setInput(prompt);
+      // Automatically send after a brief delay
+      setTimeout(() => {
+        const validation = validatePrompt(prompt);
+        if (validation.valid) {
+          void append({ role: "user", content: validation.sanitized });
+          setInput("");
+        }
+      }, 100);
+    },
+    [setInput, append],
+  );
+
   const startWithPreset = (system: string, user?: string) => {
     // Setze System-Prompt für nachfolgende Requests (unsichtbar für Nutzer)
     setCurrentSystemPrompt(system);
@@ -195,17 +230,25 @@ export default function Chat() {
     </span>
   );
 
+  const handleModelChange = useCallback(
+    (modelId: string) => {
+      setPreferredModel(modelId);
+      toasts.push({
+        kind: "success",
+        title: "Modell gewechselt",
+        message: `Nutze jetzt: ${modelId.split("/").pop()}`,
+      });
+    },
+    [setPreferredModel, toasts],
+  );
+
   const infoBar = (
     <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => navigate("/models")}
-        className="h-auto py-1 px-2 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover"
-      >
-        Modell: {settings.preferredModelId}
-      </Button>
+      <ModelSelector
+        currentModelId={settings.preferredModelId}
+        onModelChange={handleModelChange}
+      />
       <Button
         variant="ghost"
         size="sm"
@@ -226,6 +269,7 @@ export default function Chat() {
   return (
     <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
       <h1 className="sr-only">Disa AI – Chat</h1>
+      <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">
@@ -272,6 +316,8 @@ export default function Chat() {
                 console.error("Failed to copy content:", err);
               });
             }}
+            onEdit={handleEdit}
+            onFollowUp={handleFollowUp}
             onRetry={(messageId) => {
               const messageIndex = messages.findIndex((m) => m.id === messageId);
               if (messageIndex === -1) return;

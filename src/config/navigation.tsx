@@ -17,15 +17,7 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     path: "/",
     Icon: Home,
     activePattern: /^\/(chat)?$/,
-    description: "Unterhaltungen & Verlauf",
-  },
-  {
-    id: "models",
-    label: "Modelle",
-    path: "/models",
-    Icon: Cpu,
-    activePattern: /^\/models/,
-    description: "Katalog & Bewertungen",
+    description: "Unterhaltungen & KI-Assistenz",
   },
   {
     id: "roles",
@@ -33,7 +25,7 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     path: "/roles",
     Icon: Users,
     activePattern: /^\/roles/,
-    description: "Persona-Templates",
+    description: "Persona-Katalog & Templates",
   },
   {
     id: "settings",
@@ -41,7 +33,7 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     path: "/settings",
     Icon: Settings,
     activePattern: /^\/settings/,
-    description: "API, Daten & Darstellung",
+    description: "API, Modelle & Darstellung",
   },
 ];
 

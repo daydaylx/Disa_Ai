@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Bot, Copy, RotateCcw, User } from "@/lib/icons";
+import { Bot, Copy, Edit2, MoreHorizontal, RotateCcw, User } from "@/lib/icons";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
@@ -16,6 +16,8 @@ interface ChatMessageProps {
   isLast?: boolean;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
+  onEdit?: (messageId: string, newContent: string) => void;
+  onFollowUp?: (prompt: string) => void;
 }
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
@@ -74,8 +76,18 @@ function parseMessageContent(content: string) {
   return parts.length > 0 ? parts : [{ type: "text" as const, content }];
 }
 
-export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  isLast,
+  onRetry,
+  onCopy,
+  onEdit,
+  onFollowUp,
+}: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(message.content);
+  const [showFollowUps, setShowFollowUps] = useState(false);
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
@@ -97,6 +109,25 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
   const handleRetry = () => {
     onRetry?.(message.id);
   };
+
+  const handleEdit = () => {
+    if (isEditing && editContent !== message.content) {
+      onEdit?.(message.id, editContent);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleFollowUp = (prompt: string) => {
+    onFollowUp?.(prompt);
+    setShowFollowUps(false);
+  };
+
+  const followUpSuggestions = [
+    "Erkläre das genauer",
+    "Gib mir Beispiele",
+    "Fasse zusammen",
+    "In einfacheren Worten",
+  ];
 
   return (
     <div
@@ -148,25 +179,46 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
           className={cn(bubbleClass, "p-4 sm:p-5")}
           data-testid="message-bubble"
         >
-          <div className="space-y-3">
-            {parsedContent.map((part, index) => (
-              <div key={index}>
-                {part.type === "text" ? (
-                  <div className="whitespace-pre-wrap text-base leading-7 sm:text-[17px] sm:leading-8">
-                    {part.content}
-                  </div>
-                ) : (
-                  <CodeBlock language={part.language}>{part.content}</CodeBlock>
-                )}
+          {isEditing ? (
+            <div className="space-y-3">
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="w-full min-h-[100px] p-3 rounded-lg bg-surface-2 border border-surface-3 focus:outline-none focus:ring-2 focus:ring-accent-primary text-text-primary"
+                autoFocus
+              />
+              <div className="flex gap-2 justify-end">
+                <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                  Abbrechen
+                </Button>
+                <Button variant="primary" size="sm" onClick={handleEdit}>
+                  Speichern & Senden
+                </Button>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {parsedContent.map((part, index) => (
+                <div key={index}>
+                  {part.type === "text" ? (
+                    <div className="whitespace-pre-wrap text-base leading-relaxed sm:text-lg sm:leading-relaxed">
+                      {part.content}
+                    </div>
+                  ) : (
+                    <CodeBlock language={part.language}>{part.content}</CodeBlock>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </MaterialCard>
 
-        {!isSystem && showActions && (
+        {/* Actions - Always visible on mobile, hover on desktop */}
+        {!isSystem && !isEditing && (
           <div
             className={cn(
-              "flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+              "flex items-center gap-2 mt-2 transition-opacity duration-150",
+              "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
               isUser && "justify-end",
             )}
           >
@@ -178,8 +230,20 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
               title="Nachricht kopieren"
               data-testid="message.copy"
             >
-              <Copy className="h-3 w-3" />
+              <Copy className="h-3.5 w-3.5" />
             </Button>
+            {isUser && onEdit && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                onClick={() => setIsEditing(true)}
+                title="Nachricht bearbeiten"
+                data-testid="message.edit"
+              >
+                <Edit2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
             {isAssistant && isLast && onRetry && (
               <Button
                 variant="ghost"
@@ -189,9 +253,38 @@ export function ChatMessage({ message, isLast, onRetry, onCopy }: ChatMessagePro
                 title="Antwort erneut anfordern"
                 data-testid="message.retry"
               >
-                <RotateCcw className="h-3 w-3" />
+                <RotateCcw className="h-3.5 w-3.5" />
               </Button>
             )}
+            {isAssistant && isLast && onFollowUp && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                onClick={() => setShowFollowUps(!showFollowUps)}
+                title="Weiterfragen"
+                data-testid="message.followup"
+              >
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Follow-up suggestions */}
+        {isAssistant && isLast && showFollowUps && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {followUpSuggestions.map((suggestion) => (
+              <Button
+                key={suggestion}
+                variant="secondary"
+                size="sm"
+                onClick={() => handleFollowUp(suggestion)}
+                className="text-xs"
+              >
+                {suggestion}
+              </Button>
+            ))}
           </div>
         )}
       </div>

@@ -20,6 +20,8 @@ function calculateExponentialBackoff(attempt: number): number {
   return Math.min(delay, maxDelay);
 }
 
+export type ChatApiStatus = "ok" | "rate_limited" | "missing_key" | "error" | "idle";
+
 export interface UseChatOptions {
   api?: string;
   id?: string;
@@ -51,6 +53,7 @@ export function useChat({
     isLimited: false,
     retryAfter: 0,
   });
+  const [apiStatus, setApiStatus] = useState<ChatApiStatus>("idle");
   const retryAttemptsRef = useRef(0);
   const prepareMessages = useCallback(
     (history: ChatMessageType[]): ChatMessageType[] => {
@@ -128,6 +131,7 @@ export function useChat({
       dispatch({ type: "SET_LOADING", isLoading: true });
       dispatch({ type: "SET_ERROR", error: null });
       dispatch({ type: "SET_INPUT", input: "" });
+      setApiStatus("ok"); // Optimistically set to ok
 
       // Create abort controller
       const controller = new AbortController();
@@ -264,6 +268,7 @@ export function useChat({
           retryAttemptsRef.current++;
           rateLimitedThisCall = true;
           setRateLimitInfo({ isLimited: true, retryAfter: retryAfterWithBackoff });
+          setApiStatus("rate_limited");
 
           dispatch({ type: "SET_ERROR", error: friendlyError });
           if (onError) {
@@ -276,7 +281,14 @@ export function useChat({
             type: "SET_MESSAGES",
             messages: customMessages || [...stateRef.current.messages],
           });
+          setApiStatus("idle");
         } else {
+          // Check if it's a "missing key" error
+          if (mappedError.message?.includes("NO_API_KEY")) {
+            setApiStatus("missing_key");
+          } else {
+            setApiStatus("error");
+          }
           dispatch({ type: "SET_ERROR", error: mappedError });
           if (onError) {
             onError(mappedError);
@@ -374,5 +386,6 @@ export function useChat({
     setCurrentSystemPrompt,
     setRequestOptions,
     rateLimitInfo, // Füge die Rate-Limit-Info dem Return-Wert hinzu
+    apiStatus, // Expliziter Status für UI-Anzeige
   };
 }
