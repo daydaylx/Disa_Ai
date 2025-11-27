@@ -248,6 +248,15 @@ a {
   max-width: 100vw;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .scrollable {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;

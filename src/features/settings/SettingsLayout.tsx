@@ -33,13 +33,34 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
 
   return (
     <div className="flex flex-col h-full text-text-primary">
-      {/* Mobile Header (Back Button) - only show if not overview */}
-      <div className="md:hidden">
-        <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-          <Button variant="ghost" size="sm" onClick={() => navigate("/settings")}>
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Einstellungen
+      {/* Mobile Header & Navigation */}
+      <div className="md:hidden bg-surface-1 border-b border-surface-2 sticky top-0 z-20">
+        <div className="flex items-center gap-2 px-4 pt-3 pb-1">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/settings")} className="-ml-2">
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            <span className="text-base font-semibold">Einstellungen</span>
           </Button>
+        </div>
+
+        {/* Scrollable Horizontal Tabs */}
+        <div className="flex overflow-x-auto py-2 px-4 gap-2 no-scrollbar snap-x">
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <Link
+                key={item.id}
+                to={item.to}
+                className={cn(
+                  "flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                  isActive
+                    ? "bg-brand text-white shadow-brandGlow"
+                    : "bg-surface-2 text-text-secondary hover:bg-surface-3 hover:text-text-primary",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
