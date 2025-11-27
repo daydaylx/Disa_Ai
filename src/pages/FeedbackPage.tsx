@@ -31,14 +31,6 @@ export default function FeedbackPage() {
     // Simulation of API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Collect device info
-    /* const deviceInfo = {
-      userAgent: navigator.userAgent,
-      screen: `${window.innerWidth}x${window.innerHeight}`,
-      pixelRatio: window.devicePixelRatio,
-    };
-    console.log("Feedback submitted:", { type, message, deviceInfo }); */
-
     toasts.push({
       kind: "success",
       title: "Feedback gesendet",
