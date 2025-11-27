@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { analytics } from "@/lib/analytics";
 import { Bot, Shield, Sparkles } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { MaterialCard, PrimaryButton } from "@/ui";
@@ -11,6 +12,10 @@ interface OnboardingOverlayProps {
 
 export function OnboardingOverlay({ onComplete }: OnboardingOverlayProps) {
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    analytics.trackOnboardingStep(step, "view");
+  }, [step]);
 
   const steps = [
     {
@@ -43,9 +48,11 @@ export function OnboardingOverlay({ onComplete }: OnboardingOverlayProps) {
   const Icon = currentStep.icon;
 
   const handleNext = () => {
+    analytics.trackOnboardingStep(step, "complete");
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
+      analytics.track("onboarding_completed");
       onComplete();
     }
   };

@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 import { chatStream } from "../api/openrouter";
+import { analytics } from "../lib/analytics";
 import { mapError } from "../lib/errors";
 import { RateLimitError } from "../lib/errors/types";
 import { chatReducer } from "../state/chatReducer";
@@ -142,6 +143,8 @@ export function useChat({
       let assistantMessage: ChatMessageType | null = null;
 
       let rateLimitedThisCall = false;
+      const startTime = Date.now();
+      let firstTokenReceived = false;
 
       try {
         let accumulatedContent = "";
@@ -170,6 +173,13 @@ export function useChat({
             // CRITICAL FIX: Always create assistant message on first delta, even if empty
             // This ensures "KI schreibt" doesn't show without a message being created
             if (!assistantMessage) {
+              if (!firstTokenReceived) {
+                const ttfa = Date.now() - startTime;
+                const model = messageData?.model || requestOptions?.model || "unknown";
+                analytics.trackTTFA(ttfa, model);
+                firstTokenReceived = true;
+              }
+
               assistantMessage = {
                 id: messageData?.id || `assistant-${nanoid()}`,
                 role: "assistant",
@@ -236,6 +246,9 @@ export function useChat({
         setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
       } catch (error) {
         const mappedError = mapError(error);
+
+        const model = stateRef.current.requestOptions?.model || "unknown";
+        analytics.trackApiError(mappedError.name || "UnknownError", model);
 
         if (mappedError instanceof RateLimitError) {
           // Get retry-after header value if available

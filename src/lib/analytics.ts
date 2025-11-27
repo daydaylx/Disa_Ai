@@ -308,6 +308,28 @@ class LocalAnalytics {
   }): void {
     this.track("quickstart_completed", properties);
   }
+
+  /**
+   * Track Time to First Answer
+   */
+  trackTTFA(durationMs: number, model: string): void {
+    this.trackPerformance("ttfa", durationMs, "ms");
+    this.track("metric_ttfa", { durationMs, model });
+  }
+
+  /**
+   * Track API Error specifically for metrics
+   */
+  trackApiError(errorType: string, model: string): void {
+    this.track("metric_api_error", { errorType, model });
+  }
+
+  /**
+   * Track Onboarding Progress
+   */
+  trackOnboardingStep(step: number, action: "view" | "complete" | "skip"): void {
+    this.track("onboarding_step", { step, action });
+  }
 }
 
 export interface AnalyticsStats {
