@@ -17,7 +17,7 @@
   --will-change-opacity: opacity;
 
   /* Performance-optimized durations based on device */
-  --duration-performance-optimized: clamp(120ms, 0.5vw, 300ms);
+  --duration-performance-optimized: clamp(120ms, 0.5vw, 200ms);
   --duration-reduced-motion: 120ms;
 
   /* Hardware acceleration helpers */
@@ -231,7 +231,7 @@
 
 /* Emphasized animations for important interactions */
 .emphasized-motion {
-  transition-duration: 400ms;
+  transition-duration: 200ms;
   transition-timing-function: var(--ease-emphasized);
 }
 
@@ -274,7 +274,7 @@
 }
 
 .toast-appear {
-  animation: toast-slide-up 300ms var(--ease-standard) forwards;
+  animation: toast-slide-up 200ms var(--ease-standard) forwards;
 }
 
 /* Tab/Accordion animations */
@@ -290,6 +290,6 @@
 }
 
 .accordion-expand {
-  animation: accordion-expand 300ms var(--ease-standard) forwards;
+  animation: accordion-expand 200ms var(--ease-standard) forwards;
   overflow: hidden;
 }
