@@ -30,7 +30,7 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
-  const { settings } = useSettings();
+  const { settings, setPreferredModel } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
@@ -232,19 +232,14 @@ export default function Chat() {
 
   const handleModelChange = useCallback(
     (modelId: string) => {
-      const newSettings = { ...settings, preferredModelId: modelId };
-      // Update settings via the settings hook
-      if (typeof window !== "undefined") {
-        localStorage.setItem("disa:settings", JSON.stringify(newSettings));
-        window.dispatchEvent(new Event("storage"));
-      }
+      setPreferredModel(modelId);
       toasts.push({
         kind: "success",
         title: "Modell gewechselt",
         message: `Nutze jetzt: ${modelId.split("/").pop()}`,
       });
     },
-    [settings, toasts],
+    [setPreferredModel, toasts],
   );
 
   const infoBar = (

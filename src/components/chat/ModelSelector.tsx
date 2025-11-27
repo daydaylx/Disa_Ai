@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Zap } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
@@ -59,6 +59,8 @@ const COMMON_MODELS: Model[] = [
 
 export function ModelSelector({ currentModelId, onModelChange, className }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const currentModel = COMMON_MODELS.find((m) => m.id === currentModelId) || {
     id: currentModelId,
@@ -69,14 +71,35 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
   const handleSelect = (modelId: string) => {
     onModelChange(modelId);
     setIsOpen(false);
+    // Return focus to button after selection
+    buttonRef.current?.focus();
   };
+
+  // Handle Escape key to close dropdown
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isOpen]);
 
   return (
     <div className={cn("relative", className)}>
       <Button
+        ref={buttonRef}
         variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-label={`Modell auswählen. Aktuell: ${currentModel.name}`}
         className="h-auto py-1.5 px-3 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover flex items-center gap-2"
       >
         <span className="truncate max-w-[150px] sm:max-w-[200px]">{currentModel.name}</span>
@@ -94,7 +117,10 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
 
           {/* Dropdown */}
           <MaterialCard
+            ref={dropdownRef}
             variant="raised"
+            role="listbox"
+            aria-label="Verfügbare Modelle"
             className="absolute top-full left-0 mt-2 w-[280px] sm:w-[320px] max-h-[60vh] overflow-y-auto z-40 p-2"
             data-testid="model-selector-dropdown"
           >
@@ -105,9 +131,11 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
                 return (
                   <button
                     key={model.id}
+                    role="option"
+                    aria-selected={isActive}
                     onClick={() => handleSelect(model.id)}
                     className={cn(
-                      "w-full text-left px-3 py-2.5 rounded-lg transition-colors",
+                      "w-full text-left px-3 py-2.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-accent-primary",
                       "hover:bg-surface-hover",
                       isActive && "bg-accent-primary/10 ring-1 ring-accent-primary/30",
                     )}
