@@ -10,6 +10,7 @@ import { ChatHistoryDrawer } from "../components/chat/ChatHistoryDrawer";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { ModelSelector } from "../components/chat/ModelSelector";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
+import { RoleActiveBanner } from "../components/chat/RoleActiveBanner";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import type { ModelEntry } from "../config/models";
 import { useRoles } from "../contexts/RolesContext";
@@ -283,6 +284,7 @@ export default function Chat() {
     <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
       <h1 className="sr-only">Disa AI – Chat</h1>
       <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+      <RoleActiveBanner />
       {!isEmpty && infoBar}
       {isEmpty ? (
         <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">
