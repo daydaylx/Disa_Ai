@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 
 import { BuildInfo } from "../../components/BuildInfo";
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
-import { AutoBreadcrumbs } from "../../components/navigation/Breadcrumbs";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { NekoLayer } from "../../components/neko/NekoLayer";
 import { NetworkBanner } from "../../components/NetworkBanner";
@@ -44,7 +43,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen bg-bg-base text-text-primary">{/* Clean solid background - no Aurora animation */}
+    <div className="relative min-h-screen bg-bg-base text-text-primary">
+      {/* Clean solid background - no Aurora animation */}
 
       <div
         className="relative flex min-h-screen flex-col"
@@ -92,12 +92,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
         </header>
 
-        {/* Breadcrumb Navigation */}
-        <div className="border-b border-surface-1/50 bg-surface-1/30 backdrop-blur supports-[backdrop-filter]:bg-surface-1/20">
-          <div className="px-4 py-2 max-w-6xl mx-auto">
-            <AutoBreadcrumbs className="text-xs md:text-sm" />
-          </div>
-        </div>
+        {/* Breadcrumbs removed - Header already shows page title, saves ~32px vertical space */}
 
         <div
           id="main"

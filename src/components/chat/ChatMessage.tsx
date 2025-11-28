@@ -142,7 +142,7 @@ export function ChatMessage({
   return (
     <div
       className={cn(
-        "group relative flex gap-3 px-3 py-5",
+        "group relative flex gap-4 px-4 py-6 sm:py-7",
         isUser && "flex-row-reverse",
         isSystem && "justify-center opacity-70",
       )}

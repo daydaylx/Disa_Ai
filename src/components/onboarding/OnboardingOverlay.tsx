@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { analytics } from "@/lib/analytics";
-import { Bot, Shield, Sparkles } from "@/lib/icons";
+import { Sparkles } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { MaterialCard, PrimaryButton } from "@/ui";
 
@@ -17,30 +17,15 @@ export function OnboardingOverlay({ onComplete }: OnboardingOverlayProps) {
     analytics.trackOnboardingStep(step, "view");
   }, [step]);
 
+  // Simplified to single welcome screen - faster onboarding
   const steps = [
     {
       title: "Willkommen bei Disa AI",
       description:
-        "Dein professioneller, privater KI-Assistent. Lokal im Browser, sicher und schnell.",
+        "Dein professioneller KI-Assistent mit Datenschutz. Chatte direkt im Browser – deine Daten bleiben auf deinem Gerät.",
       icon: Sparkles,
       color: "text-brand",
       bgColor: "bg-brand/10",
-    },
-    {
-      title: "Wie es funktioniert",
-      description:
-        "Disa AI verbindet sich direkt mit OpenRouter. Deine Daten bleiben auf deinem Gerät. Wir speichern nichts in der Cloud.",
-      icon: Bot,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
-    },
-    {
-      title: "Sicher & Fair",
-      description:
-        "Du hast die Kontrolle. Nutze den eingebauten Jugendschutz oder deinen eigenen API-Key für maximale Leistung.",
-      icon: Shield,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10",
     },
   ];
 
@@ -93,8 +78,8 @@ export function OnboardingOverlay({ onComplete }: OnboardingOverlayProps) {
           ))}
         </div>
 
-        <PrimaryButton onClick={handleNext} className="w-full py-6 text-lg shadow-brandGlow">
-          {step === steps.length - 1 ? "Loslegen" : "Weiter"}
+        <PrimaryButton onClick={handleNext} className="w-full py-6 text-lg">
+          Loslegen
         </PrimaryButton>
       </MaterialCard>
     </div>,

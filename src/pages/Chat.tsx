@@ -374,9 +374,10 @@ export default function Chat() {
         </div>
       )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-composer">
+      {/* Chat Composer - Fixed at bottom, optimized for mobile keyboard */}
+      <div className="sticky bottom-0 bg-gradient-to-t from-bg-base via-bg-base/80 to-transparent pt-4 z-composer">
         <div
-          className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
+          className="mx-[var(--spacing-4)] rounded-xl shadow-md bg-surface-2/98 backdrop-blur-sm pb-[env(safe-area-inset-bottom)] border border-surface-3/30 focus-within:border-accent-primary/50 focus-within:shadow-lg transition-all duration-200"
           ref={composerContainerRef}
         >
           <ChatComposer
