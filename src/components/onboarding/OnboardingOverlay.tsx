@@ -60,7 +60,7 @@ export function OnboardingOverlay({ onComplete }: OnboardingOverlayProps) {
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-surface-base/80 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-modal flex items-center justify-center bg-surface-base/80 backdrop-blur-md p-4">
       <MaterialCard
         variant="raised"
         className="w-full max-w-sm p-6 space-y-6 animate-in fade-in zoom-in-95 duration-300"

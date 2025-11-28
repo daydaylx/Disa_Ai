@@ -258,7 +258,7 @@ export default function Chat() {
   );
 
   const infoBar = (
-    <div className="sticky top-0 z-20 mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
+    <div className="sticky top-0 z-sticky-content mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
       <span className="text-xs font-semibold text-text-secondary">Kontext</span>
       <ModelSelector currentModelId={settings.preferredModelId} onModelChange={handleModelChange} />
       <Button
@@ -296,7 +296,7 @@ export default function Chat() {
       <RoleActiveBanner />
       {!isEmpty && infoBar}
       {isEmpty ? (
-        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto">
+        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto flex-1">
           <div className="flex items-start justify-between gap-3">
             <SectionHeader
               variant="compact"
@@ -319,13 +319,11 @@ export default function Chat() {
             conversationCount={stats?.totalConversations || 0}
           />
 
-          <div className="rounded-lg bg-surface-inset/80 shadow-inset px-[var(--spacing-3)] py-[var(--spacing-3)]">
-            <QuickstartGrid
-              onStart={startWithPreset}
-              title="Diskussionen"
-              description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
-            />
-          </div>
+          <QuickstartGrid
+            onStart={startWithPreset}
+            title="Diskussionen"
+            description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
+          />
         </div>
       ) : (
         <div
@@ -384,7 +382,7 @@ export default function Chat() {
         </div>
       )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-10">
+      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-composer">
         <div
           className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
           ref={composerContainerRef}

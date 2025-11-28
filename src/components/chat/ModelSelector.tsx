@@ -114,7 +114,7 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-30"
+            className="fixed inset-0 z-modal-backdrop"
             onClick={() => setIsOpen(false)}
             data-testid="model-selector-backdrop"
           />
@@ -125,7 +125,7 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
             variant="raised"
             role="listbox"
             aria-label="Verfügbare Modelle"
-            className="absolute top-full left-0 mt-2 w-[280px] sm:w-[320px] max-h-[60vh] overflow-y-auto z-40 p-2"
+            className="absolute top-full left-0 mt-2 w-[280px] sm:w-[320px] max-h-[60vh] overflow-y-auto z-dropdown p-2"
             data-testid="model-selector-dropdown"
           >
             <div className="space-y-1">
