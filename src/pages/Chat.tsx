@@ -27,10 +27,10 @@ import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
+import { cn } from "../lib/utils"; // Import cn utility
 
 export default function Chat() {
   const toasts = useToasts();
-  // const navigate = useNavigate(); // Unused
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
@@ -135,7 +135,6 @@ export default function Chat() {
     restoreEnabled: settings.restoreLastConversation && memoryEnabled,
   });
 
-  // Book Navigation Integration
   const {
     startNewChat: bookStartNewChat,
     goBack: bookGoBack,
@@ -145,34 +144,27 @@ export default function Chat() {
     activeChatId: bookActiveId,
   } = useBookNavigation();
 
-  // Sync Book Navigation with Conversation Manager
   useEffect(() => {
-    // When a new conversation is saved (real ID assigned), update the book navigation state
     if (activeConversationId && bookActiveId && activeConversationId !== bookActiveId) {
-       // This assumes that the discrepancy is due to a newly saved chat replacing a temp ID.
-       // We update the book state to track the real ID.
        updateChatId(bookActiveId, activeConversationId);
     }
   }, [activeConversationId, bookActiveId, updateChatId]);
 
   const handleSwipeLeft = useCallback(() => {
-    // New Page
-    if (messages.length > 0) { // Use messages.length directly
-      bookStartNewChat(); // Update stack
-      newConversation(); // Clear chat state
+    if (messages.length > 0) {
+      bookStartNewChat();
+      newConversation();
       toasts.push({kind: "info", title: "Neue Seite", message: ""});
     }
   }, [messages.length, bookStartNewChat, newConversation, toasts]);
 
   const handleSwipeRight = useCallback(() => {
-    // Go Back
-    // We need to know the PREVIOUS ID from the stack
     const currentIndex = swipeStack.indexOf(activeConversationId || "");
     if (currentIndex !== -1 && currentIndex < swipeStack.length - 1) {
        const prevId = swipeStack[currentIndex + 1];
        if (prevId) {
-         bookGoBack(); // Update stack state
-         void selectConversation(prevId); // Load chat
+         bookGoBack();
+         void selectConversation(prevId);
          toasts.push({kind: "info", title: "Zurückgeblättert", message: ""});
        }
     }
@@ -226,12 +218,8 @@ export default function Chat() {
     (messageId: string, newContent: string) => {
       const messageIndex = messages.findIndex((m) => m.id === messageId);
       if (messageIndex === -1) return;
-
-      // Remove all messages after the edited one
       const newMessages = messages.slice(0, messageIndex);
       setMessages(newMessages);
-
-      // Re-send with new content
       void append({ role: "user", content: newContent }, newMessages);
     },
     [messages, setMessages, append],
@@ -247,9 +235,7 @@ export default function Chat() {
         });
         return;
       }
-
       setInput(prompt);
-      // Automatically send after a brief delay
       setTimeout(() => {
         const validation = validatePrompt(prompt);
         if (validation.valid) {
@@ -262,10 +248,7 @@ export default function Chat() {
   );
 
   const startWithPreset = (system: string, user?: string) => {
-    // Setze System-Prompt für nachfolgende Requests (unsichtbar für Nutzer)
     setCurrentSystemPrompt(system);
-
-    // Trigger sofort den Start der Diskussion, wenn eine User-Nachricht vorliegt
     if (user) {
       void append({
         role: "user",
@@ -286,11 +269,11 @@ export default function Chat() {
 
   const isEmpty = messages.length === 0;
   const memoryBadge = memoryEnabled ? (
-    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2 py-1 text-[11px] font-semibold shadow-inset">
+    <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 text-ink-secondary px-2 py-1 text-[11px] font-medium border border-border-ink">
       • Memory aktiv
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 rounded-full bg-surface-inset text-text-secondary px-2 py-1 text-[11px] font-semibold shadow-inset">
+    <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 text-ink-secondary px-2 py-1 text-[11px] font-medium border border-border-ink opacity-70">
       • Kein Autosave
     </span>
   );
@@ -307,17 +290,16 @@ export default function Chat() {
     [setPreferredModel, toasts],
   );
 
-  // Mobile-optimized: Kompakte InfoBar nur mit essentiellen Infos
+  // HEADER: Pinned to top of the page area
   const infoBar = (
-    <div className="sticky top-0 z-sticky-content mx-[var(--spacing-4)] mb-2 mt-1 rounded-lg bg-surface-2/95 backdrop-blur-sm px-3 py-2 flex items-center gap-2 shadow-sm">
+    <div className="sticky top-0 z-sticky-content w-full bg-bg-page/95 border-b border-border-ink px-4 py-3 flex items-center gap-2">
       <ModelSelector currentModelId={settings.preferredModelId} onModelChange={handleModelChange} />
       {activeRole && (
-        <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-medium text-text-secondary min-h-[24px]">
+        <span className="hidden sm:inline-flex items-center gap-1 rounded-md bg-surface-2 border border-border-ink px-2 py-1 text-xs font-medium text-ink-secondary min-h-[24px]">
           {activeRole.name}
         </span>
       )}
       <div className="ml-auto flex items-center gap-2">
-        {/* Legacy History Button Removed/Hidden since we have Bookmark */}
         <span className="hidden sm:inline-flex">{memoryBadge}</span>
       </div>
     </div>
@@ -328,24 +310,35 @@ export default function Chat() {
       onSwipeLeft={handleSwipeLeft}
       onSwipeRight={handleSwipeRight}
       canSwipeRight={swipeStack.length > 1 && swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1}
-      className="h-full max-h-[100dvh]"
+      className="h-full max-h-[100dvh] bg-bg-app flex justify-center overflow-hidden" // Outer Canvas: bg-bg-app
     >
-      <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
+      {/*
+        PAGE CONTAINER
+        This is the "Sheet of Paper".
+        Centered, max-width on desktop, white bg, subtle shadow.
+      */}
+      <div className="relative w-full max-w-4xl h-full flex flex-col bg-bg-page shadow-page sm:my-2 sm:rounded-lg sm:border sm:border-border-ink overflow-hidden isolate">
+
+        {/* Stacked Page Hint (Visual only, behind the main page) */}
+        <div className="absolute inset-0 z-[-1] bg-bg-page translate-x-1 translate-y-1 rounded-lg border border-border-ink opacity-50 hidden sm:block pointer-events-none" aria-hidden="true" />
+
         <h1 className="sr-only">Disa AI – Chat</h1>
 
-        {/* Bookmark for History */}
-        <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
+        {/* Bookmark: Positioned absolutely relative to the Page Container */}
+        <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-0 right-6 sm:right-8 z-50" />
 
         <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
         <RoleActiveBanner />
+
         {!isEmpty && infoBar}
+
         {isEmpty ? (
-          <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto flex-1">
-            <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-6 px-4 py-6 overflow-y-auto flex-1 bg-bg-page">
+            <div className="flex items-start justify-between gap-3 mt-8 sm:mt-4">
               <SectionHeader
                 variant="compact"
-                title="Chat-Start"
-                subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
+                title="Notizbuch"
+                subtitle="Eine neue leere Seite."
               />
               <Button
                 variant="secondary"
@@ -354,7 +347,7 @@ export default function Chat() {
                 className="self-start gap-2"
               >
                 <History className="h-4 w-4" />
-                Verlauf
+                Inhaltsverzeichnis
               </Button>
             </div>
 
@@ -365,13 +358,13 @@ export default function Chat() {
 
             <QuickstartGrid
               onStart={startWithPreset}
-              title="Diskussionen"
-              description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
+              title="Themen"
+              description="Wähle ein Thema für diese Seite."
             />
           </div>
         ) : (
           <div
-            className="flex-1 overflow-y-auto mx-[var(--spacing-4)] rounded-md bg-surface-2 shadow-raise p-[var(--spacing-4)]"
+            className="flex-1 overflow-y-auto bg-bg-page"
             data-testid="chat-message-list"
           >
             <VirtualizedMessageList
@@ -389,10 +382,8 @@ export default function Chat() {
                 if (messageIndex === -1) return;
 
                 const targetUserIndex = (() => {
-                  // If the retried message is a user message, retry from there
                   const targetMsg = messages[messageIndex];
                   if (targetMsg && targetMsg.role === "user") return messageIndex;
-                  // If it's an assistant message, find the preceding user message
                   for (let i = messageIndex; i >= 0; i -= 1) {
                     const candidate = messages[i];
                     if (candidate && candidate.role === "user") return i;
@@ -400,35 +391,23 @@ export default function Chat() {
                   return -1;
                 })();
 
-                if (targetUserIndex === -1) {
-                  toasts.push({
-                    kind: "warning",
-                    title: "Retry nicht möglich",
-                    message: "Keine passende Nutzernachricht gefunden.",
-                  });
-                  return;
-                }
+                if (targetUserIndex === -1) return;
 
                 const userMessage = messages[targetUserIndex];
                 if (!userMessage) return;
-
-                // Slice history up to (but not including) the user message we want to retry
-                // The append function will add the user message back as a new message
                 const historyContext = messages.slice(0, targetUserIndex);
-
-                // Reset messages to this point immediately to prevent UI flicker
                 setMessages(historyContext);
-
                 void append({ role: "user", content: userMessage.content }, historyContext);
               }}
-              className="h-full"
+              className="h-full pb-4"
             />
           </div>
         )}
 
-        <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-composer">
+        {/* COMPOSER: Pinned Note at bottom */}
+        <div className="sticky bottom-0 bg-bg-page pt-2 z-composer border-t border-border-ink/50 shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
           <div
-            className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
+            className="px-4 safe-area-horizontal pb-[env(safe-area-inset-bottom)]"
             ref={composerContainerRef}
           >
             <ChatComposer
@@ -438,19 +417,17 @@ export default function Chat() {
               onStop={stop}
               isLoading={isLoading}
               canSend={!isLoading}
-              placeholder="Nachricht an Disa AI schreiben..."
+              placeholder="Notiere etwas..."
             />
           </div>
         </div>
 
         <div ref={messagesEndRef} />
 
-        {/* Replaced ChatHistoryDrawer with HistorySidePanel */}
         <HistorySidePanel
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           activePages={swipeStack.map(id => {
-             // Try to find title from conversations list
              const conv = (conversations || []).find(c => c.id === id);
              return { id, title: conv?.title || "Unbenannte Seite" };
           })}

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface BookmarkProps {
   onClick: () => void;
@@ -6,28 +7,40 @@ interface BookmarkProps {
 }
 
 export function Bookmark({ onClick, className }: BookmarkProps) {
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    // Small delay to ensure it feels natural after page load
+    const timer = setTimeout(() => {
+        setHasAnimated(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <button
       onClick={onClick}
       className={cn(
-        "fixed right-[var(--spacing-4)] top-0 z-header",
-        "w-8 h-12 sm:w-10 sm:h-14",
-        "bg-accent shadow-md cursor-pointer",
-        "flex items-center justify-center",
-        "transition-transform hover:translate-y-1 active:translate-y-2",
-        "clip-path-bookmark", // We need to define this or use SVG
+        "fixed right-[var(--spacing-4)] z-header",
+        "top-0",
+        "w-8 h-12 sm:w-10 sm:h-16",
+        "bg-accent shadow-floating cursor-pointer", // shadow-floating defined in theme
+        "flex items-end justify-center pb-2",
+        "transition-transform hover:translate-y-1 active:translate-y-2 duration-300",
+        "origin-top",
+        hasAnimated ? "bookmark-wobble" : "", // Trigger animation
         className,
       )}
       style={{
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
       }}
-      aria-label="Lesezeichen öffnen"
+      aria-label="Lesezeichen: Verlauf öffnen"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-4 h-4 sm:w-5 sm:h-5 text-white/90"
+        className="w-4 h-4 sm:w-5 sm:h-5 text-ink-on-accent opacity-90 mb-1"
       >
         <path
           fillRule="evenodd"
