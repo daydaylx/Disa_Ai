@@ -149,9 +149,7 @@ describe("NekoSprite Component", () => {
 
   describe("State Transitions", () => {
     it("should update animation class when state changes from WALKING to FLEEING", () => {
-      const { container, rerender } = render(
-        <NekoSprite state="WALKING" direction="right" />,
-      );
+      const { container, rerender } = render(<NekoSprite state="WALKING" direction="right" />);
 
       let svg = container.querySelector("svg");
       expect(svg).toHaveClass("animate-neko-walk");
@@ -164,9 +162,7 @@ describe("NekoSprite Component", () => {
     });
 
     it("should update direction mirror when direction changes", () => {
-      const { container, rerender } = render(
-        <NekoSprite state="WALKING" direction="right" />,
-      );
+      const { container, rerender } = render(<NekoSprite state="WALKING" direction="right" />);
 
       let spriteDiv = container.firstChild as HTMLElement;
       expect(spriteDiv).not.toHaveClass("scale-x-[-1]");
