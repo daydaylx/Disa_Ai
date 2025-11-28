@@ -10,19 +10,17 @@
  */
 
 /* Import consolidated styles FIRST - postcss-import will process these before Tailwind */
-@import "./styles/z-index-system.css"; /* FIRST: Establish z-index hierarchy */
-@import "./styles/design-tokens-consolidated.css"; /* Material Design System Tokens */
-@import "./styles/base.css";
-/* Component and utility styles */
-@import "./styles/components.css";
-@import "./styles/grid-system.css"; /* NEW: Responsive Grid System */
-@import "./styles/white-space.css"; /* NEW: White Space Management System */
-@import "./styles/page-spacing.css"; /* NEW: Page Margins and Spacing System */
-@import "./styles/vertical-rhythm.css"; /* NEW: Vertical Rhythm and Typography System */
-@import "./styles/interactive-states.css"; /* NEW: Interactive States System */
-@import "./styles/ui-state-animations.css"; /* Universal State System animations */
-@import "./styles/logo-animations.css"; /* Logo animations for DISA AI branding */
-@import "./styles/aurora-optimized.css"; /* Aurora background animations */
+@import "./styles/z-index-system.css"; /* Z-index hierarchy */
+@import "./styles/design-tokens-consolidated.css"; /* Design System Tokens */
+@import "./styles/base.css"; /* Resets, viewport fixes, accessibility */
+@import "./styles/components.css"; /* Material component styles */
+@import "./styles/white-space.css"; /* White space management */
+@import "./styles/page-spacing.css"; /* Page margins and spacing */
+@import "./styles/vertical-rhythm.css"; /* Vertical rhythm and typography */
+@import "./styles/interactive-states.css"; /* Interactive states */
+@import "./styles/ui-state-animations.css"; /* UI state animations */
+@import "./styles/logo-animations.css"; /* Logo animations */
+@import "./styles/aurora-optimized.css"; /* Aurora background effects */
 
 /* Tailwind CSS - after base imports */
 @tailwind base;

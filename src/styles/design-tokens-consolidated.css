@@ -54,19 +54,19 @@
    * ACCENT SYSTEM - AURORA VIOLET / CYAN
    * ======================================== */
 
-  /* Duo-Accent für Wiedererkennung */
-  --accent-primary: #8f7bff; /* Aurora Violet */
-  --accent-hover: #7b6ae6;
-  --accent-active: #6653d1;
-  --accent-bright: #5ee4ff; /* Cyan highlight */
+  /* Primary Accent: Lila Brand (Disa AI Signature) */
+  --accent-primary: #8b5cf6; /* Violet 500 */
+  --accent-hover: #7c3aed; /* Violet 600 */
+  --accent-active: #6d28d9; /* Violet 700 */
+  --accent-bright: #a78bfa; /* Violet 400 - for highlights */
 
-  /* Brand Gradient (Signature Spine) */
-  --brand-gradient: linear-gradient(130deg, #8f7bff 0%, #5ee4ff 48%, #12c2b9 100%);
+  /* Brand Gradient (Signature Spine) - Unified Lila Brand */
+  --brand-gradient: linear-gradient(130deg, #8b5cf6 0%, #a78bfa 48%, #c4b5fd 100%);
   --brand-gradient-soft: linear-gradient(
     130deg,
-    rgba(143, 123, 255, 0.55) 0%,
-    rgba(94, 228, 255, 0.35) 50%,
-    rgba(18, 194, 185, 0.25) 100%
+    rgba(139, 92, 246, 0.55) 0%,
+    rgba(167, 139, 250, 0.35) 50%,
+    rgba(196, 181, 253, 0.25) 100%
   );
 
   /* Accent Secondary (Success/Positive) */
@@ -75,11 +75,11 @@
   /* Accent Danger (Warnings/Errors) */
   --accent-danger: #ef4444; /* Red for errors */
 
-  /* Signature Aurora Spine Assets */
-  --signature-spine: linear-gradient(180deg, #8f7bff 0%, #5ee4ff 60%, #12c2b9 100%);
-  --signature-gleam: linear-gradient(120deg, rgba(143, 123, 255, 0.35), rgba(94, 228, 255, 0.22));
+  /* Signature Aurora Spine Assets - Unified Lila Brand */
+  --signature-spine: linear-gradient(180deg, #8b5cf6 0%, #a78bfa 60%, #c4b5fd 100%);
+  --signature-gleam: linear-gradient(120deg, rgba(139, 92, 246, 0.35), rgba(167, 139, 250, 0.22));
   --signature-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
-    radial-gradient(circle at 80% 0%, rgba(94, 228, 255, 0.06) 0, transparent 35%);
+    radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.06) 0, transparent 35%);
 
   /* ========================================
    * SHADOW SYSTEM (MAX 3 TYPEN)
@@ -95,9 +95,9 @@
   /* 3) press: Inputs / gedrückt */
   --shadow-inset: inset 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.06);
 
-  /* Alias: Glow = Float mit Farbanteil (bleibt innerhalb 3 Typen) */
-  --shadow-brand-glow: 0 12px 28px rgba(143, 123, 255, 0.15);
-  --shadow-brand-glow-strong: 0 16px 40px rgba(94, 228, 255, 0.25);
+  /* Brand Glow (Lila-Akzent für interaktive Elemente) */
+  --shadow-brand-glow: 0 12px 28px rgba(139, 92, 246, 0.2);
+  --shadow-brand-glow-strong: 0 16px 40px rgba(139, 92, 246, 0.3);
   --shadow-accent-glow: var(--shadow-brand-glow);
   --shadow-accent-glow-strong: var(--shadow-brand-glow-strong);
 
@@ -105,9 +105,9 @@
    * STRICT RADIUS SYSTEM (NUR 3 STUFEN!)
    * ======================================== */
 
-  --r-sm: 10px; /* Small controls */
-  --r-md: 14px; /* Standard */
-  --r-lg: 18px; /* Hero */
+  --r-sm: 8px; /* Small controls (Chips, Badges) */
+  --r-md: 12px; /* Standard (Cards, Buttons) */
+  --r-lg: 16px; /* Hero (Large Cards, Panels) */
 
   /* ========================================
    * MOBILE-OPTIMIERTE SPACING (8px Grid)
@@ -349,44 +349,19 @@
 }
 
 /* ========================================
- * LEGACY COMPATIBILITY MAPPINGS
- * Für smooth Migration bestehender Komponenten
+ * MINIMAL LEGACY COMPATIBILITY (wird schrittweise entfernt)
  * ======================================== */
 
 :root {
-  /* Legacy Radius Mappings (mapped to new 3-tier system) */
-  --radius-xs: var(--r-sm);
-  --radius-sm: var(--r-sm);
-  --radius-md: var(--r-md);
-  --radius-lg: var(--r-lg);
-  --radius-xl: var(--r-lg);
-
-  /* Legacy Shadow Mappings */
-  --shadow-sm: var(--shadow-soft-raise);
-  --shadow-md: var(--shadow-soft-raise);
-  --shadow-lg: var(--shadow-strong-raise);
-  --shadow-xl: var(--shadow-strong-raise);
-
-  /* Legacy Surface Mappings */
+  /* Essentielle Aliases für bestehende Komponenten */
   --surface-base: var(--bg-base);
   --bg-0: var(--bg-base);
   --bg-1: var(--surface-1);
   --bg-2: var(--surface-2);
   --surface: var(--surface-2);
-  --surface-soft: var(--surface-1);
   --surface-card: var(--surface-2);
 
-  /* Legacy Color Mappings */
-  --primary: var(--accent-primary);
+  /* Tailwind-Kompatibilität */
   --color-primary-500: var(--accent-primary);
-  --color-primary-600: var(--accent-hover);
-  --color-primary-700: var(--accent-active);
-  --text-brand: var(--accent-primary); /* Brand text color für BrandWordmark */
-
-  /* Legacy Text Mappings */
-  --foreground: var(--text-primary);
-
-  /* Aurora Accent Legacy Support */
-  --accent-aurora-green: var(--accent-secondary);
   --color-success-500: var(--accent-secondary);
 }
