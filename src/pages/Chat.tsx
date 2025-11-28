@@ -140,25 +140,20 @@ export default function Chat() {
     startNewChat: bookStartNewChat,
     goBack: bookGoBack,
     navigateToChat: bookNavigateToChat,
+    updateChatId,
     swipeStack,
     activeChatId: bookActiveId,
   } = useBookNavigation();
 
   // Sync Book Navigation with Conversation Manager
   useEffect(() => {
-    if (bookActiveId && bookActiveId !== activeConversationId) {
-      // If we have a new active ID from book nav, load it
-      // NOTE: This assumes bookActiveId maps to conversation IDs
-      // If bookStartNewChat generates a NEW ID that doesn't exist in DB yet,
-      // selectConversation might fail or need to handle "new" state.
-
-      // Check if it's a new empty chat (not in DB yet)
-      // For now, we rely on newConversation() for new chats
-
-      // If bookActiveId is in history, load it
-      // selectConversation(bookActiveId);
+    // When a new conversation is saved (real ID assigned), update the book navigation state
+    if (activeConversationId && bookActiveId && activeConversationId !== bookActiveId) {
+       // This assumes that the discrepancy is due to a newly saved chat replacing a temp ID.
+       // We update the book state to track the real ID.
+       updateChatId(bookActiveId, activeConversationId);
     }
-  }, [bookActiveId, activeConversationId, selectConversation]);
+  }, [activeConversationId, bookActiveId, updateChatId]);
 
   const handleSwipeLeft = useCallback(() => {
     // New Page

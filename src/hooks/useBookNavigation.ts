@@ -111,6 +111,28 @@ export function useBookNavigation() {
     });
   }, []);
 
+  const updateChatId = useCallback((oldId: string, newId: string) => {
+    setState((prev) => {
+      // Update swipeStack
+      const newStack = prev.swipeStack.map((id) => (id === oldId ? newId : id));
+
+      // Update activeChatId if needed
+      const newActiveId = prev.activeChatId === oldId ? newId : prev.activeChatId;
+
+      // Update allChats
+      const newAllChats = prev.allChats.map((chat) =>
+        chat.id === oldId ? { ...chat, id: newId } : chat
+      );
+
+      return {
+        ...prev,
+        swipeStack: newStack,
+        activeChatId: newActiveId,
+        allChats: newAllChats,
+      };
+    });
+  }, []);
+
   // Sync with Storage (Effect)
   useEffect(() => {
     if (state.activeChatId) {
@@ -126,6 +148,7 @@ export function useBookNavigation() {
     startNewChat,
     navigateToChat,
     goBack,
+    updateChatId,
     isTransitioning,
     settings // Just to avoid unused var warning for now
   };
