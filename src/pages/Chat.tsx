@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
-import { ChatHistoryDrawer } from "../components/chat/ChatHistoryDrawer";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { ModelSelector } from "../components/chat/ModelSelector";
 import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { RoleActiveBanner } from "../components/chat/RoleActiveBanner";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { Bookmark } from "../components/navigation/Bookmark";
+import { BookSwipeGesture } from "../components/navigation/BookSwipeGesture";
+import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import type { ModelEntry } from "../config/models";
 import { useRoles } from "../contexts/RolesContext";
 import { useConversationStats } from "../hooks/use-storage";
+import { useBookNavigation } from "../hooks/useBookNavigation";
 import { useChat } from "../hooks/useChat";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
@@ -28,7 +30,7 @@ import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
   const toasts = useToasts();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Unused
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
@@ -116,7 +118,12 @@ export default function Chat() {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const { activeConversationId } = useConversationManager({
+  const {
+    activeConversationId,
+    selectConversation,
+    newConversation,
+    conversations,
+  } = useConversationManager({
     messages,
     isLoading,
     setMessages,
@@ -127,6 +134,49 @@ export default function Chat() {
     saveEnabled: memoryEnabled,
     restoreEnabled: settings.restoreLastConversation && memoryEnabled,
   });
+
+  // Book Navigation Integration
+  const {
+    startNewChat: bookStartNewChat,
+    goBack: bookGoBack,
+    navigateToChat: bookNavigateToChat,
+    updateChatId,
+    swipeStack,
+    activeChatId: bookActiveId,
+  } = useBookNavigation();
+
+  // Sync Book Navigation with Conversation Manager
+  useEffect(() => {
+    // When a new conversation is saved (real ID assigned), update the book navigation state
+    if (activeConversationId && bookActiveId && activeConversationId !== bookActiveId) {
+       // This assumes that the discrepancy is due to a newly saved chat replacing a temp ID.
+       // We update the book state to track the real ID.
+       updateChatId(bookActiveId, activeConversationId);
+    }
+  }, [activeConversationId, bookActiveId, updateChatId]);
+
+  const handleSwipeLeft = useCallback(() => {
+    // New Page
+    if (messages.length > 0) { // Use messages.length directly
+      bookStartNewChat(); // Update stack
+      newConversation(); // Clear chat state
+      toasts.push({kind: "info", title: "Neue Seite", message: ""});
+    }
+  }, [messages.length, bookStartNewChat, newConversation, toasts]);
+
+  const handleSwipeRight = useCallback(() => {
+    // Go Back
+    // We need to know the PREVIOUS ID from the stack
+    const currentIndex = swipeStack.indexOf(activeConversationId || "");
+    if (currentIndex !== -1 && currentIndex < swipeStack.length - 1) {
+       const prevId = swipeStack[currentIndex + 1];
+       if (prevId) {
+         bookGoBack(); // Update stack state
+         void selectConversation(prevId); // Load chat
+         toasts.push({kind: "info", title: "Zurückgeblättert", message: ""});
+       }
+    }
+  }, [swipeStack, activeConversationId, bookGoBack, selectConversation, toasts]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -267,137 +317,155 @@ export default function Chat() {
         </span>
       )}
       <div className="ml-auto flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsHistoryOpen(true)}
-          className="h-8 w-8 text-text-secondary hover:text-text-primary hover:bg-surface-3 rounded-lg"
-          title="Verlauf öffnen"
-        >
-          <History className="h-4 w-4" />
-        </Button>
+        {/* Legacy History Button Removed/Hidden since we have Bookmark */}
         <span className="hidden sm:inline-flex">{memoryBadge}</span>
       </div>
     </div>
   );
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
-      <h1 className="sr-only">Disa AI – Chat</h1>
-      <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
-      <RoleActiveBanner />
-      {!isEmpty && infoBar}
-      {isEmpty ? (
-        <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <SectionHeader
-              variant="compact"
-              title="Chat-Start"
-              subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
+    <BookSwipeGesture
+      onSwipeLeft={handleSwipeLeft}
+      onSwipeRight={handleSwipeRight}
+      canSwipeRight={swipeStack.length > 1 && swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1}
+      className="h-full max-h-[100dvh]"
+    >
+      <div className="relative flex flex-col text-text-primary h-full max-h-[100dvh] overflow-hidden">
+        <h1 className="sr-only">Disa AI – Chat</h1>
+
+        {/* Bookmark for History */}
+        <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
+
+        <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+        <RoleActiveBanner />
+        {!isEmpty && infoBar}
+        {isEmpty ? (
+          <div className="flex flex-col gap-[var(--spacing-4)] sm:gap-[var(--spacing-6)] px-[var(--spacing-4)] py-[var(--spacing-3)] sm:py-[var(--spacing-6)] overflow-y-auto flex-1">
+            <div className="flex items-start justify-between gap-3">
+              <SectionHeader
+                variant="compact"
+                title="Chat-Start"
+                subtitle="Starte eine neue Unterhaltung oder nutze vorgefertigte Workflows"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsHistoryOpen(true)}
+                className="self-start gap-2"
+              >
+                <History className="h-4 w-4" />
+                Verlauf
+              </Button>
+            </div>
+
+            <ChatStartCard
+              onNewChat={focusComposer}
+              conversationCount={stats?.totalConversations || 0}
             />
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsHistoryOpen(true)}
-              className="self-start gap-2"
-            >
-              <History className="h-4 w-4" />
-              Verlauf
-            </Button>
+
+            <QuickstartGrid
+              onStart={startWithPreset}
+              title="Diskussionen"
+              description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
+            />
           </div>
-
-          <ChatStartCard
-            onNewChat={focusComposer}
-            conversationCount={stats?.totalConversations || 0}
-          />
-
-          <QuickstartGrid
-            onStart={startWithPreset}
-            title="Diskussionen"
-            description="Vorbereitete Presets für schnelle Einstiege – tippe und starte direkt fokussiert."
-          />
-        </div>
-      ) : (
-        <div
-          className="flex-1 overflow-y-auto mx-[var(--spacing-4)] rounded-md bg-surface-2 shadow-raise p-[var(--spacing-4)]"
-          data-testid="chat-message-list"
-        >
-          <VirtualizedMessageList
-            messages={messages}
-            isLoading={isLoading}
-            onCopy={(content) => {
-              navigator.clipboard.writeText(content).catch((err) => {
-                console.error("Failed to copy content:", err);
-              });
-            }}
-            onEdit={handleEdit}
-            onFollowUp={handleFollowUp}
-            onRetry={(messageId) => {
-              const messageIndex = messages.findIndex((m) => m.id === messageId);
-              if (messageIndex === -1) return;
-
-              const targetUserIndex = (() => {
-                // If the retried message is a user message, retry from there
-                const targetMsg = messages[messageIndex];
-                if (targetMsg && targetMsg.role === "user") return messageIndex;
-                // If it's an assistant message, find the preceding user message
-                for (let i = messageIndex; i >= 0; i -= 1) {
-                  const candidate = messages[i];
-                  if (candidate && candidate.role === "user") return i;
-                }
-                return -1;
-              })();
-
-              if (targetUserIndex === -1) {
-                toasts.push({
-                  kind: "warning",
-                  title: "Retry nicht möglich",
-                  message: "Keine passende Nutzernachricht gefunden.",
+        ) : (
+          <div
+            className="flex-1 overflow-y-auto mx-[var(--spacing-4)] rounded-md bg-surface-2 shadow-raise p-[var(--spacing-4)]"
+            data-testid="chat-message-list"
+          >
+            <VirtualizedMessageList
+              messages={messages}
+              isLoading={isLoading}
+              onCopy={(content) => {
+                navigator.clipboard.writeText(content).catch((err) => {
+                  console.error("Failed to copy content:", err);
                 });
-                return;
-              }
+              }}
+              onEdit={handleEdit}
+              onFollowUp={handleFollowUp}
+              onRetry={(messageId) => {
+                const messageIndex = messages.findIndex((m) => m.id === messageId);
+                if (messageIndex === -1) return;
 
-              const userMessage = messages[targetUserIndex];
-              if (!userMessage) return;
+                const targetUserIndex = (() => {
+                  // If the retried message is a user message, retry from there
+                  const targetMsg = messages[messageIndex];
+                  if (targetMsg && targetMsg.role === "user") return messageIndex;
+                  // If it's an assistant message, find the preceding user message
+                  for (let i = messageIndex; i >= 0; i -= 1) {
+                    const candidate = messages[i];
+                    if (candidate && candidate.role === "user") return i;
+                  }
+                  return -1;
+                })();
 
-              // Slice history up to (but not including) the user message we want to retry
-              // The append function will add the user message back as a new message
-              const historyContext = messages.slice(0, targetUserIndex);
+                if (targetUserIndex === -1) {
+                  toasts.push({
+                    kind: "warning",
+                    title: "Retry nicht möglich",
+                    message: "Keine passende Nutzernachricht gefunden.",
+                  });
+                  return;
+                }
 
-              // Reset messages to this point immediately to prevent UI flicker
-              setMessages(historyContext);
+                const userMessage = messages[targetUserIndex];
+                if (!userMessage) return;
 
-              void append({ role: "user", content: userMessage.content }, historyContext);
-            }}
-            className="h-full"
-          />
+                // Slice history up to (but not including) the user message we want to retry
+                // The append function will add the user message back as a new message
+                const historyContext = messages.slice(0, targetUserIndex);
+
+                // Reset messages to this point immediately to prevent UI flicker
+                setMessages(historyContext);
+
+                void append({ role: "user", content: userMessage.content }, historyContext);
+              }}
+              className="h-full"
+            />
+          </div>
+        )}
+
+        <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-composer">
+          <div
+            className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
+            ref={composerContainerRef}
+          >
+            <ChatComposer
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              onStop={stop}
+              isLoading={isLoading}
+              canSend={!isLoading}
+              placeholder="Nachricht an Disa AI schreiben..."
+            />
+          </div>
         </div>
-      )}
 
-      <div className="sticky bottom-0 bg-gradient-to-t from-surface-base/95 to-transparent pt-[var(--spacing-4)] z-composer">
-        <div
-          className="px-[var(--spacing-4)] safe-area-horizontal rounded-t-[18px] shadow-raise bg-surface-1/95 pb-[env(safe-area-inset-bottom)]"
-          ref={composerContainerRef}
-        >
-          <ChatComposer
-            value={input}
-            onChange={setInput}
-            onSend={handleSend}
-            onStop={stop}
-            isLoading={isLoading}
-            canSend={!isLoading}
-            placeholder="Nachricht an Disa AI schreiben..."
-          />
-        </div>
+        <div ref={messagesEndRef} />
+
+        {/* Replaced ChatHistoryDrawer with HistorySidePanel */}
+        <HistorySidePanel
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          activePages={swipeStack.map(id => {
+             // Try to find title from conversations list
+             const conv = (conversations || []).find(c => c.id === id);
+             return { id, title: conv?.title || "Unbenannte Seite" };
+          })}
+          archivedPages={(conversations || []).filter(c => !swipeStack.includes(c.id)).map(c => ({
+             id: c.id,
+             title: c.title,
+             date: new Date(c.updatedAt).toLocaleDateString()
+          }))}
+          activeChatId={activeConversationId}
+          onSelectChat={(id) => {
+             void selectConversation(id);
+             bookNavigateToChat(id);
+          }}
+        />
       </div>
-
-      <div ref={messagesEndRef} />
-
-      <ChatHistoryDrawer
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-        currentConversationId={activeConversationId ?? undefined}
-      />
-    </div>
+    </BookSwipeGesture>
   );
 }

@@ -11,7 +11,8 @@
 
 /* Import consolidated styles FIRST - postcss-import will process these before Tailwind */
 @import "./styles/z-index-system.css"; /* Z-index hierarchy */
-@import "./styles/design-tokens-consolidated.css"; /* Design System Tokens */
+@import "./styles/design-tokens-consolidated.css"; /* Design System Tokens (Backups) */
+@import "./styles/theme-ink.css"; /* Ink on Paper Theme */
 @import "./styles/base.css"; /* Resets, viewport fixes, accessibility */
 @import "./styles/components.css"; /* Material component styles */
 @import "./styles/white-space.css"; /* White space management */
@@ -36,25 +37,10 @@
     color-scheme: dark;
   }
 
-  body::after {
-    content: "";
-    position: fixed;
-    inset: -20vh;
-    pointer-events: none;
-    background-image: radial-gradient(
-      1px 1px at 20% 20%,
-      rgba(255, 255, 255, calc(var(--canvas-noise-opacity, 0.18) * 0.6)) 0%,
-      transparent 100%
-    );
-    background-size: 360px 360px;
-    opacity: 0.25;
-    mix-blend-mode: screen;
-    z-index: 0;
-  }
-
   .root {
     min-height: 100dvh;
-    background: transparent;
+    background: var(--bg-app);
+    color: var(--text-primary);
     position: relative;
     z-index: 1;
   }
