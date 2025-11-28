@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-01ca959",
-  "buildTime": "2025-11-28T07:31:24.944Z",
-  "gitSha": "01ca959101b7de8862294825269a0e835727781a",
-  "gitBranch": "claude/audit-design-system-01HfC5gfy41cPmuJF13jCmeh",
+  "buildId": "v1.0.0-710c045",
+  "buildTime": "2025-11-28T08:24:48.661Z",
+  "gitSha": "710c045a25b68f6fe0f09b361199181030813a32",
+  "gitBranch": "claude/fix-ui-menu-issues-01SeM9vBzEtdXgYV8zyWWUgm",
   "version": "1.0.0"
 }
