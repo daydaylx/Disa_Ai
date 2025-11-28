@@ -1,5 +1,3 @@
-import React from "react";
-
 import { X } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
@@ -59,7 +57,7 @@ export function HistorySidePanel({
                     "w-full text-left p-3 rounded-lg border transition-colors",
                     activeChatId === page.id
                       ? "bg-accent/10 border-accent text-accent"
-                      : "bg-surface-2 border-transparent hover:bg-surface-3 text-text-primary"
+                      : "bg-surface-2 border-transparent hover:bg-surface-3 text-text-primary",
                   )}
                 >
                   <div className="font-medium truncate">{page.title}</div>
@@ -73,25 +71,25 @@ export function HistorySidePanel({
 
           {/* Archived Pages */}
           <section>
-             <h3 className="text-sm font-medium text-text-secondary uppercase tracking-wider mb-3">
+            <h3 className="text-sm font-medium text-text-secondary uppercase tracking-wider mb-3">
               Alle Chats
             </h3>
             <div className="space-y-1">
               {archivedPages.map((page) => (
                 <button
-                   key={page.id}
-                   onClick={() => {
-                     onSelectChat(page.id);
-                     onClose();
-                   }}
-                   className="w-full text-left p-3 rounded-lg hover:bg-surface-2 transition-colors flex justify-between items-center group"
+                  key={page.id}
+                  onClick={() => {
+                    onSelectChat(page.id);
+                    onClose();
+                  }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-surface-2 transition-colors flex justify-between items-center group"
                 >
-                   <div className="truncate flex-1 pr-4">
-                     <div className="text-text-primary group-hover:text-accent transition-colors">
-                       {page.title}
-                     </div>
-                     <div className="text-xs text-text-secondary">{page.date}</div>
-                   </div>
+                  <div className="truncate flex-1 pr-4">
+                    <div className="text-text-primary group-hover:text-accent transition-colors">
+                      {page.title}
+                    </div>
+                    <div className="text-xs text-text-secondary">{page.date}</div>
+                  </div>
                 </button>
               ))}
             </div>
