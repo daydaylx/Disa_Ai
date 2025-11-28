@@ -5,6 +5,10 @@ import { cn } from "@/lib/utils";
 interface MaterialCardProps extends ComponentProps<"div"> {
   children: ReactNode;
   variant?: "raised" | "inset" | "hero";
+  /**
+   * Optional decorative spine to visually align the card to one side.
+   */
+  spineSide?: "left" | "right";
 }
 
 /**
@@ -20,7 +24,13 @@ interface MaterialCardProps extends ComponentProps<"div"> {
  * - "inset": Inset appearance for input areas
  * - "hero": Elevated shadow for focal elements
  */
-export function MaterialCard({ children, className, variant = "raised", ...props }: MaterialCardProps) {
+export function MaterialCard({
+  children,
+  className,
+  variant = "raised",
+  spineSide,
+  ...props
+}: MaterialCardProps) {
   const baseStyles = "relative rounded-md p-6 transition-shadow duration-fast";
 
   const variantStyles = {
@@ -34,10 +44,13 @@ export function MaterialCard({ children, className, variant = "raised", ...props
       className={cn(
         baseStyles,
         variantStyles[variant],
+        spineSide === "left" && "border-l-4 border-surface-3 pl-5",
+        spineSide === "right" && "border-r-4 border-surface-3 pr-5",
         // Ensure scrollability when interactive
         props.onClick && "[touch-action:pan-y] cursor-pointer",
         className,
       )}
+      data-spine-side={spineSide}
       {...props}
     >
       {children}
