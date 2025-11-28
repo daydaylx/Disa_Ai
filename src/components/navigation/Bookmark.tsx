@@ -10,24 +10,29 @@ export function Bookmark({ onClick, className }: BookmarkProps) {
     <button
       onClick={onClick}
       className={cn(
-        "fixed right-[var(--spacing-4)] top-0 z-header",
-        "w-8 h-12 sm:w-10 sm:h-14",
+        "fixed right-[var(--spacing-4)] z-header",
+        // Positioned slightly off the top to look like it hangs
+        "top-0",
+        "w-8 h-12 sm:w-10 sm:h-16",
         "bg-accent shadow-md cursor-pointer",
-        "flex items-center justify-center",
-        "transition-transform hover:translate-y-1 active:translate-y-2",
-        "clip-path-bookmark", // We need to define this or use SVG
+        "flex items-end justify-center pb-2",
+        "transition-transform hover:translate-y-1 active:translate-y-2 duration-300",
+        // Physical "Hang" Effect
+        "origin-top",
         className,
       )}
       style={{
+        // Classic Bookmark Shape with "V" cut at bottom
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
       }}
-      aria-label="Lesezeichen öffnen"
+      aria-label="Lesezeichen: Verlauf öffnen"
     >
+      {/* Icon is placed at the bottom, inverted contrast */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-4 h-4 sm:w-5 sm:h-5 text-white/90"
+        className="w-4 h-4 sm:w-5 sm:h-5 text-ink-on-accent opacity-90 mb-1"
       >
         <path
           fillRule="evenodd"
