@@ -4,7 +4,6 @@ import { Bot, Copy, Edit2, MoreHorizontal, RotateCcw, User } from "@/lib/icons";
 import { Avatar, AvatarFallback } from "@/ui/Avatar";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
-import { MaterialCard } from "@/ui/MaterialCard";
 
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
@@ -22,22 +21,22 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
-    <div className="border-border bg-surface-subtle relative my-4 overflow-hidden rounded-lg border">
-      <div className="border-border flex items-center justify-between border-b px-4 py-2">
-        <span className="text-text-secondary text-xs font-medium uppercase tracking-wide">
+    <div className="border border-border-ink bg-bg-surface relative my-4 overflow-hidden rounded-md">
+      <div className="border-b border-border-ink flex items-center justify-between px-4 py-2 bg-bg-surface/50">
+        <span className="text-ink-secondary text-xs font-medium uppercase tracking-wide">
           {language || "Text"}
         </span>
         <Button
           variant="ghost"
           size="icon"
-          className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+          className="text-ink-secondary hover:text-ink-primary h-8 w-8"
           onClick={() => void navigator.clipboard?.writeText(children)}
         >
           <Copy className="h-4 w-4" />
         </Button>
       </div>
       <pre className="overflow-x-auto p-4">
-        <code className="text-text-primary text-sm leading-relaxed">{children}</code>
+        <code className="text-ink-primary text-sm leading-relaxed font-mono">{children}</code>
       </pre>
     </div>
   );
@@ -105,10 +104,15 @@ export function ChatMessage({
 
   const parsedContent = parseMessageContent(message.content);
 
+  // INK THEME: Chat Bubbles
+  // User: Lightly tinted paper, fine border
+  // Assistant: White paper, accent strip on left
   const bubbleClass = cn(
-    "w-full max-w-[92vw] sm:max-w-3xl text-left",
-    isUser && "ml-auto text-right",
-    isSystem && "mx-auto max-w-[88vw] sm:max-w-2xl text-center",
+    "w-full max-w-[92vw] sm:max-w-3xl text-left p-4 sm:p-5 relative",
+    isUser
+      ? "ml-auto text-right bg-bg-surface border border-border-ink rounded-lg rounded-tr-none"
+      : "bg-white border-l-[3px] border-accent pl-5 pr-4 py-4 rounded-r-lg shadow-sm", // Assistant style
+    isSystem && "mx-auto max-w-[88vw] sm:max-w-2xl text-center bg-transparent border-none p-2",
   );
 
   const handleCopy = () => {
@@ -148,59 +152,53 @@ export function ChatMessage({
       )}
       data-testid="message.item"
     >
-      <div className={cn("relative", isSystem && "hidden")}>
-        <Avatar className="border-border h-9 w-9 border">
-          <AvatarFallback className={cn("bg-surface-subtle text-text-primary")}>
+      <div className={cn("relative pt-1", isSystem && "hidden")}>
+        <Avatar className="h-8 w-8 border border-border-ink bg-bg-surface text-ink-primary">
+          <AvatarFallback className={cn("bg-bg-surface text-ink-primary")}>
             {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
           </AvatarFallback>
         </Avatar>
       </div>
 
-      <div className={cn("flex-1 space-y-2", isUser && "text-right", isSystem && "text-center")}>
+      <div className={cn("flex-1 space-y-1", isUser && "text-right", isSystem && "text-center")}>
         {!isSystem && (
           <div
             className={cn(
-              "text-text-secondary flex items-center gap-2 text-[13px]",
+              "text-ink-secondary flex items-center gap-2 text-[13px] mb-1",
               isUser && "justify-end",
             )}
           >
-            <span className="text-text-primary font-medium">{isUser ? "Ich" : "Assistent"}</span>
+            <span className="text-ink-primary font-bold">{isUser ? "Du" : "Disa"}</span>
             {message.model && (
               <Badge
                 variant="secondary"
-                className="border-border bg-card text-text-secondary text-xs"
+                className="border border-border-ink bg-bg-surface text-ink-secondary text-[10px] px-1.5 py-0"
               >
                 {message.model}
               </Badge>
             )}
-            {message.tokens && (
-              <Badge variant="outline" className="border-border text-text-secondary text-xs">
-                {message.tokens} Token
-              </Badge>
-            )}
-            <span className="text-xs">{new Date(message.timestamp).toLocaleTimeString()}</span>
+            <span className="text-xs opacity-60">{new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
           </div>
         )}
 
-        <MaterialCard
-          variant={isUser ? "inset" : "raised"}
-          className={cn(bubbleClass, "p-4 sm:p-5")}
+        <div
+          className={bubbleClass}
           data-testid="message-bubble"
         >
           {isEditing ? (
-            <div className="space-y-3">
+            <div className="space-y-3 text-left">
               <textarea
                 ref={textareaRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[100px] p-3 rounded-lg bg-surface-2 border border-surface-3 focus:outline-none focus:ring-2 focus:ring-accent-primary text-text-primary"
+                className="w-full min-h-[100px] p-3 rounded-md bg-white border border-border-ink focus:outline-none focus:ring-1 focus:ring-accent text-ink-primary"
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
                   Abbrechen
                 </Button>
                 <Button variant="primary" size="sm" onClick={handleEdit}>
-                  Speichern & Senden
+                  Speichern
                 </Button>
               </div>
             </div>
@@ -209,23 +207,25 @@ export function ChatMessage({
               {parsedContent.map((part, index) => (
                 <div key={index}>
                   {part.type === "text" ? (
-                    <div className="whitespace-pre-wrap text-base leading-relaxed sm:text-lg sm:leading-relaxed">
+                    <div className={cn("whitespace-pre-wrap leading-relaxed text-[17px] text-ink-primary", isUser && "text-ink-primary")}>
                       {part.content}
                     </div>
                   ) : (
-                    <CodeBlock language={part.language}>{part.content}</CodeBlock>
+                    <div className="text-left">
+                       <CodeBlock language={part.language}>{part.content}</CodeBlock>
+                    </div>
                   )}
                 </div>
               ))}
             </div>
           )}
-        </MaterialCard>
+        </div>
 
         {/* Actions - Always visible on mobile, hover on desktop */}
         {!isSystem && !isEditing && (
           <div
             className={cn(
-              "flex items-center gap-2 mt-2 transition-opacity duration-150",
+              "flex items-center gap-1 mt-1 transition-opacity duration-150",
               "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
               isUser && "justify-end",
             )}
@@ -233,47 +233,47 @@ export function ChatMessage({
             <Button
               variant="ghost"
               size="icon"
-              className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+              className="text-ink-secondary hover:text-accent h-7 w-7"
               onClick={handleCopy}
-              title="Nachricht kopieren"
+              title="Kopieren"
               data-testid="message.copy"
             >
-              <Copy className="h-3.5 w-3.5" />
+              <Copy className="h-3 w-3" />
             </Button>
             {isUser && onEdit && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                className="text-ink-secondary hover:text-accent h-7 w-7"
                 onClick={() => setIsEditing(true)}
-                title="Nachricht bearbeiten"
+                title="Bearbeiten"
                 data-testid="message.edit"
               >
-                <Edit2 className="h-3.5 w-3.5" />
+                <Edit2 className="h-3 w-3" />
               </Button>
             )}
             {isAssistant && isLast && onRetry && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                className="text-ink-secondary hover:text-accent h-7 w-7"
                 onClick={handleRetry}
-                title="Antwort erneut anfordern"
+                title="Neu generieren"
                 data-testid="message.retry"
               >
-                <RotateCcw className="h-3.5 w-3.5" />
+                <RotateCcw className="h-3 w-3" />
               </Button>
             )}
             {isAssistant && isLast && onFollowUp && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-text-secondary hover:bg-card hover:text-text-primary h-8 w-8"
+                className="text-ink-secondary hover:text-accent h-7 w-7"
                 onClick={() => setShowFollowUps(!showFollowUps)}
-                title="Weiterfragen"
+                title="Nachfragen"
                 data-testid="message.followup"
               >
-                <MoreHorizontal className="h-3.5 w-3.5" />
+                <MoreHorizontal className="h-3 w-3" />
               </Button>
             )}
           </div>
@@ -281,14 +281,14 @@ export function ChatMessage({
 
         {/* Follow-up suggestions */}
         {isAssistant && isLast && showFollowUps && (
-          <div className="flex flex-wrap gap-2 mt-3">
+          <div className="flex flex-wrap gap-2 mt-2">
             {followUpSuggestions.map((suggestion) => (
               <Button
                 key={suggestion}
                 variant="secondary"
                 size="sm"
                 onClick={() => handleFollowUp(suggestion)}
-                className="text-xs"
+                className="text-xs h-8 px-3"
               >
                 {suggestion}
               </Button>

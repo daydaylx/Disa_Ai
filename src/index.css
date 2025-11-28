@@ -1,40 +1,58 @@
 /**
- * Main CSS Entry Point - Neumorphism/Soft-Depth Design System
+ * Main CSS Entry Point - Ink on Paper Design System
  *
- * This file imports the consolidated Material CSS structure:
- * - design-tokens-consolidated.css: Neumorphism/Soft-Depth Material System
- * - base.css: Resets, viewport fixes, accessibility
- * - components.css: Material component styles
- *
- * Mobile-first material design with physical depth feedback.
+ * Refactored for "Disa AI" Book Concept.
+ * Removes Neumorphism/Aurora effects in favor of a calm, flat, physical paper aesthetic.
  */
 
-/* Import consolidated styles FIRST - postcss-import will process these before Tailwind */
-@import "./styles/z-index-system.css"; /* Z-index hierarchy */
-@import "./styles/design-tokens-consolidated.css"; /* Design System Tokens (Backups) */
-@import "./styles/theme-ink.css"; /* Ink on Paper Theme */
-@import "./styles/base.css"; /* Resets, viewport fixes, accessibility */
-@import "./styles/components.css"; /* Material component styles */
-@import "./styles/white-space.css"; /* White space management */
-@import "./styles/page-spacing.css"; /* Page margins and spacing */
-@import "./styles/vertical-rhythm.css"; /* Vertical rhythm and typography */
-@import "./styles/interactive-states.css"; /* Interactive states */
-@import "./styles/ui-state-animations.css"; /* UI state animations */
-@import "./styles/logo-animations.css"; /* Logo animations */
-@import "./styles/aurora-optimized.css"; /* Aurora background effects */
+/* Import Ink Theme FIRST - Source of Truth for Variables */
+@import "./styles/theme-ink.css";
 
-/* Tailwind CSS - after base imports */
+/* Base Styles & Resets */
+@import "./styles/base.css";
+@import "./styles/white-space.css";
+@import "./styles/page-spacing.css";
+@import "./styles/vertical-rhythm.css";
+@import "./styles/z-index-system.css";
+
+/* Components - Needs review to ensure they use Ink vars */
+@import "./styles/components.css";
+
+/* Animations */
+@import "./styles/interactive-states.css";
+@import "./styles/ui-state-animations.css";
+/* @import "./styles/logo-animations.css";  -- Keep if subtle, remove if too "loud" */
+
+/* DEPRECATED / REMOVED STYLES for Book Concept:
+ * @import "./styles/design-tokens-consolidated.css"; (Neumorphism)
+ * @import "./styles/aurora-optimized.css"; (Glow Backgrounds)
+ */
+
+/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================================
-   PROJECT-SPECIFIC STYLES
+   PROJECT-SPECIFIC OVERRIDES
    ============================================================================ */
 
 @layer base {
+  :root {
+    color-scheme: light; /* Default to light for Paper concept */
+  }
+
+  /* Force light mode override if system is dark, until Dark Paper mode is perfected */
   html {
-    color-scheme: dark;
+    background-color: var(--bg-app);
+    color: var(--ink-primary);
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .root {
@@ -42,54 +60,43 @@
     background: var(--bg-app);
     color: var(--text-primary);
     position: relative;
-    z-index: 1;
+    z-index: var(--z-base);
   }
 
-  .safe-px {
-    padding-left: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-left));
-    padding-right: calc(var(--page-padding-x, var(--space-lg)) + var(--mobile-safe-right));
+  /* Typography overrides for Book Feel */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--ink-primary);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 }
 
 @layer components {
   /* ========================================================================
-     MATERIAL DEPTH UTILITIES
+     PAPER DEPTH UTILITIES (Replacements for Neumorphism)
      ======================================================================== */
 
   .elevated {
-    box-shadow: var(--shadow-soft-raise);
+    box-shadow: var(--shadow-paper);
+    border: 1px solid var(--border-color);
   }
 
   .elevated-strong {
-    box-shadow: var(--shadow-strong-raise);
+    box-shadow: var(--shadow-floating);
+    border: 1px solid var(--border-color);
   }
 
+  /* Retain class names for compatibility but map to Paper styles */
   .surface-card--raised {
-    box-shadow: var(--shadow-strong-raise);
+    box-shadow: var(--shadow-floating);
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-color);
   }
 
-  /* ========================================================================
-     RESPONSIVE & ACCESSIBILITY OVERRIDES
-     ======================================================================== */
-
-  @media (prefers-contrast: more) {
-    .surface-card,
-    .card-depth {
-      box-shadow: var(--shadow-strong-raise);
-      background-color: var(--surface-2);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .surface-card,
-    .card-depth {
-      transform: none !important;
-    }
-
-    .surface-card:hover,
-    .card-depth:hover {
-      transform: none;
-      box-shadow: var(--shadow-soft-raise);
-    }
+  /* Remove transforms on hover for a calmer feel */
+  .surface-card:hover,
+  .card-depth:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-floating);
   }
 }

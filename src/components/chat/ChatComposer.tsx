@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 
 import { RotateCcw, Send, Square, Zap } from "@/lib/icons";
 import { Button } from "@/ui/Button";
-import { MaterialCard } from "@/ui/MaterialCard";
 import { Textarea } from "@/ui/Textarea";
 
 import { useVisualViewport } from "../../hooks/useVisualViewport";
@@ -36,20 +35,13 @@ export function ChatComposer({
   canRetry = false,
   tokenCount,
   maxTokens,
-  placeholder = "Schreibe deine Nachricht … (Enter zum Senden, Shift+Enter für Zeilenumbruch)",
+  placeholder = "Notiere etwas...",
   disabled = false,
   className,
   isQuickstartLoading = false,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-
-  // Aurora-optimierte Color-Mix für Premium Pinging
-  const supportsColorMix =
-    typeof CSS !== "undefined" && CSS.supports("color", "color-mix(in srgb, white 50%, black)");
-  const pingBackground = supportsColorMix
-    ? "color-mix(in srgb, var(--accent-primary) 40%, transparent)"
-    : "var(--accent-primary)";
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -70,8 +62,7 @@ export function ChatComposer({
   };
 
   const handleFocus = () => {
-    // Prevent default scroll behavior - let the viewport handle it
-    // This prevents jumping when keyboard opens
+     // Viewport adjustment if needed
   };
 
   const handleSend = () => {
@@ -101,44 +92,32 @@ export function ChatComposer({
   return (
     <div
       className={cn(
-        "px-2 pt-4 transition-all duration-200",
+        "px-2 pt-2 transition-all duration-200",
         viewport.isKeyboardOpen
           ? "pb-[calc(1rem+var(--inset-b))]"
-          : "pb-[calc(1.5rem+var(--inset-b))]",
+          : "pb-[calc(1rem+var(--inset-b))]",
         className,
       )}
     >
-      <div className="mx-auto max-w-md space-y-3 text-text-secondary">
+      <div className="mx-auto max-w-2xl space-y-2 text-ink-secondary">
         {(tokenCount !== undefined || maxTokens !== undefined) && (
-          <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center justify-between text-[10px] sm:text-xs px-1 opacity-70">
             <div className="flex items-center gap-2">
               {tokenCount !== undefined && (
-                <span className="inline-flex items-center gap-1 rounded-sm bg-surface-inset shadow-inset px-3 py-1 text-text-meta">
-                  <Zap className="h-3 w-3 text-accent-primary" />
+                <span className="inline-flex items-center gap-1 text-ink-primary font-medium">
+                  <Zap className="h-3 w-3 text-accent" />
                   {tokenCount} Token
                 </span>
               )}
-              {maxTokens !== undefined && (
-                <span className="inline-flex items-center gap-2 rounded-sm bg-surface-inset shadow-inset px-3 py-1 text-text-meta">
-                  Maximal: {maxTokens}
-                </span>
-              )}
             </div>
-            {tokenCount !== undefined && maxTokens !== undefined && (
-              <div className="text-text-muted">
-                {Math.round((tokenCount / maxTokens) * 100)}% verwendet
-              </div>
-            )}
           </div>
         )}
 
-        <MaterialCard
-          variant="inset"
-          className={cn(
-            "flex items-end gap-2 p-3",
-            isComposerDisabled && "cursor-not-allowed opacity-60",
-          )}
-        >
+        {/* INK THEME: Pinned Note Style */}
+        <div className={cn(
+            "flex items-end gap-2 bg-bg-surface border border-border-ink rounded-lg p-2 shadow-sm transition-colors focus-within:ring-1 focus-within:ring-accent/50 focus-within:border-accent",
+            isComposerDisabled && "opacity-60 pointer-events-none"
+        )}>
           <div className="flex-1">
             <Textarea
               ref={textareaRef}
@@ -147,30 +126,27 @@ export function ChatComposer({
               onKeyDown={handleKeyDown}
               onFocus={handleFocus}
               placeholder={placeholder}
-              aria-label={placeholder || "Nachricht an Disa AI schreiben"}
+              aria-label={placeholder || "Nachricht schreiben"}
               disabled={isComposerDisabled}
               readOnly={isQuickstartLoading}
               data-testid="composer-input"
               className={cn(
-                "text-[var(--text-primary)] placeholder:text-[var(--text-muted)] max-h-[200px] min-h-[var(--touch-target-comfortable)] resize-none border-0 bg-transparent p-2",
-                "text-base md:text-[15px] leading-[var(--leading-normal)] font-[var(--font-normal)]",
-                "focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-                "selection:bg-[var(--accent-primary)]/20 selection:text-[var(--text-primary)]",
-                isQuickstartLoading && "text-[var(--text-secondary)] cursor-not-allowed",
+                "w-full bg-transparent border-none text-ink-primary placeholder:text-ink-secondary/60 p-2 resize-none focus:ring-0",
+                "text-[16px] leading-[1.5]",
+                isQuickstartLoading && "text-ink-secondary cursor-not-allowed",
               )}
-              style={{ height: "48px" }}
+              style={{ height: "44px", maxHeight: "150px" }}
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 mb-0.5">
             {shouldShowRetry && (
               <Button
                 onClick={handleRetry}
                 size="icon"
                 variant="ghost"
-                className="h-12 w-12 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                title="Letzte Antwort erneut anfordern"
-                aria-label="Letzte Antwort erneut anfordern"
+                className="h-10 w-10 text-ink-secondary hover:text-accent"
+                title="Antwort erneut generieren"
               >
                 <RotateCcw className="h-5 w-5" />
               </Button>
@@ -181,12 +157,10 @@ export function ChatComposer({
                 onClick={handleStop}
                 size="icon"
                 variant="secondary"
-                className="h-12 w-12"
-                title="Ausgabe stoppen"
-                aria-label="Ausgabe stoppen"
-                data-testid="composer-stop"
+                className="h-10 w-10 border-accent/30 text-accent hover:bg-accent/10"
+                title="Stoppen"
               >
-                <Square className="h-5 w-5" />
+                <Square className="h-4 w-4 fill-current" />
               </Button>
             )}
 
@@ -195,41 +169,27 @@ export function ChatComposer({
                 onClick={handleSend}
                 size="icon"
                 variant="primary"
-                className="h-12 w-12"
+                className="h-10 w-10 rounded-md shadow-none"
                 disabled={disabled}
-                title="Nachricht senden (Enter)"
-                aria-label="Nachricht senden"
+                title="Senden"
                 data-testid="composer-send"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-5 w-5 translate-x-px translate-y-px" />
               </Button>
             )}
 
             {!shouldShowRetry && !shouldShowStop && !shouldShowSend && (
-              <span className="block h-12 w-12" aria-hidden="true" />
+              <div className="w-10 h-10" />
             )}
           </div>
-        </MaterialCard>
+        </div>
 
-        <div className="text-[var(--text-muted)] mt-2 text-center text-xs">
-          <span className="inline-flex items-center justify-center gap-2">
-            {(isLoading || isComposerDisabled) && (
-              <span className="relative flex h-2 w-2">
-                <span
-                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-                  style={{ background: pingBackground }}
-                />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent-primary)]" />
-              </span>
-            )}
-            <span className="font-[var(--font-normal)]">
-              {isLoading
-                ? "Antwort wird erstellt …"
-                : isComposerDisabled
-                  ? "Eingabe gesperrt, bitte warte einen Moment."
-                  : "Enter zum Senden • Shift+Enter für Zeilenumbruch"}
-            </span>
-          </span>
+        <div className="text-ink-secondary mt-1 text-center text-[11px] opacity-70">
+           {isLoading ? (
+             <span className="animate-pulse">Disa schreibt...</span>
+           ) : (
+             <span>Enter zum Senden</span>
+           )}
         </div>
       </div>
     </div>
