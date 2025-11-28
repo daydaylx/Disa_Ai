@@ -86,9 +86,9 @@ export function PWAInstallPrompt({ className }: PWAInstallPromptProps) {
   return (
     <div
       className={cn(
-        // WCAG: Less intrusive - positioned at top, smaller, auto-dismisses
-        "fixed top-20 right-4 z-notification max-w-xs",
-        "animate-in slide-in-from-top-4 duration-500",
+        // Mobile-optimized: Bottom-left position, doesn't block header/content
+        "fixed bottom-20 left-4 right-4 sm:left-4 sm:right-auto z-notification max-w-xs",
+        "animate-in slide-in-from-bottom-4 duration-500",
         className,
       )}
     >

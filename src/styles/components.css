@@ -1,47 +1,20 @@
 @layer components {
   /* ========================================================================
-     AURORA SPINE SYSTEM
-     3 Schatten-Typen, konsistente Radii, keine Zufalls-Borders
+     CLEAN MATERIAL SYSTEM - Mobile-First
+     Minimal shadows, clear hierarchies, better performance
      ======================================================================== */
 
   /* Material Depth Utilities */
   .material-raise {
-    box-shadow: var(--shadow-soft-raise);
+    box-shadow: var(--shadow-sm);
   }
 
   .material-raise-strong {
-    box-shadow: var(--shadow-strong-raise);
+    box-shadow: var(--shadow-md);
   }
 
   .material-inset {
     box-shadow: var(--shadow-inset);
-  }
-
-  /* Signature: Aurora-Spine für Cards & Buttons */
-  .with-spine {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .with-spine::after {
-    content: "";
-    position: absolute;
-    inset: 10% auto 10% 0;
-    width: 4px;
-    border-radius: 9999px;
-    background: var(--signature-spine);
-    box-shadow: var(--shadow-brand-glow);
-    opacity: 0.9;
-    pointer-events: none;
-  }
-
-  .with-spine-right::after {
-    left: auto;
-    right: 0;
-  }
-
-  .with-spine-none::after {
-    display: none;
   }
 
   /* Icon weight normalization for lucide */
@@ -71,21 +44,7 @@
     }
   }
 
-  /* Signature Gleam Overlay */
-  .with-gleam {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .with-gleam::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--signature-gleam);
-    opacity: 0.08;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
+  /* .with-gleam removed - part of old Aurora system */
 
   /* ========================================================================
      MICRO-INTERACTION ANIMATIONS (Phase 7)
@@ -163,44 +122,25 @@
     align-items: center;
     gap: 0.4rem;
     border-radius: var(--r-sm);
-    background: color-mix(in srgb, var(--accent-primary) 14%, transparent);
+    background: var(--accent-subtle);
     color: var(--accent-primary);
     padding: 0.25rem 0.75rem;
     font-size: var(--text-xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    box-shadow: var(--shadow-soft-raise);
+    font-weight: var(--font-medium);
+    letter-spacing: 0.02em;
+    box-shadow: var(--shadow-sm);
     transition: all var(--motion-fast) var(--ease-in-out);
   }
 
   .brand-chip:hover {
     background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
-    box-shadow: var(--shadow-accent-glow);
     transform: translateY(-1px);
   }
 
   .brand-panel {
-    position: relative;
-    overflow: hidden;
     border-radius: var(--r-lg);
-    background: radial-gradient(120% 120% at 80% 0%, rgba(94, 228, 255, 0.08) 0%, transparent 60%),
-      radial-gradient(120% 120% at 10% 10%, rgba(143, 123, 255, 0.1) 0%, transparent 55%),
-      var(--surface-2);
-    box-shadow: var(--shadow-strong-raise);
-  }
-
-  .brand-panel::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: 0.4;
-    background: radial-gradient(140% 120% at 90% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .brand-panel > * {
-    position: relative;
-    z-index: 1;
+    background: var(--surface-2);
+    box-shadow: var(--shadow-md);
   }
 
   /* ========================================================================
@@ -260,33 +200,7 @@
     transform: scale(0.98);
   }
 
-  /* Buttons mit Aurora-Gleam */
-  .btn-aurora {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  .btn-aurora::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    background: radial-gradient(circle at 20% 20%, rgba(94, 228, 255, 0.18), transparent 45%),
-      radial-gradient(circle at 80% 0%, rgba(143, 123, 255, 0.2), transparent 42%);
-    opacity: 0;
-    transition: opacity var(--motion-fast) var(--ease-in-out);
-    z-index: 0;
-  }
-
-  .btn-aurora:hover::before,
-  .btn-aurora:focus-visible::before {
-    opacity: 0.5;
-  }
-
-  .btn-aurora > * {
-    position: relative;
-    z-index: 1;
-  }
+  /* .btn-aurora removed - use standard button variants instead */
 
   /* ========================================================================
      RESPONSIVE & ACCESSIBILITY OVERRIDES

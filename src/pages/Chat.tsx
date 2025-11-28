@@ -257,21 +257,13 @@ export default function Chat() {
     [setPreferredModel, toasts],
   );
 
+  // Mobile-optimized: Kompakte InfoBar nur mit essentiellen Infos
   const infoBar = (
-    <div className="sticky top-0 z-sticky-content mx-[var(--spacing-4)] mb-3 mt-2 rounded-md border border-surface-2 bg-surface-1/90 px-3 py-2 flex flex-wrap items-center gap-3 shadow-raise with-spine">
-      <span className="text-xs font-semibold text-text-secondary">Kontext</span>
+    <div className="sticky top-0 z-sticky-content mx-[var(--spacing-4)] mb-2 mt-1 rounded-lg bg-surface-2/95 backdrop-blur-sm px-3 py-2 flex items-center gap-2 shadow-sm">
       <ModelSelector currentModelId={settings.preferredModelId} onModelChange={handleModelChange} />
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => navigate("/settings/behavior")}
-        className="h-auto py-1 px-2 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover"
-      >
-        Kreativität: {settings.creativity ?? 45}
-      </Button>
       {activeRole && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-semibold text-text-primary min-h-[24px]">
-          Rolle: {activeRole.name}
+        <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-surface-inset px-2 py-1 text-xs font-medium text-text-secondary min-h-[24px]">
+          {activeRole.name}
         </span>
       )}
       <div className="ml-auto flex items-center gap-2">
@@ -279,12 +271,12 @@ export default function Chat() {
           variant="ghost"
           size="icon"
           onClick={() => setIsHistoryOpen(true)}
-          className="h-8 w-8 text-text-secondary hover:text-text-primary hover:bg-surface-2 rounded-full"
+          className="h-8 w-8 text-text-secondary hover:text-text-primary hover:bg-surface-3 rounded-lg"
           title="Verlauf öffnen"
         >
           <History className="h-4 w-4" />
         </Button>
-        {memoryBadge}
+        <span className="hidden sm:inline-flex">{memoryBadge}</span>
       </div>
     </div>
   );
