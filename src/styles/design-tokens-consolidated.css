@@ -1,15 +1,16 @@
 /**
- * DISA AI DESIGN TOKENS — "Aurora Spine" System
+ * DISA AI DESIGN TOKENS — Mobile-First Clean System
  *
- * Visuelle Leitidee: Instrument-Panel bei Nacht mit einer leuchtenden Aurora-Spine,
- * die Karten, Buttons und Navigation verbindet. Tiefe entsteht über drei klar
- * definierte Schatten-Tiefen, keine zufälligen Ränder. Mobile-first (360–414px).
+ * Visuelle Leitidee: Klares, modernes Interface inspiriert von ChatGPT/Claude
+ * mit Disa AI Lila-Akzent. Fokus auf Lesbarkeit und Performance.
  *
  * Regeln:
- * ✦ Max 3 Shadow-Typen: lift, float, press (inset)
+ * ✦ Nur 2 Shadow-Typen: raise, inset (klar und minimal)
  * ✦ Konsistente Radii (sm/md/lg)
- * ✦ Signatur: Aurora-Spine (violett→cyan Gradient) + dezente Körnung
- * ✦ Kein Backdrop-Blur, Fokus auf Performance
+ * ✦ Lila-Akzent sparsam einsetzen (nur CTAs, Links, Active-States)
+ * ✦ Höherer Kontrast für bessere Lesbarkeit
+ * ✦ Größere Typography für Mobile
+ * ✦ Performance-First: keine Animationen, weniger Gradienten
  */
 
 :root {
@@ -17,89 +18,57 @@
    * CORE MATERIAL COLOR PALETTE
    * ======================================== */
 
-  /* Nachtmodus mit subtilem Blau-Anteil */
-  --bg-base: #040714; /* Page background - tiefer Navy */
-  --surface-1: #0c1222; /* Base Surface */
-  --surface-2: #121b2f; /* Raised Surface */
-  --surface-inset: #0a0f1d; /* Inset Fläche */
+  /* Modern Dark Theme - Höherer Kontrast für bessere Lesbarkeit */
+  --bg-base: #0f172a; /* Slate-900 - Page background */
+  --surface-1: #1e293b; /* Slate-800 - Base Surface */
+  --surface-2: #334155; /* Slate-700 - Raised Surface */
+  --surface-3: #475569; /* Slate-600 - Hover states */
+  --surface-inset: #0a0f1d; /* Input fields (dunkler) */
 
-  /* Material Highlights - Subtile Lichtreflexion */
-  --surface-highlight: rgba(255, 255, 255, 0.05);
-  --surface-highlight-strong: rgba(255, 255, 255, 0.08);
+  /* Subtile Surface-Highlights (optional, sparsam verwenden) */
+  --surface-highlight: rgba(255, 255, 255, 0.03);
+  --surface-hover-overlay: rgba(255, 255, 255, 0.05);
 
-  /* SIGNATURE ELEMENT: Bevel Highlight (Werkzeug-DNA) */
-  --bevel-highlight: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.05) 40%,
-    transparent 70%
-  );
-  --bevel-highlight-strong: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.08) 40%,
-    transparent 70%
-  );
-
-  /* Text Hierarchy - WCAG AA Compliant (4.5:1 minimum contrast) */
-  --text-primary: #f5f7ff;
-  --text-on-raised: #ffffff;
-  --text-secondary: #c9d2e9;
-  --text-muted: #9eabc6;
-  --text-meta: #8a96b4;
-  --text-disabled: #64748b;
-  --text-accent: var(--accent-primary); /* Accent text for key info only */
+  /* Text Hierarchy - Erhöhter Kontrast für bessere Lesbarkeit (WCAG AAA) */
+  --text-primary: #f8fafc; /* Slate-50 - Haupt-Text */
+  --text-secondary: #cbd5e1; /* Slate-300 - Sekundär-Text */
+  --text-muted: #94a3b8; /* Slate-400 - Meta-Info */
+  --text-disabled: #64748b; /* Slate-500 - Deaktiviert */
+  --text-on-accent: #ffffff; /* Text auf Lila-Buttons */
 
   /* ========================================
-   * ACCENT SYSTEM - AURORA VIOLET / CYAN
+   * ACCENT SYSTEM - Disa AI Lila (sparsam einsetzen)
    * ======================================== */
 
-  /* Primary Accent: Lila Brand (Disa AI Signature) */
+  /* Primary Brand: Lila (nur für CTAs, Links, Active-States) */
   --accent-primary: #8b5cf6; /* Violet 500 */
   --accent-hover: #7c3aed; /* Violet 600 */
   --accent-active: #6d28d9; /* Violet 700 */
-  --accent-bright: #a78bfa; /* Violet 400 - for highlights */
+  --accent-light: #a78bfa; /* Violet 400 - für Highlights */
+  --accent-subtle: rgba(139, 92, 246, 0.12); /* Subtle backgrounds */
 
-  /* Brand Gradient (Signature Spine) - Unified Lila Brand */
-  --brand-gradient: linear-gradient(130deg, #8b5cf6 0%, #a78bfa 48%, #c4b5fd 100%);
-  --brand-gradient-soft: linear-gradient(
-    130deg,
-    rgba(139, 92, 246, 0.55) 0%,
-    rgba(167, 139, 250, 0.35) 50%,
-    rgba(196, 181, 253, 0.25) 100%
-  );
-
-  /* Accent Secondary (Success/Positive) */
-  --accent-secondary: #10b981; /* Green for success */
-
-  /* Accent Danger (Warnings/Errors) */
-  --accent-danger: #ef4444; /* Red for errors */
-
-  /* Signature Aurora Spine Assets - Unified Lila Brand */
-  --signature-spine: linear-gradient(180deg, #8b5cf6 0%, #a78bfa 60%, #c4b5fd 100%);
-  --signature-gleam: linear-gradient(120deg, rgba(139, 92, 246, 0.35), rgba(167, 139, 250, 0.22));
-  --signature-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04) 0, transparent 32%),
-    radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.06) 0, transparent 35%);
+  /* Status Colors */
+  --color-success: #10b981; /* Emerald-500 - Success */
+  --color-warning: #f59e0b; /* Amber-500 - Warning */
+  --color-error: #ef4444; /* Red-500 - Error */
+  --color-info: #3b82f6; /* Blue-500 - Info */
 
   /* ========================================
-   * SHADOW SYSTEM (MAX 3 TYPEN)
-   * Lichtquelle: oben/links, leichte Wärme
+   * SHADOW SYSTEM - Minimal & Clean (nur 2 Typen!)
    * ======================================== */
 
-  /* 1) lift: Standard Tiefe */
-  --shadow-soft-raise: 0 8px 20px rgba(4, 7, 20, 0.38), 0 2px 6px rgba(4, 7, 20, 0.28);
+  /* Standard Elevation - Für Cards, Buttons */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 
-  /* 2) float: Fokusebene / hero */
-  --shadow-strong-raise: 0 14px 36px rgba(4, 7, 20, 0.46), 0 6px 16px rgba(4, 7, 20, 0.32);
+  /* Inset - Für Input-Felder, Pressed States */
+  --shadow-inset: inset 0 2px 4px 0 rgba(0, 0, 0, 0.15);
 
-  /* 3) press: Inputs / gedrückt */
-  --shadow-inset: inset 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.06);
-
-  /* Brand Glow (Lila-Akzent für interaktive Elemente) */
-  --shadow-brand-glow: 0 12px 28px rgba(139, 92, 246, 0.2);
-  --shadow-brand-glow-strong: 0 16px 40px rgba(139, 92, 246, 0.3);
-  --shadow-accent-glow: var(--shadow-brand-glow);
-  --shadow-accent-glow-strong: var(--shadow-brand-glow-strong);
+  /* Legacy-Kompatibilität (wird schrittweise durch shadow-sm/md ersetzt) */
+  --shadow-soft-raise: var(--shadow-sm);
+  --shadow-strong-raise: var(--shadow-md);
+  --shadow-raise: var(--shadow-sm);
+  --shadow-raiseLg: var(--shadow-md);
 
   /* ========================================
    * STRICT RADIUS SYSTEM (NUR 3 STUFEN!)
@@ -145,21 +114,21 @@
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
-  /* Type Scale - Verschärfte Hierarchie für Material-UI */
-  --text-xs: 0.75rem; /* 12px - Meta info (Preis, Stats) */
-  --text-sm: 0.875rem; /* 14px - Labels, small body */
-  --text-base: 1rem; /* 16px - Body text (Standard-Lesetext) */
+  /* Type Scale - Mobile-First: Größer für bessere Lesbarkeit */
+  --text-xs: 0.8125rem; /* 13px - Meta info (statt 12px) */
+  --text-sm: 0.9375rem; /* 15px - Labels, small body (statt 14px) */
+  --text-base: 1rem; /* 16px - Body text (Standard) */
   --text-lg: 1.125rem; /* 18px - Section titles */
   --text-xl: 1.25rem; /* 20px - Card titles */
   --text-2xl: 1.5rem; /* 24px - Page titles */
-  --text-3xl: 1.75rem; /* 28px - Hero titles */
+  --text-3xl: 1.875rem; /* 30px - Hero titles */
   --text-4xl: 2.25rem; /* 36px - Display */
 
-  /* Line Heights - Mobile Reading optimiert */
-  --leading-tight: 1.25; /* Headlines */
-  --leading-snug: 1.4; /* Subtitles */
-  --leading-normal: 1.5; /* Body text (mobile optimiert) */
-  --leading-relaxed: 1.6; /* Large text */
+  /* Line Heights - Mehr Luft für bessere Lesbarkeit */
+  --leading-tight: 1.3; /* Headlines (etwas mehr als 1.25) */
+  --leading-snug: 1.45; /* Subtitles */
+  --leading-normal: 1.6; /* Body text (statt 1.5) */
+  --leading-relaxed: 1.75; /* Large text */
 
   /* Font Weights - Hierarchie */
   --font-normal: 400; /* Body text */
@@ -211,12 +180,11 @@
   --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.25);
 
   /* ========================================
-   * UNIFIED METRIC SYSTEM (Brand-Gradient)
-   * Alle Progress Bars nutzen einheitlichen Lila-Gradient
+   * PROGRESS & METRICS (optional, sparsam verwenden)
    * ======================================== */
 
-  --metric-gradient: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
-  --metric-gradient-bg: rgba(139, 92, 246, 0.12);
+  --progress-bg: var(--surface-2);
+  --progress-fill: var(--accent-primary);
 
   /* ========================================
    * SEMANTIC COMPONENT TOKENS
@@ -231,11 +199,6 @@
 
   --card-hero-bg: var(--surface-2);
   --card-hero-shadow: var(--shadow-strong-raise);
-
-  /* SIGNATURE CARD ELEMENTS (Premium Brand Identity) */
-  --card-accent-strip-height: 3px;
-  --card-accent-strip-bg: var(--brand-gradient);
-  --card-accent-strip-glow: 0 0 8px rgba(139, 92, 246, 0.2);
 
   /* Button System */
   --button-primary-bg: var(--accent-primary);
@@ -254,18 +217,21 @@
   --chip-active-shadow: var(--shadow-inset);
 
   /* ========================================
-   * Z-INDEX HIERARCHY
+   * Z-INDEX HIERARCHY - Klare Schichtung
    * ======================================== */
 
-  --z-base: 1;
+  --z-background: -1; /* Aurora-Background (entfernt) */
+  --z-base: 0;
   --z-raised: 10;
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
-  --z-tooltip: 1070;
-  --z-toast: 1080;
+  --z-sticky-content: 20; /* Sticky InfoBar, Controls */
+  --z-header: 30; /* Top Header */
+  --z-composer: 35; /* Chat Input (über Header) */
+  --z-dropdown: 40; /* Select, Menus */
+  --z-notification: 50; /* PWA-Banner, Toasts */
+  --z-drawer: 60; /* AppMenuDrawer, ChatHistoryDrawer */
+  --z-modal: 70; /* Onboarding, Dialogs */
+  --z-tooltip: 80; /* Tooltips über allem */
+  --z-skip-link: 100; /* Accessibility Skip-Link */
 
   /* ========================================
    * LAYOUT SYSTEM - MOBILE FIRST
@@ -363,5 +329,14 @@
 
   /* Tailwind-Kompatibilität */
   --color-primary-500: var(--accent-primary);
-  --color-success-500: var(--accent-secondary);
+  --color-success-500: var(--color-success);
+  --color-warning-500: var(--color-warning);
+  --color-error-500: var(--color-error);
+
+  /* Brand Aliases */
+  --brand: var(--accent-primary);
+  --accent: var(--accent-primary);
+
+  /* Surface-Hover für Buttons */
+  --surface-hover: var(--surface-3);
 }
