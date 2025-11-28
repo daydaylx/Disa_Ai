@@ -60,7 +60,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                 className={cn(
                   "flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
                   isActive
-                    ? "bg-brand text-white shadow-brandGlow"
+                    ? "bg-accent-primary text-white shadow-md"
                     : "bg-surface-2 text-text-secondary hover:bg-surface-3 hover:text-text-primary",
                 )}
               >
@@ -93,12 +93,15 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-fast",
                     isActive
-                      ? "bg-brand/10 text-brand shadow-brandGlow"
+                      ? "bg-accent-primary/10 text-accent-primary shadow-sm"
                       : "text-text-secondary hover:text-text-primary hover:bg-surface-2",
                   )}
                 >
                   <Icon
-                    className={cn("h-4 w-4", isActive ? "text-brand" : "text-text-secondary")}
+                    className={cn(
+                      "h-4 w-4",
+                      isActive ? "text-accent-primary" : "text-text-secondary",
+                    )}
                   />
                   {item.label}
                 </Link>

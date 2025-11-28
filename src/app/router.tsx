@@ -9,12 +9,6 @@ const ChatHistoryPage = lazy(() => import("../pages/ChatHistoryPage"));
 const ModelsPage = lazy(() => import("../pages/ModelsPage"));
 const RolesPage = lazy(() => import("../pages/RolesPage"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
-const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
-const SettingsBehaviorPage = lazy(() => import("../pages/SettingsBehavior"));
-const SettingsYouthFilterPage = lazy(() => import("../pages/SettingsYouthFilter"));
-const SettingsApiDataPage = lazy(() => import("../pages/SettingsApiData"));
-const SettingsExtrasPage = lazy(() => import("../pages/SettingsExtras")); // New Page
-const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 const FeedbackPage = lazy(() => import("../pages/FeedbackPage"));
@@ -83,67 +77,39 @@ export const appRouter = createBrowserRouter(
     },
     {
       path: "/settings/memory",
-      element: (
-        <RouteWrapper>
-          <SettingsMemoryPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=memory" replace />,
     },
     {
       path: "/settings/behavior",
-      element: (
-        <RouteWrapper>
-          <SettingsBehaviorPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=behavior" replace />,
     },
     {
       path: "/settings/youth",
-      element: (
-        <RouteWrapper>
-          <SettingsYouthFilterPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=youth" replace />,
     },
     {
       path: "/settings/api-data",
-      element: (
-        <RouteWrapper>
-          <SettingsApiDataPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=api-data" replace />,
     },
     {
       path: "/settings/filters",
-      element: <Navigate to="/settings/youth" replace />,
+      element: <Navigate to="/settings?tab=youth" replace />,
     },
     {
       path: "/settings/extras",
-      element: (
-        <RouteWrapper>
-          <SettingsExtrasPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=extras" replace />,
     },
     {
       path: "/settings/appearance",
-      element: (
-        <RouteWrapper>
-          <SettingsAppearancePage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=appearance" replace />,
     },
     {
       path: "/settings/api",
-      element: (
-        <RouteWrapper>
-          <SettingsApiDataPage />
-        </RouteWrapper>
-      ),
+      element: <Navigate to="/settings?tab=api-data" replace />,
     },
     {
       path: "/settings/data",
-      element: <Navigate to="/settings/api-data" replace />,
+      element: <Navigate to="/settings?tab=api-data" replace />,
     },
     {
       path: "/impressum",
