@@ -27,7 +27,6 @@ import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
-import { cn } from "../lib/utils"; // Import cn utility
 
 export default function Chat() {
   const toasts = useToasts();
@@ -118,22 +117,18 @@ export default function Chat() {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const {
-    activeConversationId,
-    selectConversation,
-    newConversation,
-    conversations,
-  } = useConversationManager({
-    messages,
-    isLoading,
-    setMessages,
-    setCurrentSystemPrompt,
-    onNewConversation: () => {
-      setInput("");
-    },
-    saveEnabled: memoryEnabled,
-    restoreEnabled: settings.restoreLastConversation && memoryEnabled,
-  });
+  const { activeConversationId, selectConversation, newConversation, conversations } =
+    useConversationManager({
+      messages,
+      isLoading,
+      setMessages,
+      setCurrentSystemPrompt,
+      onNewConversation: () => {
+        setInput("");
+      },
+      saveEnabled: memoryEnabled,
+      restoreEnabled: settings.restoreLastConversation && memoryEnabled,
+    });
 
   const {
     startNewChat: bookStartNewChat,
@@ -146,7 +141,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (activeConversationId && bookActiveId && activeConversationId !== bookActiveId) {
-       updateChatId(bookActiveId, activeConversationId);
+      updateChatId(bookActiveId, activeConversationId);
     }
   }, [activeConversationId, bookActiveId, updateChatId]);
 
@@ -154,19 +149,19 @@ export default function Chat() {
     if (messages.length > 0) {
       bookStartNewChat();
       newConversation();
-      toasts.push({kind: "info", title: "Neue Seite", message: ""});
+      toasts.push({ kind: "info", title: "Neue Seite", message: "" });
     }
   }, [messages.length, bookStartNewChat, newConversation, toasts]);
 
   const handleSwipeRight = useCallback(() => {
     const currentIndex = swipeStack.indexOf(activeConversationId || "");
     if (currentIndex !== -1 && currentIndex < swipeStack.length - 1) {
-       const prevId = swipeStack[currentIndex + 1];
-       if (prevId) {
-         bookGoBack();
-         void selectConversation(prevId);
-         toasts.push({kind: "info", title: "Zurückgeblättert", message: ""});
-       }
+      const prevId = swipeStack[currentIndex + 1];
+      if (prevId) {
+        bookGoBack();
+        void selectConversation(prevId);
+        toasts.push({ kind: "info", title: "Zurückgeblättert", message: "" });
+      }
     }
   }, [swipeStack, activeConversationId, bookGoBack, selectConversation, toasts]);
 
@@ -309,7 +304,10 @@ export default function Chat() {
     <BookSwipeGesture
       onSwipeLeft={handleSwipeLeft}
       onSwipeRight={handleSwipeRight}
-      canSwipeRight={swipeStack.length > 1 && swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1}
+      canSwipeRight={
+        swipeStack.length > 1 &&
+        swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
+      }
       className="h-full max-h-[100dvh] bg-bg-app flex justify-center overflow-hidden" // Outer Canvas: bg-bg-app
     >
       {/*
@@ -318,14 +316,19 @@ export default function Chat() {
         Centered, max-width on desktop, white bg, subtle shadow.
       */}
       <div className="relative w-full max-w-4xl h-full flex flex-col bg-bg-page shadow-page sm:my-2 sm:rounded-lg sm:border sm:border-border-ink overflow-hidden isolate">
-
         {/* Stacked Page Hint (Visual only, behind the main page) */}
-        <div className="absolute inset-0 z-[-1] bg-bg-page translate-x-1 translate-y-1 rounded-lg border border-border-ink opacity-50 hidden sm:block pointer-events-none" aria-hidden="true" />
+        <div
+          className="absolute inset-0 z-[-1] bg-bg-page translate-x-1 translate-y-1 rounded-lg border border-border-ink opacity-50 hidden sm:block pointer-events-none"
+          aria-hidden="true"
+        />
 
         <h1 className="sr-only">Disa AI – Chat</h1>
 
         {/* Bookmark: Positioned absolutely relative to the Page Container */}
-        <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-0 right-6 sm:right-8 z-50" />
+        <Bookmark
+          onClick={() => setIsHistoryOpen(true)}
+          className="top-0 right-6 sm:right-8 z-50"
+        />
 
         <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
         <RoleActiveBanner />
@@ -363,10 +366,7 @@ export default function Chat() {
             />
           </div>
         ) : (
-          <div
-            className="flex-1 overflow-y-auto bg-bg-page"
-            data-testid="chat-message-list"
-          >
+          <div className="flex-1 overflow-y-auto bg-bg-page" data-testid="chat-message-list">
             <VirtualizedMessageList
               messages={messages}
               isLoading={isLoading}
@@ -427,19 +427,21 @@ export default function Chat() {
         <HistorySidePanel
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          activePages={swipeStack.map(id => {
-             const conv = (conversations || []).find(c => c.id === id);
-             return { id, title: conv?.title || "Unbenannte Seite" };
+          activePages={swipeStack.map((id) => {
+            const conv = (conversations || []).find((c) => c.id === id);
+            return { id, title: conv?.title || "Unbenannte Seite" };
           })}
-          archivedPages={(conversations || []).filter(c => !swipeStack.includes(c.id)).map(c => ({
-             id: c.id,
-             title: c.title,
-             date: new Date(c.updatedAt).toLocaleDateString()
-          }))}
+          archivedPages={(conversations || [])
+            .filter((c) => !swipeStack.includes(c.id))
+            .map((c) => ({
+              id: c.id,
+              title: c.title,
+              date: new Date(c.updatedAt).toLocaleDateString(),
+            }))}
           activeChatId={activeConversationId}
           onSelectChat={(id) => {
-             void selectConversation(id);
-             bookNavigateToChat(id);
+            void selectConversation(id);
+            bookNavigateToChat(id);
           }}
         />
       </div>
