@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface BookmarkProps {
   onClick: () => void;
@@ -12,7 +13,7 @@ export function Bookmark({ onClick, className }: BookmarkProps) {
   useEffect(() => {
     // Small delay to ensure it feels natural after page load
     const timer = setTimeout(() => {
-        setHasAnimated(true);
+      setHasAnimated(true);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
