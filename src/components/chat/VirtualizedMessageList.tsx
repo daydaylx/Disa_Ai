@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Button, MaterialCard } from "@/ui";
 
@@ -33,19 +33,10 @@ export function VirtualizedMessageList({
   virtualizationThreshold = 20,
 }: VirtualizedMessageListProps) {
   const [visibleCount, setVisibleCount] = useState(initialRenderCount);
-  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,
     enabled: true,
   });
-
-  const setRefs = useCallback(
-    (element: HTMLDivElement | null) => {
-      containerRef.current = element;
-      scrollRef.current = element;
-    },
-    [scrollRef],
-  );
 
   const { visibleMessages, shouldVirtualize, hiddenCount } = useMemo(() => {
     const shouldVirtualize = messages.length > virtualizationThreshold;
@@ -73,12 +64,12 @@ export function VirtualizedMessageList({
     setVisibleCount((prev) => Math.min(messages.length, prev + loadMoreCount));
 
     requestAnimationFrame(() => {
-      const container = containerRef.current;
+      const container = scrollRef.current;
       if (container) {
         container.scrollTop = container.scrollHeight * 0.2;
       }
     });
-  }, [messages.length, loadMoreCount]);
+  }, [messages.length, loadMoreCount, scrollRef]);
 
   const handleCopy = useCallback(
     (content: string) => {
@@ -97,7 +88,7 @@ export function VirtualizedMessageList({
   return (
     <div data-testid="message-list">
       <div
-        ref={setRefs}
+        ref={scrollRef}
         className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
         role="log"
         aria-label="Chat messages"
