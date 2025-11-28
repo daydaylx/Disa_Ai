@@ -8,10 +8,14 @@
 
 import type { ErrorBoundaryProps } from "@sentry/react";
 import * as Sentry from "@sentry/react";
-// React Router v6 integration imports
+// React Router v7 integration imports
 import React from "react";
-import { createRoutesFromChildren, matchRoutes } from "react-router";
-import { useLocation, useNavigationType } from "react-router-dom";
+import {
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
 
 /**
  * Initialize Sentry error tracking
