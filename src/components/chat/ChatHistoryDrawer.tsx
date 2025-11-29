@@ -3,9 +3,7 @@ import { createPortal } from "react-dom";
 
 import { Plus, X } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "@/ui/Button";
-import { MaterialCard } from "@/ui/MaterialCard";
-import { Typography } from "@/ui/Typography";
+import { Button, Card, Typography } from "@/ui";
 
 import { ChatHistoryEmpty } from "./components/ChatHistoryEmpty";
 import { ChatHistoryItem } from "./components/ChatHistoryItem";
@@ -18,12 +16,14 @@ interface ChatHistoryDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   currentConversationId?: string;
+  swipeStack?: string[]; // New prop
 }
 
 export function ChatHistoryDrawer({
   isOpen,
   onClose,
   currentConversationId,
+  swipeStack = [],
 }: ChatHistoryDrawerProps) {
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -37,6 +37,13 @@ export function ChatHistoryDrawer({
 
   if (!isOpen) return null;
 
+  // Split conversations
+  const activePages = conversations.filter((c) => swipeStack.includes(c.id));
+  // Sort active pages by stack order
+  activePages.sort((a, b) => swipeStack.indexOf(a.id) - swipeStack.indexOf(b.id));
+
+  const archivedPages = conversations.filter((c) => !swipeStack.includes(c.id));
+
   const drawer = (
     <div className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div
@@ -46,8 +53,9 @@ export function ChatHistoryDrawer({
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <MaterialCard
+        <Card
           variant="hero"
+          padding="none"
           className={cn(
             "h-full w-[85vw] sm:w-[clamp(20rem,30vw,24rem)] sm:rounded-3xl rounded-none",
             "flex flex-col overflow-hidden bg-surface-1 shadow-raiseLg",
@@ -91,23 +99,59 @@ export function ChatHistoryDrawer({
           </div>
 
           {/* Content List */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {loading ? (
               <ChatHistoryLoading />
             ) : conversations.length === 0 ? (
               <ChatHistoryEmpty />
             ) : (
-              <div className="space-y-1">
-                {conversations.map((conv) => (
-                  <ChatHistoryItem
-                    key={conv.id}
-                    conversation={conv}
-                    isActive={currentConversationId === conv.id}
-                    onSelect={(id) => handleSelect(id, onClose)}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
+              <>
+                {/* Active Pages (Stack) */}
+                {activePages.length > 0 && (
+                  <div className="space-y-2">
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary uppercase tracking-wider font-semibold"
+                    >
+                      Aktive Seiten
+                    </Typography>
+                    <div className="space-y-1">
+                      {activePages.map((conv) => (
+                        <ChatHistoryItem
+                          key={conv.id}
+                          conversation={conv}
+                          isActive={currentConversationId === conv.id}
+                          onSelect={(id) => handleSelect(id, onClose)}
+                          onDelete={handleDelete}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Archived Pages */}
+                <div className="space-y-2">
+                  {activePages.length > 0 && (
+                    <Typography
+                      variant="body-xs"
+                      className="text-text-secondary uppercase tracking-wider font-semibold"
+                    >
+                      Archiv
+                    </Typography>
+                  )}
+                  <div className="space-y-1">
+                    {archivedPages.map((conv) => (
+                      <ChatHistoryItem
+                        key={conv.id}
+                        conversation={conv}
+                        isActive={currentConversationId === conv.id}
+                        onSelect={(id) => handleSelect(id, onClose)}
+                        onDelete={handleDelete}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
           </div>
 
@@ -117,7 +161,7 @@ export function ChatHistoryDrawer({
               {conversations.length} Chats gespeichert
             </Typography>
           </div>
-        </MaterialCard>
+        </Card>
       </div>
     </div>
   );

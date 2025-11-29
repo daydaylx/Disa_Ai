@@ -11,7 +11,7 @@ import { QuickstartGrid } from "../components/chat/QuickstartGrid";
 import { RoleActiveBanner } from "../components/chat/RoleActiveBanner";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { Bookmark } from "../components/navigation/Bookmark";
-import { BookSwipeGesture } from "../components/navigation/BookSwipeGesture";
+import { BookPageAnimator } from "../components/navigation/BookPageAnimator";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import type { ModelEntry } from "../config/models";
 import { useRoles } from "../contexts/RolesContext";
@@ -117,22 +117,18 @@ export default function Chat() {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const {
-    activeConversationId,
-    selectConversation,
-    newConversation,
-    conversations,
-  } = useConversationManager({
-    messages,
-    isLoading,
-    setMessages,
-    setCurrentSystemPrompt,
-    onNewConversation: () => {
-      setInput("");
-    },
-    saveEnabled: memoryEnabled,
-    restoreEnabled: settings.restoreLastConversation && memoryEnabled,
-  });
+  const { activeConversationId, selectConversation, newConversation, conversations } =
+    useConversationManager({
+      messages,
+      isLoading,
+      setMessages,
+      setCurrentSystemPrompt,
+      onNewConversation: () => {
+        setInput("");
+      },
+      saveEnabled: memoryEnabled,
+      restoreEnabled: settings.restoreLastConversation && memoryEnabled,
+    });
 
   const {
     startNewChat: bookStartNewChat,
@@ -145,7 +141,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (activeConversationId && bookActiveId && activeConversationId !== bookActiveId) {
-       updateChatId(bookActiveId, activeConversationId);
+      updateChatId(bookActiveId, activeConversationId);
     }
   }, [activeConversationId, bookActiveId, updateChatId]);
 
@@ -153,19 +149,19 @@ export default function Chat() {
     if (messages.length > 0) {
       bookStartNewChat();
       newConversation();
-      toasts.push({kind: "info", title: "Neue Seite", message: ""});
+      toasts.push({ kind: "info", title: "Neue Seite", message: "" });
     }
   }, [messages.length, bookStartNewChat, newConversation, toasts]);
 
   const handleSwipeRight = useCallback(() => {
     const currentIndex = swipeStack.indexOf(activeConversationId || "");
     if (currentIndex !== -1 && currentIndex < swipeStack.length - 1) {
-       const prevId = swipeStack[currentIndex + 1];
-       if (prevId) {
-         bookGoBack();
-         void selectConversation(prevId);
-         toasts.push({kind: "info", title: "Zurückgeblättert", message: ""});
-       }
+      const prevId = swipeStack[currentIndex + 1];
+      if (prevId) {
+        bookGoBack();
+        void selectConversation(prevId);
+        toasts.push({ kind: "info", title: "Zurückgeblättert", message: "" });
+      }
     }
   }, [swipeStack, activeConversationId, bookGoBack, selectConversation, toasts]);
 
@@ -305,140 +301,147 @@ export default function Chat() {
   );
 
   return (
-    <BookSwipeGesture
-      onSwipeLeft={handleSwipeLeft}
-      onSwipeRight={handleSwipeRight}
-      canSwipeRight={swipeStack.length > 1 && swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1}
-      className="h-full max-h-[100dvh] bg-bg-page"
-    >
-      <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-bg-page">
-        <h1 className="sr-only">Disa AI – Chat</h1>
+    <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-canvas">
+      <BookPageAnimator
+        activeChatId={activeConversationId}
+        swipeStack={swipeStack}
+        onSwipeLeft={handleSwipeLeft}
+        onSwipeRight={handleSwipeRight}
+        canSwipeLeft={messages.length > 0} // Can swipe left if current chat is not empty
+        canSwipeRight={
+          swipeStack.length > 1 &&
+          swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
+        }
+      >
+        <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-bg-page">
+          <h1 className="sr-only">Disa AI – Chat</h1>
 
-        {/* Bookmark Component */}
-        <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
+          {/* Bookmark Component */}
+          <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
 
-        <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
-        <RoleActiveBanner />
-        {!isEmpty && infoBar}
-        {isEmpty ? (
-          <div className="flex flex-col gap-6 px-4 py-6 overflow-y-auto flex-1 bg-bg-page">
-            <div className="flex items-start justify-between gap-3">
-              <SectionHeader
-                variant="compact"
-                title="Seite 1"
-                subtitle="Ein neues Kapitel beginnt."
+          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          <RoleActiveBanner />
+          {!isEmpty && infoBar}
+          {isEmpty ? (
+            <div className="flex flex-col gap-6 px-4 py-6 overflow-y-auto flex-1 bg-bg-page">
+              <div className="flex items-start justify-between gap-3">
+                <SectionHeader
+                  variant="compact"
+                  title="Seite 1"
+                  subtitle="Ein neues Kapitel beginnt."
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setIsHistoryOpen(true)}
+                  className="self-start gap-2"
+                >
+                  <History className="h-4 w-4" />
+                  Verlauf
+                </Button>
+              </div>
+
+              <ChatStartCard
+                onNewChat={focusComposer}
+                conversationCount={stats?.totalConversations || 0}
               />
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setIsHistoryOpen(true)}
-                className="self-start gap-2"
-              >
-                <History className="h-4 w-4" />
-                Verlauf
-              </Button>
+
+              <QuickstartGrid
+                onStart={startWithPreset}
+                title="Diskussionen"
+                description="Wähle ein Thema für diese Seite."
+              />
             </div>
-
-            <ChatStartCard
-              onNewChat={focusComposer}
-              conversationCount={stats?.totalConversations || 0}
-            />
-
-            <QuickstartGrid
-              onStart={startWithPreset}
-              title="Diskussionen"
-              description="Wähle ein Thema für diese Seite."
-            />
-          </div>
-        ) : (
-          /* INK THEME UPDATE: Removed shadow-raise, added subtle border or plain bg */
-          <div
-            className="flex-1 overflow-y-auto mx-0 sm:mx-4 sm:my-2 sm:rounded-lg bg-bg-page sm:border sm:border-border-ink"
-            data-testid="chat-message-list"
-          >
-            <VirtualizedMessageList
-              messages={messages}
-              isLoading={isLoading}
-              onCopy={(content) => {
-                navigator.clipboard.writeText(content).catch((err) => {
-                  console.error("Failed to copy content:", err);
-                });
-              }}
-              onEdit={handleEdit}
-              onFollowUp={handleFollowUp}
-              onRetry={(messageId) => {
-                const messageIndex = messages.findIndex((m) => m.id === messageId);
-                if (messageIndex === -1) return;
-
-                const targetUserIndex = (() => {
-                  const targetMsg = messages[messageIndex];
-                  if (targetMsg && targetMsg.role === "user") return messageIndex;
-                  for (let i = messageIndex; i >= 0; i -= 1) {
-                    const candidate = messages[i];
-                    if (candidate && candidate.role === "user") return i;
-                  }
-                  return -1;
-                })();
-
-                if (targetUserIndex === -1) {
-                  toasts.push({
-                    kind: "warning",
-                    title: "Retry nicht möglich",
-                    message: "Keine passende Nutzernachricht gefunden.",
+          ) : (
+            <div
+              className="flex-1 overflow-y-auto mx-0 sm:mx-4 sm:my-2 sm:rounded-lg bg-bg-page sm:border sm:border-border-ink"
+              data-testid="chat-message-list"
+            >
+              <VirtualizedMessageList
+                messages={messages}
+                isLoading={isLoading}
+                onCopy={(content) => {
+                  navigator.clipboard.writeText(content).catch((err) => {
+                    console.error("Failed to copy content:", err);
                   });
-                  return;
-                }
+                }}
+                onEdit={handleEdit}
+                onFollowUp={handleFollowUp}
+                onRetry={(messageId) => {
+                  const messageIndex = messages.findIndex((m) => m.id === messageId);
+                  if (messageIndex === -1) return;
 
-                const userMessage = messages[targetUserIndex];
-                if (!userMessage) return;
-                const historyContext = messages.slice(0, targetUserIndex);
-                setMessages(historyContext);
-                void append({ role: "user", content: userMessage.content }, historyContext);
-              }}
-              className="h-full"
-            />
-          </div>
-        )}
+                  const targetUserIndex = (() => {
+                    const targetMsg = messages[messageIndex];
+                    if (targetMsg && targetMsg.role === "user") return messageIndex;
+                    for (let i = messageIndex; i >= 0; i -= 1) {
+                      const candidate = messages[i];
+                      if (candidate && candidate.role === "user") return i;
+                    }
+                    return -1;
+                  })();
 
-        {/* INK THEME UPDATE: Flat, clean composer area */}
-        <div className="sticky bottom-0 bg-bg-page pt-4 z-composer border-t border-border-ink">
-          <div
-            className="px-4 safe-area-horizontal pb-[env(safe-area-inset-bottom)]"
-            ref={composerContainerRef}
-          >
-            <ChatComposer
-              value={input}
-              onChange={setInput}
-              onSend={handleSend}
-              onStop={stop}
-              isLoading={isLoading}
-              canSend={!isLoading}
-              placeholder="Schreibe auf diese Seite..."
-            />
+                  if (targetUserIndex === -1) {
+                    toasts.push({
+                      kind: "warning",
+                      title: "Retry nicht möglich",
+                      message: "Keine passende Nutzernachricht gefunden.",
+                    });
+                    return;
+                  }
+
+                  const userMessage = messages[targetUserIndex];
+                  if (!userMessage) return;
+                  const historyContext = messages.slice(0, targetUserIndex);
+                  setMessages(historyContext);
+                  void append({ role: "user", content: userMessage.content }, historyContext);
+                }}
+                className="h-full"
+              />
+            </div>
+          )}
+
+          <div className="sticky bottom-0 bg-bg-page pt-4 z-composer border-t border-border-ink">
+            <div
+              className="px-4 safe-area-horizontal pb-[env(safe-area-inset-bottom)]"
+              ref={composerContainerRef}
+            >
+              <ChatComposer
+                value={input}
+                onChange={setInput}
+                onSend={handleSend}
+                onStop={stop}
+                isLoading={isLoading}
+                canSend={!isLoading}
+                placeholder="Schreibe auf diese Seite..."
+              />
+            </div>
           </div>
+
+          <div ref={messagesEndRef} />
         </div>
+      </BookPageAnimator>
 
-        <div ref={messagesEndRef} />
-
-        <HistorySidePanel
-          isOpen={isHistoryOpen}
-          onClose={() => setIsHistoryOpen(false)}
-          activePages={swipeStack.map(id => {
-             const conv = (conversations || []).find(c => c.id === id);
-             return { id, title: conv?.title || "Unbenannte Seite" };
-          })}
-          archivedPages={(conversations || []).filter(c => !swipeStack.includes(c.id)).map(c => ({
-             id: c.id,
-             title: c.title,
-             date: new Date(c.updatedAt).toLocaleDateString()
+      <HistorySidePanel
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        activePages={swipeStack.map((id) => {
+          const conv = (conversations || []).find((c) => c.id === id);
+          return { id, title: conv?.title || "Unbenannte Seite" };
+        })}
+        archivedPages={(conversations || [])
+          .filter((c) => !swipeStack.includes(c.id))
+          .map((c) => ({
+            id: c.id,
+            title: c.title,
+            date: new Date(c.updatedAt).toLocaleDateString(),
           }))}
-          activeChatId={activeConversationId}
-          onSelectChat={(id) => {
-             void selectConversation(id);
-             bookNavigateToChat(id);
-          }}
-        />
-      </div>
-    </BookSwipeGesture>
+        activeChatId={activeConversationId}
+        onSelectChat={(id) => {
+          void selectConversation(id);
+          bookNavigateToChat(id);
+        }}
+      />
+    </div>
   );
 }
