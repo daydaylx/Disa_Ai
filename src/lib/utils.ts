@@ -51,6 +51,17 @@ export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== "object") return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as T;
   if (obj instanceof Array) return obj.map((item) => deepClone(item)) as T;
+  if (obj instanceof RegExp) {
+    const clone = new RegExp(obj.source, obj.flags);
+    clone.lastIndex = obj.lastIndex;
+    return clone as T;
+  }
+  if (obj instanceof Map) {
+    return new Map(Array.from(obj).map(([k, v]) => [deepClone(k), deepClone(v)])) as T;
+  }
+  if (obj instanceof Set) {
+    return new Set(Array.from(obj).map((item) => deepClone(item))) as T;
+  }
   if (typeof obj === "object") {
     const cloned: Record<string, unknown> = {};
     for (const key in obj) {
