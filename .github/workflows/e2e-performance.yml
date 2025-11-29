@@ -1,0 +1,225 @@
+name: E2E Performance Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run performance tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  performance-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: testing
+      url: https://disaai.de
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run performance tests
+        run: npm run test:e2e -- --grep "Performance"
+        env:
+          CI: true
+          BUILD_ID: ${{ github.run_id }}
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH: ${{ github.ref_name }}
+
+      - name: Generate performance report
+        run: |
+          # Create performance summary
+          echo "# Performance Test Results" > performance-summary.md
+          echo "**Build ID:** ${{ github.run_id }}" >> performance-summary.md
+          echo "**Commit SHA:** ${{ github.sha }}" >> performance-summary.md
+          echo "**Branch:** ${{ github.ref_name }}" >> performance-summary.md
+          echo "**Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> performance-summary.md
+
+          # Check if performance tests passed
+          if [ -f "report/e2e/test-results.json" ]; then
+            echo "" >> performance-summary.md
+            echo "## Test Results" >> performance-summary.md
+            echo "- Total Tests: $(jq '.summary.totalTests' report/e2e/test-results.json)" >> performance-summary.md
+            echo "- Passed: $(jq '.summary.passedTests' report/e2e/test-results.json)" >> performance-summary.md
+            echo "- Failed: $(jq '.summary.failedTests' report/e2e/test-results.json)" >> performance-summary.md
+            echo "- Success Rate: $(jq -r '.summary.successRate' report/e2e/test-results.json)" >> performance-summary.md
+          fi
+
+      - name: Upload performance artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-test-results
+          path: |
+            report/e2e/
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+      - name: Upload performance summary
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-summary
+          path: performance-summary.md
+          retention-days: 30
+
+      - name: Comment PR with performance results
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request' && always()
+        with:
+          script: |
+            const fs = require('fs');
+
+            let body = '## 🚀 Performance Test Results\n\n';
+
+            try {
+              const summary = fs.readFileSync('performance-summary.md', 'utf8');
+              body += summary;
+            } catch (error) {
+              body += '❌ Could not read performance summary.\n';
+            }
+
+            body += '\n### 📊 What was tested:\n';
+            body += '- Core Web Vitals (LCP, FID, CLS)\n';
+            body += '- Page load performance\n';
+            body += '- Resource loading optimization\n';
+            body += '- JavaScript bundle size\n';
+            body += '- Image optimization\n';
+            body += '- Memory usage monitoring\n';
+            body += '- Accessibility performance impact\n';
+            body += '- Mobile performance\n\n';
+
+            body += '### 📁 Artifacts:\n';
+            body += '- [Performance Reports](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n';
+            body += '- [E2E Test Reports](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n';
+
+            body += '### ⚠️ Note:\n';
+            body += 'Performance test results are available in the workflow artifacts. Download and open `report/e2e/index.html` for detailed results.\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  lighthouse-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name != 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start preview server and wait
+        run: |
+          npm run preview &
+          sleep 10
+
+      - name: Run Lighthouse CI
+        run: npm run lh
+        env:
+          LHCI_BUILD_CONTEXT__COMMIT: ${{ github.sha }}
+          LHCI_BUILD_CONTEXT__OWNER: ${{ github.repository_owner }}
+          LHCI_BUILD_CONTEXT__REPO: ${{ github.repository }}
+
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 7
+
+  bundle-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and analyze bundle
+        run: |
+          npm run build
+          npm run analyze
+
+      - name: Check bundle size limits
+        run: |
+          # Check if bundle analysis exists
+          if [ -f "dist/assets/js/index-*.js" ]; then
+            ENTRY_SIZE=$(stat -c%s dist/assets/js/index-*.js)
+            ENTRY_KB=$((ENTRY_SIZE / 1024))
+
+            echo "Entry bundle size: ${ENTRY_KB} KB"
+
+            if [ "$ENTRY_KB" -gt 500 ]; then
+              echo "❌ Entry bundle exceeds 500 KB limit"
+              exit 1
+            else
+              echo "✅ Entry bundle size is acceptable"
+            fi
+          fi
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bundle-analysis
+          path: |
+            dist/
+            stats.html
+          retention-days: 7
+
+  notify-performance-failure:
+    runs-on: ubuntu-latest
+    needs: [performance-tests, lighthouse-ci, bundle-analysis]
+    if: failure() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Notify on performance failure
+        run: |
+          echo "🚨 Performance tests failed on main branch!"
+          echo "Please check the workflow: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

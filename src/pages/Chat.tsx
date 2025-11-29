@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { Button, useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
@@ -6,14 +7,14 @@ import { SectionHeader } from "@/ui/SectionHeader";
 
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { ModelSelector } from "../components/chat/ModelSelector";
-import { QuickstartGrid } from "../components/chat/QuickstartGrid";
-import { RoleActiveBanner } from "../components/chat/RoleActiveBanner";
+import { ContextBar } from "../components/chat/ContextBar";
+import { ThemenBottomSheet } from "../components/chat/ThemenBottomSheet";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { Bookmark } from "../components/navigation/Bookmark";
 import { BookPageAnimator } from "../components/navigation/BookPageAnimator";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import type { ModelEntry } from "../config/models";
+import { QUICKSTARTS } from "../config/quickstarts";
 import { useRoles } from "../contexts/RolesContext";
 import { useConversationStats } from "../hooks/use-storage";
 import { useBookNavigation } from "../hooks/useBookNavigation";
@@ -25,6 +26,7 @@ import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
+import { Brain } from "../lib/icons";
 import { History } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
@@ -33,7 +35,11 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
-  const { settings, setPreferredModel } = useSettings();
+  const { settings } = useSettings();
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [isThemenSheetOpen, setIsThemenSheetOpen] = useState(false);
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
@@ -242,15 +248,29 @@ export default function Chat() {
     [setInput, append, isLoading, toasts],
   );
 
-  const startWithPreset = (system: string, user?: string) => {
-    setCurrentSystemPrompt(system);
-    if (user) {
-      void append({
-        role: "user",
-        content: user,
-      });
+  const startWithPreset = useCallback(
+    (system: string, user?: string) => {
+      setCurrentSystemPrompt(system);
+      if (user) {
+        void append({
+          role: "user",
+          content: user,
+        });
+      }
+    },
+    [setCurrentSystemPrompt, append],
+  );
+
+  useEffect(() => {
+    const quickstartId = searchParams.get("quickstart");
+    if (quickstartId && QUICKSTARTS.length > 0) {
+      const quickstart = QUICKSTARTS.find((q) => q.id === quickstartId);
+      if (quickstart) {
+        startWithPreset(quickstart.system, quickstart.user);
+        void navigate("/", { replace: true });
+      }
     }
-  };
+  }, [searchParams, navigate, startWithPreset]);
 
   const focusComposer = () => {
     const textarea = composerContainerRef.current?.querySelector("textarea");
@@ -263,42 +283,6 @@ export default function Chat() {
   };
 
   const isEmpty = messages.length === 0;
-  const memoryBadge = memoryEnabled ? (
-    <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 text-ink-secondary px-2 py-1 text-[11px] font-medium border border-border-ink">
-      • Memory aktiv
-    </span>
-  ) : (
-    <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 text-ink-secondary px-2 py-1 text-[11px] font-medium border border-border-ink opacity-70">
-      • Kein Autosave
-    </span>
-  );
-
-  const handleModelChange = useCallback(
-    (modelId: string) => {
-      setPreferredModel(modelId);
-      toasts.push({
-        kind: "success",
-        title: "Modell gewechselt",
-        message: `Nutze jetzt: ${modelId.split("/").pop()}`,
-      });
-    },
-    [setPreferredModel, toasts],
-  );
-
-  // INK THEME UPDATE: Clean Header without glass effects
-  const infoBar = (
-    <div className="sticky top-0 z-sticky-content w-full bg-bg-page/95 border-b border-border-ink px-4 py-2 flex items-center gap-2">
-      <ModelSelector currentModelId={settings.preferredModelId} onModelChange={handleModelChange} />
-      {activeRole && (
-        <span className="hidden sm:inline-flex items-center gap-1 rounded-md bg-surface-2 border border-border-ink px-2 py-1 text-xs font-medium text-ink-secondary min-h-[24px]">
-          {activeRole.name}
-        </span>
-      )}
-      <div className="ml-auto flex items-center gap-2">
-        <span className="hidden sm:inline-flex">{memoryBadge}</span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-canvas">
@@ -320,8 +304,26 @@ export default function Chat() {
           <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
 
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
-          <RoleActiveBanner />
-          {!isEmpty && infoBar}
+
+          {/* FAB for New Chat on mobile/tablet */}
+          {!isEmpty && (
+            <button
+              onClick={handleSwipeLeft}
+              className="fixed bottom-32 right-4 z-50 flex items-center justify-center w-14 h-14 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-full shadow-lg tap-target focus:outline-none focus:ring-2 focus:ring-accent-primary/50 sm:hidden"
+              aria-label="Neuen Chat starten (Swipe left)"
+              title="Swipe left or tap for new chat"
+            >
+              <span className="sr-only sm:not-sr-only">Neuer Chat</span>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </button>
+          )}
           {isEmpty ? (
             <div className="flex flex-col gap-6 px-4 py-6 overflow-y-auto flex-1 bg-bg-page">
               <div className="flex items-start justify-between gap-3">
@@ -344,12 +346,6 @@ export default function Chat() {
               <ChatStartCard
                 onNewChat={focusComposer}
                 conversationCount={stats?.totalConversations || 0}
-              />
-
-              <QuickstartGrid
-                onStart={startWithPreset}
-                title="Diskussionen"
-                description="Wähle ein Thema für diese Seite."
               />
             </div>
           ) : (
@@ -401,7 +397,9 @@ export default function Chat() {
             </div>
           )}
 
-          <div className="sticky bottom-0 bg-bg-page pt-4 z-composer border-t border-border-ink">
+          <div className="sticky bottom-0 bg-bg-page z-composer border-t-0">
+            <ContextBar modelCatalog={modelCatalog} />
+
             <div
               className="px-4 safe-area-horizontal pb-[env(safe-area-inset-bottom)]"
               ref={composerContainerRef}
@@ -414,12 +412,31 @@ export default function Chat() {
                 isLoading={isLoading}
                 canSend={!isLoading}
                 placeholder="Schreibe auf diese Seite..."
+                className="pt-2"
               />
+            </div>
+
+            <div className="pt-2 flex justify-center pb-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsThemenSheetOpen(true)}
+                className="gap-1.5 text-ink-secondary hover:text-ink-primary"
+              >
+                <Brain className="h-3.5 w-3.5" />
+                Themen auswählen…
+              </Button>
             </div>
           </div>
 
           <div ref={messagesEndRef} />
         </div>
+
+        <ThemenBottomSheet
+          isOpen={isThemenSheetOpen}
+          onClose={() => setIsThemenSheetOpen(false)}
+          onStart={startWithPreset}
+        />
       </BookPageAnimator>
 
       <HistorySidePanel

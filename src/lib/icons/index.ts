@@ -50,6 +50,7 @@ export {
   KeyRound,
   Link2,
   Loader2,
+  Lock,
   Menu,
   MessageCircle,
   MessageSquare,

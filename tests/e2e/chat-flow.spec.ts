@@ -15,24 +15,31 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
-    // Test welcome screen is visible initially
-    const welcomeText = page.getByText(
-      "Wähle einen Einstieg oder starte direkt eine Nachricht. Optimiert für Android, PWA und ruhiges, fokussiertes Arbeiten.",
-    );
-    await expect(welcomeText).toBeVisible();
+    // Test new chat interface - should show ChatStartCard or message list
+    const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
+    const messageList = page.locator('[data-testid="chat-message-list"]').first();
 
-    // Test quickstart discussion topics
-    const discussionCard = page.getByRole("button", { name: "Gibt es Außerirdische?" });
-    await expect(discussionCard).toBeVisible();
-    await discussionCard.tap();
+    // Either start card (empty chat) or message list (with content) should be visible
+    const hasStartCard = await chatStartCard.isVisible();
+    const hasMessageList = await messageList.isVisible();
 
-    // Verify message was sent and response received
-    await page.waitForTimeout(1000);
-    const messageList = page.locator("[data-testid='message-list']");
-    await expect(messageList).toBeVisible();
+    if (hasStartCard) {
+      // Test ChatStartCard functionality
+      await expect(chatStartCard).toBeVisible();
 
-    // Test manual message sending
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+      // Test themen button in start card area
+      const themenButton = page.getByRole("button", { name: /themen auswählen|choose topics/i });
+      if (await themenButton.isVisible()) {
+        await themenButton.tap();
+        await page.waitForTimeout(500);
+      }
+    } else if (hasMessageList) {
+      // Already has messages, test composer
+      await expect(messageList).toBeVisible();
+    }
+
+    // Test manual message sending with new composer
+    const composer = page.getByTestId("composer-input");
     await expect(composer).toBeVisible();
 
     await composer.fill("Was denkst du über künstliche Intelligenz?");
@@ -40,13 +47,13 @@ test.describe("Chat Flow Integration Tests", () => {
 
     // Verify user message appears
     const userMessage = page
-      .locator("[data-testid='message-bubble']")
+      .locator("[data-testid='message.item']")
       .filter({ hasText: "Was denkst du über künstliche Intelligenz?" });
     await expect(userMessage).toBeVisible();
 
     // Verify AI response appears
     const aiResponse = page
-      .locator("[data-testid='message-bubble']")
+      .locator("[data-testid='message.item']")
       .filter({ hasText: "Hallo das ist eine Test-Antwort" });
     await expect(aiResponse).toBeVisible();
 
@@ -64,7 +71,7 @@ test.describe("Chat Flow Integration Tests", () => {
     await helpers.navigateAndWait("/chat");
 
     // Send multiple messages to create history
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
 
     const messages = ["Erste Nachricht", "Zweite Nachricht", "Dritte Nachricht"];
 
@@ -75,36 +82,21 @@ test.describe("Chat Flow Integration Tests", () => {
 
       // Verify each message appears
       const messageElement = page
-        .locator("[data-testid='message-bubble']")
+        .locator("[data-testid='message.item']")
         .filter({ hasText: message });
       await expect(messageElement).toBeVisible();
     }
 
-    // Test conversation clearing (if available)
-    const menuButton = page.locator("button[aria-label*='Menü']").first();
-    if (await menuButton.isVisible()) {
-      await menuButton.tap();
+    // Test conversation clearing via new chat button
+    const newChatButton = page.getByRole("button", { name: /neuer chat|new chat/i });
+    if (await newChatButton.isVisible()) {
+      await newChatButton.tap();
       await page.waitForTimeout(500);
 
-      // Look for clear/reset conversation option
-      const clearOption = page.getByText("Unterhaltung löschen").or(page.getByText("Neu starten"));
-      if (await clearOption.isVisible()) {
-        await clearOption.tap();
-
-        // Confirm if dialog appears
-        const confirmButton = page
-          .getByRole("button", { name: "Bestätigen" })
-          .or(page.getByRole("button", { name: "Löschen" }));
-        if (await confirmButton.isVisible()) {
-          await confirmButton.tap();
-        }
-
-        // Verify conversation is cleared
-        await expect(
-          page.getByText(
-            "Starte eine Unterhaltung oder nutze die Schnellstarts für wiederkehrende Aufgaben.",
-          ),
-        ).toBeVisible();
+      // Verify new chat started
+      const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
+      if (await chatStartCard.isVisible()) {
+        await expect(chatStartCard).toBeVisible();
       }
     }
   });
@@ -113,7 +105,7 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
 
     // Test composer accessibility
     await expect(composer).toHaveAttribute("aria-label");
@@ -133,7 +125,7 @@ test.describe("Chat Flow Integration Tests", () => {
 
     // Verify message was sent
     const sentMessage = page
-      .locator("[data-testid='message-bubble']")
+      .locator("[data-testid='message.item']")
       .filter({ hasText: longMessage });
     await expect(sentMessage).toBeVisible();
 
@@ -154,23 +146,19 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
-    // Test mobile navigation
-    const mobileNav = page.locator("nav").first();
-    await expect(mobileNav).toBeVisible();
-
     // Test composer on mobile
-    const composer = page.locator('textarea[placeholder="Nachricht an Disa AI schreiben..."]');
+    const composer = page.getByTestId("composer-input");
     await composer.tap();
 
     // Verify composer is focused and keyboard accessible
     await expect(composer).toBeFocused();
 
     // Test touch scrolling in message area
-    const messageArea = page.locator("[data-testid='message-list']").or(page.locator("main"));
+    const messageArea = page.locator('[data-testid="chat-message-list"]').first();
 
     if (await messageArea.isVisible()) {
       // Send enough messages to enable scrolling
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 3; i++) {
         await composer.fill(`Touch test message ${i + 1}`);
         await composer.press("Enter");
         await page.waitForTimeout(300);

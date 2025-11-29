@@ -18,6 +18,7 @@ const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"))
 const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 const FeedbackPage = lazy(() => import("../pages/FeedbackPage"));
+const ThemenPage = lazy(() => import("../pages/ThemenPage"));
 
 export const appRouter = createBrowserRouter(
   [
@@ -54,6 +55,14 @@ export const appRouter = createBrowserRouter(
       element: (
         <RouteWrapper>
           <ChatHistoryPage />
+        </RouteWrapper>
+      ),
+    },
+    {
+      path: "/themen",
+      element: (
+        <RouteWrapper>
+          <ThemenPage />
         </RouteWrapper>
       ),
     },

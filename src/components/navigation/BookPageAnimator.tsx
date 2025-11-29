@@ -1,6 +1,7 @@
 import { useDrag } from "@use-gesture/react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion } from "framer-motion";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface BookPageAnimatorProps {
   children: ReactNode;
@@ -124,7 +125,7 @@ export function BookPageAnimator({
         stiffness: 300,
         damping: 30,
         mass: 0.8,
-      },
+      } as any,
     },
     exit: (dir: number) => ({
       x: shouldReduceMotion ? 0 : dir > 0 ? "-100%" : "100%", // Exit fully off-screen
@@ -166,7 +167,7 @@ export function BookPageAnimator({
       <AnimatePresence initial={false} mode="wait" custom={direction}>
         <motion.div
           key={activeChatId ?? "draft"}
-          {...bind()} // Apply drag bindings here
+          {...(bind() as any)} // Apply drag bindings here - cast to any to avoid type conflict
           style={{ x, rotateY, scale }} // Bind x, rotateY, scale directly to motion values
           custom={direction}
           variants={variants}

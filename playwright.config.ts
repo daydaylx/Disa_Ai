@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const IS_LIVE = process.env.PLAYWRIGHT_LIVE === "1";
-const PORT = process.env.PLAYWRIGHT_PORT ?? "5174";
+const PORT = process.env.PLAYWRIGHT_PORT ?? "5173";
 const LOCAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
 const LIVE_BASE_URL = process.env.LIVE_BASE_URL ?? "https://disaai.de";
 const BASE_URL = IS_LIVE ? LIVE_BASE_URL : LOCAL_BASE_URL;
@@ -25,8 +25,8 @@ if (IS_LIVE) {
   });
 }
 
-// Cross-browser testing for CI
-if (process.env.CI) {
+// Cross-browser testing for CI and local development
+if (process.env.CI || process.env.PLAYWRIGHT_FIREFOX) {
   projects.push(
     {
       name: "firefox",
@@ -77,7 +77,7 @@ export default defineConfig({
     : {
         command: `npm run dev -- --port=${PORT}`,
         url: BASE_URL,
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 120_000, // Mehr Zeit für Server-Start
         stdout: "pipe", // Reduziert Noise
         stderr: "pipe",

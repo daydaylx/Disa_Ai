@@ -35,10 +35,10 @@ describe("Quickstarts Configuration", () => {
 
   describe("getQuickstartById", () => {
     it("sollte Quickstart per ID finden", () => {
-      const quickstart = getQuickstartById("text-writer");
+      const quickstart = getQuickstartById("discussion-aliens");
       expect(quickstart).toBeDefined();
-      expect(quickstart?.id).toBe("text-writer");
-      expect(quickstart?.title).toBe("AI Text Writer");
+      expect(quickstart?.id).toBe("discussion-aliens");
+      expect(quickstart?.title).toBe("Gibt es Außerirdische?");
     });
 
     it("sollte undefined für unbekannte ID zurückgeben", () => {
@@ -52,11 +52,10 @@ describe("Quickstarts Configuration", () => {
       const validQuickstart = {
         id: "test",
         title: "Test Title",
-        subtitle: "Test Subtitle",
-        gradient: "from-blue-500 to-red-500",
-        flowId: "test.v1",
-        autosend: false,
-        prompt: "Test prompt",
+        description: "Test Description",
+        icon: null,
+        system: "test-system",
+        user: "test-user",
       };
 
       const result = validateQuickstart(validQuickstart);
@@ -67,11 +66,10 @@ describe("Quickstarts Configuration", () => {
       const invalidQuickstart = {
         id: "",
         title: "Test Title",
-        // subtitle fehlt
-        gradient: "from-blue-500 to-red-500",
-        flowId: "test.v1",
-        autosend: false,
-        prompt: "Test prompt",
+        // description fehlt
+        icon: null,
+        system: "test-system",
+        user: "test-user",
       };
 
       const result = validateQuickstart(invalidQuickstart);
@@ -95,11 +93,10 @@ describe("Quickstarts Configuration", () => {
         {
           id: "external-test",
           title: "External Test",
-          subtitle: "External Test Subtitle",
-          gradient: "from-green-500 to-blue-500",
-          flowId: "external.v1",
-          autosend: true,
-          prompt: "External prompt",
+          description: "External Test Description",
+          icon: null,
+          system: "test-system",
+          user: "test-user",
         },
       ];
 
@@ -140,7 +137,9 @@ describe("Quickstarts Configuration", () => {
       });
 
       const consoleSpy = vi.spyOn(console, "warn");
-      await expect(loadQuickstarts()).rejects.toThrow("Invalid quickstarts config");
+      await expect(loadQuickstarts()).rejects.toThrow(
+        "No valid quickstarts found in external config",
+      );
       expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to load external quickstarts, using defaults:",
         expect.any(Error),
@@ -188,11 +187,10 @@ describe("Quickstarts Configuration", () => {
         {
           id: "external-fallback-test",
           title: "External Fallback Test",
-          subtitle: "External Fallback Subtitle",
-          gradient: "from-purple-500 to-pink-500",
-          flowId: "external-fallback.v1",
-          autosend: false,
-          prompt: "External fallback prompt",
+          description: "External Fallback Description",
+          icon: null,
+          system: "test-system",
+          user: "test-user",
         },
       ];
 
@@ -250,26 +248,22 @@ describe("Quickstarts Configuration", () => {
       defaultQuickstarts.forEach((quickstart) => {
         expect(quickstart).toHaveProperty("id");
         expect(quickstart).toHaveProperty("title");
-        expect(quickstart).toHaveProperty("subtitle");
-        expect(quickstart).toHaveProperty("gradient");
-        expect(quickstart).toHaveProperty("flowId");
-        expect(quickstart).toHaveProperty("autosend");
-        expect(quickstart).toHaveProperty("prompt");
+        expect(quickstart).toHaveProperty("description");
+        expect(quickstart).toHaveProperty("icon");
+        expect(quickstart).toHaveProperty("system");
+        expect(quickstart).toHaveProperty("user");
 
         expect(typeof quickstart.id).toBe("string");
         expect(typeof quickstart.title).toBe("string");
-        expect(typeof quickstart.subtitle).toBe("string");
-        expect(typeof quickstart.gradient).toBe("string");
-        expect(typeof quickstart.flowId).toBe("string");
-        expect(typeof quickstart.autosend).toBe("boolean");
-        expect(typeof quickstart.prompt).toBe("string");
+        expect(typeof quickstart.description).toBe("string");
+        expect(typeof quickstart.system).toBe("string");
+        expect(typeof quickstart.user).toBe("string");
 
         expect(quickstart.id.length).toBeGreaterThan(0);
         expect(quickstart.title.length).toBeGreaterThan(0);
-        expect(quickstart.subtitle.length).toBeGreaterThan(0);
-        expect(quickstart.gradient.length).toBeGreaterThan(0);
-        expect(quickstart.flowId.length).toBeGreaterThan(0);
-        expect(quickstart.prompt.length).toBeGreaterThan(0);
+        expect(quickstart.description.length).toBeGreaterThan(0);
+        expect(quickstart.system.length).toBeGreaterThan(0);
+        expect(quickstart.user.length).toBeGreaterThan(0);
       });
     });
 
@@ -277,18 +271,16 @@ describe("Quickstarts Configuration", () => {
       expect(defaultQuickstarts.length).toBeGreaterThanOrEqual(3);
     });
 
-    it("sollte Text Writer Quickstart enthalten", () => {
-      const textWriter = defaultQuickstarts.find((q) => q.id === "text-writer");
-      expect(textWriter).toBeDefined();
-      expect(textWriter?.title).toBe("AI Text Writer");
-      expect(textWriter?.autosend).toBe(false);
+    it("sollte aliens Diskussion enthalten", () => {
+      const aliensDiscussion = defaultQuickstarts.find((q) => q.id === "discussion-aliens");
+      expect(aliensDiscussion).toBeDefined();
+      expect(aliensDiscussion?.title).toBe("Gibt es Außerirdische?");
     });
 
-    it("sollte Fact Check Quickstart enthalten", () => {
-      const factCheck = defaultQuickstarts.find((q) => q.id === "fact-check");
-      expect(factCheck).toBeDefined();
-      expect(factCheck?.title).toBe("Faktencheck");
-      expect(factCheck?.autosend).toBe(false);
+    it("sollte Verschwörungstheorie enthalten", () => {
+      const conspiracyDiscussion = defaultQuickstarts.find((q) => q.id === "conspiracy-flat-earth");
+      expect(conspiracyDiscussion).toBeDefined();
+      expect(conspiracyDiscussion?.title).toBe("Flache Erde");
     });
   });
 });

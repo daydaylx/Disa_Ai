@@ -1,5 +1,5 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Home, Settings, Users } from "@/lib/icons";
+import { Brain, Home, Settings, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;
@@ -34,6 +34,14 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     Icon: Settings,
     activePattern: /^\/settings/,
     description: "API, Modelle & Darstellung",
+  },
+  {
+    id: "themen",
+    label: "Themen",
+    path: "/themen",
+    Icon: Brain,
+    activePattern: /^\/themen$/,
+    description: "Diskussionsthemen & Quickstarts",
   },
 ];
 

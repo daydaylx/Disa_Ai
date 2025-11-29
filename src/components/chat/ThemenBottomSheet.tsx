@@ -1,0 +1,70 @@
+import { CATEGORY_LABELS, type Quickstart, QUICKSTARTS } from "@/config/quickstarts";
+import { Brain } from "@/lib/icons";
+import { X } from "@/lib/icons";
+import { Button } from "@/ui";
+import { Dialog, DialogContent } from "@/ui/Dialog"; // Assuming shadcn Dialog
+
+interface ThemenBottomSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onStart: (system: string, user: string, title: string) => void;
+}
+
+export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomSheetProps) {
+  const handleStart = (quickstart: Quickstart) => {
+    onStart(quickstart.system, quickstart.user, `Diskussion: ${quickstart.title}`);
+    onClose();
+  };
+
+  const Icon = Brain; // Default icon for now
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md fixed bottom-0 left-0 right-0 sm:top-0 sm:left-auto sm:right-4 sm:w-96 rounded-t-3xl max-h-[90vh] p-0 border-0 bg-bg-page shadow-2xl">
+        <div className="p-6 pb-4 border-b border-border-ink">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-ink-primary">Themen auswählen</h3>
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <div className="p-4 max-h-[70vh] overflow-y-auto">
+          <div className="grid grid-cols-1 gap-3">
+            {QUICKSTARTS.slice(0, 10).map((quickstart) => {
+              // Limit for compact
+              const categoryInfo = quickstart.category
+                ? CATEGORY_LABELS[quickstart.category]
+                : null;
+              return (
+                <Button
+                  key={quickstart.id}
+                  variant="ghost"
+                  className="justify-start h-auto p-3 rounded-xl hover:bg-surface-1 border border-border-ink/50 text-left"
+                  onClick={() => handleStart(quickstart)}
+                >
+                  <div className="flex items-center gap-3 w-full">
+                    <div className="h-10 w-10 flex shrink-0 items-center justify-center rounded-lg bg-surface-2 border">
+                      <Icon className="h-5 w-5 text-ink-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-ink-primary text-sm leading-tight">
+                        {quickstart.title}
+                      </p>
+                      <p className="text-xs text-ink-secondary mt-1">{quickstart.description}</p>
+                      {categoryInfo && (
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs bg-blue-50 text-blue-700">
+                          {categoryInfo.label}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

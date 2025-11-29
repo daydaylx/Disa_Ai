@@ -109,6 +109,8 @@ export function useBookNavigation() {
           newStack = newStack.slice(0, MAX_STACK_SIZE);
         }
       }
+      // If it IS in stack, we leave it in its current position as per requirement:
+      // "Wenn bereits enthalten -> an Position belassen."
 
       return {
         ...prev,
@@ -120,7 +122,9 @@ export function useBookNavigation() {
 
   const goBack = useCallback(() => {
     setState((prev) => {
-      const currentIndex = prev.swipeStack.indexOf(prev.activeChatId || "");
+      if (!prev.activeChatId) return prev;
+
+      const currentIndex = prev.swipeStack.indexOf(prev.activeChatId);
       if (currentIndex === -1 || currentIndex >= prev.swipeStack.length - 1) {
         // Cannot go back (already at end of stack or not in stack)
         return prev;
@@ -176,6 +180,7 @@ export function useBookNavigation() {
     goBack,
     updateChatId,
     isTransitioning,
+    isInitialized, // Expose initialization status for tests
     settings, // Just to avoid unused var warning for now
   };
 }

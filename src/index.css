@@ -64,10 +64,22 @@
   }
 
   /* Typography overrides for Book Feel */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: var(--ink-primary);
     font-weight: 600;
     letter-spacing: -0.01em;
+  }
+
+  /* Mobile Typography Boost: Larger base font for better readability */
+  @media (max-width: 640px) {
+    html {
+      font-size: 112.5%; /* 18px base from 16px */
+    }
   }
 }
 
@@ -98,5 +110,12 @@
   .card-depth:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-floating);
+  }
+
+  /* Mobile Prose: Limit line lengths */
+  @media (max-width: 640px) {
+    .prose {
+      max-width: 100%;
+    }
   }
 }
