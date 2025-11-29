@@ -11,6 +11,7 @@ import { NetworkBanner } from "../../components/NetworkBanner";
 import { PWADebugInfo } from "../../components/pwa/PWADebugInfo";
 import { PWAInstallPrompt } from "../../components/pwa/PWAInstallPrompt";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
 
 interface AppShellProps {
@@ -43,8 +44,11 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     return active?.label ?? "Disa AI";
   }, [location.pathname]);
 
+  const isChatMode = location.pathname === "/" || location.pathname === "/chat";
+
   return (
-    <div className="relative min-h-screen bg-bg-base text-text-primary">{/* Clean solid background - no Aurora animation */}
+    <div className="relative min-h-screen bg-bg-base text-text-primary">
+      {/* Clean solid background - no Aurora animation */}
 
       <div
         className="relative flex min-h-screen flex-col"
@@ -92,8 +96,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
         </header>
 
-        {/* Breadcrumb Navigation */}
-        <div className="border-b border-surface-1/50 bg-surface-1/30 backdrop-blur supports-[backdrop-filter]:bg-surface-1/20">
+        {/* Breadcrumb Navigation - hidden on mobile */}
+        <div className="hidden sm:block border-b border-surface-1/50 bg-surface-1/30 backdrop-blur supports-[backdrop-filter]:bg-surface-1/20">
           <div className="px-4 py-2 max-w-6xl mx-auto">
             <AutoBreadcrumbs className="text-xs md:text-sm" />
           </div>
@@ -107,11 +111,20 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           className="relative flex flex-1 flex-col overflow-hidden"
           tabIndex={-1}
         >
-          <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col overflow-y-auto px-6 py-8 sm:px-10 sm:py-12">
-            <div className="page-stack flex flex-1 flex-col gap-6">{children}</div>
+          <div
+            className={cn(
+              "mx-auto flex h-full w-full flex-1 flex-col",
+              isChatMode
+                ? "p-0 overflow-hidden" // Chat mode: full width, no padding, no shell scroll
+                : "max-w-6xl overflow-y-auto px-6 py-8 sm:px-10 sm:py-12", // Default mode
+            )}
+          >
+            <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "page-stack gap-6")}>
+              {children}
+            </div>
 
-            {/* Footer - Only show in development */}
-            {process.env.NODE_ENV === "development" && (
+            {/* Footer - Only show in development AND NOT in Chat mode */}
+            {process.env.NODE_ENV === "development" && !isChatMode && (
               <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-surface-inset shadow-inset px-4 py-3 text-[11px] text-text-muted">
                 <span>Disa AI · Build</span>
                 <BuildInfo />
