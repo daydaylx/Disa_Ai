@@ -57,10 +57,12 @@ You need to create KV namespaces for the rate limiting functionality:
    - Replace `YOUR_PREVIEW_RATE_LIMIT_KV_NAMESPACE_ID` with the preview namespace ID
 
 **AKTUELLER STATUS:** ✅ KV Namespaces sind korrekt konfiguriert:
+
 - Production: `0d65c85d47bf490f961707338ad47993`
 - Preview: `eca29f3a0056484785f3b0f6637c8f58`
 
 **Verifizierung:**
+
 ```bash
 wrangler kv:namespace list
 ```
@@ -72,11 +74,13 @@ wrangler kv:namespace list
 **So setzt du Secrets:**
 
 **Option A: Cloudflare Dashboard**
+
 1. Dashboard → Workers & Pages → disaai
 2. Settings → Environment variables
 3. Add variable → Name: `OPENROUTER_API_KEY`, Type: **Encrypted**
 
 **Option B: Wrangler CLI**
+
 ```bash
 echo "your-api-key" | wrangler pages secret put OPENROUTER_API_KEY --project-name=disaai
 ```
@@ -107,11 +111,13 @@ Regular environment variables (non-secret) sind in `wrangler.toml` konfiguriert:
 **Nach Secret-Setup:**
 
 1. **Secret verifizieren** (zeigt nur ob vorhanden, nicht den Wert):
+
    ```bash
    wrangler pages secret list --project-name=disaai
    ```
 
 2. **Validation Script ausführen:**
+
    ```bash
    npm run validate:deploy
    ```
