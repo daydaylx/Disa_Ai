@@ -1,4 +1,4 @@
-interface GlobalMemory {
+export interface GlobalMemory {
   name?: string;
   hobbies?: string[];
   background?: string;

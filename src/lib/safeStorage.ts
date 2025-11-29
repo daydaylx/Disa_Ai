@@ -6,7 +6,7 @@ export interface SafeStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
-  clear?(): void;
+  clear(): void;
 }
 
 function createMemoryStorage(): SafeStorage {
@@ -29,40 +29,42 @@ function createMemoryStorage(): SafeStorage {
   };
 }
 
-function createBrowserStorage(): SafeStorage {
-  if (typeof window === "undefined") return createMemoryStorage();
+export function createSafeStorage(
+  storage: Storage | undefined = typeof window !== "undefined" ? window.localStorage : undefined,
+): SafeStorage {
+  if (typeof window === "undefined" || !storage) return createMemoryStorage();
 
   try {
     const testKey = "__disa_safe_storage_test__";
-    window.localStorage.setItem(testKey, "1");
-    window.localStorage.removeItem(testKey);
+    storage.setItem(testKey, "1");
+    storage.removeItem(testKey);
 
     return {
       isAvailable: true,
       getItem(key) {
         try {
-          return window.localStorage.getItem(key);
+          return storage.getItem(key);
         } catch {
           return null;
         }
       },
       setItem(key, value) {
         try {
-          window.localStorage.setItem(key, value);
+          storage.setItem(key, value);
         } catch {
           // ignore quota / privacy errors
         }
       },
       removeItem(key) {
         try {
-          window.localStorage.removeItem(key);
+          storage.removeItem(key);
         } catch {
           // ignore
         }
       },
       clear() {
         try {
-          window.localStorage.clear();
+          storage.clear();
         } catch {
           // ignore
         }
@@ -73,4 +75,4 @@ function createBrowserStorage(): SafeStorage {
   }
 }
 
-export const safeStorage: SafeStorage = createBrowserStorage();
+export const safeStorage: SafeStorage = createSafeStorage();

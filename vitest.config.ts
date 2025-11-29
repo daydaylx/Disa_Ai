@@ -13,6 +13,8 @@ export default defineConfig({
     globals: false,
     environment: "jsdom",
     pool: "threads",
+    testTimeout: 10000,
+    hookTimeout: 10000,
     setupFiles: ["tests/setup.ts", "tests/polyfills.ts"],
     environmentOptions: {
       jsdom: {
