@@ -2,14 +2,14 @@ module.exports = {
   ci: {
     collect: {
       url: [
-        "http://localhost:4173/",
-        "http://localhost:4173/chat",
-        "http://localhost:4173/models",
-        "http://localhost:4173/settings",
+        "http://localhost:4200/",
+        "http://localhost:4200/chat",
+        "http://localhost:4200/models",
+        "http://localhost:4200/settings",
       ],
       numberOfRuns: 3,
-      startServerCommand: "npm run preview",
-      startServerReadyPattern: "Local:.*:4173",
+      startServerCommand: "VITE_PREVIEW_PORT=4200 npm run preview",
+      startServerReadyPattern: "Serving dist on",
       startServerReadyTimeout: 30000,
     },
     assert: {
