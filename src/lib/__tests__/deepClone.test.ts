@@ -1,23 +1,23 @@
-import { describe, expect,it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { deepClone } from '../utils';
+import { deepClone } from "../utils";
 
-describe('deepClone', () => {
-  it('should correctly clone simple objects', () => {
-    const obj = { a: 1, b: 'test' };
+describe("deepClone", () => {
+  it("should correctly clone simple objects", () => {
+    const obj = { a: 1, b: "test" };
     const cloned = deepClone(obj);
     expect(cloned).toEqual(obj);
     expect(cloned).not.toBe(obj);
   });
 
-  it('should correctly clone arrays', () => {
+  it("should correctly clone arrays", () => {
     const arr = [1, 2, 3];
     const cloned = deepClone(arr);
     expect(cloned).toEqual(arr);
     expect(cloned).not.toBe(arr);
   });
 
-  it('should correctly clone dates', () => {
+  it("should correctly clone dates", () => {
     const date = new Date();
     const cloned = deepClone(date);
     expect(cloned).toEqual(date);
@@ -25,18 +25,18 @@ describe('deepClone', () => {
     expect(cloned instanceof Date).toBe(true);
   });
 
-  it('should correctly clone RegExp', () => {
+  it("should correctly clone RegExp", () => {
     const regex = /abc/gi;
     regex.lastIndex = 5;
     const cloned = deepClone(regex);
     expect(cloned).toEqual(regex);
     expect(cloned instanceof RegExp).toBe(true);
-    expect(cloned.source).toBe('abc');
-    expect(cloned.flags).toBe('gi');
+    expect(cloned.source).toBe("abc");
+    expect(cloned.flags).toBe("gi");
     expect(cloned.lastIndex).toBe(5);
   });
 
-  it('should correctly clone Set', () => {
+  it("should correctly clone Set", () => {
     const nested = { a: 1 };
     const set = new Set([nested, 2, 3]);
     const cloned = deepClone(set);
@@ -50,10 +50,13 @@ describe('deepClone', () => {
     expect(clonedArr[0]).not.toBe(nested);
   });
 
-  it('should correctly clone Map', () => {
+  it("should correctly clone Map", () => {
     const keyObj = { k: 1 };
     const valObj = { v: 1 };
-    const map = new Map<any, any>([[keyObj, valObj], ['b', 2]]);
+    const map = new Map<any, any>([
+      [keyObj, valObj],
+      ["b", 2],
+    ]);
     const cloned = deepClone(map);
     expect(cloned).toEqual(map);
     expect(cloned instanceof Map).toBe(true);
@@ -63,7 +66,7 @@ describe('deepClone', () => {
 
     // Find the entry that corresponds to keyObj
     const clonedEntries = Array.from(cloned.entries());
-    const matchedEntry = clonedEntries.find(e => e[0].k === 1);
+    const matchedEntry = clonedEntries.find((e) => e[0].k === 1);
     expect(matchedEntry).toBeDefined();
     expect(matchedEntry![0]).not.toBe(keyObj);
     expect(matchedEntry![1]).toEqual(valObj);
