@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useSettings } from "@/hooks/useSettings";
-import { Cat, ExternalLink, Settings2, Zap, ZapOff } from "@/lib/icons";
+import { Cat, Link2, Settings, Zap, ZapOff } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/ui/Switch";
 
@@ -22,7 +22,7 @@ export function QuickSettingsSelector() {
           )}
           aria-label="Schnell-Einstellungen"
         >
-          <Settings2
+          <Settings
             className={cn(
               "h-5 w-5 text-ink-secondary transition-colors",
               open && "text-ink-primary",
@@ -124,7 +124,7 @@ export function QuickSettingsSelector() {
               className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm text-ink-primary hover:bg-surface-2 transition-colors"
             >
               <span>Alle Einstellungen</span>
-              <ExternalLink className="h-3.5 w-3.5 text-ink-secondary" />
+              <Link2 className="h-3.5 w-3.5 text-ink-secondary" />
             </Link>
           </div>
         </DropdownMenu.Content>

@@ -22,9 +22,8 @@ test.describe("Chat Swipe Navigation", () => {
 
     // Simulate Swipe Left (Drag from right to left)
     // We need to drag on the chat container
-    const chatContainer = page.getByTestId("chat-message-list");
+
     // Fallback if list is empty (initial state might differ): drag on body or a wrapper
-    const _target = (await chatContainer.count()) > 0 ? chatContainer : page.locator("body");
 
     const box = await page.locator("body").boundingBox();
     if (!box) return;

@@ -7,14 +7,14 @@ import type { Config } from "tailwindcss";
 const colorTokens = {
   // Backgrounds
   bg: {
-    app: "var(--bg-app)",    // Off-white paper
-    page: "var(--bg-page)",  // Page surface
+    app: "var(--bg-app)", // Off-white paper
+    page: "var(--bg-page)", // Page surface
     surface: "var(--bg-surface)",
   },
 
   // Ink (Text & Icons)
   ink: {
-    primary: "var(--ink-primary)",   // Dark Blue-Black
+    primary: "var(--ink-primary)", // Dark Blue-Black
     secondary: "var(--ink-secondary)", // Muted Grey
     onAccent: "var(--ink-on-accent)",
   },

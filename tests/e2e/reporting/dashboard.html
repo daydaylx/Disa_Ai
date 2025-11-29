@@ -1,552 +1,580 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>E2E Test Dashboard - Disa AI</title>
     <style>
-        :root {
-            --primary: #007bff;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --dark: #343a40;
-            --light: #f8f9fa;
-            --text: #212529;
-            --border: #dee2e6;
-            --shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+      :root {
+        --primary: #007bff;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --info: #17a2b8;
+        --dark: #343a40;
+        --light: #f8f9fa;
+        --text: #212529;
+        --border: #dee2e6;
+        --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
-            background-color: #fff;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background-color: #fff;
+      }
 
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary), #0056b3);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 1rem 1rem;
+      }
+
+      .header h1 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .header .subtitle {
+        text-align: center;
+        opacity: 0.9;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+      }
+
+      .card h3 {
+        margin-bottom: 1rem;
+        color: var(--primary);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .metric:last-child {
+        border-bottom: none;
+      }
+
+      .metric-label {
+        font-weight: 500;
+      }
+
+      .metric-value {
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .metric-value.good {
+        color: var(--success);
+      }
+
+      .metric-value.warning {
+        color: var(--warning);
+      }
+
+      .metric-value.danger {
+        color: var(--danger);
+      }
+
+      .chart-container {
+        height: 300px;
+        margin-top: 1rem;
+      }
+
+      .progress-ring {
+        width: 120px;
+        height: 120px;
+        position: relative;
+      }
+
+      .progress-ring circle {
+        fill: none;
+        stroke-width: 8;
+        transform: rotate(-90deg);
+        transform-origin: center;
+      }
+
+      .progress-ring .bg {
+        stroke: var(--border);
+      }
+
+      .progress-ring .progress {
+        stroke: var(--success);
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.3s ease;
+      }
+
+      .progress-ring .text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .status-item {
+        text-align: center;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: var(--light);
+      }
+
+      .status-item .icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .status-item.passed {
+        background: #d4edda;
+        color: var(--success);
+      }
+
+      .status-item.failed {
+        background: #f8d7da;
+        color: var(--danger);
+      }
+
+      .status-item.skipped {
+        background: #fff3cd;
+        color: var(--warning);
+      }
+
+      .trend-chart {
+        width: 100%;
+        height: 200px;
+        background: var(--light);
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+
+      .test-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .test-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border);
+        transition: background-color 0.2s ease;
+      }
+
+      .test-item:hover {
+        background-color: var(--light);
+      }
+
+      .test-item:last-child {
+        border-bottom: none;
+      }
+
+      .test-item.failed {
+        background-color: #fff8f8;
+      }
+
+      .test-item.passed {
+        background-color: #f8fff9;
+      }
+
+      .test-item.skipped {
+        background-color: #fffbf0;
+      }
+
+      .test-name {
+        font-weight: 500;
+        flex: 1;
+      }
+
+      .test-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .test-status.passed {
+        background-color: var(--success);
+        color: white;
+      }
+
+      .test-status.failed {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .test-status.skipped {
+        background-color: var(--warning);
+        color: #212529;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border);
+        margin-top: 2rem;
+      }
+
+      .refresh-button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .refresh-button:hover {
+        background: #0056b3;
+      }
+
+      @media (max-width: 768px) {
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary), #0056b3);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 1rem 1rem;
-        }
-
-        .header h1 {
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .header .subtitle {
-            text-align: center;
-            opacity: 0.9;
+          padding: 0.5rem;
         }
 
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary);
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
-
-        .metric {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .metric:last-child {
-            border-bottom: none;
-        }
-
-        .metric-label {
-            font-weight: 500;
-        }
-
-        .metric-value {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .metric-value.good {
-            color: var(--success);
-        }
-
-        .metric-value.warning {
-            color: var(--warning);
-        }
-
-        .metric-value.danger {
-            color: var(--danger);
-        }
-
-        .chart-container {
-            height: 300px;
-            margin-top: 1rem;
-        }
-
-        .progress-ring {
-            width: 120px;
-            height: 120px;
-            position: relative;
-        }
-
-        .progress-ring circle {
-            fill: none;
-            stroke-width: 8;
-            transform: rotate(-90deg);
-            transform-origin: center;
-        }
-
-        .progress-ring .bg {
-            stroke: var(--border);
-        }
-
-        .progress-ring .progress {
-            stroke: var(--success);
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.3s ease;
-        }
-
-        .progress-ring .text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.2rem;
-            font-weight: bold;
+          grid-template-columns: 1fr;
         }
 
         .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+          grid-template-columns: 1fr;
         }
-
-        .status-item {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: var(--light);
-        }
-
-        .status-item .icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-item.passed {
-            background: #d4edda;
-            color: var(--success);
-        }
-
-        .status-item.failed {
-            background: #f8d7da;
-            color: var(--danger);
-        }
-
-        .status-item.skipped {
-            background: #fff3cd;
-            color: var(--warning);
-        }
-
-        .trend-chart {
-            width: 100%;
-            height: 200px;
-            background: var(--light);
-            border-radius: 0.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-        }
-
-        .test-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .test-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--border);
-            transition: background-color 0.2s ease;
-        }
-
-        .test-item:hover {
-            background-color: var(--light);
-        }
-
-        .test-item:last-child {
-            border-bottom: none;
-        }
-
-        .test-item.failed {
-            background-color: #fff8f8;
-        }
-
-        .test-item.passed {
-            background-color: #f8fff9;
-        }
-
-        .test-item.skipped {
-            background-color: #fffbf0;
-        }
-
-        .test-name {
-            font-weight: 500;
-            flex: 1;
-        }
-
-        .test-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .test-status.passed {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .test-status.failed {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .test-status.skipped {
-            background-color: var(--warning);
-            color: #212529;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-            margin-top: 2rem;
-        }
-
-        .refresh-button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .refresh-button:hover {
-            background: #0056b3;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header class="header">
-            <h1>🧪 E2E Test Dashboard</h1>
-            <p class="subtitle">Echtzeit-Übersicht der Testergebnisse für Disa AI</p>
-            <button class="refresh-button" onclick="refreshData()">🔄 Daten Aktualisieren</button>
-        </header>
+      <header class="header">
+        <h1>🧪 E2E Test Dashboard</h1>
+        <p class="subtitle">Echtzeit-Übersicht der Testergebnisse für Disa AI</p>
+        <button class="refresh-button" onclick="refreshData()">🔄 Daten Aktualisieren</button>
+      </header>
 
-        <main>
-            <div class="dashboard-grid">
-                <!-- Testübersicht -->
-                <div class="card">
-                    <h3>📊 Testübersicht</h3>
-                    <div class="progress-ring">
-                        <svg width="120" height="120" viewBox="0 0 120 120">
-                            <circle class="bg" cx="60" cy="60" r="50"></circle>
-                            <circle class="progress" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="314"></circle>
-                        </svg>
-                        <div class="text" id="success-rate">0%</div>
-                    </div>
-                    <div class="status-grid">
-                        <div class="status-item passed">
-                            <div class="icon">✅</div>
-                            <div class="label">Bestanden</div>
-                            <div class="value" id="passed-count">0</div>
-                        </div>
-                        <div class="status-item failed">
-                            <div class="icon">❌</div>
-                            <div class="label">Fehlgeschlagen</div>
-                            <div class="value" id="failed-count">0</div>
-                        </div>
-                        <div class="status-item skipped">
-                            <div class="icon">⏭️</div>
-                            <div class="label">Übersprungen</div>
-                            <div class="value" id="skipped-count">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance-Metriken -->
-                <div class="card">
-                    <h3>⚡ Performance</h3>
-                    <div class="metric">
-                        <span class="metric-label">LCP</span>
-                        <span class="metric-value" id="lcp-value">--</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">FID</span>
-                        <span class="metric-value" id="fid-value">--</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">CLS</span>
-                        <span class="metric-value" id="cls-value">--</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">TTFB</span>
-                        <span class="metric-value" id="ttfb-value">--</span>
-                    </div>
-                </div>
-
-                <!-- Accessibility -->
-                <div class="card">
-                    <h3>♿ Accessibility</h3>
-                    <div class="metric">
-                        <span class="metric-label">Verstöße gesamt</span>
-                        <span class="metric-value" id="violations-total">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Kritisch</span>
-                        <span class="metric-value danger" id="violations-critical">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Ernsthaft</span>
-                        <span class="metric-value warning" id="violations-serious">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Mäßig</span>
-                        <span class="metric-value" id="violations-moderate">0</span>
-                    </div>
-                </div>
-
-                <!-- Visual Regression -->
-                <div class="card">
-                    <h3>🖼️ Visual Regression</h3>
-                    <div class="metric">
-                        <span class="metric-label">Screenshots</span>
-                        <span class="metric-value" id="visual-total">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Bestanden</span>
-                        <span class="metric-value good" id="visual-passed">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Fehlgeschlagen</span>
-                        <span class="metric-value danger" id="visual-failed">0</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Erfolgsquote</span>
-                        <span class="metric-value" id="visual-success-rate">0%</span>
-                    </div>
-                </div>
+      <main>
+        <div class="dashboard-grid">
+          <!-- Testübersicht -->
+          <div class="card">
+            <h3>📊 Testübersicht</h3>
+            <div class="progress-ring">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle class="bg" cx="60" cy="60" r="50"></circle>
+                <circle
+                  class="progress"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  stroke-dasharray="314"
+                  stroke-dashoffset="314"
+                ></circle>
+              </svg>
+              <div class="text" id="success-rate">0%</div>
             </div>
-
-            <!-- Testverlauf -->
-            <div class="card">
-                <h3>📈 Testverlauf</h3>
-                <div class="trend-chart" id="trend-chart">
-                    Lade Trenddaten...
-                </div>
+            <div class="status-grid">
+              <div class="status-item passed">
+                <div class="icon">✅</div>
+                <div class="label">Bestanden</div>
+                <div class="value" id="passed-count">0</div>
+              </div>
+              <div class="status-item failed">
+                <div class="icon">❌</div>
+                <div class="label">Fehlgeschlagen</div>
+                <div class="value" id="failed-count">0</div>
+              </div>
+              <div class="status-item skipped">
+                <div class="icon">⏭️</div>
+                <div class="label">Übersprungen</div>
+                <div class="value" id="skipped-count">0</div>
+              </div>
             </div>
+          </div>
 
-            <!-- Letzte Testergebnisse -->
-            <div class="card">
-                <h3>📋 Letzte Testergebnisse</h3>
-                <div class="test-list" id="test-list">
-                    <div class="test-item">
-                        <span class="test-name">Lade Testdaten...</span>
-                        <span class="test-status">⏳</span>
-                    </div>
-                </div>
+          <!-- Performance-Metriken -->
+          <div class="card">
+            <h3>⚡ Performance</h3>
+            <div class="metric">
+              <span class="metric-label">LCP</span>
+              <span class="metric-value" id="lcp-value">--</span>
             </div>
-        </main>
+            <div class="metric">
+              <span class="metric-label">FID</span>
+              <span class="metric-value" id="fid-value">--</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">CLS</span>
+              <span class="metric-value" id="cls-value">--</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">TTFB</span>
+              <span class="metric-value" id="ttfb-value">--</span>
+            </div>
+          </div>
 
-        <footer class="footer">
-            <p>Generated by Custom Playwright Dashboard | Letztes Update: <span id="last-update">--</span></p>
-        </footer>
+          <!-- Accessibility -->
+          <div class="card">
+            <h3>♿ Accessibility</h3>
+            <div class="metric">
+              <span class="metric-label">Verstöße gesamt</span>
+              <span class="metric-value" id="violations-total">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Kritisch</span>
+              <span class="metric-value danger" id="violations-critical">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Ernsthaft</span>
+              <span class="metric-value warning" id="violations-serious">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Mäßig</span>
+              <span class="metric-value" id="violations-moderate">0</span>
+            </div>
+          </div>
+
+          <!-- Visual Regression -->
+          <div class="card">
+            <h3>🖼️ Visual Regression</h3>
+            <div class="metric">
+              <span class="metric-label">Screenshots</span>
+              <span class="metric-value" id="visual-total">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Bestanden</span>
+              <span class="metric-value good" id="visual-passed">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Fehlgeschlagen</span>
+              <span class="metric-value danger" id="visual-failed">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Erfolgsquote</span>
+              <span class="metric-value" id="visual-success-rate">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testverlauf -->
+        <div class="card">
+          <h3>📈 Testverlauf</h3>
+          <div class="trend-chart" id="trend-chart">Lade Trenddaten...</div>
+        </div>
+
+        <!-- Letzte Testergebnisse -->
+        <div class="card">
+          <h3>📋 Letzte Testergebnisse</h3>
+          <div class="test-list" id="test-list">
+            <div class="test-item">
+              <span class="test-name">Lade Testdaten...</span>
+              <span class="test-status">⏳</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>
+          Generated by Custom Playwright Dashboard | Letztes Update:
+          <span id="last-update">--</span>
+        </p>
+      </footer>
     </div>
 
     <script>
-        // Dashboard JavaScript
-        let testData = {};
-        let performanceData = {};
-        let accessibilityData = {};
-        let visualData = {};
+      // Dashboard JavaScript
+      let testData = {};
+      let performanceData = {};
+      let accessibilityData = {};
+      let visualData = {};
 
-        // Mock data for demonstration
-        function loadMockData() {
-            return {
-                summary: {
-                    totalTests: 45,
-                    passedTests: 42,
-                    failedTests: 2,
-                    skippedTests: 1,
-                    successRate: "93.33%",
-                    duration: 125000
-                },
-                performance: {
-                    lcp: 1850,
-                    fid: 45,
-                    cls: 0.025,
-                    ttfb: 320
-                },
-                accessibility: {
-                    totalViolations: 3,
-                    criticalViolations: 0,
-                    seriousViolations: 1,
-                    moderateViolations: 1,
-                    minorViolations: 1
-                },
-                visual: {
-                    totalScreenshots: 15,
-                    passedComparisons: 14,
-                    failedComparisons: 1,
-                    successRate: "93.3%"
-                },
-                tests: [
-                    { title: "Complete chat conversation flow", status: "passed", duration: 8500 },
-                    { title: "Chat history and conversation management", status: "passed", duration: 12000 },
-                    { title: "Chat composer functionality", status: "failed", duration: 6500 },
-                    { title: "Mobile chat interface", status: "passed", duration: 9500 },
-                    { title: "Roles selection flow", status: "passed", duration: 7200 },
-                    { title: "Settings configuration", status: "skipped", duration: 0 },
-                    { title: "PWA installation flow", status: "passed", duration: 15000 }
-                ]
-            };
-        }
+      // Mock data for demonstration
+      function loadMockData() {
+        return {
+          summary: {
+            totalTests: 45,
+            passedTests: 42,
+            failedTests: 2,
+            skippedTests: 1,
+            successRate: "93.33%",
+            duration: 125000,
+          },
+          performance: {
+            lcp: 1850,
+            fid: 45,
+            cls: 0.025,
+            ttfb: 320,
+          },
+          accessibility: {
+            totalViolations: 3,
+            criticalViolations: 0,
+            seriousViolations: 1,
+            moderateViolations: 1,
+            minorViolations: 1,
+          },
+          visual: {
+            totalScreenshots: 15,
+            passedComparisons: 14,
+            failedComparisons: 1,
+            successRate: "93.3%",
+          },
+          tests: [
+            { title: "Complete chat conversation flow", status: "passed", duration: 8500 },
+            {
+              title: "Chat history and conversation management",
+              status: "passed",
+              duration: 12000,
+            },
+            { title: "Chat composer functionality", status: "failed", duration: 6500 },
+            { title: "Mobile chat interface", status: "passed", duration: 9500 },
+            { title: "Roles selection flow", status: "passed", duration: 7200 },
+            { title: "Settings configuration", status: "skipped", duration: 0 },
+            { title: "PWA installation flow", status: "passed", duration: 15000 },
+          ],
+        };
+      }
 
-        function updateDashboard() {
-            const data = loadMockData();
+      function updateDashboard() {
+        const data = loadMockData();
 
-            // Update summary
-            document.getElementById('success-rate').textContent = data.summary.successRate;
-            document.getElementById('passed-count').textContent = data.summary.passedTests;
-            document.getElementById('failed-count').textContent = data.summary.failedTests;
-            document.getElementById('skipped-count').textContent = data.summary.skippedTests;
+        // Update summary
+        document.getElementById("success-rate").textContent = data.summary.successRate;
+        document.getElementById("passed-count").textContent = data.summary.passedTests;
+        document.getElementById("failed-count").textContent = data.summary.failedTests;
+        document.getElementById("skipped-count").textContent = data.summary.skippedTests;
 
-            // Update progress ring
-            const successRate = parseFloat(data.summary.successRate);
-            const circle = document.querySelector('.progress-ring .progress');
-            const circumference = 2 * Math.PI * 50;
-            const offset = circumference - (successRate / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
+        // Update progress ring
+        const successRate = parseFloat(data.summary.successRate);
+        const circle = document.querySelector(".progress-ring .progress");
+        const circumference = 2 * Math.PI * 50;
+        const offset = circumference - (successRate / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
 
-            // Update performance metrics
-            document.getElementById('lcp-value').textContent = `${data.performance.lcp}ms`;
-            document.getElementById('fid-value').textContent = `${data.performance.fid}ms`;
-            document.getElementById('cls-value').textContent = data.performance.cls.toFixed(3);
-            document.getElementById('ttfb-value').textContent = `${data.performance.ttfb}ms`;
+        // Update performance metrics
+        document.getElementById("lcp-value").textContent = `${data.performance.lcp}ms`;
+        document.getElementById("fid-value").textContent = `${data.performance.fid}ms`;
+        document.getElementById("cls-value").textContent = data.performance.cls.toFixed(3);
+        document.getElementById("ttfb-value").textContent = `${data.performance.ttfb}ms`;
 
-            // Update performance colors
-            document.getElementById('lcp-value').className = `metric-value ${data.performance.lcp > 2500 ? 'warning' : 'good'}`;
-            document.getElementById('fid-value').className = `metric-value ${data.performance.fid > 100 ? 'warning' : 'good'}`;
-            document.getElementById('cls-value').className = `metric-value ${data.performance.cls > 0.1 ? 'warning' : 'good'}`;
-            document.getElementById('ttfb-value').className = `metric-value ${data.performance.ttfb > 600 ? 'warning' : 'good'}`;
+        // Update performance colors
+        document.getElementById("lcp-value").className =
+          `metric-value ${data.performance.lcp > 2500 ? "warning" : "good"}`;
+        document.getElementById("fid-value").className =
+          `metric-value ${data.performance.fid > 100 ? "warning" : "good"}`;
+        document.getElementById("cls-value").className =
+          `metric-value ${data.performance.cls > 0.1 ? "warning" : "good"}`;
+        document.getElementById("ttfb-value").className =
+          `metric-value ${data.performance.ttfb > 600 ? "warning" : "good"}`;
 
-            // Update accessibility metrics
-            document.getElementById('violations-total').textContent = data.accessibility.totalViolations;
-            document.getElementById('violations-critical').textContent = data.accessibility.criticalViolations;
-            document.getElementById('violations-serious').textContent = data.accessibility.seriousViolations;
-            document.getElementById('violations-moderate').textContent = data.accessibility.moderateViolations;
+        // Update accessibility metrics
+        document.getElementById("violations-total").textContent =
+          data.accessibility.totalViolations;
+        document.getElementById("violations-critical").textContent =
+          data.accessibility.criticalViolations;
+        document.getElementById("violations-serious").textContent =
+          data.accessibility.seriousViolations;
+        document.getElementById("violations-moderate").textContent =
+          data.accessibility.moderateViolations;
 
-            // Update visual regression metrics
-            document.getElementById('visual-total').textContent = data.visual.totalScreenshots;
-            document.getElementById('visual-passed').textContent = data.visual.passedComparisons;
-            document.getElementById('visual-failed').textContent = data.visual.failedComparisons;
-            document.getElementById('visual-success-rate').textContent = data.visual.successRate;
+        // Update visual regression metrics
+        document.getElementById("visual-total").textContent = data.visual.totalScreenshots;
+        document.getElementById("visual-passed").textContent = data.visual.passedComparisons;
+        document.getElementById("visual-failed").textContent = data.visual.failedComparisons;
+        document.getElementById("visual-success-rate").textContent = data.visual.successRate;
 
-            // Update test list
-            const testList = document.getElementById('test-list');
-            testList.innerHTML = data.tests.map(test => `
+        // Update test list
+        const testList = document.getElementById("test-list");
+        testList.innerHTML = data.tests
+          .map(
+            (test) => `
                 <div class="test-item ${test.status}">
                     <span class="test-name">${test.title}</span>
                     <span class="test-duration">${test.duration}ms</span>
                     <span class="test-status ${test.status}">${getStatusIcon(test.status)} ${test.status.toUpperCase()}</span>
                 </div>
-            `).join('');
+            `,
+          )
+          .join("");
 
-            // Update timestamp
-            document.getElementById('last-update').textContent = new Date().toLocaleString('de-DE');
+        // Update timestamp
+        document.getElementById("last-update").textContent = new Date().toLocaleString("de-DE");
+      }
+
+      function getStatusIcon(status) {
+        switch (status) {
+          case "passed":
+            return "✅";
+          case "failed":
+            return "❌";
+          case "skipped":
+            return "⏭️";
+          default:
+            return "❓";
         }
+      }
 
-        function getStatusIcon(status) {
-            switch (status) {
-                case 'passed': return '✅';
-                case 'failed': return '❌';
-                case 'skipped': return '⏭️';
-                default: return '❓';
-            }
-        }
+      function refreshData() {
+        document.querySelector(".refresh-button").textContent = "🔄 Aktualisiere...";
+        setTimeout(() => {
+          updateDashboard();
+          document.querySelector(".refresh-button").textContent = "🔄 Daten Aktualisieren";
+        }, 1000);
+      }
 
-        function refreshData() {
-            document.querySelector('.refresh-button').textContent = '🔄 Aktualisiere...';
-            setTimeout(() => {
-                updateDashboard();
-                document.querySelector('.refresh-button').textContent = '🔄 Daten Aktualisieren';
-            }, 1000);
-        }
+      // Initialize dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        updateDashboard();
 
-        // Initialize dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDashboard();
-
-            // Auto-refresh every 30 seconds
-            setInterval(refreshData, 30000);
-        });
+        // Auto-refresh every 30 seconds
+        setInterval(refreshData, 30000);
+      });
     </script>
-</body>
+  </body>
 </html>

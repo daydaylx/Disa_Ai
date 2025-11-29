@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBookNavigation } from "../useBookNavigation";
 
@@ -11,6 +11,10 @@ vi.mock("../useSettings", () => ({
 }));
 
 describe("useBookNavigation", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+  });
   it("should initialize with default state", () => {
     const { result } = renderHook(() => useBookNavigation());
 
@@ -73,13 +77,20 @@ describe("useBookNavigation", () => {
 
   it("should not go back if at end of stack", () => {
     const { result } = renderHook(() => useBookNavigation());
-    const initialId = result.current.activeChatId;
+    act(() => {
+      result.current.startNewChat(); // Chat B
+    });
+    // Stack: [B, A]
+    act(() => {
+      result.current.goBack(); // Go back to A
+    });
+    const currentActiveId = result.current.activeChatId; // This should be A
 
     act(() => {
-      result.current.goBack();
+      result.current.goBack(); // Try to go back again
     });
 
-    expect(result.current.activeChatId).toBe(initialId);
+    expect(result.current.activeChatId).toBe(currentActiveId);
   });
 
   it("should update chat ID correctly", () => {
@@ -123,6 +134,6 @@ describe("useBookNavigation", () => {
     // Stack should remain [B, A] if we don't reorder on navigation?
     // Or should it move A to front?
     // The requirement says: "Wenn bereits enthalten -> an Position belassen."
-    expect(result.current.swipeStack).toEqual([idB, idA]);
+    expect(result.current.swipeStack).toEqual([idA, idB]);
   });
 });

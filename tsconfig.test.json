@@ -1,7 +1,14 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "vitest/globals", "vitest/import-meta", "@testing-library/jest-dom"]
+    "types": [
+      "node",
+      "vitest/globals",
+      "vitest/import-meta",
+      "@testing-library/jest-dom",
+      "playwright/test"
+    ],
+    "verbatimModuleSyntax": false
   },
   "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/__tests__", "tests", "e2e"]
 }

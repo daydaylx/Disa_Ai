@@ -1,4 +1,4 @@
-import { Book, Clock,X } from "@/lib/icons"; // Added Icons for better semantics
+import { Book, Clock, X } from "@/lib/icons"; // Added Icons for better semantics
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -34,8 +34,8 @@ export function HistorySidePanel({
         {/* Header - Paper Texture */}
         <div className="flex items-center justify-between p-5 border-b border-border-ink bg-bg-surface/50">
           <div className="flex flex-col">
-             <h2 className="text-lg font-serif font-bold text-ink-primary">Inhaltsverzeichnis</h2>
-             <span className="text-xs text-ink-secondary">Deine Seiten & Geschichte</span>
+            <h2 className="text-lg font-serif font-bold text-ink-primary">Inhaltsverzeichnis</h2>
+            <span className="text-xs text-ink-secondary">Deine Seiten & Geschichte</span>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose} aria-label="Schließen">
             <X className="w-5 h-5" />
@@ -46,8 +46,8 @@ export function HistorySidePanel({
           {/* Active Pages (Stack) */}
           <section>
             <div className="flex items-center gap-2 mb-3 text-accent">
-                <Book className="w-4 h-4" />
-                <h3 className="text-xs font-bold uppercase tracking-widest">Offene Seiten</h3>
+              <Book className="w-4 h-4" />
+              <h3 className="text-xs font-bold uppercase tracking-widest">Offene Seiten</h3>
             </div>
 
             <div className="space-y-3 pl-2 border-l-2 border-accent/20">
@@ -67,21 +67,23 @@ export function HistorySidePanel({
                 >
                   <div className="font-medium truncate font-serif text-base">{page.title}</div>
                   {activeChatId === page.id && (
-                    <div className="text-xs mt-1 text-accent font-medium">Lesezeichen liegt hier</div>
+                    <div className="text-xs mt-1 text-accent font-medium">
+                      Lesezeichen liegt hier
+                    </div>
                   )}
                 </button>
               ))}
               {activePages.length === 0 && (
-                 <div className="text-sm text-ink-secondary italic px-2">Keine offenen Seiten.</div>
+                <div className="text-sm text-ink-secondary italic px-2">Keine offenen Seiten.</div>
               )}
             </div>
           </section>
 
           {/* Archived Pages */}
           <section>
-             <div className="flex items-center gap-2 mb-3 text-ink-secondary">
-                <Clock className="w-4 h-4" />
-                <h3 className="text-xs font-bold uppercase tracking-widest">Archiv</h3>
+            <div className="flex items-center gap-2 mb-3 text-ink-secondary">
+              <Clock className="w-4 h-4" />
+              <h3 className="text-xs font-bold uppercase tracking-widest">Archiv</h3>
             </div>
             <div className="space-y-1">
               {archivedPages.map((page) => (
@@ -101,8 +103,8 @@ export function HistorySidePanel({
                   </div>
                 </button>
               ))}
-               {archivedPages.length === 0 && (
-                 <div className="text-sm text-ink-secondary italic px-2">Das Archiv ist leer.</div>
+              {archivedPages.length === 0 && (
+                <div className="text-sm text-ink-secondary italic px-2">Das Archiv ist leer.</div>
               )}
             </div>
           </section>
@@ -110,7 +112,7 @@ export function HistorySidePanel({
 
         {/* Footer Hint */}
         <div className="p-4 border-t border-border-ink bg-bg-surface/30 text-center">
-             <p className="text-xs text-ink-secondary">Wische links für eine neue Seite.</p>
+          <p className="text-xs text-ink-secondary">Wische links für eine neue Seite.</p>
         </div>
       </div>
     </div>

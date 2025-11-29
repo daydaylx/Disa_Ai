@@ -38,6 +38,7 @@ export {
   Edit2,
   Eye,
   EyeOff,
+  Feather, // Added
   FileText,
   Filter,
   GitCompare,
@@ -88,4 +89,5 @@ export {
   X,
   XCircle,
   Zap,
+  ZapOff, // Added
 } from "lucide-react";

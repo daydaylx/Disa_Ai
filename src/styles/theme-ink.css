@@ -15,9 +15,9 @@
    * ======================================== */
 
   /* Paper Backgrounds */
-  --bg-app: hsl(45, 25%, 96%);      /* App background - Warm off-white */
-  --bg-page: hsl(45, 20%, 98%);     /* Page/Chat background - Slightly lighter */
-  --bg-surface: hsl(45, 20%, 98%);  /* For cards/surfaces */
+  --bg-app: hsl(45, 25%, 96%); /* App background - Warm off-white */
+  --bg-page: hsl(45, 20%, 98%); /* Page/Chat background - Slightly lighter */
+  --bg-surface: hsl(45, 20%, 98%); /* For cards/surfaces */
 
   /* Ink Colors */
   --ink-primary: hsl(220, 15%, 18%); /* Dark Blue-Black */
@@ -59,15 +59,15 @@
    * ======================================== */
 
   /* Subtle Paper Shadows */
-  --shadow-paper: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-floating: 0 4px 12px rgba(0,0,0,0.12);
+  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.12);
 
   /* Map to existing names */
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
   --shadow-soft-raise: var(--shadow-paper);
   --shadow-strong-raise: var(--shadow-floating);
-  --shadow-inset: inset 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 
   /* Borders */
   --border-color: hsl(45, 10%, 90%);
@@ -90,7 +90,7 @@
 
 /* Dark Mode Overrides (Optional/Future) */
 @media (prefers-color-scheme: dark) {
-  :root[data-theme='dark'] {
+  :root[data-theme="dark"] {
     --bg-app: hsl(220, 15%, 10%);
     --bg-page: hsl(220, 15%, 14%);
     --bg-surface: hsl(220, 15%, 16%);
@@ -102,6 +102,6 @@
 
     --border-color: hsl(220, 10%, 25%);
 
-    --shadow-paper: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 }

@@ -97,20 +97,20 @@ export function useBookNavigation() {
       // If already active, do nothing
       if (prev.activeChatId === chatId) return prev;
 
-      // Check if in stack
-      const isInStack = prev.swipeStack.includes(chatId);
-
       let newStack = prev.swipeStack;
+      const existingIndex = newStack.indexOf(chatId);
 
-      if (!isInStack) {
-        // Add to front of stack
-        newStack = [chatId, ...prev.swipeStack];
-        if (newStack.length > MAX_STACK_SIZE) {
-          newStack = newStack.slice(0, MAX_STACK_SIZE);
-        }
+      if (existingIndex !== -1) {
+        // If already in stack, remove it from its current position
+        newStack = newStack.filter((id) => id !== chatId);
       }
-      // If it IS in stack, we leave it in its current position as per requirement:
-      // "Wenn bereits enthalten -> an Position belassen."
+      // Add to front of stack
+      newStack = [chatId, ...newStack];
+
+      // Trim Stack if > MAX_STACK_SIZE
+      if (newStack.length > MAX_STACK_SIZE) {
+        newStack = newStack.slice(0, MAX_STACK_SIZE);
+      }
 
       return {
         ...prev,

@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -85,7 +85,7 @@ export class VisualComparator {
       }
 
       // Compare screenshots using pixelmatch (simplified comparison)
-      const comparisonResult = await this.compareImages(screenshotPath, baselinePath, name);
+      const comparisonResult = await this.compareImages(screenshotPath, baselinePath);
 
       if (comparisonResult.differentPixels > threshold * comparisonResult.totalPixels) {
         // Images are different
@@ -117,7 +117,6 @@ export class VisualComparator {
   private async compareImages(
     screenshotPath: string,
     baselinePath: string,
-    name: string,
   ): Promise<{
     differentPixels: number;
     totalPixels: number;

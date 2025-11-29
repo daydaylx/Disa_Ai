@@ -52,8 +52,6 @@ test.describe("Firefox Cross-Browser Tests", () => {
     await page.waitForLoadState("networkidle");
 
     // Test CSS Grid support in Firefox
-    const mainContent = page.locator("main");
-    const _gridDisplay = await mainContent.evaluate((el) => getComputedStyle(el).display);
 
     // Test Flexbox support
     const container = page.locator('.container, .wrapper, [class*="container"]').first();
