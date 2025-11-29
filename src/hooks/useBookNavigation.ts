@@ -5,8 +5,8 @@ import type { BookNavigationState, ChatSession } from "../types/BookNavigation";
 import { useSettings } from "./useSettings";
 
 const MAX_STACK_SIZE = 5;
+const STORAGE_KEY = "disa_book_state";
 
-// Mock initial state for dev/testing if empty
 const INITIAL_STATE: BookNavigationState = {
   allChats: [],
   activeChatId: null,
@@ -17,20 +17,43 @@ export function useBookNavigation() {
   const [state, setState] = useState<BookNavigationState>(INITIAL_STATE);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { settings } = useSettings();
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize: Load from storage
   useEffect(() => {
-    // This part requires access to the storage layer to load all chats and the swipe stack.
-    // For now, we assume we have methods to get this data.
+    if (isInitialized) return;
 
-    const loadState = () => {
-      // TODO: Load real data from storage
-      // For now, we initialize with a single empty chat if nothing exists
-      if (state.activeChatId === null) {
-        startNewChat(false); // Don't animate initial load
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.activeChatId && Array.isArray(parsed.swipeStack)) {
+          // Reconstruct state from storage
+          setState((prev) => ({
+            ...prev,
+            activeChatId: parsed.activeChatId,
+            swipeStack: parsed.swipeStack,
+            // allChats we reconstruct based on stack or fetch separately,
+            // but for pure navigation logic, stack is primary.
+            // We create "stub" sessions for the stack items if needed
+            allChats: parsed.swipeStack.map((id: string) => ({
+              id,
+              title: "Gespeicherte Sitzung",
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            })),
+          }));
+          setIsInitialized(true);
+          return;
+        }
       }
-    };
-    loadState();
+    } catch (e) {
+      console.warn("Failed to load book state", e);
+    }
+
+    // Fallback: Start new chat
+    startNewChat(false);
+    setIsInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -80,17 +103,17 @@ export function useBookNavigation() {
       let newStack = prev.swipeStack;
 
       if (!isInStack) {
-         // Add to front of stack
-         newStack = [chatId, ...prev.swipeStack];
-         if (newStack.length > MAX_STACK_SIZE) {
-           newStack = newStack.slice(0, MAX_STACK_SIZE);
-         }
+        // Add to front of stack
+        newStack = [chatId, ...prev.swipeStack];
+        if (newStack.length > MAX_STACK_SIZE) {
+          newStack = newStack.slice(0, MAX_STACK_SIZE);
+        }
       }
 
       return {
         ...prev,
         activeChatId: chatId,
-        swipeStack: newStack
+        swipeStack: newStack,
       };
     });
   }, []);
@@ -121,7 +144,7 @@ export function useBookNavigation() {
 
       // Update allChats
       const newAllChats = prev.allChats.map((chat) =>
-        chat.id === oldId ? { ...chat, id: newId } : chat
+        chat.id === oldId ? { ...chat, id: newId } : chat,
       );
 
       return {
@@ -135,13 +158,16 @@ export function useBookNavigation() {
 
   // Sync with Storage (Effect)
   useEffect(() => {
-    if (state.activeChatId) {
-        localStorage.setItem("disa_book_state", JSON.stringify({
-            activeChatId: state.activeChatId,
-            swipeStack: state.swipeStack
-        }));
+    if (state.activeChatId && isInitialized) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          activeChatId: state.activeChatId,
+          swipeStack: state.swipeStack,
+        }),
+      );
     }
-  }, [state.activeChatId, state.swipeStack]);
+  }, [state.activeChatId, state.swipeStack, isInitialized]);
 
   return {
     ...state,
@@ -150,6 +176,6 @@ export function useBookNavigation() {
     goBack,
     updateChatId,
     isTransitioning,
-    settings // Just to avoid unused var warning for now
+    settings, // Just to avoid unused var warning for now
   };
 }
