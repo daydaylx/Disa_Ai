@@ -497,7 +497,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           {/* Search Input - Material Style */}
           <div className="relative">
             <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset">
-              <Search className="w-4 h-4 text-text-muted" />
+              <Search className="w-4 h-4 text-ink-secondary" />
             </div>
             <Input
               placeholder="Modelle durchsuchen..."
@@ -713,7 +713,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           {filteredModels.length === 0 && !modelLoadError && (
             <div className="text-center py-16">
               <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Search className="w-8 h-8 text-text-muted" />
+                <Search className="w-8 h-8 text-ink-secondary" />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-3">
                 Keine Modelle gefunden

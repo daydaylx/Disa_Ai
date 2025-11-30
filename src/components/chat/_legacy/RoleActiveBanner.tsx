@@ -36,7 +36,7 @@ export function RoleActiveBanner() {
         </div>
         <button
           onClick={() => setVisible(false)}
-          className="text-text-muted hover:text-text-primary p-1 -mr-1"
+          className="text-ink-secondary hover:text-text-primary p-1 -mr-1"
           aria-label="Schließen"
         >
           <X className="w-4 h-4" />

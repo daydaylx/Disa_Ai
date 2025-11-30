@@ -74,7 +74,7 @@ const ModelCardComponent = React.memo(
               "absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-sm border border-transparent transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
               isFavorite
                 ? "bg-brand/10 text-brand shadow-brandGlow"
-                : "bg-surface-1/80 text-text-muted hover:text-brand hover:border-brand/40 hover:shadow-raise",
+                : "bg-surface-1/80 text-ink-secondary hover:text-brand hover:border-brand/40 hover:shadow-raise",
             )}
           >
             <Star className={cn("h-4 w-4", isFavorite && "fill-brand")} />
@@ -91,7 +91,7 @@ const ModelCardComponent = React.memo(
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base font-semibold text-text-primary truncate">{name}</h3>
-                  <p className="text-xs text-text-muted font-medium uppercase tracking-wider mt-0.5">
+                  <p className="text-xs text-ink-secondary font-medium uppercase tracking-wider mt-0.5">
                     {vendor}
                   </p>
                 </div>
@@ -132,7 +132,7 @@ const ModelCardComponent = React.memo(
                       {tooltip && (
                         <Tooltip delayDuration={200}>
                           <TooltipTrigger asChild>
-                            <Info className="h-3.5 w-3.5 text-text-muted" />
+                            <Info className="h-3.5 w-3.5 text-ink-secondary" />
                           </TooltipTrigger>
                           <TooltipContent className="max-w-[220px] text-xs">
                             {tooltip}

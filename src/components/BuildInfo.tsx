@@ -66,7 +66,7 @@ export function BuildInfo({ className = "", showFullInfo = false }: BuildInfoPro
 
   if (showFullInfo) {
     return (
-      <div className={`space-y-1 text-xs text-text-muted ${className}`}>
+      <div className={`space-y-1 text-xs text-ink-secondary ${className}`}>
         <div className="flex items-center gap-2">
           <span className="font-mono">{formattedBuildId}</span>
           <span>•</span>

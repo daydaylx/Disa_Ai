@@ -204,7 +204,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           {/* Search Input - Material Style */}
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1 sm:p-1.5 shadow-inset z-10">
-              <Search className="w-4 h-4 text-text-muted" />
+              <Search className="w-4 h-4 text-ink-secondary" />
             </div>
             <Input
               placeholder="Rollen durchsuchen..."
@@ -412,7 +412,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   </PremiumCard>
 
                   <div className="flex items-center justify-between gap-2 px-1">
-                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-text-muted">
+                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-ink-secondary">
                       {role.category || "Spezial"}
                     </span>
                     <div className="flex items-center gap-2">
@@ -506,7 +506,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <div className="space-y-2 text-sm text-text-secondary leading-relaxed">
                         <p>{role.description}</p>
                         {usage.roles[role.id]?.lastUsed && (
-                          <p className="text-xs text-text-muted">
+                          <p className="text-xs text-ink-secondary">
                             Zuletzt genutzt:{" "}
                             {usage.roles[role.id]?.lastUsed?.toLocaleString?.() ||
                               String(usage.roles[role.id]?.lastUsed)}
@@ -536,7 +536,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             ))}
                           </div>
                         ) : (
-                          <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-text-muted">
+                          <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-ink-secondary">
                             <span className="text-lg">✓</span>
                             Keine Empfehlung – alle Modelle möglich
                           </div>
@@ -571,7 +571,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           {filteredRoles.length === 0 && !roleLoadError && (
             <div className="text-center py-16">
               <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Users className="w-8 h-8 text-text-muted" />
+                <Users className="w-8 h-8 text-ink-secondary" />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-3">
                 Keine Rollen gefunden

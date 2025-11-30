@@ -143,7 +143,7 @@ function ToastViewport({
             <button
               type="button"
               aria-label="Benachrichtigung schließen"
-              className="ml-1 rounded-sm px-2 text-text-muted hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               onClick={() => onDismiss(toast.id)}
             >
               ×

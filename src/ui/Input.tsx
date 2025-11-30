@@ -12,9 +12,9 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-surface-inset shadow-inset text-text-primary placeholder:text-text-muted focus-visible:ring-2 focus-visible:ring-brand focus-visible:shadow-brandGlow",
+          "bg-surface-inset shadow-inset text-text-primary placeholder:text-ink-secondary focus-visible:ring-2 focus-visible:ring-brand focus-visible:shadow-brandGlow",
         outline:
-          "border border-surface-1 bg-transparent placeholder:text-text-muted focus-visible:ring-2 focus-visible:ring-brand focus-visible:border-brand",
+          "border border-surface-1 bg-transparent placeholder:text-ink-secondary focus-visible:ring-2 focus-visible:ring-brand focus-visible:border-brand",
       },
     },
     defaultVariants: {

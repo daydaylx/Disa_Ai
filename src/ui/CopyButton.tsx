@@ -10,10 +10,10 @@ const sizeClasses: Record<"sm" | "md", string> = {
 };
 
 const variantClasses: Record<CopyButtonVariant, string> = {
-  base: "border-border-subtle bg-surface-card text-text-muted hover:bg-surface-card-hover hover:text-text-strong",
+  base: "border-border-subtle bg-surface-card text-ink-secondary hover:bg-surface-card-hover hover:text-text-strong",
   brand: "border-transparent bg-brand-base text-surface-0 hover:bg-brand-strong",
   ghost:
-    "border-transparent bg-transparent text-text-muted hover:bg-surface-card hover:text-text-strong",
+    "border-transparent bg-transparent text-ink-secondary hover:bg-surface-card hover:text-text-strong",
   danger: "border-transparent bg-state-danger/10 text-state-danger hover:bg-state-danger/15",
 };
 

@@ -52,7 +52,7 @@ export function FilterChip({
     >
       {leading}
       {children}
-      {count !== undefined && <span className="ml-1 text-xs text-text-muted">{count}</span>}
+      {count !== undefined && <span className="ml-1 text-xs text-ink-tertiary">{count}</span>}
     </button>
   );
 }
