@@ -24,6 +24,10 @@ export const appRouter = createBrowserRouter(
   [
     {
       path: "/",
+      element: <Navigate to="/chat" replace />,
+    },
+    {
+      path: "/chat",
       element: (
         <RouteWrapper>
           <ChatPage />
@@ -32,21 +36,13 @@ export const appRouter = createBrowserRouter(
     },
     {
       path: "/studio",
-      element: <Navigate to="/" replace />,
+      element: <Navigate to="/chat" replace />,
     },
     {
       path: "/roles",
       element: (
         <RouteWrapper>
           <RolesPage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/chat",
-      element: (
-        <RouteWrapper>
-          <ChatPage />
         </RouteWrapper>
       ),
     },

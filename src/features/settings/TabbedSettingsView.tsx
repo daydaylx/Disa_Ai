@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { cn } from "@/lib/utils";
+import { useMemory } from "@/hooks/useMemory";
+import { useSettings } from "@/hooks/useSettings";
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui";
 
 import {
   BookOpenCheck,
@@ -11,171 +14,138 @@ import {
   Shield,
   SlidersHorizontal,
 } from "../../lib/icons";
-import { SettingsApiDataView } from "./SettingsApiDataView";
-import { SettingsAppearanceView } from "./SettingsAppearanceView";
-import { SettingsBehaviorView } from "./SettingsBehaviorView";
-import { SettingsExtrasView } from "./SettingsExtrasView";
-import { SettingsMemoryView } from "./SettingsMemoryView";
-import { SettingsYouthFilterView } from "./SettingsYouthFilterView";
+import { SettingsLayout } from "./SettingsLayout";
 
-type SettingsTab =
-  | "overview"
-  | "memory"
-  | "behavior"
-  | "appearance"
-  | "youth"
-  | "extras"
-  | "api-data";
-
-interface Tab {
-  id: SettingsTab;
-  label: string;
-  icon: typeof SettingsIcon;
-  description: string;
-}
-
-const TABS: Tab[] = [
-  {
-    id: "overview",
-    label: "Übersicht",
-    icon: SettingsIcon,
-    description: "Einstellungen auf einen Blick",
-  },
+const SECTIONS = [
   {
     id: "memory",
     label: "Gedächtnis",
+    description: "Verlauf speichern, Profil pflegen, automatische Wiederherstellung steuern.",
     icon: BookOpenCheck,
-    description: "Profil & Verlauf",
+    to: "/settings/memory",
   },
   {
     id: "behavior",
     label: "KI Verhalten",
+    description: "Kreativität, Stil und Systemprompt anpassen.",
     icon: SlidersHorizontal,
-    description: "Kreativität & Stil",
+    to: "/settings/behavior",
   },
   {
     id: "appearance",
     label: "Darstellung",
+    description: "Themes, Schrift und Lesbarkeit optimieren.",
     icon: Palette,
-    description: "Theme & Optik",
+    to: "/settings/appearance",
   },
   {
     id: "youth",
     label: "Jugendschutz",
+    description: "Inhaltsfilter und Altersfreigaben verwalten.",
     icon: Shield,
-    description: "Inhaltsfilter",
+    to: "/settings/youth",
   },
   {
     id: "extras",
-    label: "Extras",
+    label: "Experimente",
+    description: "Neko, Animationen und Labs gezielt aktivieren.",
     icon: Cat,
-    description: "Spielereien",
+    to: "/settings/extras",
   },
   {
     id: "api-data",
     label: "API & Daten",
+    description: "Schlüssel hinterlegen, Export & Datenschutz steuern.",
     icon: Database,
-    description: "Schlüssel & Export",
+    to: "/settings/api-data",
   },
-];
-
-// Overview content component
-function OverviewContent() {
-  return (
-    <div className="space-y-6">
-      {/* Quick intro */}
-      <div className="text-center py-4">
-        <SettingsIcon className="h-12 w-12 text-accent-primary mx-auto mb-3" />
-        <h2 className="text-xl font-bold text-ink-primary mb-1">Einstellungen</h2>
-        <p className="text-sm text-ink-secondary max-w-sm mx-auto">
-          Wähle oben einen Tab, um spezifische Optionen zu konfigurieren.
-        </p>
-      </div>
-
-      {/* Settings overview grid */}
-      <div className="grid gap-3 sm:grid-cols-2">
-        {TABS.slice(1).map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <div
-              key={tab.id}
-              className="p-4 rounded-xl bg-surface-2/50 border border-border-ink/10"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-accent-primary/10 flex items-center justify-center">
-                  <Icon className="h-4 w-4 text-accent-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-ink-primary text-sm">{tab.label}</h3>
-                  <p className="text-xs text-ink-secondary truncate">{tab.description}</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+] as const;
 
 export function TabbedSettingsView() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("overview");
+  const navigate = useNavigate();
+  const { isEnabled: memoryEnabled } = useMemory();
+  const { settings } = useSettings();
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "overview":
-        return <OverviewContent />;
-      case "memory":
-        return <SettingsMemoryView />;
-      case "behavior":
-        return <SettingsBehaviorView />;
-      case "appearance":
-        return <SettingsAppearanceView />;
-      case "youth":
-        return <SettingsYouthFilterView />;
-      case "extras":
-        return <SettingsExtrasView />;
-      case "api-data":
-        return <SettingsApiDataView />;
-      default:
-        return <OverviewContent />;
-    }
-  };
+  const statusMap = useMemo(
+    () => ({
+      memory: memoryEnabled ? "Aktiv" : "Aus",
+      behavior: settings.creativity ? `${settings.creativity}% Kreativität` : "Standard",
+      appearance: settings.theme ?? "System",
+      youth: settings.showNSFWContent ? "NSFW erlaubt" : "Jugendschutz aktiv",
+      extras: settings.enableNeko ? "Experimente an" : "Experimente aus",
+      "api-data": settings.enableAnalytics ? "Analytics an" : "Analytics aus",
+    }),
+    [
+      memoryEnabled,
+      settings.creativity,
+      settings.enableAnalytics,
+      settings.enableNeko,
+      settings.showNSFWContent,
+      settings.theme,
+    ],
+  );
 
   return (
-    <div className="flex flex-col h-full text-ink-primary">
-      {/* Tab Navigation - Horizontal scrollable on mobile */}
-      <div className="border-b border-border-ink/10 bg-bg-page sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex overflow-x-auto gap-1 px-2 py-2 no-scrollbar">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
+    <SettingsLayout
+      activeTab="overview"
+      title="Einstellungen"
+      description="Alle Bereiche auf einen Blick."
+    >
+      <div className="space-y-6">
+        <Card className="border border-border-ink/15" padding="sm">
+          <CardHeader className="flex flex-row items-start gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-primary/10 text-accent-primary">
+              <SettingsIcon className="h-5 w-5" />
+            </span>
+            <div className="flex flex-col gap-1">
+              <CardTitle className="text-lg">Schnellstart</CardTitle>
+              <CardDescription>
+                Wähle einen Bereich, um mobil und auf Desktop dieselben Einstellungen zu erreichen.
+              </CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
 
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px]",
-                    isActive
-                      ? "bg-accent-primary text-white"
-                      : "text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
-                  )}
-                >
-                  <Icon className={cn("h-4 w-4", isActive ? "text-white" : "text-ink-tertiary")} />
-                  <span className="whitespace-nowrap">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          {SECTIONS.map((section) => {
+            const Icon = section.icon;
+            return (
+              <Card
+                key={section.id}
+                className="h-full cursor-pointer border border-border-ink/15 transition hover:border-accent-primary/40 hover:shadow-md"
+                padding="sm"
+                role="button"
+                tabIndex={0}
+                onClick={() => void navigate(section.to)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    void navigate(section.to);
+                  }
+                }}
+              >
+                <CardHeader className="flex flex-row items-start gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2 text-ink-secondary">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div className="flex min-w-0 flex-col gap-1">
+                    <CardTitle className="text-base">{section.label}</CardTitle>
+                    <CardDescription>{section.description}</CardDescription>
+                  </div>
+                  <Badge variant="outline" className="ml-auto text-[11px]">
+                    {statusMap[section.id as keyof typeof statusMap]}
+                  </Badge>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <p className="text-xs text-ink-tertiary">
+                    Tippe für Details und erweiterte Optionen.
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
-
-      {/* Tab Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-4 py-6">{renderContent()}</div>
-      </div>
-    </div>
+    </SettingsLayout>
   );
 }

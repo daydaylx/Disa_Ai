@@ -1,5 +1,5 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Brain, Home, Settings, Users } from "@/lib/icons";
+import { Brain, Cpu, Home, MessageSquare, Settings, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;
@@ -14,10 +14,18 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
   {
     id: "chat",
     label: "Chat",
-    path: "/",
+    path: "/chat",
     Icon: Home,
-    activePattern: /^\/(chat)?$/,
+    activePattern: /^\/(chat|$)(?!history)/,
     description: "Unterhaltungen & KI-Assistenz",
+  },
+  {
+    id: "models",
+    label: "Modelle",
+    path: "/models",
+    Icon: Cpu,
+    activePattern: /^\/models/,
+    description: "Modelle & Leistungsprofile",
   },
   {
     id: "roles",
@@ -35,6 +43,9 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     activePattern: /^\/settings/,
     description: "API, Modelle & Darstellung",
   },
+];
+
+export const SECONDARY_NAV_ITEMS: AppNavItem[] = [
   {
     id: "themen",
     label: "Themen",
@@ -42,6 +53,14 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     Icon: Brain,
     activePattern: /^\/themen$/,
     description: "Diskussionsthemen & Quickstarts",
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    path: "/feedback",
+    Icon: MessageSquare,
+    activePattern: /^\/feedback/,
+    description: "Melde Ideen & Fehler",
   },
 ];
 

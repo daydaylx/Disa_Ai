@@ -16,9 +16,7 @@ test.describe("Chat Smoke", () => {
     await helpers.navigateAndWait("/chat");
     await helpers.verifyChatInterface();
 
-    await expect(
-      page.getByText("Deine intelligente Assistentin für produktive Gespräche."),
-    ).toBeVisible();
+    await expect(page.getByText("Dein digitales Notizbuch für Gespräche.")).toBeVisible();
 
     const composer = page.getByTestId("composer-input");
     await composer.fill("Hallo Welt");
