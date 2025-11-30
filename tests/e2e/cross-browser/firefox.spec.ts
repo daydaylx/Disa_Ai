@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Firefox Cross-Browser Tests", () => {
+  test.skip(({ browserName }) => browserName !== "firefox", "Runs only on Firefox browsers");
   test.beforeEach(async ({ page, browserName }) => {
     // Ensure we're running on Firefox
     expect(browserName).toBe("firefox");

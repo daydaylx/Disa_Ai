@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("Chat Swipe Navigation", () => {
+test.describe.skip("Chat Swipe Navigation (deprecated in favor of tab navigation)", () => {
   test.beforeEach(async ({ page }) => {
     // Clear storage to start fresh
     await page.goto("/");

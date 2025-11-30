@@ -6,7 +6,7 @@ import { skipOnboarding } from "./utils";
 test.describe("AppShell Layout & Navigation", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
-    await page.goto("/");
+    await page.goto("/chat");
     await expect(page.locator('[data-testid="app-main"]')).toBeVisible({ timeout: 10000 });
   });
 
@@ -20,23 +20,14 @@ test.describe("AppShell Layout & Navigation", () => {
     await expect(page.locator('[data-testid="app-main"]')).toBeVisible();
   });
 
-  test("PRIMARY_NAV_ITEMS rendered correctly (Bookmark & History)", async ({ page }) => {
-    // Test Bookmark component (replaces traditional navigation)
-    // Note: Bookmark might not be available in all builds, make this test more flexible
-    const bookmark = page.locator('[data-testid="bookmark"]').first();
-    if (await bookmark.isVisible()) {
-      await expect(bookmark).toBeVisible();
-    } else {
-      console.log("⚠️ Bookmark component not found, skipping bookmark test");
+  test("PRIMARY_NAV_ITEMS rendered in shell", async ({ page }) => {
+    const nav = page.getByRole("navigation", { name: /Hauptnavigation/i });
+    await expect(nav).toBeVisible();
+    const labels = ["Chat", "Modelle", "Rollen", "Einstellungen"];
+    for (const label of labels) {
+      await expect(nav.getByRole("link", { name: new RegExp(label, "i") })).toBeVisible();
     }
 
-    // Test History Side Panel trigger
-    const historyButton = page.getByRole("button", { name: /verlauf|history/i }).first();
-    if (await historyButton.isVisible()) {
-      await expect(historyButton).toBeVisible();
-    }
-
-    // Test that main content area exists
     const mainContent = page.locator('[data-testid="app-main"], main, [role="main"]').first();
     await expect(mainContent).toBeVisible();
   });

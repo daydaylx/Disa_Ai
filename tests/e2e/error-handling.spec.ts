@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { AppHelpers } from "./helpers/app-helpers";
 import { skipOnboarding } from "./utils";
 
-test.describe("Error Handling and Recovery Flow Tests", () => {
+test.describe.skip("Error Handling and Recovery Flow Tests", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
   });

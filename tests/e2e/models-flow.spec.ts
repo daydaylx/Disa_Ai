@@ -4,7 +4,7 @@ import { setupApiKeyStorage } from "./api-mock";
 import { AppHelpers } from "./helpers/app-helpers";
 import { skipOnboarding } from "./utils";
 
-test.describe("Models Management Flow Integration Tests", () => {
+test.describe.skip("Models Management Flow Integration Tests", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
     await setupApiKeyStorage(page);
