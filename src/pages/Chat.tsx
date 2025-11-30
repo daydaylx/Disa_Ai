@@ -271,8 +271,30 @@ export default function Chat() {
   }, [searchParams, navigate, startWithPreset]);
 
   const isEmpty = messages.length === 0;
-
+  const activeConversation = conversations?.find((c) => c.id === activeConversationId);
   const showFab = !isEmpty;
+
+  const statusBadges = useMemo(() => {
+    const badges: Array<{
+      label: string;
+      variant: "success" | "warning" | "destructive" | "secondary";
+    }> = [];
+    if (isLoading) badges.push({ label: "Antwort läuft", variant: "secondary" });
+    const limited = rateLimitInfo?.isLimited ?? false;
+    const retryAfter = rateLimitInfo?.retryAfter ?? 0;
+    if (limited) {
+      badges.push({
+        label: `Cooldown ${retryAfter}s`,
+        variant: "warning",
+      });
+    }
+    if (apiStatus === "missing_key") badges.push({ label: "API-Key fehlt", variant: "secondary" });
+    if (apiStatus === "error" || error) badges.push({ label: "Fehler", variant: "destructive" });
+    if (apiStatus === "ok" && !isLoading && !limited) {
+      badges.push({ label: "Bereit", variant: "success" });
+    }
+    return badges;
+  }, [apiStatus, error, isLoading, rateLimitInfo]);
 
   return (
     <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
@@ -303,7 +325,44 @@ export default function Chat() {
           <h1 className="sr-only">Disa AI – Chat</h1>
 
           {/* Bookmark Component */}
-          <Bookmark onClick={() => setIsHistoryOpen(true)} className="top-14 sm:top-4" />
+          <Bookmark
+            onClick={() => setIsHistoryOpen(true)}
+            className="top-14 sm:top-4"
+            disabled={(conversations || []).length === 0}
+          />
+
+          {/* Header: Titel + Status */}
+          <div className="px-3 sm:px-4 pt-4 pb-2 flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                Aktuelle Seite
+              </div>
+              <div className="text-lg font-semibold text-ink-primary truncate">
+                {activeConversation?.title || "Neue Unterhaltung"}
+              </div>
+              <div className="text-xs text-ink-secondary">
+                {activeRole ? activeRole.name : "Standard"} · {settings.preferredModelId}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-1 ml-auto">
+              {statusBadges.map((badge) => (
+                <span
+                  key={badge.label}
+                  className={cn(
+                    "text-[10px] px-2 py-1 rounded-full border",
+                    badge.variant === "success" && "border-accent text-accent",
+                    badge.variant === "warning" &&
+                      "border-[var(--color-warning)] text-[var(--color-warning)]",
+                    badge.variant === "destructive" &&
+                      "border-[var(--color-error)] text-[var(--color-error)]",
+                    badge.variant === "secondary" && "border-ink-tertiary text-ink-tertiary",
+                  )}
+                >
+                  {badge.label}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 

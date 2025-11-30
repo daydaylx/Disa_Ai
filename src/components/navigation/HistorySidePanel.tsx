@@ -5,7 +5,7 @@ import { Button } from "@/ui/Button";
 interface HistorySidePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  activePages: Array<{ id: string; title: string }>;
+  activePages: Array<{ id: string; title: string; date?: string }>;
   archivedPages: Array<{ id: string; title: string; date: string }>;
   activeChatId: string | null;
   onSelectChat: (id: string) => void;
@@ -44,10 +44,15 @@ export function HistorySidePanel({
 
         <div className="flex-1 overflow-y-auto p-4 space-y-8">
           {/* Active Pages (Stack) */}
-          <section>
+          <section aria-labelledby="history-active-pages">
             <div className="flex items-center gap-2 mb-3 text-accent">
               <Book className="w-4 h-4" />
-              <h3 className="text-xs font-bold uppercase tracking-widest">Offene Seiten</h3>
+              <h3
+                id="history-active-pages"
+                className="text-xs font-bold uppercase tracking-widest text-ink-secondary"
+              >
+                Zuletzt verwendete Seiten
+              </h3>
             </div>
 
             <div className="space-y-3 pl-2 border-l-2 border-accent/20">
@@ -66,6 +71,9 @@ export function HistorySidePanel({
                   )}
                 >
                   <div className="font-medium truncate font-serif text-base">{page.title}</div>
+                  {page.date && (
+                    <div className="text-xs text-ink-secondary mt-0.5">{page.date}</div>
+                  )}
                   {activeChatId === page.id && (
                     <div className="text-xs mt-1 text-accent font-medium">
                       Lesezeichen liegt hier
@@ -74,16 +82,23 @@ export function HistorySidePanel({
                 </button>
               ))}
               {activePages.length === 0 && (
-                <div className="text-sm text-ink-secondary italic px-2">Keine offenen Seiten.</div>
+                <div className="text-sm text-ink-secondary italic px-2">
+                  Noch keine Seiten im Stapel. Starte eine Unterhaltung, sie erscheint dann hier.
+                </div>
               )}
             </div>
           </section>
 
           {/* Archived Pages */}
-          <section>
+          <section aria-labelledby="history-archive">
             <div className="flex items-center gap-2 mb-3 text-ink-secondary">
               <Clock className="w-4 h-4" />
-              <h3 className="text-xs font-bold uppercase tracking-widest">Archiv</h3>
+              <h3
+                id="history-archive"
+                className="text-xs font-bold uppercase tracking-widest text-ink-secondary"
+              >
+                Alle Chats
+              </h3>
             </div>
             <div className="space-y-1">
               {archivedPages.map((page) => (
@@ -104,7 +119,9 @@ export function HistorySidePanel({
                 </button>
               ))}
               {archivedPages.length === 0 && (
-                <div className="text-sm text-ink-secondary italic px-2">Das Archiv ist leer.</div>
+                <div className="text-sm text-ink-secondary italic px-2">
+                  Noch keine früheren Chats. Jede neue Unterhaltung landet hier.
+                </div>
               )}
             </div>
           </section>

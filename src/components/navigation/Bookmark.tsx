@@ -5,11 +5,12 @@ import { cn } from "@/lib/utils";
 interface BookmarkProps {
   onClick: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 const BOOKMARK_ANIMATION_KEY = "disa-bookmark-animated";
 
-export function Bookmark({ onClick, className }: BookmarkProps) {
+export function Bookmark({ onClick, className, disabled = false }: BookmarkProps) {
   const [shouldWiggle, setShouldWiggle] = useState(false);
 
   // Wackel-Animation nur beim allerersten Start
@@ -27,7 +28,7 @@ export function Bookmark({ onClick, className }: BookmarkProps) {
 
   return (
     <button
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       className={cn(
         "fixed right-3 sm:right-4 z-header",
         // Positioned slightly off the top to look like it hangs
@@ -40,13 +41,15 @@ export function Bookmark({ onClick, className }: BookmarkProps) {
         "origin-top",
         // Wackel-Animation beim ersten Start
         shouldWiggle && "animate-bookmark-wiggle",
+        disabled && "opacity-60 cursor-not-allowed",
         className,
       )}
       style={{
         // Classic Bookmark Shape with "V" cut at bottom
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)",
       }}
-      aria-label="Lesezeichen: Verlauf öffnen"
+      aria-label={disabled ? "Keine Verläufe verfügbar" : "Lesezeichen: Verlauf öffnen"}
+      aria-disabled={disabled}
     >
       {/* Icon is placed at the bottom */}
       <svg
