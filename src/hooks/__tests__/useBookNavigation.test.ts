@@ -131,9 +131,9 @@ describe("useBookNavigation", () => {
     });
 
     expect(result.current.activeChatId).toBe(idA);
-    // Stack should remain [B, A] if we don't reorder on navigation?
-    // Or should it move A to front?
-    // The requirement says: "Wenn bereits enthalten -> an Position belassen."
-    expect(result.current.swipeStack).toEqual([idA, idB]);
+    // Stack: startNewChat pushed B to front, then A was activated (already in stack)
+    // According to navigateToChat: if already in stack, just activate, don't reorder
+    // So stack remains [B, A] with A active
+    expect(result.current.swipeStack).toEqual([idB, idA]);
   });
 });

@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-import { ChatComposer } from "./ChatComposer";
+import { ChatInputBar } from "./ChatInputBar";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
 // Lazy-loaded mobile-specific components
@@ -63,11 +63,11 @@ export function MobileOptimizedChat({
           </Suspense>
         </ErrorBoundary>
       ) : (
-        <ChatComposer
+        <ChatInputBar
           value={input}
           onChange={handleChange}
           onSend={handleDesktopSend}
-          disabled={isLoading}
+          isLoading={isLoading}
         />
       )}
 

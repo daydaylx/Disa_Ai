@@ -83,27 +83,33 @@ const TABS: Tab[] = [
 function OverviewContent() {
   return (
     <div className="space-y-6">
-      <div className="text-center py-8">
-        <SettingsIcon className="h-16 w-16 text-brand mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-text-primary mb-2">DisaAI Einstellungen</h2>
-        <p className="text-text-secondary max-w-md mx-auto">
-          Personalisiere deine KI-Erfahrung. Wähle einen Tab oben, um spezifische Einstellungen zu
-          konfigurieren.
+      {/* Quick intro */}
+      <div className="text-center py-4">
+        <SettingsIcon className="h-12 w-12 text-accent-primary mx-auto mb-3" />
+        <h2 className="text-xl font-bold text-ink-primary mb-1">Einstellungen</h2>
+        <p className="text-sm text-ink-secondary max-w-sm mx-auto">
+          Wähle oben einen Tab, um spezifische Optionen zu konfigurieren.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
+      {/* Settings overview grid */}
+      <div className="grid gap-3 sm:grid-cols-2">
         {TABS.slice(1).map((tab) => {
           const Icon = tab.icon;
           return (
-            <div key={tab.id} className="p-4 rounded-xl bg-surface-2 border border-surface-1">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-8 w-8 rounded-md bg-brand/10 flex items-center justify-center">
-                  <Icon className="h-4 w-4 text-brand" />
+            <div
+              key={tab.id}
+              className="p-4 rounded-xl bg-surface-2/50 border border-border-ink/10"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-lg bg-accent-primary/10 flex items-center justify-center">
+                  <Icon className="h-4 w-4 text-accent-primary" />
                 </div>
-                <h3 className="font-semibold text-text-primary">{tab.label}</h3>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-ink-primary text-sm">{tab.label}</h3>
+                  <p className="text-xs text-ink-secondary truncate">{tab.description}</p>
+                </div>
               </div>
-              <p className="text-sm text-text-secondary">{tab.description}</p>
             </div>
           );
         })}
@@ -137,12 +143,11 @@ export function TabbedSettingsView() {
   };
 
   return (
-    <div className="flex flex-col h-full text-text-primary">
-      {/* Tab Navigation */}
-      <div className="border-b border-surface-2 bg-surface-1/50 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Desktop Tabs */}
-          <div className="hidden md:flex overflow-x-auto px-4">
+    <div className="flex flex-col h-full text-ink-primary">
+      {/* Tab Navigation - Horizontal scrollable on mobile */}
+      <div className="border-b border-border-ink/10 bg-bg-page sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex overflow-x-auto gap-1 px-2 py-2 no-scrollbar">
             {TABS.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -152,52 +157,24 @@ export function TabbedSettingsView() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all whitespace-nowrap",
+                    "flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px]",
                     isActive
-                      ? "border-brand text-brand bg-brand/5"
-                      : "border-transparent text-text-secondary hover:text-text-primary hover:border-surface-1",
+                      ? "bg-accent-primary text-white"
+                      : "text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
                   )}
                 >
-                  <Icon className={cn("h-4 w-4", isActive ? "text-brand" : "text-text-tertiary")} />
-                  {tab.label}
+                  <Icon className={cn("h-4 w-4", isActive ? "text-white" : "text-ink-tertiary")} />
+                  <span className="whitespace-nowrap">{tab.label}</span>
                 </button>
               );
             })}
-          </div>
-
-          {/* Mobile Tab Slider */}
-          <div className="md:hidden px-4 py-3">
-            <div className="flex overflow-x-auto gap-2 pb-1 no-scrollbar snap-x">
-              {TABS.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={cn(
-                      "flex-shrink-0 snap-start flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium transition-all min-w-[72px]",
-                      isActive
-                        ? "bg-brand text-white shadow-brandGlow"
-                        : "bg-surface-2 text-text-secondary hover:bg-surface-3",
-                    )}
-                  >
-                    <Icon
-                      className={cn("h-4 w-4", isActive ? "text-white" : "text-text-tertiary")}
-                    />
-                    <span className="text-[11px] leading-tight">{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
         </div>
       </div>
 
       {/* Tab Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto px-4 py-6">{renderContent()}</div>
+        <div className="max-w-4xl mx-auto px-4 py-6">{renderContent()}</div>
       </div>
     </div>
   );

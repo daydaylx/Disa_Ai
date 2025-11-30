@@ -105,8 +105,8 @@ describe("AppShell Layout Logic", () => {
 
     const mainWrapper = screen.getByTestId("app-main").firstElementChild;
 
-    // Should HAVE padding and scroll
-    expect(mainWrapper).toHaveClass("px-6");
+    // Should HAVE padding and scroll (mobile-first: px-4 with sm:px-6)
+    expect(mainWrapper).toHaveClass("px-4");
     expect(mainWrapper).toHaveClass("overflow-y-auto");
     expect(mainWrapper).not.toHaveClass("p-0");
   });

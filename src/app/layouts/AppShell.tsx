@@ -80,28 +80,35 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        {/* Compact Top Header */}
-        <header className="sticky top-0 z-header border-b border-surface-2 bg-surface-2/90 backdrop-blur supports-[backdrop-filter]:bg-surface-2/80 shadow-raise">
+        {/* Minimal Top Header - Mobile-First */}
+        <header className="sticky top-0 z-header bg-bg-page/95 backdrop-blur-sm border-b border-border-ink/10">
           <div
-            className="flex items-center gap-3 px-4 py-3"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5"
+            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4px)" }}
           >
             <MobileBackButton />
-            <BrandWordmark />
-            <span className="h-6 w-px bg-surface-1 shadow-inset" aria-hidden />
-            <span className="text-base font-semibold text-text-primary truncate">{pageTitle}</span>
-            <div className="ml-auto">
-              <MenuIcon onClick={openMenu} />
-            </div>
+            {/* Brand only on non-chat pages or desktop */}
+            {!isChatMode && (
+              <>
+                <BrandWordmark className="text-sm" />
+                <span className="text-ink-tertiary mx-1">·</span>
+              </>
+            )}
+            <span className="text-sm font-medium text-ink-primary truncate flex-1">
+              {pageTitle}
+            </span>
+            <MenuIcon onClick={openMenu} />
           </div>
         </header>
 
-        {/* Breadcrumb Navigation - hidden on mobile */}
-        <div className="hidden sm:block border-b border-surface-1/50 bg-surface-1/30 backdrop-blur supports-[backdrop-filter]:bg-surface-1/20">
-          <div className="px-4 py-2 max-w-6xl mx-auto">
-            <AutoBreadcrumbs className="text-xs md:text-sm" />
+        {/* Breadcrumb Navigation - compact on all screens */}
+        {!isChatMode && (
+          <div className="border-b border-border-ink/5 bg-bg-page/50">
+            <div className="px-3 py-1.5 sm:px-4 max-w-6xl mx-auto">
+              <AutoBreadcrumbs className="text-xs" />
+            </div>
           </div>
-        </div>
+        )}
 
         <div
           id="main"
@@ -116,7 +123,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               "mx-auto flex h-full w-full flex-1 flex-col",
               isChatMode
                 ? "p-0 overflow-hidden" // Chat mode: full width, no padding, no shell scroll
-                : "max-w-6xl overflow-y-auto px-6 py-8 sm:px-10 sm:py-12", // Default mode
+                : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8", // Default mode - tighter on mobile
             )}
           >
             <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "page-stack gap-6")}>

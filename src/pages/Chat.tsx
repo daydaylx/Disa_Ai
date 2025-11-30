@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { Button, useToasts } from "@/ui";
+import { cn } from "@/lib/utils";
+import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
-import { SectionHeader } from "@/ui/SectionHeader";
 
-import { ChatComposer } from "../components/chat/ChatComposer";
+import { ChatInputBar } from "../components/chat/ChatInputBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { ContextBar } from "../components/chat/ContextBar";
 import { ThemenBottomSheet } from "../components/chat/ThemenBottomSheet";
@@ -26,14 +26,12 @@ import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
-import { Brain } from "../lib/icons";
-import { History } from "../lib/icons";
+import { Plus } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const composerContainerRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
 
@@ -272,16 +270,6 @@ export default function Chat() {
     }
   }, [searchParams, navigate, startWithPreset]);
 
-  const focusComposer = () => {
-    const textarea = composerContainerRef.current?.querySelector("textarea");
-    if (textarea instanceof HTMLTextAreaElement) {
-      textarea.focus();
-      textarea.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      composerContainerRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const isEmpty = messages.length === 0;
 
   return (
@@ -309,127 +297,108 @@ export default function Chat() {
           {!isEmpty && (
             <button
               onClick={handleSwipeLeft}
-              className="fixed bottom-32 right-4 z-50 flex items-center justify-center w-14 h-14 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-full shadow-lg tap-target focus:outline-none focus:ring-2 focus:ring-accent-primary/50 sm:hidden"
-              aria-label="Neuen Chat starten (Swipe left)"
-              title="Swipe left or tap for new chat"
+              className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-text-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
+              aria-label="Neuen Chat starten"
             >
-              <span className="sr-only sm:not-sr-only">Neuer Chat</span>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <span className="sr-only">Neuer Chat</span>
+              <Plus className="w-5 h-5" />
             </button>
           )}
-          {isEmpty ? (
-            <div className="flex flex-col gap-6 px-4 py-6 overflow-y-auto flex-1 bg-bg-page">
-              <div className="flex items-start justify-between gap-3">
-                <SectionHeader
-                  variant="compact"
-                  title="Seite 1"
-                  subtitle="Ein neues Kapitel beginnt."
+
+          {/* Main Content Area - Flex Grow */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col">
+            {isEmpty ? (
+              /* Empty State - Tinte auf Papier Stil */
+              <div className="flex-1 flex items-center justify-center px-4 py-8">
+                <ChatStartCard
+                  onNewChat={() => setIsHistoryOpen(true)}
+                  conversationCount={stats?.totalConversations || 0}
                 />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setIsHistoryOpen(true)}
-                  className="self-start gap-2"
-                >
-                  <History className="h-4 w-4" />
-                  Verlauf
-                </Button>
+              </div>
+            ) : (
+              /* Chat-Bereich als "Papierseite" */
+              <div
+                className={cn(
+                  "flex-1 mx-2 sm:mx-4 my-2 rounded-xl",
+                  "bg-bg-page border border-border-ink/20",
+                  "shadow-sm",
+                  // Dezente "Seiten dahinter" Effekt
+                  "relative before:absolute before:inset-x-1 before:-bottom-1 before:h-2 before:bg-bg-page/60 before:rounded-b-lg before:-z-10",
+                )}
+                data-testid="chat-message-list"
+              >
+                <VirtualizedMessageList
+                  messages={messages}
+                  isLoading={isLoading}
+                  onCopy={(content) => {
+                    navigator.clipboard.writeText(content).catch((err) => {
+                      console.error("Failed to copy content:", err);
+                    });
+                  }}
+                  onEdit={handleEdit}
+                  onFollowUp={handleFollowUp}
+                  onRetry={(messageId) => {
+                    const messageIndex = messages.findIndex((m) => m.id === messageId);
+                    if (messageIndex === -1) return;
+
+                    // Find last user message
+                    const targetUserIndex = (() => {
+                      const targetMsg = messages[messageIndex];
+                      if (targetMsg && targetMsg.role === "user") return messageIndex;
+                      for (let i = messageIndex; i >= 0; i -= 1) {
+                        const candidate = messages[i];
+                        if (candidate && candidate.role === "user") return i;
+                      }
+                      return -1;
+                    })();
+
+                    if (targetUserIndex === -1) {
+                      toasts.push({
+                        kind: "warning",
+                        title: "Retry nicht möglich",
+                        message: "Keine passende Nutzernachricht gefunden.",
+                      });
+                      return;
+                    }
+
+                    const userMessage = messages[targetUserIndex];
+                    if (!userMessage) return;
+                    const historyContext = messages.slice(0, targetUserIndex);
+                    setMessages(historyContext);
+                    void append({ role: "user", content: userMessage.content }, historyContext);
+                  }}
+                  className="h-full"
+                />
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Bar Area - Fixed/Sticky Bottom */}
+          <div className="bg-bg-page z-composer border-t border-border-ink/30 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.06)]">
+            <div className="max-w-3xl mx-auto">
+              {/* Chat Input */}
+              <div className="px-2 pt-1.5 sm:px-4 sm:pt-2">
+                <ChatInputBar
+                  value={input}
+                  onChange={setInput}
+                  onSend={handleSend}
+                  isLoading={isLoading}
+                  onQuickAction={(prompt) => setInput(prompt)}
+                />
               </div>
 
-              <ChatStartCard
-                onNewChat={focusComposer}
-                conversationCount={stats?.totalConversations || 0}
-              />
-            </div>
-          ) : (
-            <div
-              className="flex-1 overflow-y-auto mx-0 sm:mx-4 sm:my-2 sm:rounded-lg bg-bg-page sm:border sm:border-border-ink"
-              data-testid="chat-message-list"
-            >
-              <VirtualizedMessageList
-                messages={messages}
-                isLoading={isLoading}
-                onCopy={(content) => {
-                  navigator.clipboard.writeText(content).catch((err) => {
-                    console.error("Failed to copy content:", err);
-                  });
-                }}
-                onEdit={handleEdit}
-                onFollowUp={handleFollowUp}
-                onRetry={(messageId) => {
-                  const messageIndex = messages.findIndex((m) => m.id === messageId);
-                  if (messageIndex === -1) return;
-
-                  const targetUserIndex = (() => {
-                    const targetMsg = messages[messageIndex];
-                    if (targetMsg && targetMsg.role === "user") return messageIndex;
-                    for (let i = messageIndex; i >= 0; i -= 1) {
-                      const candidate = messages[i];
-                      if (candidate && candidate.role === "user") return i;
-                    }
-                    return -1;
-                  })();
-
-                  if (targetUserIndex === -1) {
-                    toasts.push({
-                      kind: "warning",
-                      title: "Retry nicht möglich",
-                      message: "Keine passende Nutzernachricht gefunden.",
-                    });
-                    return;
-                  }
-
-                  const userMessage = messages[targetUserIndex];
-                  if (!userMessage) return;
-                  const historyContext = messages.slice(0, targetUserIndex);
-                  setMessages(historyContext);
-                  void append({ role: "user", content: userMessage.content }, historyContext);
-                }}
-                className="h-full"
-              />
-            </div>
-          )}
-
-          <div className="sticky bottom-0 bg-bg-page z-composer border-t-0">
-            <ContextBar modelCatalog={modelCatalog} />
-
-            <div
-              className="px-4 safe-area-horizontal pb-[env(safe-area-inset-bottom)]"
-              ref={composerContainerRef}
-            >
-              <ChatComposer
-                value={input}
-                onChange={setInput}
+              {/* Context Bar: Persona | Style/Memory/Settings | Model + Send */}
+              <ContextBar
+                modelCatalog={modelCatalog}
                 onSend={handleSend}
                 onStop={stop}
                 isLoading={isLoading}
-                canSend={!isLoading}
-                placeholder="Schreibe auf diese Seite..."
-                className="pt-2"
+                canSend={!!input.trim()}
+                className="border-t border-border-ink/20 mt-2"
               />
             </div>
-
-            <div className="pt-2 flex justify-center pb-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsThemenSheetOpen(true)}
-                className="gap-1.5 text-ink-secondary hover:text-ink-primary"
-              >
-                <Brain className="h-3.5 w-3.5" />
-                Themen auswählen…
-              </Button>
-            </div>
           </div>
-
-          <div ref={messagesEndRef} />
         </div>
 
         <ThemenBottomSheet

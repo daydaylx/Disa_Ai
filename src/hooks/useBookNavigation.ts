@@ -16,8 +16,16 @@ const INITIAL_STATE: BookNavigationState = {
 export function useBookNavigation() {
   const [state, setState] = useState<BookNavigationState>(INITIAL_STATE);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionTimer, setTransitionTimer] = useState<NodeJS.Timeout | null>(null);
   const { settings } = useSettings();
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // Cleanup transition timer on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimer) clearTimeout(transitionTimer);
+    };
+  }, [transitionTimer]);
 
   // Initialize: Load from storage
   useEffect(() => {
@@ -88,7 +96,8 @@ export function useBookNavigation() {
     if (animate) {
       // Trigger transition logic here (or return a flag)
       setIsTransitioning(true);
-      setTimeout(() => setIsTransitioning(false), 300); // Reset after animation
+      const timer = setTimeout(() => setIsTransitioning(false), 300);
+      setTransitionTimer(timer);
     }
   }, []);
 
@@ -101,9 +110,13 @@ export function useBookNavigation() {
       const existingIndex = newStack.indexOf(chatId);
 
       if (existingIndex !== -1) {
-        // If already in stack, remove it from its current position
-        newStack = newStack.filter((id) => id !== chatId);
+        // If already in stack, keep it at its position (do NOT reorder)
+        return {
+          ...prev,
+          activeChatId: chatId,
+        };
       }
+
       // Add to front of stack
       newStack = [chatId, ...newStack];
 

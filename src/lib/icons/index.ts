@@ -15,6 +15,7 @@ export {
   AlertTriangle,
   AppWindow, // Added
   ArrowLeft,
+  ArrowRight, // Added for ThemenPage
   Book,
   BookOpenCheck,
   Bot,

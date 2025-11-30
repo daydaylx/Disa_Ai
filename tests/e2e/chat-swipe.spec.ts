@@ -2,82 +2,108 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Chat Swipe Navigation", () => {
   test.beforeEach(async ({ page }) => {
+    // Clear storage to start fresh
     await page.goto("/");
-    // Wait for chat to be ready
-    await page.waitForSelector('[data-testid="composer-input"]');
+    await page.evaluate(() => localStorage.clear());
+    await page.reload();
   });
 
-  test("should create new chat on swipe left", async ({ page }) => {
-    // Initial State: Check for "Seite 1" or similar indicator if visible,
-    // or just verify we can type.
-    const composer = page.getByTestId("composer-input");
-    await expect(composer).toBeVisible();
+  test("should navigate to new chat on swipe left", async ({ page }) => {
+    // 1. Initial State: Chat 1
+    const firstChatId = await page.evaluate(() => {
+      const state = JSON.parse(localStorage.getItem("disa_book_state") || "{}");
+      return state.activeChatId;
+    });
+    expect(firstChatId).toBeTruthy();
 
-    // Type something to ensure current chat is "used" (optional but good practice)
-    await composer.fill("Erste Nachricht");
-    await page.getByTestId("composer-send").click();
+    // Simulate typing to make it a "real" chat (optional but good for realism)
+    await page.getByRole("textbox").fill("Hello Chat 1");
+    await page.getByTestId("composer-send").click(); // Assuming send button has this ID, or similar
+    // Wait for message to appear (basic check)
+    await expect(page.getByText("Hello Chat 1")).toBeVisible();
 
-    // Wait for message to appear to confirm chat is active
-    await expect(page.getByText("Erste Nachricht")).toBeVisible();
+    // 2. Swipe Left (New Chat)
+    // We need to swipe on the container. BookPageAnimator wraps the content.
+    // Coordinates: Center right -> Center left
+    const viewport = page.viewportSize();
+    if (!viewport) throw new Error("No viewport");
 
-    // Simulate Swipe Left (Drag from right to left)
-    // We need to drag on the chat container
-
-    // Fallback if list is empty (initial state might differ): drag on body or a wrapper
-
-    const box = await page.locator("body").boundingBox();
-    if (!box) return;
-
-    const startX = box.width * 0.8;
-    const endX = box.width * 0.2;
-    const y = box.height / 2;
-
-    await page.mouse.move(startX, y);
+    await page.mouse.move(viewport.width * 0.9, viewport.height / 2);
     await page.mouse.down();
-    await page.mouse.move(endX, y, { steps: 10 });
+    await page.mouse.move(viewport.width * 0.1, viewport.height / 2, { steps: 10 });
     await page.mouse.up();
 
-    // Verify Toast or New Chat State
-    // "Neue Seite" toast is triggered in Chat.tsx
-    await expect(page.getByText("Neue Seite")).toBeVisible();
-
-    // Composer should be empty
-    await expect(composer).toHaveValue("");
+    // 3. Verify New Chat
+    await expect(page.getByRole("textbox")).toBeEmpty(); // Input should be cleared
+    // Check storage for new ID
+    const secondChatId = await page.evaluate(() => {
+      const state = JSON.parse(localStorage.getItem("disa_book_state") || "{}");
+      return state.activeChatId;
+    });
+    expect(secondChatId).not.toBe(firstChatId);
+    expect(secondChatId).toBeTruthy();
   });
 
-  test("should go back on swipe right", async ({ page }) => {
-    // 1. Create first chat content
-    await page.getByTestId("composer-input").fill("Chat A");
+  test("should navigate back to previous chat on swipe right", async ({ page }) => {
+    // 1. Create Chat 1
+    await page.getByRole("textbox").fill("Chat A");
     await page.getByTestId("composer-send").click();
-    await expect(page.getByText("Chat A")).toBeVisible();
+    const idA = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("disa_book_state") || "{}").activeChatId,
+    );
 
-    // 2. Create new chat (Swipe Left)
-    const box = await page.locator("body").boundingBox();
-    if (!box) return;
-    const y = box.height / 2;
-
-    // Swipe Left
-    await page.mouse.move(box.width * 0.8, y);
+    // 2. Swipe Left -> Create Chat 2
+    const viewport = page.viewportSize();
+    if (!viewport) return;
+    await page.mouse.move(viewport.width * 0.9, viewport.height / 2);
     await page.mouse.down();
-    await page.mouse.move(box.width * 0.2, y, { steps: 10 });
+    await page.mouse.move(viewport.width * 0.1, viewport.height / 2, { steps: 10 });
     await page.mouse.up();
 
-    await expect(page.getByText("Neue Seite")).toBeVisible();
+    // Wait for animation/state update
+    await page.waitForTimeout(500);
+    const idB = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("disa_book_state") || "{}").activeChatId,
+    );
+    expect(idB).not.toBe(idA);
 
-    // 3. Create second chat content
-    await page.getByTestId("composer-input").fill("Chat B");
-    await page.getByTestId("composer-send").click();
-    await expect(page.getByText("Chat B")).toBeVisible();
-
-    // 4. Swipe Right (Go Back)
-    await page.mouse.move(box.width * 0.2, y);
+    // 3. Swipe Right -> Back to Chat 1
+    // Coordinates: Center left -> Center right
+    await page.mouse.move(viewport.width * 0.1, viewport.height / 2);
     await page.mouse.down();
-    await page.mouse.move(box.width * 0.8, y, { steps: 10 });
+    await page.mouse.move(viewport.width * 0.9, viewport.height / 2, { steps: 10 });
     await page.mouse.up();
 
-    // Verify we are back at Chat A
-    await expect(page.getByText("Zurückgeblättert")).toBeVisible();
-    // Content of Chat A should be visible again
+    // 4. Verify we are back at Chat 1
+    await page.waitForTimeout(500);
+    const currentId = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("disa_book_state") || "{}").activeChatId,
+    );
+    expect(currentId).toBe(idA);
+
+    // Verify content is restored (if persistence works)
+    // Note: This depends on useConversationManager persistence which might need IndexedDB mocking or just work
     await expect(page.getByText("Chat A")).toBeVisible();
+  });
+
+  test("should respect stack limit of 5", async ({ page }) => {
+    const viewport = page.viewportSize();
+    if (!viewport) return;
+
+    // Swipe left 6 times
+    for (let i = 0; i < 6; i++) {
+      await page.mouse.move(viewport.width * 0.9, viewport.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(viewport.width * 0.1, viewport.height / 2, { steps: 5 });
+      await page.mouse.up();
+      await page.waitForTimeout(300); // Wait for transition
+    }
+
+    const stackSize = await page.evaluate(() => {
+      const state = JSON.parse(localStorage.getItem("disa_book_state") || "{}");
+      return state.swipeStack?.length;
+    });
+
+    expect(stackSize).toBe(5);
   });
 });

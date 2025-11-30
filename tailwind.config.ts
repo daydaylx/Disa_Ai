@@ -16,6 +16,7 @@ const colorTokens = {
   ink: {
     primary: "var(--ink-primary)", // Dark Blue-Black
     secondary: "var(--ink-secondary)", // Muted Grey
+    tertiary: "var(--ink-tertiary)", // Light Grey - Timestamps, Hints
     onAccent: "var(--ink-on-accent)",
   },
 
@@ -144,6 +145,17 @@ export default {
         DEFAULT: "200ms",
         fast: "150ms",
         medium: "300ms",
+      },
+      // Bookmark Wackel-Animation
+      keyframes: {
+        "bookmark-wiggle": {
+          "0%, 100%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(3deg)" },
+          "75%": { transform: "rotate(-3deg)" },
+        },
+      },
+      animation: {
+        "bookmark-wiggle": "bookmark-wiggle 0.4s ease-in-out 2",
       },
       // Remove or redefine legacy gradients to be subtle/invisible
       backgroundImage: {

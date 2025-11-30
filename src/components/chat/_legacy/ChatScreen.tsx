@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { MaterialCard } from "@/ui";
 
 import type { ChatMessageType } from "../../types/chatMessage";
-import { ChatComposer } from "./ChatComposer";
+import { ChatInputBar } from "./ChatInputBar";
 import { ChatLiveRegion } from "./ChatLiveRegion";
 import { VirtualizedMessageList } from "./VirtualizedMessageList";
 
@@ -43,7 +43,7 @@ export function ChatScreen({ messages, onSend, onRetry, onCopy, isLoading }: Cha
         />
       </MaterialCard>
 
-      <ChatComposer
+      <ChatInputBar
         value={input}
         onChange={setInput}
         onSend={() => {

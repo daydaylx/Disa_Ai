@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 
-import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
-import { Typography } from "@/ui/Typography";
 
 import { BrandWordmark } from "../../app/components/BrandWordmark";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
@@ -120,7 +118,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
         <MaterialCard
           variant="hero"
           className={cn(
-            "h-[100dvh] w-[85vw] sm:w-[clamp(22rem,70vw,28rem)] sm:rounded-3xl rounded-none overflow-y-auto overscroll-contain relative bg-surface-1 shadow-raiseLg",
+            "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative bg-bg-page",
             "transition-transform duration-200 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
@@ -137,12 +135,12 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 bg-surface-1 z-10 py-4 px-4 sm:px-5 border-b border-surface-2">
-            <BrandWordmark className="text-lg" />
+          <div className="flex items-center justify-between sticky top-0 bg-bg-page z-10 py-3 px-4 border-b border-border-ink/10">
+            <BrandWordmark className="text-base" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-[var(--spacing-3)] min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full text-text-primary bg-surface-2 hover:bg-surface-3 shadow-raise focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-surface-2 transition-colors"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -150,103 +148,71 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           </div>
 
           {/* Navigation Section */}
-          <div className="space-y-6 px-4 sm:px-5 py-6">
-            <div>
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
-              >
-                Navigation
-              </Typography>
+          <nav className="px-4 py-4">
+            <ul className="space-y-1" role="list">
+              {PRIMARY_NAV_ITEMS.map((item) => {
+                const isActive = isNavItemActive(item, location.pathname);
+                const Icon = item.Icon;
 
-              <div className="space-y-2">
-                {PRIMARY_NAV_ITEMS.map((item) => {
-                  const isActive = isNavItemActive(item, location.pathname);
-                  const Icon = item.Icon;
-
-                  return (
-                    <Link key={item.id} to={item.path} onClick={onClose} className="block">
-                      <MaterialCard
-                        variant={isActive ? "inset" : "raised"}
-                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={cn(
-                              "flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg",
-                              isActive ? "bg-accent-primary/20" : "bg-surface-1",
-                            )}
-                          >
-                            <Icon
-                              className={cn(
-                                "h-4 w-4",
-                                isActive ? "text-accent-primary" : "text-text-secondary",
-                              )}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <Typography
-                              variant="body-sm"
-                              className={cn(
-                                "font-medium mb-0.5",
-                                isActive ? "text-accent-primary" : "text-text-primary",
-                              )}
-                            >
-                              {item.label}
-                            </Typography>
-                            <Typography variant="body-xs" className="text-text-secondary">
-                              {item.description}
-                            </Typography>
-                          </div>
-                        </div>
-                      </MaterialCard>
+                return (
+                  <li key={item.id}>
+                    <Link
+                      to={item.path}
+                      onClick={onClose}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors min-h-[48px]",
+                        isActive
+                          ? "bg-accent-primary/10 text-accent-primary"
+                          : "text-ink-primary hover:bg-surface-2",
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          "h-5 w-5 flex-shrink-0",
+                          isActive ? "text-accent-primary" : "text-ink-secondary",
+                        )}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm">{item.label}</span>
+                        {item.description && (
+                          <p className="text-xs text-ink-tertiary mt-0.5 truncate">
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
                     </Link>
-                  );
-                })}
-              </div>
-            </div>
+                  </li>
+                );
+              })}
+            </ul>
 
-            {/* Sekundäre Seiten */}
-            <div>
-              <Typography
-                variant="body-xs"
-                className="text-text-secondary uppercase tracking-[0.2em] mb-3 font-semibold"
-              >
-                Sekundäre Seiten
-              </Typography>
+            {/* Divider */}
+            <hr className="my-4 border-border-ink/10" />
 
-              <div className="space-y-2">
-                {secondaryPages.map((page) => {
-                  const isActive = location.pathname === page.href;
-
-                  return (
-                    <Link key={page.href} to={page.href} onClick={onClose} className="block">
-                      <MaterialCard
-                        variant={isActive ? "inset" : "raised"}
-                        className="p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-                      >
-                        <Typography
-                          variant="body-sm"
-                          className={cn(
-                            "font-medium",
-                            isActive ? "text-accent-primary" : "text-text-primary",
-                          )}
-                        >
-                          {page.label}
-                        </Typography>
-                      </MaterialCard>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+            {/* Secondary Links */}
+            <ul className="space-y-1" role="list">
+              {secondaryPages.map((page) => (
+                <li key={page.href}>
+                  <Link
+                    to={page.href}
+                    onClick={onClose}
+                    className={cn(
+                      "flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px]",
+                      location.pathname === page.href
+                        ? "text-accent-primary bg-accent-primary/5"
+                        : "text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
+                    )}
+                  >
+                    {page.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           {/* Footer */}
-          <div className="px-4 sm:px-5 pb-6 pt-4 border-t border-surface-1">
-            <Typography variant="body-xs" className="text-text-secondary text-center">
-              © 2025 Disa AI
-            </Typography>
+          <div className="px-4 pb-6 pt-2 mt-auto">
+            <p className="text-xs text-ink-tertiary text-center">© 2025 Disa AI</p>
           </div>
           <span
             ref={lastTrapRef}
@@ -273,15 +239,18 @@ interface MenuIconProps {
 
 export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
   return (
-    <Button
+    <button
       onClick={onClick}
-      variant="secondary"
-      size="icon"
-      className={cn("relative group touch-target", className)}
+      className={cn(
+        "relative flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg",
+        "text-ink-primary hover:bg-surface-2 transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
+        className,
+      )}
       aria-label="Menü öffnen"
     >
       {/* Hamburger Icon */}
-      <div className="flex flex-col justify-center space-y-1 w-5 h-5">
+      <div className="flex flex-col justify-center gap-1 w-5">
         <div className="w-full h-0.5 bg-current rounded-full" />
         <div className="w-full h-0.5 bg-current rounded-full" />
         <div className="w-full h-0.5 bg-current rounded-full" />
@@ -289,11 +258,11 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
 
       {/* Badge */}
       {badge && (
-        <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-brand text-white text-xs font-medium flex items-center justify-center shadow-sm">
+        <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-accent-primary text-white text-[10px] font-medium flex items-center justify-center">
           {badge}
         </span>
       )}
-    </Button>
+    </button>
   );
 }
 

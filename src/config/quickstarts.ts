@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 import { CONSPIRACY_SYSTEM_PROMPT } from "@/features/conspiracy/prompts";
 import { DISCUSSION_SYSTEM_PROMPT } from "@/features/discussion/prompts";
 
@@ -12,7 +14,7 @@ export interface Quickstart {
   id: string;
   title: string;
   description: string;
-  icon: any; // TODO: Replace with proper icon type, e.g. typeof Brain
+  icon: LucideIcon | null;
   system: string;
   user: string;
   category?: QuickstartCategory;

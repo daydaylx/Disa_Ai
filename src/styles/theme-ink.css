@@ -22,6 +22,7 @@
   /* Ink Colors */
   --ink-primary: hsl(220, 15%, 18%); /* Dark Blue-Black */
   --ink-secondary: hsl(220, 10%, 50%); /* Muted Grey */
+  --ink-tertiary: hsl(220, 10%, 70%); /* Light Grey - Timestamps, Hints */
   --ink-on-accent: hsl(45, 20%, 98%); /* Light text on accent */
 
   /* Accent Colors */

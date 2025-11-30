@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface BookmarkProps {
@@ -5,34 +7,53 @@ interface BookmarkProps {
   className?: string;
 }
 
+const BOOKMARK_ANIMATION_KEY = "disa-bookmark-animated";
+
 export function Bookmark({ onClick, className }: BookmarkProps) {
+  const [shouldWiggle, setShouldWiggle] = useState(false);
+
+  // Wackel-Animation nur beim allerersten Start
+  useEffect(() => {
+    const hasAnimated = localStorage.getItem(BOOKMARK_ANIMATION_KEY);
+    if (!hasAnimated) {
+      setShouldWiggle(true);
+      localStorage.setItem(BOOKMARK_ANIMATION_KEY, "true");
+      // Animation nach 800ms stoppen
+      const timer = setTimeout(() => setShouldWiggle(false), 800);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, []);
+
   return (
     <button
       onClick={onClick}
       className={cn(
-        "fixed right-[var(--spacing-4)] z-header",
+        "fixed right-3 sm:right-4 z-header",
         // Positioned slightly off the top to look like it hangs
         "top-0",
-        "w-8 h-12 sm:w-10 sm:h-16",
-        "bg-accent shadow-md cursor-pointer",
+        "w-7 h-11 sm:w-9 sm:h-14",
+        "bg-accent-primary shadow-lg cursor-pointer",
         "flex items-end justify-center pb-2",
-        "transition-transform hover:translate-y-1 active:translate-y-2 duration-300",
+        "transition-transform hover:translate-y-1 active:translate-y-2 duration-200",
         // Physical "Hang" Effect
         "origin-top",
+        // Wackel-Animation beim ersten Start
+        shouldWiggle && "animate-bookmark-wiggle",
         className,
       )}
       style={{
         // Classic Bookmark Shape with "V" cut at bottom
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+        clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)",
       }}
       aria-label="Lesezeichen: Verlauf öffnen"
     >
-      {/* Icon is placed at the bottom, inverted contrast */}
+      {/* Icon is placed at the bottom */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-4 h-4 sm:w-5 sm:h-5 text-ink-on-accent opacity-90 mb-1"
+        className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white opacity-95"
       >
         <path
           fillRule="evenodd"

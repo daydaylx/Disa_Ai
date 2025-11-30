@@ -140,9 +140,12 @@ describe("Entry-Point Smoke Tests", () => {
   it("rendert den Chat-Einstieg inklusive Composer", async () => {
     renderWithRouter("/chat", <Chat />);
 
-    await screen.findByRole("heading", {
-      name: /Disa AI Chat/i,
+    // Das Heading ist jetzt sr-only (screen reader only)
+    const heading = await screen.findByRole("heading", {
+      name: /Disa AI \u2013 Chat/i,
+      hidden: true,
     });
+    expect(heading).toBeInTheDocument();
     expect(screen.getByTestId("composer-input")).toBeVisible();
   });
 

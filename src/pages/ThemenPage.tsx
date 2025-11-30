@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import type { Quickstart } from "@/config/quickstarts";
 import { CATEGORY_LABELS, QUICKSTARTS } from "@/config/quickstarts";
-import { Brain } from "@/lib/icons";
+import { ArrowRight, Brain } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui";
-import { PremiumCard } from "@/ui/PremiumCard";
 
 const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
 const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwörungstheorien");
@@ -13,78 +13,94 @@ export default function ThemenPage() {
   const navigate = useNavigate();
 
   const handleStartQuickstart = (quickstart: Quickstart) => {
-    // Navigate to chat with quickstart param
     void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
   };
 
   const renderCard = (quickstart: Quickstart) => {
     const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
     return (
-      <PremiumCard
+      <button
         key={quickstart.id}
-        className="flex flex-col gap-4 p-6 hover:shadow-xl transition-all border border-border-ink rounded-2xl bg-bg-page/80 shadow-lg"
         onClick={() => handleStartQuickstart(quickstart)}
+        className={cn(
+          "w-full text-left p-4 rounded-xl border border-border-ink/20 bg-bg-page",
+          "hover:border-accent-primary/30 hover:bg-surface-2/50 transition-all",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
+          "active:scale-[0.99]",
+        )}
       >
         <div className="flex items-start gap-3">
-          <div className="h-12 w-12 flex shrink-0 items-center justify-center rounded-xl bg-surface-2 border border-border-ink">
-            <Brain className="h-6 w-6 text-ink-primary" />
+          {/* Icon */}
+          <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-accent-primary/10">
+            <Brain className="h-5 w-5 text-accent-primary" />
           </div>
-          <div className="flex-1 min-w-0 space-y-2">
-            <h3 className="text-xl font-semibold text-ink-primary">{quickstart.title}</h3>
-            <p className="text-sm text-ink-secondary leading-relaxed">{quickstart.description}</p>
-            <div className="flex flex-wrap gap-2">
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base font-semibold text-ink-primary line-clamp-1">
+              {quickstart.title}
+            </h3>
+            <p className="text-sm text-ink-secondary mt-1 line-clamp-2 leading-relaxed">
+              {quickstart.description}
+            </p>
+
+            {/* Tags */}
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
               {categoryInfo && (
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border">
+                <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-accent-primary/10 text-accent-primary">
                   {categoryInfo.label}
                 </span>
               )}
               {quickstart.speculative && (
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border">
+                <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-warning/10 text-warning">
                   Hypothese
                 </span>
               )}
             </div>
           </div>
+
+          {/* Arrow */}
+          <ArrowRight className="h-5 w-5 text-ink-tertiary flex-shrink-0 mt-1" />
         </div>
-        <Button variant="secondary" className="w-full mt-auto border-dashed">
-          Diskussion starten
-        </Button>
-      </PremiumCard>
+      </button>
     );
   };
 
   return (
-    <div className="flex flex-col gap-8 p-6 sm:p-8 max-w-4xl mx-auto">
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold text-ink-primary">Themen & Diskussionen</h1>
-        <p className="text-xl text-ink-secondary max-w-2xl leading-relaxed">
-          Hier kannst du vorbereitete Themen auswählen, um mit Disa eine lockere Diskussion zu
-          starten.
+    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-ink-primary">Themen & Diskussionen</h1>
+        <p className="text-base text-ink-secondary leading-relaxed">
+          Wähle ein Thema, um eine Diskussion mit Disa zu starten.
         </p>
       </div>
 
-      <section className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Diskussionen</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularDiscussions.map(renderCard)}
-          </div>
-        </div>
-
-        {conspiracyDiscussions.length > 0 && (
-          <div>
-            <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-              Verschwörungstheorien
-              <span className="text-sm px-2 py-1 rounded-full bg-orange-100 text-orange-800 font-medium">
-                Kontrovers
-              </span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {conspiracyDiscussions.map(renderCard)}
-            </div>
-          </div>
-        )}
+      {/* Regular Discussions */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-ink-primary">Diskussionen</h2>
+        <div className="space-y-2">{regularDiscussions.map(renderCard)}</div>
       </section>
+
+      {/* Conspiracy Theories Section */}
+      {conspiracyDiscussions.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-ink-primary">Verschwörungstheorien</h2>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-warning/10 text-warning font-medium">
+              Kontrovers
+            </span>
+          </div>
+          <div className="space-y-2">{conspiracyDiscussions.map(renderCard)}</div>
+        </section>
+      )}
+
+      {/* Back to Chat */}
+      <div className="pt-4 border-t border-border-ink/10">
+        <Button variant="ghost" onClick={() => navigate("/")} className="w-full justify-center">
+          ← Zurück zum Chat
+        </Button>
+      </div>
     </div>
   );
 }

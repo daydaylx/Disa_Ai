@@ -200,17 +200,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
       {/* MATERIAL INSET HEADER PANEL */}
       <div className="sticky top-0 z-40 bg-surface-inset shadow-inset pb-2">
-        <div className="p-4 space-y-4">
+        <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
           {/* Search Input - Material Style */}
           <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset z-10">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1 sm:p-1.5 shadow-inset z-10">
               <Search className="w-4 h-4 text-text-muted" />
             </div>
             <Input
               placeholder="Rollen durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-14 pr-4 py-6 text-base"
+              className="w-full pl-12 sm:pl-14 pr-3 sm:pr-4 py-4 sm:py-6 text-base"
             />
           </div>
 
@@ -257,7 +257,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         </div>
 
         {/* CATEGORY PILLS - INSET CONTAINER */}
-        <div className="mx-4 mb-4 rounded-md bg-surface-inset shadow-inset p-3">
+        <div className="mx-3 sm:mx-4 mb-3 sm:mb-4 rounded-md bg-surface-inset shadow-inset p-2 sm:p-3">
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {CATEGORY_ORDER.filter((cat: string) => (categoryCounts[cat] || 0) > 0).map(
               (category: string) => (
@@ -277,7 +277,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
       {/* Roles List */}
       <div className="flex-1 overflow-auto">
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           {(filters.showFavoritesOnly ||
             filters.showBuiltInOnly ||
             filters.hideMatureContent ||
@@ -359,7 +359,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
           {/* ROLES GRID - PREMIUM CARDS mit Aurora Spine */}
           <div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 lg:grid-cols-3"
             data-testid="roles-grid"
           >
             {filteredRoles.map((role) => {

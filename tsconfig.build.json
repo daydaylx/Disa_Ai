@@ -5,5 +5,12 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "shared/**/*.ts", "vite-env.d.ts"],
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/__tests__", "tests", "e2e"]
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/__tests__",
+    "src/**/_legacy",
+    "tests",
+    "e2e"
+  ]
 }
