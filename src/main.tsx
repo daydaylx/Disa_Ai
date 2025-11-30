@@ -37,7 +37,7 @@ try {
   if (!envResult.success) {
     safeError("Environment initialization failed:", envResult.errors);
   }
-} catch (error) {
+} catch (error: unknown) {
   safeError("Critical environment error:", error);
 }
 
@@ -72,7 +72,7 @@ function safeInitialize(): void {
   try {
     initializeApp();
     safeWarn("[INIT] React app mounted successfully");
-  } catch (error) {
+  } catch (error: unknown) {
     safeError("[INIT] React mounting failed:", error);
     // Fallback: try basic mounting without context using same root
     const el = document.getElementById("root");
@@ -90,7 +90,7 @@ function safeInitialize(): void {
   try {
     themeController.init();
     safeWarn("[INIT] Theme controller initialized");
-  } catch (error) {
+  } catch (error: unknown) {
     safeWarn("[INIT] Theme controller failed:", error);
   }
 
@@ -201,7 +201,7 @@ function safeInitialize(): void {
   try {
     initializeA11yEnforcement();
     safeWarn("[INIT] A11y enforcement initialized");
-  } catch (error) {
+  } catch (error: unknown) {
     safeWarn("[INIT] A11y enforcement failed:", error);
   }
 }
@@ -342,8 +342,10 @@ function renderPreloadErrorOverlay(error: Event): void {
   container.appendChild(buttonContainer);
   overlay.appendChild(container);
 
-  // Clear and render
-  document.body.innerHTML = "";
+  // Clear and render - using safer method to avoid XSS
+  while (document.body.firstChild) {
+    document.body.removeChild(document.body.firstChild);
+  }
   document.body.appendChild(overlay);
 }
 

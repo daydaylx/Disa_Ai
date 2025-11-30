@@ -14,6 +14,7 @@ import {
   setHapticFeedback as setLegacyHapticFeedback,
   setReduceMotion as setLegacyReduceMotion,
 } from "../config/settings";
+import { STORAGE_KEYS } from "../config/storageKeys";
 import type { DiscussionPresetKey } from "../prompts/discussion/presets";
 
 interface Settings {
@@ -39,7 +40,7 @@ const DEFAULT_SETTINGS: Settings = {
   showNSFWContent: false,
   enableAnalytics: true,
   enableNotifications: true,
-  enableNeko: true, // Default on
+  enableNeko: false, // Extras sind nun opt-in
   theme: "auto",
   language: "de",
   preferredModelId: "openai/gpt-4o-mini",
@@ -55,8 +56,6 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
-
-const SETTINGS_STORAGE_KEY = "disa-ai-settings";
 
 function clampCreativity(value: number | undefined): number {
   const numeric = Number(value);
@@ -106,7 +105,7 @@ export function useSettings() {
 
     const legacy = readLegacySettings();
     try {
-      const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEYS.SETTINGS);
       if (!saved) return normalizeSettings(legacy);
       const parsed = JSON.parse(saved) as Partial<Settings>;
       return normalizeSettings({ ...legacy, ...parsed });
@@ -135,7 +134,7 @@ export function useSettings() {
         setSettings((prev) => {
           const patch = typeof updater === "function" ? updater(prev) : updater;
           const updated = normalizeSettings({ ...prev, ...patch });
-          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+          localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
           syncLegacyStores(updated);
           return updated;
         });
@@ -242,7 +241,7 @@ export function useSettings() {
 
   const resetSettings = useCallback(() => {
     try {
-      localStorage.removeItem(SETTINGS_STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       const resetDefaults = normalizeSettings({});
       setSettings(resetDefaults);
       syncLegacyStores(resetDefaults);

@@ -59,6 +59,7 @@ export function ChatInputBar({
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Schreibe eine Nachricht..."
+          aria-label="Nachricht eingeben"
           className="flex-1 min-h-[40px] max-h-[180px] bg-transparent border-0 focus-visible:ring-0 px-3 py-2.5 sm:px-4 sm:py-3 resize-none text-base text-ink-primary placeholder:text-ink-tertiary leading-relaxed"
           rows={1}
           data-testid="composer-input"

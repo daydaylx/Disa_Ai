@@ -1,5 +1,5 @@
-import { EnhancedModelsInterface } from "../components/models/EnhancedModelsInterface";
+import { ModelsCatalog } from "../components/models/ModelsCatalog";
 
 export default function ModelsPage() {
-  return <EnhancedModelsInterface className="h-full" />;
+  return <ModelsCatalog className="h-full" />;
 }

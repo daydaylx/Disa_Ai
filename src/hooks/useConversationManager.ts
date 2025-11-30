@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 
+import { STORAGE_KEYS } from "../config/storageKeys";
 import {
   deleteConversation as deleteFromDb,
   getAllConversations,
@@ -21,8 +22,6 @@ interface ConversationManagerProps {
   saveEnabled?: boolean;
   restoreEnabled?: boolean;
 }
-
-const LAST_CONVERSATION_LS_KEY = "disa:last-conversation-id";
 
 export function useConversationManager({
   messages,
@@ -45,9 +44,9 @@ export function useConversationManager({
   const persistLastConversationId = useCallback((id: string | null) => {
     try {
       if (id) {
-        localStorage.setItem(LAST_CONVERSATION_LS_KEY, id);
+        localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, id);
       } else {
-        localStorage.removeItem(LAST_CONVERSATION_LS_KEY);
+        localStorage.removeItem(STORAGE_KEYS.LAST_CONVERSATION);
       }
     } catch {
       /* non-critical */
@@ -56,7 +55,7 @@ export function useConversationManager({
 
   const readLastConversationId = useCallback((): string | null => {
     try {
-      return localStorage.getItem(LAST_CONVERSATION_LS_KEY);
+      return localStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION);
     } catch {
       return null;
     }

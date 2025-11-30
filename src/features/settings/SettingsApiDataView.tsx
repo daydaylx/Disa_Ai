@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
 import { StorageMigration } from "../../components/StorageMigration";
+import { STORAGE_KEYS } from "../../config/storageKeys";
 import { useConversationStats } from "../../hooks/use-storage";
 import { Download, Eye, EyeOff, HardDrive, KeyRound, Upload } from "../../lib/icons";
 import { hasApiKey as hasStoredApiKey, readApiKey, writeApiKey } from "../../lib/openrouter/key";
@@ -24,9 +25,10 @@ export function SettingsApiDataView() {
       return "";
     }
   });
+
   const [baseUrl, setBaseUrl] = useState(() => {
     try {
-      return localStorage.getItem("openrouter-base-url") || "https://openrouter.ai/api/v1";
+      return localStorage.getItem(STORAGE_KEYS.API_BASE_URL) || "https://openrouter.ai/api/v1";
     } catch {
       return "https://openrouter.ai/api/v1";
     }
@@ -45,7 +47,8 @@ export function SettingsApiDataView() {
   useEffect(() => {
     try {
       sessionStorage.setItem("openrouter-key", apiKey);
-      localStorage.setItem("openrouter-key", apiKey);
+      // Remove from localStorage to maintain security (only use sessionStorage)
+      localStorage.removeItem("openrouter-key");
     } catch {
       /* ignore */
     }
@@ -81,14 +84,15 @@ export function SettingsApiDataView() {
 
       try {
         sessionStorage.setItem("openrouter-key", trimmed);
-        localStorage.setItem("openrouter-key", trimmed);
+        // Remove from localStorage to maintain security (only use sessionStorage)
+        localStorage.removeItem("openrouter-key");
       } catch {
         /* ignore */
       }
 
       try {
         localStorage.setItem(
-          "openrouter-base-url",
+          STORAGE_KEYS.API_BASE_URL,
           baseUrl.trim() || "https://openrouter.ai/api/v1",
         );
       } catch {

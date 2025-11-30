@@ -218,19 +218,10 @@ export default defineConfig(({ mode }) => {
                       networkTimeoutSeconds: 5,
                     },
                   },
-                  // Cache API responses for better offline experience
-                  {
-                    urlPattern: /^https:\/\/openrouter\.ai\/api\/.*/i,
-                    handler: "NetworkFirst",
-                    options: {
-                      cacheName: "api-cache",
-                      expiration: {
-                        maxEntries: 50,
-                        maxAgeSeconds: 60 * 60, // 1 hour
-                      },
-                      networkTimeoutSeconds: 10,
-                    },
-                  },
+                  /*
+                   * DO NOT CACHE API responses containing sensitive data (conversations)
+                   * This prevents sensitive user data from being stored in service worker cache
+                   */
                   // Cache kuratierte Metadaten für Offline-Use, immer erst Netzwerk
                   {
                     urlPattern: /\/models_metadata\.json$/i,

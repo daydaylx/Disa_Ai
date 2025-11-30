@@ -1,3 +1,5 @@
+import { STORAGE_KEYS } from "../config/storageKeys";
+
 type ThemePreference = "light" | "dark" | "system";
 type ColorMode = "light" | "dark";
 
@@ -8,7 +10,7 @@ type ThemeState = {
 
 type ThemeListener = (state: ThemeState) => void;
 
-const STORAGE_KEY = "disaai.ui.theme";
+const STORAGE_KEY = STORAGE_KEYS.THEME_PREFERENCE;
 const DEFAULT_PREFERENCE: ThemePreference = "dark";
 const DEFAULT_MODE: ColorMode = "dark";
 

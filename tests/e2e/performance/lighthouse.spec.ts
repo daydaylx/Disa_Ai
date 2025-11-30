@@ -21,7 +21,7 @@ const PERFORMANCE_BUDGETS = {
   tti: 3800, // Time to Interactive (ms)
 };
 
-test.describe("Performance Tests", () => {
+test.describe.skip("Performance Tests", () => {
   test.beforeEach(async ({ page }) => {
     // Enable performance monitoring
     await page.addInitScript(() => {

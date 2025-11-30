@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 
+import { STORAGE_KEYS } from "../config/storageKeys";
 import type { UIRole } from "../data/roles";
 import { getRoles, loadRoles } from "../data/roles";
 import { useDeferredFetch } from "../hooks/useDeferredFetch";
 
-const LS_ACTIVE_ROLE_KEY = "disa:activeRoleId";
+const LS_ACTIVE_ROLE_KEY = STORAGE_KEYS.ACTIVE_ROLE; // For backward compatibility
 
 interface RolesContextType {
   roles: UIRole[];
