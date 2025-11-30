@@ -273,7 +273,7 @@ export default function Chat() {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-canvas">
+    <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-bg-app">
       <BookPageAnimator
         activeChatId={activeConversationId}
         swipeStack={swipeStack}
@@ -297,7 +297,7 @@ export default function Chat() {
           {!isEmpty && (
             <button
               onClick={handleSwipeLeft}
-              className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-text-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
+              className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-ink-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
               aria-label="Neuen Chat starten"
             >
               <span className="sr-only">Neuer Chat</span>

@@ -53,7 +53,7 @@ export default function ChatHistoryPage() {
   };
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full">
+    <div className="relative flex flex-col text-ink-primary h-full">
       <div className="flex items-center gap-2 px-4 pt-4 pb-2">
         <Link to="/chat">
           <Button variant="ghost" size="sm">
@@ -66,13 +66,13 @@ export default function ChatHistoryPage() {
         <SectionHeader title="Verlauf" subtitle="Gespeicherte Unterhaltungen" />
 
         {loading && (
-          <Typography variant="body-sm" className="text-text-secondary px-2">
+          <Typography variant="body-sm" className="text-ink-secondary px-2">
             Lade Konversationen …
           </Typography>
         )}
 
         {!loading && conversations.length === 0 && (
-          <Typography variant="body-sm" className="text-text-secondary px-2">
+          <Typography variant="body-sm" className="text-ink-secondary px-2">
             Noch keine gespeicherten Konversationen.
           </Typography>
         )}
@@ -81,8 +81,8 @@ export default function ChatHistoryPage() {
           {conversations.map((conv) => (
             <PremiumCard key={conv.id} className="p-4 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-text-primary">{conv.title}</h3>
-                <p className="text-xs text-text-secondary">
+                <h3 className="text-base font-semibold text-ink-primary">{conv.title}</h3>
+                <p className="text-xs text-ink-secondary">
                   {new Date(conv.updatedAt || conv.createdAt || "").toLocaleString()}
                   {" • "}
                   {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten

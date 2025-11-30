@@ -48,7 +48,7 @@ export function AnimatedLogo({
 
   return (
     <span
-      className={cn("text-text-strong text-lg font-semibold tracking-tight", stateClass, className)}
+      className={cn("text-ink-primary text-lg font-semibold tracking-tight", stateClass, className)}
       {...props}
     >
       <span className="logo-animated">

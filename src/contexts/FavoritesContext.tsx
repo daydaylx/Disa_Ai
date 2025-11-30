@@ -216,7 +216,7 @@ export function FavoritesLoader({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        <span className="ml-3 text-text-muted">Lade Favoriten...</span>
+        <span className="ml-3 text-ink-secondary">Lade Favoriten...</span>
       </div>
     );
   }
@@ -225,7 +225,7 @@ export function FavoritesLoader({ children }: { children: React.ReactNode }) {
     return (
       <div className="p-4 rounded-lg bg-error/10 border border-error/20">
         <p className="text-error font-medium">Fehler beim Laden der Favoriten</p>
-        <p className="text-text-muted text-sm mt-1">{error}</p>
+        <p className="text-ink-secondary text-sm mt-1">{error}</p>
       </div>
     );
   }

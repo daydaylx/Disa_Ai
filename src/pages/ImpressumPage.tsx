@@ -16,10 +16,10 @@ export default function ImpressumPage() {
 
           {/* Verantwortliche Stelle */}
           <section>
-            <h2 className="text-lg font-semibold text-text-primary mb-3">
+            <h2 className="text-lg font-semibold text-ink-primary mb-3">
               Verantwortlich für den Inhalt
             </h2>
-            <div className="text-text-secondary space-y-3 leading-relaxed">
+            <div className="text-ink-secondary space-y-3 leading-relaxed">
               <p>
                 David Grunert
                 <br />

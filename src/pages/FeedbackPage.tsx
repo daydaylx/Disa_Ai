@@ -42,7 +42,7 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="relative flex flex-col text-text-primary h-full bg-bg-base safe-area-top">
+    <div className="relative flex flex-col text-ink-primary h-full bg-bg-base safe-area-top">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 pt-4 pb-2">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} aria-label="Zurück">
@@ -82,7 +82,7 @@ export default function FeedbackPage() {
               />
             </div>
 
-            <div className="rounded-md bg-surface-inset shadow-inset p-3 text-xs text-text-secondary">
+            <div className="rounded-md bg-surface-inset shadow-inset p-3 text-xs text-ink-secondary">
               <p>
                 Wir hängen automatisch technische Details an (Browser, Bildschirmgröße), um Fehler
                 schneller zu finden.
