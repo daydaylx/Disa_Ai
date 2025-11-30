@@ -7,7 +7,7 @@ import React from "react";
  * Inset-Style mit Brand-Ring auf Focus
  */
 const inputVariants = cva(
-  "flex min-h-[44px] w-full rounded-md px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-fast",
+  "flex min-h-[44px] w-full rounded-md px-3 py-2 text-base bg-surface-1 border border-border-ink text-ink-primary placeholder:text-ink-tertiary file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-fast",
   {
     variants: {
       variant: {

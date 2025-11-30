@@ -70,6 +70,20 @@ const colorTokens = {
     50: "var(--bg-app)",
     900: "var(--ink-primary)",
   },
+
+  // Legacy compatibility for shadcn/ui components
+  input: "var(--border-color)",
+  ring: "var(--accent-primary)",
+  background: "var(--bg-page)",
+  foreground: "var(--ink-primary)",
+  popover: {
+    DEFAULT: "var(--bg-page)",
+    foreground: "var(--ink-primary)",
+  },
+  muted: {
+    DEFAULT: "var(--surface-inset)",
+    foreground: "var(--ink-secondary)",
+  },
 };
 
 const spacingScale = {
