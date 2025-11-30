@@ -272,8 +272,22 @@ export default function Chat() {
 
   const isEmpty = messages.length === 0;
 
+  const showFab = !isEmpty;
+
   return (
-    <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-bg-app">
+    <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
+      {/* Mobile FAB outside animated page to avoid transform clipping */}
+      {showFab && (
+        <button
+          onClick={handleSwipeLeft}
+          className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-ink-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
+          aria-label="Neuen Chat starten"
+        >
+          <span className="sr-only">Neuer Chat</span>
+          <Plus className="w-5 h-5" />
+        </button>
+      )}
+
       <BookPageAnimator
         activeChatId={activeConversationId}
         swipeStack={swipeStack}
@@ -285,7 +299,7 @@ export default function Chat() {
           swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
         }
       >
-        <div className="relative flex flex-col text-ink-primary h-full max-h-[100dvh] overflow-hidden bg-bg-page">
+        <div className="relative flex flex-col text-ink-primary h-full min-h-0 bg-bg-page">
           <h1 className="sr-only">Disa AI – Chat</h1>
 
           {/* Bookmark Component */}
@@ -293,20 +307,8 @@ export default function Chat() {
 
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          {/* FAB for New Chat on mobile/tablet */}
-          {!isEmpty && (
-            <button
-              onClick={handleSwipeLeft}
-              className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-ink-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
-              aria-label="Neuen Chat starten"
-            >
-              <span className="sr-only">Neuer Chat</span>
-              <Plus className="w-5 h-5" />
-            </button>
-          )}
-
           {/* Main Content Area - Flex Grow */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative flex flex-col">
             {isEmpty ? (
               /* Empty State - Tinte auf Papier Stil */
               <div className="flex-1 flex items-center justify-center px-4 py-8">

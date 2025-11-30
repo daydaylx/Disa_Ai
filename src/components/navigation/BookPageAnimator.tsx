@@ -1,5 +1,11 @@
 import { useDrag } from "@use-gesture/react";
-import { AnimatePresence, motion, useMotionValue, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from "framer-motion";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -29,8 +35,16 @@ export function BookPageAnimator({
   const [direction, setDirection] = useState(0); // 1 = Left Swipe (New Page), -1 = Right Swipe (Back)
   const prevIdRef = useRef<string | null>(activeChatId);
   const shouldReduceMotion = useReducedMotion();
+  const [allowTransforms, setAllowTransforms] = useState(true);
   const x = useMotionValue(0); // MotionValue for 1:1 drag
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) {
+      setAllowTransforms(false); // avoid transform-stacking breaking scroll on mobile
+    }
+  }, []);
 
   // Determine direction for page transition when activeChatId changes
   useEffect(() => {
@@ -98,19 +112,26 @@ export function BookPageAnimator({
     },
   );
 
-  const rotateY =
-    (x.get() / (containerRef.current?.offsetWidth || window.innerWidth)) * ROTATION_FACTOR;
-  const scale =
-    1 -
-    (Math.abs(x.get()) / (containerRef.current?.offsetWidth || window.innerWidth)) * SCALE_FACTOR;
+  const rotateY = useTransform(x, (latest) => {
+    if (!allowTransforms || shouldReduceMotion) return 0;
+    const width = containerRef.current?.offsetWidth || window.innerWidth || 1;
+    return (latest / width) * ROTATION_FACTOR;
+  });
+
+  const scale = useTransform(x, (latest) => {
+    if (!allowTransforms || shouldReduceMotion) return 1;
+    const width = containerRef.current?.offsetWidth || window.innerWidth || 1;
+    return 1 - (Math.abs(latest) / width) * SCALE_FACTOR;
+  });
 
   // Variants for Page Transitions, now reactive to drag
   const variants = {
     enter: (dir: number) => ({
-      x: shouldReduceMotion ? 0 : dir > 0 ? "100%" : "-100%",
+      x: shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? "100%" : "-100%",
       opacity: shouldReduceMotion ? 0 : 0.5,
-      rotateY: shouldReduceMotion ? 0 : dir > 0 ? ROTATION_FACTOR : -ROTATION_FACTOR,
-      scale: shouldReduceMotion ? 1 : 1 - SCALE_FACTOR,
+      rotateY:
+        shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? ROTATION_FACTOR : -ROTATION_FACTOR,
+      scale: shouldReduceMotion || !allowTransforms ? 1 : 1 - SCALE_FACTOR,
       zIndex: 10,
     }),
     center: {
@@ -128,10 +149,11 @@ export function BookPageAnimator({
       } as any,
     },
     exit: (dir: number) => ({
-      x: shouldReduceMotion ? 0 : dir > 0 ? "-100%" : "100%", // Exit fully off-screen
+      x: shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? "-100%" : "100%", // Exit fully off-screen
       opacity: shouldReduceMotion ? 0 : 0.5,
-      scale: shouldReduceMotion ? 1 : 1 - SCALE_FACTOR,
-      rotateY: shouldReduceMotion ? 0 : dir > 0 ? -ROTATION_FACTOR : ROTATION_FACTOR, // Rotate opposite
+      scale: shouldReduceMotion || !allowTransforms ? 1 : 1 - SCALE_FACTOR,
+      rotateY:
+        shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? -ROTATION_FACTOR : ROTATION_FACTOR, // Rotate opposite
       zIndex: 0,
       transition: { duration: 0.25 },
     }),
@@ -174,7 +196,7 @@ export function BookPageAnimator({
           initial="enter"
           animate="center"
           exit="exit"
-          className="absolute inset-0 h-full w-full origin-center bg-bg-page shadow-2xl rounded-none sm:rounded-2xl overflow-hidden border border-border-ink/50 cursor-grab"
+          className="absolute inset-0 h-full min-h-full w-full origin-center bg-bg-page shadow-2xl rounded-none sm:rounded-2xl overflow-hidden border border-border-ink/50 cursor-grab"
           whileTap={{ cursor: "grabbing" }}
         >
           {children}
