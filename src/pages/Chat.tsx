@@ -32,7 +32,6 @@ import { getSamplingCapabilities } from "../lib/modelCapabilities";
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const bookPageRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
 
@@ -276,7 +275,7 @@ export default function Chat() {
   const showFab = !isEmpty;
 
   return (
-    <div className="relative flex flex-col items-center text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
+    <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
       <h1 className="sr-only">Disa AI – Chat</h1>
 
       {/* Mobile FAB - New Page Button */}
@@ -302,45 +301,50 @@ export default function Chat() {
           swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
         }
       >
-        {/* BOOK PAGE CONTAINER - This is the visible "page" */}
-        <div
-          ref={bookPageRef}
-          className={cn(
-            "relative flex flex-col h-full w-full max-w-[94%] sm:max-w-2xl lg:max-w-4xl mx-auto",
-            "bg-bg-page rounded-2xl shadow-2xl border border-border-ink/30",
-            // Stack effect: subtle shadow pages behind
-            "before:absolute before:inset-x-2 before:-bottom-2 before:h-4 before:bg-surface-2/40 before:rounded-b-2xl before:-z-10 before:blur-sm",
-            "after:absolute after:inset-x-4 after:-bottom-4 after:h-4 after:bg-surface-1/30 after:rounded-b-2xl after:-z-20 after:blur-sm",
-          )}
-        >
-          {/* Bookmark - positioned at the top-right of the book page */}
+        {/* Container matches BookPageAnimator expectations */}
+        <div className="relative flex flex-col text-ink-primary h-full min-h-0 bg-bg-page">
+          {/* Bookmark positioned relative to this container */}
           <Bookmark
             onClick={() => setIsHistoryOpen(true)}
-            className="absolute -top-0 right-4 sm:right-8"
+            className="absolute top-0 right-3 sm:right-4"
             disabled={(conversations || []).length === 0}
           />
 
           {/* Simplified Header */}
-          <div className="px-4 sm:px-6 pt-6 pb-3 border-b border-border-ink/20">
-            <div className="text-sm text-ink-secondary font-medium">Disa AI Chat</div>
-            <div className="text-xl font-bold text-ink-primary mt-0.5 truncate">
-              {activeConversation?.title || "Neue Unterhaltung"}
+          <div className="px-3 sm:px-4 pt-4 pb-2 flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                Aktuelle Seite
+              </div>
+              <div className="text-lg font-semibold text-ink-primary truncate">
+                {activeConversation?.title || "Neue Unterhaltung"}
+              </div>
             </div>
           </div>
 
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          {/* Chat Messages Area - Scrollable within the page */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
+          {/* Chat Messages Area - Scrollable */}
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative flex flex-col">
             {isEmpty ? (
-              <div className="flex items-center justify-center h-full px-4 py-8">
+              <div className="flex-1 flex items-center justify-center px-4 py-8">
                 <ChatStartCard
                   onNewChat={() => setIsHistoryOpen(true)}
                   conversationCount={stats?.totalConversations || 0}
                 />
               </div>
             ) : (
-              <div className="h-full">
+              /* Chat messages with visible "page" container */
+              <div
+                className={cn(
+                  "flex-1 mx-2 sm:mx-4 my-2 rounded-xl",
+                  "bg-bg-page border border-border-ink/20",
+                  "shadow-sm",
+                  // Stack effect: subtle pages behind
+                  "relative before:absolute before:inset-x-1 before:-bottom-1 before:h-2 before:bg-bg-page/60 before:rounded-b-lg before:-z-10",
+                )}
+                data-testid="chat-message-list"
+              >
                 <VirtualizedMessageList
                   messages={messages}
                   isLoading={isLoading}
@@ -387,28 +391,30 @@ export default function Chat() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area - Fixed at bottom of book page */}
-          <div className="border-t border-border-ink/30 bg-bg-page/98 backdrop-blur-sm rounded-b-2xl">
-            {/* Chat Input Field */}
-            <div className="px-3 pt-3 sm:px-4 sm:pt-3">
-              <ChatInputBar
-                value={input}
-                onChange={setInput}
+          {/* Input Area - Fixed at bottom */}
+          <div className="bg-bg-page z-composer border-t border-border-ink/30 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.06)]">
+            <div className="max-w-3xl mx-auto">
+              {/* Chat Input */}
+              <div className="px-2 pt-1.5 sm:px-4 sm:pt-2">
+                <ChatInputBar
+                  value={input}
+                  onChange={setInput}
+                  onSend={handleSend}
+                  isLoading={isLoading}
+                  onQuickAction={(prompt) => setInput(prompt)}
+                />
+              </div>
+
+              {/* Context Bar: AI Behavior Controls */}
+              <ContextBar
+                modelCatalog={modelCatalog}
                 onSend={handleSend}
+                onStop={stop}
                 isLoading={isLoading}
-                onQuickAction={(prompt) => setInput(prompt)}
+                canSend={!!input.trim()}
+                className="border-t border-border-ink/20 mt-2"
               />
             </div>
-
-            {/* Context Bar: AI Behavior Controls */}
-            <ContextBar
-              modelCatalog={modelCatalog}
-              onSend={handleSend}
-              onStop={stop}
-              isLoading={isLoading}
-              canSend={!!input.trim()}
-              className="border-t border-border-ink/10 mt-2"
-            />
           </div>
         </div>
 
