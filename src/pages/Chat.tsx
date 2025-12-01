@@ -32,6 +32,7 @@ import { getSamplingCapabilities } from "../lib/modelCapabilities";
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const bookPageRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
 
@@ -274,35 +275,15 @@ export default function Chat() {
   const activeConversation = conversations?.find((c) => c.id === activeConversationId);
   const showFab = !isEmpty;
 
-  const statusBadges = useMemo(() => {
-    const badges: Array<{
-      label: string;
-      variant: "success" | "warning" | "destructive" | "secondary";
-    }> = [];
-    if (isLoading) badges.push({ label: "Antwort läuft", variant: "secondary" });
-    const limited = rateLimitInfo?.isLimited ?? false;
-    const retryAfter = rateLimitInfo?.retryAfter ?? 0;
-    if (limited) {
-      badges.push({
-        label: `Cooldown ${retryAfter}s`,
-        variant: "warning",
-      });
-    }
-    if (apiStatus === "missing_key") badges.push({ label: "API-Key fehlt", variant: "secondary" });
-    if (apiStatus === "error" || error) badges.push({ label: "Fehler", variant: "destructive" });
-    if (apiStatus === "ok" && !isLoading && !limited) {
-      badges.push({ label: "Bereit", variant: "success" });
-    }
-    return badges;
-  }, [apiStatus, error, isLoading, rateLimitInfo]);
-
   return (
-    <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
-      {/* Mobile FAB outside animated page to avoid transform clipping */}
+    <div className="relative flex flex-col items-center text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
+      <h1 className="sr-only">Disa AI – Chat</h1>
+
+      {/* Mobile FAB - New Page Button */}
       {showFab && (
         <button
           onClick={handleSwipeLeft}
-          className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-ink-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
+          className="fixed top-4 right-4 z-50 flex items-center justify-center w-11 h-11 bg-ink-primary hover:bg-ink-primary/90 text-white rounded-full shadow-lg sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
           aria-label="Neuen Chat starten"
         >
           <span className="sr-only">Neuer Chat</span>
@@ -315,79 +296,51 @@ export default function Chat() {
         swipeStack={swipeStack}
         onSwipeLeft={handleSwipeLeft}
         onSwipeRight={handleSwipeRight}
-        canSwipeLeft={messages.length > 0} // Can swipe left if current chat is not empty
+        canSwipeLeft={messages.length > 0}
         canSwipeRight={
           swipeStack.length > 1 &&
           swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
         }
       >
-        <div className="relative flex flex-col text-ink-primary h-full min-h-0 bg-bg-page">
-          <h1 className="sr-only">Disa AI – Chat</h1>
-
-          {/* Bookmark Component */}
+        {/* BOOK PAGE CONTAINER - This is the visible "page" */}
+        <div
+          ref={bookPageRef}
+          className={cn(
+            "relative flex flex-col h-full w-full max-w-[94%] sm:max-w-2xl lg:max-w-4xl mx-auto",
+            "bg-bg-page rounded-2xl shadow-2xl border border-border-ink/30",
+            // Stack effect: subtle shadow pages behind
+            "before:absolute before:inset-x-2 before:-bottom-2 before:h-4 before:bg-surface-2/40 before:rounded-b-2xl before:-z-10 before:blur-sm",
+            "after:absolute after:inset-x-4 after:-bottom-4 after:h-4 after:bg-surface-1/30 after:rounded-b-2xl after:-z-20 after:blur-sm",
+          )}
+        >
+          {/* Bookmark - positioned at the top-right of the book page */}
           <Bookmark
             onClick={() => setIsHistoryOpen(true)}
-            className="top-14 sm:top-4"
+            className="absolute -top-0 right-4 sm:right-8"
             disabled={(conversations || []).length === 0}
           />
 
-          {/* Header: Titel + Status */}
-          <div className="px-3 sm:px-4 pt-4 pb-2 flex items-center gap-2">
-            <div className="min-w-0">
-              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
-                Aktuelle Seite
-              </div>
-              <div className="text-lg font-semibold text-ink-primary truncate">
-                {activeConversation?.title || "Neue Unterhaltung"}
-              </div>
-              <div className="text-xs text-ink-secondary">
-                {activeRole ? activeRole.name : "Standard"} · {settings.preferredModelId}
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-1 ml-auto">
-              {statusBadges.map((badge) => (
-                <span
-                  key={badge.label}
-                  className={cn(
-                    "text-[10px] px-2 py-1 rounded-full border",
-                    badge.variant === "success" && "border-accent text-accent",
-                    badge.variant === "warning" &&
-                      "border-[var(--color-warning)] text-[var(--color-warning)]",
-                    badge.variant === "destructive" &&
-                      "border-[var(--color-error)] text-[var(--color-error)]",
-                    badge.variant === "secondary" && "border-ink-tertiary text-ink-tertiary",
-                  )}
-                >
-                  {badge.label}
-                </span>
-              ))}
+          {/* Simplified Header */}
+          <div className="px-4 sm:px-6 pt-6 pb-3 border-b border-border-ink/20">
+            <div className="text-sm text-ink-secondary font-medium">Disa AI Chat</div>
+            <div className="text-xl font-bold text-ink-primary mt-0.5 truncate">
+              {activeConversation?.title || "Neue Unterhaltung"}
             </div>
           </div>
 
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          {/* Main Content Area - Flex Grow */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative flex flex-col">
+          {/* Chat Messages Area - Scrollable within the page */}
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
             {isEmpty ? (
-              /* Empty State - Tinte auf Papier Stil */
-              <div className="flex-1 flex items-center justify-center px-4 py-8">
+              <div className="flex items-center justify-center h-full px-4 py-8">
                 <ChatStartCard
                   onNewChat={() => setIsHistoryOpen(true)}
                   conversationCount={stats?.totalConversations || 0}
                 />
               </div>
             ) : (
-              /* Chat-Bereich als "Papierseite" */
-              <div
-                className={cn(
-                  "flex-1 mx-2 sm:mx-4 my-2 rounded-xl",
-                  "bg-bg-page border border-border-ink/20",
-                  "shadow-sm",
-                  // Dezente "Seiten dahinter" Effekt
-                  "relative before:absolute before:inset-x-1 before:-bottom-1 before:h-2 before:bg-bg-page/60 before:rounded-b-lg before:-z-10",
-                )}
-                data-testid="chat-message-list"
-              >
+              <div className="h-full">
                 <VirtualizedMessageList
                   messages={messages}
                   isLoading={isLoading}
@@ -402,7 +355,6 @@ export default function Chat() {
                     const messageIndex = messages.findIndex((m) => m.id === messageId);
                     if (messageIndex === -1) return;
 
-                    // Find last user message
                     const targetUserIndex = (() => {
                       const targetMsg = messages[messageIndex];
                       if (targetMsg && targetMsg.role === "user") return messageIndex;
@@ -435,30 +387,28 @@ export default function Chat() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Bar Area - Fixed/Sticky Bottom */}
-          <div className="bg-bg-page z-composer border-t border-border-ink/30 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.06)]">
-            <div className="max-w-3xl mx-auto">
-              {/* Chat Input */}
-              <div className="px-2 pt-1.5 sm:px-4 sm:pt-2">
-                <ChatInputBar
-                  value={input}
-                  onChange={setInput}
-                  onSend={handleSend}
-                  isLoading={isLoading}
-                  onQuickAction={(prompt) => setInput(prompt)}
-                />
-              </div>
-
-              {/* Context Bar: Persona | Style/Memory/Settings | Model + Send */}
-              <ContextBar
-                modelCatalog={modelCatalog}
+          {/* Input Area - Fixed at bottom of book page */}
+          <div className="border-t border-border-ink/30 bg-bg-page/98 backdrop-blur-sm rounded-b-2xl">
+            {/* Chat Input Field */}
+            <div className="px-3 pt-3 sm:px-4 sm:pt-3">
+              <ChatInputBar
+                value={input}
+                onChange={setInput}
                 onSend={handleSend}
-                onStop={stop}
                 isLoading={isLoading}
-                canSend={!!input.trim()}
-                className="border-t border-border-ink/20 mt-2"
+                onQuickAction={(prompt) => setInput(prompt)}
               />
             </div>
+
+            {/* Context Bar: AI Behavior Controls */}
+            <ContextBar
+              modelCatalog={modelCatalog}
+              onSend={handleSend}
+              onStop={stop}
+              isLoading={isLoading}
+              canSend={!!input.trim()}
+              className="border-t border-border-ink/10 mt-2"
+            />
           </div>
         </div>
 
