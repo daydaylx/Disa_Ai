@@ -6,11 +6,17 @@ interface BookmarkProps {
   onClick: () => void;
   className?: string;
   disabled?: boolean;
+  position?: "fixed" | "absolute";
 }
 
 const BOOKMARK_ANIMATION_KEY = "disa-bookmark-animated";
 
-export function Bookmark({ onClick, className, disabled = false }: BookmarkProps) {
+export function Bookmark({
+  onClick,
+  className,
+  disabled = false,
+  position = "fixed",
+}: BookmarkProps) {
   const [shouldWiggle, setShouldWiggle] = useState(false);
 
   // Wackel-Animation nur beim allerersten Start
@@ -30,11 +36,9 @@ export function Bookmark({ onClick, className, disabled = false }: BookmarkProps
     <button
       onClick={disabled ? undefined : onClick}
       className={cn(
-        "fixed right-3 sm:right-4 z-header",
-        // Positioned slightly off the top to look like it hangs
-        "top-0",
+        position === "fixed" ? "fixed right-3 sm:right-4 top-0 z-header" : "absolute right-3 top-8",
         "w-7 h-11 sm:w-9 sm:h-14",
-        "bg-accent-primary shadow-lg cursor-pointer",
+        "bg-accent-primary text-ink-on-accent shadow-md cursor-pointer border border-accent-hover/40",
         "flex items-end justify-center pb-2",
         "transition-transform hover:translate-y-1 active:translate-y-2 duration-200",
         // Physical "Hang" Effect

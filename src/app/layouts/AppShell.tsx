@@ -101,20 +101,22 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                 <BrandWordmark className="text-sm lg:hidden" />
                 <span className="text-sm font-semibold text-ink-primary truncate">{pageTitle}</span>
               </div>
-              <div className="ml-auto flex items-center gap-2">
-                <Link
-                  to="/themen"
-                  className="rounded-full border border-border-ink/40 px-3 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-1"
-                >
-                  Quickstarts
-                </Link>
-                <Link
-                  to="/feedback"
-                  className="rounded-full bg-accent-primary/90 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-accent-primary"
-                >
-                  Feedback
-                </Link>
-              </div>
+              {!isChatMode && (
+                <div className="ml-auto flex items-center gap-2">
+                  <Link
+                    to="/themen"
+                    className="rounded-full border border-border-ink/40 px-3 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-1"
+                  >
+                    Quickstarts
+                  </Link>
+                  <Link
+                    to="/feedback"
+                    className="rounded-full bg-accent-primary/90 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-accent-primary"
+                  >
+                    Feedback
+                  </Link>
+                </div>
+              )}
             </div>
             {!isChatMode && (
               <div className="border-t border-border-ink/10 bg-bg-page/80 px-4 pb-3 pt-2 lg:px-6">
