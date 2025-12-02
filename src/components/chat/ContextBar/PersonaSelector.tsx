@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRoles } from "@/contexts/RolesContext";
 import { cn } from "@/lib/utils";
 
+import { ContextBadge } from "./ContextBadge";
 import { PersonaDropdown } from "./PersonaDropdown";
-import { PersonaPill } from "./PersonaPill";
 
 export function PersonaSelector() {
   const [open, setOpen] = useState(false);
@@ -14,7 +14,7 @@ export function PersonaSelector() {
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
-        <PersonaPill role={activeRole} isActive={open} />
+        <ContextBadge label={`Rolle: ${activeRole?.name || "Standard"}`} isOpen={open} />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
