@@ -82,6 +82,7 @@
 
   /* Borders */
   --border-color: hsl(45, 10%, 90%);
+  --border-ink: hsl(45, 10%, 90%); /* Alias for border-color for consistency */
   --border-width: 1px;
 
   /* Radius */
@@ -99,27 +100,41 @@
   --leading-normal: 1.6;
 }
 
-/* Dark Mode Overrides (Optional/Future) */
-@media (prefers-color-scheme: dark) {
-  :root[data-theme="dark"] {
-    --bg-app: hsl(220, 15%, 10%);
-    --bg-page: hsl(220, 15%, 14%);
-    --bg-surface: hsl(220, 15%, 16%);
+/* Dark Mode Overrides - Applied when user selects dark theme */
+:root[data-theme="dark"] {
+  --bg-app: hsl(220, 15%, 10%);
+  --bg-page: hsl(220, 15%, 14%);
+  --bg-surface: hsl(220, 15%, 16%);
 
-    --ink-primary: hsl(45, 10%, 90%);
-    --ink-secondary: hsl(220, 10%, 70%);
+  --ink-primary: hsl(45, 10%, 90%);
+  --ink-secondary: hsl(220, 10%, 70%);
+  --ink-tertiary: hsl(220, 10%, 60%);
 
-    --accent-primary: hsl(260, 40%, 60%);
+  --accent-primary: hsl(260, 40%, 60%);
+  --accent-secondary: hsl(260, 30%, 70%);
+  --accent-hover: hsl(260, 45%, 65%);
 
-    --border-color: hsl(220, 10%, 25%);
+  --border-color: hsl(220, 10%, 25%);
+  --border-ink: hsl(220, 10%, 25%); /* Dark mode border */
 
-    --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4);
 
-    /* Dark mode glow effects */
-    --shadow-brandGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-    --shadow-brandGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
-    --shadow-accentGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-    --shadow-accentGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
-  }
+  /* Dark mode glow effects */
+  --shadow-brandGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
+  --shadow-brandGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
+  --shadow-accentGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
+  --shadow-accentGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
+
+  /* Update surface mappings for dark mode */
+  --surface-1: hsl(220, 15%, 14%);
+  --surface-2: hsl(220, 15%, 16%);
+  --surface-3: hsl(220, 15%, 20%);
+  --surface-inset: hsl(220, 15%, 12%);
+
+  /* Update text mappings for dark mode */
+  --text-primary: hsl(45, 10%, 90%);
+  --text-secondary: hsl(220, 10%, 70%);
+  --text-muted: hsl(220, 10%, 60%);
+  --text-disabled: hsl(220, 10%, 45%);
 }

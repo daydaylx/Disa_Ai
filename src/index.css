@@ -39,13 +39,18 @@
 
 @layer base {
   :root {
-    color-scheme: light; /* Default to light for Paper concept */
+    color-scheme: light dark; /* Support both themes */
   }
 
-  /* Force light mode override if system is dark, until Dark Paper mode is perfected */
+  /* Apply theme colors - will be overridden by [data-theme="dark"] */
   html {
     background-color: var(--bg-app);
     color: var(--ink-primary);
+  }
+
+  /* Dark theme support */
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
