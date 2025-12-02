@@ -19,7 +19,7 @@ export function ModelSelector({ catalog }: ModelSelectorProps) {
   // Find current label - shortened for mobile
   const currentModel = catalog?.find((m) => m.id === settings.preferredModelId);
   const fullLabel = currentModel?.label || settings.preferredModelId.split("/").pop() || "Auto";
-  const label = `Modell: ${fullLabel}`;
+  const label = currentModel?.label || settings.preferredModelId.split("/").pop() || "Modell";
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
@@ -28,7 +28,7 @@ export function ModelSelector({ catalog }: ModelSelectorProps) {
           label={label}
           isOpen={open}
           aria-label={`Aktuelles Modell: ${fullLabel}. Ändern…`}
-          className="max-w-[200px]"
+          className="max-w-[150px] sm:max-w-[180px]"
         />
       </DropdownMenu.Trigger>
 

@@ -14,7 +14,11 @@ export function PersonaSelector() {
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
-        <ContextBadge label={`Rolle: ${activeRole?.name || "Standard"}`} isOpen={open} />
+        <ContextBadge
+          label={activeRole?.name || "Rolle"}
+          isOpen={open}
+          className="max-w-[140px] sm:max-w-[170px]"
+        />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
