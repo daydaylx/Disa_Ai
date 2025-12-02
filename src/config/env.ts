@@ -28,6 +28,75 @@ interface EnvValidationResult {
  */
 const BOOLEAN_TRUE = new Set(["true", "1", "yes", "on"]);
 const BOOLEAN_FALSE = new Set(["false", "0", "no", "off"]);
+const REQUIRED_RUNTIME_ENV_VARS: Array<keyof EnvConfig> = ["VITE_OPENROUTER_BASE_URL"];
+
+const ENV_VALIDATION_OVERLAY_ID = "env-validation-overlay";
+
+function renderEnvironmentValidationOverlay(errors: string[]): void {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(ENV_VALIDATION_OVERLAY_ID)) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = ENV_VALIDATION_OVERLAY_ID;
+  overlay.setAttribute("role", "alert");
+  overlay.style.cssText = `
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 2147483647;
+    max-width: min(420px, 90vw);
+    color: var(--color-text-primary, #0f172a);
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border-strong, rgba(0,0,0,0.1));
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  `;
+
+  const title = document.createElement("div");
+  title.style.cssText = `
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  `;
+  title.innerHTML = `<span aria-hidden="true">⚠️</span><span>Konfiguration benötigt Aufmerksamkeit</span>`;
+
+  const description = document.createElement("p");
+  description.style.cssText = `
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-secondary, #475569);
+  `;
+  description.textContent =
+    "Mindestens eine verpflichtende Umgebungsvariable fehlt oder ist ungültig. Die App nutzt einen Fallback-Modus.";
+
+  const list = document.createElement("ul");
+  list.style.cssText = `
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 4px;
+    color: var(--color-text-primary, #0f172a);
+  `;
+
+  errors.forEach((message) => {
+    const item = document.createElement("li");
+    item.style.cssText = "font-size: 13px; line-height: 1.5;";
+    item.textContent = message;
+    list.appendChild(item);
+  });
+
+  overlay.appendChild(title);
+  overlay.appendChild(description);
+  overlay.appendChild(list);
+
+  document.body.appendChild(overlay);
+}
 
 function toBoolean(value: string | undefined, fallback: boolean): boolean {
   if (typeof value !== "string") return fallback;
@@ -56,6 +125,7 @@ function validateUrl(
 function validateEnvironment(): EnvValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
+  const isProduction = typeof import.meta !== "undefined" && Boolean(import.meta.env?.PROD);
 
   // Collect all VITE_ prefixed environment variables
   const envVars: Record<string, string> = {};
@@ -67,6 +137,15 @@ function validateEnvironment(): EnvValidationResult {
         envVars[key] = value;
       }
     });
+  }
+
+  // Check for required runtime variables (production only to avoid noisy DX)
+  if (isProduction) {
+    for (const required of REQUIRED_RUNTIME_ENV_VARS) {
+      if (!envVars[required] || envVars[required].trim() === "") {
+        errors.push(`${required}: Missing required environment variable`);
+      }
+    }
   }
 
   // Note: VITE_OPENROUTER_BASE_URL warning removed - defaults are acceptable
@@ -128,6 +207,9 @@ export function initEnvironment(): EnvValidationResult {
   } else {
     // Log errors
     console.error("❌ Environment Configuration Errors:", _validationResult.errors);
+    if (_validationResult.errors) {
+      renderEnvironmentValidationOverlay(_validationResult.errors);
+    }
   }
 
   return _validationResult;

@@ -7,7 +7,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
-import { initEnvironment } from "./config/env";
+import { getEnvConfigSafe, initEnvironment } from "./config/env";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
@@ -39,6 +39,27 @@ try {
   }
 } catch (error: unknown) {
   safeError("Critical environment error:", error);
+}
+
+const envConfig = getEnvConfigSafe();
+
+function normalizeBasePath(basePath: string): string {
+  if (!basePath.startsWith("/")) {
+    basePath = `/${basePath}`;
+  }
+  return basePath.endsWith("/") ? basePath : `${basePath}/`;
+}
+
+const normalizedBasePath = normalizeBasePath(envConfig.VITE_BASE_URL || "/");
+
+function withBasePath(path: string): string {
+  if (/^https?:\/\//i.test(path)) return path;
+  const sanitizedPath = path.replace(/^\/+/, "");
+  return `${normalizedBasePath}${sanitizedPath}`;
+}
+
+function toAbsoluteWithBase(path: string): string {
+  return new URL(withBasePath(path), window.location.origin).toString();
 }
 
 // Initialize error tracking (must be early in the process)
@@ -108,9 +129,9 @@ function safeInitialize(): void {
           )
             .map((el) => ("href" in el ? el.href : el.src))
             .filter(Boolean);
-          urls.push(location.origin + "/");
-          urls.push(location.pathname);
-          urls.push("/manifest.webmanifest");
+          urls.push(toAbsoluteWithBase("/"));
+          urls.push(new URL(location.pathname, window.location.origin).toString());
+          urls.push(toAbsoluteWithBase("manifest.webmanifest"));
           const cache = await caches.open("disa-dev-cache");
           await cache.addAll([...new Set(urls)]);
         } catch (err) {
@@ -121,6 +142,7 @@ function safeInitialize(): void {
       const registerInlineDevSW = async () => {
         const swCode = `
           const CACHE = 'disa-dev-cache';
+          const BASE_PATH = '${normalizedBasePath}';
           self.addEventListener('install', (event) => {
             event.waitUntil(caches.open(CACHE).then(() => self.skipWaiting()));
           });
@@ -138,7 +160,7 @@ function safeInitialize(): void {
                       cache.put(event.request, networkResp.clone()).catch(() => {});
                       return networkResp;
                     })
-                    .catch(async () => (await cache.match('/')) ?? Response.error());
+                    .catch(async () => (await cache.match(BASE_PATH)) ?? Response.error());
                 }),
               ),
             );
@@ -146,7 +168,9 @@ function safeInitialize(): void {
         `;
         const swUrl = URL.createObjectURL(new Blob([swCode], { type: "application/javascript" }));
         try {
-          const registration = await navigator.serviceWorker.register(swUrl, { scope: "/" });
+          const registration = await navigator.serviceWorker.register(swUrl, {
+            scope: normalizedBasePath,
+          });
           return registration;
         } catch (err) {
           safeWarn("Inline SW registration failed", err);
@@ -156,7 +180,9 @@ function safeInitialize(): void {
 
       const registerDevServiceWorker = async () => {
         try {
-          const registration = await navigator.serviceWorker.register("/dev-sw.js", { scope: "/" });
+          const registration = await navigator.serviceWorker.register(withBasePath("dev-sw.js"), {
+            scope: normalizedBasePath,
+          });
           safeWarn("Dev SW registered:", registration);
           return registration;
         } catch (err) {
@@ -173,7 +199,9 @@ function safeInitialize(): void {
         }
 
         try {
-          const registration = await navigator.serviceWorker.register("/sw.js");
+          const registration = await navigator.serviceWorker.register(withBasePath("sw.js"), {
+            scope: normalizedBasePath,
+          });
           safeWarn("SW registered:", registration);
         } catch (registrationError) {
           console.warn("SW registration failed:", registrationError);
