@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-041040e",
-  "buildTime": "2025-12-01T20:23:54.137Z",
-  "gitSha": "041040e12622723667bb002b39fbb989716ca62b",
-  "gitBranch": "claude/chat-book-interface-012Ky29NxgnMd4TJ6WPoL3oX",
+  "buildId": "v1.0.0-6635d5b",
+  "buildTime": "2025-12-02T11:27:34.763Z",
+  "gitSha": "6635d5b1bb178277a967a6398d4d0b425fb671bb",
+  "gitBranch": "claude/fix-white-page-ux-013EmkYGA27c4kx7vX4ipxyF",
   "version": "1.0.0"
 }
