@@ -10,15 +10,15 @@ import { cn } from "@/lib/utils";
  * Focuses on clarity, touch targets (min 44px), and subtle paper interactions.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-primary disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
+  "inline-flex items-center justify-center rounded-md text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/70 disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
   {
     variants: {
       variant: {
         primary:
-          "bg-accent text-white shadow-sm hover:shadow-md hover:bg-accent-hover active:translate-y-[1px]",
+          "bg-accent-primary text-surface-1 shadow-sm hover:bg-accent-hover active:translate-y-[1px]",
         secondary:
-          "bg-bg-page text-ink-primary border border-border-ink shadow-sm hover:bg-bg-surface hover:shadow-md active:translate-y-[1px]",
-        ghost: "hover:bg-bg-surface text-ink-primary hover:text-accent active:bg-bg-surface/80",
+          "bg-surface-2 text-text-primary border border-border-ink shadow-sm hover:bg-surface-3 hover:shadow-md active:translate-y-[1px]",
+        ghost: "hover:bg-surface-2 text-text-secondary hover:text-text-primary active:bg-surface-3",
         link: "text-accent underline-offset-4 hover:underline p-0 h-auto min-h-0",
       },
       size: {

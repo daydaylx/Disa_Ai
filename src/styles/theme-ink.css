@@ -1,140 +1,98 @@
 /**
- * DISA AI - INK ON PAPER THEME
- *
- * Concept: "Tinte auf Papier" - Calm book aesthetic
- *
- * Colors:
- * - Off-white paper backgrounds
- * - Dark ink text
- * - Muted indigo accents
+ * Disa AI – Nightfall Design Tokens
+ * Mobile-first, high-contrast, calm surfaces without neumorph shadows.
+ * Single source of truth for Tailwind mappings and component variables.
  */
 
 :root {
-  /* ========================================
-   * COLOR PALETTE
-   * ======================================== */
+  /* ==============================
+   * CORE COLORS
+   * ============================== */
+  --color-bg: #0b0c10;
+  --color-surface-1: #11131a;
+  --color-surface-2: #171a21;
+  --color-surface-3: #1d2028;
+  --color-primary: #7cd4ff;
+  --color-primary-strong: #42b2f5;
+  --color-accent: #9f7aea;
+  --color-text-primary: #f5f7fa;
+  --color-text-secondary: #c4cbd5;
+  --color-text-tertiary: #8c94a3;
+  --color-border: #1f2430;
+  --color-muted: #1a1e27;
 
-  /* Paper Backgrounds */
-  --bg-app: hsl(45, 25%, 96%); /* App background - Warm off-white */
-  --bg-page: hsl(45, 20%, 98%); /* Page/Chat background - Slightly lighter */
-  --bg-surface: hsl(45, 20%, 98%); /* For cards/surfaces */
+  --color-success: #4ad295;
+  --color-warning: #f2c14e;
+  --color-error: #f06272;
+  --color-info: #5ab0ff;
 
-  /* Ink Colors */
-  --ink-primary: hsl(220, 15%, 18%); /* Dark Blue-Black */
-  --ink-secondary: hsl(220, 10%, 50%); /* Muted Grey */
-  --ink-tertiary: hsl(220, 10%, 55%); /* Light Grey - Timestamps, Hints (boosted contrast) */
-  --ink-on-accent: hsl(45, 20%, 98%); /* Light text on accent */
+  /* ==============================
+   * ALIASES FOR EXISTING UTILITIES
+   * ============================== */
+  --bg-app: var(--color-bg);
+  --bg-page: var(--color-surface-1);
+  --bg-surface: var(--color-surface-2);
+  --bg-base: var(--color-bg);
+  --bg-0: var(--color-bg);
+  --bg-1: var(--color-surface-1);
+  --bg-2: var(--color-surface-2);
 
-  /* Accent Colors */
-  --accent-primary: hsl(260, 35%, 45%); /* Muted Indigo/Violet */
-  --accent-secondary: hsl(260, 25%, 65%); /* Lighter Violet */
-  --accent-hover: hsl(260, 40%, 40%);
+  --surface-1: var(--color-surface-1);
+  --surface-2: var(--color-surface-2);
+  --surface-3: var(--color-surface-3);
+  --surface-inset: var(--color-muted);
 
-  /* Semantic Colors */
-  --color-success: hsl(140, 40%, 45%);
-  --color-warning: hsl(35, 80%, 50%);
-  --color-error: hsl(0, 60%, 45%);
+  --ink-primary: var(--color-text-primary);
+  --ink-secondary: var(--color-text-secondary);
+  --ink-tertiary: var(--color-text-tertiary);
+  --ink-on-accent: var(--color-surface-1);
 
-  /* Mapping to existing variable names for compatibility */
-  --bg-base: var(--bg-app);
-  --bg-0: var(--bg-app);
-  --bg-1: var(--bg-page);
-  --bg-2: var(--bg-page);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-tertiary);
+  --text-disabled: color-mix(in srgb, var(--color-text-tertiary) 65%, transparent);
+  --text-on-accent: var(--color-surface-1);
 
-  --surface-1: var(--bg-page);
-  --surface-2: var(--bg-page); /* No elevation distinction by color, use shadow */
-  --surface-3: hsl(45, 15%, 92%); /* Hover state */
-  --surface-inset: hsl(45, 10%, 94%);
+  --accent: var(--color-primary);
+  --accent-primary: var(--color-primary);
+  --accent-secondary: var(--color-accent);
+  --accent-hover: var(--color-primary-strong);
+  --brand: var(--color-primary);
 
-  --text-primary: var(--ink-primary);
-  --text-secondary: var(--ink-secondary);
-  --text-muted: var(--ink-secondary);
-  --text-disabled: hsl(220, 10%, 65%);
-  --text-on-accent: var(--ink-on-accent);
+  /* ==============================
+   * BORDERS & SHADOWS
+   * ============================== */
+  --border-color: var(--color-border);
+  --border-ink: var(--color-border);
+  --border-width: 1px;
 
-  --accent: var(--accent-primary);
-  --brand: var(--accent-primary);
-
-  /* ========================================
-   * SHADOWS & BORDERS
-   * ======================================== */
-
-  /* Subtle Paper Shadows */
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.12);
-
-  /* Map to existing names */
+  --shadow-paper: 0 6px 20px rgba(0, 0, 0, 0.18);
+  --shadow-floating: 0 12px 28px rgba(0, 0, 0, 0.22);
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
   --shadow-soft-raise: var(--shadow-paper);
   --shadow-strong-raise: var(--shadow-floating);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
-
-  /* Legacy mappings for component compatibility */
+  --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.25);
   --shadow-raise: var(--shadow-paper);
   --shadow-raiseLg: var(--shadow-floating);
+  --shadow-brandGlow: none;
+  --shadow-brandGlowLg: none;
+  --shadow-accentGlow: none;
+  --shadow-accentGlowLg: none;
 
-  /* Glow effects for brand and accent colors */
-  --shadow-brandGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
-  --shadow-accentGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
-
-  /* Borders */
-  --border-color: hsl(45, 10%, 90%);
-  --border-ink: hsl(45, 10%, 90%); /* Alias for border-color for consistency */
-  --border-width: 1px;
-
-  /* Radius */
+  /* ==============================
+   * RADII & TYPOGRAPHY
+   * ============================== */
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
+  --r-pill: 999px;
 
-  /* ========================================
-   * TYPOGRAPHY
-   * ======================================== */
-
-  --font-sans: system-ui, -apple-system, sans-serif; /* Clean Sans */
-
-  --text-base: 17px; /* Mobile legible */
-  --leading-normal: 1.6;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --text-base: 16px;
+  --leading-normal: 1.5;
 }
 
-/* Dark Mode Overrides - Applied when user selects dark theme */
 :root[data-theme="dark"] {
-  --bg-app: hsl(220, 15%, 10%);
-  --bg-page: hsl(220, 15%, 14%);
-  --bg-surface: hsl(220, 15%, 16%);
-
-  --ink-primary: hsl(45, 10%, 90%);
-  --ink-secondary: hsl(220, 10%, 70%);
-  --ink-tertiary: hsl(220, 10%, 60%);
-
-  --accent-primary: hsl(260, 40%, 60%);
-  --accent-secondary: hsl(260, 30%, 70%);
-  --accent-hover: hsl(260, 45%, 65%);
-
-  --border-color: hsl(220, 10%, 25%);
-  --border-ink: hsl(220, 10%, 25%); /* Dark mode border */
-
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4);
-
-  /* Dark mode glow effects */
-  --shadow-brandGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
-  --shadow-accentGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
-
-  /* Update surface mappings for dark mode */
-  --surface-1: hsl(220, 15%, 14%);
-  --surface-2: hsl(220, 15%, 16%);
-  --surface-3: hsl(220, 15%, 20%);
-  --surface-inset: hsl(220, 15%, 12%);
-
-  /* Update text mappings for dark mode */
-  --text-primary: hsl(45, 10%, 90%);
-  --text-secondary: hsl(220, 10%, 70%);
-  --text-muted: hsl(220, 10%, 60%);
-  --text-disabled: hsl(220, 10%, 45%);
+  color-scheme: dark;
 }
