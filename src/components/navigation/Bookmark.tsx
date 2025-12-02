@@ -6,17 +6,11 @@ interface BookmarkProps {
   onClick: () => void;
   className?: string;
   disabled?: boolean;
-  position?: "fixed" | "absolute";
 }
 
 const BOOKMARK_ANIMATION_KEY = "disa-bookmark-animated";
 
-export function Bookmark({
-  onClick,
-  className,
-  disabled = false,
-  position = "fixed",
-}: BookmarkProps) {
+export function Bookmark({ onClick, className, disabled = false }: BookmarkProps) {
   const [shouldWiggle, setShouldWiggle] = useState(false);
 
   // Wackel-Animation nur beim allerersten Start
@@ -36,16 +30,21 @@ export function Bookmark({
     <button
       onClick={disabled ? undefined : onClick}
       className={cn(
-        position === "fixed" ? "fixed right-3 sm:right-4 top-0 z-header" : "absolute right-3 top-8",
-        "w-7 h-11 sm:w-9 sm:h-14",
-        "bg-accent-primary text-ink-on-accent shadow-md cursor-pointer border border-accent-hover/40",
+        // Base positioning - positioning handled by parent container
+        "z-header",
+        // Size - maintain improved touch targets
+        "w-9 h-12 sm:w-10 sm:h-14",
+        // Appearance - use Ink on Paper design system
+        "bg-accent-primary text-ink-on-accent shadow-brandGlow cursor-pointer border border-accent-hover/40",
         "flex items-end justify-center pb-2",
-        "transition-transform hover:translate-y-1 active:translate-y-2 duration-200",
+        "transition-all hover:scale-105 active:scale-95 duration-200",
+        // Hover effect
+        "hover:shadow-xl",
         // Physical "Hang" Effect
         "origin-top",
         // Wackel-Animation beim ersten Start
         shouldWiggle && "animate-bookmark-wiggle",
-        disabled && "opacity-60 cursor-not-allowed",
+        disabled && "opacity-40 cursor-not-allowed hover:scale-100",
         className,
       )}
       style={{
@@ -60,7 +59,7 @@ export function Bookmark({
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white opacity-95"
+        className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white opacity-95"
       >
         <path
           fillRule="evenodd"

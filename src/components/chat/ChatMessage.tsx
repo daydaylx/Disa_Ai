@@ -105,7 +105,7 @@ export function ChatMessage({
 
   // Tinte auf Papier: User rechts, KI links mit Akzentstreifen
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[80%] rounded-xl p-3 sm:p-4",
+    "relative max-w-[92%] sm:max-w-[80%] rounded-md p-3 sm:p-4",
     // User: rechts, dezent abgesetzter Hintergrund
     isUser && "ml-auto bg-surface-2 border border-border-ink/20",
     // KI: links, mit Tintenstreifen am linken Rand

@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 import { useToasts } from "@/ui";
-import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
@@ -276,40 +275,20 @@ export default function Chat() {
   const activeConversation = conversations?.find((c) => c.id === activeConversationId);
   const showFab = !isEmpty;
 
-  const statusBadges = useMemo(() => {
-    const badges: Array<{
-      label: string;
-      variant: "success" | "warning" | "destructive" | "secondary";
-    }> = [];
-    if (isLoading) badges.push({ label: "Antwort läuft", variant: "secondary" });
-    const limited = rateLimitInfo?.isLimited ?? false;
-    const retryAfter = rateLimitInfo?.retryAfter ?? 0;
-    if (limited) {
-      badges.push({
-        label: `Cooldown ${retryAfter}s`,
-        variant: "warning",
-      });
-    }
-    if (apiStatus === "missing_key") badges.push({ label: "API-Key fehlt", variant: "secondary" });
-    if (apiStatus === "error" || error) badges.push({ label: "Fehler", variant: "destructive" });
-    if (apiStatus === "ok" && !isLoading && !limited) {
-      badges.push({ label: "Bereit", variant: "success" });
-    }
-    return badges;
-  }, [apiStatus, error, isLoading, rateLimitInfo]);
-
   return (
     <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
-      {/* Mobile FAB outside animated page to avoid transform clipping */}
+      <h1 className="sr-only">Disa AI – Chat</h1>
+
+      {/* Mobile FAB - New Page Button */}
       {showFab && (
         <Button
           variant="secondary"
           size="icon"
           onClick={handleSwipeLeft}
-          className="fixed z-fab rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 touch-manipulation"
+          className="fixed z-fab flex items-center justify-center w-11 h-11 bg-ink-primary hover:bg-ink-primary/90 text-white rounded-full shadow-lg sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
           style={{
-            top: `calc(3.5rem + env(safe-area-inset-top, 0px))`, // 56px + safe area
-            right: `max(0.75rem, env(safe-area-inset-right, 0px))`, // 12px or safe area (whichever is larger)
+            top: `calc(3.5rem + env(safe-area-inset-top, 0px))`,
+            right: `max(1rem, env(safe-area-inset-right, 0px))`,
           }}
           aria-label="Neuen Chat starten"
         >
@@ -323,159 +302,125 @@ export default function Chat() {
         swipeStack={swipeStack}
         onSwipeLeft={handleSwipeLeft}
         onSwipeRight={handleSwipeRight}
-        canSwipeLeft={messages.length > 0} // Can swipe left if current chat is not empty
+        canSwipeLeft={messages.length > 0}
         canSwipeRight={
           swipeStack.length > 1 &&
           swipeStack.indexOf(activeConversationId || "") < swipeStack.length - 1
         }
       >
+        {/* Container matches BookPageAnimator expectations */}
         <div className="relative flex flex-col text-ink-primary h-full min-h-0 bg-bg-page">
-          <h1 className="sr-only">Disa AI – Chat</h1>
-          <div className="flex-1 flex justify-center px-3 sm:px-4 pb-4">
-            <div className="relative w-full max-w-5xl bg-bg-page border border-border-ink/20 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col">
-              {/* Bookmark Component */}
-              <Bookmark
-                onClick={() => setIsHistoryOpen(true)}
-                className="top-6 sm:top-8 -right-1 sm:-right-2"
-                position="absolute"
-                disabled={(conversations || []).length === 0}
-              />
+          {/* Bookmark positioned relative to this container */}
+          <Bookmark
+            onClick={() => setIsHistoryOpen(true)}
+            className="absolute top-0 right-3 sm:right-4"
+            disabled={(conversations || []).length === 0}
+          />
 
-              {/* Header: Titel + Status */}
-              <div className="px-4 pt-4 pb-2 flex items-center gap-2">
-                <div className="min-w-0">
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
-                    Aktuelle Seite
-                  </div>
-                  <div className="text-lg font-semibold text-ink-primary truncate">
-                    {activeConversation?.title || "Neue Unterhaltung"}
-                  </div>
-                  <div className="text-xs text-ink-secondary">
-                    {activeRole ? activeRole.name : "Standard"} · {settings.preferredModelId}
-                  </div>
-                </div>
-                <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-                  <div className="flex flex-wrap gap-1 justify-end">
-                    {statusBadges.map((badge) => (
-                      <Badge
-                        key={badge.label}
-                        variant="outline"
-                        className={cn(
-                          "text-[10px] font-normal h-auto py-0.5",
-                          badge.variant === "success" && "border-accent text-accent",
-                          badge.variant === "warning" && "border-warning text-warning",
-                          badge.variant === "destructive" && "border-error text-error",
-                          badge.variant === "secondary" && "border-ink-tertiary text-ink-tertiary",
-                        )}
-                      >
-                        {badge.label}
-                      </Badge>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsThemenSheetOpen(true)}
-                    className="text-[11px] font-semibold text-ink-secondary underline underline-offset-4 decoration-ink-tertiary hover:text-ink-primary hover:decoration-ink-secondary px-2 py-1 rounded-lg transition hover:bg-surface-2"
-                  >
-                    Schnelleinstieg
-                  </button>
-                </div>
+          {/* Simplified Header */}
+          <div className="px-3 sm:px-4 pt-4 pb-2 flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                Aktuelle Seite
               </div>
+              <div className="text-lg font-semibold text-ink-primary truncate">
+                {activeConversation?.title || "Neue Unterhaltung"}
+              </div>
+            </div>
+          </div>
 
-              <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-              {/* Main Content Area - Flex Grow */}
-              <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative flex flex-col px-2 sm:px-4 pb-2">
-                {isEmpty ? (
-                  /* Empty State - Tinte auf Papier Stil */
-                  <div className="flex-1 flex items-center justify-center px-2 py-6">
-                    <ChatStartCard
-                      onNewChat={() => setIsHistoryOpen(true)}
-                      conversationCount={stats?.totalConversations || 0}
-                    />
-                  </div>
-                ) : (
-                  /* Chat-Bereich als "Papierseite" */
-                  <div
-                    className={cn(
-                      "flex-1 mx-1 sm:mx-2 my-2 rounded-xl",
-                      "bg-bg-page border border-border-ink/20",
-                      "shadow-sm",
-                      "relative before:absolute before:inset-x-1 before:-bottom-1 before:h-2 before:bg-bg-page/60 before:rounded-b-lg before:-z-10",
-                    )}
-                    data-testid="chat-message-list"
-                  >
-                    <VirtualizedMessageList
-                      messages={messages}
-                      isLoading={isLoading}
-                      onCopy={(content) => {
-                        navigator.clipboard.writeText(content).catch((err) => {
-                          console.error("Failed to copy content:", err);
-                        });
-                      }}
-                      onEdit={handleEdit}
-                      onFollowUp={handleFollowUp}
-                      onRetry={(messageId) => {
-                        const messageIndex = messages.findIndex((m) => m.id === messageId);
-                        if (messageIndex === -1) return;
-
-                        // Find last user message
-                        const targetUserIndex = (() => {
-                          const targetMsg = messages[messageIndex];
-                          if (targetMsg && targetMsg.role === "user") return messageIndex;
-                          for (let i = messageIndex; i >= 0; i -= 1) {
-                            const candidate = messages[i];
-                            if (candidate && candidate.role === "user") return i;
-                          }
-                          return -1;
-                        })();
-
-                        if (targetUserIndex === -1) {
-                          toasts.push({
-                            kind: "warning",
-                            title: "Retry nicht möglich",
-                            message: "Keine passende Nutzernachricht gefunden.",
-                          });
-                          return;
-                        }
-
-                        const userMessage = messages[targetUserIndex];
-                        if (!userMessage) return;
-                        const historyContext = messages.slice(0, targetUserIndex);
-                        setMessages(historyContext);
-                        void append({ role: "user", content: userMessage.content }, historyContext);
-                      }}
-                      className="h-full"
-                    />
-                  </div>
+          {/* Chat Messages Area - Scrollable */}
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative flex flex-col">
+            {isEmpty ? (
+              <div className="flex-1 flex items-center justify-center px-4 py-8">
+                <ChatStartCard
+                  onNewChat={() => setIsHistoryOpen(true)}
+                  conversationCount={stats?.totalConversations || 0}
+                />
+              </div>
+            ) : (
+              /* Chat messages with visible "page" container */
+              <div
+                className={cn(
+                  "flex-1 mx-2 sm:mx-4 my-2 rounded-xl",
+                  "bg-bg-page border border-border-ink/20",
+                  "shadow-sm",
+                  // Stack effect: subtle pages behind
+                  "relative before:absolute before:inset-x-1 before:-bottom-1 before:h-2 before:bg-bg-page/60 before:rounded-b-lg before:-z-10",
                 )}
-                <div ref={messagesEndRef} />
+                data-testid="chat-message-list"
+              >
+                <VirtualizedMessageList
+                  messages={messages}
+                  isLoading={isLoading}
+                  onCopy={(content) => {
+                    navigator.clipboard.writeText(content).catch((err) => {
+                      console.error("Failed to copy content:", err);
+                    });
+                  }}
+                  onEdit={handleEdit}
+                  onFollowUp={handleFollowUp}
+                  onRetry={(messageId) => {
+                    const messageIndex = messages.findIndex((m) => m.id === messageId);
+                    if (messageIndex === -1) return;
+
+                    const targetUserIndex = (() => {
+                      const targetMsg = messages[messageIndex];
+                      if (targetMsg && targetMsg.role === "user") return messageIndex;
+                      for (let i = messageIndex; i >= 0; i -= 1) {
+                        const candidate = messages[i];
+                        if (candidate && candidate.role === "user") return i;
+                      }
+                      return -1;
+                    })();
+
+                    if (targetUserIndex === -1) {
+                      toasts.push({
+                        kind: "warning",
+                        title: "Retry nicht möglich",
+                        message: "Keine passende Nutzernachricht gefunden.",
+                      });
+                      return;
+                    }
+
+                    const userMessage = messages[targetUserIndex];
+                    if (!userMessage) return;
+                    const historyContext = messages.slice(0, targetUserIndex);
+                    setMessages(historyContext);
+                    void append({ role: "user", content: userMessage.content }, historyContext);
+                  }}
+                  className="h-full"
+                />
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area - Fixed at bottom */}
+          <div className="bg-bg-page z-composer border-t border-border-ink/30 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.06)]">
+            <div className="max-w-3xl mx-auto">
+              {/* Chat Input */}
+              <div className="px-2 pt-1.5 sm:px-4 sm:pt-2">
+                <ChatInputBar
+                  value={input}
+                  onChange={setInput}
+                  onSend={handleSend}
+                  isLoading={isLoading}
+                  onQuickAction={(prompt) => setInput(prompt)}
+                />
               </div>
 
-              {/* Input Bar Area */}
-              <div className="bg-bg-page border-t border-border-ink/20 shadow-sm">
-                <div className="max-w-4xl mx-auto">
-                  {/* Kontextleiste */}
-                  <ContextBar
-                    modelCatalog={modelCatalog}
-                    onSend={handleSend}
-                    onStop={stop}
-                    isLoading={isLoading}
-                    canSend={!!input.trim()}
-                    className="px-2 sm:px-3 pt-2"
-                  />
-                  {/* Chat Input */}
-                  <div className="px-2 pb-2 sm:px-3">
-                    <ChatInputBar
-                      value={input}
-                      onChange={setInput}
-                      onSend={handleSend}
-                      isLoading={isLoading}
-                      onQuickAction={(prompt) => setInput(prompt)}
-                    />
-                  </div>
-                </div>
-              </div>
+              {/* Context Bar: AI Behavior Controls */}
+              <ContextBar
+                modelCatalog={modelCatalog}
+                onSend={handleSend}
+                onStop={stop}
+                isLoading={isLoading}
+                canSend={!!input.trim()}
+                className="border-t border-border-ink/20 mt-2"
+              />
             </div>
           </div>
         </div>

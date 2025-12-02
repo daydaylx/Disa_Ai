@@ -85,9 +85,9 @@
   --border-width: 1px;
 
   /* Radius */
-  --r-sm: 4px;
-  --r-md: 8px; /* Notizbuch style, not bubble */
-  --r-lg: 12px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
 
   /* ========================================
    * TYPOGRAPHY

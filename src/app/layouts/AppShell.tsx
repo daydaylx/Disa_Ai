@@ -94,13 +94,24 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           className="flex min-h-screen flex-1 flex-col"
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
-          <header className="sticky top-0 z-header border-b border-border-ink/10 bg-bg-page/90 backdrop-blur">
+          {/* Header - Clean for Chat Mode */}
+          <header
+            className={cn(
+              "sticky top-0 z-header border-b border-border-ink/10 bg-bg-page/90 backdrop-blur",
+              isChatMode && "lg:hidden", // Hide header on desktop in chat mode
+            )}
+          >
             <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
               <MobileBackButton />
               <div className="flex items-center gap-2 truncate">
                 <BrandWordmark className="text-sm lg:hidden" />
-                <span className="text-sm font-semibold text-ink-primary truncate">{pageTitle}</span>
+                {!isChatMode && (
+                  <span className="text-sm font-semibold text-ink-primary truncate">
+                    {pageTitle}
+                  </span>
+                )}
               </div>
+              {/* Only show Quickstarts/Feedback on non-chat pages */}
               {!isChatMode && (
                 <div className="ml-auto flex items-center gap-2">
                   <Link
@@ -150,6 +161,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             </div>
           </div>
 
+          {/* Bottom Navigation - Mobile Only */}
           <div className="border-t border-border-ink/15 bg-bg-page/95 backdrop-blur lg:hidden">
             <PrimaryNavigation orientation="bottom" />
           </div>

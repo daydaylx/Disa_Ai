@@ -102,9 +102,9 @@ const spacingScale = {
 
 const radii = {
   none: "0px",
-  sm: "var(--r-sm)", // 4px
-  md: "var(--r-md)", // 8px (Notizbuch)
-  lg: "var(--r-lg)", // 12px
+  sm: "var(--r-sm)", // 8px
+  md: "var(--r-md)", // 12px
+  lg: "var(--r-lg)", // 16px
   full: "9999px",
 };
 
