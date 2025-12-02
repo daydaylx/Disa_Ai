@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
-import { ChatStartCard } from "@/ui/ChatStartCard";
+import { ChatStartCard, type QuickStartItem } from "@/ui/ChatStartCard";
 
 import { ChatInputBar } from "../components/chat/ChatInputBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -241,6 +241,18 @@ export default function Chat() {
     void navigate("/chat/history");
   }, [navigate]);
 
+  const quickStartPrompts: QuickStartItem[] = [
+    { label: "Frag mich nach Ideen", prompt: "Welche Ideen hast du für unser nächstes Feature?" },
+    {
+      label: "Hilf mir bei Text",
+      prompt: "Formuliere mir bitte eine freundliche Nachricht an unser Team.",
+    },
+    {
+      label: "Strukturiere einen Plan",
+      prompt: "Erstelle mir eine kurze Liste der nächsten Schritte.",
+    },
+  ];
+
   const isEmpty = messages.length === 0;
 
   return (
@@ -305,6 +317,8 @@ export default function Chat() {
           {isEmpty ? (
             <ChatStartCard
               onNewChat={handleStartNewChat}
+              onQuickStart={handleFollowUp}
+              quickStarts={quickStartPrompts}
               conversationCount={stats?.totalConversations ?? conversationCount}
             />
           ) : (
