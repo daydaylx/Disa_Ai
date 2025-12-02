@@ -110,7 +110,7 @@ export function ChatMessage({
     isUser && "ml-auto bg-surface-1 border border-border-ink/25",
     // KI: links, mit Tintenstreifen am linken Rand
     isAssistant &&
-      "mr-auto bg-paper border border-border-ink/20 border-l-[4px] border-l-accent-primary",
+      "mr-auto bg-bg-paper border border-border-ink/20 border-l-[4px] border-l-accent-primary",
     // System: zentriert, dezent
     isSystem &&
       "mx-auto max-w-[95%] sm:max-w-2xl bg-surface-1/50 border border-border-ink/10 text-center",

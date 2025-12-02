@@ -21,7 +21,7 @@ export function ChatStartCard({
   onOpenHistory,
 }: ChatStartCardProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border-ink/30 bg-paper px-6 py-8 text-center shadow-sm">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border-ink/30 bg-bg-paper px-6 py-8 text-center shadow-sm">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-primary/10 text-accent-primary">
         <Sparkles className="h-6 w-6" />
       </div>

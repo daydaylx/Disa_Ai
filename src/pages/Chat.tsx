@@ -286,7 +286,7 @@ export default function Chat() {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-app text-text-primary">
+    <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-bg-app text-text-primary">
       <h1 className="sr-only">Disa AI – Chat</h1>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4">
@@ -305,8 +305,8 @@ export default function Chat() {
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pb-10">
-        <div className="relative flex min-h-[70vh] flex-1 flex-col overflow-hidden rounded-2xl border border-border-ink/25 bg-paper shadow-raise">
-          <div className="flex items-center justify-between gap-3 border-b border-border-ink/20 bg-paper/90 px-5 py-4 backdrop-blur-sm supports-[backdrop-filter]:backdrop-blur-md">
+        <div className="relative flex min-h-[70vh] flex-1 flex-col overflow-hidden rounded-2xl border border-border-ink/25 bg-bg-paper shadow-raise">
+          <div className="flex items-center justify-between gap-3 border-b border-border-ink/20 bg-bg-paper/90 px-5 py-4 backdrop-blur-sm supports-[backdrop-filter]:backdrop-blur-md">
             <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.12em] text-text-tertiary">
                 Aktive Unterhaltung
@@ -337,7 +337,7 @@ export default function Chat() {
                 onOpenHistory={handleOpenHistory}
               />
             ) : (
-              <div className="relative flex min-h-[320px] flex-1 flex-col overflow-hidden rounded-xl border border-border-ink/30 bg-paper">
+              <div className="relative flex min-h-[320px] flex-1 flex-col overflow-hidden rounded-xl border border-border-ink/30 bg-bg-paper">
                 <VirtualizedMessageList
                   messages={messages}
                   isLoading={isLoading}
@@ -384,7 +384,7 @@ export default function Chat() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-border-ink/25 bg-paper/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-lg sm:px-5 sm:py-4">
+          <div className="border-t border-border-ink/25 bg-bg-paper/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-lg sm:px-5 sm:py-4">
             <div className="mx-auto w-full max-w-4xl space-y-3">
               <ChatInputBar
                 value={input}
