@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { BrandWordmark } from "@/app/components/BrandWordmark";
+import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "@/components/layout/AppMenuDrawer";
+import { Bookmark } from "@/components/navigation/Bookmark";
+import { HistorySidePanel } from "@/components/navigation/HistorySidePanel";
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
@@ -21,7 +25,6 @@ import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
-import { History, Plus } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
@@ -29,6 +32,7 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
+  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -113,7 +117,15 @@ export default function Chat() {
     }
   }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
 
-  const { activeConversationId, newConversation, conversations } = useConversationManager({
+  const {
+    activeConversationId,
+    newConversation,
+    conversations,
+    isHistoryOpen,
+    openHistory,
+    closeHistory,
+    selectConversation,
+  } = useConversationManager({
     messages,
     isLoading,
     setMessages,
@@ -226,8 +238,41 @@ export default function Chat() {
     }
   }, [searchParams, navigate, startWithPreset]);
 
-  const activeConversation = conversations?.find((c) => c.id === activeConversationId);
-  const conversationCount = conversations?.length ?? 0;
+  const conversationList = useMemo(() => conversations ?? [], [conversations]);
+
+  const activeConversation = conversationList.find((c) => c.id === activeConversationId);
+  const conversationCount = conversationList.length;
+
+  const sortedConversations = useMemo(
+    () =>
+      [...conversationList].sort(
+        (a, b) =>
+          new Date(b.updatedAt ?? b.createdAt ?? 0).getTime() -
+          new Date(a.updatedAt ?? a.createdAt ?? 0).getTime(),
+      ),
+    [conversationList],
+  );
+
+  const historyPages = useMemo(
+    () =>
+      sortedConversations.map((conversation) => ({
+        id: conversation.id,
+        title: conversation.title || "Unbenannter Chat",
+        date: (() => {
+          const referenceDate = conversation.updatedAt || conversation.createdAt;
+          if (!referenceDate) return "Unbekannt";
+
+          return new Date(referenceDate).toLocaleDateString("de-DE", {
+            day: "2-digit",
+            month: "short",
+          });
+        })(),
+      })),
+    [sortedConversations],
+  );
+
+  const activeHistoryPages = historyPages.slice(0, 3);
+  const archivedHistoryPages = historyPages.slice(3);
 
   const handleStartNewChat = useCallback(() => {
     newConversation();
@@ -235,144 +280,145 @@ export default function Chat() {
   }, [newConversation, setInput]);
 
   const handleOpenHistory = useCallback(() => {
-    void navigate("/chat/history");
-  }, [navigate]);
+    openHistory();
+  }, [openHistory]);
 
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-bg-page text-text-primary">
+    <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-app text-text-primary">
       <h1 className="sr-only">Disa AI – Chat</h1>
 
-      <div className="border-b border-border-ink/40 bg-surface-2 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] uppercase tracking-[0.08em] text-text-tertiary">
-              Aktive Unterhaltung
-            </p>
-            <p className="text-lg font-semibold text-text-primary truncate">
-              {activeConversation?.title || "Neue Unterhaltung"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
+          <BrandWordmark className="text-xl sm:text-2xl" />
+          <span className="hidden text-xs font-semibold uppercase tracking-[0.18em] text-ink-secondary sm:inline">
+            Disa AI
+          </span>
+        </div>
+        <div className="flex flex-1 justify-center">
+          <span className="rounded-full bg-surface-2 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-secondary shadow-sm">
+            Chat
+          </span>
+        </div>
+        <MenuIcon onClick={openMenu} />
+      </div>
+
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pb-10">
+        <div className="relative flex min-h-[70vh] flex-1 flex-col overflow-hidden rounded-2xl border border-border-ink/25 bg-paper shadow-raise">
+          <div className="flex items-center justify-between gap-3 border-b border-border-ink/20 bg-paper/90 px-5 py-4 backdrop-blur-sm supports-[backdrop-filter]:backdrop-blur-md">
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-text-tertiary">
+                Aktive Unterhaltung
+              </p>
+              <p className="truncate text-lg font-semibold text-text-primary">
+                {activeConversation?.title || "Neue Unterhaltung"}
+              </p>
+            </div>
             <Button
               variant="ghost"
-              size="icon"
-              aria-label="Verlauf öffnen"
-              onClick={handleOpenHistory}
-              className="hidden sm:inline-flex"
-            >
-              <History className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label="Verlauf öffnen"
-              onClick={handleOpenHistory}
-              className="sm:hidden"
-            >
-              <History className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="primary"
-              size="default"
+              size="sm"
               onClick={handleStartNewChat}
-              className="hidden sm:inline-flex"
+              className="text-sm font-medium text-ink-secondary hover:text-ink-primary"
             >
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">Neuer Chat</span>
-            </Button>
-            <Button
-              variant="primary"
-              size="icon"
-              onClick={handleStartNewChat}
-              className="sm:hidden"
-              aria-label="Neuer Chat"
-            >
-              <Plus className="h-4 w-4" />
+              Neues Kapitel
             </Button>
           </div>
-        </div>
-      </div>
 
-      <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          <div className="space-y-3 px-3 pt-3 sm:px-5">
+            <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          </div>
 
-      <div className="flex flex-1 flex-col">
-        <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-6 sm:py-4">
-          {isEmpty ? (
-            <ChatStartCard
-              onNewChat={handleStartNewChat}
-              conversationCount={stats?.totalConversations ?? conversationCount}
-            />
-          ) : (
-            <div className="relative flex min-h-[320px] flex-col overflow-hidden rounded-xl border border-border-ink/40 bg-surface-2 shadow-sm">
-              <VirtualizedMessageList
-                messages={messages}
-                isLoading={isLoading}
-                onCopy={(content) => {
-                  navigator.clipboard.writeText(content).catch((err) => {
-                    console.error("Failed to copy content:", err);
-                  });
-                }}
-                onEdit={handleEdit}
-                onFollowUp={handleFollowUp}
-                onRetry={(messageId) => {
-                  const messageIndex = messages.findIndex((m) => m.id === messageId);
-                  if (messageIndex === -1) return;
-
-                  const targetUserIndex = (() => {
-                    const targetMsg = messages[messageIndex];
-                    if (targetMsg && targetMsg.role === "user") return messageIndex;
-                    for (let i = messageIndex; i >= 0; i -= 1) {
-                      const candidate = messages[i];
-                      if (candidate && candidate.role === "user") return i;
-                    }
-                    return -1;
-                  })();
-
-                  if (targetUserIndex === -1) {
-                    toasts.push({
-                      kind: "warning",
-                      title: "Retry nicht möglich",
-                      message: "Keine passende Nutzernachricht gefunden.",
+          <div className="flex flex-1 flex-col px-3 pb-3 sm:px-5 sm:pb-4">
+            {isEmpty ? (
+              <ChatStartCard
+                onNewChat={handleStartNewChat}
+                conversationCount={stats?.totalConversations ?? conversationCount}
+                onOpenHistory={handleOpenHistory}
+              />
+            ) : (
+              <div className="relative flex min-h-[320px] flex-1 flex-col overflow-hidden rounded-xl border border-border-ink/30 bg-paper">
+                <VirtualizedMessageList
+                  messages={messages}
+                  isLoading={isLoading}
+                  onCopy={(content) => {
+                    navigator.clipboard.writeText(content).catch((err) => {
+                      console.error("Failed to copy content:", err);
                     });
-                    return;
-                  }
+                  }}
+                  onEdit={handleEdit}
+                  onFollowUp={handleFollowUp}
+                  onRetry={(messageId) => {
+                    const messageIndex = messages.findIndex((m) => m.id === messageId);
+                    if (messageIndex === -1) return;
 
-                  const userMessage = messages[targetUserIndex];
-                  if (!userMessage) return;
-                  const historyContext = messages.slice(0, targetUserIndex);
-                  setMessages(historyContext);
-                  void append({ role: "user", content: userMessage.content }, historyContext);
-                }}
-                className="h-full"
+                    const targetUserIndex = (() => {
+                      const targetMsg = messages[messageIndex];
+                      if (targetMsg && targetMsg.role === "user") return messageIndex;
+                      for (let i = messageIndex; i >= 0; i -= 1) {
+                        const candidate = messages[i];
+                        if (candidate && candidate.role === "user") return i;
+                      }
+                      return -1;
+                    })();
+
+                    if (targetUserIndex === -1) {
+                      toasts.push({
+                        kind: "warning",
+                        title: "Retry nicht möglich",
+                        message: "Keine passende Nutzernachricht gefunden.",
+                      });
+                      return;
+                    }
+
+                    const userMessage = messages[targetUserIndex];
+                    if (!userMessage) return;
+                    const historyContext = messages.slice(0, targetUserIndex);
+                    setMessages(historyContext);
+                    void append({ role: "user", content: userMessage.content }, historyContext);
+                  }}
+                  className="h-full px-3 py-4 sm:px-5 sm:py-6"
+                />
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="border-t border-border-ink/25 bg-paper/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-lg sm:px-5 sm:py-4">
+            <div className="mx-auto w-full max-w-4xl space-y-3">
+              <ChatInputBar
+                value={input}
+                onChange={setInput}
+                onSend={handleSend}
+                isLoading={isLoading}
+                onQuickAction={(prompt) => setInput(prompt)}
+              />
+
+              <ContextBar
+                modelCatalog={modelCatalog}
+                onSend={handleSend}
+                onStop={stop}
+                isLoading={isLoading}
+                canSend={!!input.trim()}
+                className="border-t border-border-ink/30 pt-3"
               />
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        <div className="border-t border-border-ink/40 bg-surface-2/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md sm:px-6 sm:py-4">
-          <div className="mx-auto w-full max-w-4xl space-y-3">
-            <ChatInputBar
-              value={input}
-              onChange={setInput}
-              onSend={handleSend}
-              isLoading={isLoading}
-              onQuickAction={(prompt) => setInput(prompt)}
-            />
-
-            <ContextBar
-              modelCatalog={modelCatalog}
-              onSend={handleSend}
-              onStop={stop}
-              isLoading={isLoading}
-              canSend={!!input.trim()}
-              className="border-t border-border-ink/30 pt-3"
-            />
           </div>
         </div>
       </div>
+
+      <Bookmark onClick={handleOpenHistory} className="fixed right-3 top-1/2 -translate-y-1/2" />
+
+      <HistorySidePanel
+        isOpen={isHistoryOpen}
+        onClose={closeHistory}
+        activePages={activeHistoryPages}
+        archivedPages={archivedHistoryPages}
+        activeChatId={activeConversationId}
+        onSelectChat={(id) => selectConversation(id)}
+      />
+
+      <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
     </div>
   );
 }

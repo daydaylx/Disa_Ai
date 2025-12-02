@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { BrandWordmark } from "../app/components/BrandWordmark";
 import { History, Sparkles } from "../lib/icons";
 import { buttonVariants } from "./Button";
@@ -14,11 +12,16 @@ import { buttonVariants } from "./Button";
 interface ChatStartCardProps {
   onNewChat: () => void;
   conversationCount?: number;
+  onOpenHistory?: () => void;
 }
 
-export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCardProps) {
+export function ChatStartCard({
+  onNewChat,
+  conversationCount = 0,
+  onOpenHistory,
+}: ChatStartCardProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border-ink/30 bg-surface-2 px-6 py-8 text-center shadow-sm">
+    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border-ink/30 bg-paper px-6 py-8 text-center shadow-sm">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-primary/10 text-accent-primary">
         <Sparkles className="h-6 w-6" />
       </div>
@@ -39,9 +42,10 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
           Neues Gespräch
         </button>
 
-        {conversationCount > 0 && (
-          <Link
-            to="/chat/history"
+        {conversationCount > 0 && onOpenHistory && (
+          <button
+            type="button"
+            onClick={onOpenHistory}
             className={buttonVariants({
               variant: "secondary",
               size: "default",
@@ -51,7 +55,7 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
           >
             <History className="h-4 w-4" />
             Verlauf ({conversationCount})
-          </Link>
+          </button>
         )}
       </div>
     </div>

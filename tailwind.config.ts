@@ -9,6 +9,7 @@ const colorTokens = {
   bg: {
     app: "var(--bg-app)", // Off-white paper
     page: "var(--bg-page)", // Page surface
+    paper: "var(--bg-page)",
     surface: "var(--bg-surface)",
   },
 

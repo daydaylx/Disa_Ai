@@ -105,12 +105,12 @@ export function ChatMessage({
 
   // Tinte auf Papier: User rechts, KI links mit Akzentstreifen
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[80%] rounded-md p-3 sm:p-4",
+    "relative max-w-[92%] sm:max-w-[80%] rounded-lg p-3 sm:p-4 shadow-sm",
     // User: rechts, dezent abgesetzter Hintergrund
-    isUser && "ml-auto bg-surface-2 border border-border-ink/20",
+    isUser && "ml-auto bg-surface-1 border border-border-ink/25",
     // KI: links, mit Tintenstreifen am linken Rand
     isAssistant &&
-      "mr-auto bg-bg-page border border-border-ink/15 border-l-[3px] border-l-accent-primary",
+      "mr-auto bg-paper border border-border-ink/20 border-l-[4px] border-l-accent-primary",
     // System: zentriert, dezent
     isSystem &&
       "mx-auto max-w-[95%] sm:max-w-2xl bg-surface-1/50 border border-border-ink/10 text-center",
