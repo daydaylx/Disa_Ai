@@ -87,22 +87,19 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
           {/* Header - Clean for Chat Mode */}
-          <header
-            className={cn(
-              "sticky top-0 z-header border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
-              isChatMode && "lg:hidden",
-            )}
-          >
-            <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
-              <MobileBackButton />
-              <div className="flex items-center gap-2 truncate">
-                <BrandWordmark className="text-sm lg:hidden" />
-                <span className="text-sm font-semibold text-text-primary truncate">
-                  {pageTitle}
-                </span>
+          {!isChatMode && (
+            <header className="sticky top-0 z-header border-b border-border-ink/30 bg-surface-2/95 backdrop-blur">
+              <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
+                <MobileBackButton />
+                <div className="flex items-center gap-2 truncate">
+                  <BrandWordmark className="text-sm lg:hidden" />
+                  <span className="text-sm font-semibold text-text-primary truncate">
+                    {pageTitle}
+                  </span>
+                </div>
               </div>
-            </div>
-          </header>
+            </header>
+          )}
 
           <div
             id="main"
@@ -127,9 +124,11 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
 
           {/* Bottom Navigation - Mobile Only */}
-          <div className="border-t border-border-ink/30 bg-surface-2/95 backdrop-blur lg:hidden">
-            <PrimaryNavigation orientation="bottom" />
-          </div>
+          {!isChatMode && (
+            <div className="border-t border-border-ink/30 bg-surface-2/95 backdrop-blur lg:hidden">
+              <PrimaryNavigation orientation="bottom" />
+            </div>
+          )}
         </div>
       </div>
     </div>
