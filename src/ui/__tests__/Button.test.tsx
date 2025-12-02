@@ -13,14 +13,14 @@ describe("Button", () => {
   it("applies primary variant classes", () => {
     render(<Button variant="primary">Primary</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("bg-accent");
-    expect(button.className).toContain("text-white");
+    expect(button.className).toContain("bg-accent-primary");
+    expect(button.className).toContain("text-surface-1");
   });
 
   it("applies secondary variant classes", () => {
     render(<Button variant="secondary">Secondary</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("bg-bg-page");
+    expect(button.className).toContain("bg-surface-2");
     expect(button.className).toContain("border-border-ink");
   });
 });

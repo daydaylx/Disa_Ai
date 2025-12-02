@@ -89,15 +89,15 @@ const colorTokens = {
 const spacingScale = {
   0: "0px",
   1: "4px",
-  2: "8px",
-  3: "12px",
-  4: "16px",
-  5: "20px",
-  6: "24px",
-  7: "32px",
-  8: "40px",
-  9: "48px",
-  10: "64px",
+  2: "6px",
+  3: "8px",
+  4: "12px",
+  5: "16px",
+  6: "20px",
+  7: "24px",
+  8: "32px",
+  9: "40px",
+  10: "48px",
 };
 
 const radii = {

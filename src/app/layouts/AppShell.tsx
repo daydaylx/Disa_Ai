@@ -2,8 +2,6 @@
 import { type ReactNode, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { BuildInfo } from "../../components/BuildInfo";
-import { AutoBreadcrumbs } from "../../components/navigation/Breadcrumbs";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
@@ -42,7 +40,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
 
   return (
-    <div className="relative min-h-screen bg-bg-base text-text-primary">
+    <div className="relative min-h-screen bg-bg-app text-text-primary">
       <div className="relative flex min-h-screen flex-col lg:flex-row">
         <a
           href="#main"
@@ -64,28 +62,22 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           Zum Hauptinhalt springen
         </a>
 
-        <aside className="hidden w-64 flex-shrink-0 border-r border-border-ink/15 bg-bg-page/90 backdrop-blur lg:flex">
+        <aside className="hidden w-64 flex-shrink-0 border-r border-border-ink/20 bg-surface-2 lg:flex">
           <div className="flex h-full w-full flex-col gap-6 px-4 py-5">
             <BrandWordmark className="text-base" />
             <PrimaryNavigation orientation="side" />
-            <div className="mt-auto space-y-2 text-xs text-ink-tertiary">
+            <div className="mt-auto space-y-2 text-xs text-text-tertiary">
               <div className="flex flex-col gap-1">
                 {SECONDARY_NAV_ITEMS.map((item) => (
                   <Link
                     key={item.id}
                     to={item.path}
-                    className="rounded-lg px-3 py-2 transition hover:bg-surface-2"
+                    className="rounded-lg px-3 py-2 transition hover:bg-surface-3"
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
-              {process.env.NODE_ENV === "development" && (
-                <div className="flex items-center gap-2 rounded-lg border border-border-ink/20 px-3 py-2 text-[11px]">
-                  <span>Build</span>
-                  <BuildInfo />
-                </div>
-              )}
             </div>
           </div>
         </aside>
@@ -97,43 +89,19 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           {/* Header - Clean for Chat Mode */}
           <header
             className={cn(
-              "sticky top-0 z-header border-b border-border-ink/10 bg-bg-page/90 backdrop-blur",
-              isChatMode && "lg:hidden", // Hide header on desktop in chat mode
+              "sticky top-0 z-header border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
+              isChatMode && "lg:hidden",
             )}
           >
             <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
               <MobileBackButton />
               <div className="flex items-center gap-2 truncate">
                 <BrandWordmark className="text-sm lg:hidden" />
-                {!isChatMode && (
-                  <span className="text-sm font-semibold text-ink-primary truncate">
-                    {pageTitle}
-                  </span>
-                )}
+                <span className="text-sm font-semibold text-text-primary truncate">
+                  {pageTitle}
+                </span>
               </div>
-              {/* Only show Quickstarts/Feedback on non-chat pages */}
-              {!isChatMode && (
-                <div className="ml-auto flex items-center gap-2">
-                  <Link
-                    to="/themen"
-                    className="rounded-full border border-border-ink/40 px-3 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-1"
-                  >
-                    Quickstarts
-                  </Link>
-                  <Link
-                    to="/feedback"
-                    className="rounded-full bg-accent-primary/90 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-accent-primary"
-                  >
-                    Feedback
-                  </Link>
-                </div>
-              )}
             </div>
-            {!isChatMode && (
-              <div className="border-t border-border-ink/10 bg-bg-page/80 px-4 pb-3 pt-2 lg:px-6">
-                <AutoBreadcrumbs className="text-xs" />
-              </div>
-            )}
           </header>
 
           <div
@@ -141,10 +109,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             role="main"
             data-testid="app-main"
             key={location.pathname}
-            className={cn(
-              "relative flex flex-1 flex-col",
-              isChatMode ? "bg-bg-page" : "bg-bg-base",
-            )}
+            className={cn("relative flex flex-1 flex-col", isChatMode ? "bg-bg-page" : "bg-bg-app")}
             tabIndex={-1}
           >
             <div
@@ -162,7 +127,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
 
           {/* Bottom Navigation - Mobile Only */}
-          <div className="border-t border-border-ink/15 bg-bg-page/95 backdrop-blur lg:hidden">
+          <div className="border-t border-border-ink/30 bg-surface-2/95 backdrop-blur lg:hidden">
             <PrimaryNavigation orientation="bottom" />
           </div>
         </div>
