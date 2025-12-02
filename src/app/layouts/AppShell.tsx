@@ -2,11 +2,40 @@
 import { type ReactNode, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
+import { Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
+
+const HAMBURGER_NAV_ITEMS = [
+  { id: "models", label: "Models", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
+  { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
+  {
+    id: "settings",
+    label: "Einstellungen",
+    path: "/settings",
+    Icon: Settings,
+    activePattern: /^\/settings/,
+  },
+  {
+    id: "quickstarts",
+    label: "Quickstarts",
+    path: "/themen",
+    Icon: Brain,
+    activePattern: /^\/themen/,
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    path: "/feedback",
+    Icon: MessageSquare,
+    activePattern: /^\/feedback/,
+  },
+  { id: "about", label: "Über", path: "/impressum", Icon: Info, activePattern: /^\/impressum/ },
+] satisfies typeof PRIMARY_NAV_ITEMS;
 
 interface AppShellProps {
   children: ReactNode;
@@ -23,6 +52,7 @@ export function AppShell({ children }: AppShellProps) {
 }
 
 function AppShellLayout({ children, location }: AppShellLayoutProps) {
+  const menuDrawer = useMenuDrawer();
   const focusMain = useCallback(() => {
     const mainEl = document.getElementById("main");
     if (!mainEl) return;
@@ -94,13 +124,16 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             )}
           >
             <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
-              <MobileBackButton />
-              <div className="flex items-center gap-2 truncate">
-                <BrandWordmark className="text-sm lg:hidden" />
-                <span className="text-sm font-semibold text-text-primary truncate">
-                  {pageTitle}
-                </span>
+              <div className="flex flex-1 items-center gap-3 truncate">
+                <MobileBackButton />
+                <div className="flex items-center gap-2 truncate">
+                  <BrandWordmark className="text-sm lg:hidden" />
+                  <span className="text-sm font-semibold text-text-primary truncate">
+                    {pageTitle}
+                  </span>
+                </div>
               </div>
+              <MenuIcon onClick={menuDrawer.openMenu} className="ml-auto" />
             </div>
           </header>
 
@@ -126,10 +159,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             </div>
           </div>
 
-          {/* Bottom Navigation - Mobile Only */}
-          <div className="border-t border-border-ink/30 bg-surface-2/95 backdrop-blur lg:hidden">
-            <PrimaryNavigation orientation="bottom" />
-          </div>
+          <AppMenuDrawer
+            isOpen={menuDrawer.isOpen}
+            onClose={menuDrawer.closeMenu}
+            navItems={HAMBURGER_NAV_ITEMS}
+            secondaryItems={[]}
+          />
         </div>
       </div>
     </div>

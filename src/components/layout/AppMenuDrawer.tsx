@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { MaterialCard } from "@/ui/MaterialCard";
 
 import { BrandWordmark } from "../../app/components/BrandWordmark";
+import type { AppNavItem } from "../../config/navigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
 import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
@@ -14,9 +15,17 @@ interface AppMenuDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   className?: string;
+  navItems?: AppNavItem[];
+  secondaryItems?: AppNavItem[];
 }
 
-export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps) {
+export function AppMenuDrawer({
+  isOpen,
+  onClose,
+  className,
+  navItems,
+  secondaryItems,
+}: AppMenuDrawerProps) {
   const location = useLocation();
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -68,10 +77,12 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
   };
 
   // Sekundäre Seiten
-  const secondaryPages = [
-    { label: "Impressum", href: "/impressum" },
-    { label: "Datenschutz", href: "/datenschutz" },
+  const secondaryPages: AppNavItem[] = secondaryItems ?? [
+    { id: "impressum", label: "Impressum", path: "/impressum", Icon: X },
+    { id: "datenschutz", label: "Datenschutz", path: "/datenschutz", Icon: X },
   ];
+
+  const navigationItems = navItems ?? PRIMARY_NAV_ITEMS;
 
   // Lock background scroll while the drawer is open
   useEffect(() => {
@@ -150,7 +161,7 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
           {/* Navigation Section */}
           <nav className="px-4 py-4">
             <ul className="space-y-1" role="list">
-              {PRIMARY_NAV_ITEMS.map((item) => {
+              {navigationItems.map((item) => {
                 const isActive = isNavItemActive(item, location.pathname);
                 const Icon = item.Icon;
 
@@ -186,28 +197,32 @@ export function AppMenuDrawer({ isOpen, onClose, className }: AppMenuDrawerProps
               })}
             </ul>
 
-            {/* Divider */}
-            <hr className="my-4 border-border-ink/10" />
+            {secondaryPages.length > 0 && (
+              <>
+                {/* Divider */}
+                <hr className="my-4 border-border-ink/10" />
 
-            {/* Secondary Links */}
-            <ul className="space-y-1" role="list">
-              {secondaryPages.map((page) => (
-                <li key={page.href}>
-                  <Link
-                    to={page.href}
-                    onClick={onClose}
-                    className={cn(
-                      "flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px]",
-                      location.pathname === page.href
-                        ? "text-accent-primary bg-accent-primary/5"
-                        : "text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
-                    )}
-                  >
-                    {page.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                {/* Secondary Links */}
+                <ul className="space-y-1" role="list">
+                  {secondaryPages.map((page) => (
+                    <li key={page.id}>
+                      <Link
+                        to={page.path}
+                        onClick={onClose}
+                        className={cn(
+                          "flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px]",
+                          location.pathname === page.path
+                            ? "text-accent-primary bg-accent-primary/5"
+                            : "text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
+                        )}
+                      >
+                        {page.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </nav>
 
           {/* Footer */}
