@@ -3,11 +3,9 @@ import { Send, Square } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
-import { CreativitySelector } from "./CreativityDropdown";
 import { ModelSelector } from "./ModelSelector";
 import { PersonaSelector } from "./PersonaSelector";
-import { ContextLengthSelector } from "./QuickSettingsDropdown";
-import { StyleSelector } from "./StyleDropdown";
+import { QuickSettingsDropdown } from "./QuickSettingsDropdown";
 
 interface ContextBarProps {
   modelCatalog: ModelEntry[] | null;
@@ -34,17 +32,16 @@ export function ContextBar({
         className,
       )}
     >
-      <div className="flex-1 overflow-x-auto">
-        <div className="flex min-w-max items-center gap-2 pr-1">
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <div className="flex flex-wrap items-center gap-1.5 pr-1">
           <PersonaSelector />
-          <StyleSelector />
-          <CreativitySelector />
-          <ContextLengthSelector />
           <ModelSelector catalog={modelCatalog} />
         </div>
       </div>
 
       <div className="flex-shrink-0 flex items-center gap-1.5 sm:gap-2">
+        <QuickSettingsDropdown />
+
         {isLoading ? (
           <Button
             onClick={onStop}
