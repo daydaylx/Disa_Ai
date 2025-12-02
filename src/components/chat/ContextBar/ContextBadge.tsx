@@ -14,7 +14,8 @@ export const ContextBadge = forwardRef<HTMLButtonElement, ContextBadgeProps>(
       ref={ref}
       type="button"
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-border-ink bg-surface-1 px-3 py-1.5 text-xs font-medium text-ink-primary",
+        "inline-flex min-w-0 max-w-[160px] items-center gap-1 rounded-full border border-border-ink bg-surface-1 px-2.5 py-1.5",
+        "text-[11px] font-medium uppercase tracking-wide text-ink-primary",
         "transition-all duration-200 hover:bg-surface-2 active:scale-[0.98]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/50",
         isOpen && "bg-ink-primary text-surface-1 border-ink-primary",
