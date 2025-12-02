@@ -55,16 +55,9 @@ export function FavoritesProvider({
     }
   }, [initialRoles, initialModels, favoritesManager]);
 
-  const initializeWithData = (roles: EnhancedRole[], models: EnhancedModel[]) => {
+  const initializeWithData = (_roles: EnhancedRole[], _models: EnhancedModel[]) => {
     // This method can be called to re-initialize context with fresh data
-    // eslint-disable-next-line no-console
-    console.log(
-      "FavoritesContext initialized with",
-      roles.length,
-      "roles and",
-      models.length,
-      "models",
-    );
+    // Initialization complete with provided roles and models
   };
 
   const resetAllData = () => {
