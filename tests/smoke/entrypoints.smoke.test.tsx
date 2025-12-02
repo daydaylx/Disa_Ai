@@ -1,7 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 
 import { render, screen } from "@testing-library/react";
-import type React from "react";
+import userEvent from "@testing-library/user-event";
+import React, { useState } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -44,9 +45,15 @@ vi.mock("../../src/hooks/useChat", () => ({
 }));
 
 vi.mock("../../src/hooks/useConversationManager", () => ({
-  useConversationManager: () => ({
-    activeConversationId: null,
-  }),
+  useConversationManager: () => {
+    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+
+    return {
+      activeConversationId,
+      conversations: [],
+      newConversation: () => setActiveConversationId("test-conversation"),
+    };
+  },
 }));
 
 vi.mock("../../src/hooks/useMemory", () => ({
@@ -138,6 +145,7 @@ function renderWithRouter(pathname: string, element: React.ReactElement) {
 
 describe("Entry-Point Smoke Tests", () => {
   it("rendert den Chat-Einstieg inklusive Composer", async () => {
+    const user = userEvent.setup();
     renderWithRouter("/chat", <Chat />);
 
     // Das Heading ist jetzt sr-only (screen reader only)
@@ -146,7 +154,10 @@ describe("Entry-Point Smoke Tests", () => {
       hidden: true,
     });
     expect(heading).toBeInTheDocument();
-    expect(screen.getByTestId("composer-input")).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: /Neues Gespräch/i }));
+
+    expect(await screen.findByTestId("composer-input")).toBeVisible();
   });
 
   it("zeigt die Einstellungsübersicht", async () => {

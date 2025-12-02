@@ -241,7 +241,8 @@ export default function Chat() {
     void navigate("/chat/history");
   }, [navigate]);
 
-  const isEmpty = messages.length === 0;
+  const hasActiveConversation = !!activeConversationId;
+  const isEmpty = !hasActiveConversation && messages.length === 0;
 
   return (
     <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-bg-page text-text-primary">
@@ -276,24 +277,29 @@ export default function Chat() {
             >
               <History className="h-4 w-4" />
             </Button>
-            <Button
-              variant="primary"
-              size="default"
-              onClick={handleStartNewChat}
-              className="hidden sm:inline-flex"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">Neuer Chat</span>
-            </Button>
-            <Button
-              variant="primary"
-              size="icon"
-              onClick={handleStartNewChat}
-              className="sm:hidden"
-              aria-label="Neuer Chat"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
+            {!isEmpty && (
+              <>
+                <Button
+                  variant="primary"
+                  size="default"
+                  onClick={handleStartNewChat}
+                  className="hidden sm:inline-flex"
+                  aria-label="Neuen Chat beginnen"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-2">Neuer Chat</span>
+                </Button>
+                <Button
+                  variant="primary"
+                  size="icon"
+                  onClick={handleStartNewChat}
+                  className="sm:hidden"
+                  aria-label="Neuen Chat beginnen"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -355,26 +361,28 @@ export default function Chat() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="border-t border-border-ink/40 bg-surface-2/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md sm:px-6 sm:py-4">
-          <div className="mx-auto w-full max-w-4xl space-y-3">
-            <ContextBar
-              modelCatalog={modelCatalog}
-              onSend={handleSend}
-              onStop={stop}
-              isLoading={isLoading}
-              canSend={!!input.trim()}
-              className="border-b border-border-ink/30 pb-3"
-            />
+        {!isEmpty && (
+          <div className="border-t border-border-ink/40 bg-surface-2/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md sm:px-6 sm:py-4">
+            <div className="mx-auto w-full max-w-4xl space-y-3">
+              <ContextBar
+                modelCatalog={modelCatalog}
+                onSend={handleSend}
+                onStop={stop}
+                isLoading={isLoading}
+                canSend={!!input.trim()}
+                className="border-b border-border-ink/30 pb-3"
+              />
 
-            <ChatInputBar
-              value={input}
-              onChange={setInput}
-              onSend={handleSend}
-              isLoading={isLoading}
-              onQuickAction={(prompt) => setInput(prompt)}
-            />
+              <ChatInputBar
+                value={input}
+                onChange={setInput}
+                onSend={handleSend}
+                isLoading={isLoading}
+                onQuickAction={(prompt) => setInput(prompt)}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
