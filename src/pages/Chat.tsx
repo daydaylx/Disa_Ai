@@ -354,21 +354,21 @@ export default function Chat() {
 
         <div className="border-t border-border-ink/40 bg-surface-2/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md sm:px-6 sm:py-4">
           <div className="mx-auto w-full max-w-4xl space-y-3">
-            <ChatInputBar
-              value={input}
-              onChange={setInput}
-              onSend={handleSend}
-              isLoading={isLoading}
-              onQuickAction={(prompt) => setInput(prompt)}
-            />
-
             <ContextBar
               modelCatalog={modelCatalog}
               onSend={handleSend}
               onStop={stop}
               isLoading={isLoading}
               canSend={!!input.trim()}
-              className="border-t border-border-ink/30 pt-3"
+              className="border-b border-border-ink/30 pb-3"
+            />
+
+            <ChatInputBar
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              isLoading={isLoading}
+              onQuickAction={(prompt) => setInput(prompt)}
             />
           </div>
         </div>
