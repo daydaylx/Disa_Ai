@@ -14,6 +14,7 @@ import { QUICKSTARTS } from "../config/quickstarts";
 import { useRoles } from "../contexts/RolesContext";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
+import { useConversationHistory } from "../hooks/useConversationHistory";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
@@ -226,8 +227,10 @@ export default function Chat() {
     }
   }, [searchParams, navigate, startWithPreset]);
 
-  const activeConversation = conversations?.find((c) => c.id === activeConversationId);
-  const conversationCount = conversations?.length ?? 0;
+  const { activeConversation, conversationCount } = useConversationHistory(
+    conversations,
+    activeConversationId,
+  );
 
   const handleStartNewChat = useCallback(() => {
     newConversation();
