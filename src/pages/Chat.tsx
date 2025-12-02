@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 import { useToasts } from "@/ui";
+import { Badge } from "@/ui/Badge";
+import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
 import { ChatInputBar } from "../components/chat/ChatInputBar";
@@ -300,14 +302,20 @@ export default function Chat() {
     <div className="relative flex flex-col text-ink-primary h-full min-h-[calc(var(--vh,1vh)*100)] bg-bg-app">
       {/* Mobile FAB outside animated page to avoid transform clipping */}
       {showFab && (
-        <button
+        <Button
+          variant="secondary"
+          size="icon"
           onClick={handleSwipeLeft}
-          className="fixed top-14 right-3 z-50 flex items-center justify-center w-11 h-11 bg-surface-2 hover:bg-surface-3 active:bg-surface-3 text-ink-primary rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 transition-all touch-manipulation"
+          className="fixed z-fab rounded-full shadow-md sm:hidden opacity-90 hover:opacity-100 touch-manipulation"
+          style={{
+            top: `calc(3.5rem + env(safe-area-inset-top, 0px))`, // 56px + safe area
+            right: `max(0.75rem, env(safe-area-inset-right, 0px))`, // 12px or safe area (whichever is larger)
+          }}
           aria-label="Neuen Chat starten"
         >
           <span className="sr-only">Neuer Chat</span>
           <Plus className="w-5 h-5" />
-        </button>
+        </Button>
       )}
 
       <BookPageAnimator
@@ -349,20 +357,19 @@ export default function Chat() {
                 <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
                   <div className="flex flex-wrap gap-1 justify-end">
                     {statusBadges.map((badge) => (
-                      <span
+                      <Badge
                         key={badge.label}
+                        variant="outline"
                         className={cn(
-                          "text-[10px] px-2 py-1 rounded-full border",
+                          "text-[10px] font-normal h-auto py-0.5",
                           badge.variant === "success" && "border-accent text-accent",
-                          badge.variant === "warning" &&
-                            "border-[var(--color-warning)] text-[var(--color-warning)]",
-                          badge.variant === "destructive" &&
-                            "border-[var(--color-error)] text-[var(--color-error)]",
+                          badge.variant === "warning" && "border-warning text-warning",
+                          badge.variant === "destructive" && "border-error text-error",
                           badge.variant === "secondary" && "border-ink-tertiary text-ink-tertiary",
                         )}
                       >
                         {badge.label}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                   <button
@@ -446,7 +453,7 @@ export default function Chat() {
               </div>
 
               {/* Input Bar Area */}
-              <div className="bg-bg-page border-t border-border-ink/20 shadow-[0_-4px_12px_-6px_rgba(0,0,0,0.08)]">
+              <div className="bg-bg-page border-t border-border-ink/20 shadow-sm">
                 <div className="max-w-4xl mx-auto">
                   {/* Kontextleiste */}
                   <ContextBar

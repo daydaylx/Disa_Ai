@@ -22,11 +22,11 @@ export function MetricRow({
   const percentage = Math.min(100, Math.max(0, (value / maxValue) * 100));
   const displayValue = score !== undefined ? score : value;
 
-  // Aurora Color Palette Integration
+  // Ink on Paper Color System Integration
   const colorClasses = {
-    green: "bg-[var(--aurora-green-500)]",
-    yellow: "bg-[var(--aurora-orange-500)]",
-    primary: "bg-[var(--aurora-primary-500)]",
+    green: "bg-color-success",
+    yellow: "bg-color-warning",
+    primary: "bg-accent-primary",
   };
 
   return (
@@ -57,8 +57,8 @@ export function MetricRow({
       >
         <div
           className={cn(
-            "absolute inset-y-0 left-0 rounded-full transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
-            "shadow-[var(--shadow-glow-soft)]",
+            "absolute inset-y-0 left-0 rounded-full transition-all duration-medium",
+            "shadow-sm",
             colorClasses[color],
           )}
           style={{ width: `${percentage}%` }}

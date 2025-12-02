@@ -33,6 +33,25 @@ export function ChatInputBar({
     }
   }, [value]);
 
+  // Ensure input visibility when keyboard opens
+  useEffect(() => {
+    if (viewport.isKeyboardOpen && textareaRef.current) {
+      // Small delay to ensure keyboard transition is complete
+      const timer = setTimeout(() => {
+        textareaRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+
+    // Return undefined for the else case
+    return undefined;
+  }, [viewport.isKeyboardOpen]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();

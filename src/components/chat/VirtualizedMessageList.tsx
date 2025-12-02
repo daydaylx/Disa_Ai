@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { Button, MaterialCard } from "@/ui";
 
@@ -6,6 +6,21 @@ import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { ChatMessage } from "./ChatMessage";
+
+// Memoized ChatMessage for performance optimization
+const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.message.id === nextProps.message.id &&
+    prevProps.message.content === nextProps.message.content &&
+    prevProps.message.timestamp === nextProps.message.timestamp &&
+    prevProps.isLast === nextProps.isLast &&
+    prevProps.onRetry === nextProps.onRetry &&
+    prevProps.onCopy === nextProps.onCopy &&
+    prevProps.onEdit === nextProps.onEdit &&
+    prevProps.onFollowUp === nextProps.onFollowUp
+  );
+});
 
 interface VirtualizedMessageListProps {
   messages: ChatMessageType[];
@@ -95,7 +110,7 @@ export function VirtualizedMessageList({
         data-testid="virtualized-chat-log"
       >
         {shouldVirtualize && hiddenCount > 0 && (
-          <div className="sticky top-0 z-10 flex justify-center bg-[var(--bg0)] py-2">
+          <div className="sticky top-0 z-sticky-content flex justify-center bg-[var(--bg0)] py-2">
             <Button
               onClick={loadOlderMessages}
               variant="secondary"
@@ -111,7 +126,7 @@ export function VirtualizedMessageList({
         <div className="chat-stack">
           {visibleMessages.map((message, index) => (
             <div key={message.id} data-testid="message-bubble">
-              <ChatMessage
+              <MemoizedChatMessage
                 message={message}
                 isLast={index === visibleMessages.length - 1 && !isLoading}
                 onRetry={handleRetry}

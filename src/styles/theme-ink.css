@@ -70,6 +70,16 @@
   --shadow-strong-raise: var(--shadow-floating);
   --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 
+  /* Legacy mappings for component compatibility */
+  --shadow-raise: var(--shadow-paper);
+  --shadow-raiseLg: var(--shadow-floating);
+
+  /* Glow effects for brand and accent colors */
+  --shadow-brandGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
+  --shadow-brandGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
+  --shadow-accentGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
+  --shadow-accentGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
+
   /* Borders */
   --border-color: hsl(45, 10%, 90%);
   --border-width: 1px;
@@ -104,5 +114,12 @@
     --border-color: hsl(220, 10%, 25%);
 
     --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+    /* Dark mode glow effects */
+    --shadow-brandGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
+    --shadow-brandGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
+    --shadow-accentGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
+    --shadow-accentGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
   }
 }

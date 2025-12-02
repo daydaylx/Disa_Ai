@@ -69,7 +69,8 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
     observer.observe(scrollRef.current, {
       childList: true,
       subtree: true,
-      characterData: true,
+      // Removed characterData: true - causes excessive callbacks during message streaming
+      // We only need to track when new messages are added (childList), not character updates
     });
 
     return () => {

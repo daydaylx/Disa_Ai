@@ -22,13 +22,12 @@ export function ActionCard({
   variant = "primary",
   className,
 }: ActionCardProps) {
-  // Aurora Palette Integration
+  // Ink on Paper Design System Integration
   const variantClasses = {
     primary: [
-      "bg-gradient-to-r from-[var(--aurora-primary-500)] to-[var(--aurora-lila-500)]",
-      "hover:from-[var(--aurora-primary-400)] hover:to-[var(--aurora-lila-400)]",
-      "border border-[var(--aurora-primary-400)] text-white shadow-[var(--shadow-glow-primary)]",
-      "hover:shadow-[var(--shadow-premium-medium)] hover:scale-[1.02]",
+      "bg-accent-primary text-ink-on-accent shadow-brandGlow",
+      "hover:bg-accent-hover hover:shadow-brandGlowLg hover:scale-[1.02]",
+      "border border-accent-primary/30",
     ].join(" "),
     secondary: [
       "bg-surface-2 shadow-raise text-text-primary",

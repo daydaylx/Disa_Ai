@@ -357,7 +357,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             </div>
           )}
 
-          {/* ROLES GRID - PREMIUM CARDS mit Aurora Spine */}
+          {/* ROLES GRID - PREMIUM CARDS mit Ink on Paper Design */}
           <div
             className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 lg:grid-cols-3"
             data-testid="roles-grid"

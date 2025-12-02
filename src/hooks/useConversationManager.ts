@@ -157,10 +157,9 @@ export function useConversationManager({
             setActiveConversationId(conversationId);
           }
 
-          persistLastConversationId(activeConversationId ?? null);
-          if (conversationId) {
-            persistLastConversationId(conversationId);
-          }
+          // Always use the current conversationId to avoid race condition
+          // when activeConversationId hasn't been updated yet
+          persistLastConversationId(conversationId ?? null);
           lastSavedSignatureRef.current = signature;
           await refreshConversations();
         } catch (error) {

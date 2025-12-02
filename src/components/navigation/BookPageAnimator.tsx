@@ -41,8 +41,15 @@ export function BookPageAnimator({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.innerWidth < 768) {
-      setAllowTransforms(false); // avoid transform-stacking breaking scroll on mobile
+
+    // Better mobile detection: check for touch capability and viewport size
+    const isMobile = window.innerWidth < 768;
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    // Only disable 3D transforms on touch mobile devices to avoid scroll issues
+    // Keep 2D transforms for better UX where possible
+    if (isMobile && isTouch) {
+      setAllowTransforms(false); // Avoid transform-stacking breaking scroll
     }
   }, []);
 
@@ -170,18 +177,22 @@ export function BookPageAnimator({
           <motion.button
             onClick={onSwipeLeft}
             whileHover={{ scale: 1.1, x: 5 }}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-r from-ink-primary/10 to-transparent flex items-center justify-start pl-2 rounded-r-md text-ink-primary opacity-0 hover:opacity-100 transition-opacity duration-200"
+            aria-label="Vorherige Seite"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-r from-ink-primary/10 to-transparent flex items-center justify-start pl-2 rounded-r-md text-ink-primary opacity-0 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:outline-none transition-opacity duration-200"
           >
-            &lt;
+            <span aria-hidden="true">&lt;</span>
+            <span className="sr-only">Zur vorherigen Seite navigieren</span>
           </motion.button>
         )}
         {canSwipeRight && (
           <motion.button
             onClick={onSwipeRight}
             whileHover={{ scale: 1.1, x: -5 }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-l from-ink-primary/10 to-transparent flex items-center justify-end pr-2 rounded-l-md text-ink-primary opacity-0 hover:opacity-100 transition-opacity duration-200"
+            aria-label="Nächste Seite"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-l from-ink-primary/10 to-transparent flex items-center justify-end pr-2 rounded-l-md text-ink-primary opacity-0 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:outline-none transition-opacity duration-200"
           >
-            &gt;
+            <span aria-hidden="true">&gt;</span>
+            <span className="sr-only">Zur nächsten Seite navigieren</span>
           </motion.button>
         )}
       </div>

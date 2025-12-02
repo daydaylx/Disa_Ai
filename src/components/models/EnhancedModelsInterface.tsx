@@ -492,7 +492,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   return (
     <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
       {/* MATERIAL INSET HEADER PANEL */}
-      <div className="sticky top-0 z-40 bg-surface-1 shadow-inset">
+      <div className="sticky top-0 z-header bg-surface-1 shadow-inset">
         <div className="p-4 space-y-4">
           {/* Search Input - Material Style */}
           <div className="relative">

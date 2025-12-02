@@ -148,6 +148,43 @@ export default {
         DEFAULT: "var(--border-color)",
         ink: "var(--border-color)",
       },
+      zIndex: {
+        // Base layers
+        background: "var(--z-background)",
+        base: "var(--z-base)",
+        content: "var(--z-content)",
+        "sticky-header": "var(--z-sticky-header)",
+        "sticky-content": "var(--z-sticky-content)",
+
+        // UI Chrome
+        header: "var(--z-header)",
+        navigation: "var(--z-navigation)",
+        "bottom-nav": "var(--z-bottom-nav)",
+        sidebar: "var(--z-sidebar)",
+
+        // Overlays
+        composer: "var(--z-composer)",
+        fab: "var(--z-fab)",
+        drawer: "var(--z-drawer)",
+        "bottom-sheet": "var(--z-bottom-sheet)",
+
+        // Modals
+        "modal-backdrop": "var(--z-modal-backdrop)",
+        modal: "var(--z-modal)",
+
+        // Popovers
+        popover: "var(--z-popover)",
+        dropdown: "var(--z-dropdown)",
+        tooltip: "var(--z-tooltip)",
+
+        // System
+        toast: "var(--z-toast)",
+        notification: "var(--z-notification)",
+
+        // Critical
+        "skip-link": "var(--z-skip-link)",
+        debug: "var(--z-debug)",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },

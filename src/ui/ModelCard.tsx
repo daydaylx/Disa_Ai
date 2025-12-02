@@ -71,7 +71,7 @@ const ModelCardComponent = React.memo(
             aria-pressed={isFavorite}
             aria-label={isFavorite ? "Favorit entfernen" : "Als Favorit markieren"}
             className={cn(
-              "absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-sm border border-transparent transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
+              "absolute right-3 top-3 z-sticky-header inline-flex h-11 w-11 items-center justify-center rounded-sm border border-transparent transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2",
               isFavorite
                 ? "bg-brand/10 text-brand shadow-brandGlow"
                 : "bg-surface-1/80 text-ink-secondary hover:text-brand hover:border-brand/40 hover:shadow-raise",

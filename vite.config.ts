@@ -94,7 +94,6 @@ export default defineConfig(({ mode }) => {
   // Ensure required environment variables for production
   if (isProduction) {
     const requiredEnvVars = [
-      "VITE_OPENROUTER_API_KEY",
       "OPENROUTER_API_KEY", // Runtime from Cloudflare Workers
     ];
 
@@ -303,7 +302,7 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: true, // CSS-Chunks für besseres Caching
       // Production-spezifische Optimierungen
       ...(isProduction && {
-        sourcemap: false, // Deaktiviert für kleinere Produktions-Builds
+        sourcemap: true, // Required for Sentry
         reportCompressedSize: false, // Schnellere Builds
       }),
       rollupOptions: {

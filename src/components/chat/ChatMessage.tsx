@@ -223,7 +223,7 @@ export function ChatMessage({
             <Button
               variant="ghost"
               size="icon"
-              className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-8 w-8 min-h-[32px] min-w-[32px] touch-manipulation"
+              className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
               onClick={handleCopy}
               title="Kopieren"
               data-testid="message.copy"
@@ -234,7 +234,7 @@ export function ChatMessage({
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-8 w-8 min-h-[32px] min-w-[32px] touch-manipulation"
+                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={() => setIsEditing(true)}
                 title="Bearbeiten"
                 data-testid="message.edit"
@@ -246,7 +246,7 @@ export function ChatMessage({
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-8 w-8 min-h-[32px] min-w-[32px] touch-manipulation"
+                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={handleRetry}
                 title="Neu generieren"
                 data-testid="message.retry"
@@ -258,7 +258,7 @@ export function ChatMessage({
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-8 w-8 min-h-[32px] min-w-[32px] touch-manipulation"
+                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={() => setShowFollowUps(!showFollowUps)}
                 title="Weiterfragen"
                 data-testid="message.followup"

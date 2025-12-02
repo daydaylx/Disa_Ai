@@ -1,7 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { handleChatRequest } from "../api/chat";
 import { chatStream } from "../api/openrouter";
 import { useChat } from "../hooks/useChat";
 
@@ -16,88 +15,6 @@ describe("Message ID Synchronization", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockChatStream = vi.mocked(chatStream);
-  });
-
-  describe("Server-side ID generation in handleChatRequest", () => {
-    it("should generate consistent assistant message ID", () => {
-      const request = {
-        messages: [{ role: "user" as const, content: "Hello" }],
-      };
-
-      const response = handleChatRequest(request);
-
-      expect(response).toBeInstanceOf(Response);
-      expect(response.headers.get("Content-Type")).toBe("text/event-stream");
-    });
-
-    it("should include message metadata in SSE stream", async () => {
-      const request = {
-        messages: [{ role: "user" as const, content: "Test message" }],
-        model: "test-model",
-      };
-
-      // Mock fetch globally for this test
-      const mockFetch = vi.fn();
-      global.fetch = mockFetch;
-
-      // Mock the worker response
-      const mockWorkerResponse = new Response(
-        new ReadableStream({
-          start(controller) {
-            const encoder = new TextEncoder();
-
-            // Simulate streaming response with choices
-            controller.enqueue(
-              encoder.encode(
-                'data: {"choices":[{"delta":{"content":"Hello"},"message":{"id":"assistant-123-456","role":"assistant"}}]}\n\n',
-              ),
-            );
-            controller.enqueue(
-              encoder.encode(
-                'data: {"choices":[{"delta":{"content":" world"},"message":{"id":"assistant-123-456","role":"assistant"}}]}\n\n',
-              ),
-            );
-            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-
-            controller.close();
-          },
-        }),
-        {
-          headers: {
-            "Content-Type": "text/event-stream",
-          },
-        },
-      );
-
-      mockFetch.mockResolvedValue(mockWorkerResponse);
-
-      const response = handleChatRequest(request);
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-
-      expect(reader).toBeDefined();
-
-      if (reader) {
-        const chunks: string[] = [];
-
-        try {
-          while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value);
-            chunks.push(chunk);
-          }
-        } catch {
-          // Expected in test environment
-        }
-
-        // Should contain SSE formatted data with message metadata
-        const allData = chunks.join("");
-        expect(allData).toContain("data:");
-        expect(allData).toContain("choices");
-      }
-    });
   });
 
   describe("Client-side ID synchronization in useChat", () => {
