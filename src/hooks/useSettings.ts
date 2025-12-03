@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { DEFAULT_MODEL_ID, isAllowedModelId } from "../config/modelDefaults";
 import {
   getDiscussionMaxSentences,
   getDiscussionPreset,
@@ -43,7 +44,7 @@ const DEFAULT_SETTINGS: Settings = {
   enableNeko: false, // Extras sind nun opt-in
   theme: "auto",
   language: "de",
-  preferredModelId: "openai/gpt-4o-mini",
+  preferredModelId: DEFAULT_MODEL_ID || "",
   creativity: 45,
   discussionPreset: "locker_neugierig",
   discussionStrict: false,
@@ -56,6 +57,12 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
+
+function normalizePreferredModelId(modelId: string | undefined): string {
+  const candidate = modelId ?? DEFAULT_MODEL_ID ?? "";
+  if (!candidate) return "";
+  return isAllowedModelId(candidate) ? candidate : "";
+}
 
 function clampCreativity(value: number | undefined): number {
   const numeric = Number(value);
@@ -88,9 +95,12 @@ function readLegacySettings(): Partial<Settings> {
 }
 
 function normalizeSettings(raw: Partial<Settings>): Settings {
+  const preferredModelId = normalizePreferredModelId(raw.preferredModelId);
+
   return {
     ...DEFAULT_SETTINGS,
     ...raw,
+    preferredModelId,
     creativity: clampCreativity(raw.creativity ?? DEFAULT_SETTINGS.creativity),
     discussionMaxSentences: clampSentences(
       raw.discussionMaxSentences ?? DEFAULT_SETTINGS.discussionMaxSentences,
