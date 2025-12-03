@@ -19,6 +19,8 @@ import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 interface ContextDropdownBarProps {
   models: ModelEntry[] | null;
   modelsLoading?: boolean;
+  modelsError?: string | null;
+  onRefreshModels?: () => void;
 }
 
 type DropdownKey = "role" | "style" | "creativity" | "context" | "model" | null;
@@ -197,7 +199,12 @@ function TriggerBadge({
   );
 }
 
-export function ContextDropdownBar({ models, modelsLoading }: ContextDropdownBarProps) {
+export function ContextDropdownBar({
+  models,
+  modelsLoading,
+  modelsError,
+  onRefreshModels,
+}: ContextDropdownBarProps) {
   const { roles, activeRole, setActiveRole } = useRoles();
   const {
     settings,
@@ -237,20 +244,28 @@ export function ContextDropdownBar({ models, modelsLoading }: ContextDropdownBar
     [curatedRoles, roles],
   );
 
-  const activeStyleLabel =
-    styleOptions.find((option) => option.id === settings.discussionPreset)?.label ?? "Stil";
+  const activeStyleLabel = useMemo(() => {
+    const label = styleOptions.find((option) => option.id === settings.discussionPreset)?.label;
+    return label ? `Stil: ${label}` : "Stil";
+  }, [settings.discussionPreset]);
 
-  const activeCreativityLabel =
-    creativityOptions.find((option) => option.id === settings.creativity)?.label ?? "Kreativität";
+  const activeCreativityLabel = useMemo(() => {
+    const label = creativityOptions.find((option) => option.id === settings.creativity)?.label;
+    return label ? `Kreativität: ${label}` : "Kreativität";
+  }, [settings.creativity]);
 
-  const activeContextLabel =
-    contextOptions.find((option) => option.id === settings.discussionMaxSentences)?.label ??
-    "Kontext";
+  const activeContextLabel = useMemo(() => {
+    const label = contextOptions.find(
+      (option) => option.id === settings.discussionMaxSentences,
+    )?.label;
+    return label ? `Kontext: ${label}` : "Kontext";
+  }, [settings.discussionMaxSentences]);
 
   const activeModelLabel = useMemo(() => {
-    if (modelsLoading) return "Modelle laden";
+    if (modelsLoading) return "Modelle laden...";
     const activeModel = modelOptions.find((model) => model.id === settings.preferredModelId);
-    return activeModel?.label ?? settings.preferredModelId ?? "Modell";
+    const modelName = activeModel?.label ?? settings.preferredModelId;
+    return modelName ? `Modell: ${modelName}` : "Modell";
   }, [modelOptions, modelsLoading, settings.preferredModelId]);
 
   return (
@@ -407,8 +422,27 @@ export function ContextDropdownBar({ models, modelsLoading }: ContextDropdownBar
             onClose={() => setOpenDropdown(null)}
           >
             {modelsLoading ? (
-              <div className="flex h-11 items-center rounded-lg px-3 text-sm text-[#A3A3AB]">
-                Modelle werden geladen...
+              <div className="flex h-11 items-center justify-center rounded-lg px-3 text-sm text-[#A3A3AB]">
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#A3A3AB] border-t-transparent" />
+                  Modelle werden geladen...
+                </div>
+              </div>
+            ) : modelsError ? (
+              <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
+                <div className="text-sm text-color-error">{modelsError}</div>
+                {onRefreshModels && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onRefreshModels();
+                    }}
+                    className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+                  >
+                    <ChevronDown className="h-4 w-4 rotate-180" />
+                    Nochmal versuchen
+                  </button>
+                )}
               </div>
             ) : modelOptions.length > 0 ? (
               modelOptions.map((model) => (
@@ -423,8 +457,20 @@ export function ContextDropdownBar({ models, modelsLoading }: ContextDropdownBar
                 />
               ))
             ) : (
-              <div className="flex h-11 items-center rounded-lg px-3 text-sm text-[#A3A3AB]">
-                Keine Modelle verfügbar
+              <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
+                <div className="text-sm text-[#A3A3AB]">Keine Modelle verfügbar</div>
+                {onRefreshModels && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onRefreshModels();
+                    }}
+                    className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+                  >
+                    <ChevronDown className="h-4 w-4 rotate-180" />
+                    Nochmal versuchen
+                  </button>
+                )}
               </div>
             )}
           </DropdownPanel>
