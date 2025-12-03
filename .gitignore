@@ -124,3 +124,8 @@ autopilot.log
 
 .gemini/
 gha-creds-*.json
+
+# Cloudflare (CRITICAL - secrets must never be committed!)
+.wrangler/
+.dev.vars
+wrangler.toml
