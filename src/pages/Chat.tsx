@@ -38,6 +38,7 @@ export default function Chat() {
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
@@ -264,13 +265,19 @@ export default function Chat() {
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
         <BookPageAnimator pageKey={activeConversationId || "new"}>
-          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          <div className="flex h-[calc(var(--vh,1vh)*100)] flex-col">
+            <h1 className="sr-only">Disa AI – Chat</h1>
+            <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          <div className="flex flex-1 flex-col h-full relative overflow-hidden">
-            {/* Scroll Area */}
-            <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 scroll-smooth">
+            <main
+              ref={chatScrollRef}
+              className="scroll-smooth flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 min-h-0"
+              role="log"
+              aria-label="Chat messages"
+              data-testid="virtualized-chat-log"
+            >
               {isEmpty ? (
-                <div className="max-w-2xl mx-auto mt-8">
+                <div className="mx-auto mt-8 max-w-2xl">
                   <ChatStartCard
                     onNewChat={handleStartNewChat}
                     conversationCount={stats?.totalConversations ?? conversationCount}
@@ -288,21 +295,21 @@ export default function Chat() {
                   onRetry={(_messageId) => {
                     /* TODO: Implement simple retry */ return void 0;
                   }}
-                  className="h-full max-w-3xl mx-auto"
+                  className="mx-auto h-full max-w-3xl"
+                  scrollContainerRef={chatScrollRef}
                 />
               )}
               <div ref={messagesEndRef} />
-            </div>
+            </main>
 
-            {/* Unified Input Area */}
-            <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+            <footer className="z-sticky-content border-t border-border-ink/10 bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
                 onSend={handleSend}
                 isLoading={isLoading}
               />
-            </div>
+            </footer>
           </div>
         </BookPageAnimator>
       </BookLayout>

@@ -30,6 +30,7 @@ interface VirtualizedMessageListProps {
   initialRenderCount?: number;
   loadMoreCount?: number;
   virtualizationThreshold?: number;
+  scrollContainerRef?: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 export function VirtualizedMessageList({
@@ -43,11 +44,13 @@ export function VirtualizedMessageList({
   initialRenderCount = 50,
   loadMoreCount = 30,
   virtualizationThreshold = 20,
+  scrollContainerRef,
 }: VirtualizedMessageListProps) {
   const [visibleCount, setVisibleCount] = useState(initialRenderCount);
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
     threshold: 0.8,
     enabled: true,
+    containerRef: scrollContainerRef,
   });
 
   const { visibleMessages, shouldVirtualize, hiddenCount } = useMemo(() => {
@@ -97,14 +100,20 @@ export function VirtualizedMessageList({
     [onRetry],
   );
 
+  const attachInternalRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!scrollContainerRef) {
+        scrollRef.current = node;
+      }
+    },
+    [scrollContainerRef, scrollRef],
+  );
+
   return (
-    <div data-testid="message-list">
+    <div data-testid="message-list" className={cn("h-full", className)}>
       <div
-        ref={scrollRef}
-        className={cn("chat-scroll-area flex-1 overflow-y-auto scroll-smooth", className)}
-        role="log"
-        aria-label="Chat messages"
-        data-testid="virtualized-chat-log"
+        ref={scrollContainerRef ? undefined : attachInternalRef}
+        className="chat-scroll-area h-full"
       >
         {shouldVirtualize && hiddenCount > 0 && (
           <div className="sticky top-0 z-sticky-content flex justify-center bg-[var(--bg0)] py-2">
