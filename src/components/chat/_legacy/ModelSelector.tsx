@@ -1,73 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { LegacyModelOption } from "@/config/modelPresets";
 import { ChevronDown, Zap } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
 
-interface Model {
-  id: string;
-  name: string;
-  description?: string;
-  isFree?: boolean;
-  isPremium?: boolean;
-}
+import { useLegacyModelOptions } from "./useLegacyModelOptions";
 
 interface ModelSelectorProps {
   currentModelId: string;
   onModelChange: (modelId: string) => void;
   className?: string;
+  models?: LegacyModelOption[];
 }
-
-// Quick list of common models - full list can be loaded dynamically
-const COMMON_MODELS: Model[] = [
-  {
-    id: "meta-llama/llama-3.3-70b-instruct:free",
-    name: "Llama 3.3 70B",
-    description: "Schnell & kostenlos",
-    isFree: true,
-  },
-  {
-    id: "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-    name: "Dolphin Mistral 24B",
-    description: "Kreativ & frei",
-    isFree: true,
-  },
-  {
-    id: "openai/gpt-4o-mini",
-    name: "GPT-4o Mini",
-    description: "OpenAI, ausgewogen",
-  },
-  {
-    id: "openai/gpt-4o",
-    name: "GPT-4o",
-    description: "OpenAI, leistungsstark",
-    isPremium: true,
-  },
-  {
-    id: "anthropic/claude-3.5-sonnet",
-    name: "Claude 3.5 Sonnet",
-    description: "Anthropic, präzise",
-    isPremium: true,
-  },
-  {
-    id: "google/gemini-2.0-flash-exp:free",
-    name: "Gemini 2.0 Flash",
-    description: "Google, experimentell",
-    isFree: true,
-  },
-];
-
-export function ModelSelector({ currentModelId, onModelChange, className }: ModelSelectorProps) {
+export function ModelSelector({
+  currentModelId,
+  onModelChange,
+  className,
+  models,
+}: ModelSelectorProps) {
   const navigate = useNavigate();
+  const { modelOptions } = useLegacyModelOptions();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const currentModel = COMMON_MODELS.find((m) => m.id === currentModelId) || {
+  const availableModels = models ?? modelOptions;
+
+  const currentModel = availableModels.find((m) => m.id === currentModelId) || {
     id: currentModelId,
-    name: currentModelId.split("/").pop() || currentModelId,
+    label: currentModelId.split("/").pop() || currentModelId,
     description: "",
   };
 
@@ -103,10 +67,10 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label={`Modell auswählen. Aktuell: ${currentModel.name}`}
+        aria-label={`Modell auswählen. Aktuell: ${currentModel.label}`}
         className="h-auto py-1.5 px-3 text-xs font-semibold text-text-primary bg-surface-inset hover:bg-surface-hover flex items-center gap-2"
       >
-        <span className="truncate max-w-[150px] sm:max-w-[200px]">{currentModel.name}</span>
+        <span className="truncate max-w-[150px] sm:max-w-[200px]">{currentModel.label}</span>
         <ChevronDown className={cn("h-3 w-3 transition-transform", isOpen && "rotate-180")} />
       </Button>
 
@@ -129,7 +93,7 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
             data-testid="model-selector-dropdown"
           >
             <div className="space-y-1">
-              {COMMON_MODELS.map((model) => {
+              {availableModels.map((model) => {
                 const isActive = model.id === currentModelId;
 
                 return (
@@ -154,7 +118,7 @@ export function ModelSelector({ currentModelId, onModelChange, className }: Mode
                               isActive ? "text-accent-primary" : "text-text-primary",
                             )}
                           >
-                            {model.name}
+                            {model.label}
                           </span>
                           {model.isFree && (
                             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400">

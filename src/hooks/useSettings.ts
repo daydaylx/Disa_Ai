@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { DEFAULT_MODEL_ID } from "../config/modelPresets";
 import {
   getDiscussionMaxSentences,
   getDiscussionPreset,
@@ -43,7 +44,7 @@ const DEFAULT_SETTINGS: Settings = {
   enableNeko: false, // Extras sind nun opt-in
   theme: "auto",
   language: "de",
-  preferredModelId: "openai/gpt-4o-mini",
+  preferredModelId: DEFAULT_MODEL_ID,
   creativity: 45,
   discussionPreset: "locker_neugierig",
   discussionStrict: false,

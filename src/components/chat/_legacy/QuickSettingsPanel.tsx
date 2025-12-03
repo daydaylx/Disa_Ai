@@ -1,10 +1,12 @@
 import { useState } from "react";
 
+import { DEFAULT_MODEL_ID } from "@/config/modelPresets";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
 import { useSettings } from "../../hooks/useSettings";
 import { ChevronDown, ChevronUp, Settings, SlidersHorizontal } from "../../lib/icons";
+import { useLegacyModelOptions } from "./useLegacyModelOptions";
 
 interface QuickSettingsPanelProps {
   className?: string;
@@ -13,10 +15,11 @@ interface QuickSettingsPanelProps {
 export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { settings, setCreativity, setPreferredModel } = useSettings();
+  const { modelOptions } = useLegacyModelOptions();
 
   // Get current values for display
   const creativity = settings.creativity ?? 45;
-  const currentModel = settings.preferredModelId || "claude-3.5-sonnet";
+  const currentModel = settings.preferredModelId || DEFAULT_MODEL_ID;
 
   const creativityLabel =
     creativity < 25
@@ -31,14 +34,8 @@ export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
     setCreativity(value);
   };
 
-  const modelOptions = [
-    { id: "claude-3.5-sonnet", label: "Claude 3.5 Sonnet", description: "Schnell & Smart" },
-    { id: "claude-3-opus", label: "Claude 3 Opus", description: "Präzise & Tiefgreifend" },
-    { id: "gpt-4", label: "GPT-4", description: "Vielseitig" },
-    { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", description: "Schnell & Günstig" },
-  ];
-
-  const currentModelOption = modelOptions.find((m) => m.id === currentModel) ?? modelOptions[0];
+  const currentModelOption = modelOptions.find((m) => m.id === currentModel) ??
+    modelOptions[0] ?? { id: currentModel, label: currentModel, description: "" };
   if (!currentModelOption) return null;
 
   return (
@@ -117,9 +114,7 @@ export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
                       : "bg-surface-1 hover:bg-surface-2 text-text-secondary hover:text-text-primary",
                   )}
                 >
-                  <div className="font-medium truncate">
-                    {model.label.replace(/Claude |GPT-/, "")}
-                  </div>
+                  <div className="font-medium truncate">{model.label}</div>
                   <div className="text-[10px] opacity-75 truncate">{model.description}</div>
                 </button>
               ))}

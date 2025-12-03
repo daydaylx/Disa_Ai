@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
+import { DEFAULT_MODEL_ID } from "../../src/config/modelPresets";
 import { ModelCatalogProvider } from "../../src/contexts/ModelCatalogContext";
 import { RolesProvider } from "../../src/contexts/RolesContext";
 import { ToastsProvider } from "../../src/ui/toast";
@@ -85,7 +86,7 @@ vi.mock("../../src/app/state/StudioContext", () => ({
 vi.mock("../../src/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
-      preferredModelId: "openai/gpt-4o-mini",
+      preferredModelId: DEFAULT_MODEL_ID,
       showNSFWContent: false,
       language: "de",
       discussionPreset: "locker_neugierig",
