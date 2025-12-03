@@ -34,8 +34,7 @@ export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
     setCreativity(value);
   };
 
-  const currentModelOption = modelOptions.find((m) => m.id === currentModel) ??
-    modelOptions[0] ?? { id: currentModel, label: currentModel, description: "" };
+  const currentModelOption = modelOptions.find((m) => m.id === currentModel) ?? modelOptions[0];
   if (!currentModelOption) return null;
 
   return (
