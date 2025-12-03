@@ -9,16 +9,13 @@ import { ChatMessage } from "./ChatMessage";
 
 // Memoized ChatMessage for performance optimization
 const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
-  // Custom comparison to prevent unnecessary re-renders
+  // Custom comparison focusing on data that affects rendering
+  // Funktions-Vergleiche entfernt - diese brechen Memoization da Funktionen oft neu erstellt werden
   return (
     prevProps.message.id === nextProps.message.id &&
     prevProps.message.content === nextProps.message.content &&
     prevProps.message.timestamp === nextProps.message.timestamp &&
-    prevProps.isLast === nextProps.isLast &&
-    prevProps.onRetry === nextProps.onRetry &&
-    prevProps.onCopy === nextProps.onCopy &&
-    prevProps.onEdit === nextProps.onEdit &&
-    prevProps.onFollowUp === nextProps.onFollowUp
+    prevProps.isLast === nextProps.isLast
   );
 });
 

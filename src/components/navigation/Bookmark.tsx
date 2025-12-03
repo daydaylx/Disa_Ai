@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { Book } from "../../lib/icons";
 
 interface BookmarkProps {
   onClick: () => void;
@@ -8,65 +8,77 @@ interface BookmarkProps {
   disabled?: boolean;
 }
 
-const BOOKMARK_ANIMATION_KEY = "disa-bookmark-animated";
+export function Bookmark({ onClick, className = "", disabled = false }: BookmarkProps) {
+  const [hasWiggled, setHasWiggled] = useState(false);
 
-export function Bookmark({ onClick, className, disabled = false }: BookmarkProps) {
-  const [shouldWiggle, setShouldWiggle] = useState(false);
-
-  // Wackel-Animation nur beim allerersten Start
+  // One-time wiggle animation on first mount
   useEffect(() => {
-    const hasAnimated = localStorage.getItem(BOOKMARK_ANIMATION_KEY);
-    if (!hasAnimated) {
-      setShouldWiggle(true);
-      localStorage.setItem(BOOKMARK_ANIMATION_KEY, "true");
-      // Animation nach 800ms stoppen
-      const timer = setTimeout(() => setShouldWiggle(false), 800);
+    const hasSeenBefore = localStorage.getItem("disa-bookmark-seen");
+    if (!hasSeenBefore && !disabled) {
+      const timer = setTimeout(() => {
+        setHasWiggled(true);
+        localStorage.setItem("disa-bookmark-seen", "true");
+
+        // Reset after animation
+        setTimeout(() => setHasWiggled(false), 600);
+      }, 1000); // Delay to show after page loads
+
       return () => clearTimeout(timer);
     }
-    return undefined;
-  }, []);
+  }, [disabled]);
 
   return (
-    <button
-      onClick={disabled ? undefined : onClick}
-      className={cn(
-        // Base positioning - positioning handled by parent container
-        "z-header",
-        // Size - maintain improved touch targets
-        "w-9 h-12 sm:w-10 sm:h-14",
-        // Appearance - use Ink on Paper design system
-        "bg-accent-primary text-ink-on-accent shadow-brandGlow cursor-pointer border border-accent-hover/40",
-        "flex items-end justify-center pb-2",
-        "transition-all hover:scale-105 active:scale-95 duration-200",
-        // Hover effect
-        "hover:shadow-xl",
-        // Physical "Hang" Effect
-        "origin-top",
-        // Wackel-Animation beim ersten Start
-        shouldWiggle && "animate-bookmark-wiggle",
-        disabled && "opacity-40 cursor-not-allowed hover:scale-100",
-        className,
-      )}
-      style={{
-        // Classic Bookmark Shape with "V" cut at bottom
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)",
-      }}
-      aria-label={disabled ? "Keine Verläufe verfügbar" : "Lesezeichen: Verlauf öffnen"}
-      aria-disabled={disabled}
-    >
-      {/* Icon is placed at the bottom */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white opacity-95"
+    <>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`
+          relative flex items-center justify-center
+          w-8 h-12 sm:w-10 sm:h-14
+          bg-accent-primary hover:bg-accent-primary/90
+          text-white shadow-raise cursor-pointer
+          transition-all duration-200
+          border-l-4 border-l-accent-primary/50
+          ${disabled ? "opacity-40 cursor-not-allowed" : "hover:shadow-lg active:scale-95"}
+          ${className}
+        `}
+        style={{
+          // Bookmark shape with triangle bottom
+          clipPath: "polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%)",
+        }}
+        aria-label="Lesezeichen - Chat-Verlauf öffnen"
       >
-        <path
-          fillRule="evenodd"
-          d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
-          clipRule="evenodd"
+        <Book
+          className={`
+            w-4 h-4 sm:w-5 sm:h-5
+            ${hasWiggled ? "animate-wiggle" : ""}
+          `}
         />
-      </svg>
-    </button>
+      </button>
+
+      {/* Wiggle animation styles */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            75% { transform: rotate(-3deg); }
+          }
+
+          .animate-wiggle {
+            animation: wiggle 600ms ease-in-out;
+          }
+
+          /* Reduced motion support */
+          @media (prefers-reduced-motion: reduce) {
+            .animate-wiggle {
+              animation: none;
+            }
+          }
+        `,
+        }}
+      />
+    </>
   );
 }

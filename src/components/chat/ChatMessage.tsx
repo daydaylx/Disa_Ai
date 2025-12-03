@@ -91,21 +91,18 @@ export function ChatMessage({
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
 
-  // Mobile detection for conditional focus
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-
-  // Handle textarea focus when entering edit mode (accessibility improvement)
+  // Handle textarea focus when entering edit mode - funktioniert für Desktop und Mobile
   useEffect(() => {
-    if (isMobile && isEditing && textareaRef.current) {
+    if (isEditing && textareaRef.current) {
       textareaRef.current.focus();
     }
-  }, [isMobile, isEditing]);
+  }, [isEditing]);
 
   const parsedContent = parseMessageContent(message.content);
 
   // Tinte auf Papier: User rechts, KI links mit Akzentstreifen
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[80%] rounded-md p-3 sm:p-4",
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-md p-3 sm:p-4",
     // User: rechts, dezent abgesetzter Hintergrund
     isUser && "ml-auto bg-surface-2 border border-border-ink/20",
     // KI: links, mit Tintenstreifen am linken Rand

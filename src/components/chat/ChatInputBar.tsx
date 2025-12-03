@@ -65,9 +65,7 @@ export function ChatInputBar({
     <div
       className={cn("w-full transition-[padding]", className)}
       style={{
-        paddingBottom: viewport.isKeyboardOpen
-          ? `${Math.max(0, window.innerHeight - viewport.height)}px`
-          : undefined,
+        paddingBottom: "var(--keyboard-offset, 0px)",
       }}
     >
       {/* Main Input Container - Clean Paper Style */}

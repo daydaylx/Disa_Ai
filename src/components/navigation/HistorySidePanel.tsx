@@ -1,11 +1,11 @@
-import { Book, Clock, X } from "@/lib/icons"; // Added Icons for better semantics
-import { cn } from "@/lib/utils";
-import { Button } from "@/ui/Button";
+import React, { useState } from "react";
+
+import { Book, Clock, Database, X } from "../../lib/icons";
 
 interface HistorySidePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  activePages: Array<{ id: string; title: string; date?: string }>;
+  activePages: Array<{ id: string; title: string }>;
   archivedPages: Array<{ id: string; title: string; date: string }>;
   activeChatId: string | null;
   onSelectChat: (id: string) => void;
@@ -19,88 +19,114 @@ export function HistorySidePanel({
   activeChatId,
   onSelectChat,
 }: HistorySidePanelProps) {
+  const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-drawer flex justify-end isolate">
-      {/* Overlay - Darkened Room metaphor */}
-      <div
-        className="absolute inset-0 bg-ink-primary/20 backdrop-blur-[2px] animate-in fade-in duration-300"
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 z-50 flex">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Panel - The Book Shelf */}
-      <div className="relative w-[85%] max-w-sm h-full bg-bg-page shadow-2xl border-l border-border-ink animate-in slide-in-from-right duration-300 flex flex-col">
-        {/* Header - Paper Texture */}
-        <div className="flex items-center justify-between p-5 border-b border-border-ink bg-bg-surface/50">
-          <div className="flex flex-col">
-            <h2 className="text-lg font-serif font-bold text-ink-primary">Inhaltsverzeichnis</h2>
-            <span className="text-xs text-ink-secondary">Deine Seiten & Geschichte</span>
-          </div>
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Schließen">
+      {/* Panel */}
+      <div className="relative w-80 h-full bg-surface-bg border-r border-ink/20 shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-ink/20">
+          <h2 className="text-lg font-semibold text-ink-primary">Buch-Navigation</h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-ink/10 rounded-lg transition-colors"
+            aria-label="Schließen"
+          >
             <X className="w-5 h-5" />
-          </Button>
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-8">
-          {/* Active Pages (Stack) */}
-          <section aria-labelledby="history-active-pages">
-            <div className="flex items-center gap-2 mb-3 text-accent">
-              <Book className="w-4 h-4" />
-              <h3
-                id="history-active-pages"
-                className="text-xs font-bold uppercase tracking-widest text-ink-secondary"
-              >
-                Zuletzt verwendete Seiten
-              </h3>
-            </div>
+        {/* Tab Navigation */}
+        <div className="flex border-b border-ink/20">
+          <button
+            onClick={() => setActiveTab("active")}
+            className={`
+              flex-1 px-4 py-3 text-sm font-medium transition-colors
+              ${
+                activeTab === "active"
+                  ? "text-accent-primary border-b-2 border-accent-primary"
+                  : "text-ink-secondary hover:text-ink-primary"
+              }
+            `}
+          >
+            <Book className="w-4 h-4 inline mr-2" />
+            Aktuelle Seiten ({activePages.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("archived")}
+            className={`
+              flex-1 px-4 py-3 text-sm font-medium transition-colors
+              ${
+                activeTab === "archived"
+                  ? "text-accent-primary border-b-2 border-accent-primary"
+                  : "text-ink-secondary hover:text-ink-primary"
+              }
+            `}
+          >
+            <Database className="w-4 h-4 inline mr-2" />
+            Archiv ({archivedPages.length})
+          </button>
+        </div>
 
-            <div className="space-y-3 pl-2 border-l-2 border-accent/20">
-              {activePages.map((page) => (
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto">
+          {activeTab === "active" && (
+            <div className="p-4 space-y-2">
+              <div className="text-sm text-ink-tertiary mb-3">
+                <Clock className="w-4 h-4 inline mr-1" />
+                Aktuelle Lesezeichen - swipe zum Navigieren
+              </div>
+              {activePages.map((page, index) => (
                 <button
                   key={page.id}
                   onClick={() => {
                     onSelectChat(page.id);
                     onClose();
                   }}
-                  className={cn(
-                    "w-full text-left p-3 rounded-md border transition-all duration-200",
-                    activeChatId === page.id
-                      ? "bg-white border-accent shadow-sm translate-x-1"
-                      : "bg-bg-surface border-transparent hover:border-border-ink hover:bg-white text-ink-primary",
-                  )}
+                  className={`
+                    w-full text-left p-3 rounded-lg border transition-all
+                    ${
+                      activeChatId === page.id
+                        ? "bg-accent-primary/10 border-accent-primary/30 shadow-sm"
+                        : "bg-surface-bg border-ink/20 hover:bg-ink/5 hover:shadow-sm"
+                    }
+                  `}
                 >
-                  <div className="font-medium truncate font-serif text-base">{page.title}</div>
-                  {page.date && (
-                    <div className="text-xs text-ink-secondary mt-0.5">{page.date}</div>
-                  )}
-                  {activeChatId === page.id && (
-                    <div className="text-xs mt-1 text-accent font-medium">
-                      Lesezeichen liegt hier
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-ink-primary truncate">
+                        Seite {activePages.length - index}
+                      </div>
+                      <div className="text-sm text-ink-secondary truncate">{page.title}</div>
                     </div>
-                  )}
+                    {activeChatId === page.id && (
+                      <div className="w-2 h-2 bg-accent-primary rounded-full" />
+                    )}
+                  </div>
                 </button>
               ))}
               {activePages.length === 0 && (
-                <div className="text-sm text-ink-secondary italic px-2">
-                  Noch keine Seiten im Stapel. Starte eine Unterhaltung, sie erscheint dann hier.
+                <div className="text-center py-8 text-ink-tertiary">
+                  <Book className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                  <p>Keine aktiven Seiten</p>
+                  <p className="text-sm mt-1">Starte einen neuen Chat</p>
                 </div>
               )}
             </div>
-          </section>
+          )}
 
-          {/* Archived Pages */}
-          <section aria-labelledby="history-archive">
-            <div className="flex items-center gap-2 mb-3 text-ink-secondary">
-              <Clock className="w-4 h-4" />
-              <h3
-                id="history-archive"
-                className="text-xs font-bold uppercase tracking-widest text-ink-secondary"
-              >
-                Alle Chats
-              </h3>
-            </div>
-            <div className="space-y-1">
+          {activeTab === "archived" && (
+            <div className="p-4 space-y-2">
+              <div className="text-sm text-ink-tertiary mb-3">
+                <Database className="w-4 h-4 inline mr-1" />
+                Archivierte Unterhaltungen
+              </div>
               {archivedPages.map((page) => (
                 <button
                   key={page.id}
@@ -108,28 +134,47 @@ export function HistorySidePanel({
                     onSelectChat(page.id);
                     onClose();
                   }}
-                  className="w-full text-left p-3 rounded-md hover:bg-bg-surface transition-colors flex justify-between items-center group border border-transparent hover:border-border-ink"
+                  className={`
+                    w-full text-left p-3 rounded-lg border transition-all
+                    ${
+                      activeChatId === page.id
+                        ? "bg-accent-primary/10 border-accent-primary/30 shadow-sm"
+                        : "bg-surface-bg border-ink/20 hover:bg-ink/5 hover:shadow-sm"
+                    }
+                  `}
                 >
-                  <div className="truncate flex-1 pr-4">
-                    <div className="text-ink-primary font-medium group-hover:text-accent transition-colors">
-                      {page.title}
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-ink-primary truncate">{page.title}</div>
+                      <div className="text-sm text-ink-secondary">{page.date}</div>
                     </div>
-                    <div className="text-xs text-ink-secondary mt-0.5">{page.date}</div>
+                    {activeChatId === page.id && (
+                      <div className="w-2 h-2 bg-accent-primary rounded-full" />
+                    )}
                   </div>
                 </button>
               ))}
               {archivedPages.length === 0 && (
-                <div className="text-sm text-ink-secondary italic px-2">
-                  Noch keine früheren Chats. Jede neue Unterhaltung landet hier.
+                <div className="text-center py-8 text-ink-tertiary">
+                  <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                  <p>Keine archivierten Seiten</p>
+                  <p className="text-sm mt-1">Deine Chats erscheinen hier</p>
                 </div>
               )}
             </div>
-          </section>
+          )}
         </div>
 
-        {/* Footer Hint */}
-        <div className="p-4 border-t border-border-ink bg-bg-surface/30 text-center">
-          <p className="text-xs text-ink-secondary">Wische links für eine neue Seite.</p>
+        {/* Footer mit Gamification-Hinweis */}
+        <div className="p-4 border-t border-ink/20 bg-ink/5">
+          <div className="text-xs text-ink-tertiary text-center">
+            <div className="font-medium text-ink-secondary mb-1">📖 Buch-Navigation Tipps</div>
+            <div className="space-y-1">
+              <div>• Swipe ← → zum Blättern</div>
+              <div>• Lange für Archiv-Zugriff</div>
+              <div>• Lesezeichen speichert deinen Fortschritt</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

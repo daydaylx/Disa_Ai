@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
 
@@ -38,21 +38,46 @@ export function SettingsApiDataView() {
   const [isImporting, setIsImporting] = useState(false);
   const [showMigration, setShowMigration] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     setHasApiKey(hasStoredApiKey());
   }, []);
 
-  // Mirror Eingaben direkt in Storage, damit Werte zwischen Seiten erhalten bleiben
-  useEffect(() => {
-    try {
-      sessionStorage.setItem("openrouter-key", apiKey);
-      // Remove from localStorage to maintain security (only use sessionStorage)
-      localStorage.removeItem("openrouter-key");
-    } catch {
-      /* ignore */
+  // Debounced sessionStorage sync to prevent performance issues during typing
+  const debouncedStorageSync = useCallback((value: string) => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
-  }, [apiKey]);
+    debounceTimerRef.current = setTimeout(() => {
+      try {
+        sessionStorage.setItem("openrouter-key", value);
+        // Remove from localStorage to maintain security (only use sessionStorage)
+        localStorage.removeItem("openrouter-key");
+      } catch {
+        /* ignore */
+      }
+    }, 300); // 300ms delay
+  }, []);
+
+  // Handle API key input change with debounced storage
+  const handleApiKeyChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setApiKey(value);
+      debouncedStorageSync(value);
+    },
+    [debouncedStorageSync],
+  );
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleSaveKey = () => {
     try {
@@ -82,6 +107,7 @@ export function SettingsApiDataView() {
         message: "Der Schlüssel wird nur in dieser Session gehalten.",
       });
 
+      // Immediate sync on save
       try {
         sessionStorage.setItem("openrouter-key", trimmed);
         // Remove from localStorage to maintain security (only use sessionStorage)
@@ -220,9 +246,7 @@ export function SettingsApiDataView() {
             <section className="space-y-4">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-4 h-4 text-brand" />
-                <h3 className="text-sm font-semibold text-text-primary">
-                  Schlüssel &amp; Verbindung
-                </h3>
+                <h3 className="text-sm font-semibold text-text-primary">Schlüssel & Verbindung</h3>
               </div>
 
               {hasApiKey && (
@@ -241,7 +265,7 @@ export function SettingsApiDataView() {
                     id="api-key"
                     type={showKey ? "text" : "password"}
                     value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
+                    onChange={handleApiKeyChange}
                     placeholder="sk-or-..."
                     className="pr-12"
                     autoComplete="off"
@@ -377,9 +401,7 @@ export function SettingsApiDataView() {
 
             <section className="space-y-4 border-t border-border pt-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-text-primary">
-                  Migration &amp; Recovery
-                </h3>
+                <h3 className="text-sm font-semibold text-text-primary">Migration & Recovery</h3>
                 <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
                   {showMigration ? "Schließen" : "Öffnen"}
                 </Button>

@@ -6,7 +6,8 @@ import { VitePWA } from "vite-plugin-pwa";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 const analyzerPlugin = analyzer({
-  analyzerMode: process.env.BUNDLE_ANALYZE_MODE ?? "static",
+  analyzerMode:
+    (process.env.BUNDLE_ANALYZE_MODE as "static" | "server" | "json" | undefined) ?? "static",
   openAnalyzer: false,
   enabled: process.env.BUNDLE_ANALYZE !== "false",
 });
@@ -44,7 +45,7 @@ export default defineConfig(({ mode }) => {
    * @param {string} path - The base path to validate
    * @returns {string} - Normalized and validated base path
    */
-  function validateBasePath(path) {
+  function validateBasePath(path: string) {
     if (!path || typeof path !== "string") return "/";
 
     // Remove any trailing slash except for root
@@ -142,13 +143,12 @@ export default defineConfig(({ mode }) => {
               org: env.SENTRY_ORG || "disa-ai",
               project: env.SENTRY_PROJECT || "disa-ai-web",
               authToken: env.SENTRY_AUTH_TOKEN,
-              sourceMaps: {
-                include: ["./dist/assets"],
+              sourcemaps: {
+                assets: ["./dist/assets"],
                 ignore: ["node_modules"],
               },
               release: {
                 name: env.VITE_BUILD_ID || "development",
-                cleanArtifacts: true,
               },
               telemetry: false, // Disable telemetry for privacy
             }),
@@ -270,7 +270,7 @@ export default defineConfig(({ mode }) => {
         clientFiles: [
           "./src/App.tsx",
           "./src/pages/Chat.tsx",
-          "./src/components/chat/ChatScreen.tsx",
+          "./src/components/chat/ChatMessage.tsx",
           "./src/app/layouts/AppShell.tsx",
           "./src/ui/Button.tsx",
           "./src/hooks/useSettings.ts",
