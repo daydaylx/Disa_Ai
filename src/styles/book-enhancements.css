@@ -12,13 +12,15 @@
 /* Subtle paper texture overlay */
 .book-page {
   position: relative;
-  background: linear-gradient(135deg,
-    hsla(45, 15%, 96%, 0.3) 0%,
-    hsla(45, 10%, 94%, 0.2) 50%,
-    hsla(45, 20%, 98%, 0.3) 100%
-  ),
+  background: linear-gradient(
+      135deg,
+      hsla(45, 15%, 96%, 0.3) 0%,
+      hsla(45, 10%, 94%, 0.2) 50%,
+      hsla(45, 20%, 98%, 0.3) 100%
+    ),
     var(--bg-page);
-  background-size: 100% 100%, 200px 200px;
+  background-size: 100% 100%,
+    200px 200px;
 
   /* Subtle paper noise texture */
   position: relative;
@@ -66,19 +68,13 @@
 
 .book-page-stack::before {
   transform: translateZ(-2px) scale(0.99);
-  background: linear-gradient(135deg,
-  hsla(45, 20%, 96%, 0.8) 0%,
-  hsla(45, 15%, 94%, 0.8) 100%
-);
+  background: linear-gradient(135deg, hsla(45, 20%, 96%, 0.8) 0%, hsla(45, 15%, 94%, 0.8) 100%);
   z-index: -2;
 }
 
 .book-page-stack::after {
   transform: translateZ(-4px) scale(0.98);
-  background: linear-gradient(135deg,
-  hsla(45, 25%, 94%, 0.6) 0%,
-  hsla(45, 20%, 92%, 0.6) 100%
-);
+  background: linear-gradient(135deg, hsla(45, 25%, 94%, 0.6) 0%, hsla(45, 20%, 92%, 0.6) 100%);
   z-index: -3;
 }
 
@@ -111,7 +107,8 @@
 
 /* Page margin lines */
 .book-page-lines {
-  background-image: linear-gradient(90deg,
+  background-image: linear-gradient(
+    90deg,
     transparent 0%,
     transparent 1.5rem,
     hsla(220, 10%, 85%, 0.1) 1.5rem,
@@ -128,11 +125,7 @@
  * ======================================== */
 
 .book-user-bubble {
-  background: linear-gradient(
-    135deg,
-    hsla(260, 30%, 55%, 0.9) 0%,
-    hsla(260, 25%, 50%, 0.9) 100%
-  );
+  background: linear-gradient(135deg, hsla(260, 30%, 55%, 0.9) 0%, hsla(260, 25%, 50%, 0.9) 100%);
   border: 1px solid hsla(260, 30%, 40%, 0.3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
     0 1px 2px rgba(0, 0, 0, 0.05);
@@ -175,18 +168,8 @@
 
 .bookmark-enhanced {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--accent-primary) 0%,
-    hsla(260, 40%, 55%, 0.9) 100%
-  );
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 20px),
-    50% 100%,
-    0 calc(100% - 20px)
-  );
+  background: linear-gradient(135deg, var(--accent-primary) 0%, hsla(260, 40%, 55%, 0.9) 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 50% 100%, 0 calc(100% - 20px));
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15),
     0 2px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 2px rgba(255, 255, 255, 0.2);
@@ -239,11 +222,7 @@
   left: 0;
   width: 60px;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--accent-primary) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, var(--accent-primary) 0%, transparent 100%);
 }
 
 /* ========================================
@@ -271,11 +250,7 @@
  * ======================================== */
 
 .book-toc {
-  background: linear-gradient(
-    135deg,
-    hsla(45, 20%, 97%, 0.8) 0%,
-    hsla(45, 15%, 95%, 0.8) 100%
-  );
+  background: linear-gradient(135deg, hsla(45, 20%, 97%, 0.8) 0%, hsla(45, 15%, 95%, 0.8) 100%);
   border: 1px solid var(--border-color);
   border-left: 4px solid var(--accent-primary);
   padding: 1.5rem;
@@ -343,7 +318,8 @@
 }
 
 @keyframes bookmarkWiggle {
-  0%, 100% {
+  0%,
+  100% {
     transform: rotate(0deg);
   }
   25% {
@@ -382,11 +358,12 @@
  * ======================================== */
 
 :root[data-theme="dark"] .book-page {
-  background: linear-gradient(135deg,
-    hsla(220, 15%, 14%, 0.3) 0%,
-    hsla(220, 10%, 16%, 0.2) 50%,
-    hsla(220, 20%, 12%, 0.3) 100%
-  ),
+  background: linear-gradient(
+      135deg,
+      hsla(220, 15%, 14%, 0.3) 0%,
+      hsla(220, 10%, 16%, 0.2) 50%,
+      hsla(220, 20%, 12%, 0.3) 100%
+    ),
     var(--bg-page);
 }
 
