@@ -7,6 +7,7 @@ import { ToastsProvider } from "@/ui/toast";
 import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
+import { FullPageLoader } from "./components/FullPageLoader";
 import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { RolesProvider } from "./contexts/RolesContext";
@@ -65,6 +66,20 @@ function AppContent() {
                   Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
                   automatisch gemeldet.
                 </p>
+                <p className="mt-3 text-sm text-text-secondary">
+                  <a
+                    className="text-accent hover:underline"
+                    href="#"
+                    onClick={() => window.location.reload()}
+                  >
+                    Neu laden
+                  </a>{" "}
+                  oder wende dich an unseren Support unter{" "}
+                  <a className="text-accent hover:underline" href="mailto:support@disa.ai">
+                    support@disa.ai
+                  </a>
+                  , falls das Problem bestehen bleibt.
+                </p>
               </div>
               <div className="mt-6 flex flex-col gap-3">
                 <Button onClick={resetError} variant="primary" className="w-full">
@@ -93,9 +108,11 @@ function AppContent() {
         )}
         showDialog={false}
       >
-        <Router />
+        <Suspense fallback={<FullPageLoader message="Inhalt wird geladen" />}>
+          <Router />
+        </Suspense>
       </SentryErrorBoundary>
-      <Suspense fallback={null}>
+      <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
         <FeatureFlagPanel />
       </Suspense>
       {!settings.hasCompletedOnboarding && <OnboardingOverlay onComplete={completeOnboarding} />}

@@ -76,9 +76,47 @@
     <link rel="preconnect" href="https://openrouter.ai" crossorigin />
 
     <!-- Module Preload for critical chunks will be added by Vite -->
+    <style>
+      @keyframes initial-loader-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root">
+      <div
+        id="initial-loader"
+        aria-live="polite"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          min-height: 100vh;
+          background: radial-gradient(circle at 25% 25%, #1f2937, #0b0f14 45%);
+          color: #f8fafc;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+          letter-spacing: 0.01em;
+        "
+      >
+        <div
+          aria-hidden="true"
+          style="
+            width: 18px;
+            height: 18px;
+            border-radius: 9999px;
+            border: 3px solid rgba(167, 139, 250, 0.2);
+            border-top-color: #a78bfa;
+            animation: initial-loader-spin 1s linear infinite;
+          "
+        ></div>
+        <div style="font-weight: 600">Disa&nbsp;AI wird geladen...</div>
+      </div>
       <!-- Fallback content for when JavaScript is disabled -->
       <div
         class="fallback-content"

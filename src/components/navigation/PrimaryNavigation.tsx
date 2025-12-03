@@ -15,7 +15,7 @@ export function PrimaryNavigation({ orientation }: PrimaryNavigationProps) {
       className={cn(
         "w-full",
         orientation === "bottom"
-          ? "flex items-center justify-between gap-1 px-1 pb-2 pt-1"
+          ? "flex items-center justify-between gap-2 px-2 pb-[calc(12px+env(safe-area-inset-bottom,0px))] pt-2"
           : "flex flex-1 flex-col gap-1",
       )}
       aria-label="Hauptnavigation"
@@ -31,10 +31,10 @@ export function PrimaryNavigation({ orientation }: PrimaryNavigationProps) {
             to={item.path}
             className={cn(
               "group flex flex-1 items-center gap-2 rounded-xl text-sm font-medium transition",
-              orientation === "bottom" ? "flex-col px-2 py-2" : "flex-row px-3 py-3",
+              orientation === "bottom" ? "flex-col px-3 py-2" : "flex-row px-3 py-3",
               isActive
-                ? "bg-accent-primary/10 text-accent-primary shadow-[0_6px_16px_-12px_rgba(0,0,0,0.35)]"
-                : "text-ink-secondary hover:bg-surface-2",
+                ? "bg-surface-2 text-text-primary ring-1 ring-accent-primary/40"
+                : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
             )}
             aria-current={isActive ? "page" : undefined}
           >
@@ -42,9 +42,9 @@ export function PrimaryNavigation({ orientation }: PrimaryNavigationProps) {
               className={cn(
                 "flex items-center justify-center rounded-full border",
                 isActive
-                  ? "border-accent-primary/40 bg-accent-primary/15 text-accent-primary"
-                  : "border-border-ink/30 bg-surface-1 text-ink-secondary",
-                orientation === "bottom" ? "h-8 w-8" : "h-9 w-9",
+                  ? "border-accent-primary/60 bg-accent-primary/15 text-accent-primary"
+                  : "border-border-ink/40 bg-surface-1 text-text-secondary",
+                orientation === "bottom" ? "h-9 w-9" : "h-10 w-10",
               )}
             >
               <Icon className={orientation === "bottom" ? "h-4 w-4" : "h-5 w-5"} />

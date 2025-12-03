@@ -3,9 +3,9 @@ import { useState } from "react";
 
 import type { ModelEntry } from "@/config/models";
 import { useSettings } from "@/hooks/useSettings";
-import { ChevronUp } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
+import { ContextBadge } from "./ContextBadge";
 import { ModelDropdown } from "./ModelDropdown";
 
 interface ModelSelectorProps {
@@ -19,29 +19,17 @@ export function ModelSelector({ catalog }: ModelSelectorProps) {
   // Find current label - shortened for mobile
   const currentModel = catalog?.find((m) => m.id === settings.preferredModelId);
   const fullLabel = currentModel?.label || settings.preferredModelId.split("/").pop() || "Auto";
-  // Shorten long labels for mobile
-  const shortLabel = fullLabel.length > 12 ? fullLabel.slice(0, 10) + "…" : fullLabel;
+  const label = currentModel?.label || settings.preferredModelId.split("/").pop() || "Modell";
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
-        <button
-          className={cn(
-            "group flex items-center gap-1 rounded-full border border-border-ink bg-surface-1 pl-2.5 pr-1.5 py-1.5 text-xs sm:text-sm font-medium text-ink-primary transition-all duration-200",
-            "hover:bg-surface-2 hover:border-border-ink/80 active:scale-[0.98]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/50",
-            open && "bg-ink-primary text-surface-1 border-ink-primary hover:bg-ink-primary/90",
-          )}
+        <ContextBadge
+          label={label}
+          isOpen={open}
           aria-label={`Aktuelles Modell: ${fullLabel}. Ändern…`}
-        >
-          <span className="truncate max-w-[60px] sm:max-w-[100px]">{shortLabel}</span>
-          <ChevronUp
-            className={cn(
-              "h-3 w-3 sm:h-3.5 sm:w-3.5 text-ink-secondary transition-transform duration-200",
-              open ? "text-surface-1/70 rotate-180" : "group-hover:text-ink-primary",
-            )}
-          />
-        </button>
+          className="max-w-[150px] sm:max-w-[180px]"
+        />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>

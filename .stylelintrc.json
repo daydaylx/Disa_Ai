@@ -76,6 +76,9 @@
     "**/*.min.css",
     "public/**",
     "**/vendor/**",
-    "**/third-party/**"
+    "**/third-party/**",
+    "coverage/**",
+    "test-results/**",
+    "playwright-report/**"
   ]
 }

@@ -172,6 +172,7 @@ export const appRouter = createBrowserRouter(
     },
   ],
   {
+    basename: import.meta.env.BASE_URL ?? "/",
     future: {
       v7_skipActionErrorRevalidation: true,
       v7_normalizeFormMethod: true,

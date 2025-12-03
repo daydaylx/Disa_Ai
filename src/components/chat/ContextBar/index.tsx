@@ -3,9 +3,9 @@ import { Send, Square } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
-import { ContextBarMiddle } from "./ContextBarMiddle";
 import { ModelSelector } from "./ModelSelector";
 import { PersonaSelector } from "./PersonaSelector";
+import { QuickSettingsDropdown } from "./QuickSettingsDropdown";
 
 interface ContextBarProps {
   modelCatalog: ModelEntry[] | null;
@@ -27,26 +27,21 @@ export function ContextBar({
   return (
     <div
       className={cn(
-        "w-full flex items-center justify-between gap-2 px-2 py-2 sm:px-4 bg-bg-page/98 backdrop-blur-sm transition-all",
+        "w-full flex items-center gap-2 px-2 py-2 sm:px-4 bg-bg-page/98 backdrop-blur-sm transition-all",
         "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
         className,
       )}
     >
-      {/* Left: Role */}
-      <div className="flex-shrink-0 min-w-0">
-        <PersonaSelector />
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <div className="flex flex-wrap items-center gap-1.5 pr-1">
+          <PersonaSelector />
+          <ModelSelector catalog={modelCatalog} />
+        </div>
       </div>
 
-      {/* Center: Settings - hidden on very small screens */}
-      <div className="flex-shrink-0 hidden xs:flex">
-        <ContextBarMiddle />
-      </div>
+      <div className="flex-shrink-0 flex items-center gap-1.5 sm:gap-2">
+        <QuickSettingsDropdown />
 
-      {/* Right: Model + Send */}
-      <div className="flex-shrink-0 min-w-0 flex items-center gap-1.5 sm:gap-2">
-        <ModelSelector catalog={modelCatalog} />
-
-        {/* Send/Stop Button */}
         {isLoading ? (
           <Button
             onClick={onStop}

@@ -7,7 +7,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
-import { initEnvironment } from "./config/env";
+import { getEnvConfigSafe, initEnvironment } from "./config/env";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
@@ -41,6 +41,27 @@ try {
   safeError("Critical environment error:", error);
 }
 
+const envConfig = getEnvConfigSafe();
+
+function normalizeBasePath(basePath: string): string {
+  if (!basePath.startsWith("/")) {
+    basePath = `/${basePath}`;
+  }
+  return basePath.endsWith("/") ? basePath : `${basePath}/`;
+}
+
+const normalizedBasePath = normalizeBasePath(envConfig.VITE_BASE_URL || "/");
+
+function withBasePath(path: string): string {
+  if (/^https?:\/\//i.test(path)) return path;
+  const sanitizedPath = path.replace(/^\/+/, "");
+  return `${normalizedBasePath}${sanitizedPath}`;
+}
+
+function toAbsoluteWithBase(path: string): string {
+  return new URL(withBasePath(path), window.location.origin).toString();
+}
+
 // Initialize error tracking (must be early in the process)
 void import("./lib/monitoring/sentry")
   .then((mod) => mod.initializeSentry())
@@ -48,6 +69,12 @@ void import("./lib/monitoring/sentry")
 
 // Singleton React Root to prevent memory leaks
 let _appRoot: ReactDOM.Root | null = null;
+let preloadOverlayRendered = false;
+
+function removeInitialLoader(): void {
+  const loader = document.getElementById("initial-loader");
+  loader?.remove();
+}
 
 // Initialize app
 function initializeApp() {
@@ -68,6 +95,7 @@ function initializeApp() {
 
 // Initialize app with error recovery
 function safeInitialize(): void {
+  removeInitialLoader();
   // Always initialize React first (critical for app to load)
   try {
     initializeApp();
@@ -108,9 +136,9 @@ function safeInitialize(): void {
           )
             .map((el) => ("href" in el ? el.href : el.src))
             .filter(Boolean);
-          urls.push(location.origin + "/");
-          urls.push(location.pathname);
-          urls.push("/manifest.webmanifest");
+          urls.push(toAbsoluteWithBase("/"));
+          urls.push(new URL(location.pathname, window.location.origin).toString());
+          urls.push(toAbsoluteWithBase("manifest.webmanifest"));
           const cache = await caches.open("disa-dev-cache");
           await cache.addAll([...new Set(urls)]);
         } catch (err) {
@@ -121,6 +149,7 @@ function safeInitialize(): void {
       const registerInlineDevSW = async () => {
         const swCode = `
           const CACHE = 'disa-dev-cache';
+          const BASE_PATH = '${normalizedBasePath}';
           self.addEventListener('install', (event) => {
             event.waitUntil(caches.open(CACHE).then(() => self.skipWaiting()));
           });
@@ -138,7 +167,7 @@ function safeInitialize(): void {
                       cache.put(event.request, networkResp.clone()).catch(() => {});
                       return networkResp;
                     })
-                    .catch(async () => (await cache.match('/')) ?? Response.error());
+                    .catch(async () => (await cache.match(BASE_PATH)) ?? Response.error());
                 }),
               ),
             );
@@ -146,7 +175,9 @@ function safeInitialize(): void {
         `;
         const swUrl = URL.createObjectURL(new Blob([swCode], { type: "application/javascript" }));
         try {
-          const registration = await navigator.serviceWorker.register(swUrl, { scope: "/" });
+          const registration = await navigator.serviceWorker.register(swUrl, {
+            scope: normalizedBasePath,
+          });
           return registration;
         } catch (err) {
           safeWarn("Inline SW registration failed", err);
@@ -156,7 +187,9 @@ function safeInitialize(): void {
 
       const registerDevServiceWorker = async () => {
         try {
-          const registration = await navigator.serviceWorker.register("/dev-sw.js", { scope: "/" });
+          const registration = await navigator.serviceWorker.register(withBasePath("dev-sw.js"), {
+            scope: normalizedBasePath,
+          });
           safeWarn("Dev SW registered:", registration);
           return registration;
         } catch (err) {
@@ -173,7 +206,9 @@ function safeInitialize(): void {
         }
 
         try {
-          const registration = await navigator.serviceWorker.register("/sw.js");
+          const registration = await navigator.serviceWorker.register(withBasePath("sw.js"), {
+            scope: normalizedBasePath,
+          });
           safeWarn("SW registered:", registration);
         } catch (registrationError) {
           console.warn("SW registration failed:", registrationError);
@@ -214,7 +249,11 @@ function safeInitialize(): void {
  * Renders a fallback error overlay when critical preload errors occur
  * This function operates outside React to ensure it works even when React fails
  */
-function renderPreloadErrorOverlay(error: Event): void {
+function renderPreloadErrorOverlay(error: Event | PromiseRejectionEvent): void {
+  if (preloadOverlayRendered || document.getElementById("preload-error-overlay")) {
+    return;
+  }
+  preloadOverlayRendered = true;
   safeError("[PRELOAD ERROR] Critical asset loading failed:", error);
 
   // Create error overlay with inline styles (no CSS dependencies)
@@ -354,6 +393,43 @@ function renderPreloadErrorOverlay(error: Event): void {
  * Must be installed BEFORE any dynamic imports occur
  */
 function installPreloadErrorHandler(): void {
+  const shouldHandlePreloadError = (
+    message?: string,
+    error?: unknown,
+    target?: EventTarget | null,
+  ): boolean => {
+    const normalizedMessage = message?.toLowerCase() ?? "";
+    const normalizedErrorMessage =
+      typeof error === "object" && error && "message" in error
+        ? String((error as { message?: string }).message ?? "").toLowerCase()
+        : typeof error === "string"
+          ? error.toLowerCase()
+          : "";
+    const errorName =
+      typeof error === "object" && error && "name" in error
+        ? String((error as { name?: string }).name ?? "")
+        : undefined;
+
+    const matchesChunkFailure =
+      normalizedMessage.includes("failed to fetch dynamically imported module") ||
+      normalizedMessage.includes("unable to preload css") ||
+      normalizedMessage.includes("loading chunk") ||
+      normalizedMessage.includes("chunkloaderror") ||
+      normalizedErrorMessage.includes("chunkloaderror") ||
+      normalizedErrorMessage.includes("failed to fetch dynamically imported module") ||
+      normalizedErrorMessage.includes("loading chunk") ||
+      normalizedErrorMessage.includes("unable to preload css") ||
+      errorName === "ChunkLoadError" ||
+      errorName === "CSS_CHUNK_LOAD_FAILED";
+
+    const isAssetElementError =
+      target instanceof HTMLScriptElement ||
+      target instanceof HTMLLinkElement ||
+      target instanceof HTMLImageElement;
+
+    return matchesChunkFailure || isAssetElementError;
+  };
+
   window.addEventListener("vite:preloadError", (event: Event) => {
     event.preventDefault(); // Prevent default error handling
     renderPreloadErrorOverlay(event);
@@ -361,10 +437,21 @@ function installPreloadErrorHandler(): void {
 
   // Also catch general module preload errors
   window.addEventListener("error", (event: ErrorEvent) => {
-    if (
-      event.message.includes("Failed to fetch dynamically imported module") ||
-      event.message.includes("Unable to preload CSS")
-    ) {
+    if (shouldHandlePreloadError(event.message, event.error, event.target)) {
+      event.preventDefault();
+      renderPreloadErrorOverlay(event);
+    }
+  });
+
+  window.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
+    const reason = event.reason;
+    const message =
+      typeof reason === "string"
+        ? reason
+        : typeof reason === "object" && reason && "message" in reason
+          ? String((reason as { message?: string }).message ?? "")
+          : undefined;
+    if (shouldHandlePreloadError(message, reason, null)) {
       event.preventDefault();
       renderPreloadErrorOverlay(event);
     }
