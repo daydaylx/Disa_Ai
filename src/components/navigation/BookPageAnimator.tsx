@@ -7,28 +7,25 @@ interface BookPageAnimatorProps {
   direction?: "forward" | "backward"; // Could be used for history navigation
 }
 
+// Updated to "Dust Cloud" Fade per Slate & Chalk V1 Spec
 const pageVariants: Variants = {
   initial: {
     opacity: 0,
-    x: 20, // Slight slide from right (like a new page)
-    rotateY: 5, // Slight 3D perspective
-    transformOrigin: "left center",
+    scale: 0.99,
   },
   animate: {
     opacity: 1,
-    x: 0,
-    rotateY: 0,
+    scale: 1,
     transition: {
-      duration: 0.4,
-      ease: [0.22, 1, 0.36, 1] as const, // Ease-out cubic (smooth landing)
+      duration: 0.12, // 80-120ms
+      ease: "linear", // Simple dissolve
     },
   },
   exit: {
     opacity: 0,
-    x: -10, // Slight slide to left
     transition: {
-      duration: 0.2,
-      ease: "easeIn",
+      duration: 0.1,
+      ease: "linear",
     },
   },
 };
