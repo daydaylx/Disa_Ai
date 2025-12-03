@@ -46,27 +46,27 @@ export function HistorySidePanel({
     <div className="fixed inset-0 z-drawer z-[100]" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         onClick={handleBackdropClick}
       />
 
       {/* Panel - Slide in from right */}
       <div
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm bg-bg-page shadow-2xl transition-transform duration-300 ease-out transform",
+          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm bg-[rgba(19,19,20,0.96)] border-l border-[var(--border-chalk)] shadow-[0_0_0_1px_var(--border-chalk),0_18px_40px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out transform",
           isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border-ink/10 bg-bg-page z-10">
-          <h2 className="text-lg font-serif font-bold text-ink-primary tracking-wide">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)] z-10">
+          <h2 className="text-lg font-serif font-bold text-ink-primary tracking-[0.04em]">
             Inhaltsverzeichnis
           </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-ink-secondary hover:text-ink-primary"
+            className="text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)]"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -79,8 +79,8 @@ export function HistorySidePanel({
             className={cn(
               "flex-1 py-3 text-sm font-medium transition-colors border-b-2",
               activeTab === "bookmarks"
-                ? "border-accent text-accent bg-accent/5"
-                : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
+                ? "border-[var(--border-chalk-strong)] text-text-primary bg-[rgba(255,255,255,0.04)]"
+                : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.03)]",
             )}
           >
             <Book className="h-4 w-4 inline-block mr-2 mb-0.5" />
@@ -91,8 +91,8 @@ export function HistorySidePanel({
             className={cn(
               "flex-1 py-3 text-sm font-medium transition-colors border-b-2",
               activeTab === "archive"
-                ? "border-accent text-accent bg-accent/5"
-                : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-surface-2",
+                ? "border-[var(--border-chalk-strong)] text-text-primary bg-[rgba(255,255,255,0.04)]"
+                : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.03)]",
             )}
           >
             <Database className="h-4 w-4 inline-block mr-2 mb-0.5" />
@@ -117,10 +117,10 @@ export function HistorySidePanel({
                 key={chat.id}
                 onClick={() => onSelect(chat.id)}
                 className={cn(
-                  "w-full text-left px-4 py-3 rounded-lg transition-all group",
-                  "hover:bg-surface-2",
+                  "w-full text-left px-4 py-3 rounded-lg transition-all group border border-[color:hsla(0,0%,92%,0.35)]",
+                  "hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)]",
                   activeId === chat.id
-                    ? "bg-accent/5 border-l-4 border-accent pl-3"
+                    ? "bg-[rgba(255,255,255,0.05)] border-l-4 border-[var(--accent-primary)] pl-3 shadow-[0_0_0_1px_var(--border-chalk-strong)]"
                     : "border-l-4 border-transparent",
                 )}
               >
@@ -129,7 +129,7 @@ export function HistorySidePanel({
                     className={cn(
                       "font-medium truncate",
                       activeId === chat.id
-                        ? "text-accent"
+                        ? "text-text-primary"
                         : "text-ink-primary group-hover:text-ink-primary",
                     )}
                   >
@@ -150,7 +150,7 @@ export function HistorySidePanel({
         </div>
 
         {/* Footer Action */}
-        <div className="absolute bottom-0 w-full p-4 border-t border-border-ink/10 bg-bg-page">
+        <div className="absolute bottom-0 w-full p-4 border-t border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)]">
           <Button
             variant="primary"
             className="w-full shadow-md"

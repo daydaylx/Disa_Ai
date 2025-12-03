@@ -41,11 +41,13 @@ body {
   overflow-x: hidden;
   position: relative;
   overscroll-behavior: none;
-  background: radial-gradient(120% 140% at 10% 20%, rgba(143, 123, 255, 0.08), transparent 55%),
-    radial-gradient(120% 140% at 90% 10%, rgba(94, 228, 255, 0.08), transparent 55%),
-    var(--surface-base);
-  color: var(--color-text-primary, var(--fg0));
-  font-family: var(--font-family-sans);
+  background-color: var(--bg-app);
+  background-image: var(--chalk-noise);
+  background-blend-mode: normal;
+  color: var(--text-primary);
+  font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
   padding-top: var(--mobile-safe-top);
   padding-bottom: calc(var(--mobile-gutter) + var(--mobile-safe-bottom));
   padding-left: calc(var(--mobile-gutter) + var(--mobile-safe-left));

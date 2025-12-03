@@ -1,138 +1,115 @@
 /**
- * DISA AI - INK ON PAPER THEME
+ * DISA AI - SCHIEFER & KREIDE THEME
  *
- * Concept: "Tinte auf Papier" - Calm book aesthetic
- *
- * Colors:
- * - Off-white paper backgrounds
- * - Dark ink text
- * - Muted indigo accents
+ * Konzept: Matte Schieferoberfläche mit digitaler Kreide.
+ * Ruhig, analog, warm und klar.
  */
 
 :root {
   /* ========================================
-   * COLOR PALETTE
+   * COLOR PALETTE (Schiefer)
    * ======================================== */
 
-  /* Paper Backgrounds */
-  --bg-app: hsl(45, 25%, 96%); /* App background - Warm off-white */
-  --bg-page: hsl(45, 20%, 98%); /* Page/Chat background - Slightly lighter */
-  --bg-surface: hsl(45, 20%, 98%); /* For cards/surfaces */
+  /* Slate Backgrounds */
+  --bg-app: hsl(240, 4%, 6%); /* #0E0E0F - matte schwarzer Schiefer */
+  --bg-page: hsl(240, 3%, 8%); /* #131314 - leicht heller Schiefer */
+  --bg-surface: hsl(240, 3%, 11%); /* abgesetzte Flächen */
+  --bg-surface-strong: hsl(240, 3%, 13%);
 
-  /* Ink Colors */
-  --ink-primary: hsl(220, 15%, 18%); /* Dark Blue-Black */
-  --ink-secondary: hsl(220, 10%, 50%); /* Muted Grey */
-  --ink-tertiary: hsl(220, 10%, 55%); /* Light Grey - Timestamps, Hints (boosted contrast) */
-  --ink-on-accent: hsl(45, 20%, 98%); /* Light text on accent */
+  /* Chalk Text */
+  --ink-primary: hsl(0, 0%, 92%); /* #ECECEC */
+  --ink-secondary: hsl(0, 0%, 62%); /* #9E9E9E */
+  --ink-tertiary: hsl(0, 0%, 55%);
+  --ink-on-accent: hsl(240, 6%, 7%);
 
-  /* Accent Colors */
-  --accent-primary: hsl(260, 35%, 45%); /* Muted Indigo/Violet */
-  --accent-secondary: hsl(260, 25%, 65%); /* Lighter Violet */
-  --accent-hover: hsl(260, 40%, 40%);
+  /* Chalk Accents */
+  --accent-primary: hsl(218, 100%, 82%); /* #A7C8FF - Kreideblau */
+  --accent-secondary: hsl(49, 100%, 83%); /* #FFEFA6 - Kreidegelb */
+  --accent-tertiary: hsl(350, 100%, 89%); /* #FFCAD4 - Kreidepink */
+  --accent-hover: hsl(218, 90%, 78%);
 
-  /* Semantic Colors */
-  --color-success: hsl(140, 40%, 45%);
-  --color-warning: hsl(35, 80%, 50%);
-  --color-error: hsl(0, 60%, 45%);
+  /* Semantic Colors aligned to chalk warmth */
+  --color-success: hsl(147, 42%, 68%);
+  --color-warning: var(--accent-secondary);
+  --color-error: hsl(0, 62%, 65%);
 
   /* Mapping to existing variable names for compatibility */
   --bg-base: var(--bg-app);
   --bg-0: var(--bg-app);
   --bg-1: var(--bg-page);
-  --bg-2: var(--bg-page);
+  --bg-2: var(--bg-surface);
 
   --surface-1: var(--bg-page);
-  --surface-2: var(--bg-page); /* No elevation distinction by color, use shadow */
-  --surface-3: hsl(45, 15%, 92%); /* Hover state */
-  --surface-inset: hsl(45, 10%, 94%);
+  --surface-2: var(--bg-surface);
+  --surface-3: var(--bg-surface-strong);
+  --surface-inset: hsl(240, 4%, 9%);
 
   --text-primary: var(--ink-primary);
   --text-secondary: var(--ink-secondary);
   --text-muted: var(--ink-secondary);
-  --text-disabled: hsl(220, 10%, 65%);
+  --text-disabled: hsla(0, 0%, 62%, 0.6);
   --text-on-accent: var(--ink-on-accent);
 
   --accent: var(--accent-primary);
   --brand: var(--accent-primary);
 
   /* ========================================
-   * SHADOWS & BORDERS
+   * SHADOWS & BORDERS (digitale Kreide)
    * ======================================== */
 
-  /* Subtle Paper Shadows */
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-paper: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.32);
 
-  /* Map to existing names */
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
   --shadow-soft-raise: var(--shadow-paper);
   --shadow-strong-raise: var(--shadow-floating);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 
-  /* Legacy mappings for component compatibility */
+  /* Keep legacy tokens but remove neon glows */
   --shadow-raise: var(--shadow-paper);
   --shadow-raiseLg: var(--shadow-floating);
-
-  /* Glow effects for brand and accent colors */
-  --shadow-brandGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
-  --shadow-accentGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
+  --shadow-brandGlow: 0 0 0 rgba(0, 0, 0, 0);
+  --shadow-brandGlowLg: 0 0 0 rgba(0, 0, 0, 0);
+  --shadow-accentGlow: 0 0 0 rgba(0, 0, 0, 0);
+  --shadow-accentGlowLg: 0 0 0 rgba(0, 0, 0, 0);
 
   /* Borders */
-  --border-color: hsl(45, 10%, 90%);
+  --border-color: hsl(240, 4%, 16%);
+  --border-chalk: hsla(0, 0%, 92%, 0.28);
+  --border-chalk-strong: hsla(0, 0%, 92%, 0.5);
   --border-width: 1px;
 
   /* Radius */
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
 
   /* ========================================
    * TYPOGRAPHY
    * ======================================== */
 
-  --font-sans: system-ui, -apple-system, sans-serif; /* Clean Sans */
-
-  --text-base: 17px; /* Mobile legible */
+  --font-sans: "Inter", "IBM Plex Sans", "Cabin", system-ui, -apple-system, sans-serif;
+  --text-base: 17px;
   --leading-normal: 1.6;
-  --font-serif: Lora, serif;
-}
+  --font-serif: "Inter", system-ui, sans-serif;
 
-:root {
-  --bg-page-texture: var(--bg-page) var(--noise-texture-light);
+  /* ========================================
+   * TEXTURES
+   * ======================================== */
+  --chalk-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.035) 0%, transparent 32%),
+    radial-gradient(circle at 75% 30%, rgba(255, 255, 255, 0.028) 0%, transparent 26%),
+    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 28%);
+
+  --bg-page-texture: var(--bg-page);
 }
 
 :root[data-theme="dark"] {
-  --bg-page-texture: var(--bg-page) var(--noise-texture-dark);
-}
+  /* Stay on slate palette in dark mode */
+  --bg-app: hsl(240, 4%, 6%);
+  --bg-page: hsl(240, 3%, 8%);
+  --bg-surface: hsl(240, 3%, 11%);
+  --bg-surface-strong: hsl(240, 3%, 13%);
 
-/* Dark Mode Overrides - "Slate & Chalk" Metaphor */
-:root[data-theme="dark"] {
-  /* Slate Backgrounds */
-  --bg-app: hsl(220, 20%, 14%); /* Deep Slate */
-  --bg-page: hsl(220, 18%, 18%); /* Slightly lighter Slate Page */
-  --bg-surface: hsl(220, 18%, 20%); /* Cards */
-
-  /* Chalk Text */
-  --ink-primary: hsl(40, 10%, 92%); /* Chalk White */
-  --ink-secondary: hsl(220, 15%, 70%); /* Muted Chalk */
-  --ink-tertiary: hsl(220, 15%, 55%);
-
-  /* Bioluminescent Accents */
-  --accent-primary: hsl(260, 60%, 70%); /* Glowing Violet */
-  --accent-secondary: hsl(260, 40%, 50%);
-  --accent-hover: hsl(260, 70%, 75%);
-
-  --border-color: hsl(220, 15%, 25%);
-
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
-
-  /* Dark mode glow effects */
-  --shadow-brandGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
-  --shadow-accentGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
+  --bg-page-texture: var(--bg-page);
 }
