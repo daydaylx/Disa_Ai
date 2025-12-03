@@ -11,12 +11,14 @@
 export type { LucideIcon } from "lucide-react";
 
 export {
+  Activity, // Added if needed, checking if it was missed
   AlertCircle,
   AlertTriangle,
   AppWindow, // Added
   ArrowLeft,
   ArrowRight, // Added for ThemenPage
   Book,
+  Bookmark, // Added
   BookOpenCheck,
   Bot,
   Brain,

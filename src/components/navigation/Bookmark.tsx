@@ -1,85 +1,23 @@
-import { useEffect, useState } from "react";
-
-import { Book } from "../../lib/icons";
+import { Bookmark as BookmarkIcon } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 
 interface BookmarkProps {
   onClick: () => void;
   className?: string;
-  disabled?: boolean;
 }
 
-export function Bookmark({ onClick, className = "", disabled = false }: BookmarkProps) {
-  const [hasWiggled, setHasWiggled] = useState(false);
-
-  // One-time wiggle animation on first mount
-  useEffect(() => {
-    const hasSeenBefore = localStorage.getItem("disa-bookmark-seen");
-    if (!hasSeenBefore && !disabled) {
-      const timer = setTimeout(() => {
-        setHasWiggled(true);
-        localStorage.setItem("disa-bookmark-seen", "true");
-
-        // Reset after animation
-        setTimeout(() => setHasWiggled(false), 600);
-      }, 1000); // Delay to show after page loads
-
-      return () => clearTimeout(timer);
-    }
-    return undefined;
-  }, [disabled]);
-
+export function Bookmark({ onClick, className }: BookmarkProps) {
   return (
-    <>
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        className={`
-          relative flex items-center justify-center
-          w-8 h-12 sm:w-10 sm:h-14
-          bg-accent-primary hover:bg-accent-primary/90
-          text-white shadow-raise cursor-pointer
-          transition-all duration-200
-          border-l-4 border-l-accent-primary/50
-          ${disabled ? "opacity-40 cursor-not-allowed" : "hover:shadow-lg active:scale-95"}
-          ${className}
-        `}
-        style={{
-          // Bookmark shape with triangle bottom
-          clipPath: "polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%)",
-        }}
-        aria-label="Lesezeichen - Chat-Verlauf öffnen"
-      >
-        <Book
-          className={`
-            w-4 h-4 sm:w-5 sm:h-5
-            ${hasWiggled ? "animate-wiggle" : ""}
-          `}
-        />
-      </button>
-
-      {/* Wiggle animation styles */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          @keyframes wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(3deg); }
-            75% { transform: rotate(-3deg); }
-          }
-
-          .animate-wiggle {
-            animation: wiggle 600ms ease-in-out;
-          }
-
-          /* Reduced motion support */
-          @media (prefers-reduced-motion: reduce) {
-            .animate-wiggle {
-              animation: none;
-            }
-          }
-        `,
-        }}
-      />
-    </>
+    <button
+      onClick={onClick}
+      className={cn(
+        "absolute right-[-12px] top-24 z-fab flex h-16 w-8 items-center justify-center rounded-l-md bg-accent text-ink-onAccent shadow-md transition-transform hover:-translate-x-1 active:scale-95 sm:right-[-16px] sm:w-10",
+        "animate-bookmark-wiggle", // Optional: only wiggle on first render if needed
+        className,
+      )}
+      aria-label="Verlauf öffnen"
+    >
+      <BookmarkIcon className="h-5 w-5 text-white" />
+    </button>
   );
 }

@@ -116,11 +116,12 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           className="flex min-h-screen flex-1 flex-col"
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
-          {/* Header - Clean for Chat Mode */}
+          {/* Header - Clean for Chat Mode (Hidden in Chat, BookLayout handles it) */}
           <header
             className={cn(
               "sticky top-0 z-header border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
-              isChatMode && "lg:hidden",
+              // Hide AppShell header on mobile AND desktop for Chat Mode, as BookLayout has its own
+              isChatMode ? "hidden" : "lg:hidden",
             )}
           >
             <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
@@ -142,14 +143,18 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
             role="main"
             data-testid="app-main"
             key={location.pathname}
-            className={cn("relative flex flex-1 flex-col", isChatMode ? "bg-bg-page" : "bg-bg-app")}
+            // Remove background handling here for Chat Mode, BookLayout does it
+            className={cn(
+              "relative flex flex-1 flex-col",
+              isChatMode ? "bg-transparent" : "bg-bg-app",
+            )}
             tabIndex={-1}
           >
             <div
               className={cn(
                 "mx-auto flex w-full flex-1 flex-col",
                 isChatMode
-                  ? "max-w-5xl overflow-hidden p-0"
+                  ? "w-full p-0 max-w-none overflow-hidden" // Let BookLayout handle constraints
                   : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8",
               )}
             >

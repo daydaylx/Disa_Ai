@@ -121,7 +121,9 @@ export function AchievementSystem({
 
       let shouldUnlock = false;
       let _progress = 0;
+      void _progress;
       let _maxProgress = 1;
+      void _maxProgress;
 
       switch (achievement.id) {
         case "first_swipe":

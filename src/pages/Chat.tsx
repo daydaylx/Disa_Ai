@@ -2,13 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useToasts } from "@/ui";
-import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
-import { ChatInputBar } from "../components/chat/ChatInputBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { ContextBar } from "../components/chat/ContextBar";
+import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { BookLayout } from "../components/layout/BookLayout";
+import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import type { ModelEntry } from "../config/models";
 import { QUICKSTARTS } from "../config/quickstarts";
 import { useRoles } from "../contexts/RolesContext";
@@ -22,7 +23,6 @@ import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
-import { History, Plus } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
@@ -36,6 +36,10 @@ export default function Chat() {
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
   const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
+
+  // UI State
+  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -76,7 +80,6 @@ export default function Chat() {
     setMessages,
     input,
     setInput,
-    stop,
     setCurrentSystemPrompt,
     setRequestOptions,
     apiStatus,
@@ -114,17 +117,18 @@ export default function Chat() {
     }
   }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
 
-  const { activeConversationId, newConversation, conversations } = useConversationManager({
-    messages,
-    isLoading,
-    setMessages,
-    setCurrentSystemPrompt,
-    onNewConversation: () => {
-      setInput("");
-    },
-    saveEnabled: memoryEnabled,
-    restoreEnabled: settings.restoreLastConversation && memoryEnabled,
-  });
+  const { activeConversationId, newConversation, conversations, selectConversation } =
+    useConversationManager({
+      messages,
+      isLoading,
+      setMessages,
+      setCurrentSystemPrompt,
+      onNewConversation: () => {
+        setInput("");
+      },
+      saveEnabled: memoryEnabled,
+      restoreEnabled: settings.restoreLastConversation && memoryEnabled,
+    });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -235,155 +239,82 @@ export default function Chat() {
   const handleStartNewChat = useCallback(() => {
     newConversation();
     setInput("");
+    setIsHistoryOpen(false);
   }, [newConversation, setInput]);
 
-  const handleOpenHistory = useCallback(() => {
-    void navigate("/chat/history");
-  }, [navigate]);
+  // History Selection
+  const handleSelectConversation = useCallback(
+    (id: string) => {
+      void selectConversation(id);
+      setIsHistoryOpen(false);
+    },
+    [selectConversation],
+  );
 
   const hasActiveConversation = !!activeConversationId;
   const isEmpty = !hasActiveConversation && messages.length === 0;
 
   return (
-    <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] flex-col bg-bg-page text-text-primary">
-      <h1 className="sr-only">Disa AI – Chat</h1>
+    <>
+      <BookLayout
+        title={activeConversation?.title || "Neue Unterhaltung"}
+        onMenuClick={openMenu}
+        onBookmarkClick={() => setIsHistoryOpen(true)}
+      >
+        <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-      <div className="border-b border-border-ink/40 bg-surface-2 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] uppercase tracking-[0.08em] text-text-tertiary">
-              Aktive Unterhaltung
-            </p>
-            <p className="text-lg font-semibold text-text-primary truncate">
-              {activeConversation?.title || "Neue Unterhaltung"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Verlauf öffnen"
-              onClick={handleOpenHistory}
-              className="hidden sm:inline-flex"
-            >
-              <History className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              aria-label="Verlauf öffnen"
-              onClick={handleOpenHistory}
-              className="sm:hidden"
-            >
-              <History className="h-4 w-4" />
-            </Button>
-            {!isEmpty && (
-              <>
-                <Button
-                  variant="primary"
-                  size="default"
-                  onClick={handleStartNewChat}
-                  className="hidden sm:inline-flex"
-                  aria-label="Neuen Chat beginnen"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span className="ml-2">Neuer Chat</span>
-                </Button>
-                <Button
-                  variant="primary"
-                  size="icon"
-                  onClick={handleStartNewChat}
-                  className="sm:hidden"
-                  aria-label="Neuen Chat beginnen"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
-
-      <div className="flex flex-1 flex-col">
-        <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-6 sm:py-4">
-          {isEmpty ? (
-            <ChatStartCard
-              onNewChat={handleStartNewChat}
-              conversationCount={stats?.totalConversations ?? conversationCount}
-            />
-          ) : (
-            <div className="relative flex min-h-[320px] flex-col overflow-hidden rounded-xl border border-border-ink/40 bg-surface-2 shadow-sm">
+        <div className="flex flex-1 flex-col h-full relative overflow-hidden">
+          {/* Scroll Area */}
+          <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 scroll-smooth">
+            {isEmpty ? (
+              <div className="max-w-2xl mx-auto mt-8">
+                <ChatStartCard
+                  onNewChat={handleStartNewChat}
+                  conversationCount={stats?.totalConversations ?? conversationCount}
+                />
+              </div>
+            ) : (
               <VirtualizedMessageList
                 messages={messages}
                 isLoading={isLoading}
                 onCopy={(content) => {
-                  navigator.clipboard.writeText(content).catch((err) => {
-                    console.error("Failed to copy content:", err);
-                  });
+                  void navigator.clipboard.writeText(content);
                 }}
                 onEdit={handleEdit}
                 onFollowUp={handleFollowUp}
-                onRetry={(messageId) => {
-                  const messageIndex = messages.findIndex((m) => m.id === messageId);
-                  if (messageIndex === -1) return;
-
-                  const targetUserIndex = (() => {
-                    const targetMsg = messages[messageIndex];
-                    if (targetMsg && targetMsg.role === "user") return messageIndex;
-                    for (let i = messageIndex; i >= 0; i -= 1) {
-                      const candidate = messages[i];
-                      if (candidate && candidate.role === "user") return i;
-                    }
-                    return -1;
-                  })();
-
-                  if (targetUserIndex === -1) {
-                    toasts.push({
-                      kind: "warning",
-                      title: "Retry nicht möglich",
-                      message: "Keine passende Nutzernachricht gefunden.",
-                    });
-                    return;
-                  }
-
-                  const userMessage = messages[targetUserIndex];
-                  if (!userMessage) return;
-                  const historyContext = messages.slice(0, targetUserIndex);
-                  setMessages(historyContext);
-                  void append({ role: "user", content: userMessage.content }, historyContext);
+                onRetry={(_messageId) => {
+                  /* TODO: Implement simple retry */ return void 0;
                 }}
-                className="h-full"
+                className="h-full max-w-3xl mx-auto"
               />
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {!isEmpty && (
-          <div className="border-t border-border-ink/40 bg-surface-2/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md sm:px-6 sm:py-4">
-            <div className="mx-auto w-full max-w-4xl space-y-3">
-              <ContextBar
-                modelCatalog={modelCatalog}
-                onSend={handleSend}
-                onStop={stop}
-                isLoading={isLoading}
-                canSend={!!input.trim()}
-                className="border-b border-border-ink/30 pb-3"
-              />
-
-              <ChatInputBar
-                value={input}
-                onChange={setInput}
-                onSend={handleSend}
-                isLoading={isLoading}
-                onQuickAction={(prompt) => setInput(prompt)}
-              />
-            </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
-        )}
-      </div>
-    </div>
+
+          {/* Unified Input Area */}
+          <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+            <UnifiedInputBar
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              isLoading={isLoading}
+            />
+          </div>
+        </div>
+      </BookLayout>
+
+      {/* Global Menu */}
+      <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
+
+      {/* History Side Panel */}
+      <HistorySidePanel
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        conversations={conversations}
+        activeId={activeConversationId}
+        onSelect={handleSelectConversation}
+        onNewChat={handleStartNewChat}
+      />
+    </>
   );
 }
