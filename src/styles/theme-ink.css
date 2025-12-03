@@ -92,6 +92,17 @@
   /* 3-6% noise simulation via repeating gradient or base64 (applied in index.css typically) */
   /* Here we define the color for the overlay */
   --noise-overlay-color: rgba(255, 255, 255, 0.04);
+
+  /* Chalk Noise Pattern - subtle grain texture for slate surface */
+  --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.05"/></svg>');
+
+  /* Chalk Glow for text and borders */
+  --chalk-glow: 0 0 8px rgba(236, 236, 236, 0.15), 0 0 2px rgba(236, 236, 236, 0.2);
+  --chalk-glow-strong: 0 0 12px rgba(236, 236, 236, 0.25), 0 0 4px rgba(236, 236, 236, 0.3);
+
+  /* Chalk Line - subtle blur for hand-drawn effect */
+  --border-chalk-blur: rgba(236, 236, 236, 0.35);
+  --chalk-line-shadow: 0 0 1px rgba(236, 236, 236, 0.4);
 }
 
 :root[data-theme="dark"] {
