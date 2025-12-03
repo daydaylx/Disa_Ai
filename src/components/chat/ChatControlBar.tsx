@@ -17,6 +17,8 @@ import {
 } from "@/ui/Select";
 import { Switch } from "@/ui/Switch";
 
+import { resolveInitialModelId } from "../models/resolveInitialModelId";
+
 const CREATIVE_STYLES = [
   { id: 10, label: "Präzise" },
   { id: 45, label: "Ausgewogen" },
@@ -48,20 +50,19 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
   const { settings, setPreferredModel, setCreativity } = useSettings();
   const { isEnabled: memoryEnabled, toggleMemory } = useMemory();
 
-  const modelOptions = useMemo(() => {
-    if (modelCatalog && modelCatalog.length > 0) return modelCatalog;
-    if (settings.preferredModelId) {
-      return [
-        {
-          id: settings.preferredModelId,
-          label: settings.preferredModelId,
-          tags: [],
-          safety: "any",
-        } as ModelEntry,
-      ];
-    }
-    return [] as ModelEntry[];
-  }, [modelCatalog, settings.preferredModelId]);
+  const modelOptions = useMemo(() => modelCatalog ?? ([] as ModelEntry[]), [modelCatalog]);
+
+  const resolvedModelId = useMemo(
+    () => resolveInitialModelId(settings.preferredModelId, modelCatalog),
+    [modelCatalog, settings.preferredModelId],
+  );
+
+  const modelSelectDisabled = modelOptions.length === 0;
+
+  const selectedModelLabel =
+    modelOptions.find((model) => model.id === resolvedModelId)?.label ??
+    resolvedModelId ??
+    "Kein Modell ausgewählt – bitte auswählen";
 
   const activeStyleLabel =
     CREATIVE_STYLES.find((style) => style.id === (settings.creativity ?? 45))?.label ??
@@ -164,9 +165,9 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
         </Select>
 
         <Select
-          value={settings.preferredModelId}
+          value={resolvedModelId ?? ""}
           onValueChange={(value) => setPreferredModel(value)}
-          disabled={modelCatalog === null && modelOptions.length === 0}
+          disabled={modelSelectDisabled}
         >
           <SelectTrigger aria-label="Modell auswählen" className="min-h-[44px] text-left">
             <div className="flex w-full items-center gap-2 truncate">
@@ -176,8 +177,7 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
               <div className="flex flex-col truncate text-start">
                 <ControlLabel icon={Cpu} label="Modell" />
                 <span className="truncate text-sm font-medium text-ink-primary">
-                  {modelOptions.find((model) => model.id === settings.preferredModelId)?.label ??
-                    settings.preferredModelId}
+                  {selectedModelLabel}
                 </span>
               </div>
             </div>
