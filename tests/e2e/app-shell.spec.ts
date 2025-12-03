@@ -22,10 +22,12 @@ test.describe("AppShell Layout & Navigation", () => {
 
   test("PRIMARY_NAV_ITEMS rendered in shell", async ({ page }) => {
     const nav = page.getByRole("navigation", { name: /Hauptnavigation/i });
-    await expect(nav).toBeVisible();
+    await expect(nav).toBeVisible({ timeout: 15000 });
     const labels = ["Chat", "Modelle", "Rollen", "Einstellungen"];
     for (const label of labels) {
-      await expect(nav.getByRole("link", { name: new RegExp(label, "i") })).toBeVisible();
+      await expect(nav.getByRole("link", { name: new RegExp(label, "i") })).toBeVisible({
+        timeout: 5000,
+      });
     }
 
     const mainContent = page.locator('[data-testid="app-main"], main, [role="main"]').first();

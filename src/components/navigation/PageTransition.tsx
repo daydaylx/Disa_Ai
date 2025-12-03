@@ -12,13 +12,13 @@ type TransitionDirection = "forward" | "backward" | "none";
 export function PageTransition({ children, className = "" }: PageTransitionProps) {
   const { isTransitioning } = useBookNavigation();
   const [direction, setDirection] = useState<TransitionDirection>("none");
-  const [prevChatId, setPrevChatId] = useState<string | null>(null);
-  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [prevChatId] = useState<string | null>(null);
+  const [currentChatId] = useState<string | null>(null);
 
   // Track chat ID changes to determine direction
   useEffect(() => {
     // This is a simplified version - in a real implementation,
-    // we'd track the actual chat IDs from useBookNavigation
+    // we'd track actual chat IDs from useBookNavigation
     if (currentChatId !== prevChatId && prevChatId !== null) {
       // For now, assume forward motion on new chat
       // In a full implementation, we'd compare stack positions

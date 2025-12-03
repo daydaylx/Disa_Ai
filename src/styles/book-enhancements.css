@@ -1,0 +1,454 @@
+/**
+ * DISA AI - Enhanced Book Aesthetics
+ *
+ * Additional styles to make the AI chat feel more like a real book
+ * with enhanced paper textures, book page effects, and reading elements
+ */
+
+/* ========================================
+ * ENHANCED PAPER TEXTURES & BACKGROUNDS
+ * ======================================== */
+
+/* Subtle paper texture overlay */
+.book-page {
+  position: relative;
+  background: linear-gradient(135deg,
+    hsla(45, 15%, 96%, 0.3) 0%,
+    hsla(45, 10%, 94%, 0.2) 50%,
+    hsla(45, 20%, 98%, 0.3) 100%
+  ),
+    var(--bg-page);
+  background-size: 100% 100%, 200px 200px;
+
+  /* Subtle paper noise texture */
+  position: relative;
+}
+
+.book-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(220, 200, 180, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(200, 180, 160, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(210, 190, 170, 0.03) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ========================================
+ * ENHANCED BOOK PAGE EFFECTS
+ * ======================================== */
+
+/* Multiple page stack effect */
+.book-page-stack {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.book-page-stack::before,
+.book-page-stack::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: inherit;
+  box-shadow: var(--shadow-paper);
+  pointer-events: none;
+}
+
+.book-page-stack::before {
+  transform: translateZ(-2px) scale(0.99);
+  background: linear-gradient(135deg,
+  hsla(45, 20%, 96%, 0.8) 0%,
+  hsla(45, 15%, 94%, 0.8) 100%
+);
+  z-index: -2;
+}
+
+.book-page-stack::after {
+  transform: translateZ(-4px) scale(0.98);
+  background: linear-gradient(135deg,
+  hsla(45, 25%, 94%, 0.6) 0%,
+  hsla(45, 20%, 92%, 0.6) 100%
+);
+  z-index: -3;
+}
+
+/* ========================================
+ * BOOK BINDING & MARGINS
+ * ======================================== */
+
+.book-binding {
+  position: relative;
+  padding: 2rem 1.5rem;
+  box-shadow: inset 3px 0 8px rgba(0, 0, 0, 0.1),
+    inset -3px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.book-binding::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 69, 19, 0.2) 0%,
+    rgba(160, 82, 45, 0.1) 50%,
+    rgba(139, 69, 19, 0.2) 100%
+  );
+  border-radius: 0 2px 2px 0;
+}
+
+/* Page margin lines */
+.book-page-lines {
+  background-image: linear-gradient(90deg,
+    transparent 0%,
+    transparent 1.5rem,
+    hsla(220, 10%, 85%, 0.1) 1.5rem,
+    hsla(220, 10%, 85%, 0.1) 1.52rem,
+    transparent 1.52rem,
+    transparent calc(1.5rem + 1px)
+  );
+  background-size: 100% 2rem;
+  background-position: 0 0;
+}
+
+/* ========================================
+ * ENHANCED CHAT BUBBLES FOR BOOK FEEL
+ * ======================================== */
+
+.book-user-bubble {
+  background: linear-gradient(
+    135deg,
+    hsla(260, 30%, 55%, 0.9) 0%,
+    hsla(260, 25%, 50%, 0.9) 100%
+  );
+  border: 1px solid hsla(260, 30%, 40%, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.book-user-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid hsla(260, 25%, 50%, 0.9);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+.book-ai-bubble {
+  background: transparent;
+  border-left: 3px solid var(--accent-primary);
+  position: relative;
+  padding-left: 1rem;
+}
+
+.book-ai-bubble::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px hsla(260, 35%, 45%, 0.3);
+}
+
+/* ========================================
+ * ENHANCED BOOKMARK STYLES
+ * ======================================== */
+
+.bookmark-enhanced {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary) 0%,
+    hsla(260, 40%, 55%, 0.9) 100%
+  );
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 20px),
+    50% 100%,
+    0 calc(100% - 20px)
+  );
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bookmark-enhanced:hover {
+  transform: translateY(-2px) rotate(1deg);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2),
+    0 3px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.bookmark-enhanced::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+}
+
+/* ========================================
+ * READING TYPOGRAPHY ENHANCEMENTS
+ * ======================================== */
+
+.book-font {
+  font-family: "Georgia", "Times New Roman", serif;
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.book-heading {
+  font-family: "Playfair Display", "Georgia", serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  position: relative;
+}
+
+.book-heading::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary) 0%,
+    transparent 100%
+  );
+}
+
+/* ========================================
+ * PAGE NUMBERING
+ * ======================================== */
+
+.book-page-number {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  font-family: "Georgia", serif;
+  font-size: 0.875rem;
+  color: var(--ink-tertiary);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.book-page-number::before {
+  content: "Seite ";
+  font-size: 0.75rem;
+}
+
+/* ========================================
+ * TABLE OF CONTENTS STYLE
+ * ======================================== */
+
+.book-toc {
+  background: linear-gradient(
+    135deg,
+    hsla(45, 20%, 97%, 0.8) 0%,
+    hsla(45, 15%, 95%, 0.8) 100%
+  );
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent-primary);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow-paper);
+}
+
+.book-toc-item {
+  display: flex;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted hsla(220, 10%, 85%, 0.3);
+}
+
+.book-toc-item:last-child {
+  border-bottom: none;
+}
+
+.book-toc-number {
+  font-family: "Georgia", serif;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-right: 1rem;
+  min-width: 2rem;
+}
+
+.book-toc-title {
+  font-family: "Georgia", serif;
+  color: var(--ink-primary);
+  flex: 1;
+}
+
+.book-toc-dots {
+  flex: 1;
+  margin: 0 1rem;
+  border-bottom: 1px dotted var(--ink-tertiary);
+  opacity: 0.3;
+}
+
+.book-toc-page {
+  font-family: "Georgia", serif;
+  font-style: italic;
+  color: var(--ink-tertiary);
+  min-width: 3rem;
+  text-align: right;
+}
+
+/* ========================================
+ * ANIMATIONS FOR BOOK FEEL
+ * ======================================== */
+
+@keyframes pageFlip {
+  0% {
+    transform: rotateY(0deg) translateZ(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(-90deg) translateZ(-50px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotateY(-180deg) translateZ(-100px);
+    opacity: 0;
+  }
+}
+
+@keyframes bookmarkWiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes inkDry {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-flip-animation {
+  animation: pageFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bookmark-wiggle {
+  animation: bookmarkWiggle 0.5s ease-in-out;
+}
+
+.ink-dry-animation {
+  animation: inkDry 0.3s ease-out;
+}
+
+/* ========================================
+ * DARK MODE BOOK ENHANCEMENTS
+ * ======================================== */
+
+:root[data-theme="dark"] .book-page {
+  background: linear-gradient(135deg,
+    hsla(220, 15%, 14%, 0.3) 0%,
+    hsla(220, 10%, 16%, 0.2) 50%,
+    hsla(220, 20%, 12%, 0.3) 100%
+  ),
+    var(--bg-page);
+}
+
+:root[data-theme="dark"] .book-page::before {
+  background-image: radial-gradient(circle at 20% 50%, rgba(180, 160, 140, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(160, 140, 120, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(170, 150, 130, 0.03) 0%, transparent 40%);
+}
+
+:root[data-theme="dark"] .book-binding::before {
+  background: linear-gradient(
+    90deg,
+    rgba(100, 50, 20, 0.3) 0%,
+    rgba(120, 60, 30, 0.2) 50%,
+    rgba(100, 50, 20, 0.3) 100%
+  );
+}
+
+/* ========================================
+ * RESPONSIVE ADJUSTMENTS
+ * ======================================== */
+
+@media (max-width: 768px) {
+  .book-binding {
+    padding: 1rem 0.75rem;
+  }
+
+  .bookmark-enhanced {
+    width: 32px;
+    height: 80px;
+  }
+
+  .book-page-number {
+    font-size: 0.75rem;
+    bottom: 0.5rem;
+    right: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .book-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+/* ========================================
+ * REDUCED MOTION SUPPORT
+ * ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .page-flip-animation {
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .bookmark-wiggle {
+    animation: none;
+  }
+
+  .ink-dry-animation {
+    animation: none;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Book, Clock, TrendingUp } from "../../lib/icons";
 
@@ -31,6 +31,7 @@ export function ReadingProgress({
 
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [sessionStart]);
 
   const formatTime = (minutes: number) => {

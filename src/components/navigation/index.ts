@@ -8,10 +8,5 @@ export { PageTransition } from "./PageTransition";
 export { ReadingProgress } from "./ReadingProgress";
 export { SwipeHandler } from "./SwipeHandler";
 
-// Re-export types for convenience
-export type { AchievementSystemProps } from "./AchievementSystem";
-export type { BookmarkProps } from "./Bookmark";
-export type { HistorySidePanelProps } from "./HistorySidePanel";
-export type { PageTransitionProps } from "./PageTransition";
-export type { ReadingProgressProps } from "./ReadingProgress";
-export type { SwipeHandlerProps } from "./SwipeHandler";
+// Note: Props types are interfaces defined within component files
+// They are not exported as separate types

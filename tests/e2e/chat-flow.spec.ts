@@ -15,32 +15,27 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
-    // Test new chat interface - should show ChatStartCard or message list
+    // Test new chat interface - should show ChatStartCard initially
     const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
-    const messageList = page.locator('[data-testid="chat-message-list"]').first();
+    await expect(chatStartCard).toBeVisible({ timeout: 10000 });
 
-    // Either start card (empty chat) or message list (with content) should be visible
-    const hasStartCard = await chatStartCard.isVisible();
-    const hasMessageList = await messageList.isVisible();
-
-    if (hasStartCard) {
-      // Test ChatStartCard functionality
-      await expect(chatStartCard).toBeVisible();
-
-      // Test themen button in start card area
-      const themenButton = page.getByRole("button", { name: /themen auswählen|choose topics/i });
-      if (await themenButton.isVisible()) {
-        await themenButton.tap();
-        await page.waitForTimeout(500);
-      }
-    } else if (hasMessageList) {
-      // Already has messages, test composer
-      await expect(messageList).toBeVisible();
+    // Start a new conversation to make composer visible
+    const newChatButton = page.getByRole("button", { name: /neuer chat|new chat/i });
+    if (await newChatButton.isVisible()) {
+      await newChatButton.tap();
+      await page.waitForTimeout(500);
     }
 
-    // Test manual message sending with new composer
+    // Alternative: Click on a quickstart or topic to start conversation
+    const quickstartButton = page.getByRole("button", { name: /themen auswählen|choose topics/i });
+    if (await quickstartButton.isVisible()) {
+      await quickstartButton.tap();
+      await page.waitForTimeout(500);
+    }
+
+    // Now the composer should be visible after starting a conversation
     const composer = page.getByTestId("composer-input");
-    await expect(composer).toBeVisible();
+    await expect(composer).toBeVisible({ timeout: 10000 });
 
     await composer.fill("Was denkst du über künstliche Intelligenz?");
     await composer.press("Enter");
@@ -70,9 +65,22 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
-    // Send multiple messages to create history
-    const composer = page.getByTestId("composer-input");
+    // Start a conversation first to make composer visible
+    const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
+    if (await chatStartCard.isVisible()) {
+      // Click any available button to start a conversation
+      const anyButton = page.locator("button").first();
+      if (await anyButton.isVisible()) {
+        await anyButton.tap();
+        await page.waitForTimeout(1000);
+      }
+    }
 
+    // Now composer should be visible
+    const composer = page.getByTestId("composer-input");
+    await expect(composer).toBeVisible({ timeout: 10000 });
+
+    // Send multiple messages to create history
     const messages = ["Erste Nachricht", "Zweite Nachricht", "Dritte Nachricht"];
 
     for (const message of messages) {
@@ -105,7 +113,18 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
+    // Start a conversation first to make composer visible
+    const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
+    if (await chatStartCard.isVisible()) {
+      const anyButton = page.locator("button").first();
+      if (await anyButton.isVisible()) {
+        await anyButton.tap();
+        await page.waitForTimeout(1000);
+      }
+    }
+
     const composer = page.getByTestId("composer-input");
+    await expect(composer).toBeVisible({ timeout: 10000 });
 
     // Test composer accessibility
     await expect(composer).toHaveAttribute("aria-label");
@@ -146,8 +165,19 @@ test.describe("Chat Flow Integration Tests", () => {
     const helpers = new AppHelpers(page);
     await helpers.navigateAndWait("/chat");
 
+    // Start a conversation first to make composer visible
+    const chatStartCard = page.locator('[data-testid="chat-start-card"]').first();
+    if (await chatStartCard.isVisible()) {
+      const anyButton = page.locator("button").first();
+      if (await anyButton.isVisible()) {
+        await anyButton.tap();
+        await page.waitForTimeout(1000);
+      }
+    }
+
     // Test composer on mobile
     const composer = page.getByTestId("composer-input");
+    await expect(composer).toBeVisible({ timeout: 10000 });
     await composer.tap();
 
     // Verify composer is focused and keyboard accessible

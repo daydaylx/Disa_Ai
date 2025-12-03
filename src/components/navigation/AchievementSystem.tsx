@@ -120,8 +120,8 @@ export function AchievementSystem({
       if (unlockedAchievements.includes(achievement.id)) return;
 
       let shouldUnlock = false;
-      let progress = 0;
-      let maxProgress = 1;
+      let _progress = 0;
+      let _maxProgress = 1;
 
       switch (achievement.id) {
         case "first_swipe":
@@ -129,36 +129,24 @@ export function AchievementSystem({
           break;
         case "swipe_master":
           shouldUnlock = totalSwipes >= 100;
-          progress = Math.min(totalSwipes, 100);
-          maxProgress = 100;
           break;
         case "page_explorer":
           shouldUnlock = totalPages >= 50;
-          progress = Math.min(totalPages, 50);
-          maxProgress = 50;
           break;
         case "book_worm":
           shouldUnlock = totalPages >= 10;
-          progress = Math.min(totalPages, 10);
-          maxProgress = 10;
           break;
         case "marathon_reader":
           shouldUnlock = totalPages >= 25;
-          progress = Math.min(totalPages, 25);
-          maxProgress = 25;
           break;
         case "speed_reader":
           shouldUnlock = sessionDuration <= 2 && totalPages >= 5;
           break;
         case "dedicated_reader":
           shouldUnlock = sessionDuration >= 30;
-          progress = Math.min(sessionDuration, 30);
-          maxProgress = 30;
           break;
         case "book_marathon":
           shouldUnlock = sessionDuration >= 120;
-          progress = Math.min(sessionDuration, 120);
-          maxProgress = 120;
           break;
       }
 

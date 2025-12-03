@@ -47,6 +47,8 @@ export function SwipeHandler({ children, onSwipeStart, onSwipeEnd }: SwipeHandle
     if (e.touches.length === 0) return;
 
     const touch = e.touches[0];
+    if (!touch) return;
+
     touchStartRef.current = {
       x: touch.clientX,
       y: touch.clientY,
@@ -59,6 +61,8 @@ export function SwipeHandler({ children, onSwipeStart, onSwipeEnd }: SwipeHandle
     if (!touchStartRef.current || e.touches.length === 0) return;
 
     const touch = e.touches[0];
+    if (!touch) return;
+
     const deltaX = touch.clientX - touchStartRef.current.x;
     const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
 
@@ -86,6 +90,8 @@ export function SwipeHandler({ children, onSwipeStart, onSwipeEnd }: SwipeHandle
       if (e.changedTouches.length === 0) return;
 
       const touch = e.changedTouches[0];
+      if (!touch) return;
+
       const deltaX = touch.clientX - touchStartRef.current.x;
       const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
       const deltaTime = Date.now() - touchStartRef.current.time;
