@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
+import { ChatControlBar } from "../components/chat/ChatControlBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -282,14 +283,16 @@ export default function Chat() {
               <div ref={messagesEndRef} />
             </main>
 
-            <footer className="z-sticky-content border-t border-border-ink/10 bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
+            {/* Unified Input Area */}
+            <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+              <ChatControlBar modelCatalog={modelCatalog} />
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
                 onSend={handleSend}
                 isLoading={isLoading}
               />
-            </footer>
+            </div>
           </div>
         </BookPageAnimator>
       </BookLayout>
