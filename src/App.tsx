@@ -10,6 +10,7 @@ import { Router } from "./app/router";
 import { FullPageLoader } from "./components/FullPageLoader";
 import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
+import { ModelCatalogProvider } from "./contexts/ModelCatalogContext";
 import { RolesProvider } from "./contexts/RolesContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
@@ -162,11 +163,13 @@ export default function App() {
   return (
     <TooltipProvider>
       <RolesProvider>
-        <FavoritesProvider>
-          <ToastsProvider>
-            <AppContent />
-          </ToastsProvider>
-        </FavoritesProvider>
+        <ModelCatalogProvider>
+          <FavoritesProvider>
+            <ToastsProvider>
+              <AppContent />
+            </ToastsProvider>
+          </FavoritesProvider>
+        </ModelCatalogProvider>
       </RolesProvider>
     </TooltipProvider>
   );

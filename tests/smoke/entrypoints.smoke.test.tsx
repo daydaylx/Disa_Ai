@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
+import { ModelCatalogProvider } from "../../src/contexts/ModelCatalogContext";
 import { RolesProvider } from "../../src/contexts/RolesContext";
 import { ToastsProvider } from "../../src/ui/toast";
 
@@ -133,11 +134,13 @@ function renderWithRouter(pathname: string, element: React.ReactElement) {
   return render(
     <ToastsProvider>
       <RolesProvider>
-        <MemoryRouter initialEntries={[pathname]}>
-          <Routes>
-            <Route path={pathname} element={element} />
-          </Routes>
-        </MemoryRouter>
+        <ModelCatalogProvider>
+          <MemoryRouter initialEntries={[pathname]}>
+            <Routes>
+              <Route path={pathname} element={element} />
+            </Routes>
+          </MemoryRouter>
+        </ModelCatalogProvider>
       </RolesProvider>
     </ToastsProvider>,
   );

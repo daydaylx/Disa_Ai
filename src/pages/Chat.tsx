@@ -11,8 +11,8 @@ import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer
 import { BookLayout } from "../components/layout/BookLayout";
 import { BookPageAnimator } from "../components/navigation/BookPageAnimator";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
-import type { ModelEntry } from "../config/models";
 import { QUICKSTARTS } from "../config/quickstarts";
+import { useModelCatalog } from "../contexts/ModelCatalogContext";
 import { useRoles } from "../contexts/RolesContext";
 import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
@@ -37,36 +37,15 @@ export default function Chat() {
   const [searchParams] = useSearchParams();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
-  const [modelCatalog, setModelCatalog] = useState<ModelEntry[] | null>(null);
+  const { models: modelCatalog } = useModelCatalog();
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  useEffect(() => {
-    let active = true;
-    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
-    if (typeof window === "undefined" || isTestEnv || typeof window.fetch === "undefined") return;
-    import("../config/models")
-      .then((mod) =>
-        mod.loadModelCatalog().then((data) => {
-          if (!active) return;
-          setModelCatalog(data);
-        }),
-      )
-      .catch(() => {
-        if (!active) return;
-        setModelCatalog(null);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const requestOptions = useMemo(() => {
-    const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog);
+    const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog ?? null);
     const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
     return {
       model: settings.preferredModelId,
@@ -264,6 +243,7 @@ export default function Chat() {
         onMenuClick={openMenu}
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
+        <h1 className="sr-only">Disa AI – Chat</h1>
         <BookPageAnimator pageKey={activeConversationId || "new"}>
           <div className="flex h-[calc(var(--vh,1vh)*100)] flex-col">
             <h1 className="sr-only">Disa AI – Chat</h1>

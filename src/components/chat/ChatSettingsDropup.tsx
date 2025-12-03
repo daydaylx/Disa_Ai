@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { ModelEntry } from "@/config/models";
-import { loadModelCatalog } from "@/config/models";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import type { UIRole } from "@/data/roles";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, Feather, SlidersHorizontal, User } from "@/lib/icons";
+import { Check, Cpu, Feather, Loader2, SlidersHorizontal, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 // Simple creative styles list
@@ -35,16 +34,11 @@ function useClickOutside(ref: React.RefObject<HTMLElement>, handler: () => void)
 export function ChatSettingsDropup() {
   const { settings, setPreferredModel, setCreativity } = useSettings();
   const { roles, activeRole, setActiveRole } = useRoles();
-  const [models, setModels] = useState<ModelEntry[]>([]);
+  const { models, loading: modelsLoading, error: modelError } = useModelCatalog();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(menuRef, () => setIsOpen(false));
-
-  // Load models
-  useEffect(() => {
-    loadModelCatalog().then(setModels).catch(console.error);
-  }, []);
 
   const handleModelSelect = (modelId: string) => {
     setPreferredModel(modelId);
@@ -61,8 +55,13 @@ export function ChatSettingsDropup() {
     setIsOpen(false);
   };
 
-  const activeModelLabel =
-    models.find((m) => m.id === settings.preferredModelId)?.label ?? "Modell";
+  const hasModels = (models?.length ?? 0) > 0;
+  const activeModelLabel = useMemo(() => {
+    if (modelsLoading) return "Modelle laden...";
+    const activeModel = models?.find((m) => m.id === settings.preferredModelId);
+    if (activeModel) return activeModel.label ?? activeModel.id;
+    return settings.preferredModelId || "Modell";
+  }, [models, modelsLoading, settings.preferredModelId]);
   const activeRoleLabel = activeRole?.name ?? "Keine Rolle";
   const activeStyleLabel =
     CREATIVE_STYLES.find((s) => s.id === settings.creativity)?.label ?? "Ausgewogen";
@@ -101,23 +100,39 @@ export function ChatSettingsDropup() {
               Modell
             </div>
             <div className="max-h-40 overflow-y-auto scrollbar-thin">
-              {models.map((model) => (
-                <button
-                  key={model.id}
-                  onClick={() => handleModelSelect(model.id)}
-                  className={cn(
-                    "group flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
-                    settings.preferredModelId === model.id
-                      ? "bg-accent/10 text-accent font-medium"
-                      : "text-ink-primary hover:bg-surface-2",
-                  )}
-                >
-                  <span className="truncate mr-2">{model.label}</span>
-                  {settings.preferredModelId === model.id && (
-                    <Check className="h-4 w-4 flex-shrink-0" />
-                  )}
-                </button>
-              ))}
+              {modelsLoading && (
+                <div className="flex items-center gap-2 px-3 py-2 text-sm text-ink-tertiary">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Modelle werden geladen...
+                </div>
+              )}
+              {!modelsLoading &&
+                hasModels &&
+                models?.map((model) => (
+                  <button
+                    key={model.id}
+                    onClick={() => handleModelSelect(model.id)}
+                    className={cn(
+                      "group flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
+                      settings.preferredModelId === model.id
+                        ? "bg-accent/10 text-accent font-medium"
+                        : "text-ink-primary hover:bg-surface-2",
+                    )}
+                  >
+                    <span className="truncate mr-2">{model.label}</span>
+                    {settings.preferredModelId === model.id && (
+                      <Check className="h-4 w-4 flex-shrink-0" />
+                    )}
+                  </button>
+                ))}
+              {!modelsLoading && !hasModels && (
+                <div className="px-3 py-2 text-sm text-ink-secondary">
+                  {modelError || "Modelle konnten nicht geladen werden."}
+                  <div className="mt-1 text-xs text-ink-tertiary">
+                    Deine letzte Modellwahl bleibt aktiv.
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

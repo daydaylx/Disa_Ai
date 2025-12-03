@@ -1,0 +1,75 @@
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+
+import type { ModelEntry } from "@/config/models";
+import { loadModelCatalog } from "@/config/models";
+
+interface ModelCatalogContextValue {
+  models: ModelEntry[] | null;
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+}
+
+const ModelCatalogContext = createContext<ModelCatalogContextValue | undefined>(undefined);
+
+export function ModelCatalogProvider({ children }: { children: React.ReactNode }) {
+  const [models, setModels] = useState<ModelEntry[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const hasRequestedRef = useRef(false);
+
+  const refresh = useCallback(async () => {
+    if (loading) return;
+    hasRequestedRef.current = true;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const catalog = await loadModelCatalog();
+      setModels(catalog);
+      if (!catalog.length) {
+        setError("Modelle konnten nicht geladen werden.");
+      }
+    } catch (err) {
+      console.error("Model catalog loading failed", err);
+      setError("Modelle konnten nicht geladen werden.");
+    } finally {
+      setLoading(false);
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (hasRequestedRef.current) return;
+    hasRequestedRef.current = true;
+
+    if (typeof window === "undefined") {
+      setLoading(false);
+      return;
+    }
+
+    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
+    if (isTestEnv) {
+      setLoading(false);
+      return;
+    }
+
+    void refresh();
+  }, [refresh]);
+
+  const value: ModelCatalogContextValue = {
+    models,
+    loading,
+    error,
+    refresh,
+  };
+
+  return <ModelCatalogContext.Provider value={value}>{children}</ModelCatalogContext.Provider>;
+}
+
+export function useModelCatalog() {
+  const context = useContext(ModelCatalogContext);
+  if (context === undefined) {
+    throw new Error("useModelCatalog must be used within a ModelCatalogProvider");
+  }
+  return context;
+}
