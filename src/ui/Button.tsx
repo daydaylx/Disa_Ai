@@ -15,11 +15,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "border border-[var(--border-chalk-strong)] bg-[rgba(236,236,236,0.04)] text-text-primary shadow-[0_0_0_1px_rgba(236,236,236,0.08)] hover:bg-[rgba(236,236,236,0.07)] active:translate-y-[0.5px]",
+          "border border-[var(--border-chalk)] bg-[var(--bg-slate)] text-[var(--ink-primary)] shadow-[0_0_0_1px_var(--border-chalk)] hover:bg-[rgba(255,255,255,0.05)] active:scale-95 active:bg-[rgba(255,255,255,0.08)] backdrop-blur-[1px]",
         secondary:
-          "border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-text-primary shadow-[0_0_0_1px_rgba(236,236,236,0.05)] hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)] active:translate-y-[0.5px]",
+          "border border-[var(--border-chalk)] bg-transparent text-[var(--ink-primary)] hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)] active:scale-95",
         ghost:
-          "text-text-secondary hover:text-text-primary border border-transparent hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)] active:bg-[rgba(255,255,255,0.05)]",
+          "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] border border-transparent hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)] active:scale-95",
         link: "text-accent underline-offset-4 hover:underline p-0 h-auto min-h-0",
       },
       size: {

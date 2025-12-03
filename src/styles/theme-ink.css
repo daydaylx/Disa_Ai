@@ -11,27 +11,29 @@
    * ======================================== */
 
   /* Slate Backgrounds */
-  --bg-app: hsl(240, 4%, 6%); /* #0E0E0F - matte schwarzer Schiefer */
-  --bg-page: hsl(240, 3%, 8%); /* #131314 - leicht heller Schiefer */
-  --bg-surface: hsl(240, 3%, 11%); /* abgesetzte Flächen */
-  --bg-surface-strong: hsl(240, 3%, 13%);
+  --bg-app: #0E0E0F; /* Mattschwarzer Schiefer */
+  --bg-slate: #131314; /* Leicht heller, mit Textur */
+
+  --bg-page: var(--bg-slate); /* Mapping for compatibility */
+  --bg-surface: #1A1A1C; /* Slightly lighter for surfaces */
+  --bg-surface-strong: #222225;
 
   /* Chalk Text */
-  --ink-primary: hsl(0, 0%, 92%); /* #ECECEC */
-  --ink-secondary: hsl(0, 0%, 62%); /* #9E9E9E */
-  --ink-tertiary: hsl(0, 0%, 55%);
-  --ink-on-accent: hsl(240, 6%, 7%);
+  --ink-primary: #ECECEC; /* text-chalk */
+  --ink-secondary: #9E9E9E; /* text-fade */
+  --ink-tertiary: #757575;
+  --ink-on-accent: #0E0E0F;
 
   /* Chalk Accents */
-  --accent-primary: hsl(218, 100%, 82%); /* #A7C8FF - Kreideblau */
-  --accent-secondary: hsl(49, 100%, 83%); /* #FFEFA6 - Kreidegelb */
-  --accent-tertiary: hsl(350, 100%, 89%); /* #FFCAD4 - Kreidepink */
-  --accent-hover: hsl(218, 90%, 78%);
+  --accent-primary: #A7C8FF; /* accent-chalk-blue */
+  --accent-secondary: #FFEFA6; /* accent-yellow */
+  --accent-tertiary: #FFCAD4; /* accent-pink */
+  --accent-hover: #8AB4FF;
 
   /* Semantic Colors aligned to chalk warmth */
-  --color-success: hsl(147, 42%, 68%);
+  --color-success: #A5D6A7;
   --color-warning: var(--accent-secondary);
-  --color-error: hsl(0, 62%, 65%);
+  --color-error: #EF9A9A;
 
   /* Mapping to existing variable names for compatibility */
   --bg-base: var(--bg-app);
@@ -42,12 +44,12 @@
   --surface-1: var(--bg-page);
   --surface-2: var(--bg-surface);
   --surface-3: var(--bg-surface-strong);
-  --surface-inset: hsl(240, 4%, 9%);
+  --surface-inset: #0A0A0B;
 
   --text-primary: var(--ink-primary);
   --text-secondary: var(--ink-secondary);
-  --text-muted: var(--ink-secondary);
-  --text-disabled: hsla(0, 0%, 62%, 0.6);
+  --text-muted: var(--ink-tertiary);
+  --text-disabled: rgba(158, 158, 158, 0.5);
   --text-on-accent: var(--ink-on-accent);
 
   --accent: var(--accent-primary);
@@ -57,59 +59,43 @@
    * SHADOWS & BORDERS (digitale Kreide)
    * ======================================== */
 
-  --shadow-paper: 0 1px 2px rgba(0, 0, 0, 0.28);
-  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.32);
+  /* Shadows - minimal, mostly for separation */
+  --shadow-paper: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
 
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
-  --shadow-soft-raise: var(--shadow-paper);
-  --shadow-strong-raise: var(--shadow-floating);
-  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 
-  /* Keep legacy tokens but remove neon glows */
-  --shadow-raise: var(--shadow-paper);
-  --shadow-raiseLg: var(--shadow-floating);
-  --shadow-brandGlow: 0 0 0 rgba(0, 0, 0, 0);
-  --shadow-brandGlowLg: 0 0 0 rgba(0, 0, 0, 0);
-  --shadow-accentGlow: 0 0 0 rgba(0, 0, 0, 0);
-  --shadow-accentGlowLg: 0 0 0 rgba(0, 0, 0, 0);
-
-  /* Borders */
-  --border-color: hsl(240, 4%, 16%);
-  --border-chalk: hsla(0, 0%, 92%, 0.28);
-  --border-chalk-strong: hsla(0, 0%, 92%, 0.5);
+  /* Borders - Chalk Lines */
+  --border-color: rgba(236, 236, 236, 0.15);
+  --border-chalk: rgba(236, 236, 236, 0.3);
+  --border-chalk-strong: rgba(236, 236, 236, 0.6);
   --border-width: 1px;
 
   /* Radius */
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 18px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
 
   /* ========================================
    * TYPOGRAPHY
    * ======================================== */
 
   --font-sans: "Inter", "IBM Plex Sans", "Cabin", system-ui, -apple-system, sans-serif;
-  --text-base: 17px;
+  --text-base: 16px; /* slightly smaller for cleaner look? Spec said 17px base previously but standard is 16 */
   --leading-normal: 1.6;
-  --font-serif: "Inter", system-ui, sans-serif;
 
   /* ========================================
    * TEXTURES
    * ======================================== */
-  --chalk-noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.035) 0%, transparent 32%),
-    radial-gradient(circle at 75% 30%, rgba(255, 255, 255, 0.028) 0%, transparent 26%),
-    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 28%);
 
-  --bg-page-texture: var(--bg-page);
+  /* 3-6% noise simulation via repeating gradient or base64 (applied in index.css typically) */
+  /* Here we define the color for the overlay */
+  --noise-overlay-color: rgba(255, 255, 255, 0.04);
 }
 
 :root[data-theme="dark"] {
-  /* Stay on slate palette in dark mode */
-  --bg-app: hsl(240, 4%, 6%);
-  --bg-page: hsl(240, 3%, 8%);
-  --bg-surface: hsl(240, 3%, 11%);
-  --bg-surface-strong: hsl(240, 3%, 13%);
-
-  --bg-page-texture: var(--bg-page);
+  /* Ensure consistency in dark mode */
+  --bg-app: #0E0E0F;
+  --bg-page: #131314;
 }
