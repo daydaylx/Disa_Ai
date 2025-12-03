@@ -12,14 +12,16 @@
 /* Subtle paper texture overlay */
 .book-page {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    hsla(45, 15%, 96%, 0.3) 0%,
-    hsla(45, 10%, 94%, 0.2) 50%,
-    hsla(45, 20%, 98%, 0.3) 100%
-  ),
+  background:
+    linear-gradient(
+      135deg,
+      hsla(45, 15%, 96%, 0.3) 0%,
+      hsla(45, 10%, 94%, 0.2) 50%,
+      hsla(45, 20%, 98%, 0.3) 100%
+    ),
     var(--bg-page);
-  background-size: 100% 100%,
+  background-size:
+    100% 100%,
     200px 200px;
 
   /* Subtle paper noise texture */
@@ -33,7 +35,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: radial-gradient(circle at 20% 50%, rgba(220, 200, 180, 0.03) 0%, transparent 50%),
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(220, 200, 180, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(200, 180, 160, 0.02) 0%, transparent 50%),
     radial-gradient(circle at 40% 20%, rgba(210, 190, 170, 0.03) 0%, transparent 40%);
   pointer-events: none;
@@ -85,7 +88,8 @@
 .book-binding {
   position: relative;
   padding: 2rem 1.5rem;
-  box-shadow: inset 3px 0 8px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    inset 3px 0 8px rgba(0, 0, 0, 0.1),
     inset -3px 0 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -127,7 +131,8 @@
 .book-user-bubble {
   background: linear-gradient(135deg, hsla(260, 30%, 55%, 0.9) 0%, hsla(260, 25%, 50%, 0.9) 100%);
   border: 1px solid hsla(260, 30%, 40%, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
     0 1px 2px rgba(0, 0, 0, 0.05);
   position: relative;
 }
@@ -170,7 +175,8 @@
   position: relative;
   background: linear-gradient(135deg, var(--accent-primary) 0%, hsla(260, 40%, 55%, 0.9) 100%);
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 50% 100%, 0 calc(100% - 20px));
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15),
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
     0 2px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 2px rgba(255, 255, 255, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -178,7 +184,8 @@
 
 .bookmark-enhanced:hover {
   transform: translateY(-2px) rotate(1deg);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2),
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.2),
     0 3px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
 }
@@ -358,17 +365,19 @@
  * ======================================== */
 
 :root[data-theme="dark"] .book-page {
-  background: linear-gradient(
-    135deg,
-    hsla(220, 15%, 14%, 0.3) 0%,
-    hsla(220, 10%, 16%, 0.2) 50%,
-    hsla(220, 20%, 12%, 0.3) 100%
-  ),
+  background:
+    linear-gradient(
+      135deg,
+      hsla(220, 15%, 14%, 0.3) 0%,
+      hsla(220, 10%, 16%, 0.2) 50%,
+      hsla(220, 20%, 12%, 0.3) 100%
+    ),
     var(--bg-page);
 }
 
 :root[data-theme="dark"] .book-page::before {
-  background-image: radial-gradient(circle at 20% 50%, rgba(180, 160, 140, 0.03) 0%, transparent 50%),
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(180, 160, 140, 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(160, 140, 120, 0.02) 0%, transparent 50%),
     radial-gradient(circle at 40% 20%, rgba(170, 150, 130, 0.03) 0%, transparent 40%);
 }
