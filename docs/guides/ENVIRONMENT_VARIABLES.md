@@ -27,6 +27,13 @@ Diese Referenz listet alle Umgebungsvariablen auf, die das Projekt aktuell auswe
 | `VITE_PREVIEW_PORT` | optional | `4173` | Port für `npm run preview`. | [`scripts/run-preview.mjs`](../scripts/run-preview.mjs) |
 | `VITE_FF_*` | optional | – | Laufzeit-Feature-Flags (per Präfix `VITE_FF_`). | [`src/config/flags.ts`](../src/config/flags.ts) |
 
+## MCP Server Variablen (Node-Kontext)
+
+| Variable | Pflicht? | Default / Verhalten | Zweck | Referenz |
+| --- | --- | --- | --- | --- |
+| `Z_AI_API_KEY` | ja (für MCP) | – | Z.AI API Key für Vision MCP Server. | [`tools/zai-vision-mcp.ts`](../tools/zai-vision-mcp.ts) |
+| `Z_AI_MODE` | ja (für MCP) | – | Service-Plattform Auswahl für Z.AI. | [`tools/zai-vision-mcp.ts`](../tools/zai-vision-mcp.ts) |
+
 ## Build-, Monitoring- & Tooling-Variablen (Node-Kontext)
 
 | Variable | Pflicht? | Zweck | Referenz |
