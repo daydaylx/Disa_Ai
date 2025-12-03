@@ -97,41 +97,42 @@
 
   --text-base: 17px; /* Mobile legible */
   --leading-normal: 1.6;
-
-  /* ========================================
-   * MOBILE & SAFE AREA SUPPORT
-   * ======================================== */
-
-  /* Safe Area Insets für notched devices (iPhone X+, etc.) */
-  --mobile-safe-top: env(safe-area-inset-top, 0);
-  --mobile-safe-bottom: env(safe-area-inset-bottom, 0);
-  --mobile-safe-left: env(safe-area-inset-left, 0);
-  --mobile-safe-right: env(safe-area-inset-right, 0);
-
-  /* Mobile Gutter für Touch-freundliche Abstände */
-  --mobile-gutter: 1rem;
+  --font-serif: Lora, serif;
 }
 
-/* Dark Mode Overrides - Aktiviert durch data-theme="dark" */
+:root {
+  --bg-page-texture: var(--bg-page) var(--noise-texture-light);
+}
+
 :root[data-theme="dark"] {
-  --bg-app: hsl(220, 15%, 10%);
-  --bg-page: hsl(220, 15%, 14%);
-  --bg-surface: hsl(220, 15%, 16%);
+  --bg-page-texture: var(--bg-page) var(--noise-texture-dark);
+}
 
-  --ink-primary: hsl(45, 10%, 90%);
-  --ink-secondary: hsl(220, 10%, 70%);
-  --ink-tertiary: hsl(220, 10%, 75%); /* Improved contrast for WCAG AA */
+/* Dark Mode Overrides - "Slate & Chalk" Metaphor */
+:root[data-theme="dark"] {
+  /* Slate Backgrounds */
+  --bg-app: hsl(220, 20%, 14%); /* Deep Slate */
+  --bg-page: hsl(220, 18%, 18%); /* Slightly lighter Slate Page */
+  --bg-surface: hsl(220, 18%, 20%); /* Cards */
 
-  --accent-primary: hsl(260, 40%, 60%);
+  /* Chalk Text */
+  --ink-primary: hsl(40, 10%, 92%); /* Chalk White */
+  --ink-secondary: hsl(220, 15%, 70%); /* Muted Chalk */
+  --ink-tertiary: hsl(220, 15%, 55%);
 
-  --border-color: hsl(220, 10%, 25%);
+  /* Bioluminescent Accents */
+  --accent-primary: hsl(260, 60%, 70%); /* Glowing Violet */
+  --accent-secondary: hsl(260, 40%, 50%);
+  --accent-hover: hsl(260, 70%, 75%);
 
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --border-color: hsl(220, 15%, 25%);
+
+  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
 
   /* Dark mode glow effects */
-  --shadow-brandGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
-  --shadow-accentGlow: 0 0 20px hsla(260, 40%, 60%, 0.4);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 40%, 60%, 0.5);
+  --shadow-brandGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
+  --shadow-brandGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
+  --shadow-accentGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
+  --shadow-accentGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
 }

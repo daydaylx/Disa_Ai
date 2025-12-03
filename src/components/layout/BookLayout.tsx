@@ -38,7 +38,7 @@ export function BookLayout({
         </div>
         {/* Center: Title / Date */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center">
-          <h1 className="text-base font-semibold tracking-tight text-ink-primary">
+          <h1 className="text-base font-serif font-semibold tracking-tight text-ink-primary">
             {title || "Disa AI"}
           </h1>
         </div>
@@ -49,9 +49,10 @@ export function BookLayout({
       {/* Main Page Content Area */}
       <main
         className={cn(
-          "flex-1 relative flex flex-col max-w-5xl mx-auto w-full bg-bg-page shadow-sm sm:my-4 sm:border sm:border-border-ink/20 sm:rounded-xl",
+          "flex-1 relative flex flex-col max-w-5xl mx-auto w-full shadow-sm sm:my-4 sm:border sm:border-border-ink/20 sm:rounded-xl",
           className,
         )}
+        style={{ background: "var(--bg-page-texture)" }}
       >
         {children}
 

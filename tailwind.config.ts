@@ -187,6 +187,7 @@ export default {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        serif: ["Lora", "serif"],
       },
       fontSize: fontSizes,
       minHeight: {

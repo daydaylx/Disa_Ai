@@ -1,252 +1,57 @@
-import { useDrag } from "@use-gesture/react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
 
 interface BookPageAnimatorProps {
   children: ReactNode;
-  activeChatId: string | null;
-  swipeStack: string[];
-  onSwipeLeft: () => void; // New Page
-  onSwipeRight: () => void; // Go Back
-  canSwipeRight: boolean;
-  canSwipeLeft: boolean;
+  pageKey: string; // Key to trigger transition (e.g. conversation ID)
+  direction?: "forward" | "backward"; // Could be used for history navigation
 }
 
-const SWIPE_THRESHOLD_PERCENT = 0.25; // 25% of container width
-const ROTATION_FACTOR = 15; // Max rotation in degrees
-const SCALE_FACTOR = 0.05; // Max scale reduction
-
-export function BookPageAnimator({
-  children,
-  activeChatId,
-  swipeStack,
-  onSwipeLeft,
-  onSwipeRight,
-  canSwipeLeft,
-  canSwipeRight,
-}: BookPageAnimatorProps) {
-  const [direction, setDirection] = useState(0); // 1 = Left Swipe (New Page), -1 = Right Swipe (Back)
-  const prevIdRef = useRef<string | null>(activeChatId);
-  const shouldReduceMotion = useReducedMotion();
-  const [allowTransforms, setAllowTransforms] = useState(true);
-  const x = useMotionValue(0); // MotionValue for 1:1 drag
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // Better mobile detection: check for touch capability and viewport size
-    const isMobile = window.innerWidth < 768;
-    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-
-    // Only disable 3D transforms on touch mobile devices to avoid scroll issues
-    // Keep 2D transforms for better UX where possible
-    if (isMobile && isTouch) {
-      setAllowTransforms(false); // Avoid transform-stacking breaking scroll
-    }
-  }, []);
-
-  // Determine direction for page transition when activeChatId changes
-  useEffect(() => {
-    const prevId = prevIdRef.current;
-    const currentId = activeChatId;
-
-    if (prevId !== currentId) {
-      const prevIndex = swipeStack.indexOf(prevId || "");
-      const currentIndex = swipeStack.indexOf(currentId || "");
-
-      if (prevIndex === -1 && currentIndex === 0) {
-        // New chat created, wasn't in stack, now at 0
-        setDirection(1);
-      } else if (currentIndex < prevIndex) {
-        // Navigating to a newer page in the stack (e.g., from index 1 to 0)
-        setDirection(1);
-      } else if (currentIndex > prevIndex) {
-        // Navigating to an older page in the stack (e.g., from index 0 to 1)
-        setDirection(-1);
-      } else {
-        // Default or initial load: assume new page effect
-        setDirection(1);
-      }
-      prevIdRef.current = currentId;
-    }
-  }, [activeChatId, swipeStack]);
-
-  const bind = useDrag(
-    ({ movement: [mx, my], active, last, event }) => {
-      // Gesten-Sicherheit: Check if the drag originated from a code block or table
-      const target = event.target as HTMLElement;
-      if (target && (target.closest("pre") || target.closest("table"))) {
-        return; // Suppress swipe if it originates from a scrollable content area
-      }
-
-      // Ignore if vertical movement is too high (scrolling)
-      if (Math.abs(my) > Math.abs(mx) * 2) return; // Prioritize horizontal drag
-
-      const containerWidth = containerRef.current?.offsetWidth || window.innerWidth;
-      const swipeThreshold = containerWidth * SWIPE_THRESHOLD_PERCENT;
-
-      if (active) {
-        x.set(mx); // 1:1 movement
-      } else if (last) {
-        // Gesture ended
-        if (mx < -swipeThreshold && canSwipeLeft) {
-          onSwipeLeft();
-          // Animate out completely (Framer Motion's exit variant will handle this for the old page)
-          // The new page will enter from the right
-          x.set(-containerWidth); // Set it off-screen to trigger exit correctly
-        } else if (mx > swipeThreshold && canSwipeRight) {
-          onSwipeRight();
-          // Animate out completely
-          x.set(containerWidth); // Set it off-screen to trigger exit correctly
-        } else {
-          // Snap back if not past threshold
-          x.set(0);
-        }
-      }
+const pageVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: 20, // Slight slide from right (like a new page)
+    rotateY: 5, // Slight 3D perspective
+    transformOrigin: "left center",
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    rotateY: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1] as const, // Ease-out cubic (smooth landing)
     },
-    {
-      filterTaps: true,
-      rubberband: true,
-      axis: "x", // Only allow horizontal drag
+  },
+  exit: {
+    opacity: 0,
+    x: -10, // Slight slide to left
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
     },
-  );
+  },
+};
 
-  const rotateY = useTransform(x, (latest) => {
-    if (!allowTransforms || shouldReduceMotion) return 0;
-    const width = containerRef.current?.offsetWidth || window.innerWidth || 1;
-    return (latest / width) * ROTATION_FACTOR;
-  });
-
-  const scale = useTransform(x, (latest) => {
-    if (!allowTransforms || shouldReduceMotion) return 1;
-    const width = containerRef.current?.offsetWidth || window.innerWidth || 1;
-    return 1 - (Math.abs(latest) / width) * SCALE_FACTOR;
-  });
-
-  // Variants for Page Transitions, now reactive to drag
-  const variants = {
-    enter: (dir: number) => ({
-      x: shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? "100%" : "-100%",
-      opacity: shouldReduceMotion ? 0 : 0.5,
-      rotateY:
-        shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? ROTATION_FACTOR : -ROTATION_FACTOR,
-      scale: shouldReduceMotion || !allowTransforms ? 1 : 1 - SCALE_FACTOR,
-      zIndex: 10,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      rotateY: 0,
-      scale: 1,
-      zIndex: 20,
-      transition: {
-        type: shouldReduceMotion ? "tween" : "spring",
-        duration: shouldReduceMotion ? 0.3 : undefined,
-        stiffness: 300,
-        damping: 30,
-        mass: 0.8,
-      } as any,
-    },
-    exit: (dir: number) => ({
-      x: shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? "-100%" : "100%", // Exit fully off-screen
-      opacity: shouldReduceMotion ? 0 : 0.5,
-      scale: shouldReduceMotion || !allowTransforms ? 1 : 1 - SCALE_FACTOR,
-      rotateY:
-        shouldReduceMotion || !allowTransforms ? 0 : dir > 0 ? -ROTATION_FACTOR : ROTATION_FACTOR, // Rotate opposite
-      zIndex: 0,
-      transition: { duration: 0.25 },
-    }),
-  };
-
+export function BookPageAnimator({ children, pageKey }: BookPageAnimatorProps) {
   return (
-    <div
-      ref={containerRef}
-      className="relative h-full w-full overflow-hidden perspective-1000 bg-bg-page"
-    >
-      {/* Desktop Navigation Arrows/Hotspots */}
-      <div className="hidden md:block">
-        {canSwipeLeft && (
-          <motion.button
-            onClick={onSwipeLeft}
-            whileHover={{ scale: 1.1, x: 5 }}
-            aria-label="Vorherige Seite"
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-r from-ink-primary/10 to-transparent flex items-center justify-start pl-2 rounded-r-md text-ink-primary opacity-0 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:outline-none transition-opacity duration-200"
-          >
-            <span aria-hidden="true">&lt;</span>
-            <span className="sr-only">Zur vorherigen Seite navigieren</span>
-          </motion.button>
-        )}
-        {canSwipeRight && (
-          <motion.button
-            onClick={onSwipeRight}
-            whileHover={{ scale: 1.1, x: -5 }}
-            aria-label="Nächste Seite"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-16 h-24 bg-gradient-to-l from-ink-primary/10 to-transparent flex items-center justify-end pr-2 rounded-l-md text-ink-primary opacity-0 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:outline-none transition-opacity duration-200"
-          >
-            <span aria-hidden="true">&gt;</span>
-            <span className="sr-only">Zur nächsten Seite navigieren</span>
-          </motion.button>
-        )}
-      </div>
-
-      <AnimatePresence initial={false} mode="wait" custom={direction}>
-        <motion.div
-          key={activeChatId ?? "draft"}
-          {...(bind() as any)} // Apply drag bindings here - cast to any to avoid type conflict
-          style={{ x, rotateY, scale }} // Bind x, rotateY, scale directly to motion values
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className="absolute inset-0 h-full min-h-full w-full origin-center bg-bg-page shadow-2xl rounded-none sm:rounded-2xl overflow-hidden border border-border-ink/50 cursor-grab"
-          whileTap={{ cursor: "grabbing" }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Visual Stack Hints (Pages behind) - Dynamische Dicke */}
-      {!shouldReduceMotion && swipeStack.length > 1 && (
-        <>
-          <motion.div
-            initial={{
-              x: direction > 0 ? "5%" : "-5%",
-              rotateY: direction > 0 ? -2 : 2,
-              opacity: 0,
-            }}
-            animate={{ x: 0, rotateY: 0, opacity: 0.6 }}
-            exit={{ x: direction > 0 ? "-5%" : "5%", rotateY: direction > 0 ? 2 : -2, opacity: 0 }}
-            transition={{ duration: 0.2, type: "tween" }}
-            className="absolute inset-0 z-[-1] translate-x-3 translate-y-3 sm:translate-x-4 sm:translate-y-4 bg-surface-2 rounded-none sm:rounded-2xl border border-black/5 opacity-60 pointer-events-none"
-          />
-          {swipeStack.length > 2 && (
-            <motion.div
-              initial={{
-                x: direction > 0 ? "10%" : "-10%",
-                rotateY: direction > 0 ? -4 : 4,
-                opacity: 0,
-              }}
-              animate={{ x: 0, rotateY: 0, opacity: 0.3 }}
-              exit={{
-                x: direction > 0 ? "-10%" : "10%",
-                rotateY: direction > 0 ? 4 : -4,
-                opacity: 0,
-              }}
-              transition={{ duration: 0.2, type: "tween" }}
-              className="absolute inset-0 z-[-2] translate-x-6 translate-y-6 sm:translate-x-8 sm:translate-y-8 bg-surface-1 rounded-none sm:rounded-2xl border border-black/5 opacity-30 pointer-events-none"
-            />
-          )}
-        </>
-      )}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pageKey}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          transformStyle: "preserve-3d", // Enable 3D for rotateY
+        }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }

@@ -5,7 +5,7 @@ import { loadModelCatalog } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import type { UIRole } from "@/data/roles";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, SlidersHorizontal } from "@/lib/icons";
+import { Check, Cpu, Feather, SlidersHorizontal, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 // Simple creative styles list
@@ -96,7 +96,8 @@ export function ChatSettingsDropup() {
 
           {/* Models Section */}
           <div className="p-1">
-            <div className="px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+            <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+              <Cpu className="h-3 w-3" />
               Modell
             </div>
             <div className="max-h-40 overflow-y-auto scrollbar-thin">
@@ -122,7 +123,8 @@ export function ChatSettingsDropup() {
 
           {/* Roles Section */}
           <div className="p-1">
-            <div className="px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+            <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+              <User className="h-3 w-3" />
               Rolle ({activeRoleLabel})
             </div>
             <div className="max-h-40 overflow-y-auto scrollbar-thin">
@@ -158,7 +160,8 @@ export function ChatSettingsDropup() {
 
           {/* Style Section */}
           <div className="p-1">
-            <div className="px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+            <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+              <Feather className="h-3 w-3" />
               Stil
             </div>
             {CREATIVE_STYLES.map((style) => (

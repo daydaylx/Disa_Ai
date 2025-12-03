@@ -9,6 +9,7 @@ import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { BookLayout } from "../components/layout/BookLayout";
+import { BookPageAnimator } from "../components/navigation/BookPageAnimator";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import type { ModelEntry } from "../config/models";
 import { QUICKSTARTS } from "../config/quickstarts";
@@ -27,6 +28,7 @@ import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
   const toasts = useToasts();
+  // ... (hooks setup remains same)
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
@@ -261,46 +263,48 @@ export default function Chat() {
         onMenuClick={openMenu}
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
-        <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+        <BookPageAnimator pageKey={activeConversationId || "new"}>
+          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-        <div className="flex flex-1 flex-col h-full relative overflow-hidden">
-          {/* Scroll Area */}
-          <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 scroll-smooth">
-            {isEmpty ? (
-              <div className="max-w-2xl mx-auto mt-8">
-                <ChatStartCard
-                  onNewChat={handleStartNewChat}
-                  conversationCount={stats?.totalConversations ?? conversationCount}
+          <div className="flex flex-1 flex-col h-full relative overflow-hidden">
+            {/* Scroll Area */}
+            <div className="flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 scroll-smooth">
+              {isEmpty ? (
+                <div className="max-w-2xl mx-auto mt-8">
+                  <ChatStartCard
+                    onNewChat={handleStartNewChat}
+                    conversationCount={stats?.totalConversations ?? conversationCount}
+                  />
+                </div>
+              ) : (
+                <VirtualizedMessageList
+                  messages={messages}
+                  isLoading={isLoading}
+                  onCopy={(content) => {
+                    void navigator.clipboard.writeText(content);
+                  }}
+                  onEdit={handleEdit}
+                  onFollowUp={handleFollowUp}
+                  onRetry={(_messageId) => {
+                    /* TODO: Implement simple retry */ return void 0;
+                  }}
+                  className="h-full max-w-3xl mx-auto"
                 />
-              </div>
-            ) : (
-              <VirtualizedMessageList
-                messages={messages}
-                isLoading={isLoading}
-                onCopy={(content) => {
-                  void navigator.clipboard.writeText(content);
-                }}
-                onEdit={handleEdit}
-                onFollowUp={handleFollowUp}
-                onRetry={(_messageId) => {
-                  /* TODO: Implement simple retry */ return void 0;
-                }}
-                className="h-full max-w-3xl mx-auto"
-              />
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-          {/* Unified Input Area */}
-          <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
-            <UnifiedInputBar
-              value={input}
-              onChange={setInput}
-              onSend={handleSend}
-              isLoading={isLoading}
-            />
+            {/* Unified Input Area */}
+            <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+              <UnifiedInputBar
+                value={input}
+                onChange={setInput}
+                onSend={handleSend}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
-        </div>
+        </BookPageAnimator>
       </BookLayout>
 
       {/* Global Menu */}
