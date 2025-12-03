@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 
 interface UseStickToBottomOptions {
   threshold?: number; // 0.8 = scrolled to within 80% of bottom
   enabled?: boolean;
+  containerRef?: MutableRefObject<HTMLDivElement | null>;
 }
 
 /**
@@ -11,8 +12,9 @@ interface UseStickToBottomOptions {
  * but only if user is already near the bottom
  */
 export function useStickToBottom(options: UseStickToBottomOptions = {}) {
-  const { threshold = 0.8, enabled = true } = options;
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const { threshold = 0.8, enabled = true, containerRef } = options;
+  const internalRef = useRef<HTMLDivElement>(null);
+  const scrollRef: MutableRefObject<HTMLDivElement | null> = containerRef ?? internalRef;
   const [isSticking, setIsSticking] = useState(true);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
@@ -32,19 +34,22 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
     setShouldAutoScroll(nearBottom);
 
     return nearBottom;
-  }, [threshold, enabled]);
+  }, [enabled, scrollRef, threshold]);
 
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
-    if (!scrollRef.current) return;
+  const scrollToBottom = useCallback(
+    (behavior: ScrollBehavior = "smooth") => {
+      if (!scrollRef.current) return;
 
-    scrollRef.current.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior,
-    });
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior,
+      });
 
-    setIsSticking(true);
-    setShouldAutoScroll(true);
-  }, []);
+      setIsSticking(true);
+      setShouldAutoScroll(true);
+    },
+    [scrollRef],
+  );
 
   const scrollToBottomInstant = useCallback(() => {
     scrollToBottom("instant");
@@ -77,7 +82,7 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
       if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
     };
-  }, [enabled, shouldAutoScroll, scrollToBottomInstant]);
+  }, [enabled, scrollRef, shouldAutoScroll, scrollToBottomInstant]);
 
   // Handle scroll events
   useEffect(() => {
@@ -104,7 +109,7 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
     return () => {
       element.removeEventListener("scroll", handleScroll);
     };
-  }, [enabled, checkShouldStick]);
+  }, [checkShouldStick, enabled, scrollRef]);
 
   return {
     scrollRef,
