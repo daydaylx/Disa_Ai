@@ -32,7 +32,17 @@ function collectCssFiles(dir) {
     const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      if (["node_modules", "dist", "dev-dist", "coverage", ".git"].includes(entry.name)) {
+      if (
+        [
+          "node_modules",
+          "dist",
+          "dev-dist",
+          "coverage",
+          ".git",
+          "playwright-report",
+          "test-results",
+        ].includes(entry.name)
+      ) {
         return [];
       }
       return collectCssFiles(fullPath);

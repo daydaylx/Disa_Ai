@@ -6,7 +6,7 @@
     "@stylistic/no-eol-whitespace": true,
     "@stylistic/max-empty-lines": 2,
     "@stylistic/declaration-block-trailing-semicolon": "always",
-    "@stylistic/declaration-colon-space-after": "always",
+    "@stylistic/declaration-colon-space-after": "always-single-line",
     "@stylistic/declaration-colon-space-before": "never",
     "@stylistic/block-closing-brace-empty-line-before": "never",
     "@stylistic/block-closing-brace-newline-after": "always",

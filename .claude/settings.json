@@ -29,7 +29,7 @@
     "DISABLE_ERROR_REPORTING": "1"
   },
   "includeCoAuthoredBy": false,
-  "model": "claude-sonnet-4-0",
+  "model": "claude-sonnet-4-5",
   "outputStyle": "Default",
   "enableAllProjectMcpServers": false,
 

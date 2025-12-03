@@ -244,7 +244,6 @@ export default function Chat() {
         onMenuClick={openMenu}
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
-        <h1 className="sr-only">Disa AI – Chat</h1>
         <BookPageAnimator pageKey={activeConversationId || "new"}>
           <div className="flex h-[calc(var(--vh,1vh)*100)] flex-col">
             <h1 className="sr-only">Disa AI – Chat</h1>
