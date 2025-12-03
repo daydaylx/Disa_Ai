@@ -6,8 +6,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 import { Textarea } from "@/ui/Textarea";
 
-import { ChatSettingsDropup } from "./ChatSettingsDropup";
-
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -62,19 +60,14 @@ export function UnifiedInputBar({
 
   return (
     <div
-      className={cn("w-full transition-[padding] bg-bg-page", className)}
+      className={cn("w-full max-w-3xl mx-auto transition-[padding] px-3 sm:px-4", className)}
       style={{
-        paddingBottom: "max(var(--keyboard-offset, 0px), env(safe-area-inset-bottom, 0px))",
+        paddingBottom:
+          "calc(max(var(--keyboard-offset, 0px), env(safe-area-inset-bottom, 0px)) + 0.5rem)",
       }}
     >
-      <div className="flex items-end gap-2 p-2 sm:gap-3 sm:p-3 md:max-w-3xl md:mx-auto">
-        {/* Left: Settings Dropup */}
-        <div className="flex-shrink-0 mb-1">
-          <ChatSettingsDropup />
-        </div>
-
-        {/* Center: Text Input (Paper Style) */}
-        <div className="relative flex-1 rounded-2xl bg-surface-1 border border-border-ink shadow-sm transition-shadow focus-within:shadow-md focus-within:border-ink-primary/30">
+      <div className="flex items-end gap-2 rounded-2xl border border-border-ink bg-surface-1 p-2 shadow-sm transition-shadow focus-within:border-ink-primary/30 focus-within:shadow-md sm:gap-3 sm:p-3">
+        <div className="relative flex-1">
           <Textarea
             ref={textareaRef}
             value={value}
@@ -82,14 +75,13 @@ export function UnifiedInputBar({
             onKeyDown={handleKeyDown}
             placeholder="Schreibe..."
             aria-label="Nachricht eingeben"
-            className="w-full min-h-[40px] max-h-[180px] bg-transparent border-0 focus-visible:ring-0 px-4 py-3 resize-none text-base text-ink-primary placeholder:text-ink-tertiary leading-relaxed"
+            className="w-full min-h-[40px] max-h-[180px] resize-none border-0 bg-transparent px-3 py-2 text-base leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus-visible:ring-0 sm:px-4 sm:py-3"
             rows={1}
             data-testid="composer-input"
           />
         </div>
 
-        {/* Right: Send Button */}
-        <div className="flex-shrink-0 mb-1">
+        <div className="flex-shrink-0">
           <Button
             onClick={onSend}
             disabled={!value.trim() || isLoading}

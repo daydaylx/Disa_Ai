@@ -19,8 +19,10 @@ test.describe("Book Concept UI", () => {
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
 
-    // Check for Settings Dropup Trigger
-    await expect(page.locator('button[aria-label="Chat Einstellungen"]')).toBeVisible();
+    // Check for control bar dropdowns
+    await expect(page.getByRole("button", { name: "Rolle auswählen" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Stil und Gedächtnis" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Modell auswählen" })).toBeVisible();
   });
 
   test("should allow typing and sending a message", async ({ page }) => {
@@ -41,25 +43,18 @@ test.describe("Book Concept UI", () => {
     await expect(page.getByText("Hello Book World")).toBeVisible();
   });
 
-  test("should open and interact with Settings Dropup", async ({ page }) => {
-    const settingsButton = page.locator('button[aria-label="Chat Einstellungen"]');
-    await settingsButton.click();
+  test("should open and interact with Control Bar", async ({ page }) => {
+    const styleControl = page.getByRole("button", { name: "Stil und Gedächtnis" });
+    await styleControl.click();
 
-    // Dropup should be visible
-    const dropup = page.locator(".z-popover"); // Based on class used in ChatSettingsDropup
-    await expect(dropup).toBeVisible();
-
-    // Check for sections
-    await expect(dropup.getByText("Modell")).toBeVisible();
-    await expect(dropup.getByText("Rolle")).toBeVisible();
-    await expect(dropup.getByText("Stil")).toBeVisible();
-
-    // Select a style (e.g., "Kreativ")
-    const creativeOption = dropup.getByRole("button", { name: "Kreativ" });
+    const creativeOption = page.getByRole("option", { name: "Kreativ" });
+    await expect(creativeOption).toBeVisible();
     await creativeOption.click();
 
-    // Dropup should close
-    await expect(dropup).not.toBeVisible();
+    await styleControl.click();
+    const memorySwitch = page.getByRole("switch", { name: "Gedächtnis umschalten" });
+    await expect(memorySwitch).toBeVisible();
+    await memorySwitch.click();
   });
 
   test("should open History Panel via Bookmark", async ({ page }) => {

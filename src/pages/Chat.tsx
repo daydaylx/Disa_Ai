@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
+import { ChatControlBar } from "../components/chat/ChatControlBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -263,6 +264,7 @@ export default function Chat() {
         onMenuClick={openMenu}
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
+        <h1 className="sr-only">Disa AI – Chat</h1>
         <BookPageAnimator pageKey={activeConversationId || "new"}>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
@@ -296,6 +298,7 @@ export default function Chat() {
 
             {/* Unified Input Area */}
             <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+              <ChatControlBar modelCatalog={modelCatalog} />
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
