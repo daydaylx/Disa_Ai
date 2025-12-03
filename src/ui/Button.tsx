@@ -10,21 +10,22 @@ import { cn } from "@/lib/utils";
  * Focuses on clarity, touch targets (min 44px), and subtle paper interactions.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/70 disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
+  "inline-flex items-center justify-center rounded-full text-sm font-semibold tracking-[0.01em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[var(--border-chalk-strong)] disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
   {
     variants: {
       variant: {
         primary:
-          "bg-accent-primary text-surface-1 shadow-sm hover:bg-accent-hover active:translate-y-[1px]",
+          "border border-[var(--border-chalk-strong)] bg-[rgba(236,236,236,0.04)] text-text-primary shadow-[0_0_0_1px_rgba(236,236,236,0.08)] hover:bg-[rgba(236,236,236,0.07)] active:translate-y-[0.5px]",
         secondary:
-          "bg-surface-2 text-text-primary border border-border-ink shadow-sm hover:bg-surface-3 hover:shadow-md active:translate-y-[1px]",
-        ghost: "hover:bg-surface-2 text-text-secondary hover:text-text-primary active:bg-surface-3",
+          "border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-text-primary shadow-[0_0_0_1px_rgba(236,236,236,0.05)] hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)] active:translate-y-[0.5px]",
+        ghost:
+          "text-text-secondary hover:text-text-primary border border-transparent hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)] active:bg-[rgba(255,255,255,0.05)]",
         link: "text-accent underline-offset-4 hover:underline p-0 h-auto min-h-0",
       },
       size: {
-        default: "min-h-[44px] py-2 px-4",
-        sm: "min-h-[44px] px-3 text-xs",
-        lg: "min-h-[56px] px-8 text-base",
+        default: "min-h-[44px] min-w-[44px] py-2 px-4",
+        sm: "min-h-[42px] min-w-[42px] px-3 text-xs",
+        lg: "min-h-[52px] min-w-[52px] px-6 text-base",
         icon: "min-h-[44px] min-w-[44px] p-2",
       },
     },

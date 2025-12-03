@@ -131,7 +131,7 @@ function DropdownPanel({
     <div
       ref={panelRef}
       className={cn(
-        "dropdown-appear absolute z-popover w-[260px] origin-top-left rounded-[16px] border border-white/5 bg-[rgba(20,20,20,0.95)] p-3 text-[#F2F2F5] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur",
+        "dropdown-appear absolute z-popover w-[260px] origin-top-left rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)] p-3 text-text-primary shadow-[0_18px_40px_rgba(0,0,0,0.45)] backdrop-blur",
         placement === "bottom" ? "top-full mt-2" : "bottom-full mb-2",
       )}
       style={{ maxHeight: maxHeight ? `${maxHeight}px` : undefined }}
@@ -155,13 +155,13 @@ function DropdownItem<T>({
     <button
       type="button"
       onClick={() => onSelect(option.id)}
-      className="group flex h-11 w-full items-center justify-between rounded-lg px-3 text-[14px] leading-[1.2] text-[#F2F2F5] transition-colors duration-150 hover:bg-[rgba(255,255,255,0.08)]"
+      className="group flex h-11 w-full items-center justify-between rounded-lg px-3 text-[14px] leading-[1.2] text-text-primary transition-colors duration-150 hover:bg-[rgba(255,255,255,0.05)]"
     >
       <div className="flex min-w-0 items-center gap-3 truncate">
-        {Icon ? <Icon className="h-4 w-4 text-[#A3A3AB]" /> : null}
+        {Icon ? <Icon className="h-4 w-4 text-ink-tertiary" /> : null}
         <span className="truncate">{option.label}</span>
       </div>
-      {selected ? <Check className="h-4 w-4 text-[#F2F2F5]" /> : null}
+      {selected ? <Check className="h-4 w-4 text-text-primary" /> : null}
     </button>
   );
 }
@@ -185,14 +185,14 @@ function TriggerBadge({
       ref={innerRef}
       onClick={onClick}
       className={cn(
-        "flex h-10 items-center gap-2 rounded-full border border-white/5 bg-[rgba(28,28,28,0.92)] px-3 text-[13px] font-medium text-[#F2F2F5] transition-colors duration-150 hover:bg-[rgba(255,255,255,0.05)]",
-        open && "shadow-[0_0_0_1px_rgba(111,108,255,0.35)]",
+        "flex h-9 items-center gap-2 rounded-full border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] px-3 text-[13px] font-medium text-text-primary transition-colors duration-150 hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.05)]",
+        open && "shadow-[0_0_0_1px_var(--border-chalk-strong)]",
       )}
       aria-expanded={open}
     >
-      {Icon ? <Icon className="h-4 w-4 text-[#A3A3AB]" /> : null}
+      {Icon ? <Icon className="h-4 w-4 text-ink-tertiary" /> : null}
       <span className="truncate">{label}</span>
-      <ChevronDown className="h-4 w-4 text-[#A3A3AB]" />
+      <ChevronDown className="h-4 w-4 text-ink-tertiary" />
     </button>
   );
 }
