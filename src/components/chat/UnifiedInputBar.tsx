@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
@@ -88,6 +89,9 @@ function DropdownPanel({
   const panelRef = useRef<HTMLDivElement>(null);
   const [placement, setPlacement] = useState<"bottom" | "top">("bottom");
   const [maxHeight, setMaxHeight] = useState<number | undefined>();
+  const [position, setPosition] = useState<{ top?: number; bottom?: number; left: number }>({
+    left: 0,
+  });
 
   useOutsideClose(panelRef, onClose, open);
 
@@ -106,6 +110,19 @@ function DropdownPanel({
       setPlacement(shouldPlaceBottom ? "bottom" : "top");
       const availableSpace = shouldPlaceBottom ? spaceBelow : spaceAbove;
       setMaxHeight(Math.max(0, Math.min(availableSpace, 320)));
+
+      // Calculate fixed position
+      if (shouldPlaceBottom) {
+        setPosition({
+          top: rect.bottom + 8,
+          left: rect.left,
+        });
+      } else {
+        setPosition({
+          bottom: viewportHeight - rect.top + 8,
+          left: rect.left,
+        });
+      }
     };
 
     updatePlacement();
@@ -128,17 +145,23 @@ function DropdownPanel({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       ref={panelRef}
       className={cn(
-        "dropdown-appear absolute z-popover w-[260px] origin-top-left rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)] p-3 text-text-primary shadow-[0_18px_40px_rgba(0,0,0,0.45)] backdrop-blur",
-        placement === "bottom" ? "top-full mt-2" : "bottom-full mb-2",
+        "dropdown-appear fixed z-popover w-[260px] rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)] p-3 text-text-primary shadow-[0_18px_40px_rgba(0,0,0,0.45)] backdrop-blur",
+        placement === "bottom" ? "origin-top-left" : "origin-bottom-left",
       )}
-      style={{ maxHeight: maxHeight ? `${maxHeight}px` : undefined }}
+      style={{
+        maxHeight: maxHeight ? `${maxHeight}px` : undefined,
+        top: position.top !== undefined ? `${position.top}px` : undefined,
+        bottom: position.bottom !== undefined ? `${position.bottom}px` : undefined,
+        left: `${position.left}px`,
+      }}
     >
       <div className="max-h-full space-y-1 overflow-y-auto no-scrollbar">{children}</div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
