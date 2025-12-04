@@ -73,7 +73,7 @@ export function UnifiedInputBar({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Schreibe..."
+            placeholder="Schreibe eine Nachricht..."
             aria-label="Nachricht eingeben"
             className="chalk-text w-full min-h-[40px] max-h-[180px] resize-none border-0 bg-transparent px-3 py-2 text-base leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus-visible:ring-0 sm:px-4 sm:py-3"
             rows={1}
