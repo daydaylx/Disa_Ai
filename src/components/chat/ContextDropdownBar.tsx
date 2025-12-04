@@ -23,7 +23,7 @@ interface ContextDropdownBarProps {
   onRefreshModels?: () => void;
 }
 
-type DropdownKey = "role" | "style" | "creativity" | "context" | "model" | null;
+type DropdownKey = "role" | "style" | "creativity" | "model" | null;
 
 interface DropdownOption<T> {
   id: T;
@@ -45,14 +45,6 @@ const creativityOptions: DropdownOption<number>[] = [
   { id: 45, label: "Mittel", icon: Brain },
   { id: 70, label: "Hoch", icon: Brain },
   { id: 95, label: "Extrem", icon: Brain },
-];
-
-const contextOptions: DropdownOption<number>[] = [
-  { id: 5, label: "Minimal", icon: Feather },
-  { id: 6, label: "Kurz", icon: Feather },
-  { id: 8, label: "Normal", icon: Feather },
-  { id: 9, label: "Lang", icon: Feather },
-  { id: 10, label: "Maximal", icon: Feather },
 ];
 
 const CURATED_ROLE_NAMES = ["Mentor", "Assistent", "Humorvoll", "Experte"];
@@ -206,16 +198,9 @@ export function ContextDropdownBar({
   onRefreshModels,
 }: ContextDropdownBarProps) {
   const { roles, activeRole, setActiveRole } = useRoles();
-  const {
-    settings,
-    setCreativity,
-    setDiscussionPreset,
-    setDiscussionMaxSentences,
-    setPreferredModel,
-  } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
 
   const [openDropdown, setOpenDropdown] = useState<DropdownKey>(null);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRefs = {
     role: useRef<HTMLButtonElement>(null),
@@ -251,13 +236,22 @@ export function ContextDropdownBar({
     return modelName ? `${modelName}` : "Modell";
   }, [modelOptions, modelsLoading, settings.preferredModelId]);
 
+  const activeStyleLabel = useMemo(() => {
+    const activeStyle = styleOptions.find((style) => style.id === settings.discussionPreset);
+    return activeStyle?.label ?? "Stil";
+  }, [settings.discussionPreset]);
+
+  const activeCreativityLabel = useMemo(() => {
+    const activeCreativity = creativityOptions.find(
+      (option) => option.id === (settings.creativity ?? 45),
+    );
+    return activeCreativity?.label ?? "Kreativität";
+  }, [settings.creativity]);
+
   return (
     <>
       <div className="mx-auto w-full max-w-3xl px-3 pb-3 sm:px-4">
-        <div
-          ref={containerRef}
-          className="chalk-pills-container flex items-center justify-center gap-2"
-        >
+        <div ref={containerRef} className="flex items-center gap-2 flex-wrap">
           {/* Rolle */}
           <div className="relative">
             <button
@@ -452,145 +446,6 @@ export function ContextDropdownBar({
           </div>
         </div>
       </div>
-
-      {/* Advanced Settings Bottom Sheet */}
-      {isAdvancedOpen && (
-        <AdvancedSettingsSheet
-          isOpen={isAdvancedOpen}
-          onClose={() => setIsAdvancedOpen(false)}
-          settings={settings}
-          onStyleChange={setDiscussionPreset}
-          onCreativityChange={setCreativity}
-          onContextChange={setDiscussionMaxSentences}
-        />
-      )}
     </>
-  );
-}
-
-// Advanced Settings Bottom Sheet Component
-interface AdvancedSettingsSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-  settings: ReturnType<typeof useSettings>["settings"];
-  onStyleChange: (value: DiscussionPresetKey) => void;
-  onCreativityChange: (value: number) => void;
-  onContextChange: (value: number) => void;
-}
-
-function AdvancedSettingsSheet({
-  isOpen,
-  onClose,
-  settings,
-  onStyleChange,
-  onCreativityChange,
-  onContextChange,
-}: AdvancedSettingsSheetProps) {
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-[var(--z-bottom-sheet)] flex items-end justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-lg rounded-t-2xl border-t border-[var(--border-chalk)] bg-[rgba(19,19,20,0.98)] p-6 shadow-[0_-8px_32px_rgba(0,0,0,0.5)] backdrop-blur animate-in slide-in-from-bottom duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-text-primary">Erweiterte Einstellungen</h2>
-          <button
-            onClick={onClose}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-ink-secondary transition-colors hover:bg-[rgba(255,255,255,0.05)] hover:text-ink-primary"
-            aria-label="Schließen"
-          >
-            <ChevronDown className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Settings */}
-        <div className="space-y-6">
-          {/* Stil */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-ink-secondary">Stil</label>
-            <div className="grid grid-cols-2 gap-2">
-              {styleOptions.map((option) => {
-                const Icon = option.icon;
-                const isSelected = settings.discussionPreset === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => onStyleChange(option.id)}
-                    className={cn(
-                      "flex min-h-[48px] items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-                      isSelected
-                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary"
-                        : "border-[var(--border-chalk)] bg-transparent text-ink-secondary hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)]",
-                    )}
-                  >
-                    {Icon && <Icon className="h-4 w-4" />}
-                    <span>{option.label}</span>
-                    {isSelected && <Check className="ml-auto h-4 w-4" />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Kreativität */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-ink-secondary">Kreativität</label>
-            <div className="space-y-1">
-              {creativityOptions.map((option) => {
-                const isSelected = (settings.creativity ?? 45) === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => onCreativityChange(option.id)}
-                    className={cn(
-                      "flex w-full min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
-                      isSelected
-                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary font-medium"
-                        : "border-transparent bg-transparent text-ink-secondary hover:bg-[rgba(255,255,255,0.03)]",
-                    )}
-                  >
-                    <span>{option.label}</span>
-                    {isSelected && <Check className="h-4 w-4" />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Kontext */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-ink-secondary">
-              Kontextlänge
-            </label>
-            <div className="space-y-1">
-              {contextOptions.map((option) => {
-                const isSelected = settings.discussionMaxSentences === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => onContextChange(option.id)}
-                    className={cn(
-                      "flex w-full min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
-                      isSelected
-                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary font-medium"
-                        : "border-transparent bg-transparent text-ink-secondary hover:bg-[rgba(255,255,255,0.03)]",
-                    )}
-                  >
-                    <span>{option.label}</span>
-                    {isSelected && <Check className="h-4 w-4" />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

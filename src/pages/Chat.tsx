@@ -25,6 +25,7 @@ import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
+import { Clock } from "../lib/icons";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
@@ -253,6 +254,18 @@ export default function Chat() {
           <div className="chalkboard-container flex h-[calc(var(--vh,1vh)*100)] flex-col relative">
             <h1 className="sr-only">Disa AI – Chat</h1>
             <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+
+            {/* Floating Action Button - Chalk Style */}
+            <button
+              type="button"
+              onClick={() => {
+                /* TODO: Implementiere History-Funktion oder andere Aktion */
+              }}
+              className="fixed right-4 top-20 z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 chalk-border bg-[rgba(19,19,20,0.85)] text-ink-primary backdrop-blur transition-all duration-200 hover:chalk-border-strong hover:bg-[rgba(19,19,20,0.95)] hover:shadow-[var(--chalk-glow)] active:scale-95"
+              aria-label="Verlauf anzeigen"
+            >
+              <Clock className="h-6 w-6" />
+            </button>
 
             <main
               ref={chatScrollRef}
