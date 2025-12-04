@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-eb1f91b",
-  "buildTime": "2025-12-03T21:19:44.232Z",
-  "gitSha": "eb1f91b4c997eb62c8ff344dd59293e84e299846",
-  "gitBranch": "claude/build-chat-start-screen-01YXjgiuwVexNZm91AEp4iav",
+  "buildId": "v1.0.0-22607d8",
+  "buildTime": "2025-12-04T00:44:26.981Z",
+  "gitSha": "22607d8e711001b29222bbea5f0f44435f65501a",
+  "gitBranch": "claude/redesign-ui-layout-019vzuyHcXFK278atd3rehu6",
   "version": "1.0.0"
 }
