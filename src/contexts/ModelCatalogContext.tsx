@@ -17,9 +17,11 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const hasRequestedRef = useRef(false);
+  const isRefreshingRef = useRef(false);
 
   const refresh = useCallback(async () => {
-    if (loading) return;
+    if (isRefreshingRef.current) return;
+    isRefreshingRef.current = true;
     hasRequestedRef.current = true;
     setLoading(true);
     setError(null);
@@ -34,9 +36,10 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
       console.error("Model catalog loading failed", err);
       setError("Modelle konnten nicht geladen werden.");
     } finally {
+      isRefreshingRef.current = false;
       setLoading(false);
     }
-  }, [loading]);
+  }, []);
 
   useEffect(() => {
     if (hasRequestedRef.current) return;
