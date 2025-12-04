@@ -70,9 +70,14 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
 
   return (
     <div
-      className={cn("w-full bg-bg-page/95 backdrop-blur border-b border-border-ink/10", className)}
+      className={cn(
+        "fixed bottom-0 left-0 right-0 z-40 bg-bg-page/95 backdrop-blur border-t border-border-ink/20",
+        "before:content-[''] before:absolute before:inset-0 before:shadow-[0_-1px_0_var(--border-chalk)] before:pointer-events-none before:opacity-50",
+        className
+      )}
     >
-      <div className="mx-auto flex w-full max-w-3xl flex-wrap gap-2 px-3 py-3 sm:gap-3 sm:px-4 md:grid md:grid-cols-3">
+      <div className="mx-auto flex w-full max-w-3xl items-center justify-center gap-2 px-3 py-3 overflow-x-auto no-scrollbar sm:gap-3 sm:px-4">
+        {/* Rolle Button */}
         <Select
           value={activeRole?.id ?? "none"}
           onValueChange={(value) => {
@@ -84,20 +89,17 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
             setActiveRole(role ?? null);
           }}
         >
-          <SelectTrigger aria-label="Rolle auswählen" className="min-h-[44px] text-left">
-            <div className="flex w-full items-center gap-2 truncate">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-ink-secondary">
-                <User className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col truncate text-start">
-                <ControlLabel icon={User} label="Rolle" />
-                <span className="truncate text-sm font-medium text-ink-primary">
-                  {activeRole?.name ?? "Keine Rolle"}
-                </span>
-              </div>
+          <SelectTrigger
+            aria-label="Rolle auswählen"
+            className="min-h-[44px] min-w-[80px] flex-shrink-0 rounded-xl relative before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-[0_0_0_1.5px_var(--border-chalk)] before:pointer-events-none before:opacity-[var(--chalk-rough-opacity)] hover:before:shadow-[0_0_0_2px_var(--accent-primary),var(--chalk-glow)] transition-all"
+          >
+            <div className="flex items-center gap-1.5 justify-center">
+              <User className="h-4 w-4 text-ink-secondary" />
+              <span className="text-xs font-medium text-ink-primary">Rolle</span>
+              <span className="text-ink-tertiary">›</span>
             </div>
           </SelectTrigger>
-          <SelectContent align="start">
+          <SelectContent align="center">
             <SelectGroup>
               <SelectLabel>Rollen</SelectLabel>
               <SelectItem value="none">Standard (Keine)</SelectItem>
@@ -110,6 +112,7 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
           </SelectContent>
         </Select>
 
+        {/* Stil Button */}
         <Select
           value={String(settings.creativity ?? 45)}
           onValueChange={(value) => {
@@ -123,24 +126,17 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
             }
           }}
         >
-          <SelectTrigger aria-label="Stil und Gedächtnis" className="min-h-[44px] text-left">
-            <div className="flex w-full items-center gap-2 truncate">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-ink-secondary">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col truncate text-start">
-                <ControlLabel icon={Feather} label="Stil & Gedächtnis" />
-                <span className="truncate text-sm font-medium text-ink-primary">
-                  {activeStyleLabel}
-                  <span className="text-ink-tertiary">
-                    {" "}
-                    • {memoryEnabled ? "Memory an" : "Memory aus"}
-                  </span>
-                </span>
-              </div>
+          <SelectTrigger
+            aria-label="Stil auswählen"
+            className="min-h-[44px] min-w-[80px] flex-shrink-0 rounded-xl relative before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-[0_0_0_1.5px_var(--border-chalk)] before:pointer-events-none before:opacity-[var(--chalk-rough-opacity)] hover:before:shadow-[0_0_0_2px_var(--accent-primary),var(--chalk-glow)] transition-all"
+          >
+            <div className="flex items-center gap-1.5 justify-center">
+              <Feather className="h-4 w-4 text-ink-secondary" />
+              <span className="text-xs font-medium text-ink-primary">Stil</span>
+              <span className="text-ink-tertiary">›</span>
             </div>
           </SelectTrigger>
-          <SelectContent align="start">
+          <SelectContent align="center">
             <SelectGroup>
               <SelectLabel>Stil</SelectLabel>
               {CREATIVE_STYLES.map((style) => (
@@ -164,25 +160,55 @@ export function ChatControlBar({ modelCatalog, className }: ChatControlBarProps)
           </SelectContent>
         </Select>
 
+        {/* Kreativität Button */}
+        <Select
+          value={String(settings.creativity ?? 45)}
+          onValueChange={(value) => {
+            const numericValue = Number(value);
+            if (!Number.isNaN(numericValue)) {
+              setCreativity(numericValue);
+            }
+          }}
+        >
+          <SelectTrigger
+            aria-label="Kreativität"
+            className="min-h-[44px] min-w-[110px] flex-shrink-0 rounded-xl relative before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-[0_0_0_1.5px_var(--border-chalk)] before:pointer-events-none before:opacity-[var(--chalk-rough-opacity)] hover:before:shadow-[0_0_0_2px_var(--accent-primary),var(--chalk-glow)] transition-all"
+          >
+            <div className="flex items-center gap-1.5 justify-center">
+              <Sparkles className="h-4 w-4 text-ink-secondary" />
+              <span className="text-xs font-medium text-ink-primary">Kreativität</span>
+              <span className="text-ink-tertiary">≡</span>
+            </div>
+          </SelectTrigger>
+          <SelectContent align="center">
+            <SelectGroup>
+              <SelectLabel>Kreativität</SelectLabel>
+              {CREATIVE_STYLES.map((style) => (
+                <SelectItem key={style.id} value={String(style.id)}>
+                  {style.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {/* Modell Button */}
         <Select
           value={resolvedModelId ?? ""}
           onValueChange={(value) => setPreferredModel(value)}
           disabled={modelSelectDisabled}
         >
-          <SelectTrigger aria-label="Modell auswählen" className="min-h-[44px] text-left">
-            <div className="flex w-full items-center gap-2 truncate">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-ink-secondary">
-                <Cpu className="h-4 w-4" />
-              </div>
-              <div className="flex flex-col truncate text-start">
-                <ControlLabel icon={Cpu} label="Modell" />
-                <span className="truncate text-sm font-medium text-ink-primary">
-                  {selectedModelLabel}
-                </span>
-              </div>
+          <SelectTrigger
+            aria-label="Modell auswählen"
+            className="min-h-[44px] min-w-[90px] flex-shrink-0 rounded-xl relative before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-[0_0_0_1.5px_var(--border-chalk)] before:pointer-events-none before:opacity-[var(--chalk-rough-opacity)] hover:before:shadow-[0_0_0_2px_var(--accent-primary),var(--chalk-glow)] transition-all disabled:opacity-50"
+          >
+            <div className="flex items-center gap-1.5 justify-center">
+              <Cpu className="h-4 w-4 text-ink-secondary" />
+              <span className="text-xs font-medium text-ink-primary">Modell</span>
+              <span className="text-ink-tertiary">›</span>
             </div>
           </SelectTrigger>
-          <SelectContent align="start">
+          <SelectContent align="center">
             <SelectGroup>
               <SelectLabel>Modelle</SelectLabel>
               {modelOptions.length === 0 ? (

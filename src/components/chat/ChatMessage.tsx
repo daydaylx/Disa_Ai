@@ -20,7 +20,7 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
-    <div className="relative my-4 overflow-hidden rounded-xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] shadow-[0_0_0_1px_var(--border-chalk)]">
+    <div className="relative my-4 overflow-hidden rounded-xl bg-[rgba(255,255,255,0.02)] before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-[0_0_0_1.5px_var(--border-chalk)] before:pointer-events-none before:opacity-[var(--chalk-rough-opacity)]">
       <div className="flex items-center justify-between border-b border-[var(--border-chalk)] px-4 py-2 backdrop-blur-sm">
         <span className="text-ink-tertiary text-xs font-medium uppercase tracking-[0.08em]">
           {language || "Text"}
@@ -100,16 +100,24 @@ export function ChatMessage({
 
   const parsedContent = parseMessageContent(message.content);
 
-  // Schiefer & Kreide: feine Kreidelinien auf mattem Schiefer
+  // Schiefer & Kreide: Handgezeichnete Kreidelinien auf mattem Schiefer
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-3 py-2 sm:px-4 sm:py-3",
-    "shadow-[0_0_0_1px_var(--border-chalk)] backdrop-blur-[0.5px] text-text-primary",
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3",
+    "backdrop-blur-[0.5px] text-text-primary",
+    "before:content-[''] before:absolute before:inset-0 before:rounded-2xl before:pointer-events-none",
+    "before:shadow-[0_0_0_2px_var(--border-chalk-blur)] before:opacity-[var(--chalk-rough-opacity)]",
     isUser &&
-      "ml-auto border border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.03)] shadow-[0_0_0_1px_var(--border-chalk-strong),0_1px_0_rgba(255,255,255,0.03)]",
+      "ml-auto bg-[rgba(255,255,255,0.04)]",
+    isUser &&
+      "before:shadow-[0_0_0_2px_var(--border-chalk-strong),var(--chalk-shadow-sketch)]",
     isAssistant &&
-      "mr-auto border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] shadow-[0_0_0_1px_var(--border-chalk),-2px_0_0_var(--accent-primary)]",
+      "mr-auto bg-[rgba(255,255,255,0.03)]",
+    isAssistant &&
+      "before:shadow-[0_0_0_2px_var(--border-chalk),var(--chalk-shadow-sketch)] after:content-[''] after:absolute after:left-0 after:top-0 after:bottom-0 after:w-[3px] after:bg-[var(--accent-primary)] after:rounded-l-2xl after:opacity-70",
     isSystem &&
-      "mx-auto max-w-[95%] sm:max-w-2xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-center opacity-80",
+      "mx-auto max-w-[95%] sm:max-w-2xl bg-[rgba(255,255,255,0.02)] text-center opacity-80",
+    isSystem &&
+      "before:shadow-[0_0_0_1.5px_var(--border-chalk)]",
   );
 
   const handleCopy = () => {

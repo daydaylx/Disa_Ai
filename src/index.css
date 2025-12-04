@@ -20,6 +20,7 @@
 /* Animations */
 @import "./styles/interactive-states.css";
 @import "./styles/ui-state-animations.css";
+@import "./styles/chalk-animations.css";
 /* @import "./styles/logo-animations.css";  -- Keep if subtle, remove if too "loud" */
 
 /* Deprecated legacy styles removed as part of the reset */

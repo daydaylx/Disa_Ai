@@ -42,8 +42,10 @@ body {
   position: relative;
   overscroll-behavior: none;
   background-color: var(--bg-app);
-  background-image: var(--chalk-noise);
-  background-blend-mode: normal;
+  background-image: var(--chalk-noise), var(--chalk-dust);
+  background-blend-mode: normal, screen;
+  background-size: 300px 300px, 100% 100%;
+  background-position: 0 0, center;
   color: var(--text-primary);
   font-family: var(--font-sans, "Inter", system-ui, sans-serif);
   letter-spacing: 0.01em;

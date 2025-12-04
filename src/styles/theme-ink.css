@@ -93,8 +93,8 @@
   /* Here we define the color for the overlay */
   --noise-overlay-color: rgba(255, 255, 255, 0.04);
 
-  /* Chalk Noise Pattern - subtle grain texture for slate surface */
-  --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.05"/></svg>');
+  /* Chalk Noise Pattern - Enhanced grain texture for slate surface */
+  --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.12"/></svg>');
 
   /* Chalk Glow for text and borders */
   --chalk-glow: 0 0 8px rgba(236, 236, 236, 0.15), 0 0 2px rgba(236, 236, 236, 0.2);
@@ -103,6 +103,34 @@
   /* Chalk Line - subtle blur for hand-drawn effect */
   --border-chalk-blur: rgba(236, 236, 236, 0.35);
   --chalk-line-shadow: 0 0 1px rgba(236, 236, 236, 0.4);
+
+  /* ========================================
+   * HAND-DRAWN CHALK EFFECTS
+   * ======================================== */
+
+  /* Variables for hand-drawn chalk styling */
+  --chalk-rough-opacity: 0.85;
+  --chalk-texture-scale: 1.5;
+  --chalk-line-width: 2px;
+  --chalk-line-variation: 0.3px;
+
+  /* Enhanced chalk shadow for sketch effect */
+  --chalk-shadow-sketch:
+    0 0 1px rgba(236, 236, 236, 0.6),
+    0 0 3px rgba(236, 236, 236, 0.3),
+    0 0 5px rgba(236, 236, 236, 0.1);
+
+  /* Chalk dust overlay effect */
+  --chalk-dust: radial-gradient(
+    circle at 30% 40%,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 70% 60%,
+    rgba(255, 255, 255, 0.015) 0%,
+    transparent 50%
+  );
 }
 
 :root[data-theme="dark"] {

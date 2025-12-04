@@ -7,6 +7,7 @@ import { ToastsProvider } from "@/ui/toast";
 import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
+import { ChalkFilter } from "./components/effects/ChalkFilter";
 import { FullPageLoader } from "./components/FullPageLoader";
 import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
@@ -57,6 +58,7 @@ function AppContent() {
 
   return (
     <>
+      <ChalkFilter />
       <SentryErrorBoundary
         fallback={({ error, resetError }) => (
           <div className="flex min-h-screen flex-col items-center justify-center p-4">

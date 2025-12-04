@@ -4,8 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
+import { ChatControlBar } from "../components/chat/ChatControlBar";
+import { ChatHeader } from "../components/chat/ChatHeader";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { ContextDropdownBar } from "../components/chat/ContextDropdownBar";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
@@ -252,6 +253,7 @@ export default function Chat() {
         <BookPageAnimator pageKey={activeConversationId || "new"}>
           <div className="flex h-[calc(var(--vh,1vh)*100)] flex-col">
             <h1 className="sr-only">Disa AI – Chat</h1>
+            <ChatHeader />
             <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
             <main
@@ -288,18 +290,12 @@ export default function Chat() {
             </main>
 
             {/* Unified Input Area */}
-            <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+            <div className="z-sticky-content pb-16">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
                 onSend={handleSend}
                 isLoading={isLoading}
-              />
-              <ContextDropdownBar
-                models={modelCatalog}
-                modelsLoading={modelsLoading}
-                modelsError={modelsError}
-                onRefreshModels={refreshModels}
               />
             </div>
           </div>
@@ -318,6 +314,9 @@ export default function Chat() {
         onSelect={handleSelectConversation}
         onNewChat={handleStartNewChat}
       />
+
+      {/* Chat Control Bar - Fixed at bottom */}
+      <ChatControlBar modelCatalog={modelCatalog} />
     </>
   );
 }
