@@ -9,6 +9,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { DEFAULT_MODEL_ID } from "@/config/modelPresets";
 import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import type { UIRole } from "@/data/roles";
@@ -269,6 +270,13 @@ export function UnifiedInputBar({
     }
   };
 
+  const hasActiveRole = activeRole !== null;
+  const hasCustomStyle = settings.discussionPreset !== "locker_neugierig";
+  const hasCustomCreativity = (settings.creativity ?? 45) !== 45;
+  const hasCustomModel = Boolean(
+    settings.preferredModelId && settings.preferredModelId !== DEFAULT_MODEL_ID,
+  );
+
   return (
     <div
       ref={containerRef}
@@ -279,9 +287,9 @@ export function UnifiedInputBar({
       }}
     >
       {/* Unified Chat Bar Container */}
-      <div className="rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.90)] backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.3)] p-2.5">
+      <div className="rounded-2xl border border-[var(--border-chalk-strong)] bg-[rgba(16,18,22,0.92)] backdrop-blur-lg shadow-[0_16px_38px_rgba(0,0,0,0.42)] ring-1 ring-[rgba(243,214,138,0.06)] p-3">
         {/* Input Row */}
-        <div className="flex items-end gap-2.5 mb-2.5">
+        <div className="flex items-end gap-2.5 mb-3">
           <div className="relative flex-1">
             <Textarea
               ref={textareaRef}
@@ -290,7 +298,7 @@ export function UnifiedInputBar({
               onKeyDown={handleKeyDown}
               placeholder="Formuliere deine Frage…"
               aria-label="Nachricht eingeben"
-              className="input-chalk w-full min-h-[36px] max-h-[160px] resize-none px-2.5 py-1.5 placeholder:text-chalk-dim/50 text-[14px]"
+              className="input-chalk w-full min-h-[40px] max-h-[160px] resize-none rounded-xl bg-[rgba(255,255,255,0.02)] px-3 py-2 text-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] placeholder:text-chalk-dim/60"
               rows={1}
               data-testid="composer-input"
             />
@@ -301,7 +309,7 @@ export function UnifiedInputBar({
               onClick={onSend}
               disabled={!value.trim() || isLoading}
               className={cn(
-                "btn-chalk h-9 w-9 flex items-center justify-center",
+                "h-10 w-10 flex items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--accent-primary)_60%,transparent)] bg-[var(--accent-primary)] text-[var(--ink-on-accent)] shadow-[0_12px_28px_rgba(243,214,138,0.35)] transition hover:translate-y-[-1px] hover:shadow-[0_16px_36px_rgba(243,214,138,0.4)]",
                 !value.trim() && "opacity-50 cursor-not-allowed",
               )}
               aria-label="Senden"
@@ -320,12 +328,18 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("role")}
               ref={triggerRefs.role}
               className={cn(
-                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
-                "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
-                openDropdown === "role" &&
-                  "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
+                "h-8 px-2.5 flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(18,20,24,0.82)] text-[12px] text-chalk-dim/90 shadow-[0_8px_18px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all duration-150",
+                "hover:border-[color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:bg-[rgba(24,26,32,0.95)]",
+                (openDropdown === "role" || hasActiveRole) &&
+                  "border-[color-mix(in_srgb,var(--accent-primary)_65%,transparent)] text-text-primary shadow-[0_10px_26px_rgba(243,214,138,0.28)]",
               )}
             >
+              {hasActiveRole ? (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_4px_rgba(243,214,138,0.18)]"
+                  aria-hidden
+                />
+              ) : null}
               <User className="h-3.5 w-3.5 stroke-[1.5]" />
               <span className="whitespace-nowrap">Rolle</span>
               <ChevronDown className="h-3 w-3 stroke-[1.5] text-ink-tertiary" />
@@ -385,12 +399,18 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("style")}
               ref={triggerRefs.style}
               className={cn(
-                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
-                "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
-                openDropdown === "style" &&
-                  "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
+                "h-8 px-2.5 flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(18,20,24,0.82)] text-[12px] text-chalk-dim/90 shadow-[0_8px_18px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all duration-150",
+                "hover:border-[color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:bg-[rgba(24,26,32,0.95)]",
+                (openDropdown === "style" || hasCustomStyle) &&
+                  "border-[color-mix(in_srgb,var(--accent-primary)_65%,transparent)] text-text-primary shadow-[0_10px_26px_rgba(243,214,138,0.28)]",
               )}
             >
+              {hasCustomStyle ? (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_4px_rgba(243,214,138,0.18)]"
+                  aria-hidden
+                />
+              ) : null}
               <Feather className="h-3.5 w-3.5 stroke-[1.5]" />
               <span className="whitespace-nowrap">Stil</span>
               <ChevronDown className="h-3 w-3 stroke-[1.5] text-ink-tertiary" />
@@ -425,12 +445,18 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("creativity")}
               ref={triggerRefs.creativity}
               className={cn(
-                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
-                "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
-                openDropdown === "creativity" &&
-                  "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
+                "h-8 px-2.5 flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(18,20,24,0.82)] text-[12px] text-chalk-dim/90 shadow-[0_8px_18px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all duration-150",
+                "hover:border-[color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:bg-[rgba(24,26,32,0.95)]",
+                (openDropdown === "creativity" || hasCustomCreativity) &&
+                  "border-[color-mix(in_srgb,var(--accent-primary)_65%,transparent)] text-text-primary shadow-[0_10px_26px_rgba(243,214,138,0.28)]",
               )}
             >
+              {hasCustomCreativity ? (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_4px_rgba(243,214,138,0.18)]"
+                  aria-hidden
+                />
+              ) : null}
               <Brain className="h-3.5 w-3.5 stroke-[1.5]" />
               <span className="whitespace-nowrap">Kreativ</span>
               <ChevronDown className="h-3 w-3 stroke-[1.5] text-ink-tertiary" />
@@ -464,12 +490,18 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("model")}
               ref={triggerRefs.model}
               className={cn(
-                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
-                "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
-                openDropdown === "model" &&
-                  "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
+                "h-8 px-2.5 flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(18,20,24,0.82)] text-[12px] text-chalk-dim/90 shadow-[0_8px_18px_rgba(0,0,0,0.32)] backdrop-blur-sm transition-all duration-150",
+                "hover:border-[color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:bg-[rgba(24,26,32,0.95)]",
+                (openDropdown === "model" || hasCustomModel) &&
+                  "border-[color-mix(in_srgb,var(--accent-primary)_65%,transparent)] text-text-primary shadow-[0_10px_26px_rgba(243,214,138,0.28)]",
               )}
             >
+              {hasCustomModel ? (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_4px_rgba(243,214,138,0.18)]"
+                  aria-hidden
+                />
+              ) : null}
               <Cpu className="h-3.5 w-3.5 stroke-[1.5]" />
               <span className="whitespace-nowrap">Modell</span>
               <ChevronDown className="h-3 w-3 stroke-[1.5] text-ink-tertiary" />
