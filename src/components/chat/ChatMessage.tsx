@@ -101,13 +101,20 @@ export function ChatMessage({
   const parsedContent = parseMessageContent(message.content);
 
   // Schiefer & Kreide: feine Kreidelinien auf mattem Schiefer
+  const chalkNoiseBorder =
+    "after:pointer-events-none after:absolute after:inset-[0.5px] after:rounded-[inherit] after:border after:border-[var(--border-chalk-strong)] after:opacity-35 after:[mask-image:conic-gradient(from_0deg,_rgba(0,0,0,0.35)_0deg,_transparent_60deg,rgba(0,0,0,0.35)_130deg,_transparent_200deg,rgba(0,0,0,0.35)_280deg,_transparent_330deg,_rgba(0,0,0,0.35)_360deg)]";
+
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-3 py-2 sm:px-4 sm:py-3",
-    "shadow-[0_0_0_1px_var(--border-chalk)] backdrop-blur-[0.5px] text-text-primary",
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-2 py-1.5 sm:px-2 sm:py-2",
+    "backdrop-blur-[0.25px] text-text-primary",
     isUser &&
-      "ml-auto border border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.03)] shadow-[0_0_0_1px_var(--border-chalk-strong),0_1px_0_rgba(255,255,255,0.03)]",
+      cn("ml-auto border border-[var(--border-chalk-strong)] bg-transparent", chalkNoiseBorder),
     isAssistant &&
-      "mr-auto border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] shadow-[0_0_0_1px_var(--border-chalk),-2px_0_0_var(--accent-primary)]",
+      cn(
+        "mr-auto border border-[var(--border-chalk-strong)] bg-transparent",
+        "before:absolute before:-left-1 before:top-1 before:bottom-1 before:w-px before:rounded-full before:bg-[var(--accent-primary)]",
+        chalkNoiseBorder,
+      ),
     isSystem &&
       "mx-auto max-w-[95%] sm:max-w-2xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-center opacity-80",
   );
@@ -142,7 +149,7 @@ export function ChatMessage({
 
   return (
     <div
-      className={cn("group relative px-2 py-2 sm:px-4 sm:py-3", isSystem && "opacity-70")}
+      className={cn("group relative px-3 py-3 sm:px-5 sm:py-4", isSystem && "opacity-70")}
       data-testid="message.item"
     >
       {/* Message Bubble - Tinte auf Papier Stil */}
