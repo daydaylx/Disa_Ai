@@ -12,7 +12,7 @@ import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import type { UIRole } from "@/data/roles";
 import { useSettings } from "@/hooks/useSettings";
-import { Brain, Check, ChevronDown, Cpu, Feather, Sparkles, User, Waves } from "@/lib/icons";
+import { Brain, Check, ChevronDown, Cpu, Feather, SlidersHorizontal, Sparkles, User, Waves } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 
