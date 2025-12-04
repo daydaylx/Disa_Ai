@@ -479,9 +479,7 @@ function AdvancedSettingsSheet({
 
           {/* Kreativität */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-ink-secondary">
-              Kreativität
-            </label>
+            <label className="mb-2 block text-sm font-medium text-ink-secondary">Kreativität</label>
             <div className="space-y-1">
               {creativityOptions.map((option) => {
                 const isSelected = (settings.creativity ?? 45) === option.id;
