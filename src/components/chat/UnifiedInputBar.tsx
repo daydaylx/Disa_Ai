@@ -86,6 +86,7 @@ function DropdownPanel({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const PANEL_WIDTH = 260;
   const panelRef = useRef<HTMLDivElement>(null);
   const [placement, setPlacement] = useState<"bottom" | "top">("bottom");
   const [maxHeight, setMaxHeight] = useState<number | undefined>();
@@ -104,6 +105,8 @@ function DropdownPanel({
 
       const rect = anchor.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const horizontalPadding = 12;
       const spaceBelow = viewportHeight - rect.bottom - 12;
       const spaceAbove = rect.top - 12;
       const shouldPlaceBottom = spaceBelow >= spaceAbove;
@@ -111,16 +114,21 @@ function DropdownPanel({
       const availableSpace = shouldPlaceBottom ? spaceBelow : spaceAbove;
       setMaxHeight(Math.max(0, Math.min(availableSpace, 320)));
 
+      const clampedLeft = Math.min(
+        Math.max(rect.left, horizontalPadding),
+        Math.max(horizontalPadding, viewportWidth - PANEL_WIDTH - horizontalPadding),
+      );
+
       // Calculate fixed position
       if (shouldPlaceBottom) {
         setPosition({
           top: rect.bottom + 8,
-          left: rect.left,
+          left: clampedLeft,
         });
       } else {
         setPosition({
           bottom: viewportHeight - rect.top + 8,
-          left: rect.left,
+          left: clampedLeft,
         });
       }
     };
