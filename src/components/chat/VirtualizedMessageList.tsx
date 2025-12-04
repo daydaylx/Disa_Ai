@@ -187,13 +187,14 @@ export function VirtualizedMessageList({
           </div>
         )}
 
+        {/* Scroll to Bottom FAB - Fixed Position */}
         {!isSticking && (
-          <div className="flex justify-center py-2">
+          <div className="pointer-events-none fixed bottom-28 left-1/2 z-fab -translate-x-1/2 animate-in fade-in slide-in-from-bottom-4 duration-200">
             <Button
               onClick={() => scrollToBottom()}
-              variant="secondary"
+              variant="primary"
               size="sm"
-              className="rounded-full"
+              className="pointer-events-auto rounded-full shadow-lg hover:shadow-xl"
               aria-label="Zu neuen Nachrichten scrollen"
             >
               ↓ Nach unten

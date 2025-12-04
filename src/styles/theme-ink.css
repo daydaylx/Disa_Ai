@@ -1,87 +1,75 @@
 /**
- * DISA AI - INK ON PAPER THEME
+ * DISA AI - SCHIEFER & KREIDE THEME
  *
- * Concept: "Tinte auf Papier" - Calm book aesthetic
- *
- * Colors:
- * - Off-white paper backgrounds
- * - Dark ink text
- * - Muted indigo accents
+ * Konzept: Matte Schieferoberfläche mit digitaler Kreide.
+ * Ruhig, analog, warm und klar.
  */
 
 :root {
   /* ========================================
-   * COLOR PALETTE
+   * COLOR PALETTE (Schiefer)
    * ======================================== */
 
-  /* Paper Backgrounds */
-  --bg-app: hsl(45, 25%, 96%); /* App background - Warm off-white */
-  --bg-page: hsl(45, 20%, 98%); /* Page/Chat background - Slightly lighter */
-  --bg-surface: hsl(45, 20%, 98%); /* For cards/surfaces */
+  /* Slate Backgrounds */
+  --bg-app: #0e0e0f; /* Mattschwarzer Schiefer */
+  --bg-slate: #131314; /* Leicht heller, mit Textur */
 
-  /* Ink Colors */
-  --ink-primary: hsl(220, 15%, 18%); /* Dark Blue-Black */
-  --ink-secondary: hsl(220, 10%, 50%); /* Muted Grey */
-  --ink-tertiary: hsl(220, 10%, 55%); /* Light Grey - Timestamps, Hints (boosted contrast) */
-  --ink-on-accent: hsl(45, 20%, 98%); /* Light text on accent */
+  --bg-page: var(--bg-slate); /* Mapping for compatibility */
+  --bg-surface: #1a1a1c; /* Slightly lighter for surfaces */
+  --bg-surface-strong: #222225;
 
-  /* Accent Colors */
-  --accent-primary: hsl(260, 35%, 45%); /* Muted Indigo/Violet */
-  --accent-secondary: hsl(260, 25%, 65%); /* Lighter Violet */
-  --accent-hover: hsl(260, 40%, 40%);
+  /* Chalk Text */
+  --ink-primary: #ececec; /* text-chalk */
+  --ink-secondary: #9e9e9e; /* text-fade */
+  --ink-tertiary: #757575;
+  --ink-on-accent: #0e0e0f;
 
-  /* Semantic Colors */
-  --color-success: hsl(140, 40%, 45%);
-  --color-warning: hsl(35, 80%, 50%);
-  --color-error: hsl(0, 60%, 45%);
+  /* Chalk Accents */
+  --accent-primary: #a7c8ff; /* accent-chalk-blue */
+  --accent-secondary: #ffefa6; /* accent-yellow */
+  --accent-tertiary: #ffcad4; /* accent-pink */
+  --accent-hover: #8ab4ff;
+
+  /* Semantic Colors aligned to chalk warmth */
+  --color-success: #a5d6a7;
+  --color-warning: var(--accent-secondary);
+  --color-error: #ef9a9a;
 
   /* Mapping to existing variable names for compatibility */
   --bg-base: var(--bg-app);
   --bg-0: var(--bg-app);
   --bg-1: var(--bg-page);
-  --bg-2: var(--bg-page);
+  --bg-2: var(--bg-surface);
 
   --surface-1: var(--bg-page);
-  --surface-2: var(--bg-page); /* No elevation distinction by color, use shadow */
-  --surface-3: hsl(45, 15%, 92%); /* Hover state */
-  --surface-inset: hsl(45, 10%, 94%);
+  --surface-2: var(--bg-surface);
+  --surface-3: var(--bg-surface-strong);
+  --surface-inset: #0a0a0b;
 
   --text-primary: var(--ink-primary);
   --text-secondary: var(--ink-secondary);
-  --text-muted: var(--ink-secondary);
-  --text-disabled: hsl(220, 10%, 65%);
+  --text-muted: var(--ink-tertiary);
+  --text-disabled: rgba(158, 158, 158, 0.5);
   --text-on-accent: var(--ink-on-accent);
 
   --accent: var(--accent-primary);
   --brand: var(--accent-primary);
 
   /* ========================================
-   * SHADOWS & BORDERS
+   * SHADOWS & BORDERS (digitale Kreide)
    * ======================================== */
 
-  /* Subtle Paper Shadows */
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-floating: 0 4px 12px rgba(0, 0, 0, 0.12);
+  /* Shadows - minimal, mostly for separation */
+  --shadow-paper: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
 
-  /* Map to existing names */
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
-  --shadow-soft-raise: var(--shadow-paper);
-  --shadow-strong-raise: var(--shadow-floating);
-  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 
-  /* Legacy mappings for component compatibility */
-  --shadow-raise: var(--shadow-paper);
-  --shadow-raiseLg: var(--shadow-floating);
-
-  /* Glow effects for brand and accent colors */
-  --shadow-brandGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
-  --shadow-accentGlow: 0 0 20px hsla(260, 35%, 45%, 0.25);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 35%, 45%, 0.3);
-
-  /* Borders */
-  --border-color: hsl(45, 10%, 90%);
+  /* Borders - Chalk Lines */
+  --border-color: rgba(236, 236, 236, 0.15);
+  --border-chalk: rgba(236, 236, 236, 0.3);
+  --border-chalk-strong: rgba(236, 236, 236, 0.6);
   --border-width: 1px;
 
   /* Radius */
@@ -93,46 +81,103 @@
    * TYPOGRAPHY
    * ======================================== */
 
-  --font-sans: system-ui, -apple-system, sans-serif; /* Clean Sans */
-
-  --text-base: 17px; /* Mobile legible */
+  --font-sans: "Inter", "IBM Plex Sans", "Cabin", system-ui, -apple-system, sans-serif;
+  --text-base: 16px; /* slightly smaller for cleaner look? Spec said 17px base previously but standard is 16 */
   --leading-normal: 1.6;
-  --font-serif: Lora, serif;
-}
 
-:root {
-  --bg-page-texture: var(--bg-page) var(--noise-texture-light);
+  /* ========================================
+   * TEXTURES
+   * ======================================== */
+
+  /* 3-6% noise simulation via repeating gradient or base64 (applied in index.css typically) */
+  /* Here we define the color for the overlay */
+  --noise-overlay-color: rgba(255, 255, 255, 0.04);
+
+  /* Chalk Noise Pattern - subtle grain texture for slate surface */
+  --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.05"/></svg>');
+
+  /* Chalk Glow for text and borders */
+  --chalk-glow: 0 0 8px rgba(236, 236, 236, 0.15), 0 0 2px rgba(236, 236, 236, 0.2);
+  --chalk-glow-strong: 0 0 12px rgba(236, 236, 236, 0.25), 0 0 4px rgba(236, 236, 236, 0.3);
+  --chalk-glow-accent: 0 0 10px rgba(167, 200, 255, 0.3), 0 0 4px rgba(167, 200, 255, 0.4);
+
+  /* Chalk Line - subtle blur for hand-drawn effect */
+  --border-chalk-blur: rgba(236, 236, 236, 0.35);
+  --chalk-line-shadow: 0 0 1px rgba(236, 236, 236, 0.4);
+
+  /* Chalk Dust Particles - for interactive elements */
+  --chalk-dust:
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.025) 0%, transparent 45%);
+
+  /* Enhanced Shadows for depth */
+  --shadow-slate-soft: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  --shadow-slate-deep: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  /* Improved Border with texture */
+  --border-ink: rgba(236, 236, 236, 0.12);
 }
 
 :root[data-theme="dark"] {
-  --bg-page-texture: var(--bg-page) var(--noise-texture-dark);
+  /* Ensure consistency in dark mode */
+  --bg-app: #0e0e0f;
+  --bg-page: #131314;
 }
 
-/* Dark Mode Overrides - "Slate & Chalk" Metaphor */
-:root[data-theme="dark"] {
-  /* Slate Backgrounds */
-  --bg-app: hsl(220, 20%, 14%); /* Deep Slate */
-  --bg-page: hsl(220, 18%, 18%); /* Slightly lighter Slate Page */
-  --bg-surface: hsl(220, 18%, 20%); /* Cards */
+/* ========================================
+ * CHALK UTILITY CLASSES
+ * ======================================== */
 
-  /* Chalk Text */
-  --ink-primary: hsl(40, 10%, 92%); /* Chalk White */
-  --ink-secondary: hsl(220, 15%, 70%); /* Muted Chalk */
-  --ink-tertiary: hsl(220, 15%, 55%);
+.chalk-text {
+  text-shadow: var(--chalk-glow);
+  letter-spacing: 0.02em;
+}
 
-  /* Bioluminescent Accents */
-  --accent-primary: hsl(260, 60%, 70%); /* Glowing Violet */
-  --accent-secondary: hsl(260, 40%, 50%);
-  --accent-hover: hsl(260, 70%, 75%);
+.chalk-text-strong {
+  text-shadow: var(--chalk-glow-strong);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
 
-  --border-color: hsl(220, 15%, 25%);
+.chalk-border {
+  border-color: var(--border-chalk);
+  box-shadow: var(--chalk-line-shadow);
+}
 
-  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
+.chalk-border-strong {
+  border-color: var(--border-chalk-strong);
+  box-shadow: var(--chalk-glow);
+}
 
-  /* Dark mode glow effects */
-  --shadow-brandGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
-  --shadow-brandGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
-  --shadow-accentGlow: 0 0 20px hsla(260, 60%, 70%, 0.2);
-  --shadow-accentGlowLg: 0 0 32px hsla(260, 60%, 70%, 0.3);
+.slate-surface {
+  background-color: var(--bg-surface);
+  background-image: var(--chalk-noise);
+  background-blend-mode: overlay;
+}
+
+.slate-surface-raised {
+  background-color: var(--bg-surface);
+  background-image: var(--chalk-noise), var(--chalk-dust);
+  background-blend-mode: overlay, screen;
+  box-shadow: var(--shadow-slate-soft);
+}
+
+/* Chalk-style focus states */
+.chalk-focus:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--border-chalk-strong),
+    var(--chalk-glow-accent);
+}
+
+/* Subtle texture overlay for containers */
+.slate-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--chalk-noise);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
 }

@@ -1,0 +1,6 @@
+# Local Development Environment Variables for Cloudflare Functions
+# Copy this file to .dev.vars and fill in your actual values
+# NEVER commit .dev.vars to git!
+
+# OpenRouter API Key (get one at https://openrouter.ai/keys)
+OPENROUTER_API_KEY=sk-or-v1-your-key-here

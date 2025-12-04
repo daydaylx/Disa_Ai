@@ -18,6 +18,8 @@ import {
   Skeleton,
 } from "@/ui";
 
+import { resolveInitialModelId } from "./resolveInitialModelId";
+
 interface ModelsCatalogProps {
   className?: string;
 }
@@ -56,12 +58,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       .then((data) => {
         if (!active) return;
         setCatalog(data);
-        const preferred = data.find((m) => m.id === settings.preferredModelId);
-        setSelectedId(preferred?.id ?? data[0]?.id ?? null);
+        const resolvedModelId = resolveInitialModelId(settings.preferredModelId, data);
+        setSelectedId(resolvedModelId);
       })
       .catch(() => {
         if (!active) return;
         setCatalog([]);
+        setSelectedId(null);
       });
     return () => {
       active = false;
@@ -84,7 +87,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
     });
   }, [catalog, search]);
 
-  const activeModelId = selectedId ?? settings.preferredModelId;
+  const resolvedPreferredModelId = useMemo(
+    () => resolveInitialModelId(settings.preferredModelId, catalog),
+    [catalog, settings.preferredModelId],
+  );
+
+  const activeModelId = selectedId ?? resolvedPreferredModelId;
+  const hasSelectedModel = Boolean(activeModelId);
 
   return (
     <div className={cn("flex h-full flex-col gap-4", className)}>
@@ -122,15 +131,28 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
           <div className="flex flex-wrap gap-2 rounded-xl border border-border-ink/20 bg-surface-2 px-3 py-2 text-xs text-ink-secondary">
             <Badge variant="outline" className="flex items-center gap-1 text-[11px]">
               <Zap className="h-3.5 w-3.5 text-accent-primary" />
-              {settings.preferredModelId}
+              {activeModelId ?? "Kein Modell"}
             </Badge>
             <Badge variant="secondary" className="text-[11px]">
-              Kontext:{" "}
-              {getContextTokens(catalog?.find((m) => m.id === settings.preferredModelId)) || "—"}{" "}
+              Kontext: {getContextTokens(catalog?.find((m) => m.id === activeModelId)) || "—"}{" "}
               Tokens
             </Badge>
           </div>
         </div>
+
+        {catalog !== null && !hasSelectedModel && (
+          <div className="mt-3 flex items-start gap-3 rounded-xl border border-border-ink/20 bg-surface-2 px-3 py-2 text-sm text-ink-secondary">
+            <Sparkles className="h-4 w-4 text-ink-secondary" />
+            <div>
+              <p className="font-medium text-ink-primary">
+                Kein Modell ausgewählt – bitte auswählen
+              </p>
+              <p className="text-xs text-ink-secondary">
+                Wähle ein Modell aus der Liste, um modellabhängige Aktionen freizuschalten.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[320px,1fr]">

@@ -13,14 +13,15 @@ describe("Button", () => {
   it("applies primary variant classes", () => {
     render(<Button variant="primary">Primary</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("bg-accent-primary");
-    expect(button.className).toContain("text-surface-1");
+    // Updated to match Slate & Chalk specs
+    expect(button.className).toContain("border-[var(--border-chalk)]");
+    expect(button.className).toContain("bg-[var(--bg-slate)]");
   });
 
   it("applies secondary variant classes", () => {
     render(<Button variant="secondary">Secondary</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("bg-surface-2");
-    expect(button.className).toContain("border-border-ink");
+    expect(button.className).toContain("border-[var(--border-chalk)]");
+    expect(button.className).toContain("bg-transparent");
   });
 });

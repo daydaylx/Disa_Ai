@@ -43,7 +43,7 @@ export function UnifiedInputBar({
           block: "nearest",
           inline: "nearest",
         });
-      }, 150);
+      }, 50);
       return () => clearTimeout(timer);
     }
     return undefined;
@@ -66,8 +66,8 @@ export function UnifiedInputBar({
           "calc(max(var(--keyboard-offset, 0px), env(safe-area-inset-bottom, 0px)) + 0.5rem)",
       }}
     >
-      <div className="flex items-end gap-2 rounded-2xl border border-border-ink bg-surface-1 p-2 shadow-sm transition-shadow focus-within:border-ink-primary/30 focus-within:shadow-md sm:gap-3 sm:p-3">
-        <div className="relative flex-1">
+      <div className="slate-surface-raised flex items-end gap-2 rounded-2xl border chalk-border p-2 transition-all duration-200 focus-within:chalk-border-strong focus-within:shadow-[var(--shadow-slate-deep)] sm:gap-3 sm:p-3">
+        <div className="relative z-10 flex-1">
           <Textarea
             ref={textareaRef}
             value={value}
@@ -75,21 +75,23 @@ export function UnifiedInputBar({
             onKeyDown={handleKeyDown}
             placeholder="Schreibe..."
             aria-label="Nachricht eingeben"
-            className="w-full min-h-[40px] max-h-[180px] resize-none border-0 bg-transparent px-3 py-2 text-base leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus-visible:ring-0 sm:px-4 sm:py-3"
+            className="chalk-text w-full min-h-[40px] max-h-[180px] resize-none border-0 bg-transparent px-3 py-2 text-base leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus-visible:ring-0 sm:px-4 sm:py-3"
             rows={1}
             data-testid="composer-input"
           />
         </div>
 
-        <div className="flex-shrink-0">
+        <div className="z-10 flex-shrink-0">
           <Button
             onClick={onSend}
             disabled={!value.trim() || isLoading}
             size="icon"
             variant={value.trim() ? "primary" : "ghost"}
             className={cn(
-              "h-10 w-10 rounded-full transition-all",
-              value.trim() ? "shadow-md hover:shadow-lg" : "text-ink-tertiary hover:bg-black/5",
+              "h-10 w-10 rounded-full transition-all chalk-focus",
+              value.trim()
+                ? "shadow-[var(--shadow-slate-soft)] hover:shadow-[var(--shadow-slate-deep),var(--chalk-glow-accent)]"
+                : "text-ink-tertiary hover:bg-[rgba(255,255,255,0.06)]",
             )}
             aria-label="Senden"
           >

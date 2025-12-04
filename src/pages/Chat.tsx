@@ -4,8 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToasts } from "@/ui";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
-import { ChatControlBar } from "../components/chat/ChatControlBar";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { ContextDropdownBar } from "../components/chat/ContextDropdownBar";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
@@ -38,7 +38,12 @@ export default function Chat() {
   const [searchParams] = useSearchParams();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
-  const { models: modelCatalog } = useModelCatalog();
+  const {
+    models: modelCatalog,
+    loading: modelsLoading,
+    error: modelsError,
+    refresh: refreshModels,
+  } = useModelCatalog();
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
@@ -284,12 +289,17 @@ export default function Chat() {
 
             {/* Unified Input Area */}
             <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
-              <ChatControlBar modelCatalog={modelCatalog} />
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
                 onSend={handleSend}
                 isLoading={isLoading}
+              />
+              <ContextDropdownBar
+                models={modelCatalog}
+                modelsLoading={modelsLoading}
+                modelsError={modelsError}
+                onRefreshModels={refreshModels}
               />
             </div>
           </div>

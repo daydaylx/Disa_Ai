@@ -20,21 +20,21 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   return (
-    <div className="relative my-4 overflow-hidden rounded-lg border border-border-ink/30 bg-surface-1">
-      <div className="flex items-center justify-between border-b border-border-ink/20 px-4 py-2">
-        <span className="text-ink-tertiary text-xs font-medium uppercase tracking-wide">
+    <div className="relative my-4 overflow-hidden rounded-xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] shadow-[0_0_0_1px_var(--border-chalk)]">
+      <div className="flex items-center justify-between border-b border-[var(--border-chalk)] px-4 py-2 backdrop-blur-sm">
+        <span className="text-ink-tertiary text-xs font-medium uppercase tracking-[0.08em]">
           {language || "Text"}
         </span>
         <Button
           variant="ghost"
           size="icon"
-          className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-7 w-7"
+          className="text-ink-tertiary hover:bg-[rgba(255,255,255,0.05)] hover:text-ink-primary h-8 w-8"
           onClick={() => void navigator.clipboard?.writeText(children)}
         >
           <Copy className="h-3.5 w-3.5" />
         </Button>
       </div>
-      <pre className="overflow-x-auto p-4 bg-surface-2/50">
+      <pre className="overflow-x-auto bg-[rgba(0,0,0,0.35)] p-4">
         <code className="text-ink-primary text-sm leading-relaxed font-mono">{children}</code>
       </pre>
     </div>
@@ -100,17 +100,16 @@ export function ChatMessage({
 
   const parsedContent = parseMessageContent(message.content);
 
-  // Tinte auf Papier: User rechts, KI links mit Akzentstreifen
+  // Schiefer & Kreide: feine Kreidelinien auf mattem Schiefer
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-md p-3 sm:p-4",
-    // User: rechts, dezent abgesetzter Hintergrund
-    isUser && "ml-auto bg-surface-2 border border-border-ink/20",
-    // KI: links, mit Tintenstreifen am linken Rand
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-3 py-2 sm:px-4 sm:py-3",
+    "shadow-[0_0_0_1px_var(--border-chalk)] backdrop-blur-[0.5px] text-text-primary",
+    isUser &&
+      "ml-auto border border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.03)] shadow-[0_0_0_1px_var(--border-chalk-strong),0_1px_0_rgba(255,255,255,0.03)]",
     isAssistant &&
-      "mr-auto bg-bg-page border border-border-ink/15 border-l-[3px] border-l-accent-primary",
-    // System: zentriert, dezent
+      "mr-auto border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] shadow-[0_0_0_1px_var(--border-chalk),-2px_0_0_var(--accent-primary)]",
     isSystem &&
-      "mx-auto max-w-[95%] sm:max-w-2xl bg-surface-1/50 border border-border-ink/10 text-center",
+      "mx-auto max-w-[95%] sm:max-w-2xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-center opacity-80",
   );
 
   const handleCopy = () => {
@@ -212,8 +211,8 @@ export function ChatMessage({
         {!isSystem && !isEditing && (
           <div
             className={cn(
-              "flex items-center gap-0.5 mt-2 pt-2 border-t border-border-ink/10 transition-opacity duration-150",
-              "opacity-70 group-hover:opacity-100",
+              "flex items-center gap-0.5 mt-2 pt-2 border-t border-[var(--border-chalk)] transition-opacity duration-150",
+              "opacity-80 group-hover:opacity-100",
               isUser ? "justify-end" : "justify-start",
             )}
           >
@@ -275,7 +274,7 @@ export function ChatMessage({
                 variant="secondary"
                 size="sm"
                 onClick={() => handleFollowUp(suggestion)}
-                className="text-xs bg-surface-1 border-border-ink/20 text-ink-secondary hover:text-ink-primary"
+                className="text-xs border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-ink-secondary hover:border-[var(--border-chalk-strong)] hover:text-ink-primary"
               >
                 {suggestion}
               </Button>
