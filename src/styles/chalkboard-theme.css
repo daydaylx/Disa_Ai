@@ -7,15 +7,19 @@
 
 :root {
   /* Tafel-Hintergrund */
-  --chalkboard-bg: #0a0a0b;
-  --chalkboard-vignette: radial-gradient(ellipse at center, rgba(26, 26, 28, 0.3) 0%, rgba(10, 10, 11, 0.8) 100%);
+  --chalkboard-bg: var(--bg-app, #0b0c0d);
+  --chalkboard-vignette: radial-gradient(
+    ellipse at center,
+    rgba(26, 26, 28, 0.18) 0%,
+    rgba(10, 10, 11, 0.55) 100%
+  );
 
   /* Tafel-Textur */
-  --chalkboard-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="chalkboard"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0.1"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.02 0.02 0.03 0.03 0.02 0.02 0"/></feComponentTransfer></filter><rect width="400" height="400" filter="url(%23chalkboard)" opacity="0.4"/></svg>');
+  --chalkboard-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="chalkboard"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0.08"/><feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer></filter><rect width="400" height="400" filter="url(%23chalkboard)" opacity="0.28"/></svg>');
 
   /* Kreide-Effekte */
-  --chalk-stroke: 1.5px;
-  --chalk-stroke-rough: 2px;
+  --chalk-stroke: 1px;
+  --chalk-stroke-rough: 1.25px;
   --chalk-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="chalk-texture"><feTurbulence type="turbulence" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.1 0.1 0.2 0.1 0.1 0"/></feComponentTransfer></filter><rect width="100" height="100" filter="url(%23chalk-texture)" opacity="0.3"/></svg>');
 
   /* Kreide-Farben */
@@ -25,21 +29,22 @@
   --chalk-yellow: rgba(255, 239, 166, 0.9);
 
   /* Kreide-Schatten und Glühen */
-  --chalk-glow-text: 0 0 3px rgba(236, 236, 236, 0.4), 0 0 1px rgba(236, 236, 236, 0.6);
-  --chalk-glow-strong: 0 0 6px rgba(236, 236, 236, 0.5), 0 0 2px rgba(236, 236, 236, 0.7);
-  --chalk-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --chalk-glow-text: 0 0 1.5px rgba(236, 236, 236, 0.28), 0 0 1px rgba(236, 236, 236, 0.36);
+  --chalk-glow-strong: 0 0 4px rgba(236, 236, 236, 0.32), 0 0 2px rgba(236, 236, 236, 0.4);
+  --chalk-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
 }
 
 /* Tafel-Hintergrund für die gesamte Chat-Seite */
 .chalkboard-container {
   background-color: var(--chalkboard-bg);
-  background-image: var(--chalkboard-texture), var(--chalkboard-vignette);
-  background-blend-mode: overlay, multiply;
-  background-size: 400px 400px, 100% 100%;
+  background-image: var(--chalkboard-texture), var(--chalk-noise), var(--chalkboard-vignette);
+  background-blend-mode: soft-light, overlay, multiply;
+  background-size: 320px 320px, 100% 100%, 100% 100%;
   background-position: 0 0, center;
-  background-attachment: fixed, scroll;
-  min-height: 100vh;
+  background-attachment: fixed, scroll, scroll;
+  min-height: calc(var(--vh, 1vh) * 100);
   position: relative;
+  isolation: isolate;
 }
 
 /* Vignette-Effekt für den Rand */
@@ -50,8 +55,8 @@
   background: radial-gradient(
     ellipse at center,
     transparent 0%,
-    rgba(10, 10, 11, 0.2) 60%,
-    rgba(10, 10, 11, 0.6) 100%
+    rgba(10, 10, 11, 0.12) 58%,
+    rgba(10, 10, 11, 0.45) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -59,34 +64,32 @@
 
 /* Chat-Blasen im Kreidestil */
 .chalk-bubble {
-  background-color: transparent;
+  background-color: rgba(22, 22, 24, 0.45);
   background-image: var(--chalk-texture);
   background-blend-mode: overlay;
   border: var(--chalk-stroke) solid var(--chalk-white);
-  border-radius: 16px;
-  box-shadow:
-    var(--chalk-shadow),
-    0 0 0 1px rgba(236, 236, 236, 0.1),
-    inset 0 0 10px rgba(236, 236, 236, 0.05);
+  border-radius: 12px;
+  box-shadow: var(--chalk-shadow);
   position: relative;
-  backdrop-filter: blur(0.5px);
+  backdrop-filter: blur(1px) saturate(105%);
 }
 
 /* Unregelmäßiger Kreide-Rand-Effekt */
 .chalk-bubble::before {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: -0.5px;
   border-radius: inherit;
   background: linear-gradient(
     45deg,
     transparent 30%,
-    rgba(236, 236, 236, 0.1) 50%,
+    rgba(236, 236, 236, 0.08) 50%,
     transparent 70%
   );
   mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="rough-edge"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="1"/></filter><rect width="100" height="100" filter="url(%23rough-edge)"/></svg>');
   mask-size: 100px 100px;
   pointer-events: none;
+  opacity: 0.7;
   z-index: -1;
 }
 
@@ -100,49 +103,45 @@
 
 /* Kreide-Buttons und Pills */
 .chalk-button {
-  background-color: transparent;
+  background-color: rgba(236, 236, 236, 0.03);
   background-image: var(--chalk-texture);
   border: var(--chalk-stroke) solid var(--chalk-white);
-  border-radius: 24px;
+  border-radius: 14px;
   color: var(--chalk-white);
   text-shadow: var(--chalk-glow-text);
   box-shadow: var(--chalk-shadow);
-  transition: all 0.2s ease;
-  backdrop-filter: blur(0.5px);
+  transition: all 0.18s ease;
+  backdrop-filter: blur(0.5px) saturate(105%);
 }
 
 .chalk-button:hover {
   border-color: var(--chalk-white-faded);
-  box-shadow:
-    var(--chalk-shadow),
-    0 0 4px rgba(236, 236, 236, 0.2);
-  background-color: rgba(236, 236, 236, 0.05);
+  box-shadow: var(--chalk-shadow);
+  background-color: rgba(236, 236, 236, 0.06);
 }
 
 .chalk-button:focus-visible {
   outline: none;
-  box-shadow:
-    0 0 0 2px var(--chalk-white-faded),
-    var(--chalk-glow-strong);
+  box-shadow: 0 0 0 2px rgba(167, 200, 255, 0.35), var(--chalk-shadow);
 }
 
 .chalk-button.active {
-  background-color: rgba(236, 236, 236, 0.1);
+  background-color: rgba(236, 236, 236, 0.08);
   border-color: var(--chalk-blue);
   color: var(--chalk-blue);
-  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
+  text-shadow: 0 0 2px rgba(167, 200, 255, 0.28);
 }
 
 /* Kreide-Eingabefeld */
 .chalk-input {
-  background-color: transparent;
+  background-color: rgba(236, 236, 236, 0.02);
   background-image: var(--chalk-texture);
   border: var(--chalk-stroke) solid var(--chalk-white);
-  border-radius: 20px;
+  border-radius: 12px;
   color: var(--chalk-white);
   text-shadow: var(--chalk-glow-text);
   box-shadow: var(--chalk-shadow);
-  backdrop-filter: blur(0.5px);
+  backdrop-filter: blur(0.5px) saturate(105%);
 }
 
 .chalk-input::placeholder {
@@ -154,70 +153,64 @@
 .chalk-input:focus {
   outline: none;
   border-color: var(--chalk-blue);
-  box-shadow:
-    var(--chalk-shadow),
-    0 0 4px rgba(167, 200, 255, 0.2);
+  box-shadow: var(--chalk-shadow);
 }
 
 /* Floating Action Button im Kreidestil */
 .chalk-fab {
-  background-color: transparent;
+  background-color: rgba(236, 236, 236, 0.03);
   background-image: var(--chalk-texture);
   border: var(--chalk-stroke) solid var(--chalk-white);
-  border-radius: 50%;
+  border-radius: 14px;
   color: var(--chalk-white);
   text-shadow: var(--chalk-glow-text);
-  box-shadow:
-    var(--chalk-shadow),
-    0 0 8px rgba(236, 236, 236, 0.3);
-  backdrop-filter: blur(0.5px);
-  transition: all 0.2s ease;
+  box-shadow: var(--chalk-shadow);
+  backdrop-filter: blur(0.5px) saturate(105%);
+  transition: all 0.18s ease;
 }
 
 .chalk-fab:hover {
   border-color: var(--chalk-blue);
   color: var(--chalk-blue);
-  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
-  box-shadow:
-    var(--chalk-shadow),
-    0 0 12px rgba(167, 200, 255, 0.4);
+  text-shadow: 0 0 2px rgba(167, 200, 255, 0.32);
+  box-shadow: var(--chalk-shadow);
 }
 
 /* Kreide-Pill-Menü */
 .chalk-pills-container {
-  background-color: rgba(10, 10, 11, 0.8);
-  border-radius: 30px;
-  padding: 4px;
-  backdrop-filter: blur(4px);
+  background-color: rgba(10, 10, 11, 0.75);
+  border-radius: 18px;
+  padding: 4px 6px;
+  backdrop-filter: blur(6px) saturate(110%);
   border: var(--chalk-stroke) solid var(--chalk-white-faded);
   box-shadow: var(--chalk-shadow);
 }
 
 .chalk-pill {
-  background-color: transparent;
+  background-color: rgba(236, 236, 236, 0.03);
   background-image: var(--chalk-texture);
   border: var(--chalk-stroke) solid var(--chalk-white);
-  border-radius: 20px;
+  border-radius: 12px;
   color: var(--chalk-white);
-  text-shadow: var(--chalk-glow-text);
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(0.5px);
+  text-shadow: 0 0 1px rgba(236, 236, 236, 0.2);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  transition: all 0.16s ease;
+  backdrop-filter: blur(1px) saturate(108%);
   white-space: nowrap;
 }
 
 .chalk-pill:hover {
-  background-color: rgba(236, 236, 236, 0.05);
+  background-color: rgba(236, 236, 236, 0.06);
   border-color: var(--chalk-white-faded);
 }
 
 .chalk-pill.active {
-  background-color: rgba(167, 200, 255, 0.1);
+  background-color: rgba(167, 200, 255, 0.08);
   border-color: var(--chalk-blue);
   color: var(--chalk-blue);
-  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
+  text-shadow: 0 0 2px rgba(167, 200, 255, 0.3);
 }
 
 /* Scrollbar im Tafel-Stil */
@@ -242,11 +235,11 @@
 /* Responsive Anpassungen */
 @media (max-width: 640px) {
   .chalk-pill {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 11.5px;
+    padding: 5px 10px;
   }
 
   .chalk-bubble {
-    border-radius: 12px;
+    border-radius: 10px;
   }
 }

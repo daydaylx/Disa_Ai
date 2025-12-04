@@ -261,7 +261,7 @@ export default function Chat() {
               onClick={() => {
                 /* TODO: Implementiere History-Funktion oder andere Aktion */
               }}
-              className="fixed right-4 top-20 z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 chalk-border bg-[rgba(19,19,20,0.85)] text-ink-primary backdrop-blur transition-all duration-200 hover:chalk-border-strong hover:bg-[rgba(19,19,20,0.95)] hover:shadow-[var(--chalk-glow)] active:scale-95"
+              className="fixed right-4 top-20 z-10 flex h-14 w-14 items-center justify-center rounded-xl border chalk-border bg-[rgba(19,19,20,0.85)] text-ink-primary backdrop-blur transition-all duration-200 hover:chalk-border-strong hover:bg-[rgba(19,19,20,0.95)] hover:shadow-[var(--chalk-glow)] active:scale-[0.98]"
               aria-label="Verlauf anzeigen"
             >
               <Clock className="h-6 w-6" />

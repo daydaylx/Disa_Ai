@@ -23,7 +23,7 @@ export function BookLayout({
   return (
     <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden">
       {/* Header / Top Edge of the Page */}
-      <header className="sticky top-0 z-header flex h-14 w-full items-center justify-between border-b chalk-border bg-[rgba(19,19,20,0.95)] px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
+      <header className="sticky top-0 z-header flex h-14 w-full items-center justify-between border-b border-[var(--border-color)] bg-[rgba(19,19,20,0.9)] px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
         {/* Left: Hamburger Menu */}
         <div className="flex items-center">
           <Button
@@ -38,7 +38,7 @@ export function BookLayout({
         </div>
         {/* Center: Title / Date */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center">
-          <h1 className="chalk-text-strong text-base font-serif tracking-[0.04em] text-ink-primary">
+          <h1 className="text-sm font-semibold font-sans tracking-[-0.01em] text-ink-primary/90">
             {title || "Disa AI"}
           </h1>
         </div>

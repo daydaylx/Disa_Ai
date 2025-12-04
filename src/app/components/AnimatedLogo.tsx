@@ -48,21 +48,24 @@ export function AnimatedLogo({
 
   return (
     <span
-      className={cn("text-ink-primary text-lg font-semibold tracking-tight", stateClass, className)}
+      className={cn(
+        "inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight",
+        stateClass,
+        className,
+      )}
       {...props}
     >
-      <span className="logo-animated">
-        {/* DISA part */}
-        <span className="logo-letter">D</span>
-        <span className="logo-letter">i</span>
-        <span className="logo-letter">s</span>
-        <span className="logo-letter">a</span>
+      <span className="logo-animated inline-flex items-baseline gap-[0.28em]">
+        {/* DISA part in hand-written style */}
+        <span className="logo-disa inline-flex items-baseline gap-[0.05em] font-hand text-[1.02em] leading-none tracking-[0.01em]">
+          <span className="logo-letter">D</span>
+          <span className="logo-letter">i</span>
+          <span className="logo-letter">s</span>
+          <span className="logo-letter">a</span>
+        </span>
 
-        {/* Space */}
-        <span className="inline-block w-[0.25em]" aria-hidden="true" />
-
-        {/* AI part with brand color */}
-        <span className="logo-ai-part text-brand">
+        {/* AI part in clean sans, desaturated */}
+        <span className="logo-ai-part inline-flex items-baseline gap-[0.06em] font-sans text-[0.96em] font-medium tracking-[-0.01em] text-ink-primary/90">
           <span className="logo-letter">A</span>
           <span className="logo-letter">I</span>
         </span>

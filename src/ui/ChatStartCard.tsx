@@ -36,17 +36,16 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
       />
 
       <p className="max-w-xl text-sm leading-relaxed text-text-secondary tracking-[0.01em]">
-        Starte ein neues Gespräch oder setze eine Unterhaltung fort. Kreideweiße Linien auf mattem
-        Schiefer halten den Fokus auf deinen Gedanken.
+        Formuliere deine Frage oder hol dir einen klaren Zweitblick. Matte Schieferoberfläche,
+        dezente Kreide – der Fokus liegt auf Inhalt, nicht auf Deko.
       </p>
 
       <div className="flex w-full max-w-md flex-col gap-3 sm:flex-row">
         <button
           onClick={onNewChat}
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--border-chalk-blur)] bg-[rgba(236,236,236,0.05)] px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-[rgba(236,236,236,0.08)] hover:shadow-[var(--chalk-glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-chalk-strong)]"
-          style={{ boxShadow: "0 0 0 1px var(--border-chalk-blur), var(--chalk-line-shadow)" }}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-chalk)] bg-[rgba(236,236,236,0.06)] px-5 py-3 text-sm font-semibold text-text-primary transition hover:bg-[rgba(236,236,236,0.09)] hover:shadow-[0_10px_24px_rgba(0,0,0,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-chalk-strong)]"
         >
-          <Sparkles className="h-4 w-4 text-accent-primary drop-shadow-[var(--chalk-glow)]" />
+          <Sparkles className="h-4 w-4 text-accent-primary" />
           Neues Gespräch
         </button>
 
@@ -57,7 +56,7 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
               variant: "secondary",
               size: "default",
               className:
-                "flex w-full items-center justify-center gap-2 border-[var(--border-chalk-blur)] bg-[rgba(255,255,255,0.02)] text-text-primary shadow-[var(--chalk-line-shadow)]",
+                "flex w-full items-center justify-center gap-2 border-[var(--border-chalk)] bg-[rgba(255,255,255,0.04)] text-text-primary shadow-[0_8px_20px_rgba(0,0,0,0.22)] hover:bg-[rgba(255,255,255,0.06)]",
             })}
           >
             <History className="h-4 w-4" />

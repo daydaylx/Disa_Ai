@@ -67,9 +67,9 @@
   --shadow-md: var(--shadow-floating);
 
   /* Borders - Chalk Lines */
-  --border-color: rgba(236, 236, 236, 0.15);
-  --border-chalk: rgba(236, 236, 236, 0.3);
-  --border-chalk-strong: rgba(236, 236, 236, 0.6);
+  --border-color: rgba(236, 236, 236, 0.12);
+  --border-chalk: rgba(236, 236, 236, 0.24);
+  --border-chalk-strong: rgba(236, 236, 236, 0.45);
   --border-width: 1px;
 
   /* Radius */
@@ -97,9 +97,9 @@
   --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.05"/></svg>');
 
   /* Chalk Glow for text and borders */
-  --chalk-glow: 0 0 8px rgba(236, 236, 236, 0.15), 0 0 2px rgba(236, 236, 236, 0.2);
-  --chalk-glow-strong: 0 0 12px rgba(236, 236, 236, 0.25), 0 0 4px rgba(236, 236, 236, 0.3);
-  --chalk-glow-accent: 0 0 10px rgba(167, 200, 255, 0.3), 0 0 4px rgba(167, 200, 255, 0.4);
+  --chalk-glow: 0 0 4px rgba(236, 236, 236, 0.12), 0 0 1px rgba(236, 236, 236, 0.18);
+  --chalk-glow-strong: 0 0 6px rgba(236, 236, 236, 0.16), 0 0 2px rgba(236, 236, 236, 0.22);
+  --chalk-glow-accent: 0 0 6px rgba(167, 200, 255, 0.22), 0 0 2px rgba(167, 200, 255, 0.3);
 
   /* Chalk Line - subtle blur for hand-drawn effect */
   --border-chalk-blur: rgba(236, 236, 236, 0.35);

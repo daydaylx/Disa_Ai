@@ -11,10 +11,10 @@ export function Bookmark({ onClick, className }: BookmarkProps) {
     <button
       onClick={onClick}
       className={cn(
-        "absolute right-[-12px] top-24 z-fab flex h-16 w-8 items-center justify-center rounded-l-md bg-accent text-ink-onAccent shadow-md transition-transform hover:-translate-x-1 active:scale-95 sm:right-[-16px] sm:w-10",
-        "animate-bookmark-wiggle", // Optional: only wiggle on first render if needed
+        "absolute right-[-12px] top-20 z-fab flex h-12 w-7 items-center justify-center rounded-l-md border border-[var(--border-chalk)] text-ink-onAccent shadow-[0_10px_24px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-transform duration-200 hover:-translate-x-1 sm:right-[-14px] sm:w-8",
         className,
       )}
+      style={{ backgroundColor: "var(--accent-secondary)", opacity: 0.78 }}
       aria-label="Verlauf öffnen"
     >
       <BookmarkIcon className="h-5 w-5 text-white" />

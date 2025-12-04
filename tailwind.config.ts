@@ -100,7 +100,15 @@ export default {
     extend: {
       colors: colorTokens,
       fontFamily: {
-        sans: ['"Patrick Hand"', "cursive", "sans-serif"],
+        sans: [
+          '"Inter"',
+          '"IBM Plex Sans"',
+          '"Space Grotesk"',
+          "system-ui",
+          "-apple-system",
+          '"Segoe UI"',
+          "sans-serif",
+        ],
         serif: ["Lora", "serif"],
         hand: ['"Patrick Hand"', "cursive"],
       },
