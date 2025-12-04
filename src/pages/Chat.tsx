@@ -255,13 +255,13 @@ export default function Chat() {
 
             <main
               ref={chatScrollRef}
-              className="scroll-smooth flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 min-h-0 relative z-10"
+              className="scroll-smooth flex-1 overflow-y-auto px-3 py-2 sm:px-6 sm:py-4 min-h-0 relative z-10"
               role="log"
               aria-label="Chat messages"
               data-testid="virtualized-chat-log"
             >
               {isEmpty ? (
-                <div className="mx-auto mt-8 max-w-2xl">
+                <div className="mx-auto mt-4 max-w-2xl">
                   <ChatStartCard
                     onNewChat={handleStartNewChat}
                     conversationCount={stats?.totalConversations ?? conversationCount}

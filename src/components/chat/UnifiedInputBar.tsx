@@ -240,7 +240,7 @@ export function UnifiedInputBar({
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = "auto";
-      const newHeight = Math.min(Math.max(textarea.scrollHeight, 40), 180);
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, 36), 160);
       textarea.style.height = `${newHeight}px`;
     }
   }, [value]);
@@ -279,9 +279,9 @@ export function UnifiedInputBar({
       }}
     >
       {/* Unified Chat Bar Container */}
-      <div className="rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.90)] backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.3)] p-3">
+      <div className="rounded-2xl border border-[var(--border-chalk)] bg-[rgba(19,19,20,0.90)] backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.3)] p-2.5">
         {/* Input Row */}
-        <div className="flex items-end gap-3 mb-3">
+        <div className="flex items-end gap-2.5 mb-2.5">
           <div className="relative flex-1">
             <Textarea
               ref={textareaRef}
@@ -290,7 +290,7 @@ export function UnifiedInputBar({
               onKeyDown={handleKeyDown}
               placeholder="Formuliere deine Frage…"
               aria-label="Nachricht eingeben"
-              className="input-chalk w-full min-h-[40px] max-h-[180px] resize-none px-3 py-2 placeholder:text-chalk-dim/50 text-[15px]"
+              className="input-chalk w-full min-h-[36px] max-h-[160px] resize-none px-2.5 py-1.5 placeholder:text-chalk-dim/50 text-[14px]"
               rows={1}
               data-testid="composer-input"
             />
@@ -301,12 +301,12 @@ export function UnifiedInputBar({
               onClick={onSend}
               disabled={!value.trim() || isLoading}
               className={cn(
-                "btn-chalk h-11 w-11 flex items-center justify-center",
+                "btn-chalk h-9 w-9 flex items-center justify-center",
                 !value.trim() && "opacity-50 cursor-not-allowed",
               )}
               aria-label="Senden"
             >
-              <Send className="h-5 w-5" />
+              <Send className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -320,7 +320,7 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("role")}
               ref={triggerRefs.role}
               className={cn(
-                "h-8 px-2.5 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[13px] text-chalk-dim transition-all duration-150",
+                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
                 "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
                 openDropdown === "role" &&
                   "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
@@ -385,7 +385,7 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("style")}
               ref={triggerRefs.style}
               className={cn(
-                "h-8 px-2.5 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[13px] text-chalk-dim transition-all duration-150",
+                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
                 "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
                 openDropdown === "style" &&
                   "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
@@ -425,7 +425,7 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("creativity")}
               ref={triggerRefs.creativity}
               className={cn(
-                "h-8 px-2.5 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[13px] text-chalk-dim transition-all duration-150",
+                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
                 "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
                 openDropdown === "creativity" &&
                   "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
@@ -464,7 +464,7 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("model")}
               ref={triggerRefs.model}
               className={cn(
-                "h-8 px-2.5 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[13px] text-chalk-dim transition-all duration-150",
+                "h-7 px-2 flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-[12px] text-chalk-dim transition-all duration-150",
                 "hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.06)]",
                 openDropdown === "model" &&
                   "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.08)]",
