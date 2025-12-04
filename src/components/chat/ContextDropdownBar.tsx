@@ -187,13 +187,13 @@ function TriggerBadge({
       ref={innerRef}
       onClick={onClick}
       className={cn(
-        "flex h-9 items-center gap-2 rounded-full border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] px-3 text-[13px] font-medium text-text-primary transition-colors duration-150 hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.05)]",
-        open && "shadow-[0_0_0_1px_var(--border-chalk-strong)]",
+        "chalk-focus flex min-h-[44px] items-center gap-2 rounded-full border chalk-border bg-[rgba(255,255,255,0.02)] px-3 py-2 text-[13px] font-medium text-text-primary transition-all duration-150 hover:chalk-border-strong hover:bg-[rgba(255,255,255,0.06)]",
+        open && "chalk-border-strong shadow-[var(--chalk-glow)]",
       )}
       aria-expanded={open}
     >
       {Icon ? <Icon className="h-4 w-4 text-ink-tertiary" /> : null}
-      <span className="truncate">{label}</span>
+      <span className="chalk-text truncate">{label}</span>
       <ChevronDown className="h-4 w-4 text-ink-tertiary" />
     </button>
   );
@@ -215,12 +215,10 @@ export function ContextDropdownBar({
   } = useSettings();
 
   const [openDropdown, setOpenDropdown] = useState<DropdownKey>(null);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRefs = {
     role: useRef<HTMLButtonElement>(null),
-    style: useRef<HTMLButtonElement>(null),
-    creativity: useRef<HTMLButtonElement>(null),
-    context: useRef<HTMLButtonElement>(null),
     model: useRef<HTMLButtonElement>(null),
   };
 
@@ -244,236 +242,294 @@ export function ContextDropdownBar({
     [curatedRoles, roles],
   );
 
-  const activeStyleLabel = useMemo(() => {
-    const label = styleOptions.find((option) => option.id === settings.discussionPreset)?.label;
-    return label ? `Stil: ${label}` : "Stil";
-  }, [settings.discussionPreset]);
-
-  const activeCreativityLabel = useMemo(() => {
-    const label = creativityOptions.find((option) => option.id === settings.creativity)?.label;
-    return label ? `Kreativität: ${label}` : "Kreativität";
-  }, [settings.creativity]);
-
-  const activeContextLabel = useMemo(() => {
-    const label = contextOptions.find(
-      (option) => option.id === settings.discussionMaxSentences,
-    )?.label;
-    return label ? `Kontext: ${label}` : "Kontext";
-  }, [settings.discussionMaxSentences]);
-
   const activeModelLabel = useMemo(() => {
     if (modelsLoading) return "Modelle laden...";
     const activeModel = modelOptions.find((model) => model.id === settings.preferredModelId);
     const modelName = activeModel?.label ?? settings.preferredModelId;
-    return modelName ? `Modell: ${modelName}` : "Modell";
+    return modelName ? `${modelName}` : "Modell";
   }, [modelOptions, modelsLoading, settings.preferredModelId]);
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-3 pb-3 sm:px-4">
-      <div ref={containerRef} className="flex flex-wrap gap-2">
-        <div className="relative">
-          <TriggerBadge
-            innerRef={triggerRefs.role}
-            label={activeRole?.name ?? "Rolle"}
-            icon={User}
-            open={openDropdown === "role"}
-            onClick={() => toggleDropdown("role")}
-          />
-          <DropdownPanel
-            open={openDropdown === "role"}
-            anchorRef={triggerRefs.role}
-            onClose={() => setOpenDropdown(null)}
-          >
-            <DropdownItem<UIRole | null>
-              option={{ id: null, label: "Standard", icon: User }}
-              selected={activeRole === null}
-              onSelect={() => {
-                setActiveRole(null);
-                setOpenDropdown(null);
-              }}
+    <>
+      <div className="mx-auto w-full max-w-3xl px-3 pb-3 sm:px-4">
+        <div ref={containerRef} className="flex items-center gap-2">
+          {/* Rolle */}
+          <div className="relative">
+            <TriggerBadge
+              innerRef={triggerRefs.role}
+              label={activeRole?.name ?? "Rolle"}
+              icon={User}
+              open={openDropdown === "role"}
+              onClick={() => toggleDropdown("role")}
             />
-            {curatedRoles.length > 0 && (
-              <>
-                <div className="my-1 h-px w-full bg-[rgba(255,255,255,0.06)]" />
-                {curatedRoles.map((role) => (
-                  <DropdownItem<UIRole>
-                    key={role.id}
-                    option={{ id: role, label: role.name, icon: User }}
-                    selected={activeRole?.id === role.id}
-                    onSelect={(value) => {
-                      setActiveRole(value);
-                      setOpenDropdown(null);
-                    }}
-                  />
-                ))}
-              </>
-            )}
-            {remainingRoles.length > 0 && (
-              <>
-                <div className="my-1 h-px w-full bg-[rgba(255,255,255,0.06)]" />
-                {remainingRoles.map((role) => (
-                  <DropdownItem<UIRole>
-                    key={role.id}
-                    option={{ id: role, label: role.name, icon: User }}
-                    selected={activeRole?.id === role.id}
-                    onSelect={(value) => {
-                      setActiveRole(value);
-                      setOpenDropdown(null);
-                    }}
-                  />
-                ))}
-              </>
-            )}
-          </DropdownPanel>
-        </div>
-
-        <div className="relative">
-          <TriggerBadge
-            innerRef={triggerRefs.style}
-            label={activeStyleLabel}
-            icon={Feather}
-            open={openDropdown === "style"}
-            onClick={() => toggleDropdown("style")}
-          />
-          <DropdownPanel
-            open={openDropdown === "style"}
-            anchorRef={triggerRefs.style}
-            onClose={() => setOpenDropdown(null)}
-          >
-            {styleOptions.map((option) => (
-              <DropdownItem<DiscussionPresetKey>
-                key={option.id}
-                option={option}
-                selected={settings.discussionPreset === option.id}
-                onSelect={(value) => {
-                  setDiscussionPreset(value);
+            <DropdownPanel
+              open={openDropdown === "role"}
+              anchorRef={triggerRefs.role}
+              onClose={() => setOpenDropdown(null)}
+            >
+              <DropdownItem<UIRole | null>
+                option={{ id: null, label: "Standard", icon: User }}
+                selected={activeRole === null}
+                onSelect={() => {
+                  setActiveRole(null);
                   setOpenDropdown(null);
                 }}
               />
-            ))}
-          </DropdownPanel>
-        </div>
+              {curatedRoles.length > 0 && (
+                <>
+                  <div className="my-1 h-px w-full bg-[rgba(255,255,255,0.06)]" />
+                  {curatedRoles.map((role) => (
+                    <DropdownItem<UIRole>
+                      key={role.id}
+                      option={{ id: role, label: role.name, icon: User }}
+                      selected={activeRole?.id === role.id}
+                      onSelect={(value) => {
+                        setActiveRole(value);
+                        setOpenDropdown(null);
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+              {remainingRoles.length > 0 && (
+                <>
+                  <div className="my-1 h-px w-full bg-[rgba(255,255,255,0.06)]" />
+                  {remainingRoles.map((role) => (
+                    <DropdownItem<UIRole>
+                      key={role.id}
+                      option={{ id: role, label: role.name, icon: User }}
+                      selected={activeRole?.id === role.id}
+                      onSelect={(value) => {
+                        setActiveRole(value);
+                        setOpenDropdown(null);
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+            </DropdownPanel>
+          </div>
 
-        <div className="relative">
-          <TriggerBadge
-            innerRef={triggerRefs.creativity}
-            label={activeCreativityLabel}
-            icon={Sparkles}
-            open={openDropdown === "creativity"}
-            onClick={() => toggleDropdown("creativity")}
-          />
-          <DropdownPanel
-            open={openDropdown === "creativity"}
-            anchorRef={triggerRefs.creativity}
-            onClose={() => setOpenDropdown(null)}
-          >
-            {creativityOptions.map((option) => (
-              <DropdownItem<number>
-                key={option.id}
-                option={option}
-                selected={(settings.creativity ?? 45) === option.id}
-                onSelect={(value) => {
-                  setCreativity(value);
-                  setOpenDropdown(null);
-                }}
-              />
-            ))}
-          </DropdownPanel>
-        </div>
-
-        <div className="relative">
-          <TriggerBadge
-            innerRef={triggerRefs.context}
-            label={activeContextLabel}
-            icon={Brain}
-            open={openDropdown === "context"}
-            onClick={() => toggleDropdown("context")}
-          />
-          <DropdownPanel
-            open={openDropdown === "context"}
-            anchorRef={triggerRefs.context}
-            onClose={() => setOpenDropdown(null)}
-          >
-            {contextOptions.map((option) => (
-              <DropdownItem<number>
-                key={option.id}
-                option={option}
-                selected={settings.discussionMaxSentences === option.id}
-                onSelect={(value) => {
-                  setDiscussionMaxSentences(value);
-                  setOpenDropdown(null);
-                }}
-              />
-            ))}
-          </DropdownPanel>
-        </div>
-
-        <div className="relative">
-          <TriggerBadge
-            innerRef={triggerRefs.model}
-            label={activeModelLabel}
-            icon={Cpu}
-            open={openDropdown === "model"}
-            onClick={() => toggleDropdown("model")}
-          />
-          <DropdownPanel
-            open={openDropdown === "model"}
-            anchorRef={triggerRefs.model}
-            onClose={() => setOpenDropdown(null)}
-          >
-            {modelsLoading ? (
-              <div className="flex h-11 items-center justify-center rounded-lg px-3 text-sm text-[#A3A3AB]">
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#A3A3AB] border-t-transparent" />
-                  Modelle werden geladen...
+          {/* Modell */}
+          <div className="relative">
+            <TriggerBadge
+              innerRef={triggerRefs.model}
+              label={activeModelLabel}
+              icon={Cpu}
+              open={openDropdown === "model"}
+              onClick={() => toggleDropdown("model")}
+            />
+            <DropdownPanel
+              open={openDropdown === "model"}
+              anchorRef={triggerRefs.model}
+              onClose={() => setOpenDropdown(null)}
+            >
+              {modelsLoading ? (
+                <div className="flex h-11 items-center justify-center rounded-lg px-3 text-sm text-[#A3A3AB]">
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#A3A3AB] border-t-transparent" />
+                    Modelle werden geladen...
+                  </div>
                 </div>
-              </div>
-            ) : modelsError ? (
-              <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
-                <div className="text-sm text-color-error">{modelsError}</div>
-                {onRefreshModels && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onRefreshModels();
+              ) : modelsError ? (
+                <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
+                  <div className="text-sm text-color-error">{modelsError}</div>
+                  {onRefreshModels && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onRefreshModels();
+                      }}
+                      className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+                    >
+                      <ChevronDown className="h-4 w-4 rotate-180" />
+                      Nochmal versuchen
+                    </button>
+                  )}
+                </div>
+              ) : modelOptions.length > 0 ? (
+                modelOptions.map((model) => (
+                  <DropdownItem<string>
+                    key={model.id}
+                    option={{ id: model.id, label: model.label ?? model.id, icon: Cpu }}
+                    selected={settings.preferredModelId === model.id}
+                    onSelect={(value) => {
+                      setPreferredModel(value);
+                      setOpenDropdown(null);
                     }}
-                    className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
-                  >
-                    <ChevronDown className="h-4 w-4 rotate-180" />
-                    Nochmal versuchen
-                  </button>
-                )}
-              </div>
-            ) : modelOptions.length > 0 ? (
-              modelOptions.map((model) => (
-                <DropdownItem<string>
-                  key={model.id}
-                  option={{ id: model.id, label: model.label ?? model.id, icon: Cpu }}
-                  selected={settings.preferredModelId === model.id}
-                  onSelect={(value) => {
-                    setPreferredModel(value);
-                    setOpenDropdown(null);
-                  }}
-                />
-              ))
-            ) : (
-              <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
-                <div className="text-sm text-[#A3A3AB]">Keine Modelle verfügbar</div>
-                {onRefreshModels && (
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col gap-2 rounded-lg px-3 py-2">
+                  <div className="text-sm text-[#A3A3AB]">Keine Modelle verfügbar</div>
+                  {onRefreshModels && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onRefreshModels();
+                      }}
+                      className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+                    >
+                      <ChevronDown className="h-4 w-4 rotate-180" />
+                      Nochmal versuchen
+                    </button>
+                  )}
+                </div>
+              )}
+            </DropdownPanel>
+          </div>
+
+          {/* Erweitert Button */}
+          <button
+            type="button"
+            onClick={() => setIsAdvancedOpen(true)}
+            className="ml-auto flex min-h-[44px] items-center gap-2 rounded-full border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] px-3 text-[13px] font-medium text-text-primary transition-colors duration-150 hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.05)]"
+            aria-label="Erweiterte Einstellungen"
+          >
+            <SlidersHorizontal className="h-4 w-4 text-ink-tertiary" />
+            <span className="hidden sm:inline">Erweitert</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Advanced Settings Bottom Sheet */}
+      {isAdvancedOpen && (
+        <AdvancedSettingsSheet
+          isOpen={isAdvancedOpen}
+          onClose={() => setIsAdvancedOpen(false)}
+          settings={settings}
+          onStyleChange={setDiscussionPreset}
+          onCreativityChange={setCreativity}
+          onContextChange={setDiscussionMaxSentences}
+        />
+      )}
+    </>
+  );
+}
+
+// Advanced Settings Bottom Sheet Component
+interface AdvancedSettingsSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  settings: ReturnType<typeof useSettings>["settings"];
+  onStyleChange: (value: DiscussionPresetKey) => void;
+  onCreativityChange: (value: number) => void;
+  onContextChange: (value: number) => void;
+}
+
+function AdvancedSettingsSheet({
+  isOpen,
+  onClose,
+  settings,
+  onStyleChange,
+  onCreativityChange,
+  onContextChange,
+}: AdvancedSettingsSheetProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[var(--z-bottom-sheet)] flex items-end justify-center bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-t-2xl border-t border-[var(--border-chalk)] bg-[rgba(19,19,20,0.98)] p-6 shadow-[0_-8px_32px_rgba(0,0,0,0.5)] backdrop-blur animate-in slide-in-from-bottom duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-text-primary">Erweiterte Einstellungen</h2>
+          <button
+            onClick={onClose}
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-ink-secondary transition-colors hover:bg-[rgba(255,255,255,0.05)] hover:text-ink-primary"
+            aria-label="Schließen"
+          >
+            <ChevronDown className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Settings */}
+        <div className="space-y-6">
+          {/* Stil */}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink-secondary">Stil</label>
+            <div className="grid grid-cols-2 gap-2">
+              {styleOptions.map((option) => {
+                const Icon = option.icon;
+                const isSelected = settings.discussionPreset === option.id;
+                return (
                   <button
-                    type="button"
-                    onClick={() => {
-                      onRefreshModels();
-                    }}
-                    className="flex h-9 items-center justify-center gap-2 rounded-lg bg-[rgba(255,255,255,0.05)] px-3 text-sm text-text-primary transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+                    key={option.id}
+                    onClick={() => onStyleChange(option.id)}
+                    className={cn(
+                      "flex min-h-[48px] items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
+                      isSelected
+                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary"
+                        : "border-[var(--border-chalk)] bg-transparent text-ink-secondary hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)]",
+                    )}
                   >
-                    <ChevronDown className="h-4 w-4 rotate-180" />
-                    Nochmal versuchen
+                    {Icon && <Icon className="h-4 w-4" />}
+                    <span>{option.label}</span>
+                    {isSelected && <Check className="ml-auto h-4 w-4" />}
                   </button>
-                )}
-              </div>
-            )}
-          </DropdownPanel>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Kreativität */}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink-secondary">
+              Kreativität
+            </label>
+            <div className="space-y-1">
+              {creativityOptions.map((option) => {
+                const isSelected = (settings.creativity ?? 45) === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => onCreativityChange(option.id)}
+                    className={cn(
+                      "flex w-full min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
+                      isSelected
+                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary font-medium"
+                        : "border-transparent bg-transparent text-ink-secondary hover:bg-[rgba(255,255,255,0.03)]",
+                    )}
+                  >
+                    <span>{option.label}</span>
+                    {isSelected && <Check className="h-4 w-4" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Kontext */}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink-secondary">
+              Kontextlänge
+            </label>
+            <div className="space-y-1">
+              {contextOptions.map((option) => {
+                const isSelected = settings.discussionMaxSentences === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => onContextChange(option.id)}
+                    className={cn(
+                      "flex w-full min-h-[44px] items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
+                      isSelected
+                        ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.08)] text-text-primary font-medium"
+                        : "border-transparent bg-transparent text-ink-secondary hover:bg-[rgba(255,255,255,0.03)]",
+                    )}
+                  >
+                    <span>{option.label}</span>
+                    {isSelected && <Check className="h-4 w-4" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
