@@ -32,8 +32,8 @@ interface ChatRequest {
 // OpenRouter API endpoint
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-// Allowed origins for CORS
-const ALLOWED_ORIGINS = [
+// Allowed origins for CORS (reserved for future CORS validation)
+const _ALLOWED_ORIGINS = [
   "https://disaai.de",
   "https://disa-ai.pages.dev",
   "http://localhost:5173",
@@ -103,7 +103,7 @@ export async function onRequest(context: {
     let body: ChatRequest;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return jsonError("Invalid JSON in request body", 400);
     }
 
@@ -161,7 +161,7 @@ export async function onRequest(context: {
         if (errorData?.error) {
           errorMessage = errorData.error.message || errorData.error;
         }
-      } catch (e) {
+      } catch {
         // If we can't parse the error, use the status text
         errorMessage = `OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`;
       }
