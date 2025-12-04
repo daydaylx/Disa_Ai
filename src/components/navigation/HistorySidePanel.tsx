@@ -43,30 +43,30 @@ export function HistorySidePanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-drawer z-[100]" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         onClick={handleBackdropClick}
       />
 
-      {/* Panel - Slide in from right */}
+      {/* Panel - Slide in from right with Chalk Texture */}
       <div
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm bg-[rgba(19,19,20,0.96)] border-l border-[var(--border-chalk)] shadow-[0_0_0_1px_var(--border-chalk),0_18px_40px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out transform",
+          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm bg-[var(--bg-slate)] border-l border-[var(--border-chalk)] shadow-[0_0_0_1px_var(--border-chalk),0_18px_40px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out transform",
           isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-chalk)] bg-[rgba(19,19,20,0.96)] z-10">
-          <h2 className="text-lg font-serif font-bold text-ink-primary tracking-[0.04em]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-chalk)] bg-[var(--bg-slate)] z-10">
+          <h2 className="text-lg font-semibold text-[var(--ink-primary)] tracking-[0.04em]">
             Inhaltsverzeichnis
           </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)]"
+            className="text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] hover:border-[var(--border-chalk)]"
           >
             <X className="h-5 w-5" />
           </Button>

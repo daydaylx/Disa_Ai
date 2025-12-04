@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { DEFAULT_MODEL_ID, isAllowedModelId } from "../config/modelDefaults";
+import { isAllowedModelId } from "../config/modelDefaults";
+import { DEFAULT_MODEL_ID } from "../config/modelPresets";
 import {
   getDiscussionMaxSentences,
   getDiscussionPreset,

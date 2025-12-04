@@ -23,7 +23,7 @@ export function BookLayout({
   return (
     <div className="relative flex min-h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden">
       {/* Header / Top Edge of the Page */}
-      <header className="sticky top-0 z-header flex h-14 w-full items-center justify-between border-b border-[var(--border-chalk)] bg-[rgba(19,19,20,0.9)] px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
+      <header className="sticky top-0 z-header flex h-14 w-full items-center justify-between border-b chalk-border bg-[rgba(19,19,20,0.95)] px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
         {/* Left: Hamburger Menu */}
         <div className="flex items-center">
           <Button
@@ -31,14 +31,14 @@ export function BookLayout({
             size="icon"
             onClick={onMenuClick}
             aria-label="Hauptmenü öffnen"
-            className="text-ink-primary hover:bg-[rgba(255,255,255,0.04)]"
+            className="text-ink-primary hover:bg-[rgba(255,255,255,0.06)] chalk-focus"
           >
             <Menu className="h-5 w-5" />
           </Button>
         </div>
         {/* Center: Title / Date */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center">
-          <h1 className="text-base font-serif font-semibold tracking-[0.04em] text-ink-primary">
+          <h1 className="chalk-text-strong text-base font-serif tracking-[0.04em] text-ink-primary">
             {title || "Disa AI"}
           </h1>
         </div>

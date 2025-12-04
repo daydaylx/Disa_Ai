@@ -38,7 +38,12 @@ export default function Chat() {
   const [searchParams] = useSearchParams();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
-  const { models: modelCatalog, loading: modelsLoading } = useModelCatalog();
+  const {
+    models: modelCatalog,
+    loading: modelsLoading,
+    error: modelsError,
+    refresh: refreshModels,
+  } = useModelCatalog();
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
@@ -290,7 +295,12 @@ export default function Chat() {
                 onSend={handleSend}
                 isLoading={isLoading}
               />
-              <ContextDropdownBar models={modelCatalog} modelsLoading={modelsLoading} />
+              <ContextDropdownBar
+                models={modelCatalog}
+                modelsLoading={modelsLoading}
+                modelsError={modelsError}
+                onRefreshModels={refreshModels}
+              />
             </div>
           </div>
         </BookPageAnimator>
