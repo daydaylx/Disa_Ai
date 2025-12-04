@@ -101,23 +101,26 @@ export function ChatMessage({
   const parsedContent = parseMessageContent(message.content);
 
   // Schiefer & Kreide: feine Kreidelinien auf mattem Schiefer
-  const chalkNoiseBorder =
-    "after:pointer-events-none after:absolute after:inset-[0.5px] after:rounded-[inherit] after:border after:border-[var(--border-chalk-strong)] after:opacity-35 after:[mask-image:conic-gradient(from_0deg,_rgba(0,0,0,0.35)_0deg,_transparent_60deg,rgba(0,0,0,0.35)_130deg,_transparent_200deg,rgba(0,0,0,0.35)_280deg,_transparent_330deg,_rgba(0,0,0,0.35)_360deg)]";
+  // User: Blue chalk hatching box
+  // AI: Minimalist text on stone
 
-  const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-2 py-1.5 sm:px-2 sm:py-2",
-    "backdrop-blur-[0.25px] text-text-primary",
-    isUser &&
-      cn("ml-auto border border-[var(--border-chalk-strong)] bg-transparent", chalkNoiseBorder),
-    isAssistant &&
-      cn(
-        "mr-auto border border-[var(--border-chalk-strong)] bg-transparent",
-        "before:absolute before:-left-1 before:top-1 before:bottom-1 before:w-px before:rounded-full before:bg-[var(--accent-primary)]",
-        chalkNoiseBorder,
-      ),
-    isSystem &&
-      "mx-auto max-w-[95%] sm:max-w-2xl border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-center opacity-80",
+  const userBubbleClass = cn(
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] px-4 py-3 sm:px-5 sm:py-4",
+    "border-chalk text-xl tracking-wide", // Use the new class
+    "chalk-text",
   );
+
+  const aiBubbleClass = cn(
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] px-4 py-2 sm:px-5 sm:py-3",
+    "border-l-2 border-chalk-dim pl-4", // Fine line on left
+    "chalk-text",
+  );
+
+  const bubbleClass = isUser
+    ? userBubbleClass
+    : isAssistant
+      ? aiBubbleClass
+      : "mx-auto max-w-[95%] opacity-80 text-center italic text-chalk-dim";
 
   const handleCopy = () => {
     onCopy?.(message.content);
@@ -162,7 +165,9 @@ export function ChatMessage({
               isUser ? "justify-end" : "justify-start",
             )}
           >
-            <span className="text-ink-secondary font-medium">{isUser ? "Du" : "Disa"}</span>
+            <span className="text-[var(--chalk-white-faded)] font-medium">
+              {isUser ? "Du" : "Disa"}
+            </span>
             {message.model && (
               <Badge
                 variant="secondary"
@@ -171,7 +176,7 @@ export function ChatMessage({
                 {message.model.split("/").pop()}
               </Badge>
             )}
-            <span className="text-ink-tertiary text-[11px]">
+            <span className="text-[var(--chalk-white-faded)] text-[11px]">
               {new Date(message.timestamp).toLocaleTimeString("de-DE", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -203,7 +208,7 @@ export function ChatMessage({
             {parsedContent.map((part, index) => (
               <div key={index}>
                 {part.type === "text" ? (
-                  <div className="whitespace-pre-wrap text-[15px] sm:text-base leading-relaxed text-ink-primary">
+                  <div className="whitespace-pre-wrap text-[15px] sm:text-base leading-relaxed chalk-text">
                     {part.content}
                   </div>
                 ) : (
@@ -223,51 +228,48 @@ export function ChatMessage({
               isUser ? "justify-end" : "justify-start",
             )}
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
+            {/* DEBUG: Using native button element for copy functionality */}
+            <button
+              type="button"
+              className="chalk-button text-[var(--chalk-white-faded)] hover:text-[var(--chalk-white)] hover:bg-[rgba(236,236,236,0.05)] h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
               onClick={handleCopy}
               title="Kopieren"
               data-testid="message.copy"
             >
-              <Copy className="h-3.5 w-3.5" />
-            </Button>
+              <Copy className="h-4 w-4" />
+            </button>
             {isUser && onEdit && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
+              <button
+                type="button"
+                className="chalk-button text-[var(--chalk-white-faded)] hover:text-[var(--chalk-white)] hover:bg-[rgba(236,236,236,0.05)] h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={() => setIsEditing(true)}
                 title="Bearbeiten"
                 data-testid="message.edit"
               >
-                <Edit2 className="h-3.5 w-3.5" />
-              </Button>
+                <Edit2 className="h-4 w-4" />
+              </button>
             )}
             {isAssistant && isLast && onRetry && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
+              <button
+                type="button"
+                className="chalk-button text-[var(--chalk-white-faded)] hover:text-[var(--chalk-white)] hover:bg-[rgba(236,236,236,0.05)] h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={handleRetry}
                 title="Neu generieren"
                 data-testid="message.retry"
               >
-                <RotateCcw className="h-3.5 w-3.5" />
-              </Button>
+                <RotateCcw className="h-4 w-4" />
+              </button>
             )}
             {isAssistant && isLast && onFollowUp && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-ink-tertiary hover:bg-surface-2 hover:text-ink-primary h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
+              <button
+                type="button"
+                className="chalk-button text-[var(--chalk-white-faded)] hover:text-[var(--chalk-white)] hover:bg-[rgba(236,236,236,0.05)] h-11 w-11 min-h-[44px] min-w-[44px] touch-manipulation"
                 onClick={() => setShowFollowUps(!showFollowUps)}
                 title="Weiterfragen"
                 data-testid="message.followup"
               >
-                <MoreHorizontal className="h-3.5 w-3.5" />
-              </Button>
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
             )}
           </div>
         )}
@@ -275,16 +277,16 @@ export function ChatMessage({
         {/* Follow-up suggestions */}
         {isAssistant && isLast && showFollowUps && (
           <div className="flex flex-wrap gap-2 mt-3 pt-2">
+            {/* DEBUG: Mapping follow-up suggestions with native button elements */}
             {followUpSuggestions.map((suggestion) => (
-              <Button
+              <button
                 key={suggestion}
-                variant="secondary"
-                size="sm"
+                type="button"
                 onClick={() => handleFollowUp(suggestion)}
-                className="text-xs border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] text-ink-secondary hover:border-[var(--border-chalk-strong)] hover:text-ink-primary"
+                className="chalk-pill text-xs border-[var(--chalk-white-faded)] bg-transparent text-[var(--chalk-white-faded)] hover:border-[var(--chalk-white)] hover:text-[var(--chalk-white)]"
               >
                 {suggestion}
-              </Button>
+              </button>
             ))}
           </div>
         )}

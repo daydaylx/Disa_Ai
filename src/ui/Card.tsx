@@ -1,24 +1,22 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
+import { cn } from "@/lib/utils";
+
 /**
- * Material Card Component - Neumorphism/Soft-Depth System with Signature Bevel
+ * Card - Digital Slate Theme
  *
- * NO backdrop-blur, NO borders - depth through shadows only
- * Bevel highlight auf raised variants (Werkzeug-DNA)
- *
- * Variants:
- * - raised: Standard raised card with bevel (default)
- * - inset: Pressed/inset appearance (NO bevel)
- * - hero: Strong raised shadow + stronger bevel for focal elements
+ * Minimalist "Stone" surface with "Chalk" border.
+ * Removed: Neumorphism, bevels, heavy shadows.
+ * Added: .slate-card class for organic shape (optional) or standard rounded corners.
  */
-const cardVariants = cva("relative rounded-md transition-all duration-fast overflow-hidden", {
+const cardVariants = cva("relative overflow-hidden transition-all", {
   variants: {
     variant: {
-      raised:
-        "bg-surface-2 shadow-raise before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight)]",
-      inset: "bg-surface-inset shadow-inset border border-white/5",
-      hero: "bg-surface-2 shadow-raiseLg before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-[var(--bevel-highlight-strong)]",
+      default: "bg-surface border-chalk shadow-sm rounded-xl", // Standard Slate Card
+      organic: "bg-surface border-chalk slate-card", // Hand-drawn organic shape
+      ghost: "bg-transparent border border-chalk-dim/30 rounded-xl",
+      flat: "bg-surface rounded-xl", // No border
     },
     padding: {
       default: "p-6",
@@ -28,7 +26,7 @@ const cardVariants = cva("relative rounded-md transition-all duration-fast overf
     },
   },
   defaultVariants: {
-    variant: "raised",
+    variant: "default",
     padding: "default",
   },
 });
@@ -40,8 +38,8 @@ export interface CardProps
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, padding, children, ...props }, ref) => {
     return (
-      <div className={cardVariants({ variant, padding, className })} ref={ref} {...props}>
-        <div className="relative z-10">{children}</div>
+      <div className={cn(cardVariants({ variant, padding, className }))} ref={ref} {...props}>
+        {children}
       </div>
     );
   },
@@ -50,7 +48,7 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={`flex flex-col space-y-1.5 ${className}`} {...props} />
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 mb-4", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -59,7 +57,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={`text-xl font-semibold leading-snug tracking-normal text-text-primary ${className}`}
+      className={cn("text-xl font-bold leading-snug text-chalk-white font-hand", className)}
       {...props}
     />
   ),
@@ -70,18 +68,24 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={`text-sm text-ink-secondary ${className}`} {...props} />
+  <p ref={ref} className={cn("text-sm text-chalk-dim font-sans", className)} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={`pt-6 ${className}`} {...props} />,
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("text-chalk-white", className)} {...props} />
+  ),
 );
 CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={`flex items-center pt-6 ${className}`} {...props} />
+    <div
+      ref={ref}
+      className={cn("flex items-center pt-4 mt-4 border-t border-chalk-dim/20", className)}
+      {...props}
+    />
   ),
 );
 CardFooter.displayName = "CardFooter";

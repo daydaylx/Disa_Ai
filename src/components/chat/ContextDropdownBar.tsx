@@ -219,6 +219,8 @@ export function ContextDropdownBar({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRefs = {
     role: useRef<HTMLButtonElement>(null),
+    style: useRef<HTMLButtonElement>(null),
+    creativity: useRef<HTMLButtonElement>(null),
     model: useRef<HTMLButtonElement>(null),
   };
 
@@ -252,16 +254,20 @@ export function ContextDropdownBar({
   return (
     <>
       <div className="mx-auto w-full max-w-3xl px-3 pb-3 sm:px-4">
-        <div ref={containerRef} className="flex items-center gap-2">
+        <div
+          ref={containerRef}
+          className="chalk-pills-container flex items-center justify-center gap-2"
+        >
           {/* Rolle */}
           <div className="relative">
-            <TriggerBadge
-              innerRef={triggerRefs.role}
-              label={activeRole?.name ?? "Rolle"}
-              icon={User}
-              open={openDropdown === "role"}
+            <button
+              type="button"
               onClick={() => toggleDropdown("role")}
-            />
+              className={cn("chalk-pill", openDropdown === "role" && "active")}
+            >
+              <User className="h-4 w-4 mr-1" />
+              Rolle ▾
+            </button>
             <DropdownPanel
               open={openDropdown === "role"}
               anchorRef={triggerRefs.role}
@@ -310,15 +316,81 @@ export function ContextDropdownBar({
             </DropdownPanel>
           </div>
 
+          {/* Stil */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => toggleDropdown("style")}
+              className={cn("chalk-pill", openDropdown === "style" && "active")}
+            >
+              <Feather className="h-4 w-4 mr-1" />
+              Stil ▾
+            </button>
+            <DropdownPanel
+              open={openDropdown === "style"}
+              anchorRef={triggerRefs.style}
+              onClose={() => setOpenDropdown(null)}
+            >
+              {styleOptions.map((option) => {
+                const Icon = option.icon;
+                const isSelected = settings.discussionPreset === option.id;
+                return (
+                  <DropdownItem<DiscussionPresetKey>
+                    key={option.id}
+                    option={{ id: option.id, label: option.label, icon: Icon }}
+                    selected={isSelected}
+                    onSelect={(value) => {
+                      setDiscussionPreset(value);
+                      setOpenDropdown(null);
+                    }}
+                  />
+                );
+              })}
+            </DropdownPanel>
+          </div>
+
+          {/* Kreativität */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => toggleDropdown("creativity")}
+              className={cn("chalk-pill", openDropdown === "creativity" && "active")}
+            >
+              <Brain className="h-4 w-4 mr-1" />
+              Kreativität ▾
+            </button>
+            <DropdownPanel
+              open={openDropdown === "creativity"}
+              anchorRef={triggerRefs.creativity}
+              onClose={() => setOpenDropdown(null)}
+            >
+              {creativityOptions.map((option) => {
+                const isSelected = (settings.creativity ?? 45) === option.id;
+                return (
+                  <DropdownItem<number>
+                    key={option.id}
+                    option={{ id: option.id, label: option.label, icon: Brain }}
+                    selected={isSelected}
+                    onSelect={(value) => {
+                      setCreativity(value);
+                      setOpenDropdown(null);
+                    }}
+                  />
+                );
+              })}
+            </DropdownPanel>
+          </div>
+
           {/* Modell */}
           <div className="relative">
-            <TriggerBadge
-              innerRef={triggerRefs.model}
-              label={activeModelLabel}
-              icon={Cpu}
-              open={openDropdown === "model"}
+            <button
+              type="button"
               onClick={() => toggleDropdown("model")}
-            />
+              className={cn("chalk-pill", openDropdown === "model" && "active")}
+            >
+              <Cpu className="h-4 w-4 mr-1" />
+              Modell ▾
+            </button>
             <DropdownPanel
               open={openDropdown === "model"}
               anchorRef={triggerRefs.model}
@@ -378,17 +450,6 @@ export function ContextDropdownBar({
               )}
             </DropdownPanel>
           </div>
-
-          {/* Erweitert Button */}
-          <button
-            type="button"
-            onClick={() => setIsAdvancedOpen(true)}
-            className="ml-auto flex min-h-[44px] items-center gap-2 rounded-full border border-[var(--border-chalk)] bg-[rgba(255,255,255,0.02)] px-3 text-[13px] font-medium text-text-primary transition-colors duration-150 hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.05)]"
-            aria-label="Erweiterte Einstellungen"
-          >
-            <SlidersHorizontal className="h-4 w-4 text-ink-tertiary" />
-            <span className="hidden sm:inline">Erweitert</span>
-          </button>
         </div>
       </div>
 

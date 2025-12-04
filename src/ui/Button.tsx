@@ -4,29 +4,30 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * InkButton - Calm, physical buttons for the Book Concept.
+ * Button - Digital Slate Theme
  *
- * Removes "Brand Glow" and "Aurora" effects.
- * Focuses on clarity, touch targets (min 44px), and subtle paper interactions.
+ * Redesigned to match the "Chalk on Stone" aesthetic.
+ * - Default: Transparent with white chalk border.
+ * - Hover: Subtle highlight and "redrawn" border effect (handled by CSS class).
+ * - Ghost: Minimal, text-only until hover.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full text-sm font-semibold tracking-[0.01em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[var(--border-chalk-strong)] disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
+  "inline-flex items-center justify-center text-sm font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk-blue disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
   {
     variants: {
       variant: {
-        primary:
-          "border border-[var(--border-chalk)] bg-[var(--bg-slate)] text-[var(--ink-primary)] shadow-[0_0_0_1px_var(--border-chalk)] hover:bg-[rgba(255,255,255,0.05)] active:scale-95 active:bg-[rgba(255,255,255,0.08)] backdrop-blur-[1px]",
+        primary: "btn-chalk", // Defined in theme-slate.css for complex animations
         secondary:
-          "border border-[var(--border-chalk)] bg-transparent text-[var(--ink-primary)] hover:border-[var(--border-chalk-strong)] hover:bg-[rgba(255,255,255,0.03)] active:scale-95",
-        ghost:
-          "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] border border-transparent hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)] active:scale-95",
-        link: "text-accent underline-offset-4 hover:underline p-0 h-auto min-h-0",
+          "border border-chalk-dim text-chalk-dim hover:text-chalk-white hover:border-chalk-white bg-transparent rounded-lg",
+        ghost: "text-chalk-dim hover:text-chalk-white hover:bg-white/5 rounded-lg",
+        link: "text-chalk-blue underline-offset-4 hover:underline p-0 h-auto min-h-0",
+        destructive: "border border-error text-error hover:bg-error/10 rounded-lg",
       },
       size: {
-        default: "min-h-[44px] min-w-[44px] py-2 px-4",
-        sm: "min-h-[42px] min-w-[42px] px-3 text-xs",
-        lg: "min-h-[52px] min-w-[52px] px-6 text-base",
-        icon: "min-h-[44px] min-w-[44px] p-2",
+        default: "h-11 px-4 py-2",
+        sm: "h-9 px-3 text-xs",
+        lg: "h-14 px-8 text-lg",
+        icon: "h-11 w-11 p-2",
       },
     },
     defaultVariants: {

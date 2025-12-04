@@ -250,13 +250,13 @@ export default function Chat() {
         onBookmarkClick={() => setIsHistoryOpen(true)}
       >
         <BookPageAnimator pageKey={activeConversationId || "new"}>
-          <div className="flex h-[calc(var(--vh,1vh)*100)] flex-col">
+          <div className="chalkboard-container flex h-[calc(var(--vh,1vh)*100)] flex-col relative">
             <h1 className="sr-only">Disa AI – Chat</h1>
             <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
             <main
               ref={chatScrollRef}
-              className="scroll-smooth flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 min-h-0"
+              className="scroll-smooth flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 min-h-0 relative z-10"
               role="log"
               aria-label="Chat messages"
               data-testid="virtualized-chat-log"
@@ -287,8 +287,21 @@ export default function Chat() {
               <div ref={messagesEndRef} />
             </main>
 
+            {/* Floating Action Button rechts */}
+            <div className="fixed bottom-32 right-4 z-20">
+              <button
+                className="chalk-fab h-14 w-14 flex items-center justify-center"
+                aria-label="Chat-Verlauf"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                  <path d="M12 6v6l4 2" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+
             {/* Unified Input Area */}
-            <div className="z-sticky-content bg-bg-page/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-border-ink/10">
+            <div className="z-sticky-content bg-transparent/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}

@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import { Button, MaterialCard } from "@/ui";
-
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
@@ -110,22 +108,20 @@ export function VirtualizedMessageList({
   );
 
   return (
-    <div data-testid="message-list" className={cn("h-full", className)}>
+    <div data-testid="message-list" className={cn("h-full chalkboard-container", className)}>
       <div
         ref={scrollContainerRef ? undefined : attachInternalRef}
         className="chat-scroll-area h-full"
       >
         {shouldVirtualize && hiddenCount > 0 && (
-          <div className="sticky top-0 z-sticky-content flex justify-center bg-[var(--bg0)] py-2">
-            <Button
+          <div className="sticky top-0 z-sticky-content flex justify-center py-2">
+            <button
               onClick={loadOlderMessages}
-              variant="secondary"
-              size="sm"
-              className="rounded-full"
+              className="chalk-button px-4 py-2 text-sm rounded-full"
               data-testid="load-older-messages"
             >
               ↑ {hiddenCount} ältere Nachrichten laden
-            </Button>
+            </button>
           </div>
         )}
 
@@ -146,7 +142,7 @@ export function VirtualizedMessageList({
 
         {isLoading && (
           <div className="flex items-start gap-4 px-4 py-6">
-            <MaterialCard className="border-border text-text-secondary flex h-9 w-9 items-center justify-center rounded-full border">
+            <div className="chalk-bubble flex h-9 w-9 items-center justify-center rounded-full">
               <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 3a9 9 0 019 9"
@@ -165,40 +161,38 @@ export function VirtualizedMessageList({
                   className="opacity-20"
                 />
               </svg>
-            </MaterialCard>
-            <MaterialCard className="border-border text-text-secondary flex-1 rounded-lg border p-4 text-sm">
-              <div className="text-text-secondary flex items-center gap-2 text-xs uppercase tracking-wider">
+            </div>
+            <div className="chalk-bubble flex-1 rounded-lg p-4 text-sm">
+              <div className="text-[var(--chalk-white-faded)] flex items-center gap-2 text-xs uppercase tracking-wider">
                 <span>Assistent</span>
-                <span className="bg-text-1 inline-flex h-1.5 w-1.5 animate-pulse rounded-full" />
+                <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--chalk-white-faded)]" />
                 <span>Schreibt …</span>
               </div>
               <div className="mt-3 flex gap-1">
-                <div className="bg-text-1 h-2 w-2 animate-pulse rounded-full" />
+                <div className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]" />
                 <div
-                  className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
+                  className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]"
                   style={{ animationDelay: "0.15s" }}
                 />
                 <div
-                  className="bg-text-1 h-2 w-2 animate-pulse rounded-full"
+                  className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]"
                   style={{ animationDelay: "0.3s" }}
                 />
               </div>
-            </MaterialCard>
+            </div>
           </div>
         )}
 
         {/* Scroll to Bottom FAB - Fixed Position */}
         {!isSticking && (
           <div className="pointer-events-none fixed bottom-28 left-1/2 z-fab -translate-x-1/2 animate-in fade-in slide-in-from-bottom-4 duration-200">
-            <Button
+            <button
               onClick={() => scrollToBottom()}
-              variant="primary"
-              size="sm"
-              className="pointer-events-auto rounded-full shadow-lg hover:shadow-xl"
+              className="chalk-button px-4 py-2 text-sm rounded-full shadow-lg hover:shadow-xl"
               aria-label="Zu neuen Nachrichten scrollen"
             >
               ↓ Nach unten
-            </Button>
+            </button>
           </div>
         )}
       </div>

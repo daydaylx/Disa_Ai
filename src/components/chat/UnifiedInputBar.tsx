@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "@/ui/Button";
 import { Textarea } from "@/ui/Textarea";
 
 export interface UnifiedInputBarProps {
@@ -66,37 +65,34 @@ export function UnifiedInputBar({
           "calc(max(var(--keyboard-offset, 0px), env(safe-area-inset-bottom, 0px)) + 0.5rem)",
       }}
     >
-      <div className="slate-surface-raised flex items-end gap-2 rounded-2xl border chalk-border p-2 transition-all duration-200 focus-within:chalk-border-strong focus-within:shadow-[var(--shadow-slate-deep)] sm:gap-3 sm:p-3">
-        <div className="relative z-10 flex-1">
+      {/* Minimalist Slate Input: Horizontal Line */}
+      <div className="flex items-end gap-4 p-2">
+        <div className="relative z-10 flex-1 pb-1">
           <Textarea
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Schreibe..."
+            placeholder="Schreibe auf die Tafel…"
             aria-label="Nachricht eingeben"
-            className="chalk-text w-full min-h-[40px] max-h-[180px] resize-none border-0 bg-transparent px-3 py-2 text-base leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus-visible:ring-0 sm:px-4 sm:py-3"
+            className="input-chalk w-full min-h-[40px] max-h-[180px] resize-none px-2 py-2 placeholder:text-chalk-dim/50"
             rows={1}
             data-testid="composer-input"
           />
         </div>
 
-        <div className="z-10 flex-shrink-0">
-          <Button
+        <div className="z-10 flex-shrink-0 pb-1">
+          <button
             onClick={onSend}
             disabled={!value.trim() || isLoading}
-            size="icon"
-            variant={value.trim() ? "primary" : "ghost"}
             className={cn(
-              "h-10 w-10 rounded-full transition-all chalk-focus",
-              value.trim()
-                ? "shadow-[var(--shadow-slate-soft)] hover:shadow-[var(--shadow-slate-deep),var(--chalk-glow-accent)]"
-                : "text-ink-tertiary hover:bg-[rgba(255,255,255,0.06)]",
+              "btn-chalk h-12 w-12 flex items-center justify-center",
+              !value.trim() && "opacity-50 cursor-not-allowed",
             )}
             aria-label="Senden"
           >
-            <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
-          </Button>
+            <Send className="h-5 w-5" />
+          </button>
         </div>
       </div>
     </div>

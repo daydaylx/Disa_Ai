@@ -1,0 +1,252 @@
+/**
+ * DISA AI - TAFEL-KREIDE THEME
+ *
+ * Erweitert das bestehende Schiefer & Kreide Theme um ein vollständiges Tafel-Erlebnis
+ * mit authentischen Kreide-Effekten und Tafel-Textur
+ */
+
+:root {
+  /* Tafel-Hintergrund */
+  --chalkboard-bg: #0a0a0b;
+  --chalkboard-vignette: radial-gradient(ellipse at center, rgba(26, 26, 28, 0.3) 0%, rgba(10, 10, 11, 0.8) 100%);
+
+  /* Tafel-Textur */
+  --chalkboard-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><filter id="chalkboard"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0.1"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.02 0.02 0.03 0.03 0.02 0.02 0"/></feComponentTransfer></filter><rect width="400" height="400" filter="url(%23chalkboard)" opacity="0.4"/></svg>');
+
+  /* Kreide-Effekte */
+  --chalk-stroke: 1.5px;
+  --chalk-stroke-rough: 2px;
+  --chalk-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="chalk-texture"><feTurbulence type="turbulence" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.1 0.1 0.2 0.1 0.1 0"/></feComponentTransfer></filter><rect width="100" height="100" filter="url(%23chalk-texture)" opacity="0.3"/></svg>');
+
+  /* Kreide-Farben */
+  --chalk-white: rgba(236, 236, 236, 0.95);
+  --chalk-white-faded: rgba(236, 236, 236, 0.7);
+  --chalk-blue: rgba(167, 200, 255, 0.9);
+  --chalk-yellow: rgba(255, 239, 166, 0.9);
+
+  /* Kreide-Schatten und Glühen */
+  --chalk-glow-text: 0 0 3px rgba(236, 236, 236, 0.4), 0 0 1px rgba(236, 236, 236, 0.6);
+  --chalk-glow-strong: 0 0 6px rgba(236, 236, 236, 0.5), 0 0 2px rgba(236, 236, 236, 0.7);
+  --chalk-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Tafel-Hintergrund für die gesamte Chat-Seite */
+.chalkboard-container {
+  background-color: var(--chalkboard-bg);
+  background-image: var(--chalkboard-texture), var(--chalkboard-vignette);
+  background-blend-mode: overlay, multiply;
+  background-size: 400px 400px, 100% 100%;
+  background-position: 0 0, center;
+  background-attachment: fixed, scroll;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Vignette-Effekt für den Rand */
+.chalkboard-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(10, 10, 11, 0.2) 60%,
+    rgba(10, 10, 11, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Chat-Blasen im Kreidestil */
+.chalk-bubble {
+  background-color: transparent;
+  background-image: var(--chalk-texture);
+  background-blend-mode: overlay;
+  border: var(--chalk-stroke) solid var(--chalk-white);
+  border-radius: 16px;
+  box-shadow:
+    var(--chalk-shadow),
+    0 0 0 1px rgba(236, 236, 236, 0.1),
+    inset 0 0 10px rgba(236, 236, 236, 0.05);
+  position: relative;
+  backdrop-filter: blur(0.5px);
+}
+
+/* Unregelmäßiger Kreide-Rand-Effekt */
+.chalk-bubble::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(236, 236, 236, 0.1) 50%,
+    transparent 70%
+  );
+  mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="rough-edge"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="1"/></filter><rect width="100" height="100" filter="url(%23rough-edge)"/></svg>');
+  mask-size: 100px 100px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Kreide-Text */
+.chalk-text {
+  color: var(--chalk-white);
+  text-shadow: var(--chalk-glow-text);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Kreide-Buttons und Pills */
+.chalk-button {
+  background-color: transparent;
+  background-image: var(--chalk-texture);
+  border: var(--chalk-stroke) solid var(--chalk-white);
+  border-radius: 24px;
+  color: var(--chalk-white);
+  text-shadow: var(--chalk-glow-text);
+  box-shadow: var(--chalk-shadow);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(0.5px);
+}
+
+.chalk-button:hover {
+  border-color: var(--chalk-white-faded);
+  box-shadow:
+    var(--chalk-shadow),
+    0 0 4px rgba(236, 236, 236, 0.2);
+  background-color: rgba(236, 236, 236, 0.05);
+}
+
+.chalk-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--chalk-white-faded),
+    var(--chalk-glow-strong);
+}
+
+.chalk-button.active {
+  background-color: rgba(236, 236, 236, 0.1);
+  border-color: var(--chalk-blue);
+  color: var(--chalk-blue);
+  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
+}
+
+/* Kreide-Eingabefeld */
+.chalk-input {
+  background-color: transparent;
+  background-image: var(--chalk-texture);
+  border: var(--chalk-stroke) solid var(--chalk-white);
+  border-radius: 20px;
+  color: var(--chalk-white);
+  text-shadow: var(--chalk-glow-text);
+  box-shadow: var(--chalk-shadow);
+  backdrop-filter: blur(0.5px);
+}
+
+.chalk-input::placeholder {
+  color: var(--chalk-white-faded);
+  text-shadow: none;
+  opacity: 0.8;
+}
+
+.chalk-input:focus {
+  outline: none;
+  border-color: var(--chalk-blue);
+  box-shadow:
+    var(--chalk-shadow),
+    0 0 4px rgba(167, 200, 255, 0.2);
+}
+
+/* Floating Action Button im Kreidestil */
+.chalk-fab {
+  background-color: transparent;
+  background-image: var(--chalk-texture);
+  border: var(--chalk-stroke) solid var(--chalk-white);
+  border-radius: 50%;
+  color: var(--chalk-white);
+  text-shadow: var(--chalk-glow-text);
+  box-shadow:
+    var(--chalk-shadow),
+    0 0 8px rgba(236, 236, 236, 0.3);
+  backdrop-filter: blur(0.5px);
+  transition: all 0.2s ease;
+}
+
+.chalk-fab:hover {
+  border-color: var(--chalk-blue);
+  color: var(--chalk-blue);
+  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
+  box-shadow:
+    var(--chalk-shadow),
+    0 0 12px rgba(167, 200, 255, 0.4);
+}
+
+/* Kreide-Pill-Menü */
+.chalk-pills-container {
+  background-color: rgba(10, 10, 11, 0.8);
+  border-radius: 30px;
+  padding: 4px;
+  backdrop-filter: blur(4px);
+  border: var(--chalk-stroke) solid var(--chalk-white-faded);
+  box-shadow: var(--chalk-shadow);
+}
+
+.chalk-pill {
+  background-color: transparent;
+  background-image: var(--chalk-texture);
+  border: var(--chalk-stroke) solid var(--chalk-white);
+  border-radius: 20px;
+  color: var(--chalk-white);
+  text-shadow: var(--chalk-glow-text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(0.5px);
+  white-space: nowrap;
+}
+
+.chalk-pill:hover {
+  background-color: rgba(236, 236, 236, 0.05);
+  border-color: var(--chalk-white-faded);
+}
+
+.chalk-pill.active {
+  background-color: rgba(167, 200, 255, 0.1);
+  border-color: var(--chalk-blue);
+  color: var(--chalk-blue);
+  text-shadow: 0 0 3px rgba(167, 200, 255, 0.4);
+}
+
+/* Scrollbar im Tafel-Stil */
+.chalkboard-container ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chalkboard-container ::-webkit-scrollbar-track {
+  background: rgba(10, 10, 11, 0.5);
+}
+
+.chalkboard-container ::-webkit-scrollbar-thumb {
+  background: rgba(236, 236, 236, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(236, 236, 236, 0.1);
+}
+
+.chalkboard-container ::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 236, 236, 0.5);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 640px) {
+  .chalk-pill {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .chalk-bubble {
+    border-radius: 12px;
+  }
+}

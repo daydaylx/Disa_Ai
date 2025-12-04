@@ -1,20 +1,22 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
+import { cn } from "@/lib/utils";
+
 /**
- * PremiumInput - Material Input mit Brand-Focus
+ * Input - Digital Slate Theme
  *
- * Inset-Style mit Brand-Ring auf Focus
+ * Minimalist line-based input.
+ * Replaced: Boxy/Neumorph styles.
+ * Use .input-chalk from global CSS for the core look.
  */
 const inputVariants = cva(
-  "flex min-h-[44px] w-full rounded-md px-3 py-2 text-base bg-surface-1 border border-border-ink text-ink-primary placeholder:text-ink-tertiary file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-fast",
+  "flex w-full bg-transparent px-0 py-2 text-lg file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-chalk-dim/50 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300",
   {
     variants: {
       variant: {
-        default:
-          "bg-surface-inset shadow-inset text-text-primary placeholder:text-ink-secondary focus-visible:ring-2 focus-visible:ring-brand focus-visible:shadow-brandGlow",
-        outline:
-          "border border-surface-1 bg-transparent placeholder:text-ink-secondary focus-visible:ring-2 focus-visible:ring-brand focus-visible:border-brand",
+        default: "input-chalk", // Defined in theme-slate.css (bottom border only)
+        ghost: "border-none focus:ring-0 p-0",
       },
     },
     defaultVariants: {
@@ -30,7 +32,12 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, variant, type, ...props }, ref) => {
     return (
-      <input type={type} className={inputVariants({ variant, className })} ref={ref} {...props} />
+      <input
+        type={type}
+        className={cn(inputVariants({ variant, className }))}
+        ref={ref}
+        {...props}
+      />
     );
   },
 );

@@ -13,15 +13,14 @@ describe("Button", () => {
   it("applies primary variant classes", () => {
     render(<Button variant="primary">Primary</Button>);
     const button = screen.getByRole("button");
-    // Updated to match Slate & Chalk specs
-    expect(button.className).toContain("border-[var(--border-chalk)]");
-    expect(button.className).toContain("bg-[var(--bg-slate)]");
+    // Updated to match new Digital Slate Theme (btn-chalk class)
+    expect(button.className).toContain("btn-chalk");
   });
 
   it("applies secondary variant classes", () => {
     render(<Button variant="secondary">Secondary</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("border-[var(--border-chalk)]");
+    expect(button.className).toContain("border-chalk-dim");
     expect(button.className).toContain("bg-transparent");
   });
 });
