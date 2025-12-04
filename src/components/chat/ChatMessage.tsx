@@ -105,14 +105,17 @@ export function ChatMessage({
     "after:pointer-events-none after:absolute after:inset-[0.5px] after:rounded-[inherit] after:border after:border-[var(--border-chalk-strong)] after:opacity-35 after:[mask-image:conic-gradient(from_0deg,_rgba(0,0,0,0.35)_0deg,_transparent_60deg,rgba(0,0,0,0.35)_130deg,_transparent_200deg,rgba(0,0,0,0.35)_280deg,_transparent_330deg,_rgba(0,0,0,0.35)_360deg)]";
 
   const bubbleClass = cn(
-    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-xl px-2 py-1.5 sm:px-2 sm:py-2",
+    "relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[60%] rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3",
     "backdrop-blur-[0.25px] text-text-primary",
     isUser &&
-      cn("ml-auto border border-[var(--border-chalk-strong)] bg-transparent", chalkNoiseBorder),
+      cn(
+        "ml-auto border-2 border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.03)]",
+        chalkNoiseBorder,
+      ),
     isAssistant &&
       cn(
-        "mr-auto border border-[var(--border-chalk-strong)] bg-transparent",
-        "before:absolute before:-left-1 before:top-1 before:bottom-1 before:w-px before:rounded-full before:bg-[var(--accent-primary)]",
+        "mr-auto border-2 border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.03)]",
+        "before:absolute before:-left-1.5 before:top-2 before:bottom-2 before:w-1 before:rounded-full before:bg-[var(--accent-primary)]",
         chalkNoiseBorder,
       ),
     isSystem &&
