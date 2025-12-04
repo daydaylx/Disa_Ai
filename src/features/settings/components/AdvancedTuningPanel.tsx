@@ -1,3 +1,4 @@
+import { DEFAULT_MODEL_ID } from "@/config/modelPresets";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 import { discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button, Input, Label } from "@/ui";
@@ -141,7 +142,7 @@ export function AdvancedTuningPanel({
           <Input
             value={preferredModelInput}
             onChange={(e) => onPreferredModelChange(e.target.value)}
-            placeholder="openai/gpt-4o-mini"
+            placeholder={DEFAULT_MODEL_ID}
             className="text-xs"
           />
           <Button variant="secondary" size="sm" onClick={onPreferredModelSave}>
