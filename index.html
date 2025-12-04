@@ -94,6 +94,488 @@
         }
       }
     </style>
+    <style id="nojs-fallback-style">
+      :root {
+        --nojs-bg: radial-gradient(circle at 18% 20%, #131a2f, #060a17 55%, #03050c 100%);
+        --nojs-surface: rgba(255, 255, 255, 0.04);
+        --nojs-surface-strong: rgba(255, 255, 255, 0.08);
+        --nojs-border: rgba(255, 255, 255, 0.12);
+        --nojs-border-strong: rgba(255, 255, 255, 0.22);
+        --nojs-ink: #f7f9ff;
+        --nojs-muted: #b7c1db;
+        --nojs-accent: #8b5cf6;
+        --nojs-accent-alt: #22d3ee;
+        --nojs-success: #22c55e;
+        --nojs-shadow: 0 15px 60px rgba(5, 8, 20, 0.55);
+        --nojs-radius-lg: 22px;
+        --nojs-radius-md: 14px;
+        --nojs-radius-sm: 10px;
+      }
+
+      .nojs-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        background: var(--nojs-bg);
+        color: var(--nojs-ink);
+        padding: clamp(1.25rem, 2vw, 2.25rem);
+        position: relative;
+        isolation: isolate;
+      }
+
+      .nojs-shell::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 72% 8%, rgba(139, 92, 246, 0.15), transparent 38%),
+          radial-gradient(ellipse at 18% 82%, rgba(34, 211, 238, 0.12), transparent 42%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .nojs-layout {
+        position: relative;
+        z-index: 1;
+        max-width: 1160px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1.5rem, 2vw, 2.5rem);
+      }
+
+      .nojs-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .nojs-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .nojs-logo-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+        display: grid;
+        place-items: center;
+        color: #0b0f14;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        box-shadow: var(--nojs-shadow);
+      }
+
+      .nojs-logo-text {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .nojs-logo-sub {
+        font-size: 0.9rem;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-nav {
+        display: flex;
+        align-items: center;
+        gap: clamp(0.5rem, 1vw, 1rem);
+        flex-wrap: wrap;
+      }
+
+      .nojs-nav a {
+        color: var(--nojs-muted);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        transition: border-color 160ms ease, color 160ms ease;
+      }
+
+      .nojs-nav a:hover {
+        border-color: var(--nojs-border-strong);
+        color: var(--nojs-ink);
+      }
+
+      .nojs-cta {
+        background: var(--nojs-accent);
+        color: #0c0f1a;
+        padding: 0.65rem 1rem;
+        border-radius: 999px;
+        font-weight: 700;
+        box-shadow: 0 8px 22px rgba(139, 92, 246, 0.35);
+      }
+
+      .nojs-hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: clamp(1.25rem, 3vw, 2rem);
+        align-items: stretch;
+      }
+
+      .nojs-hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .nojs-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        background: rgba(34, 211, 238, 0.14);
+        color: #e5fbff;
+        border: 1px solid rgba(34, 211, 238, 0.28);
+        border-radius: 999px;
+        padding: 0.3rem 0.75rem;
+        width: fit-content;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+      }
+
+      .nojs-hero-title {
+        font-size: clamp(2.2rem, 3vw, 3rem);
+        line-height: 1.1;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      .nojs-hero-text {
+        margin: 0;
+        color: var(--nojs-muted);
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+
+      .nojs-cta-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 0.35rem;
+      }
+
+      .nojs-cta-primary,
+      .nojs-cta-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border-radius: 12px;
+        padding: 0.65rem 1.1rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 120ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      }
+
+      .nojs-cta-primary {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: #0b0f14;
+        box-shadow: 0 14px 30px rgba(139, 92, 246, 0.4);
+      }
+
+      .nojs-cta-secondary {
+        border: 1px solid var(--nojs-border-strong);
+        color: var(--nojs-ink);
+        background: var(--nojs-surface);
+      }
+
+      .nojs-cta-primary:hover,
+      .nojs-cta-secondary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 38px rgba(5, 8, 20, 0.35);
+      }
+
+      .nojs-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+      }
+
+      .nojs-pill {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--nojs-border);
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.92rem;
+        color: var(--nojs-ink);
+      }
+
+      .nojs-chat-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        border: 1px solid var(--nojs-border);
+        border-radius: var(--nojs-radius-lg);
+        padding: clamp(1rem, 2vw, 1.6rem);
+        box-shadow: var(--nojs-shadow);
+        backdrop-filter: blur(6px);
+      }
+
+      .nojs-chat-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .nojs-chip {
+        background: rgba(139, 92, 246, 0.14);
+        color: #ede9ff;
+        padding: 0.4rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.92rem;
+        border: 1px solid rgba(139, 92, 246, 0.4);
+      }
+
+      .nojs-status {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.9rem;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-status::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--nojs-success);
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.2);
+      }
+
+      .nojs-chat-thread {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .nojs-msg {
+        display: flex;
+        gap: 0.65rem;
+        align-items: flex-start;
+      }
+
+      .nojs-msg.user {
+        flex-direction: row-reverse;
+      }
+
+      .nojs-bubble {
+        padding: 0.9rem 1rem;
+        border-radius: var(--nojs-radius-md);
+        border: 1px solid var(--nojs-border);
+        background: var(--nojs-surface);
+        color: var(--nojs-ink);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        max-width: 100%;
+      }
+
+      .nojs-msg.assistant .nojs-bubble {
+        background: rgba(139, 92, 246, 0.12);
+        border-color: rgba(139, 92, 246, 0.4);
+      }
+
+      .nojs-msg.user .nojs-bubble {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--nojs-border-strong);
+      }
+
+      .nojs-bubble-title {
+        margin: 0 0 0.35rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .nojs-msg p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .nojs-time {
+        display: block;
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        background: var(--nojs-surface-strong);
+        border: 1px solid var(--nojs-border);
+        color: var(--nojs-ink);
+      }
+
+      .nojs-avatar.assistant {
+        background: linear-gradient(140deg, rgba(139, 92, 246, 0.75), rgba(34, 211, 238, 0.75));
+        color: #0b0f14;
+        border-color: rgba(139, 92, 246, 0.5);
+      }
+
+      .nojs-quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.35rem 0 0.5rem;
+      }
+
+      .nojs-quick-actions button {
+        border: 1px solid var(--nojs-border);
+        background: var(--nojs-surface);
+        color: var(--nojs-ink);
+        border-radius: 999px;
+        padding: 0.45rem 0.85rem;
+        font-weight: 600;
+        cursor: not-allowed;
+        opacity: 0.9;
+      }
+
+      .nojs-quick-actions button:hover {
+        border-color: var(--nojs-border-strong);
+      }
+
+      .nojs-input {
+        margin-top: 0.85rem;
+        display: flex;
+        gap: 0.65rem;
+        align-items: center;
+        padding: 0.65rem 0.75rem;
+        border-radius: var(--nojs-radius-md);
+        border: 1px dashed var(--nojs-border);
+        background: var(--nojs-surface);
+      }
+
+      .nojs-input input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--nojs-ink);
+        font-weight: 600;
+        padding: 0.4rem 0;
+      }
+
+      .nojs-input input::placeholder {
+        color: var(--nojs-muted);
+      }
+
+      .nojs-input button {
+        border: 1px solid var(--nojs-border-strong);
+        background: rgba(139, 92, 246, 0.18);
+        color: #f5f0ff;
+        padding: 0.5rem 0.85rem;
+        border-radius: var(--nojs-radius-sm);
+        font-weight: 700;
+        cursor: not-allowed;
+      }
+
+      .nojs-section-title {
+        margin: 0 0 0.35rem;
+        font-size: 1.2rem;
+      }
+
+      .nojs-subtle {
+        margin: 0 0 1rem;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+
+      .nojs-card {
+        background: var(--nojs-surface);
+        border: 1px solid var(--nojs-border);
+        border-radius: var(--nojs-radius-md);
+        padding: 1rem 1.1rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      }
+
+      .nojs-card h3 {
+        margin: 0 0 0.35rem;
+        font-size: 1.1rem;
+      }
+
+      .nojs-card p {
+        margin: 0;
+        color: var(--nojs-muted);
+        line-height: 1.5;
+      }
+
+      .nojs-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .nojs-list li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.5rem;
+        align-items: flex-start;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--nojs-accent);
+        box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.16);
+        margin-top: 0.25rem;
+      }
+
+      .nojs-footnote {
+        font-size: 0.92rem;
+        color: var(--nojs-muted);
+      }
+
+      .nojs-footer {
+        border-top: 1px solid var(--nojs-border);
+        padding-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        color: var(--nojs-muted);
+        font-size: 0.95rem;
+      }
+
+      .nojs-footer a {
+        color: var(--nojs-ink);
+      }
+
+      @media (max-width: 640px) {
+        .nojs-chat-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nojs-nav {
+          justify-content: flex-start;
+        }
+
+        .nojs-shell {
+          padding: 1.15rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root">
@@ -130,123 +612,176 @@
         ></div>
         <div style="font-weight: 600">Disa&nbsp;AI wird geladen...</div>
       </div>
-      <!-- Fallback content for when JavaScript is disabled -->
-      <div
-        class="fallback-content"
-        style="
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
-          padding: 2rem;
-          text-align: center;
-          background: #0f1420;
-          color: #f5f6ff;
-          font-family:
-            system-ui,
-            -apple-system,
-            BlinkMacSystemFont,
-            &quot;Segoe UI&quot;,
-            sans-serif;
-        "
-      >
-        <div
-          style="
-            max-width: 600px;
-            background: #151d31;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 14px;
-            padding: 2rem;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
-          "
-        >
-          <h1 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: #f5f6ff">
-            Disa AI - Mobile KI-Assistentin
-          </h1>
+      <!-- Server-rendered fallback for environments without JavaScript -->
+      <div id="nojs-shell" class="nojs-shell" role="presentation">
+        <div class="nojs-layout" aria-live="polite">
+          <header class="nojs-header">
+            <div class="nojs-brand">
+              <div class="nojs-logo-mark" aria-hidden="true">D</div>
+              <div>
+                <div class="nojs-logo-text">Disa AI</div>
+                <div class="nojs-logo-sub">Private KI-Assistentin</div>
+              </div>
+            </div>
+            <nav class="nojs-nav" aria-label="Hauptnavigation (statisch)">
+              <a href="#demo">Demo</a>
+              <a href="#features">Funktionen</a>
+              <a href="#privacy">Datenschutz</a>
+              <a class="nojs-cta" href="/chat">App starten</a>
+            </nav>
+          </header>
 
-          <p style="font-size: 1rem; line-height: 1.5rem; color: #c2c7da; margin-bottom: 1.5rem">
-            Disa AI ist eine moderne, mobile KI-Assistentin für produktive Gespräche und effiziente
-            Aufgabenbewältigung. Die Anwendung benötigt JavaScript, um korrekt zu funktionieren.
-          </p>
-
-          <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center">
-            <img
-              src="/app-icons/icon-192.png"
-              alt="Disa AI Logo"
-              style="width: 64px; height: 64px; border-radius: 12px"
-            />
-
-            <div
-              style="
-                background: #8b5cf6;
-                color: #0b0f14;
-                padding: 0.75rem 1.5rem;
-                border-radius: 10px;
-                font-weight: 600;
-                margin-top: 1rem;
-              "
-            >
-              App starten
+          <section class="nojs-hero" id="hero">
+            <div class="nojs-hero-copy">
+              <span class="nojs-eyebrow">No-JS Preview - servergerendert</span>
+              <h1 class="nojs-hero-title">Weiter chatten, auch wenn Skripte blockiert sind.</h1>
+              <p class="nojs-hero-text">
+                Diese Seite wird statisch ausgeliefert. Sobald JavaScript verfügbar ist, lädt
+                automatisch die vollwertige Disa-App mit Modellwahl, Rollen und Offline-Modus.
+              </p>
+              <div class="nojs-cta-group">
+                <a class="nojs-cta-primary" href="/chat">Im Browser öffnen</a>
+                <a class="nojs-cta-secondary" href="#privacy">Datenschutz ansehen</a>
+              </div>
+              <div class="nojs-meta">
+                <span class="nojs-pill">Offline-PWA bereit</span>
+                <span class="nojs-pill">Rollen &amp; Modelle</span>
+                <span class="nojs-pill">Kein Tracking</span>
+              </div>
             </div>
 
-            <p style="font-size: 0.875rem; color: #8d94ad; margin-top: 1rem">
-              Bitte aktivieren Sie JavaScript in Ihrem Browser, um Disa AI zu nutzen.
-            </p>
+            <div class="nojs-chat-card" id="demo" aria-label="Statische Chat-Vorschau ohne JavaScript">
+              <div class="nojs-chat-header">
+                <div class="nojs-chip">Demo-Chat - Persona: Research Coach</div>
+                <div class="nojs-status">Status: lokal</div>
+              </div>
 
-            <div
-              style="
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                justify-content: center;
-                margin-top: 1.5rem;
-              "
-            >
-              <a href="/chat" style="color: #a78bfa; text-decoration: none; font-size: 0.875rem"
-                >Chat starten</a
-              >
-              <span style="color: #6f738b">|</span>
-              <a href="/models" style="color: #a78bfa; text-decoration: none; font-size: 0.875rem"
-                >Modelle</a
-              >
-              <span style="color: #6f738b">|</span>
-              <a href="/roles" style="color: #a78bfa; text-decoration: none; font-size: 0.875rem"
-                >Rollen</a
-              >
-              <span style="color: #6f738b">|</span>
-              <a href="/settings" style="color: #a78bfa; text-decoration: none; font-size: 0.875rem"
-                >Einstellungen</a
-              >
+              <div class="nojs-chat-thread">
+                <article class="nojs-msg user">
+                  <div class="nojs-avatar" aria-hidden="true">DU</div>
+                  <div class="nojs-bubble">
+                    <div class="nojs-bubble-title">Du</div>
+                    <p>
+                      Hey Disa, kannst du mir drei Argumente nennen, warum unser Team KI produktiv
+                      einsetzen sollte?
+                    </p>
+                    <span class="nojs-time">Vor 1 Minute</span>
+                  </div>
+                </article>
+
+                <article class="nojs-msg assistant">
+                  <div class="nojs-avatar assistant" aria-hidden="true">AI</div>
+                  <div class="nojs-bubble">
+                    <div class="nojs-bubble-title">Disa</div>
+                    <p>- Spart Zeit: Routinefragen werden in Sekunden beantwortet.</p>
+                    <p>- Konsistent: Rollen halten Tonalität und Quellenhinweise stabil.</p>
+                    <p>- Sicher: Demo läuft ohne Telemetrie, nur lokales Rendering.</p>
+                    <span class="nojs-time">Gerade eben - Modell: GPT-4.1 mini (Demo)</span>
+                  </div>
+                </article>
+
+                <article class="nojs-msg user">
+                  <div class="nojs-avatar" aria-hidden="true">DU</div>
+                  <div class="nojs-bubble">
+                    <div class="nojs-bubble-title">Du</div>
+                    <p>Mach daraus eine kurze Agenda für unser Team-Meeting.</p>
+                    <span class="nojs-time">Gerade eben</span>
+                  </div>
+                </article>
+
+                <article class="nojs-msg assistant">
+                  <div class="nojs-avatar assistant" aria-hidden="true">AI</div>
+                  <div class="nojs-bubble">
+                    <div class="nojs-bubble-title">Disa</div>
+                    <p>
+                      1) Ziel &amp; Rollen klären (2 Min)<br />
+                      2) Beispiel-Workflows zeigen (5 Min)<br />
+                      3) Guardrails &amp; Datenschutz (5 Min)<br />
+                      4) Nächste Schritte &amp; Owner (3 Min)
+                    </p>
+                    <span class="nojs-time">Demo-Ausgabe - Kein Tracking</span>
+                  </div>
+                </article>
+              </div>
+
+              <div class="nojs-quick-actions" aria-label="Schnellaktionen (Demo, nicht klickbar)">
+                <button type="button" aria-disabled="true">Meeting-Agenda</button>
+                <button type="button" aria-disabled="true">Deutsch / Englisch</button>
+                <button type="button" aria-disabled="true">Ton: sachlich</button>
+                <button type="button" aria-disabled="true">Quellen zitieren</button>
+              </div>
+
+              <div class="nojs-input" aria-label="Statische Eingabe, nicht interaktiv">
+                <input
+                  name="nojs-input"
+                  type="text"
+                  aria-readonly="true"
+                  placeholder="Schreibe eine Nachricht - Demo ohne JavaScript"
+                />
+                <button type="button" aria-disabled="true">Senden</button>
+              </div>
+
+              <div class="nojs-footnote">
+                Demo bleibt sichtbar, wenn der Client nicht lädt. Die echte App benötigt JavaScript.
+              </div>
             </div>
+          </section>
+
+          <section id="features" aria-labelledby="nojs-features-title">
+            <h2 class="nojs-section-title" id="nojs-features-title">Kernfunktionen im Überblick</h2>
+            <p class="nojs-subtle">Was dich nach dem Laden des Clients erwartet.</p>
+            <div class="nojs-grid">
+              <div class="nojs-card">
+                <h3>Rollenvorlagen</h3>
+                <p>Starte Gespräche mit vordefinierten Rollen für Recherche, Stil oder Support.</p>
+              </div>
+              <div class="nojs-card">
+                <h3>Modellwahl</h3>
+                <p>Wechsle pro Chat das passende Modell (z. B. GPT-4.1, Claude) ohne Kontextverlust.</p>
+              </div>
+              <div class="nojs-card">
+                <h3>Gerätefreundlich</h3>
+                <p>Touch-optimiert, PWA-fähig und bereit für Handoff zwischen Desktop und Mobile.</p>
+              </div>
+              <div class="nojs-card">
+                <h3>Offline-fähige Shell</h3>
+                <p>Shell und UI-Assets können gecacht werden; Chats starten, sobald Verbindung steht.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="privacy" aria-labelledby="nojs-privacy-title">
+            <h2 class="nojs-section-title" id="nojs-privacy-title">Datenschutz &amp; Betrieb</h2>
+            <p class="nojs-subtle">Auszug aus der Datenschutzerklärung (Stand 23.10.2025).</p>
+            <ul class="nojs-list">
+              <li>
+                <span class="nojs-dot" aria-hidden="true"></span>
+                <span>Keine Tracking-Pixel; Infrastruktur nutzt nur technisch notwendige Cookies (z. B. Cloudflare).</span>
+              </li>
+              <li>
+                <span class="nojs-dot" aria-hidden="true"></span>
+                <span>KI-Antworten werden über OpenRouter erzeugt; Eingaben speichern wir selbst nicht.</span>
+              </li>
+              <li>
+                <span class="nojs-dot" aria-hidden="true"></span>
+                <span>Kontakt lt. Datenschutzerklärung: <a href="mailto:grunert94@hotmail.com">grunert94@hotmail.com</a>.</span>
+              </li>
+            </ul>
+          </section>
+
+          <div class="nojs-footer">
+            <span>Statische Vorschau - funktioniert ohne JavaScript.</span>
+            <span>Die App lädt automatisch, sobald Skripte erlaubt sind.</span>
           </div>
         </div>
       </div>
     </div>
     <noscript>
       <style>
-        .fallback-content {
-          display: flex !important;
-        }
-
-        .no-js-message {
-          font-family:
-            system-ui,
-            -apple-system,
-            BlinkMacSystemFont,
-            "Segoe UI",
-            sans-serif;
-          color: #f8fafc;
-          background: #0f172a;
-          padding: 1.5rem;
-          text-align: center;
+        #initial-loader {
+          display: none !important;
         }
       </style>
-      <div class="no-js-message">
-        Disa&nbsp;AI benötigt JavaScript. Bitte aktivieren Sie JavaScript, um die Anwendung zu
-        verwenden.
-      </div>
     </noscript>
     <script type="module">
       import("/src/main.tsx").catch((error) => {
