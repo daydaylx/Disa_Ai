@@ -99,14 +99,82 @@
   /* Chalk Glow for text and borders */
   --chalk-glow: 0 0 8px rgba(236, 236, 236, 0.15), 0 0 2px rgba(236, 236, 236, 0.2);
   --chalk-glow-strong: 0 0 12px rgba(236, 236, 236, 0.25), 0 0 4px rgba(236, 236, 236, 0.3);
+  --chalk-glow-accent: 0 0 10px rgba(167, 200, 255, 0.3), 0 0 4px rgba(167, 200, 255, 0.4);
 
   /* Chalk Line - subtle blur for hand-drawn effect */
   --border-chalk-blur: rgba(236, 236, 236, 0.35);
   --chalk-line-shadow: 0 0 1px rgba(236, 236, 236, 0.4);
+
+  /* Chalk Dust Particles - for interactive elements */
+  --chalk-dust: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.025) 0%, transparent 45%);
+
+  /* Enhanced Shadows for depth */
+  --shadow-slate-soft: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  --shadow-slate-deep: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  /* Improved Border with texture */
+  --border-ink: rgba(236, 236, 236, 0.12);
 }
 
 :root[data-theme="dark"] {
   /* Ensure consistency in dark mode */
   --bg-app: #0E0E0F;
   --bg-page: #131314;
+}
+
+/* ========================================
+ * CHALK UTILITY CLASSES
+ * ======================================== */
+
+.chalk-text {
+  text-shadow: var(--chalk-glow);
+  letter-spacing: 0.02em;
+}
+
+.chalk-text-strong {
+  text-shadow: var(--chalk-glow-strong);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+.chalk-border {
+  border-color: var(--border-chalk);
+  box-shadow: var(--chalk-line-shadow);
+}
+
+.chalk-border-strong {
+  border-color: var(--border-chalk-strong);
+  box-shadow: var(--chalk-glow);
+}
+
+.slate-surface {
+  background-color: var(--bg-surface);
+  background-image: var(--chalk-noise);
+  background-blend-mode: overlay;
+}
+
+.slate-surface-raised {
+  background-color: var(--bg-surface);
+  background-image: var(--chalk-noise), var(--chalk-dust);
+  background-blend-mode: overlay, screen;
+  box-shadow: var(--shadow-slate-soft);
+}
+
+/* Chalk-style focus states */
+.chalk-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--border-chalk-strong), var(--chalk-glow-accent);
+}
+
+/* Subtle texture overlay for containers */
+.slate-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--chalk-noise);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
 }
