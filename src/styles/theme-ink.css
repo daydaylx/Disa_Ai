@@ -10,13 +10,13 @@
    * COLOR PALETTE (Schiefer)
    * ======================================== */
 
-  /* Slate Backgrounds */
-  --bg-app: #050608; /* Tiefes Nachtschiefer, deutlich dunklerer Grundton */
-  --bg-slate: #0b0d10; /* Abgesetzte Schieferfläche mit leichter Tönung */
+  /* Slate Backgrounds - Clear layer hierarchy */
+  --bg-app: #020304; /* Sehr tiefes Nachtschiefer - dunkelste Ebene */
+  --bg-slate: #08090b; /* Abgesetzte Schieferfläche - mittlere Ebene */
 
   --bg-page: var(--bg-slate); /* Mapping for compatibility */
-  --bg-surface: #121418; /* Helle Tafelstufe für Karten */
-  --bg-surface-strong: #1a1d22;
+  --bg-surface: #161820; /* Deutlich hellere Tafelstufe für Karten - besserer Kontrast */
+  --bg-surface-strong: #1f2228; /* Noch hellere Stufe für erhöhte Elemente */
 
   /* Chalk Text */
   --ink-primary: #ececec; /* text-chalk */
@@ -59,12 +59,14 @@
    * SHADOWS & BORDERS (digitale Kreide)
    * ======================================== */
 
-  /* Shadows - minimal, mostly for separation */
-  --shadow-paper: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.5);
+  /* Shadows - enhanced depth and separation */
+  --shadow-paper: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-floating: 0 12px 32px rgba(0, 0, 0, 0.65);
+  --shadow-elevated: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.04);
 
   --shadow-sm: var(--shadow-paper);
   --shadow-md: var(--shadow-floating);
+  --shadow-lg: var(--shadow-elevated);
 
   /* Borders - Chalk Lines */
   --border-color: rgba(236, 236, 236, 0.18);
@@ -96,10 +98,11 @@
   /* Chalk Noise Pattern - subtle grain texture for slate surface */
   --chalk-noise: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.05"/></svg>');
 
-  /* Chalk Glow for text and borders */
-  --chalk-glow: 0 0 4px rgba(236, 236, 236, 0.12), 0 0 1px rgba(236, 236, 236, 0.18);
-  --chalk-glow-strong: 0 0 6px rgba(236, 236, 236, 0.16), 0 0 2px rgba(236, 236, 236, 0.22);
-  --chalk-glow-accent: 0 0 6px rgba(167, 200, 255, 0.22), 0 0 2px rgba(167, 200, 255, 0.3);
+  /* Chalk Glow for text and borders - Enhanced visibility */
+  --chalk-glow: 0 0 6px rgba(236, 236, 236, 0.18), 0 0 2px rgba(236, 236, 236, 0.24);
+  --chalk-glow-strong: 0 0 10px rgba(236, 236, 236, 0.22), 0 0 3px rgba(236, 236, 236, 0.28);
+  --chalk-glow-accent: 0 0 12px rgba(243, 214, 138, 0.35), 0 0 4px rgba(243, 214, 138, 0.45);
+  --chalk-glow-accent-strong: 0 0 20px rgba(243, 214, 138, 0.5), 0 0 6px rgba(243, 214, 138, 0.6);
 
   /* Chalk Line - subtle blur for hand-drawn effect */
   --border-chalk-blur: rgba(236, 236, 236, 0.35);
@@ -180,4 +183,20 @@
   opacity: 0.6;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Subtle pulse animation for presence indicators */
+@keyframes presence-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(125, 220, 211, 0.5);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 6px rgba(125, 220, 211, 0);
+  }
+}
+
+.presence-indicator {
+  animation: presence-pulse 3s ease-in-out infinite;
 }
