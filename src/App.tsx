@@ -9,7 +9,6 @@ import { TooltipProvider } from "@/ui/Tooltip";
 import { Router } from "./app/router";
 import { FullPageLoader } from "./components/FullPageLoader";
 import { NekoLayer } from "./components/neko/NekoLayer";
-import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ModelCatalogProvider } from "./contexts/ModelCatalogContext";
 import { RolesProvider } from "./contexts/RolesContext";
@@ -33,7 +32,7 @@ const FeatureFlagPanel = lazy(() =>
 // AppContent component that runs inside the providers
 function AppContent() {
   useServiceWorker(); // Now safely inside ToastsProvider
-  const { settings, completeOnboarding } = useSettings();
+  const { settings } = useSettings();
 
   // Apply analytics opt-in/out
   useEffect(() => {
@@ -118,7 +117,6 @@ function AppContent() {
       <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
         <FeatureFlagPanel />
       </Suspense>
-      {!settings.hasCompletedOnboarding && <OnboardingOverlay onComplete={completeOnboarding} />}
     </div>
   );
 }

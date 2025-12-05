@@ -35,7 +35,6 @@ interface Settings {
   reduceMotion: boolean;
   hapticFeedback: boolean;
   restoreLastConversation: boolean;
-  hasCompletedOnboarding: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -54,7 +53,6 @@ const DEFAULT_SETTINGS: Settings = {
   reduceMotion: false,
   hapticFeedback: false,
   restoreLastConversation: true,
-  hasCompletedOnboarding: false,
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
@@ -246,10 +244,6 @@ export function useSettings() {
     saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
   }, [saveSettings]);
 
-  const completeOnboarding = useCallback(() => {
-    saveSettings({ hasCompletedOnboarding: true });
-  }, [saveSettings]);
-
   const resetSettings = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -295,7 +289,6 @@ export function useSettings() {
     setReduceMotion,
     setHapticFeedback,
     toggleRestoreLastConversation,
-    completeOnboarding,
     resetSettings,
   };
 }

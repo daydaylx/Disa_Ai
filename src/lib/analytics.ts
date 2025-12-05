@@ -323,13 +323,6 @@ class LocalAnalytics {
   trackApiError(errorType: string, model: string): void {
     this.track("metric_api_error", { errorType, model });
   }
-
-  /**
-   * Track Onboarding Progress
-   */
-  trackOnboardingStep(step: number, action: "view" | "complete" | "skip"): void {
-    this.track("onboarding_step", { step, action });
-  }
 }
 
 export interface AnalyticsStats {
