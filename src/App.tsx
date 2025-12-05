@@ -1,5 +1,4 @@
 import "./index.css"; // Consolidated CSS: tokens, base, components, Tailwind
-import "./styles/theme-slate.css"; // New Digital Slate Theme
 
 import React, { lazy, Suspense, useEffect, useRef } from "react";
 
@@ -57,7 +56,7 @@ function AppContent() {
   }, [settings.enableAnalytics]);
 
   return (
-    <div className="bg-slate min-h-screen w-full">
+    <div className="bg-app min-h-screen w-full">
       <SentryErrorBoundary
         fallback={({ error, resetError }) => (
           <div className="flex min-h-screen flex-col items-center justify-center p-4">
