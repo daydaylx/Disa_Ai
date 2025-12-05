@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { ChatApiStatus } from "@/hooks/useChat";
 import { AlertCircle, AlertTriangle, XCircle } from "@/lib/icons";
 import { hasApiKey } from "@/lib/openrouter/key";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 import { MaterialCard } from "@/ui/MaterialCard";
 import { Typography } from "@/ui/Typography";
@@ -16,6 +17,8 @@ interface ChatStatusBannerProps {
   };
   onDismiss?: () => void;
 }
+
+type BannerTone = "warning" | "error" | "info";
 
 export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBannerProps) {
   const navigate = useNavigate();
@@ -39,7 +42,7 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
                   : "Einen Moment bitte …"
               }`
             : "Der Test-Zugang ist vorübergehend ausgeschöpft.",
-          color: "warning" as const,
+          color: "warning" as BannerTone,
           actions: userHasKey
             ? []
             : [
@@ -56,7 +59,7 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
           title: "Kein API-Key",
           message:
             "Um Disa AI zu nutzen, benötigst du einen OpenRouter API-Key. Du kannst entweder den Test-Zugang verwenden oder deinen eigenen Key hinterlegen.",
-          color: "error" as const,
+          color: "error" as BannerTone,
           actions: [
             {
               label: "API-Key einrichten",
@@ -72,7 +75,7 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
           message:
             error?.message ||
             "Die Anfrage konnte nicht verarbeitet werden. Bitte versuche es erneut.",
-          color: "error" as const,
+          color: "error" as BannerTone,
           actions: [
             {
               label: "Status ansehen",
@@ -90,38 +93,57 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
   if (!config) return null;
 
   const Icon = config.icon;
-  const bgColor =
-    config.color === "warning"
-      ? "bg-amber-50 dark:bg-amber-950/30"
-      : config.color === "error"
-        ? "bg-red-50 dark:bg-red-950/30"
-        : "bg-blue-50 dark:bg-blue-950/30";
-  const iconColor =
-    config.color === "warning"
-      ? "text-amber-600 dark:text-amber-400"
-      : config.color === "error"
-        ? "text-red-600 dark:text-red-400"
-        : "text-blue-600 dark:text-blue-400";
-  const borderColor =
-    config.color === "warning"
-      ? "border-amber-200 dark:border-amber-800"
-      : config.color === "error"
-        ? "border-red-200 dark:border-red-800"
-        : "border-blue-200 dark:border-blue-800";
+
+  const toneStyles: Record<
+    BannerTone,
+    { bg: string; border: string; iconWrap: string; icon: string }
+  > = {
+    warning: {
+      bg: "bg-gradient-to-r from-amber-500/12 via-surface-1/90 to-surface-1/90",
+      border: "border-amber-400/30",
+      iconWrap: "bg-amber-500/20 text-amber-100",
+      icon: "text-amber-200",
+    },
+    error: {
+      bg: "bg-gradient-to-r from-red-500/10 via-surface-1/90 to-surface-1/90",
+      border: "border-red-400/35",
+      iconWrap: "bg-red-500/20 text-red-100",
+      icon: "text-red-200",
+    },
+    info: {
+      bg: "bg-gradient-to-r from-accent-primary/15 via-surface-1/90 to-surface-1/90",
+      border: "border-accent-primary/30",
+      iconWrap: "bg-accent-primary/20 text-accent-primary",
+      icon: "text-accent-primary",
+    },
+  };
+
+  const tone = toneStyles[config.color];
 
   return (
     <MaterialCard
       variant="raised"
-      className={`mx-[var(--spacing-4)] my-3 p-4 ${bgColor} border ${borderColor}`}
+      className={cn(
+        "mx-[var(--spacing-4)] my-3 rounded-2xl border px-4 py-3 shadow-lg",
+        tone.bg,
+        tone.border,
+      )}
       data-testid="chat-status-banner"
     >
       <div className="flex items-start gap-3">
-        <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${iconColor}`} />
+        <span
+          className={cn(
+            "mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-sm font-semibold",
+            tone.iconWrap,
+          )}
+        >
+          <Icon className={cn("h-4 w-4", tone.icon)} />
+        </span>
         <div className="flex-1 min-w-0">
           <Typography variant="body-sm" className="font-semibold text-text-primary mb-1">
             {config.title}
           </Typography>
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-text-secondary leading-relaxed">
             {config.message}
           </Typography>
           {config.actions.length > 0 && (

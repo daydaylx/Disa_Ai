@@ -249,12 +249,14 @@ export default function Chat() {
         onMenuClick={openMenu}
         headerActions={
           <Button
-            variant="ghost"
-            size="icon"
+            variant="secondary"
+            size="sm"
             onClick={() => setIsHistoryOpen(true)}
             aria-label="Verlauf öffnen"
+            className="gap-2 px-3"
           >
-            <Bookmark className="h-5 w-5 text-ink-secondary" />
+            <Bookmark className="h-4 w-4 text-ink-secondary" />
+            <span className="hidden sm:inline">Verlauf</span>
           </Button>
         }
       >
@@ -270,35 +272,37 @@ export default function Chat() {
             aria-label="Chat messages"
           >
             <div className="px-4 py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              {isEmpty ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <ChatStartCard
-                    onNewChat={handleStartNewChat}
-                    conversationCount={stats?.totalConversations ?? conversationCount}
+              <div className="flex-1 rounded-3xl border border-white/8 bg-surface-1/80 px-4 sm:px-6 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm flex flex-col gap-4">
+                {isEmpty ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <ChatStartCard
+                      onNewChat={handleStartNewChat}
+                      conversationCount={stats?.totalConversations ?? conversationCount}
+                    />
+                  </div>
+                ) : (
+                  <VirtualizedMessageList
+                    messages={messages}
+                    isLoading={isLoading}
+                    onCopy={(content) => {
+                      void navigator.clipboard.writeText(content);
+                    }}
+                    onEdit={handleEdit}
+                    onFollowUp={handleFollowUp}
+                    onRetry={(_messageId) => {
+                      /* TODO: Implement retry logic properly */
+                    }}
+                    className="w-full pb-2"
+                    scrollContainerRef={chatScrollRef}
                   />
-                </div>
-              ) : (
-                <VirtualizedMessageList
-                  messages={messages}
-                  isLoading={isLoading}
-                  onCopy={(content) => {
-                    void navigator.clipboard.writeText(content);
-                  }}
-                  onEdit={handleEdit}
-                  onFollowUp={handleFollowUp}
-                  onRetry={(_messageId) => {
-                    /* TODO: Implement retry logic properly */
-                  }}
-                  className="w-full pb-4"
-                  scrollContainerRef={chatScrollRef}
-                />
-              )}
-              <div ref={messagesEndRef} className="h-4" />
+                )}
+                <div ref={messagesEndRef} className="h-3" />
+              </div>
             </div>
           </main>
 
           {/* Input Area - Fixed at bottom */}
-          <div className="flex-none w-full bg-bg-app border-t border-white/5">
+          <div className="flex-none w-full bg-bg-app/90 backdrop-blur-md border-t border-white/8 shadow-[0_-12px_30px_rgba(0,0,0,0.35)]">
             <div className="max-w-3xl mx-auto px-4 py-3 pb-safe-bottom">
               <UnifiedInputBar
                 value={input}

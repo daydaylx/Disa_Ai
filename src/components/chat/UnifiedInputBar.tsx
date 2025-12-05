@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { ChevronUp, Cpu, Send, User } from "@/lib/icons";
+import { Cpu, Send, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -33,7 +33,6 @@ export function UnifiedInputBar({
   const { activeRole } = useRoles();
   const { settings } = useSettings();
   const navigate = useNavigate();
-  const [showContext, setShowContext] = useState(false);
 
   // Auto-resize logic
   useEffect(() => {
@@ -74,46 +73,35 @@ export function UnifiedInputBar({
 
   return (
     <div className={cn("w-full space-y-2", className)}>
-      {/* Context Bar (Collapsible) */}
-      {showContext && (
-        <div className="flex items-center gap-2 px-1 animate-fade-in">
+      {/* Context Bar (always visible for clarity) */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-ink-tertiary">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="uppercase tracking-[0.08em] text-ink-muted">Kontext</span>
           <button
             onClick={() => navigate("/models")}
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-surface-2 text-ink-secondary hover:text-ink-primary hover:bg-surface-3 transition-colors border border-white/5"
+            className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2 px-3 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-accent-primary/40 hover:text-ink-primary hover:bg-surface-3"
           >
             <Cpu className="h-3.5 w-3.5" />
-            <span className="font-medium truncate max-w-[100px]">{modelLabel}</span>
+            <span className="truncate max-w-[140px]">{modelLabel}</span>
           </button>
-
           <button
             onClick={() => navigate("/roles")}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors border border-white/5",
-              activeRole ? "text-accent-primary" : "text-ink-secondary hover:text-ink-primary",
+              "flex items-center gap-2 rounded-full border border-white/10 bg-surface-2 px-3 py-1.5 text-xs font-medium transition-colors",
+              activeRole
+                ? "text-accent-primary hover:border-accent-primary/50 hover:bg-accent-primary/10"
+                : "text-ink-secondary hover:border-accent-primary/40 hover:text-ink-primary hover:bg-surface-3",
             )}
           >
             <User className="h-3.5 w-3.5" />
-            <span className="font-medium truncate max-w-[100px]">{roleLabel}</span>
+            <span className="truncate max-w-[140px]">{roleLabel}</span>
           </button>
         </div>
-      )}
+        <span className="text-[10px] text-ink-muted">Enter senden • Shift+Enter Zeilenumbruch</span>
+      </div>
 
       {/* Main Input Container */}
-      <div className="relative flex items-end gap-2 bg-surface-1 rounded-2xl border border-white/5 p-1.5 focus-within:border-accent-primary/30 transition-colors">
-        {/* Context Toggle */}
-        <button
-          onClick={() => setShowContext(!showContext)}
-          className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
-            showContext
-              ? "bg-accent-primary/10 text-accent-primary"
-              : "text-ink-tertiary hover:text-ink-primary hover:bg-surface-2",
-          )}
-          aria-label="Optionen anzeigen"
-        >
-          <ChevronUp className={cn("h-5 w-5 transition-transform", showContext && "rotate-180")} />
-        </button>
-
+      <div className="relative flex items-end gap-3 rounded-3xl border border-white/8 bg-surface-1/90 p-2.5 shadow-[0_14px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm focus-within:border-accent-primary/40 focus-within:shadow-[0_16px_55px_rgba(99,102,241,0.18)]">
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -121,21 +109,21 @@ export function UnifiedInputBar({
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Schreibe eine Nachricht..."
-          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-2 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
+          className="flex-1 max-h-[160px] min-h-[48px] w-full resize-none bg-transparent px-2 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
           rows={1}
           data-testid="composer-input"
+          aria-label="Nachricht eingeben"
         />
 
         {/* Send Button */}
         <Button
           onClick={onSend}
           disabled={!value.trim() || isLoading}
-          variant={value.trim() ? "primary" : "ghost"}
+          variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200",
-            !value.trim() && "text-ink-muted hover:text-ink-tertiary hover:bg-surface-2",
-            isLoading && "opacity-50",
+            "flex-shrink-0 h-12 w-12 rounded-2xl transition-all duration-200 shadow-md",
+            isLoading && "opacity-60",
           )}
           aria-label="Senden"
         >

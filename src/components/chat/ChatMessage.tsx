@@ -153,7 +153,7 @@ export function ChatMessage({
         {/* Bubble */}
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
+            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-[0_10px_30px_rgba(0,0,0,0.18)]",
             isUser
               ? "bg-accent-primary text-white rounded-br-md"
               : "bg-surface-1 text-ink-primary border border-white/5 rounded-bl-md",
@@ -197,7 +197,7 @@ export function ChatMessage({
         {!isEditing && (
           <div
             className={cn(
-              "flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity",
+              "flex items-center gap-1 mt-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity",
               isUser ? "justify-end" : "justify-start",
             )}
           >
@@ -233,12 +233,13 @@ export function ChatMessage({
                   <button
                     onClick={() => setShowFollowUps(!showFollowUps)}
                     className={cn(
-                      "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors",
+                      "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors flex items-center gap-1 text-[12px] font-medium",
                       showFollowUps && "text-accent-primary bg-surface-2",
                     )}
                     title="Schnellantworten"
                   >
                     <MoreHorizontal className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Vorschläge</span>
                   </button>
                 )}
               </>
