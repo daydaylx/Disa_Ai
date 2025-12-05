@@ -72,7 +72,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header */}
-      <div className="flex-none px-4 py-4 space-y-4">
+      <div className="flex-none px-4 py-4 pb-3 space-y-4">
         <PageHeader
           title="Modelle"
           description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
@@ -97,7 +97,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             description="Versuche es mit anderen Suchbegriffen."
           />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);

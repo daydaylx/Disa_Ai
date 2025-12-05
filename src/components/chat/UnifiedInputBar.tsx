@@ -72,32 +72,33 @@ export function UnifiedInputBar({
   const roleLabel = activeRole?.name || "Standard";
 
   return (
-    <div className={cn("w-full space-y-2", className)}>
-      {/* Context Bar (always visible for clarity) */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-ink-tertiary">
+    <div className={cn("w-full space-y-3", className)}>
+      {/* Context Bar (subdued, doesn't compete with primary action) */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="uppercase tracking-[0.08em] text-ink-muted">Kontext</span>
           <button
             onClick={() => navigate("/models")}
-            className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2 px-3 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-accent-primary/40 hover:text-ink-primary hover:bg-surface-3"
+            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
           >
-            <Cpu className="h-3.5 w-3.5" />
+            <Cpu className="h-3.5 w-3.5 opacity-70" />
             <span className="truncate max-w-[140px]">{modelLabel}</span>
           </button>
           <button
             onClick={() => navigate("/roles")}
             className={cn(
-              "flex items-center gap-2 rounded-full border border-white/10 bg-surface-2 px-3 py-1.5 text-xs font-medium transition-colors",
+              "flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors",
               activeRole
-                ? "text-accent-primary hover:border-accent-primary/50 hover:bg-accent-primary/10"
-                : "text-ink-secondary hover:border-accent-primary/40 hover:text-ink-primary hover:bg-surface-3",
+                ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
+                : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
             )}
           >
-            <User className="h-3.5 w-3.5" />
+            <User className="h-3.5 w-3.5 opacity-70" />
             <span className="truncate max-w-[140px]">{roleLabel}</span>
           </button>
         </div>
-        <span className="text-[10px] text-ink-muted">Enter senden • Shift+Enter Zeilenumbruch</span>
+        <span className="text-[10px] text-ink-secondary/60 hidden sm:inline">
+          Enter • Shift+Enter
+        </span>
       </div>
 
       {/* Main Input Container */}

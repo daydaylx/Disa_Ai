@@ -91,7 +91,7 @@ export function TabbedSettingsView() {
       title="Einstellungen"
       description="Passe Disa an deine Bedürfnisse an."
     >
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {SECTIONS.map((section) => {
           const Icon = section.icon;
           const status = statusMap[section.id as keyof typeof statusMap];
@@ -103,7 +103,7 @@ export function TabbedSettingsView() {
               className={cn(
                 "w-full flex items-center gap-4 p-4 rounded-2xl",
                 "bg-surface-1 border border-white/5",
-                "hover:bg-surface-2 active:scale-[0.99] transition-all",
+                "hover:bg-surface-2 hover:border-white/8 active:scale-[0.99] transition-all",
                 "text-left",
               )}
             >
@@ -115,14 +115,14 @@ export function TabbedSettingsView() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-ink-primary">{section.label}</p>
-                <p className="text-xs text-ink-tertiary">{section.description}</p>
+                <p className="text-xs text-ink-secondary">{section.description}</p>
               </div>
 
               {/* Status */}
-              <span className="text-xs text-ink-tertiary flex-shrink-0">{status}</span>
+              <span className="text-xs text-ink-secondary flex-shrink-0">{status}</span>
 
               {/* Chevron */}
-              <ChevronRight className="h-4 w-4 text-ink-muted flex-shrink-0" />
+              <ChevronRight className="h-4 w-4 text-ink-tertiary flex-shrink-0" />
             </button>
           );
         })}
