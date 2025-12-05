@@ -88,49 +88,7 @@ export function UnifiedInputBar({
   const creativityLabel = `${settings.creativity}%`;
 
   return (
-    <div className={cn("w-full space-y-3", className)}>
-      {/* Context Bar (subdued, doesn't compete with primary action) */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => navigate("/models")}
-            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
-          >
-            <Cpu className="h-3.5 w-3.5 opacity-70" />
-            <span className="truncate max-w-[140px]">{modelLabel}</span>
-          </button>
-          <button
-            onClick={() => navigate("/roles")}
-            className={cn(
-              "flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors",
-              activeRole
-                ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
-                : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
-            )}
-          >
-            <User className="h-3.5 w-3.5 opacity-70" />
-            <span className="truncate max-w-[140px]">{roleLabel}</span>
-          </button>
-          <button
-            onClick={() => navigate("/settings/behavior")}
-            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
-          >
-            <Palette className="h-3.5 w-3.5 opacity-70" />
-            <span className="truncate max-w-[90px]">{styleLabel}</span>
-          </button>
-          <button
-            onClick={() => navigate("/settings/behavior")}
-            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
-          >
-            <Sparkles className="h-3.5 w-3.5 opacity-70" />
-            <span className="truncate max-w-[60px]">{creativityLabel}</span>
-          </button>
-        </div>
-        <span className="text-[10px] text-ink-secondary/60 hidden sm:inline">
-          Enter • Shift+Enter
-        </span>
-      </div>
-
+    <div className={cn("w-full space-y-2.5", className)}>
       {/* Main Input Container */}
       <div className="relative flex items-end gap-3 rounded-3xl border border-white/8 bg-surface-1/90 p-2.5 shadow-[0_14px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm focus-within:border-accent-primary/40 focus-within:shadow-[0_16px_55px_rgba(99,102,241,0.18)]">
         {/* Textarea */}
@@ -164,6 +122,45 @@ export function UnifiedInputBar({
             <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
           )}
         </Button>
+      </div>
+
+      {/* Context Bar below input (single row, horizontal scroll if needed) */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar px-1 pb-1 text-[11px] text-ink-tertiary">
+        <span className="uppercase tracking-[0.08em] text-ink-muted flex-shrink-0">Kontext</span>
+        <button
+          onClick={() => navigate("/models")}
+          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+        >
+          <Cpu className="h-3.5 w-3.5 opacity-70" />
+          <span className="truncate max-w-[140px]">{modelLabel}</span>
+        </button>
+        <button
+          onClick={() => navigate("/roles")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors",
+            activeRole
+              ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
+              : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
+          )}
+        >
+          <User className="h-3.5 w-3.5 opacity-70" />
+          <span className="truncate max-w-[140px]">{roleLabel}</span>
+        </button>
+        <button
+          onClick={() => navigate("/settings/behavior")}
+          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+        >
+          <Palette className="h-3.5 w-3.5 opacity-70" />
+          <span className="truncate max-w-[90px]">{styleLabel}</span>
+        </button>
+        <button
+          onClick={() => navigate("/settings/behavior")}
+          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+        >
+          <Sparkles className="h-3.5 w-3.5 opacity-70" />
+          <span className="truncate max-w-[60px]">{creativityLabel}</span>
+        </button>
+        <span className="text-[10px] text-ink-secondary/60 flex-shrink-0">Enter • Shift+Enter</span>
       </div>
     </div>
   );

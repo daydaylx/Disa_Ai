@@ -7,7 +7,7 @@ import { MaterialCard } from "@/ui/MaterialCard";
 
 import { BrandWordmark } from "../../app/components/BrandWordmark";
 import type { AppNavItem } from "../../config/navigation";
-import { isNavItemActive, PRIMARY_NAV_ITEMS } from "../../config/navigation";
+import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
 import { X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
@@ -82,7 +82,17 @@ export function AppMenuDrawer({
     { id: "datenschutz", label: "Datenschutz", path: "/datenschutz", Icon: X },
   ];
 
-  const navigationItems = navItems ?? PRIMARY_NAV_ITEMS;
+  const quickstartItem =
+    SECONDARY_NAV_ITEMS.find((item) => item.id === "themen") ??
+    ({
+      id: "themen",
+      label: "Quickstarts",
+      path: "/themen",
+      Icon: X,
+      description: "Themen & Beispielprompts",
+    } satisfies AppNavItem);
+
+  const navigationItems = navItems ?? [...PRIMARY_NAV_ITEMS, quickstartItem];
 
   // Lock background scroll while the drawer is open
   useEffect(() => {
@@ -146,12 +156,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 bg-[rgba(19,19,20,0.96)] z-10 py-3 px-4 border-b border-[var(--border-chalk)]">
+          <div className="flex items-center justify-between sticky top-0 bg-[rgba(19,19,20,0.96)] z-10 py-3 px-5 border-b border-[var(--border-chalk)] gap-3">
             <BrandWordmark className="text-base" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.04)] transition-colors border border-transparent hover:border-[var(--border-chalk)]"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.04)] transition-colors border border-transparent hover:border-[var(--border-chalk)] shrink-0"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
