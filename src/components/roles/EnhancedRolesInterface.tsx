@@ -145,26 +145,28 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header & Filters */}
-      <div className="flex-none px-4 py-4 pb-3 space-y-4">
+      <div className="flex-none sticky top-16 z-20 bg-bg-app/90 backdrop-blur px-4 py-3 space-y-3 border-b border-white/5">
         <PageHeader
           title="Rollen"
           description={`${filteredRoles.length} von ${roles.length} verfügbar`}
         />
 
         {/* Search */}
-        <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Rolle suchen..." />
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Rolle suchen..."
+          className="w-full"
+        />
 
-        {/* Filter Pills with fade edges for scroll affordance */}
-        <div className="relative -mx-4">
-          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-bg-app to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-bg-app to-transparent z-10 pointer-events-none" />
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-4">
-            {/* Favorites Toggle */}
-            <button
-              onClick={() =>
-                setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-              }
-              className={cn(
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-2 px-2">
+          {/* Favorites Toggle */}
+          <button
+            onClick={() =>
+              setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+            }
+            className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
                 filters.showFavoritesOnly
                   ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
@@ -215,7 +217,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
 
       {/* Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-20">
+      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-3">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-6 w-6" />}

@@ -72,17 +72,22 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header */}
-      <div className="flex-none px-4 py-4 pb-3 space-y-4">
+      <div className="flex-none sticky top-16 z-20 bg-bg-app/90 backdrop-blur px-4 py-3 border-b border-white/5 space-y-3">
         <PageHeader
           title="Modelle"
           description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
         />
 
-        <SearchInput value={search} onChange={setSearch} placeholder="Modell suchen..." />
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Modell suchen..."
+          className="w-full"
+        />
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-20">
+      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-3 space-y-2">
         {catalog === null ? (
           // Loading skeletons
           <div className="space-y-3">
@@ -107,10 +112,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   key={model.id}
                   onClick={() => setPreferredModel(model.id)}
                   className={cn(
-                    "w-full flex items-center gap-3 p-4 rounded-2xl border text-left transition-all",
-                    "hover:bg-surface-2 active:scale-[0.99]",
+                    "w-full flex items-center gap-3 p-4 rounded-2xl border text-left transition-all min-h-[84px]",
+                    "hover:bg-surface-2 active:scale-[0.99] shadow-sm",
                     isActive
-                      ? "bg-surface-1 border-accent-primary/30"
+                      ? "bg-surface-1 border-accent-primary/30 ring-1 ring-accent-primary/30"
                       : "bg-surface-1 border-white/5",
                   )}
                 >
@@ -143,22 +148,20 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       </span>
                       {isActive && <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />}
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-ink-tertiary">{model.provider}</span>
-                      <span className="text-xs text-ink-muted">·</span>
-                      <span className="text-xs text-ink-tertiary">
-                        {Math.round(getContextTokens(model) / 1000)}k
-                      </span>
-                      <span className="text-xs text-ink-muted">·</span>
-                      <span className="text-xs text-ink-tertiary">{getPriceLabel(model)}</span>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs text-ink-tertiary">
+                      <span className="truncate">{model.provider}</span>
+                      <span className="text-ink-muted">·</span>
+                      <span>{Math.round(getContextTokens(model) / 1000)}k</span>
+                      <span className="text-ink-muted">·</span>
+                      <span>{getPriceLabel(model)}</span>
                     </div>
                   </div>
 
                   {/* Favorite Toggle */}
                   <Button
                     variant="ghost"
-                    size="icon-sm"
-                    className="flex-shrink-0 text-ink-tertiary hover:text-status-warning"
+                    size="icon"
+                    className="flex-shrink-0 text-ink-tertiary hover:text-status-warning h-10 w-10"
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleModelFavorite(model.id);

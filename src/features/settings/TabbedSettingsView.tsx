@@ -101,10 +101,9 @@ export function TabbedSettingsView() {
               key={section.id}
               onClick={() => void navigate(section.to)}
               className={cn(
-                "w-full flex items-center gap-4 p-4 rounded-2xl",
-                "bg-surface-1 border border-white/5",
-                "hover:bg-surface-2 hover:border-white/8 active:scale-[0.99] transition-all",
-                "text-left",
+                "w-full flex items-center gap-4 p-4 rounded-2xl text-left",
+                "bg-surface-1 border border-white/5 shadow-sm",
+                "hover:bg-surface-2 active:scale-[0.99] transition-all",
               )}
             >
               {/* Icon */}
@@ -114,12 +113,14 @@ export function TabbedSettingsView() {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-ink-primary">{section.label}</p>
-                <p className="text-xs text-ink-secondary">{section.description}</p>
+                <p className="text-sm font-semibold text-ink-primary">{section.label}</p>
+                <p className="text-xs text-ink-tertiary leading-snug">{section.description}</p>
               </div>
 
               {/* Status */}
-              <span className="text-xs text-ink-secondary flex-shrink-0">{status}</span>
+              <span className="text-[11px] font-medium text-ink-primary bg-surface-2 px-2.5 py-1 rounded-full border border-white/5 flex-shrink-0">
+                {status}
+              </span>
 
               {/* Chevron */}
               <ChevronRight className="h-4 w-4 text-ink-tertiary flex-shrink-0" />
