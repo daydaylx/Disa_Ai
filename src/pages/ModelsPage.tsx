@@ -1,12 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { AppShell } from "../components/layout/AppShell";
 import { ModelsCatalog } from "../components/models/ModelsCatalog";
 
 export default function ModelsPage() {
   const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Removed unused navigate
 
   return (
     <>

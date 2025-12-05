@@ -1,32 +1,20 @@
-import { lazy, Suspense } from "react";
+import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { AppShell } from "../components/layout/AppShell";
+import { EnhancedRolesInterface } from "../components/roles/EnhancedRolesInterface";
 
-const EnhancedRolesInterface = lazy(() =>
-  import("../components/roles/EnhancedRolesInterface").then((module) => ({
-    default: module.EnhancedRolesInterface,
-  })),
-);
-
-/**
- * RolesPage - Material Design Roles Browser
- *
- * Uses the enhanced Material-Design roles interface with:
- * - Real roles from persona.json
- * - Favorites & usage tracking
- * - Category navigation
- * - Material depth system (raised/inset)
- */
 export default function RolesPage() {
+  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
+  // const navigate = useNavigate(); // Removed unused navigate
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Suspense
-        fallback={
-          <div className="flex flex-1 items-center justify-center p-6 text-sm text-ink-secondary">
-            Rollen werden geladen…
-          </div>
-        }
-      >
-        <EnhancedRolesInterface />
-      </Suspense>
-    </div>
+    <>
+      <AppShell title="Rollen & Personas" onMenuClick={openMenu}>
+        <div className="h-full flex flex-col">
+          <EnhancedRolesInterface className="flex-1 min-h-0" />
+        </div>
+      </AppShell>
+
+      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
+    </>
   );
 }

@@ -1,4 +1,8 @@
-import { useEffect, useRef } from "react";
+import {
+  // Removed RefObject from here as it's not directly used
+  useEffect,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { ModelEntry } from "@/config/models";
@@ -15,6 +19,7 @@ export interface UnifiedInputBarProps {
   onSend: () => void;
   isLoading?: boolean;
   className?: string;
+  // models, modelsLoading, modelsError, onRefreshModels are passed but not directly used in this component's JSX after refactor
   models: ModelEntry[] | null;
   modelsLoading?: boolean;
   modelsError?: string | null;
@@ -27,7 +32,8 @@ export function UnifiedInputBar({
   onSend,
   isLoading = false,
   className,
-  models,
+  // Removed unused props from destructuring
+  // models, modelsLoading, modelsError, onRefreshModels,
 }: UnifiedInputBarProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
@@ -116,6 +122,7 @@ export function UnifiedInputBar({
           placeholder="Schreibe eine Nachricht..."
           className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
           rows={1}
+          data-testid="composer-input" // Added data-testid back here
         />
 
         <Button

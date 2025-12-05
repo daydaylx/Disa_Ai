@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Check, Search, Shield, Star, Users } from "@/lib/icons";
+import { ChevronDown, RotateCcw, Search, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, FilterChip, Input, PremiumCard, Skeleton, useToasts } from "@/ui";
+import { Badge, Button, Card } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
@@ -30,10 +29,8 @@ interface EnhancedRolesInterfaceProps {
   className?: string;
 }
 
-// Main Enhanced Roles Interface Component
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
-  const { push } = useToasts();
-  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useRoles();
+  const { roles, activeRole, setActiveRole, rolesLoading } = useRoles();
   const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -41,9 +38,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set());
-  const detailRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
     searchHistory: [],
@@ -52,7 +48,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     showFavoritesOnly: false,
     showRecentlyUsed: false,
     showBuiltInOnly: false,
-    hideMatureContent: !settings.showNSFWContent, // Respect global NSFW setting
+    hideMatureContent: !settings.showNSFWContent,
     models: {
       showFreeOnly: false,
       showPremiumOnly: false,
@@ -71,31 +67,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     }));
   }, [settings.showNSFWContent]);
 
-  // Convert legacy roles to enhanced roles
-  const enhancedRoles = useMemo(() => {
-    return roles.map(migrateRole);
-  }, [roles]);
-
-  // Show error toast when role loading fails
-  useEffect(() => {
-    if (roleLoadError) {
-      push({
-        kind: "error",
-        title: "Fehler beim Laden der Rollen",
-        message: roleLoadError,
-      });
-    }
-  }, [roleLoadError, push]);
-
-  // Get category counts
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    enhancedRoles.forEach((role) => {
-      const category = role.category || "Spezial";
-      counts[category] = (counts[category] || 0) + 1;
-    });
-    return counts;
-  }, [enhancedRoles]);
+  const enhancedRoles = useMemo(() => roles.map(migrateRole), [roles]);
 
   const filterFnCallback = useCallback(
     (role: EnhancedRole, filters: FilterState, searchQuery: string) =>
@@ -116,7 +88,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortFnCallback,
   );
 
-  // Handlers
   const handleActivateRole = useCallback(
     (role: EnhancedRole) => {
       const legacyRole = {
@@ -129,525 +100,221 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         category: role.category,
         styleHints: role.styleHints,
       };
-
       setActiveRole(legacyRole);
       trackRoleUsage(role.id);
-
-      push({
-        kind: "success",
-        title: `${role.name} aktiviert`,
-        message: "Diese Rolle ist jetzt aktiv für neue Chats",
-      });
+      void navigate("/chat"); // Added void to ignore the promise
     },
-    [setActiveRole, trackRoleUsage, push],
+    [setActiveRole, trackRoleUsage, navigate],
   );
-
-  const handleCategorySelect = useCallback((category: string) => {
-    setSelectedCategory((prev) => (prev === category ? null : category));
-  }, []);
 
   const toggleRoleExpansion = useCallback((roleId: string) => {
     setExpandedRoles((prev) => {
       const next = new Set(prev);
-      if (next.has(roleId)) {
-        next.delete(roleId);
-      } else {
-        next.add(roleId);
-      }
+      if (next.has(roleId)) next.delete(roleId);
+      else next.add(roleId);
       return next;
     });
   }, []);
 
-  const toggleRoleDetails = useCallback((roleId: string) => {
-    setSelectedRoleId((prev) => (prev === roleId ? null : roleId));
-  }, []);
-
-  useEffect(() => {
-    if (!selectedRoleId) return;
-    const el = detailRefs.current[selectedRoleId];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  }, [selectedRoleId]);
-
-  // Show loading skeleton while roles are loading
   if (rolesLoading) {
     return (
-      <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
-        <div className="p-4 space-y-4">
-          <Skeleton className="h-10 w-full rounded-md" /> {/* Search bar skeleton */}
-          <div className="flex gap-2">
-            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
-            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
-            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
-          </div>
-          <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-32 rounded-sm" /> // Category pill skeleton
-            ))}
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[200px] w-full rounded-md" /> // Role card skeleton
-            ))}
-          </div>
+      <div className="flex flex-col h-full p-4 space-y-4 animate-pulse">
+        <div className="h-12 bg-surface-2 rounded-xl w-full" />
+        <div className="flex gap-2 overflow-hidden">
+          <div className="h-8 w-20 bg-surface-2 rounded-full" />
+          <div className="h-8 w-20 bg-surface-2 rounded-full" />
+          <div className="h-8 w-20 bg-surface-2 rounded-full" />
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="h-40 bg-surface-2 rounded-2xl" />
+          <div className="h-40 bg-surface-2 rounded-2xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
-      {/* MATERIAL INSET HEADER PANEL */}
-      <div className="sticky top-0 z-40 bg-surface-inset shadow-inset pb-2">
-        <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
-          {/* Search Input - Material Style */}
-          <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1 sm:p-1.5 shadow-inset z-10">
-              <Search className="w-4 h-4 text-ink-secondary" />
-            </div>
-            <Input
-              placeholder="Rollen durchsuchen..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 sm:pl-14 pr-3 sm:pr-4 py-4 sm:py-6 text-base"
-            />
-          </div>
-
-          {/* Filter Chips Row - WCAG: Added mature content filter */}
-          <div className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <FilterChip
-              selected={filters.showFavoritesOnly}
-              onClick={() =>
-                setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-              }
-              leading={<Star className="w-4 h-4" />}
-            >
-              Favoriten
-            </FilterChip>
-            <FilterChip
-              selected={filters.showBuiltInOnly}
-              onClick={() =>
-                setFilters((prev) => ({ ...prev, showBuiltInOnly: !prev.showBuiltInOnly }))
-              }
-              leading={<Users className="w-4 h-4" />}
-            >
-              Standard
-            </FilterChip>
-            <FilterChip
-              selected={filters.hideMatureContent ?? true}
-              onClick={() =>
-                setFilters((prev) => ({
-                  ...prev,
-                  hideMatureContent: !(prev.hideMatureContent ?? true),
-                }))
-              }
-            >
-              Jugendschutz 🔞
-            </FilterChip>
-          </div>
-
-          {/* Jugendschutz Hinweis */}
-          {filters.hideMatureContent && (
-            <div className="flex items-center gap-2 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-amber-700 text-sm shadow-inset">
-              <Shield className="w-4 h-4" />
-              <span>Jugendschutz aktiv – NSFW-Rollen sind ausgeblendet.</span>
-            </div>
-          )}
+    <div className={cn("flex flex-col h-full bg-bg-app", className)}>
+      {/* Header & Filters */}
+      <div className="flex-none px-4 py-4 bg-bg-app/95 backdrop-blur-sm z-10 space-y-3 border-b border-white/5">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-tertiary" />
+          <input
+            type="text"
+            placeholder="Suche nach Rollen..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-11 bg-surface-2 rounded-xl pl-10 pr-4 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all"
+          />
         </div>
 
-        {/* CATEGORY PILLS - INSET CONTAINER */}
-        <div className="mx-3 sm:mx-4 mb-3 sm:mb-4 rounded-md bg-surface-inset shadow-inset p-2 sm:p-3">
-          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {CATEGORY_ORDER.filter((cat: string) => (categoryCounts[cat] || 0) > 0).map(
-              (category: string) => (
-                <FilterChip
-                  key={category}
-                  selected={selectedCategory === category}
-                  onClick={() => handleCategorySelect(category)}
-                  count={categoryCounts[category]}
-                >
-                  {category}
-                </FilterChip>
-              ),
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button
+            onClick={() =>
+              setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+            }
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+              filters.showFavoritesOnly
+                ? "bg-accent-warning/10 border-accent-warning/30 text-accent-warning"
+                : "bg-surface-1 border-white/10 text-ink-secondary hover:border-white/20",
             )}
-          </div>
+          >
+            <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+            Favoriten
+          </button>
+
+          <div className="w-px h-4 bg-white/10 mx-1 flex-shrink-0" />
+
+          {CATEGORY_ORDER.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                selectedCategory === cat
+                  ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
+                  : "bg-surface-1 border-white/10 text-ink-secondary hover:border-white/20",
+              )}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Roles List */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-3 sm:p-4">
-          {(filters.showFavoritesOnly ||
-            filters.showBuiltInOnly ||
-            filters.hideMatureContent ||
-            selectedCategory ||
-            searchQuery) && (
-            <div className="sticky top-0 z-30 mb-4 flex flex-wrap items-center gap-2 rounded-md border border-surface-1 bg-surface-inset/90 px-3 py-2 shadow-inset backdrop-blur">
-              <span className="text-xs font-semibold text-text-secondary">Aktive Filter:</span>
-              {filters.showFavoritesOnly && (
-                <Badge variant="secondary" className="text-xs">
-                  Favoriten
-                </Badge>
-              )}
-              {filters.showBuiltInOnly && (
-                <Badge variant="secondary" className="text-xs">
-                  Standard
-                </Badge>
-              )}
-              {selectedCategory && (
-                <Badge variant="outline" className="text-xs">
-                  Kategorie: {selectedCategory}
-                </Badge>
-              )}
-              {filters.hideMatureContent && (
-                <Badge variant="outline" className="text-xs">
-                  Jugendschutz
-                </Badge>
-              )}
-              {searchQuery && (
-                <Badge variant="outline" className="text-xs">
-                  Suche: “{searchQuery}”
-                </Badge>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="ml-auto"
-                onClick={() => {
-                  setFilters((prev) => ({
-                    ...prev,
-                    showFavoritesOnly: false,
-                    showBuiltInOnly: false,
-                    hideMatureContent: !settings.showNSFWContent,
-                  }));
-                  setSelectedCategory(null);
-                  setSearchQuery("");
-                }}
-              >
-                Zurücksetzen
-              </Button>
-            </div>
-          )}
-
-          {/* Results Header - Typography Semantic */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-medium text-text-secondary">
-              {filteredRoles.length} Rollen gefunden
-              {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
-              {selectedCategory && <span className="text-text-accent"> in {selectedCategory}</span>}
-            </h2>
-            {selectedCategory && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedCategory(null)}
-                className="text-sm"
-              >
-                Alle anzeigen
-              </Button>
-            )}
+      {/* Scrollable List */}
+      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-20">
+        {/* Active Filters Summary */}
+        {(selectedCategory || filters.showFavoritesOnly || searchQuery) && (
+          <div className="mb-4 flex items-center justify-between">
+            <span className="text-xs text-ink-secondary">
+              {filteredRoles.length} Ergebnisse
+              {selectedCategory && ` in ${selectedCategory}`}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory(null);
+                setFilters((prev) => ({ ...prev, showFavoritesOnly: false }));
+              }}
+              className="h-6 text-xs text-ink-tertiary hover:text-ink-primary"
+            >
+              <RotateCcw className="h-3 w-3 mr-1" /> Reset
+            </Button>
           </div>
-          {activeRole && (
-            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-3 py-2 text-sm text-text-secondary shadow-inset">
-              <span className="font-semibold text-text-primary">Aktive Rolle:</span>
-              <Badge variant="secondary" className="text-xs">
-                {activeRole.name}
-              </Badge>
-            </div>
-          )}
+        )}
 
-          {/* ROLES GRID - PREMIUM CARDS mit Ink on Paper Design */}
-          <div
-            className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:gap-4 lg:grid-cols-3"
-            data-testid="roles-grid"
-          >
-            {filteredRoles.map((role) => {
-              const isFavorite = isRoleFavorite(role.id);
-              const isActive = activeRole?.id === role.id;
-              const isExpanded = expandedRoles.has(role.id);
-              const isSelected = selectedRoleId === role.id;
-              return (
-                <div key={role.id} className="space-y-2">
-                  <PremiumCard
-                    className={cn(
-                      "group animate-card-enter cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1",
-                      isActive && "ring-2 ring-brand shadow-raiseLg",
-                    )}
-                    onClick={() => toggleRoleDetails(role.id)}
-                    interactiveRole="group"
-                    focusable={false}
-                  >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {filteredRoles.map((role) => {
+            const isActive = activeRole?.id === role.id;
+            const isExpanded = expandedRoles.has(role.id);
+
+            return (
+              <Card
+                key={role.id}
+                variant={isActive ? "interactive" : "default"}
+                padding="sm"
+                className={cn(
+                  "group transition-all duration-200",
+                  isActive && "ring-1 ring-accent-primary/50 bg-surface-1/80",
+                )}
+              >
+                <div className="flex flex-col gap-3">
+                  {/* Header */}
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-surface-2 flex items-center justify-center text-ink-secondary group-hover:text-ink-primary transition-colors">
+                        <Users className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-ink-primary leading-tight">
+                          {role.name}
+                        </h3>
+                        <span className="text-xs text-ink-tertiary">
+                          {role.category || "Spezial"}
+                        </span>
+                      </div>
+                    </div>
                     {isActive && (
-                      <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-sm bg-brand/10 px-2 py-1 text-[11px] font-semibold text-brand shadow-inset">
-                        <Check className="h-3.5 w-3.5" />
+                      <Badge variant="default" className="text-[10px] h-5 px-1.5">
                         Aktiv
-                      </div>
+                      </Badge>
                     )}
-                    {/* CARD HEADER */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3">
-                        {/* Icon Container mit Brand-Akzent */}
-                        <div className="w-10 h-10 rounded-md bg-brand/10 shadow-brandGlow flex items-center justify-center with-spine">
-                          <Users className="w-5 h-5 text-brand" />
-                        </div>
-                        {/* Title */}
-                        <h3 className="font-semibold text-lg text-text-primary">{role.name}</h3>
-                      </div>
-                      {/* Favorite Star */}
-                      {isFavorite && <Star className="w-5 h-5 text-brand fill-brand" />}
-                    </div>
-
-                    {/* CARD BODY */}
-                    <div className="mb-4">
-                      <p
-                        className={cn(
-                          "text-sm text-text-secondary leading-relaxed transition-all duration-300 ease-in-out motion-reduce:transition-none",
-                          !isExpanded && "line-clamp-3",
-                        )}
-                      >
-                        {role.description}
-                      </p>
-                    </div>
-                  </PremiumCard>
-
-                  <div className="flex items-center justify-between gap-2 px-1">
-                    <span className="inline-flex items-center px-2 py-1 rounded-sm bg-surface-inset shadow-inset text-xs font-medium text-ink-secondary">
-                      {role.category || "Spezial"}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {isActive && (
-                        <Badge variant="secondary" className="text-xs bg-brand/10 text-brand">
-                          Aktiv
-                        </Badge>
-                      )}
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        onClick={() => {
-                          if (isActive) {
-                            setActiveRole(null);
-                          } else {
-                            handleActivateRole(role);
-                          }
-                        }}
-                      >
-                        {isActive ? "Deaktivieren" : "Aktivieren"}
-                      </Button>
-                      <button
-                        type="button"
-                        onClick={() => toggleRoleExpansion(role.id)}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 rounded-sm px-2 py-1.5 min-h-[32px] touch-manipulation"
-                        aria-expanded={isExpanded}
-                        aria-label={isExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
-                      >
-                        <span>{isExpanded ? "Weniger" : "Mehr anzeigen"}</span>
-                        <svg
-                          className={cn(
-                            "w-3.5 h-3.5 transition-transform duration-300 ease-in-out motion-reduce:transition-none",
-                            isExpanded && "rotate-180",
-                          )}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                    </div>
                   </div>
 
-                  {isSelected && (
-                    <div
-                      ref={(el) => {
-                        detailRefs.current[role.id] = el;
-                      }}
-                      className="rounded-lg border border-surface-2 bg-surface-1 shadow-raise p-4 space-y-4 animate-[fadeIn_180ms_ease]"
+                  {/* Description */}
+                  <div className="text-sm text-ink-secondary leading-relaxed">
+                    <p className={cn(!isExpanded && "line-clamp-2")}>{role.description}</p>
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-1">
+                    <button
+                      onClick={() => toggleRoleExpansion(role.id)}
+                      className="text-xs font-medium text-ink-tertiary hover:text-ink-primary flex items-center gap-1"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="text-base font-semibold text-text-primary">{role.name}</h3>
-                          <p className="text-xs text-text-secondary">
-                            {role.category || "Spezial"}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toggleRoleDetails(role.id)}
-                          >
-                            Schließen
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => {
-                              void navigate("/chat");
-                              toggleRoleDetails(role.id);
-                            }}
-                          >
-                            Im Chat öffnen
-                          </Button>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => {
-                              handleActivateRole(role);
-                              toggleRoleDetails(role.id);
-                            }}
-                          >
-                            Aktivieren
-                          </Button>
-                        </div>
-                      </div>
+                      {isExpanded ? "Weniger" : "Details"}
+                      <ChevronDown
+                        className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-180")}
+                      />
+                    </button>
 
-                      <div className="space-y-2 text-sm text-text-secondary leading-relaxed">
-                        <p>{role.description}</p>
-                        {usage.roles[role.id]?.lastUsed && (
-                          <p className="text-xs text-ink-secondary">
-                            Zuletzt genutzt:{" "}
-                            {usage.roles[role.id]?.lastUsed?.toLocaleString?.() ||
-                              String(usage.roles[role.id]?.lastUsed)}
-                          </p>
-                        )}
-                        {role.tags?.length ? (
-                          <div className="flex flex-wrap gap-2">
-                            {role.tags.map((tag) => (
-                              <Badge key={tag} variant="outline" className="text-[11px]">
-                                #{tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
+                    <Button
+                      size="sm"
+                      variant={isActive ? "secondary" : "primary"}
+                      className="h-8 px-4 text-xs"
+                      onClick={() => handleActivateRole(role)}
+                    >
+                      {isActive ? "Im Chat" : "Wählen"}
+                    </Button>
+                  </div>
 
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold text-text-primary">
-                          Empfohlene Modelle
-                        </h4>
-                        {role.allowedModels?.length ? (
-                          <div className="flex flex-wrap gap-2">
-                            {role.allowedModels.map((model) => (
-                              <Badge key={model} variant="secondary" className="text-xs">
-                                {model}
-                              </Badge>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="inline-flex items-center gap-2 rounded-md bg-surface-inset px-3 py-2 text-sm text-ink-secondary">
-                            <span className="text-lg">✓</span>
-                            Keine Empfehlung – alle Modelle möglich
-                          </div>
-                        )}
-                      </div>
-
-                      {role.examples && role.examples.length > 0 && (
-                        <div className="space-y-1">
-                          <h4 className="text-sm font-semibold text-text-primary">
-                            Beispiel-Prompt
-                          </h4>
-                          <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary">
-                            {role.examples[0]}
-                          </div>
+                  {/* Expanded Details */}
+                  {isExpanded && (
+                    <div className="pt-2 space-y-2 animate-slide-up">
+                      {role.tags && role.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {role.tags.map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant="secondary"
+                              className="text-[10px] px-1.5 h-5 bg-surface-2 text-ink-tertiary border-none"
+                            >
+                              #{tag}
+                            </Badge>
+                          ))}
                         </div>
                       )}
-
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold text-text-primary">System-Prompt</h4>
-                        <div className="rounded-md bg-surface-inset shadow-inset p-3 text-sm text-text-secondary whitespace-pre-wrap">
-                          {role.systemPrompt || "Kein Prompt hinterlegt."}
+                      {role.systemPrompt && (
+                        <div className="mt-2 p-2 rounded-lg bg-surface-2/50 text-xs text-ink-secondary font-mono border border-white/5">
+                          {role.systemPrompt.slice(0, 150)}...
                         </div>
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Empty State */}
-          {filteredRoles.length === 0 && !roleLoadError && (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Users className="w-8 h-8 text-ink-secondary" />
-              </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">
-                Keine Rollen gefunden
-              </h3>
-              <p className="text-text-secondary">
-                {searchQuery
-                  ? `Keine Ergebnisse für "${searchQuery}"`
-                  : selectedCategory
-                    ? `Keine Rollen in "${selectedCategory}"`
-                    : "Versuche es mit anderen Filtereinstellungen"}
-              </p>
-              <div className="mt-4 flex justify-center">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory(null);
-                    setFilters((prev) => ({
-                      ...prev,
-                      showFavoritesOnly: false,
-                      showBuiltInOnly: false,
-                      hideMatureContent: !settings.showNSFWContent,
-                    }));
-                  }}
-                >
-                  Filter zurücksetzen
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Error State */}
-          {roleLoadError && (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Users className="w-8 h-8 text-accent-danger" />
-              </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">
-                Rollen konnten nicht geladen werden
-              </h3>
-              <p className="text-text-secondary mb-6 max-w-md mx-auto">{roleLoadError}</p>
-              <p className="text-sm text-text-meta">
-                Stelle sicher, dass{" "}
-                <code className="px-2 py-1 bg-surface-inset rounded-sm shadow-inset">
-                  public/persona.json
-                </code>{" "}
-                existiert und korrekt formatiert ist.
-              </p>
-            </div>
-          )}
+              </Card>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Always-visible active role pill (helps when far down the list) */}
-      {activeRole &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full bg-surface-1/95 px-4 py-2 shadow-raiseLg border border-surface-2">
-            <span className="text-xs font-semibold text-text-secondary">Aktive Rolle</span>
-            <Badge variant="secondary" className="text-xs">
-              {activeRole.name}
-            </Badge>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-xs"
-              onClick={() => setActiveRole(null)}
-            >
-              Zurücksetzen
-            </Button>
-          </div>,
-          document.body,
+        {filteredRoles.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="h-12 w-12 rounded-full bg-surface-2 flex items-center justify-center text-ink-tertiary mb-4">
+              <Search className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-medium text-ink-primary">Keine Rollen gefunden</h3>
+            <p className="text-sm text-ink-secondary mt-1 max-w-xs">
+              Versuche es mit anderen Suchbegriffen oder Filtern.
+            </p>
+          </div>
         )}
+      </div>
     </div>
   );
 }
-
-export default EnhancedRolesInterface;
