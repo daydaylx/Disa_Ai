@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 
 import { useSettings } from "./useSettings";
 
@@ -8,6 +7,7 @@ const MIN_SPAWN_INTERVAL_MS = 60000; // 1 minute cooldown
 const MAX_SPAWNS_PER_SESSION = 5;
 const CHECK_INTERVAL_MS = 5000; // Check every 5s
 const SPAWN_CHANCE = 0.2; // 20% chance every check if cooldown ready
+const INACTIVITY_THRESHOLD_MS = 4000; // Require ~4s idle before spawning
 
 // Allowed routes (whitelist)
 const ALLOWED_ROUTES = [
@@ -20,8 +20,9 @@ const ALLOWED_ROUTES = [
   "/settings/appearance",
   "/settings/extras",
   "/models",
+  "/chat",
 ];
-const BLOCKED_ROUTES_PREFIX = ["/chat"];
+const BLOCKED_ROUTES_PREFIX: string[] = [];
 
 /**
  * Calculate adaptive animation duration based on viewport width
@@ -47,9 +48,12 @@ interface NekoStatus {
   direction: "left" | "right";
 }
 
-export function useNeko() {
+export interface NekoController extends NekoStatus {
+  flee: () => void;
+}
+
+export function useNeko(): NekoController {
   const { settings } = useSettings();
-  const location = useLocation();
   const [status, setStatus] = useState<NekoStatus>({
     state: "HIDDEN",
     x: -10,
@@ -61,6 +65,7 @@ export function useNeko() {
   const spawnCountRef = useRef<number>(0);
   const isVisibleRef = useRef<boolean>(false);
   const animationFrameRef = useRef<number | null>(null);
+  const lastInteractionRef = useRef<number>(Date.now());
 
   const despawn = useCallback(() => {
     isVisibleRef.current = false;
@@ -162,22 +167,38 @@ export function useNeko() {
     });
   }, [despawn]);
 
-  // Interaction Tracking - Only for fleeing, not for preventing spawn
+  // Track user activity to avoid spawning while actively using the app
   useEffect(() => {
     if (!settings.enableNeko) return;
 
-    // Explicit tap to scare
-    const handleTap = (_e: PointerEvent) => {
-      // If visible, maybe flee?
-      if (isVisibleRef.current && status.state === "WALKING") {
+    const markInteraction = () => {
+      lastInteractionRef.current = Date.now();
+      // If the cat is on screen and user interacts, make it flee quickly
+      if (isVisibleRef.current && status.state !== "HIDDEN") {
         triggerFlee();
       }
     };
 
-    window.addEventListener("pointerdown", handleTap);
+    const events: Array<keyof DocumentEventMap> = [
+      "pointerdown",
+      "keydown",
+      "scroll",
+      "wheel",
+      "touchmove",
+    ];
+
+    const targets: (Document | Window)[] = [document, window];
+
+    targets.forEach((target) =>
+      events.forEach((event) => target.addEventListener(event, markInteraction, { passive: true })),
+    );
 
     return () => {
-      window.removeEventListener("pointerdown", handleTap);
+      targets.forEach((target) =>
+        events.forEach((event) =>
+          target.removeEventListener(event, markInteraction as EventListener),
+        ),
+      );
     };
   }, [settings.enableNeko, status.state, triggerFlee]);
 
@@ -197,11 +218,13 @@ export function useNeko() {
       const now = Date.now();
       const isCooldownOver = now - lastSpawnTimeRef.current > MIN_SPAWN_INTERVAL_MS;
       const isBelowLimit = spawnCountRef.current < MAX_SPAWNS_PER_SESSION;
+      const isIdleEnough = now - lastInteractionRef.current > INACTIVITY_THRESHOLD_MS;
 
       // Check if current path is allowed
+      const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
       const isAllowedRoute =
-        ALLOWED_ROUTES.includes(location.pathname) &&
-        !BLOCKED_ROUTES_PREFIX.some((prefix) => location.pathname.startsWith(prefix));
+        ALLOWED_ROUTES.some((route) => pathname.startsWith(route)) &&
+        !BLOCKED_ROUTES_PREFIX.some((prefix) => pathname.startsWith(prefix));
 
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -210,6 +233,7 @@ export function useNeko() {
       if (
         isCooldownOver &&
         isBelowLimit &&
+        isIdleEnough &&
         isAllowedRoute &&
         !isVisibleRef.current &&
         !prefersReducedMotion &&
@@ -224,7 +248,19 @@ export function useNeko() {
 
     const interval = setInterval(checkSpawnCondition, CHECK_INTERVAL_MS);
     return () => clearInterval(interval);
-  }, [settings.enableNeko, location.pathname, spawnNeko]);
+  }, [settings.enableNeko, spawnNeko]);
 
-  return status;
+  // Cleanup animation frames on unmount
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
+  return {
+    ...status,
+    flee: triggerFlee,
+  };
 }

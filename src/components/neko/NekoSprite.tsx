@@ -1,19 +1,33 @@
+import React from "react";
+
 import { cn } from "@/lib/utils";
 
 interface NekoSpriteProps {
   state: "WALKING" | "FLEEING" | "IDLE" | "HIDDEN" | "SPAWNING";
   direction: "left" | "right";
+  onInteract?: () => void;
 }
 
-export function NekoSprite({ state, direction }: NekoSpriteProps) {
+export function NekoSprite({ state, direction, onInteract }: NekoSpriteProps) {
   // Simple pixel-art style black cat using SVG
   // This avoids external assets and keeps it lightweight
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      onInteract?.();
+    }
+  };
+
   return (
     <div
       className={cn(
         "w-12 h-12 md:w-16 md:h-16 transition-transform duration-100 relative",
         direction === "left" && "scale-x-[-1]", // Mirror for left direction
       )}
+      role={onInteract ? "button" : undefined}
+      aria-label={onInteract ? "Kleine Neko-Katze – tippen um sie zu verscheuchen" : undefined}
+      tabIndex={onInteract ? 0 : -1}
+      onPointerDown={onInteract}
+      onKeyDown={onInteract ? handleKeyDown : undefined}
     >
       <svg
         viewBox="0 0 32 32"

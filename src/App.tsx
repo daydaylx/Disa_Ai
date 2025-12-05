@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/ui/Tooltip";
 
 import { Router } from "./app/router";
 import { FullPageLoader } from "./components/FullPageLoader";
+import { NekoLayer } from "./components/neko/NekoLayer";
 import { OnboardingOverlay } from "./components/onboarding/OnboardingOverlay";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ModelCatalogProvider } from "./contexts/ModelCatalogContext";
@@ -112,6 +113,7 @@ function AppContent() {
         <Suspense fallback={<FullPageLoader message="Inhalt wird geladen" />}>
           <Router />
         </Suspense>
+        <NekoLayer />
       </SentryErrorBoundary>
       <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
         <FeatureFlagPanel />

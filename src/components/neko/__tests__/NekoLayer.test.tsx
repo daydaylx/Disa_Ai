@@ -8,12 +8,14 @@ interface MockNekoStatus {
   state: "HIDDEN" | "SPAWNING" | "WALKING" | "FLEEING";
   x: number;
   direction: "left" | "right";
+  flee: () => void;
 }
 
 const mockNekoStatus: MockNekoStatus = {
   state: "HIDDEN",
   x: -10,
   direction: "right",
+  flee: vi.fn(),
 };
 
 vi.mock("@/hooks/useNeko", () => ({
@@ -87,10 +89,10 @@ describe("NekoLayer Component", () => {
 
       const nekoContainer = screen.getByTestId("neko-container");
       expect(nekoContainer).toHaveClass("fixed");
-      expect(nekoContainer).toHaveClass("bottom-0");
       expect(nekoContainer).toHaveClass("h-32");
       expect(nekoContainer).toHaveClass("pointer-events-none");
       expect(nekoContainer).toHaveClass("z-toast");
+      expect(nekoContainer.style.bottom).toContain("calc");
     });
 
     it("should apply correct transform based on x position", () => {
