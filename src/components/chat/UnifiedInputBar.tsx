@@ -6,7 +6,9 @@ import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/Select";
 
 export interface UnifiedInputBarProps {
   value: string;
@@ -26,7 +28,7 @@ export function UnifiedInputBar({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole } = useRoles();
-  const { settings } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset } = useSettings();
   const navigate = useNavigate();
 
   // Auto-resize logic
@@ -65,21 +67,13 @@ export function UnifiedInputBar({
 
   const roleLabel = activeRole?.name || "Standard";
 
-  // Stil-Label aus Discussion Preset
-  const stylePresetLabels: Record<string, string> = {
-    locker_neugierig: "Locker",
-    edgy_provokant: "Provokant",
-    nuechtern_pragmatisch: "Pragmatisch",
-    akademisch_formell: "Akademisch",
-    freundlich_offen: "Freundlich",
-    analytisch_detailliert: "Analytisch",
-    sarkastisch_witzig: "Sarkastisch",
-    fachlich_tiefgehend: "Fachlich",
-  };
-  const styleLabel = stylePresetLabels[settings.discussionPreset] || "Stil";
-
-  // Kreativitäts-Label
-  const creativityLabel = `${settings.creativity}%`;
+  const creativityOptions = [
+    { value: "10", label: "Präzise (10%)" },
+    { value: "30", label: "Klar & fokussiert (30%)" },
+    { value: "45", label: "Ausgewogen (45%)" },
+    { value: "70", label: "Kreativ (70%)" },
+    { value: "90", label: "Verspielt (90%)" },
+  ];
 
   return (
     <div className={cn("w-full space-y-2.5", className)}>
@@ -132,20 +126,47 @@ export function UnifiedInputBar({
           <User className="h-3.5 w-3.5 opacity-70" />
           <span className="truncate max-w-[140px]">{roleLabel}</span>
         </button>
-        <button
-          onClick={() => navigate("/settings/behavior")}
-          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+        <Select
+          value={settings.discussionPreset}
+          onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
         >
-          <Palette className="h-3.5 w-3.5 opacity-70" />
-          <span className="truncate max-w-[90px]">{styleLabel}</span>
-        </button>
-        <button
-          onClick={() => navigate("/settings/behavior")}
-          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+          <SelectTrigger
+            aria-label="Stil auswählen"
+            className="flex h-9 w-auto items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+          >
+            <Palette className="h-3.5 w-3.5 opacity-70" />
+            <SelectValue className="truncate px-0 py-0 text-xs max-w-[120px]" placeholder="Stil" />
+          </SelectTrigger>
+          <SelectContent className="w-56">
+            {discussionPresetOptions.map((preset) => (
+              <SelectItem key={preset.key} value={preset.key}>
+                {preset.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={String(settings.creativity)}
+          onValueChange={(value) => setCreativity(Number(value))}
         >
-          <Sparkles className="h-3.5 w-3.5 opacity-70" />
-          <span className="truncate max-w-[60px]">{creativityLabel}</span>
-        </button>
+          <SelectTrigger
+            aria-label="Kreativität auswählen"
+            className="flex h-9 w-auto items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+          >
+            <Sparkles className="h-3.5 w-3.5 opacity-70" />
+            <SelectValue
+              className="truncate px-0 py-0 text-xs max-w-[80px]"
+              placeholder={`${settings.creativity}%`}
+            />
+          </SelectTrigger>
+          <SelectContent className="w-52">
+            {creativityOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
