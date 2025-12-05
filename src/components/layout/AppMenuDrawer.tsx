@@ -76,8 +76,11 @@ export function AppMenuDrawer({
     }
   };
 
-  // Sekundäre Seiten
+  // Sekundäre Seiten mit Feedback aus SECONDARY_NAV_ITEMS
+  const feedbackItem = SECONDARY_NAV_ITEMS.find((item) => item.id === "feedback");
+
   const secondaryPages: AppNavItem[] = secondaryItems ?? [
+    ...(feedbackItem ? [feedbackItem] : []),
     { id: "impressum", label: "Impressum", path: "/impressum", Icon: X },
     { id: "datenschutz", label: "Datenschutz", path: "/datenschutz", Icon: X },
   ];
@@ -214,22 +217,40 @@ export function AppMenuDrawer({
 
                 {/* Secondary Links */}
                 <ul className="space-y-1" role="list">
-                  {secondaryPages.map((page) => (
-                    <li key={page.id}>
-                      <Link
-                        to={page.path}
-                        onClick={onClose}
-                        className={cn(
-                          "flex items-center px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
-                          location.pathname === page.path
-                            ? "text-text-primary border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)]"
-                            : "text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
-                        )}
-                      >
-                        {page.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {secondaryPages.map((page) => {
+                    const isActive = isNavItemActive(page, location.pathname);
+                    const Icon = page.Icon;
+
+                    return (
+                      <li key={page.id}>
+                        <Link
+                          to={page.path}
+                          onClick={onClose}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
+                            isActive
+                              ? "text-text-primary border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)]"
+                              : "text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
+                          )}
+                        >
+                          {Icon && (
+                            <Icon
+                              className={cn(
+                                "h-4 w-4 flex-shrink-0",
+                                isActive ? "text-text-primary" : "text-ink-tertiary",
+                              )}
+                            />
+                          )}
+                          <span>{page.label}</span>
+                          {page.description && (
+                            <span className="text-xs text-ink-tertiary ml-auto truncate max-w-[120px]">
+                              {page.description}
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             )}
