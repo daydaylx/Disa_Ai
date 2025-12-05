@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -15,10 +14,6 @@ export interface UnifiedInputBarProps {
   onSend: () => void;
   isLoading?: boolean;
   className?: string;
-  models: ModelEntry[] | null;
-  modelsLoading?: boolean;
-  modelsError?: string | null;
-  onRefreshModels?: () => void;
 }
 
 export function UnifiedInputBar({
@@ -68,7 +63,6 @@ export function UnifiedInputBar({
     }
   };
 
-  const modelLabel = settings.preferredModelId.split("/").pop() || "Modell";
   const roleLabel = activeRole?.name || "Standard";
 
   // Stil-Label aus Discussion Preset
@@ -126,13 +120,6 @@ export function UnifiedInputBar({
 
       {/* Context Bar below input (single row, horizontal scroll if needed) */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar px-1 pb-1 text-[11px] text-ink-tertiary">
-        <button
-          onClick={() => navigate("/models")}
-          className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
-        >
-          <Cpu className="h-3.5 w-3.5 opacity-70" />
-          <span className="truncate max-w-[140px]">{modelLabel}</span>
-        </button>
         <button
           onClick={() => navigate("/roles")}
           className={cn(

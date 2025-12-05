@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { Bookmark } from "@/lib/icons"; // Using Icon directly instead of component
+import { Bookmark, Cpu } from "@/lib/icons"; // Using Icon directly instead of component
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
@@ -37,12 +37,7 @@ export default function Chat() {
   const [searchParams] = useSearchParams();
   const { isEnabled: memoryEnabled } = useMemory();
   const { stats } = useConversationStats();
-  const {
-    models: modelCatalog,
-    loading: modelsLoading,
-    error: modelsError,
-    refresh: refreshModels,
-  } = useModelCatalog();
+  const { models: modelCatalog } = useModelCatalog();
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
@@ -264,6 +259,21 @@ export default function Chat() {
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
+          {/* Model Pill above chat */}
+          <div className="flex-none px-4 pt-2 pb-1">
+            <div className="max-w-3xl mx-auto">
+              <button
+                onClick={() => navigate("/models")}
+                className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80 shadow-sm"
+              >
+                <Cpu className="h-4 w-4 opacity-70" />
+                <span className="truncate max-w-[160px]">
+                  {settings.preferredModelId.split("/").pop() || "Modell"}
+                </span>
+              </button>
+            </div>
+          </div>
+
           {/* Messages Area */}
           <main
             ref={chatScrollRef}
@@ -309,10 +319,6 @@ export default function Chat() {
                 onChange={setInput}
                 onSend={handleSend}
                 isLoading={isLoading}
-                models={modelCatalog}
-                modelsLoading={modelsLoading}
-                modelsError={modelsError}
-                onRefreshModels={refreshModels}
               />
             </div>
           </div>
