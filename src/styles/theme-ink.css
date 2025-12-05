@@ -40,19 +40,19 @@
   --ink-tertiary-rgb: 108 112 122;
   --ink-tertiary: rgb(var(--ink-tertiary-rgb));
 
-  --ink-on-accent: #0e0e0f;
+  --ink-on-accent: rgb(14 14 15);
 
   /* Chalk Accents */
   --accent-primary-rgb: 246 231 197;
   --accent-primary: rgb(var(--accent-primary-rgb));
-  --accent-secondary: #7ddcd3; /* Gedämpftes Türkis für zarte Marker */
-  --accent-tertiary: #ffcab8; /* Sanftes Kreide-Pink als Reserve */
-  --accent-hover: #ffe199;
+  --accent-secondary: rgb(125 220 211); /* Gedämpftes Türkis für zarte Marker */
+  --accent-tertiary: rgb(255 202 184); /* Sanftes Kreide-Pink als Reserve */
+  --accent-hover: rgb(255 225 153);
 
   /* Semantic Colors aligned to chalk warmth */
-  --color-success: #a5d6a7;
+  --color-success: rgb(165 214 167);
   --color-warning: var(--accent-secondary);
-  --color-error: #ef9a9a;
+  --color-error: rgb(239 154 154);
 
   /* Mapping to existing variable names for compatibility */
   --bg-0: var(--bg-app);
@@ -68,7 +68,7 @@
   --surface-1: var(--bg-page);
   --surface-2: var(--bg-surface);
   --surface-3: var(--bg-surface-strong);
-  --surface-inset: #0a0a0b;
+  --surface-inset: rgb(10 10 11);
 
   --text-primary: var(--ink-primary);
   --text-secondary: var(--ink-secondary);
@@ -148,8 +148,8 @@
 
 :root[data-theme="dark"] {
   /* Ensure consistency in dark mode */
-  --bg-app: #0e0e0f;
-  --bg-page: #131314;
+  --bg-app: rgb(14 14 15);
+  --bg-page: rgb(19 19 20);
 }
 
 /* ========================================

@@ -4,13 +4,13 @@
 
 :root {
   /* Modern Slate Glass Theme Variables */
-  --bg-app: #131314;
-  --bg-surface-1: #1e1e20;
-  --bg-surface-2: #27272a;
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-tertiary: #71717a;
-  --border-color: #3f3f46;
+  --bg-app: rgb(19 19 20);
+  --bg-surface-1: rgb(30 30 32);
+  --bg-surface-2: rgb(39 39 42);
+  --text-primary: rgb(244 244 245);
+  --text-secondary: rgb(161 161 170);
+  --text-tertiary: rgb(113 113 122);
+  --border-color: rgb(63 63 70);
 
   /* Viewport Height Fix */
   --vh: 1vh;
