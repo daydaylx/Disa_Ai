@@ -120,64 +120,68 @@ export function UnifiedInputBar({
         </Button>
       </div>
 
-      {/* Context Bar below input (single row, horizontal scroll if needed) */}
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar px-1 pb-1 text-[11px] text-ink-tertiary">
-        <button
-          onClick={() => navigate("/roles")}
-          className={cn(
-            "flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[11px] font-medium leading-none transition-colors",
-            activeRole
-              ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
-              : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
-          )}
-        >
-          <User className="h-3.5 w-3.5 opacity-70" />
-          <span className="truncate max-w-[120px]">{roleLabel}</span>
-        </button>
-        <Select
-          value={settings.discussionPreset}
-          onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
-        >
-          <SelectTrigger
-            aria-label="Stil auswählen"
-            className="flex h-8 shrink-0 items-center gap-1 rounded-full border border-white/5 bg-surface-1/60 px-3 text-[11px] font-medium leading-none text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary !w-auto !min-h-0"
+      {/* Kontext-Leiste: volle Breite, gleich große Pills */}
+      <div className="w-full px-4 pb-3">
+        <div className="flex w-full items-stretch gap-2 text-[11px] text-ink-tertiary">
+          <button
+            onClick={() => navigate("/roles")}
+            className={cn(
+              "flex h-10 flex-1 items-center justify-center gap-1.5 rounded-full border px-3 text-[11px] font-medium leading-none text-center transition-colors",
+              activeRole
+                ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
+                : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
+            )}
           >
-            <Palette className="h-3.5 w-3.5 opacity-70" />
-            <SelectValue
-              className="truncate px-0 py-0 text-[11px] leading-none max-w-[110px]"
-              placeholder={discussionPresetLabel}
-            />
-          </SelectTrigger>
-          <SelectContent className="w-56">
-            {discussionPresetOptions.map((preset) => (
-              <SelectItem key={preset.key} value={preset.key}>
-                {preset.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={String(settings.creativity)}
-          onValueChange={(value) => setCreativity(Number(value))}
-        >
-          <SelectTrigger
-            aria-label="Kreativität auswählen"
-            className="flex h-8 shrink-0 items-center gap-1 rounded-full border border-white/5 bg-surface-1/60 px-3 text-[11px] font-medium leading-none text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary !w-auto !min-h-0"
+            <User className="h-3.5 w-3.5 opacity-70" />
+            <span className="truncate">{roleLabel}</span>
+          </button>
+
+          <Select
+            value={settings.discussionPreset}
+            onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
           >
-            <Sparkles className="h-3.5 w-3.5 opacity-70" />
-            <SelectValue
-              className="truncate px-0 py-0 text-[11px] leading-none max-w-[80px]"
-              placeholder={creativityLabel}
-            />
-          </SelectTrigger>
-          <SelectContent className="w-52">
-            {creativityOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            <SelectTrigger
+              aria-label="Stil auswählen"
+              className="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/60 px-3 text-[11px] font-medium leading-none text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+            >
+              <Palette className="h-3.5 w-3.5 opacity-70" />
+              <SelectValue
+                className="truncate px-0 py-0 text-[11px] leading-none text-center"
+                placeholder={discussionPresetLabel}
+              />
+            </SelectTrigger>
+            <SelectContent className="w-56">
+              {discussionPresetOptions.map((preset) => (
+                <SelectItem key={preset.key} value={preset.key}>
+                  {preset.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={String(settings.creativity)}
+            onValueChange={(value) => setCreativity(Number(value))}
+          >
+            <SelectTrigger
+              aria-label="Kreativität auswählen"
+              className="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/60 px-3 text-[11px] font-medium leading-none text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+            >
+              <Sparkles className="h-3.5 w-3.5 opacity-70" />
+              <SelectValue
+                className="truncate px-0 py-0 text-[11px] leading-none text-center"
+                placeholder={creativityLabel}
+              />
+            </SelectTrigger>
+            <SelectContent className="w-52">
+              {creativityOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
