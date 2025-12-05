@@ -75,6 +75,14 @@ export function UnifiedInputBar({
     { value: "90", label: "Verspielt (90%)" },
   ];
 
+  const discussionPresetLabel =
+    discussionPresetOptions.find((preset) => preset.key === settings.discussionPreset)?.label ||
+    "Standard";
+
+  const creativityLabel =
+    creativityOptions.find((option) => option.value === String(settings.creativity))?.label ||
+    `${settings.creativity}%`;
+
   return (
     <div className={cn("w-full space-y-2.5", className)}>
       {/* Main Input Container */}
@@ -112,19 +120,24 @@ export function UnifiedInputBar({
         </Button>
       </div>
 
-      {/* Context Bar below input (single row, horizontal scroll if needed) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar px-1 pb-1 text-[11px] text-ink-tertiary">
+      {/* Context Bar below input */}
+      <div className="flex flex-wrap items-stretch gap-2 px-1 pb-1 text-[11px] text-ink-tertiary">
         <button
           onClick={() => navigate("/roles")}
           className={cn(
-            "flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors",
+            "flex min-w-[0] flex-1 basis-[180px] items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-medium transition-colors",
             activeRole
-              ? "border-accent-primary/20 bg-accent-primary/8 text-accent-primary hover:border-accent-primary/30 hover:bg-accent-primary/12"
-              : "border-white/5 bg-surface-1/60 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
+              ? "border-accent-primary/25 bg-accent-primary/10 text-ink-primary shadow-[0_10px_30px_rgba(99,102,241,0.15)] hover:border-accent-primary/30 hover:bg-accent-primary/12"
+              : "border-white/6 bg-surface-1/70 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80",
           )}
         >
-          <User className="h-3.5 w-3.5 opacity-70" />
-          <span className="truncate max-w-[140px]">{roleLabel}</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/5 text-ink-secondary">
+            <User className="h-4 w-4" />
+          </div>
+          <div className="flex min-w-[0] flex-col text-left leading-tight">
+            <span className="text-[11px] font-medium text-ink-tertiary">Rolle</span>
+            <span className="truncate text-xs font-semibold text-ink-primary">{roleLabel}</span>
+          </div>
         </button>
         <Select
           value={settings.discussionPreset}
@@ -132,10 +145,18 @@ export function UnifiedInputBar({
         >
           <SelectTrigger
             aria-label="Stil auswählen"
-            className="flex h-9 w-auto items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+            className="flex min-w-[0] flex-1 basis-[180px] items-center gap-2 rounded-2xl border border-white/6 bg-surface-1/70 px-3 py-2 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
           >
-            <Palette className="h-3.5 w-3.5 opacity-70" />
-            <SelectValue className="truncate px-0 py-0 text-xs max-w-[120px]" placeholder="Stil" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/5 text-ink-secondary">
+              <Palette className="h-4 w-4" />
+            </div>
+            <div className="flex min-w-[0] flex-col text-left leading-tight">
+              <span className="text-[11px] font-medium text-ink-tertiary">Antwort-Stil</span>
+              <SelectValue
+                className="truncate text-xs font-semibold text-ink-primary"
+                placeholder={discussionPresetLabel}
+              />
+            </div>
           </SelectTrigger>
           <SelectContent className="w-56">
             {discussionPresetOptions.map((preset) => (
@@ -151,13 +172,18 @@ export function UnifiedInputBar({
         >
           <SelectTrigger
             aria-label="Kreativität auswählen"
-            className="flex h-9 w-auto items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
+            className="flex min-w-[0] flex-1 basis-[180px] items-center gap-2 rounded-2xl border border-white/6 bg-surface-1/70 px-3 py-2 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:bg-surface-2/80 hover:text-ink-primary"
           >
-            <Sparkles className="h-3.5 w-3.5 opacity-70" />
-            <SelectValue
-              className="truncate px-0 py-0 text-xs max-w-[80px]"
-              placeholder={`${settings.creativity}%`}
-            />
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/5 text-ink-secondary">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div className="flex min-w-[0] flex-col text-left leading-tight">
+              <span className="text-[11px] font-medium text-ink-tertiary">Kreativität</span>
+              <SelectValue
+                className="truncate text-xs font-semibold text-ink-primary"
+                placeholder={creativityLabel}
+              />
+            </div>
           </SelectTrigger>
           <SelectContent className="w-52">
             {creativityOptions.map((option) => (
