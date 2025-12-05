@@ -27,25 +27,23 @@ function CodeBlock({ children, language }: { children: string; language?: string
   };
 
   return (
-    <div className="relative my-4 overflow-hidden rounded-xl border border-white/10 bg-surface-1">
-      <div className="flex items-center justify-between bg-surface-2/50 px-4 py-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-ink-tertiary">
+    <div className="relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5">
+      <div className="flex items-center justify-between bg-surface-2/50 px-3 py-1.5">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-ink-tertiary">
           {language || "Code"}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-ink-tertiary hover:text-ink-primary"
+        <button
           onClick={handleCopy}
+          className="p-1 text-ink-tertiary hover:text-ink-primary transition-colors"
         >
           {copied ? (
             <Check className="h-3.5 w-3.5 text-status-success" />
           ) : (
             <Copy className="h-3.5 w-3.5" />
           )}
-        </Button>
+        </button>
       </div>
-      <pre className="overflow-x-auto p-4">
+      <pre className="overflow-x-auto p-3">
         <code className="font-mono text-sm leading-relaxed text-ink-primary">{children}</code>
       </pre>
     </div>
@@ -143,40 +141,28 @@ export function ChatMessage({
   return (
     <div
       className={cn(
-        "group flex w-full gap-4 animate-fade-in",
-        isUser ? "justify-end" : "justify-start",
+        "group flex w-full gap-3 animate-fade-in",
+        isUser ? "justify-end" : "justify-start"
       )}
       data-testid="message.item"
     >
       {/* Message Content Container */}
       <div
         className={cn(
-          "relative max-w-[90%] sm:max-w-[80%] md:max-w-[70%]",
-          isUser ? "items-end" : "items-start",
+          "relative max-w-[85%] sm:max-w-[75%]",
+          isUser ? "items-end" : "items-start"
         )}
       >
         {/* Bubble */}
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-[15px] sm:text-base leading-relaxed shadow-sm",
+            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
             isUser
-              ? "bg-surface-2 text-ink-primary rounded-tr-sm border border-white/5"
-              : "bg-surface-1 text-ink-primary rounded-tl-sm border border-white/5",
+              ? "bg-accent-primary text-white rounded-br-md"
+              : "bg-surface-1 text-ink-primary border border-white/5 rounded-bl-md"
           )}
           data-testid="message-bubble"
         >
-          {/* Meta Header for Assistant */}
-          {isAssistant && (
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-xs font-semibold text-accent-primary">Disa</span>
-              {message.model && (
-                <span className="text-[10px] text-ink-tertiary opacity-60 uppercase tracking-wider">
-                  {message.model.split("/").pop()}
-                </span>
-              )}
-            </div>
-          )}
-
           {/* Content Body */}
           {isEditing ? (
             <div className="space-y-3">
@@ -184,7 +170,7 @@ export function ChatMessage({
                 ref={textareaRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[100px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-ink-primary resize-none"
+                className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-ink-primary resize-none text-sm"
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
@@ -196,11 +182,11 @@ export function ChatMessage({
               </div>
             </div>
           ) : (
-            <div className="space-y-2 break-words">
+            <div className="space-y-1">
               {parsedContent.map((part, index) => (
                 <div key={index}>
                   {part.type === "text" ? (
-                    <div className="whitespace-pre-wrap">{part.content}</div>
+                    <div className="whitespace-pre-wrap break-words">{part.content}</div>
                   ) : (
                     <CodeBlock language={part.language}>{part.content}</CodeBlock>
                   )}
@@ -210,12 +196,12 @@ export function ChatMessage({
           )}
         </div>
 
-        {/* Actions Row (Outside Bubble) */}
+        {/* Actions Row */}
         {!isEditing && (
           <div
             className={cn(
-              "flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity px-1",
-              isUser ? "justify-end" : "justify-start",
+              "flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity",
+              isUser ? "justify-end" : "justify-start"
             )}
           >
             <button
@@ -251,9 +237,9 @@ export function ChatMessage({
                     onClick={() => setShowFollowUps(!showFollowUps)}
                     className={cn(
                       "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors",
-                      showFollowUps && "text-accent-primary bg-surface-2",
+                      showFollowUps && "text-accent-primary bg-surface-2"
                     )}
-                    title="Optionen"
+                    title="Schnellantworten"
                   >
                     <MoreHorizontal className="h-3.5 w-3.5" />
                   </button>
@@ -272,12 +258,12 @@ export function ChatMessage({
 
         {/* Follow-up Suggestions */}
         {isAssistant && isLast && showFollowUps && (
-          <div className="flex flex-wrap gap-2 mt-2 animate-slide-up">
+          <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
             {followUpSuggestions.map((suggestion) => (
               <button
                 key={suggestion}
                 onClick={() => handleFollowUp(suggestion)}
-                className="text-xs border border-white/10 bg-surface-1 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary hover:border-white/20 px-3 py-1.5 rounded-full transition-all"
+                className="text-xs bg-surface-1 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary px-3 py-1.5 rounded-full border border-white/5 transition-all"
               >
                 {suggestion}
               </button>

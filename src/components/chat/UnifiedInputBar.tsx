@@ -1,7 +1,7 @@
 import {
-  // Removed RefObject from here as it's not directly used
   useEffect,
   useRef,
+  useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +9,7 @@ import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Cpu, Send, SlidersHorizontal, User } from "@/lib/icons";
+import { ChevronUp, Cpu, Send, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -19,7 +19,6 @@ export interface UnifiedInputBarProps {
   onSend: () => void;
   isLoading?: boolean;
   className?: string;
-  // models, modelsLoading, modelsError, onRefreshModels are passed but not directly used in this component's JSX after refactor
   models: ModelEntry[] | null;
   modelsLoading?: boolean;
   modelsError?: string | null;
@@ -32,14 +31,13 @@ export function UnifiedInputBar({
   onSend,
   isLoading = false,
   className,
-  // Removed unused props from destructuring
-  // models, modelsLoading, modelsError, onRefreshModels,
 }: UnifiedInputBarProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole } = useRoles();
   const { settings } = useSettings();
   const navigate = useNavigate();
+  const [showContext, setShowContext] = useState(false);
 
   // Auto-resize logic
   useEffect(() => {
@@ -75,67 +73,81 @@ export function UnifiedInputBar({
     }
   };
 
+  const modelLabel = settings.preferredModelId.split("/").pop() || "Modell";
+  const roleLabel = activeRole?.name || "Standard";
+
   return (
-    <div className={cn("w-full transition-all", className)}>
-      {/* Context Bar (Above Input) */}
-      <div className="flex items-center justify-between mb-2 px-1">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-          {/* Active Model Badge */}
+    <div className={cn("w-full space-y-2", className)}>
+      {/* Context Bar (Collapsible) */}
+      {showContext && (
+        <div className="flex items-center gap-2 px-1 animate-fade-in">
           <button
             onClick={() => navigate("/models")}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-surface-2 transition-colors text-xs font-medium text-ink-secondary"
+            className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-surface-2 text-ink-secondary hover:text-ink-primary hover:bg-surface-3 transition-colors border border-white/5"
           >
             <Cpu className="h-3.5 w-3.5" />
-            <span>{settings.preferredModelId.split("/").pop() || "Auto"}</span>
+            <span className="font-medium truncate max-w-[100px]">{modelLabel}</span>
           </button>
 
-          {/* Active Role Badge */}
           <button
             onClick={() => navigate("/roles")}
             className={cn(
-              "flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-surface-2 transition-colors text-xs font-medium",
-              activeRole ? "text-accent-primary" : "text-ink-secondary",
+              "flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors border border-white/5",
+              activeRole ? "text-accent-primary" : "text-ink-secondary hover:text-ink-primary"
             )}
           >
             <User className="h-3.5 w-3.5" />
-            <span>{activeRole?.name || "Standard"}</span>
+            <span className="font-medium truncate max-w-[100px]">{roleLabel}</span>
           </button>
         </div>
+      )}
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 text-ink-tertiary"
-          onClick={() => navigate("/settings")}
+      {/* Main Input Container */}
+      <div className="relative flex items-end gap-2 bg-surface-1 rounded-2xl border border-white/5 p-1.5 focus-within:border-accent-primary/30 transition-colors">
+        {/* Context Toggle */}
+        <button
+          onClick={() => setShowContext(!showContext)}
+          className={cn(
+            "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
+            showContext
+              ? "bg-accent-primary/10 text-accent-primary"
+              : "text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+          )}
+          aria-label="Optionen anzeigen"
         >
-          <SlidersHorizontal className="h-3.5 w-3.5" />
-        </Button>
-      </div>
+          <ChevronUp className={cn("h-5 w-5 transition-transform", showContext && "rotate-180")} />
+        </button>
 
-      {/* Input Field */}
-      <div className="relative flex items-end gap-2 bg-surface-2 rounded-2xl p-1.5 ring-1 ring-white/5 focus-within:ring-accent-primary/50 transition-shadow">
+        {/* Textarea */}
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Schreibe eine Nachricht..."
-          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
+          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-2 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
           rows={1}
-          data-testid="composer-input" // Added data-testid back here
+          data-testid="composer-input"
         />
 
+        {/* Send Button */}
         <Button
           onClick={onSend}
           disabled={!value.trim() || isLoading}
           variant={value.trim() ? "primary" : "ghost"}
           size="icon"
           className={cn(
-            "mb-0.5 h-10 w-10 rounded-xl transition-all",
-            !value.trim() && "text-ink-muted hover:bg-transparent",
+            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200",
+            !value.trim() && "text-ink-muted hover:text-ink-tertiary hover:bg-surface-2",
+            isLoading && "opacity-50"
           )}
+          aria-label="Senden"
         >
-          <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
+          {isLoading ? (
+            <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
+          )}
         </Button>
       </div>
     </div>

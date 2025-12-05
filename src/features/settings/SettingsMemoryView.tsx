@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-
-import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
+import { useEffect, useState } from "react";
 
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { History, Shield, Trash2 } from "../../lib/icons";
+import { Button, InfoBanner, useToasts } from "@/ui";
+import { SettingsRow, SettingsSection, SettingsToggleRow } from "@/ui/SettingsRow";
 import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsMemoryView() {
@@ -13,6 +13,17 @@ export function SettingsMemoryView() {
   const { isEnabled, globalMemory, toggleMemory, updateGlobalMemory, clearAllMemory } = useMemory();
   const { settings, toggleRestoreLastConversation } = useSettings();
   const { stats, refresh } = useConversationStats();
+
+  // Local form state
+  const [name, setName] = useState(globalMemory?.name || "");
+  const [hobbies, setHobbies] = useState(globalMemory?.hobbies?.join(", ") || "");
+  const [background, setBackground] = useState(globalMemory?.background || "");
+
+  useEffect(() => {
+    setName(globalMemory?.name || "");
+    setHobbies(globalMemory?.hobbies?.join(", ") || "");
+    setBackground(globalMemory?.background || "");
+  }, [globalMemory]);
 
   const handleToggleMemory = () => {
     toggleMemory();
@@ -26,19 +37,10 @@ export function SettingsMemoryView() {
   };
 
   const handleUpdateProfile = () => {
-    // Get form data from inputs
-    const nameInput = document.getElementById("memory-name") as HTMLInputElement;
-    const hobbiesInput = document.getElementById("memory-hobbies") as HTMLInputElement;
-    const backgroundInput = document.getElementById("memory-background") as HTMLInputElement;
-
     const updates = {
-      name: nameInput?.value?.trim() || undefined,
-      hobbies:
-        hobbiesInput?.value
-          ?.split(",")
-          .map((h) => h.trim())
-          .filter(Boolean) || undefined,
-      background: backgroundInput?.value?.trim() || undefined,
+      name: name.trim() || undefined,
+      hobbies: hobbies.split(",").map((h) => h.trim()).filter(Boolean) || undefined,
+      background: background.trim() || undefined,
     };
 
     updateGlobalMemory(updates);
@@ -52,7 +54,7 @@ export function SettingsMemoryView() {
   const handleClearMemory = () => {
     if (
       confirm(
-        "Wirklich alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "Wirklich alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden."
       )
     ) {
       clearAllMemory();
@@ -76,8 +78,6 @@ export function SettingsMemoryView() {
     toggleRestoreLastConversation();
   };
 
-  const showHistoryStats = isEnabled && stats;
-
   useEffect(() => {
     if (isEnabled) {
       void refresh();
@@ -87,209 +87,130 @@ export function SettingsMemoryView() {
   return (
     <SettingsLayout
       activeTab="memory"
-      title="Verlauf, Erinnerung & Memory"
-      description="Kontextuelles Gedächtnis für personalisierte Gespräche verwalten"
+      title="Gedächtnis"
+      description="Verlauf und persönliche Informationen verwalten"
     >
-      <div className="space-y-4">
-        <PremiumCard variant="default" className="max-w-3xl mx-auto">
-          <div className="space-y-6">
-            {/* Memory Toggle */}
-            <div className="flex items-center justify-between p-4 rounded-md border bg-surface-inset">
-              <div className="space-y-1">
-                <Label className="text-base font-semibold text-text-primary">
-                  Gedächtnis aktivieren
-                </Label>
-                <p className="text-sm text-text-muted">
-                  Erlaubt der KI, sich an Details aus vergangenen Gesprächen zu erinnern
-                </p>
+      <div className="space-y-6">
+        {/* Memory Toggle Section */}
+        <SettingsSection title="Gedächtnis">
+          <SettingsToggleRow
+            label="Gedächtnis aktivieren"
+            description="Erlaubt der KI, sich an Details aus vergangenen Gesprächen zu erinnern"
+            checked={isEnabled}
+            onCheckedChange={handleToggleMemory}
+          />
+        </SettingsSection>
+
+        {/* Profile Section - Only when enabled */}
+        {isEnabled && (
+          <SettingsSection
+            title="Persönliches Profil"
+            description="Diese Informationen helfen der KI, dich besser zu verstehen"
+          >
+            <SettingsRow label="Dein Name" description="Wie soll die KI dich ansprechen?">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Optional"
+                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+              />
+            </SettingsRow>
+
+            <SettingsRow label="Interessen" description="Hobbies, kommagetrennt">
+              <input
+                type="text"
+                value={hobbies}
+                onChange={(e) => setHobbies(e.target.value)}
+                placeholder="z.B. Musik, Sport"
+                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+              />
+            </SettingsRow>
+
+            <SettingsRow label="Hintergrund" description="Beruf oder Studienfach">
+              <input
+                type="text"
+                value={background}
+                onChange={(e) => setBackground(e.target.value)}
+                placeholder="Optional"
+                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+              />
+            </SettingsRow>
+
+            <div className="py-4">
+              <Button variant="primary" size="sm" onClick={handleUpdateProfile}>
+                Profil speichern
+              </Button>
+            </div>
+          </SettingsSection>
+        )}
+
+        {/* History Section */}
+        {isEnabled && (
+          <SettingsSection title="Verlauf">
+            <SettingsToggleRow
+              label="Letzte Unterhaltung laden"
+              description="Beim Start die letzte Session automatisch öffnen"
+              checked={settings.restoreLastConversation}
+              onCheckedChange={handleToggleRestore}
+            />
+
+            {stats && (
+              <div className="py-4 flex gap-6">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-accent-primary" />
+                  <span className="text-sm text-ink-primary font-medium">
+                    {stats.totalConversations ?? 0}
+                  </span>
+                  <span className="text-xs text-ink-tertiary">Gespräche</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-accent-primary" />
+                  <span className="text-sm text-ink-primary font-medium">
+                    {stats.totalMessages ?? 0}
+                  </span>
+                  <span className="text-xs text-ink-tertiary">Nachrichten</span>
+                </div>
               </div>
-              <button
-                onClick={handleToggleMemory}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
-                  isEnabled ? "bg-brand shadow-brandGlow" : "bg-surface-inset"
-                }`}
+            )}
+          </SettingsSection>
+        )}
+
+        {/* Danger Zone */}
+        {isEnabled && (
+          <SettingsSection title="Daten löschen">
+            <div className="py-4 space-y-3">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleClearMemory}
+                className="gap-2"
               >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-                    isEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+                <Trash2 className="h-4 w-4" />
+                Alle Erinnerungen löschen
+              </Button>
+              <p className="text-xs text-ink-tertiary">
+                Löscht alle gespeicherten Kontextinformationen permanent.
+              </p>
             </div>
+          </SettingsSection>
+        )}
 
-            {/* Status Indicator */}
-            {isEnabled && (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-brand/10 border border-brand/20">
-                <Shield className="w-4 h-4 text-brand" />
-                <span className="text-sm font-medium text-brand">Gedächtnis ist aktiv</span>
-              </div>
-            )}
+        {/* Privacy Notice */}
+        <InfoBanner icon={<Shield className="h-4 w-4" />} title="Datenschutz">
+          Alle Gedächtnisinformationen werden nur lokal im Browser gespeichert und niemals
+          an externe Server übertragen. Du kannst diese Daten jederzeit einsehen oder
+          löschen.
+        </InfoBanner>
 
-            {/* Profile Information - Only show when memory is enabled */}
-            {isEnabled && (
-              <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-text-primary">Persönliches Profil</h3>
-                <p className="text-xs text-text-muted">
-                  Diese Informationen helfen der KI, dich besser zu verstehen und relevantere
-                  Antworten zu geben.
-                </p>
-
-                <div className="space-y-4">
-                  {/* Name */}
-                  <div className="space-y-2">
-                    <Label htmlFor="memory-name" className="text-sm font-medium text-text-primary">
-                      Dein Name (optional)
-                    </Label>
-                    <Input
-                      id="memory-name"
-                      type="text"
-                      placeholder="Wie soll die KI dich ansprechen?"
-                      defaultValue={globalMemory?.name || ""}
-                      disabled={!isEnabled}
-                    />
-                  </div>
-
-                  {/* Hobbies */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="memory-hobbies"
-                      className="text-sm font-medium text-text-primary"
-                    >
-                      Interessen & Hobbies (optional)
-                    </Label>
-                    <Input
-                      id="memory-hobbies"
-                      type="text"
-                      placeholder="Programmierung, Musik, Sport... (kommagetrennt)"
-                      defaultValue={globalMemory?.hobbies?.join(", ") || ""}
-                      disabled={!isEnabled}
-                    />
-                  </div>
-
-                  {/* Background */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="memory-background"
-                      className="text-sm font-medium text-text-primary"
-                    >
-                      Hintergrund (optional)
-                    </Label>
-                    <Input
-                      id="memory-background"
-                      type="text"
-                      placeholder="Beruf, Studienfach, oder andere wichtige Informationen"
-                      defaultValue={globalMemory?.background || ""}
-                      disabled={!isEnabled}
-                    />
-                  </div>
-
-                  {/* Update Button */}
-                  <PrimaryButton
-                    onClick={handleUpdateProfile}
-                    disabled={!isEnabled}
-                    className="w-full sm:w-auto"
-                  >
-                    Profil speichern
-                  </PrimaryButton>
-                </div>
-              </div>
-            )}
-
-            {/* Memory Management */}
-            {isEnabled && (
-              <div className="space-y-4 border-t border-border pt-4">
-                <h3 className="text-sm font-semibold text-text-primary">Verlauf &amp; Kontext</h3>
-
-                <div className="flex items-center justify-between p-3 rounded-md bg-surface-inset">
-                  <div className="space-y-1">
-                    <Label className="text-sm text-text-primary">
-                      Letzte Unterhaltung automatisch öffnen
-                    </Label>
-                    <p className="text-xs text-text-muted">
-                      Merkt sich die letzte Session und lädt sie beim Start.
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleToggleRestore}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
-                      settings.restoreLastConversation ? "bg-brand" : "bg-surface-inset"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-                        settings.restoreLastConversation ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {showHistoryStats && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-md bg-surface-inset flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
-                        <History className="w-4 h-4 text-brand" />
-                        Gespräche
-                      </div>
-                      <div className="text-lg font-bold text-brand">
-                        {stats?.totalConversations ?? 0}
-                      </div>
-                    </div>
-                    <div className="p-3 rounded-md bg-surface-inset flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
-                        <Shield className="w-4 h-4 text-brand" />
-                        Nachrichten
-                      </div>
-                      <div className="text-lg font-bold text-brand">
-                        {stats?.totalMessages ?? 0}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-4 border-t border-border pt-4">
-                  <h3 className="text-sm font-semibold text-text-primary">Löschen &amp; Reset</h3>
-                  <div className="space-y-3">
-                    <Button
-                      variant="secondary"
-                      onClick={handleClearMemory}
-                      className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Alle Erinnerungen löschen
-                    </Button>
-                    <p className="text-xs text-text-muted">
-                      ⚠️ Löscht alle gespeicherten Kontextinformationen permanent.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Privacy Notice */}
-            <div className="rounded-md bg-surface-inset shadow-inset p-3">
-              <div className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-text-primary">Datenschutz-Hinweis</p>
-                  <p className="text-xs text-text-secondary leading-relaxed">
-                    Alle Gedächtnisinformationen werden nur lokal im Browser gespeichert und niemals
-                    an externe Server übertragen. Du kannst diese Daten jederzeit einsehen oder
-                    löschen.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Disabled State Info */}
-            {!isEnabled && (
-              <div className="text-center py-4">
-                <p className="text-sm text-text-muted">
-                  Aktiviere das Gedächtnis, um personalisierte Gespräche zu führen
-                </p>
-              </div>
-            )}
+        {/* Disabled State */}
+        {!isEnabled && (
+          <div className="text-center py-8">
+            <p className="text-sm text-ink-tertiary">
+              Aktiviere das Gedächtnis, um personalisierte Gespräche zu führen.
+            </p>
           </div>
-        </PremiumCard>
+        )}
       </div>
     </SettingsLayout>
   );

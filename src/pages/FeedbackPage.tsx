@@ -1,31 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ArrowLeft, Send } from "@/lib/icons";
+import { ArrowLeft, Send, MessageSquare, Bug, Palette, MoreHorizontal } from "@/lib/icons";
 import {
   Button,
-  Label,
-  PremiumCard,
-  PrimaryButton,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Textarea,
+  Card,
   useToasts,
 } from "@/ui";
-import { SectionHeader } from "@/ui/SectionHeader";
+import { AppShell } from "../components/layout/AppShell";
+import { useMenuDrawer, AppMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { cn } from "@/lib/utils";
+
+const FEEDBACK_TYPES = [
+  { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-primary" },
+  { id: "bug", label: "Fehler", icon: Bug, color: "text-status-error" },
+  { id: "ui", label: "Design", icon: Palette, color: "text-accent-secondary" },
+  { id: "other", label: "Sonstiges", icon: MoreHorizontal, color: "text-ink-secondary" },
+] as const;
 
 export default function FeedbackPage() {
   const navigate = useNavigate();
   const toasts = useToasts();
-  const [type, setType] = useState("idea");
+  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
+  
+  const [type, setType] = useState<string>("idea");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!message.trim()) return;
+    
     setIsSending(true);
 
     // Simulation of API call
@@ -38,73 +43,101 @@ export default function FeedbackPage() {
     });
 
     setIsSending(false);
-    void navigate("/settings"); // Back to settings
+    void navigate("/settings");
   };
 
   return (
-    <div className="relative flex flex-col text-ink-primary h-full bg-bg-base safe-area-top">
-      {/* Header */}
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} aria-label="Zurück">
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Zurück
-        </Button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
-        <PremiumCard variant="default" className="max-w-xl mx-auto p-6">
-          <SectionHeader title="Feedback senden" subtitle="Hilf uns, Disa AI besser zu machen." />
-
-          <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-            <div className="space-y-2">
-              <Label>Art der Rückmeldung</Label>
-              <Select value={type} onValueChange={setType}>
-                <SelectTrigger className="bg-surface-inset border-surface-2">
-                  <SelectValue placeholder="Art der Rückmeldung" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="idea">💡 Idee & Vorschlag</SelectItem>
-                  <SelectItem value="bug">🐛 Fehler melden</SelectItem>
-                  <SelectItem value="ui">🎨 Design / UI-Problem</SelectItem>
-                  <SelectItem value="other">Sonstiges</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Beschreibung</Label>
-              <Textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Was ist dir aufgefallen? Was wünschst du dir?"
-                className="min-h-[150px] bg-surface-inset border-surface-2"
-                required
-              />
-            </div>
-
-            <div className="rounded-md bg-surface-inset shadow-inset p-3 text-xs text-ink-secondary">
-              <p>
-                Wir hängen automatisch technische Details an (Browser, Bildschirmgröße), um Fehler
-                schneller zu finden.
+    <>
+      <AppShell
+        title="Feedback"
+        onMenuClick={openMenu}
+        headerActions={
+          <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Zurück
+          </Button>
+        }
+      >
+        <div className="flex flex-col items-center justify-center min-h-full p-4 overflow-y-auto">
+          <Card className="w-full max-w-lg" padding="lg">
+            <div className="mb-6 text-center">
+              <h1 className="text-2xl font-bold text-ink-primary">Deine Meinung zählt</h1>
+              <p className="text-sm text-ink-secondary mt-2">
+                Hilf uns, Disa AI besser zu machen. Was funktioniert gut? Was fehlt dir?
               </p>
             </div>
 
-            <PrimaryButton
-              type="submit"
-              disabled={isSending}
-              className="w-full flex items-center justify-center gap-2"
-            >
-              {isSending ? (
-                "Wird gesendet..."
-              ) : (
-                <>
-                  <Send className="h-4 w-4" /> Feedback absenden
-                </>
-              )}
-            </PrimaryButton>
-          </form>
-        </PremiumCard>
-      </div>
-    </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
+                  Worum geht es?
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {FEEDBACK_TYPES.map((item) => {
+                    const Icon = item.icon;
+                    const isSelected = type === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setType(item.id)}
+                        className={cn(
+                          "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all",
+                          isSelected
+                            ? "bg-surface-2 border-accent-primary/50 ring-1 ring-accent-primary/20"
+                            : "bg-surface-1 border-white/5 hover:bg-surface-2 hover:border-white/10"
+                        )}
+                      >
+                        <Icon className={cn("h-6 w-6", isSelected ? item.color : "text-ink-tertiary")} />
+                        <span className={cn("text-xs font-medium", isSelected ? "text-ink-primary" : "text-ink-secondary")}>
+                          {item.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
+                  Deine Nachricht
+                </label>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Beschreibe deine Idee oder das Problem..."
+                  className="w-full min-h-[160px] bg-surface-2 border border-white/10 rounded-xl p-4 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 resize-none"
+                  required
+                />
+              </div>
+
+              <div className="rounded-lg bg-surface-2/50 p-3 text-xs text-ink-secondary border border-white/5">
+                <p>
+                  Technische Details (Browser, Gerät) werden anonymisiert angehängt, um Fehler schneller zu finden.
+                </p>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                disabled={isSending || !message.trim()}
+                className="w-full"
+              >
+                {isSending ? (
+                  "Wird gesendet..."
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Send className="h-4 w-4" /> Feedback absenden
+                  </div>
+                )}
+              </Button>
+            </form>
+          </Card>
+        </div>
+      </AppShell>
+      
+      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
+    </>
   );
 }

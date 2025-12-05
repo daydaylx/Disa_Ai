@@ -248,22 +248,23 @@ export default function Chat() {
         title={activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
         headerActions={
-          <Button variant="ghost" size="icon" onClick={() => setIsHistoryOpen(true)}>
+          <Button variant="ghost" size="icon" onClick={() => setIsHistoryOpen(true)} aria-label="Verlauf öffnen">
             <Bookmark className="h-5 w-5 text-ink-secondary" />
           </Button>
         }
       >
-        <div className="flex h-full flex-col relative">
+        <div className="flex h-full flex-col">
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
+          {/* Messages Area */}
           <main
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 relative z-10"
+            className="flex-1 overflow-y-auto min-h-0"
             role="log"
             aria-label="Chat messages"
           >
-            <div className="px-3 py-3 sm:px-6 sm:py-6 max-w-3xl mx-auto w-full min-h-full flex flex-col">
+            <div className="px-4 py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               {isEmpty ? (
                 <div className="flex-1 flex items-center justify-center">
                   <ChatStartCard
@@ -291,9 +292,9 @@ export default function Chat() {
             </div>
           </main>
 
-          {/* Input Area anchored to bottom */}
-          <div className="z-20 w-full bg-bg-app/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-white/5">
-            <div className="max-w-3xl mx-auto px-3 pb-safe-bottom pt-2">
+          {/* Input Area - Fixed at bottom */}
+          <div className="flex-none w-full bg-bg-app border-t border-white/5">
+            <div className="max-w-3xl mx-auto px-4 py-3 pb-safe-bottom">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}

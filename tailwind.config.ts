@@ -8,37 +8,35 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Modern Slate Glass Palette
+        // Calm Productivity Palette
         bg: {
-          app: "#131314", // Deep OLED-friendly dark
-          page: "#131314",
-          surface: "#1E1E20",
-          "surface-hover": "#27272A",
+          app: "#131314", // Deep Dark (OLED friendly but soft)
+          surface: "#1E1E20", // Main Surface
         },
         surface: {
-          1: "#1E1E20", // Cards
-          2: "#27272A", // Hover / Inputs
-          3: "#3F3F46", // Borders / Dividers
-          inset: "#000000", // For distinct deep zones
+          1: "#1E1E20", // Cards / Panels
+          2: "#27272A", // Inputs / Hover states
+          3: "#3F3F46", // Active / Borders
+          inset: "#09090B", // Deep zones (code blocks)
         },
         ink: {
-          primary: "#F4F4F5", // Zinc 100
-          secondary: "#A1A1AA", // Zinc 400
-          tertiary: "#71717A", // Zinc 500
-          muted: "#52525B", // Zinc 600
+          primary: "#F4F4F5", // Zinc 100 (High contrast text)
+          secondary: "#A1A1AA", // Zinc 400 (Supporting text)
+          tertiary: "#71717A", // Zinc 500 (Meta text)
+          muted: "#52525B", // Zinc 600 (Disabled/Very subtle)
         },
         accent: {
-          primary: "#60A5FA", // Blue 400
+          primary: "#6366f1", // Indigo 500 (Calm, professional accent)
+          "primary-dim": "rgba(99, 102, 241, 0.1)", // For backgrounds
           secondary: "#818CF8", // Indigo 400
-          "primary-dim": "rgba(96, 165, 250, 0.1)",
         },
         border: {
-          ink: "#3F3F46", // Zinc 700
+          ink: "#27272A", // Very subtle border
         },
         status: {
-          error: "#F87171", // Red 400
-          success: "#4ADE80", // Green 400
-          warning: "#FBBF24", // Amber 400
+          error: "#ef4444", // Red 500
+          success: "#22c55e", // Green 500
+          warning: "#eab308", // Yellow 500
         },
       },
       fontFamily: {
@@ -58,22 +56,23 @@ export default {
         "safe-bottom": "env(safe-area-inset-bottom)",
       },
       borderRadius: {
-        "3xl": "1.5rem",
-        "2xl": "1rem",
-        xl: "0.75rem",
-        lg: "0.5rem",
-        md: "0.375rem",
-        sm: "0.25rem",
+        "3xl": "1.5rem", // 24px
+        "2xl": "1rem",   // 16px (Standard Card)
+        xl: "0.75rem",   // 12px (Standard Button)
+        lg: "0.5rem",    // 8px
+        md: "0.375rem",  // 6px
+        sm: "0.25rem",   // 4px
       },
       boxShadow: {
-        glass: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
-        raise: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        raiseLg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        // Functional shadows only, no glow
+        sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        inset: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
       },
       animation: {
         "fade-in": "fadeIn 0.2s ease-out",
         "slide-up": "slideUp 0.3s ease-out",
-        "slide-in-right": "slideInRight 0.3s ease-out",
       },
       keyframes: {
         fadeIn: {
@@ -83,10 +82,6 @@ export default {
         slideUp: {
           "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        slideInRight: {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(0)" },
         },
       },
     },
@@ -102,11 +97,10 @@ export default {
             display: "none",
           },
         },
-        ".glass-panel": {
-          "background-color": "rgba(30, 30, 32, 0.7)",
+        // Functional glass, only for sticky headers/overlays
+        ".glass-blur": {
           "backdrop-filter": "blur(12px)",
           "-webkit-backdrop-filter": "blur(12px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
         },
       });
     }),
