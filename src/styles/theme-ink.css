@@ -11,21 +11,40 @@
    * ======================================== */
 
   /* Slate Backgrounds - Clear layer hierarchy */
-  --bg-app: #020304; /* Sehr tiefes Nachtschiefer - dunkelste Ebene */
-  --bg-slate: #08090b; /* Abgesetzte Schieferfläche - mittlere Ebene */
+  --bg-app-rgb: 5 6 8;
+  --bg-app: rgb(var(--bg-app-rgb));
+  --bg-base: var(--bg-app);
 
-  --bg-page: var(--bg-slate); /* Mapping for compatibility */
-  --bg-surface: #161820; /* Deutlich hellere Tafelstufe für Karten - besserer Kontrast */
-  --bg-surface-strong: #1f2228; /* Noch hellere Stufe für erhöhte Elemente */
+  --bg-slate-rgb: 17 19 25;
+  --bg-slate: rgb(var(--bg-slate-rgb));
+
+  --bg-surface-rgb: 17 19 25;
+  --bg-surface: rgb(var(--bg-surface-rgb));
+
+  --bg-elevated-rgb: 21 24 33;
+  --bg-elevated: rgb(var(--bg-elevated-rgb));
+  --bg-surface-strong: var(--bg-elevated);
+
+  --bg-pill-rgb: 26 29 38;
+  --bg-pill: rgb(var(--bg-pill-rgb));
+
+  --bg-page: var(--bg-app);
 
   /* Chalk Text */
-  --ink-primary: #ececec; /* text-chalk */
-  --ink-secondary: #9e9e9e; /* text-fade */
-  --ink-tertiary: #757575;
+  --ink-primary-rgb: 245 245 247;
+  --ink-primary: rgb(var(--ink-primary-rgb));
+
+  --ink-secondary-rgb: 160 164 174;
+  --ink-secondary: rgb(var(--ink-secondary-rgb));
+
+  --ink-tertiary-rgb: 108 112 122;
+  --ink-tertiary: rgb(var(--ink-tertiary-rgb));
+
   --ink-on-accent: #0e0e0f;
 
   /* Chalk Accents */
-  --accent-primary: #f3d68a; /* Warmes Kreide-Gelb als Signalfarbe */
+  --accent-primary-rgb: 246 231 197;
+  --accent-primary: rgb(var(--accent-primary-rgb));
   --accent-secondary: #7ddcd3; /* Gedämpftes Türkis für zarte Marker */
   --accent-tertiary: #ffcab8; /* Sanftes Kreide-Pink als Reserve */
   --accent-hover: #ffe199;
@@ -36,10 +55,15 @@
   --color-error: #ef9a9a;
 
   /* Mapping to existing variable names for compatibility */
-  --bg-base: var(--bg-app);
   --bg-0: var(--bg-app);
-  --bg-1: var(--bg-page);
-  --bg-2: var(--bg-surface);
+  --bg-1: var(--bg-surface);
+  --bg-2: var(--bg-elevated);
+
+  /* Legacy Theme Compatibility */
+  --stone-base: var(--bg-app);
+  --chalk-white: var(--ink-primary);
+  --chalk-dim: var(--ink-secondary);
+  --chalk-accent: var(--accent-primary);
 
   --surface-1: var(--bg-page);
   --surface-2: var(--bg-surface);
@@ -199,4 +223,64 @@
 
 .presence-indicator {
   animation: presence-pulse 3s ease-in-out infinite;
+}
+
+/* ========================================
+ * LEGACY MIGRATED CLASSES
+ * ======================================== */
+
+.border-chalk {
+  border: 1px solid var(--ink-secondary);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: var(--shadow-paper);
+}
+
+.border-chalk-rough {
+  border: 1.25px solid var(--ink-secondary);
+  border-radius: 14px;
+}
+
+.border-chalk-pill {
+  border: 1px solid var(--ink-primary);
+  border-radius: 14px;
+}
+
+.btn-chalk {
+  padding: 0.55rem 1.1rem;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  font-weight: 600;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 180ms;
+  border: 1.25px solid var(--ink-primary);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-primary);
+  box-shadow: var(--shadow-floating);
+}
+
+.btn-chalk:hover {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.input-chalk {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--ink-secondary);
+  color: var(--ink-primary);
+  font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+  font-size: 1rem;
+  letter-spacing: -0.005em;
+  padding: 0.25rem 0;
+}
+
+.input-chalk:focus {
+  outline: none;
+  border-bottom: 2px solid var(--ink-primary);
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.18);
 }

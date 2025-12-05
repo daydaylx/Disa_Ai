@@ -19,15 +19,14 @@ interface ChatStartCardProps {
 export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCardProps) {
   return (
     <div
-      className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-[var(--border-chalk-strong)] bg-[radial-gradient(circle_at_50%_20%,rgba(243,214,138,0.08),transparent_52%),var(--bg-surface)] px-4 py-7 text-center shadow-[var(--shadow-lg)]"
+      className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-[var(--border-chalk-strong)] bg-surface px-4 py-7 text-center shadow-[var(--shadow-lg)]"
       style={{
-        backgroundImage: "var(--chalk-noise), var(--chalk-dust)",
-        backgroundBlendMode: "overlay, screen",
-        boxShadow:
-          "0 24px 64px rgba(0,0,0,0.75), 0 0 0 1px var(--border-chalk-strong), inset 0 2px 0 rgba(255,255,255,0.05), inset 0 0 80px rgba(243,214,138,0.04)",
+        backgroundImage: "var(--chalk-noise), radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-primary) 5%, transparent), transparent 70%)",
+        backgroundBlendMode: "overlay, normal",
+        boxShadow: "var(--shadow-elevated)",
       }}
     >
-      <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-[color-mix(in_srgb,var(--accent-primary)_70%,transparent)] bg-[radial-gradient(circle,rgba(243,214,138,0.14),rgba(243,214,138,0.05))] text-accent-primary shadow-[0_16px_42px_rgba(243,214,138,0.45),var(--chalk-glow-accent)]">
+      <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-[color-mix(in_srgb,var(--accent-primary)_70%,transparent)] bg-[color-mix(in_srgb,var(--accent-primary)_10%,transparent)] text-accent-primary shadow-[0_0_20px_color-mix(in_srgb,var(--accent-primary)_20%,transparent)]">
         <Sparkles className="h-6 w-6 drop-shadow-[var(--chalk-glow-strong)]" />
         <span
           className="presence-indicator absolute -right-1 -top-1 inline-flex h-3 w-3 rounded-full bg-[var(--accent-secondary)]"
@@ -36,11 +35,11 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
       </div>
 
       <BrandWordmark
-        className="text-[1.75rem] sm:text-[1.9rem] tracking-[0.05em] drop-shadow-[var(--chalk-glow-strong)]"
+        className="text-[1.75rem] sm:text-[1.9rem] tracking-[0.05em] drop-shadow-[var(--chalk-glow-strong)] text-text-primary"
         state="idle"
       />
 
-      <p className="max-w-md text-[13px] leading-relaxed text-text-secondary/90 tracking-[0.02em]">
+      <p className="max-w-md text-[13px] leading-relaxed text-text-secondary tracking-[0.02em]">
         Klare Antworten statt Deko.<br />
         Schieferoberfläche, dezente Kreide.
       </p>
@@ -48,7 +47,7 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
       <div className="flex w-full max-w-md flex-col gap-2.5 sm:flex-row">
         <button
           onClick={onNewChat}
-          className="group flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-[color-mix(in_srgb,var(--accent-primary)_80%,transparent)] bg-[var(--accent-primary)] px-5 py-3 text-[15px] font-semibold text-[var(--ink-on-accent)] shadow-[0_18px_42px_rgba(243,214,138,0.55),var(--chalk-glow-accent)] transition-all hover:translate-y-[-2px] hover:shadow-[0_24px_54px_rgba(243,214,138,0.65),var(--chalk-glow-accent-strong)] hover:border-[color-mix(in_srgb,var(--accent-primary)_90%,transparent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--accent-primary)_60%,transparent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-surface)]"
+          className="group flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-[color-mix(in_srgb,var(--accent-primary)_80%,transparent)] bg-accent px-5 py-3 text-[15px] font-semibold text-[var(--ink-on-accent)] shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-all hover:translate-y-[-1px] hover:shadow-[0_8px_20px_color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-bg-surface"
         >
           <Plus className="h-[18px] w-[18px] drop-shadow-[0_0_2px_rgba(0,0,0,0.3)] transition-transform group-hover:scale-110" />
           Neues Gespräch

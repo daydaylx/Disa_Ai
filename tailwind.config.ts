@@ -5,16 +5,16 @@ import type { Config } from "tailwindcss";
 
 const slateColors = {
   stone: {
-    base: "#1a1b1e", // Dunkles Anthrazit (Hintergrund)
-    surface: "#25262b", // Etwas hellerer Stein (Cards)
-    highlight: "#2c2e33", // Für Hover-Effekte
+    base: "rgb(var(--bg-app-rgb) / <alpha-value>)", // Dunkles Anthrazit (Hintergrund)
+    surface: "rgb(var(--bg-surface-rgb) / <alpha-value>)", // Etwas hellerer Stein (Cards)
+    highlight: "rgb(var(--bg-elevated-rgb) / <alpha-value>)", // Für Hover-Effekte
   },
   chalk: {
-    white: "#f4f4f0", // Haupttext (Gebrochenes Weiß)
-    dim: "rgba(244, 244, 240, 0.6)", // Sekundärtext
-    yellow: "#facc15", // Akzent Gelb
-    blue: "#a5d8ff", // Akzent Blau (Pastell)
-    pink: "#fcc2d7", // Akzent Pink (Pastell)
+    white: "rgb(var(--ink-primary-rgb) / <alpha-value>)", // Haupttext (Gebrochenes Weiß)
+    dim: "rgb(var(--ink-secondary-rgb) / <alpha-value>)", // Sekundärtext
+    yellow: "rgb(var(--accent-primary-rgb) / <alpha-value>)", // Akzent Gelb
+    blue: "var(--accent-secondary)", // Akzent Blau (Pastell)
+    pink: "var(--accent-tertiary)", // Akzent Pink (Pastell)
   },
 };
 
@@ -23,6 +23,8 @@ const colorTokens = {
     app: slateColors.stone.base,
     page: slateColors.stone.base,
     surface: slateColors.stone.surface,
+    elevated: "rgb(var(--bg-elevated-rgb) / <alpha-value>)",
+    pill: "rgb(var(--bg-pill-rgb) / <alpha-value>)",
   },
   ink: {
     primary: slateColors.chalk.white,
