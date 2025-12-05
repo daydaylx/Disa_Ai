@@ -167,36 +167,34 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
             }
             className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-                filters.showFavoritesOnly
-                  ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+              filters.showFavoritesOnly
+                ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+                : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+            )}
+          >
+            <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+            Favoriten
+          </button>
+
+          <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+          {/* Category Filters */}
+          {CATEGORY_ORDER.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                selectedCategory === cat
+                  ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
                   : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
               )}
             >
-              <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
-              Favoriten
+              {cat}
             </button>
-
-            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-
-            {/* Category Filters */}
-            {CATEGORY_ORDER.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-                className={cn(
-                  "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-                  selectedCategory === cat
-                    ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
-                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                )}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
-
         {/* Active Filters Summary */}
         {hasActiveFilters && (
           <div className="flex items-center justify-between">
