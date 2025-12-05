@@ -3,32 +3,31 @@ import { useEffect, useMemo, useState } from "react";
 import { loadModelCatalog, type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useSettings } from "@/hooks/useSettings";
-import { CheckCircle, Search, Sparkles, Star, Zap } from "@/lib/icons";
+import { CheckCircle, Cpu, Search, Star } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-  Skeleton,
-} from "@/ui";
+import { Badge, Button, Card } from "@/ui";
 
-import { resolveInitialModelId } from "./resolveInitialModelId";
+// Simple input component for local use to avoid dependency on old Input
+function SimpleSearchInput({ value, onChange, placeholder }: any) {
+  return (
+    <div className="relative w-full">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary">
+        <Search className="h-4 w-4" />
+      </div>
+      <input
+        type="text"
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full h-11 rounded-xl bg-surface-2 border border-white/5 pl-10 pr-4 text-sm text-ink-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 placeholder:text-ink-tertiary transition-all"
+      />
+    </div>
+  );
+}
 
 interface ModelsCatalogProps {
   className?: string;
-}
-
-function getQualityScore(entry: ModelEntry) {
-  if (typeof entry.qualityScore === "number") return entry.qualityScore;
-  if (entry.tags.includes("flagship")) return 92;
-  if (entry.tags.includes("fast")) return 78;
-  return 70;
 }
 
 function getContextTokens(entry?: ModelEntry) {
@@ -39,10 +38,8 @@ function getContextTokens(entry?: ModelEntry) {
 function getPriceLabel(entry: ModelEntry) {
   const inputPrice = coercePrice(entry.pricing?.in, 0);
   const outputPrice = coercePrice(entry.pricing?.out, 0);
-  if (inputPrice === 0 && outputPrice === 0) return "Kostenlos";
-  if (inputPrice === 0) return `${formatPricePerK(outputPrice)} out`;
-  if (outputPrice === 0) return `${formatPricePerK(inputPrice)} in`;
-  return `${formatPricePerK(inputPrice)} · ${formatPricePerK(outputPrice, { currencySymbol: "" })} out`;
+  if (inputPrice === 0 && outputPrice === 0) return "Gratis";
+  return `${formatPricePerK(inputPrice)} / ${formatPricePerK(outputPrice, { currencySymbol: "" })}`;
 }
 
 export function ModelsCatalog({ className }: ModelsCatalogProps) {
@@ -50,261 +47,158 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
   const [catalog, setCatalog] = useState<ModelEntry[] | null>(null);
   const [search, setSearch] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  // Load catalog
   useEffect(() => {
     let active = true;
     loadModelCatalog()
       .then((data) => {
         if (!active) return;
         setCatalog(data);
-        const resolvedModelId = resolveInitialModelId(settings.preferredModelId, data);
-        setSelectedId(resolvedModelId);
       })
       .catch(() => {
         if (!active) return;
         setCatalog([]);
-        setSelectedId(null);
       });
     return () => {
       active = false;
     };
-  }, [settings.preferredModelId]);
-
-  const recommended = useMemo(() => {
-    if (!catalog) return [] as ModelEntry[];
-    return [...catalog].sort((a, b) => getQualityScore(b) - getQualityScore(a)).slice(0, 3);
-  }, [catalog]);
+  }, []);
 
   const filtered = useMemo(() => {
     if (!catalog) return [] as ModelEntry[];
     const query = search.trim().toLowerCase();
-    if (!query) return catalog;
-    return catalog.filter((entry) => {
+
+    // Sort: Favorites first, then by name
+    const sorted = [...catalog].sort((a, b) => {
+      const favA = isModelFavorite(a.id) ? 1 : 0;
+      const favB = isModelFavorite(b.id) ? 1 : 0;
+      if (favA !== favB) return favB - favA;
+      return (a.label || a.id).localeCompare(b.label || b.id);
+    });
+
+    if (!query) return sorted;
+    return sorted.filter((entry) => {
       const haystack =
         `${entry.id} ${entry.label ?? ""} ${entry.provider ?? ""} ${entry.tags.join(" ")}`.toLowerCase();
       return haystack.includes(query);
     });
-  }, [catalog, search]);
+  }, [catalog, search, isModelFavorite]);
 
-  const resolvedPreferredModelId = useMemo(
-    () => resolveInitialModelId(settings.preferredModelId, catalog),
-    [catalog, settings.preferredModelId],
-  );
-
-  const activeModelId = selectedId ?? resolvedPreferredModelId;
-  const hasSelectedModel = Boolean(activeModelId);
+  const activeModelId = settings.preferredModelId;
 
   return (
-    <div className={cn("flex h-full flex-col gap-4", className)}>
-      <div className="rounded-2xl border border-border-ink/15 bg-surface-1 p-4 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-ink-tertiary">
-              Modelle
-            </p>
-            <h1 className="text-xl font-bold text-ink-primary">Schnellauswahl & Details</h1>
-            <p className="text-sm text-ink-secondary">
-              Finde ein Modell für deinen Anwendungsfall und setze es als Standard für neue Chats.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border border-border-ink/20 bg-surface-2 px-3 py-2 text-xs text-ink-secondary">
-            <CheckCircle className="h-4 w-4 text-accent-primary" />
-            <span>{favorites.models.items.length} Favoriten</span>
-            <span className="mx-1 text-border-ink">·</span>
-            <span>{catalog?.length ?? 0} Modelle</span>
-          </div>
+    <div className={cn("flex flex-col h-full bg-bg-app", className)}>
+      {/* Header & Search */}
+      <div className="flex-none px-4 py-4 space-y-4 bg-bg-app/80 backdrop-blur-sm z-10">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-ink-primary">Modell-Katalog</h2>
+          <p className="text-sm text-ink-secondary mt-1">
+            Wähle das passende Gehirn für deinen Chat.
+          </p>
         </div>
 
-        <div className="mt-4 grid gap-3 lg:grid-cols-[1fr,320px] lg:items-center">
-          <div className="flex items-center gap-3 rounded-xl border border-border-ink/20 bg-surface-1 px-3 py-2">
-            <Search className="h-4 w-4 text-ink-tertiary" />
-            <Input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Nach Modellen suchen (z.B. GPT, Claude, Llama)"
-              className="h-11 border-0 bg-transparent px-0 text-sm focus-visible:ring-0"
-              aria-label="Modelle suchen"
-            />
-          </div>
-          <div className="flex flex-wrap gap-2 rounded-xl border border-border-ink/20 bg-surface-2 px-3 py-2 text-xs text-ink-secondary">
-            <Badge variant="outline" className="flex items-center gap-1 text-[11px]">
-              <Zap className="h-3.5 w-3.5 text-accent-primary" />
-              {activeModelId ?? "Kein Modell"}
-            </Badge>
-            <Badge variant="secondary" className="text-[11px]">
-              Kontext: {getContextTokens(catalog?.find((m) => m.id === activeModelId)) || "—"}{" "}
-              Tokens
-            </Badge>
-          </div>
-        </div>
+        <SimpleSearchInput
+          value={search}
+          onChange={(e: any) => setSearch(e.target.value)}
+          placeholder="Modell suchen..."
+        />
 
-        {catalog !== null && !hasSelectedModel && (
-          <div className="mt-3 flex items-start gap-3 rounded-xl border border-border-ink/20 bg-surface-2 px-3 py-2 text-sm text-ink-secondary">
-            <Sparkles className="h-4 w-4 text-ink-secondary" />
-            <div>
-              <p className="font-medium text-ink-primary">
-                Kein Modell ausgewählt – bitte auswählen
-              </p>
-              <p className="text-xs text-ink-secondary">
-                Wähle ein Modell aus der Liste, um modellabhängige Aktionen freizuschalten.
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Quick Stats */}
+        <div className="flex gap-2">
+          <Badge variant="secondary" className="bg-surface-2 text-ink-secondary border-none">
+            {catalog?.length ?? 0} Modelle
+          </Badge>
+          <Badge variant="secondary" className="bg-surface-2 text-ink-secondary border-none">
+            {favorites.models.items.length} Favoriten
+          </Badge>
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[320px,1fr]">
-        <Card className="h-full" padding="sm">
-          <CardHeader>
-            <CardTitle className="text-lg">Empfehlungen</CardTitle>
-            <CardDescription>
-              Für die meisten Chats: robuste Modelle mit guter Qualität und Preis-Leistung.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4 space-y-3">
-            {!catalog && (
-              <div className="space-y-2">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </div>
-            )}
-            {catalog && recommended.length === 0 && (
-              <p className="text-sm text-ink-secondary">Keine Modelle gefunden.</p>
-            )}
-            {recommended.map((model) => {
-              const isActive = activeModelId === model.id;
-              return (
-                <button
-                  key={model.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedId(model.id);
-                    setPreferredModel(model.id);
-                  }}
-                  className={cn(
-                    "group flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition",
-                    isActive
-                      ? "border-accent-primary/50 bg-accent-primary/10 shadow-[0_8px_30px_-16px_rgba(109,140,255,0.8)]"
-                      : "border-border-ink/20 bg-surface-1 hover:border-accent-primary/30 hover:bg-surface-2",
-                  )}
-                  aria-pressed={isActive}
-                  data-testid={`recommended-${model.id}`}
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2 text-ink-secondary">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-ink-primary">
-                      {model.label ?? model.id}
-                    </p>
-                    <p className="text-xs text-ink-secondary">{model.provider}</p>
-                  </div>
-                  <Badge variant={isActive ? "secondary" : "outline"} className="text-[11px]">
-                    {getPriceLabel(model)}
-                  </Badge>
-                </button>
-              );
-            })}
-          </CardContent>
-        </Card>
-
-        <div className="space-y-3">
-          {catalog === null && (
-            <div className="space-y-2 rounded-2xl border border-border-ink/20 bg-surface-1 p-4">
-              <Skeleton className="h-5 w-1/3" />
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-24 w-full" />
-            </div>
-          )}
-
-          {catalog !== null && filtered.length === 0 && (
-            <div className="rounded-2xl border border-border-ink/20 bg-surface-1 p-5 text-sm text-ink-secondary">
-              Keine Modelle entsprechen deiner Suche. Entferne Filter oder prüfe die Schreibweise.
-            </div>
-          )}
+      {/* Scrollable List */}
+      <div className="flex-1 overflow-y-auto px-4 pb-20">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {catalog === null &&
+            // Skeletons
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-32 rounded-2xl bg-surface-1 animate-pulse" />
+            ))}
 
           {filtered.map((model) => {
             const isActive = activeModelId === model.id;
             const isFavorite = isModelFavorite(model.id);
+
             return (
               <Card
                 key={model.id}
-                className="border border-border-ink/15"
+                variant={isActive ? "interactive" : "default"}
                 padding="sm"
-                data-testid={`model-card-${model.id}`}
+                className={cn(
+                  "group relative transition-all duration-200 hover:shadow-lg",
+                  isActive && "ring-1 ring-accent-primary/50 bg-surface-1/80",
+                )}
+                onClick={() => setPreferredModel(model.id)}
               >
-                <CardHeader className="gap-2">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2 text-ink-secondary">
-                      <Zap className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <CardTitle className="text-base">{model.label ?? model.id}</CardTitle>
-                      <CardDescription className="text-xs">{model.provider}</CardDescription>
-                    </div>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      aria-pressed={isFavorite}
-                      aria-label={
-                        isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
-                      }
-                      onClick={() => toggleModelFavorite(model.id)}
-                      className={cn(
-                        "h-9 w-9 rounded-full",
-                        isFavorite ? "text-accent-primary" : "text-ink-secondary",
-                      )}
-                      data-testid={`favorite-${model.id}`}
-                    >
-                      <Star
-                        className={cn(
-                          "h-4 w-4",
-                          isFavorite ? "fill-accent-primary text-accent-primary" : "",
-                        )}
-                      />
-                    </Button>
+                {isActive && (
+                  <div className="absolute top-3 right-3 text-accent-primary">
+                    <CheckCircle className="h-5 w-5" />
                   </div>
-                </CardHeader>
+                )}
 
-                <CardContent className="pt-3 space-y-3">
-                  <div className="flex flex-wrap gap-2 text-xs text-ink-secondary">
-                    <Badge variant="outline" className="text-[11px]">
-                      Kontext{" "}
-                      {getContextTokens(model)
-                        ? `${Math.round(getContextTokens(model) / 1000)}K`
-                        : "—"}
+                <div className="flex flex-col h-full gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-none h-10 w-10 rounded-xl bg-surface-2 flex items-center justify-center text-ink-secondary group-hover:text-ink-primary transition-colors">
+                      {isFavorite ? (
+                        <Star className="h-5 w-5 fill-accent-warning text-accent-warning" />
+                      ) : (
+                        <Cpu className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1 pr-6">
+                      <h3 className="font-semibold text-base text-ink-primary truncate">
+                        {model.label ?? model.id}
+                      </h3>
+                      <p className="text-xs text-ink-secondary truncate">{model.provider}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] h-5 px-1.5 border-white/10 text-ink-tertiary"
+                    >
+                      {Math.round(getContextTokens(model) / 1000)}k Context
                     </Badge>
-                    <Badge variant="outline" className="text-[11px]">
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] h-5 px-1.5 border-white/10 text-ink-tertiary"
+                    >
                       {getPriceLabel(model)}
                     </Badge>
-                    {model.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-[11px] capitalize">
-                        {tag.replace("_", " ")}
-                      </Badge>
-                    ))}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-1">
                     <Button
+                      variant="ghost"
                       size="sm"
-                      onClick={() => {
-                        setSelectedId(model.id);
-                        setPreferredModel(model.id);
+                      className="h-7 px-2 text-xs text-ink-tertiary hover:text-accent-warning hover:bg-transparent"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleModelFavorite(model.id);
                       }}
-                      variant={isActive ? "secondary" : "primary"}
-                      aria-pressed={isActive}
                     >
-                      {isActive ? "Als Standard gesetzt" : "Als Standard nutzen"}
+                      {isFavorite ? "Favorit entfernen" : "Favorisieren"}
                     </Button>
-                    <span className="text-xs text-ink-tertiary">
-                      Qualitätsscore: {getQualityScore(model)} · Kontext{" "}
-                      {getContextTokens(model) || "—"} Tokens
-                    </span>
+
+                    {isActive ? (
+                      <span className="text-xs font-medium text-accent-primary">Aktiv</span>
+                    ) : (
+                      <span className="text-xs text-ink-muted group-hover:text-ink-secondary">
+                        Tippen zum Wählen
+                      </span>
+                    )}
                   </div>
-                </CardContent>
+                </div>
               </Card>
             );
           })}

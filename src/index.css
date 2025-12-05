@@ -1,123 +1,65 @@
-/**
- * Main CSS Entry Point - Nightfall Design System
- *
- * Mobile-first, high-contrast, calm surfaces with minimal shadows and clear hierarchy.
- */
-
-/* Import Theme FIRST - Source of Truth for Variables */
-@import "./styles/theme-slate.css";
-@import "./styles/chalkboard-theme.css";
-
-/* Base Styles & Resets */
-@import "./styles/base.css";
-@import "./styles/white-space.css";
-@import "./styles/page-spacing.css";
-@import "./styles/vertical-rhythm.css";
-@import "./styles/z-index-system.css";
-
-/* Components */
-@import "./styles/components.css";
-
-/* Animations */
-@import "./styles/interactive-states.css";
-@import "./styles/ui-state-animations.css";
-/* @import "./styles/logo-animations.css";  -- Keep if subtle, remove if too "loud" */
-
-/* Deprecated legacy styles removed as part of the reset */
-
-/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================================================
-   PROJECT-SPECIFIC OVERRIDES
-   ============================================================================ */
+:root {
+  /* Modern Slate Glass Theme Variables */
+  --bg-app: #131314;
+  --bg-surface-1: #1E1E20;
+  --bg-surface-2: #27272A;
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-tertiary: #71717A;
+  --border-color: #3F3F46;
+
+  /* Viewport Height Fix */
+  --vh: 1vh;
+}
 
 @layer base {
-  :root {
-    color-scheme: light dark; /* Support both themes */
+  html, body {
+    @apply bg-bg-app text-ink-primary font-sans antialiased selection:bg-accent-primary/30;
+    overscroll-behavior: none; /* Prevent bounce on mobile */
   }
 
-  /* Apply theme colors - will be overridden by [data-theme="dark"] */
-  html {
-    background-color: var(--bg-app);
-    color: var(--ink-primary);
-  }
-
-  /* Dark theme support */
-  html[data-theme="dark"] {
-    color-scheme: dark;
-  }
-
+  /* Remove chalkboard fonts and complex backgrounds */
   body {
-    background-color: var(--bg-app);
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    background-image: none;
   }
 
-  .root {
-    min-height: 100dvh;
-    background: var(--bg-app);
-    color: var(--text-primary);
-    position: relative;
-    z-index: var(--z-base);
-  }
-
-  /* Typography overrides for Book Feel */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: var(--ink-primary);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
-  /* Mobile Typography Boost: Larger base font for better readability */
-  @media (max-width: 640px) {
-    html {
-      font-size: 112.5%; /* 18px base from 16px */
-    }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-ink-primary tracking-tight font-semibold;
   }
 }
 
 @layer components {
-  /* ========================================================================
-     PAPER DEPTH UTILITIES (Replacements for Neumorphism)
-     ======================================================================== */
-
-  .elevated {
-    box-shadow: var(--shadow-paper);
-    border: 1px solid var(--border-color);
+  .glass {
+    @apply bg-surface-1/80 backdrop-blur-md border border-white/5;
   }
 
-  .elevated-strong {
-    box-shadow: var(--shadow-floating);
-    border: 1px solid var(--border-color);
+  .card-base {
+    @apply bg-surface-1 border border-white/5 rounded-2xl shadow-sm;
   }
 
-  /* Retain class names for compatibility but map to Paper styles */
-  .surface-card--raised {
-    box-shadow: var(--shadow-floating);
-    background-color: var(--bg-page);
-    border: 1px solid var(--border-color);
+  .input-base {
+    @apply bg-surface-2 border border-white/10 rounded-xl px-4 py-2 text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all;
   }
+}
 
-  /* Remove transforms on hover for a calmer feel */
-  .surface-card:hover,
-  .card-depth:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-floating);
-  }
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
 
-  /* Mobile Prose: Limit line lengths */
-  @media (max-width: 640px) {
-    .prose {
-      max-width: 100%;
-    }
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-3 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-ink-muted;
 }

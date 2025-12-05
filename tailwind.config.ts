@@ -1,130 +1,114 @@
 /* eslint-disable */
 import type { Config } from "tailwindcss";
-
-// "DIGITAL SLATE" THEME KONFIGURATION
-
-const slateColors = {
-  stone: {
-    base: "#1a1b1e", // Dunkles Anthrazit (Hintergrund)
-    surface: "#25262b", // Etwas hellerer Stein (Cards)
-    highlight: "#2c2e33", // Für Hover-Effekte
-  },
-  chalk: {
-    white: "#f4f4f0", // Haupttext (Gebrochenes Weiß)
-    dim: "rgba(244, 244, 240, 0.6)", // Sekundärtext
-    yellow: "#facc15", // Akzent Gelb
-    blue: "#a5d8ff", // Akzent Blau (Pastell)
-    pink: "#fcc2d7", // Akzent Pink (Pastell)
-  },
-};
-
-const colorTokens = {
-  bg: {
-    app: slateColors.stone.base,
-    page: slateColors.stone.base,
-    surface: slateColors.stone.surface,
-  },
-  ink: {
-    primary: slateColors.chalk.white,
-    secondary: slateColors.chalk.dim,
-    tertiary: "rgba(244, 244, 240, 0.4)",
-    onAccent: slateColors.stone.base,
-  },
-  text: {
-    DEFAULT: slateColors.chalk.white,
-    primary: slateColors.chalk.white,
-    secondary: slateColors.chalk.dim,
-    muted: slateColors.chalk.dim,
-    disabled: "rgba(244, 244, 240, 0.2)",
-  },
-  accent: {
-    DEFAULT: slateColors.chalk.yellow,
-    hover: "#eab308",
-    secondary: slateColors.chalk.blue,
-  },
-  primary: {
-    DEFAULT: slateColors.chalk.blue,
-    50: slateColors.stone.highlight,
-    100: slateColors.stone.surface,
-    500: slateColors.chalk.blue,
-    600: "#74c0fc",
-  },
-  brand: {
-    DEFAULT: slateColors.chalk.blue,
-    hover: "#74c0fc",
-  },
-  success: { DEFAULT: "#b2f2bb" },
-  warning: { DEFAULT: "#ffec99" },
-  error: { DEFAULT: "#ffc9c9" },
-  surface: {
-    DEFAULT: slateColors.stone.surface,
-    soft: slateColors.stone.surface,
-    card: slateColors.stone.surface,
-    overlay: "rgba(26, 27, 30, 0.95)",
-    base: slateColors.stone.base,
-    inset: "rgba(0, 0, 0, 0.2)",
-  },
-  slate: slateColors.stone,
-  chalk: slateColors.chalk,
-  input: slateColors.chalk.dim,
-  ring: slateColors.chalk.blue,
-  background: slateColors.stone.base,
-  foreground: slateColors.chalk.white,
-  muted: {
-    DEFAULT: slateColors.stone.highlight,
-    foreground: slateColors.chalk.dim,
-  },
-};
-
-const fontSizes = {
-  xs: ["12px", { lineHeight: "1.5" }],
-  sm: ["14px", { lineHeight: "1.5" }],
-  base: ["18px", { lineHeight: "1.6" }],
-  lg: ["20px", { lineHeight: "1.5" }],
-  xl: ["24px", { lineHeight: "1.3" }],
-  "2xl": ["30px", { lineHeight: "1.2" }],
-  "3xl": ["36px", { lineHeight: "1.2" }],
-};
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: ["class", "[data-theme='dark']"],
   theme: {
-    screens: {
-      xs: "360px",
-      sm: "480px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-    },
     extend: {
-      colors: colorTokens,
+      colors: {
+        // Modern Slate Glass Palette
+        bg: {
+          app: "#131314", // Deep OLED-friendly dark
+          page: "#131314",
+          surface: "#1E1E20",
+          "surface-hover": "#27272A",
+        },
+        surface: {
+          1: "#1E1E20", // Cards
+          2: "#27272A", // Hover / Inputs
+          3: "#3F3F46", // Borders / Dividers
+          inset: "#000000", // For distinct deep zones
+        },
+        ink: {
+          primary: "#F4F4F5", // Zinc 100
+          secondary: "#A1A1AA", // Zinc 400
+          tertiary: "#71717A", // Zinc 500
+          muted: "#52525B", // Zinc 600
+        },
+        accent: {
+          primary: "#60A5FA", // Blue 400
+          secondary: "#818CF8", // Indigo 400
+          "primary-dim": "rgba(96, 165, 250, 0.1)",
+        },
+        border: {
+          ink: "#3F3F46", // Zinc 700
+        },
+        status: {
+          error: "#F87171", // Red 400
+          success: "#4ADE80", // Green 400
+          warning: "#FBBF24", // Amber 400
+        },
+      },
       fontFamily: {
         sans: [
           '"Inter"',
-          '"IBM Plex Sans"',
-          '"Space Grotesk"',
-          "system-ui",
           "-apple-system",
-          '"Segoe UI"',
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
           "sans-serif",
         ],
-        serif: ["Lora", "serif"],
-        hand: ['"Patrick Hand"', "cursive"],
+        mono: ['"JetBrains Mono"', '"Fira Code"', "monospace"],
       },
-      fontSize: fontSizes,
-      backgroundImage: {
-        "granite-noise": "none", // Removed complex data URI for debugging
+      spacing: {
+        "safe-bottom": "env(safe-area-inset-bottom)",
       },
       borderRadius: {
-        lg: "12px", // Simplified radius
-        md: "8px",
-        sm: "4px",
+        "3xl": "1.5rem",
+        "2xl": "1rem",
+        xl: "0.75rem",
+        lg: "0.5rem",
+        md: "0.375rem",
+        sm: "0.25rem",
       },
       boxShadow: {
-        chalk: "2px 4px 6px rgba(0,0,0,0.4)",
+        glass: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
+        raise: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        raiseLg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.2s ease-out",
+        "slide-up": "slideUp 0.3s ease-out",
+        "slide-in-right": "slideInRight 0.3s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".no-scrollbar": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+        ".glass-panel": {
+          "background-color": "rgba(30, 30, 32, 0.7)",
+          "backdrop-filter": "blur(12px)",
+          "-webkit-backdrop-filter": "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+        },
+      });
+    }),
+  ],
 } satisfies Config;

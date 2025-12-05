@@ -1,33 +1,26 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import React from "react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/**
- * Button - Digital Slate Theme
- *
- * Redesigned to match the "Chalk on Stone" aesthetic.
- * - Default: Transparent with white chalk border.
- * - Hover: Subtle highlight and "redrawn" border effect (handled by CSS class).
- * - Ghost: Minimal, text-only until hover.
- */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center text-sm font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chalk-blue disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "btn-chalk", // Defined in theme-slate.css for complex animations
-        secondary:
-          "border border-chalk-dim text-chalk-dim hover:text-chalk-white hover:border-chalk-white bg-transparent rounded-lg",
-        ghost: "text-chalk-dim hover:text-chalk-white hover:bg-white/5 rounded-lg",
-        link: "text-chalk-blue underline-offset-4 hover:underline p-0 h-auto min-h-0",
-        destructive: "border border-error text-error hover:bg-error/10 rounded-lg",
+        primary: "bg-accent-primary text-white shadow hover:bg-accent-primary/90",
+        destructive: "bg-status-error text-white shadow-sm hover:bg-status-error/90",
+        outline:
+          "border border-white/10 bg-transparent shadow-sm hover:bg-surface-2 hover:text-ink-primary",
+        secondary: "bg-surface-2 text-ink-primary shadow-sm hover:bg-surface-3",
+        ghost: "hover:bg-surface-2 hover:text-ink-primary",
+        link: "text-accent-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-11 px-4 py-2",
-        sm: "h-9 px-3 text-xs",
-        lg: "h-14 px-8 text-lg",
-        icon: "h-11 w-11 p-2",
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-lg px-3 text-xs",
+        lg: "h-12 rounded-xl px-8 text-base",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
@@ -39,10 +32,12 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
     return (
       <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
     );

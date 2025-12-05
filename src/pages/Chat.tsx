@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { Bookmark } from "@/lib/icons"; // Using Icon directly instead of component
 import { useToasts } from "@/ui";
+import { Button } from "@/ui/Button";
 import { ChatStartCard } from "@/ui/ChatStartCard";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
-import { BookLayout } from "../components/layout/BookLayout";
-import { BookPageAnimator } from "../components/navigation/BookPageAnimator";
+import { AppShell } from "../components/layout/AppShell";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { QUICKSTARTS } from "../config/quickstarts";
 import { useModelCatalog } from "../contexts/ModelCatalogContext";
@@ -28,7 +29,6 @@ import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 export default function Chat() {
   const toasts = useToasts();
-  // ... (hooks setup remains same)
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
@@ -118,6 +118,7 @@ export default function Chat() {
     });
 
   useEffect(() => {
+    // Only scroll if we are near bottom or it's a new message
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
@@ -243,25 +244,28 @@ export default function Chat() {
 
   return (
     <>
-      <BookLayout
+      <AppShell
         title={activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
-        onBookmarkClick={() => setIsHistoryOpen(true)}
+        headerActions={
+          <Button variant="ghost" size="icon" onClick={() => setIsHistoryOpen(true)}>
+            <Bookmark className="h-5 w-5 text-ink-secondary" />
+          </Button>
+        }
       >
-        <BookPageAnimator pageKey={activeConversationId || "new"}>
-          <div className="chalkboard-container flex h-[calc(var(--vh,1vh)*100)] flex-col relative">
-            <h1 className="sr-only">Disa AI – Chat</h1>
-            <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+        <div className="flex h-full flex-col relative">
+          <h1 className="sr-only">Disa AI – Chat</h1>
+          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-            <main
-              ref={chatScrollRef}
-              className="scroll-smooth flex-1 overflow-y-auto px-3 py-3 sm:px-8 sm:py-6 min-h-0 relative z-10"
-              role="log"
-              aria-label="Chat messages"
-              data-testid="virtualized-chat-log"
-            >
+          <main
+            ref={chatScrollRef}
+            className="flex-1 overflow-y-auto min-h-0 relative z-10"
+            role="log"
+            aria-label="Chat messages"
+          >
+            <div className="px-3 py-3 sm:px-6 sm:py-6 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               {isEmpty ? (
-                <div className="mx-auto mt-8 max-w-2xl">
+                <div className="flex-1 flex items-center justify-center">
                   <ChatStartCard
                     onNewChat={handleStartNewChat}
                     conversationCount={stats?.totalConversations ?? conversationCount}
@@ -277,17 +281,19 @@ export default function Chat() {
                   onEdit={handleEdit}
                   onFollowUp={handleFollowUp}
                   onRetry={(_messageId) => {
-                    /* TODO: Implement simple retry */ return void 0;
+                    /* TODO: Implement retry logic properly */
                   }}
-                  className="mx-auto h-full max-w-3xl"
+                  className="w-full pb-4"
                   scrollContainerRef={chatScrollRef}
                 />
               )}
-              <div ref={messagesEndRef} />
-            </main>
+              <div ref={messagesEndRef} className="h-4" />
+            </div>
+          </main>
 
-            {/* Unified Input Area */}
-            <div className="z-sticky-content bg-transparent/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md">
+          {/* Input Area anchored to bottom */}
+          <div className="z-20 w-full bg-bg-app/95 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-t border-white/5">
+            <div className="max-w-3xl mx-auto px-3 pb-safe-bottom pt-2">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
@@ -300,8 +306,8 @@ export default function Chat() {
               />
             </div>
           </div>
-        </BookPageAnimator>
-      </BookLayout>
+        </div>
+      </AppShell>
 
       {/* Global Menu */}
       <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />

@@ -7,8 +7,6 @@ import { ChatMessage } from "./ChatMessage";
 
 // Memoized ChatMessage for performance optimization
 const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
-  // Custom comparison focusing on data that affects rendering
-  // Funktions-Vergleiche entfernt - diese brechen Memoization da Funktionen oft neu erstellt werden
   return (
     prevProps.message.id === nextProps.message.id &&
     prevProps.message.content === nextProps.message.content &&
@@ -108,16 +106,13 @@ export function VirtualizedMessageList({
   );
 
   return (
-    <div data-testid="message-list" className={cn("h-full chalkboard-container", className)}>
-      <div
-        ref={scrollContainerRef ? undefined : attachInternalRef}
-        className="chat-scroll-area h-full"
-      >
+    <div data-testid="message-list" className={cn("flex flex-col gap-6", className)}>
+      <div ref={scrollContainerRef ? undefined : attachInternalRef} className="flex flex-col">
         {shouldVirtualize && hiddenCount > 0 && (
-          <div className="sticky top-0 z-sticky-content flex justify-center py-2">
+          <div className="flex justify-center py-4">
             <button
               onClick={loadOlderMessages}
-              className="chalk-button px-4 py-2 text-sm rounded-full"
+              className="text-xs text-ink-tertiary hover:text-ink-primary transition-colors px-3 py-1 rounded-full bg-surface-2 hover:bg-surface-3"
               data-testid="load-older-messages"
             >
               ↑ {hiddenCount} ältere Nachrichten laden
@@ -125,7 +120,7 @@ export function VirtualizedMessageList({
           </div>
         )}
 
-        <div className="chat-stack">
+        <div className="flex flex-col gap-6">
           {visibleMessages.map((message, index) => (
             <div key={message.id} data-testid="message-bubble">
               <MemoizedChatMessage
@@ -141,8 +136,8 @@ export function VirtualizedMessageList({
         </div>
 
         {isLoading && (
-          <div className="flex items-start gap-4 px-4 py-6">
-            <div className="chalk-bubble flex h-9 w-9 items-center justify-center rounded-full">
+          <div className="flex items-start gap-4 py-4 animate-fade-in">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-ink-tertiary">
               <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 3a9 9 0 019 9"
@@ -162,36 +157,37 @@ export function VirtualizedMessageList({
                 />
               </svg>
             </div>
-            <div className="chalk-bubble flex-1 rounded-lg p-4 text-sm">
-              <div className="text-[var(--chalk-white-faded)] flex items-center gap-2 text-xs uppercase tracking-wider">
-                <span>Assistent</span>
-                <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--chalk-white-faded)]" />
-                <span>Schreibt …</span>
-              </div>
-              <div className="mt-3 flex gap-1">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]" />
-                <div
-                  className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]"
-                  style={{ animationDelay: "0.15s" }}
-                />
-                <div
-                  className="h-2 w-2 animate-pulse rounded-full bg-[var(--chalk-white-faded)]"
-                  style={{ animationDelay: "0.3s" }}
-                />
+            <div className="flex-1 space-y-2">
+              <div className="flex gap-1.5 h-6 items-center">
+                <span className="text-xs font-medium text-ink-tertiary">Disa denkt nach</span>
+                <div className="flex gap-1 ml-1">
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
+                    style={{ animationDelay: "0s" }}
+                  />
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
+                    style={{ animationDelay: "0.1s" }}
+                  />
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
+                    style={{ animationDelay: "0.2s" }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Scroll to Bottom FAB - Fixed Position */}
+        {/* Scroll to Bottom FAB */}
         {!isSticking && (
-          <div className="pointer-events-none fixed bottom-28 left-1/2 z-fab -translate-x-1/2 animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="pointer-events-none fixed bottom-32 left-1/2 z-40 -translate-x-1/2 animate-fade-in">
             <button
               onClick={() => scrollToBottom()}
-              className="chalk-button px-4 py-2 text-sm rounded-full shadow-lg hover:shadow-xl"
+              className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-surface-3/80 px-4 text-sm font-medium text-ink-primary backdrop-blur hover:bg-surface-3 shadow-lg"
               aria-label="Zu neuen Nachrichten scrollen"
             >
-              ↓ Nach unten
+              ↓ Neueste
             </button>
           </div>
         )}
