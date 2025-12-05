@@ -26,10 +26,10 @@
   --chalk-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="chalk-texture"><feTurbulence type="turbulence" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0.1 0.1 0.2 0.1 0.1 0"/></feComponentTransfer></filter><rect width="100" height="100" filter="url(%23chalk-texture)" opacity="0.3"/></svg>');
 
   /* Kreide-Farben */
-  --chalk-white: rgba(236, 236, 236, 0.95);
-  --chalk-white-faded: rgba(236, 236, 236, 0.7);
-  --chalk-blue: rgba(167, 200, 255, 0.9);
-  --chalk-yellow: rgba(255, 239, 166, 0.9);
+  --chalk-white: var(--ink-primary);
+  --chalk-white-faded: var(--ink-secondary);
+  --chalk-blue: var(--accent-secondary);
+  --chalk-yellow: var(--accent-primary);
 
   /* Kreide-Schatten und Glühen */
   --chalk-glow-text: 0 0 2px rgba(243, 214, 138, 0.28), 0 0 1px rgba(236, 236, 236, 0.36);

@@ -305,7 +305,7 @@ export function UnifiedInputBar({
       }}
     >
       {/* Unified Chat Bar Container */}
-      <div className="rounded-2xl border-2 border-[var(--border-chalk-strong)] bg-[rgba(22,24,28,0.95)] backdrop-blur-lg shadow-[0_20px_48px_rgba(0,0,0,0.65),var(--shadow-slate-soft)] ring-1 ring-[rgba(243,214,138,0.08)] p-3.5">
+      <div className="rounded-2xl border-2 border-[var(--border-chalk-strong)] bg-elevated/95 backdrop-blur-lg shadow-lg ring-1 ring-accent/10 p-3.5">
         {/* Input Row */}
         <div className="flex items-end gap-2.5 mb-3">
           <div className="relative flex-1">
@@ -316,7 +316,7 @@ export function UnifiedInputBar({
               onKeyDown={handleKeyDown}
               placeholder="Formuliere deine Frage…"
               aria-label="Nachricht eingeben"
-              className="input-chalk w-full min-h-[42px] max-h-[160px] resize-none rounded-xl bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] px-3.5 py-2.5 text-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_8px_rgba(0,0,0,0.3)] placeholder:text-chalk-dim/60 focus:bg-[rgba(255,255,255,0.06)] focus:border-[rgba(243,214,138,0.35)]"
+              className="input-chalk w-full min-h-[42px] max-h-[160px] resize-none rounded-xl bg-pill/50 border border-white/5 px-3.5 py-2.5 text-[14px] shadow-inner placeholder:text-muted focus:bg-pill focus:border-accent/40"
               rows={1}
               data-testid="composer-input"
             />
@@ -327,7 +327,7 @@ export function UnifiedInputBar({
               onClick={onSend}
               disabled={!value.trim() || isLoading}
               className={cn(
-                "h-[42px] w-[42px] flex items-center justify-center rounded-xl border-2 border-[color-mix(in_srgb,var(--accent-primary)_75%,transparent)] bg-[var(--accent-primary)] text-[var(--ink-on-accent)] shadow-[0_14px_32px_rgba(243,214,138,0.45),var(--chalk-glow-accent)] transition-all hover:translate-y-[-1px] hover:shadow-[0_18px_40px_rgba(243,214,138,0.55),var(--chalk-glow-accent-strong)] hover:scale-105",
+                "h-[42px] w-[42px] flex items-center justify-center rounded-xl border-2 border-accent/75 bg-accent text-[var(--ink-on-accent)] shadow-[0_4px_12px_rgba(0,0,0,0.2)] transition-all hover:translate-y-[-1px] hover:shadow-[0_8px_20px_color-mix(in_srgb,var(--accent-primary)_30%,transparent)] hover:scale-105",
                 !value.trim() && "opacity-40 cursor-not-allowed",
               )}
               aria-label="Senden"
@@ -346,10 +346,10 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("role")}
               ref={triggerRefs.role}
               className={cn(
-                "h-9 px-3 flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(26,28,32,0.88)] text-[13px] text-chalk-dim/95 shadow-[0_10px_22px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-150",
-                "hover:border-[color-mix(in_srgb,var(--accent-primary)_40%,transparent)] hover:bg-[rgba(32,34,38,0.98)] hover:shadow-[0_12px_26px_rgba(0,0,0,0.45)]",
+                "h-9 px-3 flex items-center gap-2 rounded-full border border-white/10 bg-pill text-[13px] text-text-secondary shadow-sm backdrop-blur-sm transition-all duration-150",
+                "hover:border-accent/40 hover:bg-pill/80 hover:shadow-md",
                 (openDropdown === "role" || hasActiveRole) &&
-                  "border-[color-mix(in_srgb,var(--accent-primary)_75%,transparent)] text-text-primary shadow-[0_12px_30px_rgba(243,214,138,0.38),var(--chalk-glow)] bg-[rgba(32,34,38,1)]",
+                  "border-accent/75 text-text-primary shadow-md bg-pill ring-1 ring-accent/20",
               )}
             >
               {hasActiveRole ? (
@@ -417,10 +417,10 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("style")}
               ref={triggerRefs.style}
               className={cn(
-                "h-9 px-3 flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(26,28,32,0.88)] text-[13px] text-chalk-dim/95 shadow-[0_10px_22px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-150",
-                "hover:border-[color-mix(in_srgb,var(--accent-primary)_40%,transparent)] hover:bg-[rgba(32,34,38,0.98)] hover:shadow-[0_12px_26px_rgba(0,0,0,0.45)]",
+                "h-9 px-3 flex items-center gap-2 rounded-full border border-white/10 bg-pill text-[13px] text-text-secondary shadow-sm backdrop-blur-sm transition-all duration-150",
+                "hover:border-accent/40 hover:bg-pill/80 hover:shadow-md",
                 (openDropdown === "style" || hasCustomStyle) &&
-                  "border-[color-mix(in_srgb,var(--accent-primary)_75%,transparent)] text-text-primary shadow-[0_12px_30px_rgba(243,214,138,0.38),var(--chalk-glow)] bg-[rgba(32,34,38,1)]",
+                  "border-accent/75 text-text-primary shadow-md bg-pill ring-1 ring-accent/20",
               )}
             >
               {hasCustomStyle ? (
@@ -463,10 +463,10 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("creativity")}
               ref={triggerRefs.creativity}
               className={cn(
-                "h-9 px-3 flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(26,28,32,0.88)] text-[13px] text-chalk-dim/95 shadow-[0_10px_22px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-150",
-                "hover:border-[color-mix(in_srgb,var(--accent-primary)_40%,transparent)] hover:bg-[rgba(32,34,38,0.98)] hover:shadow-[0_12px_26px_rgba(0,0,0,0.45)]",
+                "h-9 px-3 flex items-center gap-2 rounded-full border border-white/10 bg-pill text-[13px] text-text-secondary shadow-sm backdrop-blur-sm transition-all duration-150",
+                "hover:border-accent/40 hover:bg-pill/80 hover:shadow-md",
                 (openDropdown === "creativity" || hasCustomCreativity) &&
-                  "border-[color-mix(in_srgb,var(--accent-primary)_75%,transparent)] text-text-primary shadow-[0_12px_30px_rgba(243,214,138,0.38),var(--chalk-glow)] bg-[rgba(32,34,38,1)]",
+                  "border-accent/75 text-text-primary shadow-md bg-pill ring-1 ring-accent/20",
               )}
             >
               {hasCustomCreativity ? (
@@ -508,10 +508,10 @@ export function UnifiedInputBar({
               onClick={() => toggleDropdown("model")}
               ref={triggerRefs.model}
               className={cn(
-                "h-9 px-3 flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(26,28,32,0.88)] text-[13px] text-chalk-dim/95 shadow-[0_10px_22px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all duration-150",
-                "hover:border-[color-mix(in_srgb,var(--accent-primary)_40%,transparent)] hover:bg-[rgba(32,34,38,0.98)] hover:shadow-[0_12px_26px_rgba(0,0,0,0.45)]",
+                "h-9 px-3 flex items-center gap-2 rounded-full border border-white/10 bg-pill text-[13px] text-text-secondary shadow-sm backdrop-blur-sm transition-all duration-150",
+                "hover:border-accent/40 hover:bg-pill/80 hover:shadow-md",
                 (openDropdown === "model" || hasCustomModel) &&
-                  "border-[color-mix(in_srgb,var(--accent-primary)_75%,transparent)] text-text-primary shadow-[0_12px_30px_rgba(243,214,138,0.38),var(--chalk-glow)] bg-[rgba(32,34,38,1)]",
+                  "border-accent/75 text-text-primary shadow-md bg-pill ring-1 ring-accent/20",
               )}
             >
               {hasCustomModel ? (

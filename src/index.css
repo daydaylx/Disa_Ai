@@ -5,7 +5,7 @@
  */
 
 /* Import Theme FIRST - Source of Truth for Variables */
-@import "./styles/theme-slate.css";
+@import "./styles/theme-ink.css";
 @import "./styles/chalkboard-theme.css";
 
 /* Base Styles & Resets */
