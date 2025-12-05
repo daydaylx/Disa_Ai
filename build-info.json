@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-a523845",
-  "buildTime": "2025-12-04T18:47:26.533Z",
-  "gitSha": "a52384530e894cc25472941f42ba0bfc79016cc1",
-  "gitBranch": "claude/optimize-page-scaling-01AoLMPGDkjJdAdb9A3NepPp",
+  "buildId": "v1.0.0-2aa18c9",
+  "buildTime": "2025-12-05T18:47:39.849Z",
+  "gitSha": "2aa18c9b6e194731ec79f91203a1657a0369a76b",
+  "gitBranch": "claude/move-model-pill-chat-01NgdBBMBhUJ7BYP8RvMGLXL",
   "version": "1.0.0"
 }
