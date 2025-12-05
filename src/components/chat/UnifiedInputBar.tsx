@@ -126,7 +126,6 @@ export function UnifiedInputBar({
 
       {/* Context Bar below input (single row, horizontal scroll if needed) */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar px-1 pb-1 text-[11px] text-ink-tertiary">
-        <span className="uppercase tracking-[0.08em] text-ink-muted flex-shrink-0">Kontext</span>
         <button
           onClick={() => navigate("/models")}
           className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
@@ -160,7 +159,6 @@ export function UnifiedInputBar({
           <Sparkles className="h-3.5 w-3.5 opacity-70" />
           <span className="truncate max-w-[60px]">{creativityLabel}</span>
         </button>
-        <span className="text-[10px] text-ink-secondary/60 flex-shrink-0">Enter • Shift+Enter</span>
       </div>
     </div>
   );

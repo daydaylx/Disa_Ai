@@ -22,7 +22,7 @@ export function AppShell({
   return (
     <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
       {/* Glass Header */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-bg-app/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
+      <header className="sticky top-0 z-header border-b border-white/10 bg-bg-app/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
           {/* Left: Hamburger Menu */}
           <div className="flex items-center gap-3">
