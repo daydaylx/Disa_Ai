@@ -22,7 +22,7 @@ export function SettingsRow({ label, description, children, className }: Setting
     <div
       className={cn(
         "flex items-center justify-between gap-4 py-4 border-b border-white/5 last:border-b-0",
-        className
+        className,
       )}
     >
       <div className="flex-1 min-w-0">
@@ -78,13 +78,9 @@ export function SettingsSection({ title, description, children, className }: Set
     <section className={cn("mb-8", className)}>
       <div className="mb-4">
         <h3 className="text-base font-semibold text-ink-primary">{title}</h3>
-        {description && (
-          <p className="text-xs text-ink-tertiary mt-1">{description}</p>
-        )}
+        {description && <p className="text-xs text-ink-tertiary mt-1">{description}</p>}
       </div>
-      <div className="bg-surface-1 rounded-2xl border border-white/5 px-4">
-        {children}
-      </div>
+      <div className="bg-surface-1 rounded-2xl border border-white/5 px-4">{children}</div>
     </section>
   );
 }

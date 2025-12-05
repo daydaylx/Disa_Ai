@@ -248,7 +248,12 @@ export default function Chat() {
         title={activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
         headerActions={
-          <Button variant="ghost" size="icon" onClick={() => setIsHistoryOpen(true)} aria-label="Verlauf öffnen">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsHistoryOpen(true)}
+            aria-label="Verlauf öffnen"
+          >
             <Bookmark className="h-5 w-5 text-ink-secondary" />
           </Button>
         }

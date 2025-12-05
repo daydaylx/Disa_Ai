@@ -8,17 +8,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-accent-primary-dim text-accent-primary border border-accent-primary/20", // Subtle accent
-        secondary:
-          "bg-surface-2 text-ink-secondary border border-border-ink", // Neutral
+        default: "bg-accent-primary-dim text-accent-primary border border-accent-primary/20", // Subtle accent
+        secondary: "bg-surface-2 text-ink-secondary border border-border-ink", // Neutral
         outline: "text-ink-secondary border border-border-ink bg-transparent",
-        destructive:
-          "bg-status-error/10 text-status-error border border-status-error/20",
-        success:
-          "bg-status-success/10 text-status-success border border-status-success/20",
-        warning:
-          "bg-status-warning/10 text-status-warning border border-status-warning/20",
+        destructive: "bg-status-error/10 text-status-error border border-status-error/20",
+        success: "bg-status-success/10 text-status-success border border-status-success/20",
+        warning: "bg-status-warning/10 text-status-warning border border-status-warning/20",
       },
     },
     defaultVariants: {

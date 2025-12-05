@@ -17,9 +17,7 @@ export function PageHeader({ title, description, action, className }: PageHeader
     <div className={cn("flex items-start justify-between gap-4 mb-6", className)}>
       <div>
         <h1 className="text-xl font-bold text-ink-primary tracking-tight">{title}</h1>
-        {description && (
-          <p className="text-sm text-ink-secondary mt-1">{description}</p>
-        )}
+        {description && <p className="text-sm text-ink-secondary mt-1">{description}</p>}
       </div>
       {action && <div className="flex-shrink-0">{action}</div>}
     </div>
@@ -39,16 +37,16 @@ interface EmptyStateProps {
  */
 export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center py-16 px-4 text-center", className)}>
+    <div
+      className={cn("flex flex-col items-center justify-center py-16 px-4 text-center", className)}
+    >
       {icon && (
         <div className="h-14 w-14 rounded-2xl bg-surface-2 flex items-center justify-center text-ink-tertiary mb-4">
           {icon}
         </div>
       )}
       <h3 className="text-base font-medium text-ink-primary">{title}</h3>
-      {description && (
-        <p className="text-sm text-ink-tertiary mt-1 max-w-xs">{description}</p>
-      )}
+      {description && <p className="text-sm text-ink-tertiary mt-1 max-w-xs">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -84,7 +82,7 @@ export function InfoBanner({
       className={cn(
         "flex items-start gap-3 p-4 rounded-xl border",
         variantStyles[variant],
-        className
+        className,
       )}
     >
       {icon && <div className="flex-shrink-0 mt-0.5">{icon}</div>}

@@ -22,6 +22,7 @@ export {
   BookOpenCheck,
   Bot,
   Brain,
+  Bug, // Added for FeedbackPage
   Cat, // Added
   Check,
   CheckCircle,

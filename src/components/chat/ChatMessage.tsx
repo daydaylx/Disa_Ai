@@ -142,16 +142,13 @@ export function ChatMessage({
     <div
       className={cn(
         "group flex w-full gap-3 animate-fade-in",
-        isUser ? "justify-end" : "justify-start"
+        isUser ? "justify-end" : "justify-start",
       )}
       data-testid="message.item"
     >
       {/* Message Content Container */}
       <div
-        className={cn(
-          "relative max-w-[85%] sm:max-w-[75%]",
-          isUser ? "items-end" : "items-start"
-        )}
+        className={cn("relative max-w-[85%] sm:max-w-[75%]", isUser ? "items-end" : "items-start")}
       >
         {/* Bubble */}
         <div
@@ -159,7 +156,7 @@ export function ChatMessage({
             "rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
             isUser
               ? "bg-accent-primary text-white rounded-br-md"
-              : "bg-surface-1 text-ink-primary border border-white/5 rounded-bl-md"
+              : "bg-surface-1 text-ink-primary border border-white/5 rounded-bl-md",
           )}
           data-testid="message-bubble"
         >
@@ -201,7 +198,7 @@ export function ChatMessage({
           <div
             className={cn(
               "flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity",
-              isUser ? "justify-end" : "justify-start"
+              isUser ? "justify-end" : "justify-start",
             )}
           >
             <button
@@ -237,7 +234,7 @@ export function ChatMessage({
                     onClick={() => setShowFollowUps(!showFollowUps)}
                     className={cn(
                       "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors",
-                      showFollowUps && "text-accent-primary bg-surface-2"
+                      showFollowUps && "text-accent-primary bg-surface-2",
                     )}
                     title="Schnellantworten"
                   >

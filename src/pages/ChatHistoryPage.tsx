@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ArrowLeft, MessageSquare,Trash2 } from "@/lib/icons";
+import { ArrowLeft, MessageSquare, Trash2 } from "@/lib/icons";
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
-import { AppMenuDrawer,useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { AppShell } from "../components/layout/AppShell";
 import {
   type Conversation,
@@ -106,7 +106,12 @@ export default function ChatHistoryPage() {
               <p className="text-sm text-ink-secondary mt-1">
                 Starte einen neuen Chat, um ihn hier zu sehen.
               </p>
-              <Button variant="primary" size="sm" className="mt-4" onClick={() => void navigate("/chat")}>
+              <Button
+                variant="primary"
+                size="sm"
+                className="mt-4"
+                onClick={() => void navigate("/chat")}
+              >
                 Neuen Chat starten
               </Button>
             </div>
@@ -131,7 +136,7 @@ export default function ChatHistoryPage() {
                       month: "2-digit",
                       year: "numeric",
                       hour: "2-digit",
-                      minute: "2-digit"
+                      minute: "2-digit",
                     })}
                     {" • "}
                     {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten

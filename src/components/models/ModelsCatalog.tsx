@@ -78,11 +78,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
           description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
         />
 
-        <SearchInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Modell suchen..."
-        />
+        <SearchInput value={search} onChange={setSearch} placeholder="Modell suchen..." />
       </div>
 
       {/* List */}
@@ -115,14 +111,16 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     "hover:bg-surface-2 active:scale-[0.99]",
                     isActive
                       ? "bg-surface-1 border-accent-primary/30"
-                      : "bg-surface-1 border-white/5"
+                      : "bg-surface-1 border-white/5",
                   )}
                 >
                   {/* Icon */}
                   <div
                     className={cn(
                       "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
-                      isActive ? "bg-accent-primary/10 text-accent-primary" : "bg-surface-2 text-ink-tertiary"
+                      isActive
+                        ? "bg-accent-primary/10 text-accent-primary"
+                        : "bg-surface-2 text-ink-tertiary",
                     )}
                   >
                     {isFavorite ? (
@@ -135,10 +133,12 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className={cn(
-                        "font-medium text-sm truncate",
-                        isActive ? "text-accent-primary" : "text-ink-primary"
-                      )}>
+                      <span
+                        className={cn(
+                          "font-medium text-sm truncate",
+                          isActive ? "text-accent-primary" : "text-ink-primary",
+                        )}
+                      >
                         {model.label ?? model.id}
                       </span>
                       {isActive && <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />}
@@ -165,7 +165,9 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     }}
                     aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
                   >
-                    <Star className={cn("h-4 w-4", isFavorite && "fill-current text-status-warning")} />
+                    <Star
+                      className={cn("h-4 w-4", isFavorite && "fill-current text-status-warning")}
+                    />
                   </Button>
                 </button>
               );

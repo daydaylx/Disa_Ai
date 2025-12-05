@@ -46,7 +46,7 @@ export function SearchInput({
           "pl-10 pr-10 text-sm text-ink-primary",
           "placeholder:text-ink-tertiary",
           "focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary/50",
-          "transition-all duration-200"
+          "transition-all duration-200",
         )}
         {...props}
       />

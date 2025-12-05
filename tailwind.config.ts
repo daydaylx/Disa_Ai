@@ -57,11 +57,11 @@ export default {
       },
       borderRadius: {
         "3xl": "1.5rem", // 24px
-        "2xl": "1rem",   // 16px (Standard Card)
-        xl: "0.75rem",   // 12px (Standard Button)
-        lg: "0.5rem",    // 8px
-        md: "0.375rem",  // 6px
-        sm: "0.25rem",   // 4px
+        "2xl": "1rem", // 16px (Standard Card)
+        xl: "0.75rem", // 12px (Standard Button)
+        lg: "0.5rem", // 8px
+        md: "0.375rem", // 6px
+        sm: "0.25rem", // 4px
       },
       boxShadow: {
         // Functional shadows only, no glow

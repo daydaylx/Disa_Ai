@@ -36,23 +36,14 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
-        <Button
-          onClick={onNewChat}
-          variant="primary"
-          size="lg"
-          className="w-full gap-2"
-        >
+        <Button onClick={onNewChat} variant="primary" size="lg" className="w-full gap-2">
           <Plus className="h-5 w-5" />
           Neues Gespräch
         </Button>
 
         {conversationCount > 0 && (
           <Link to="/chat/history" className="w-full">
-            <Button
-              variant="secondary"
-              size="lg"
-              className={cn("w-full gap-2")}
-            >
+            <Button variant="secondary" size="lg" className={cn("w-full gap-2")}>
               <History className="h-4 w-4" />
               Verlauf ({conversationCount})
             </Button>

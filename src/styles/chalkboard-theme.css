@@ -13,7 +13,8 @@
     rgba(20, 23, 27, 0.25) 0%,
     rgba(6, 8, 10, 0.75) 100%
   );
-  --chalkboard-rings: radial-gradient(circle at 30% 40%, rgba(243, 214, 138, 0.04) 0, transparent 34%),
+  --chalkboard-rings:
+    radial-gradient(circle at 30% 40%, rgba(243, 214, 138, 0.04) 0, transparent 34%),
     radial-gradient(circle at 70% 65%, rgba(125, 220, 211, 0.035) 0, transparent 38%),
     radial-gradient(circle at 48% 52%, rgba(255, 255, 255, 0.018) 0, transparent 50%);
 
@@ -40,10 +41,20 @@
 /* Tafel-Hintergrund für die gesamte Chat-Seite */
 .chalkboard-container {
   background-color: var(--chalkboard-bg);
-  background-image: var(--chalkboard-texture), var(--chalk-noise), var(--chalkboard-rings), var(--chalkboard-vignette);
+  background-image:
+    var(--chalkboard-texture), var(--chalk-noise), var(--chalkboard-rings),
+    var(--chalkboard-vignette);
   background-blend-mode: soft-light, overlay, screen, multiply;
-  background-size: 380px 380px, 100% 100%, 220% 220%, 100% 100%;
-  background-position: 0 0, center, 50% 50%, center;
+  background-size:
+    380px 380px,
+    100% 100%,
+    220% 220%,
+    100% 100%;
+  background-position:
+    0 0,
+    center,
+    50% 50%,
+    center;
   background-attachment: fixed, scroll, fixed, scroll;
   min-height: calc(var(--vh, 1vh) * 100);
   position: relative;
@@ -144,7 +155,9 @@
 
 .chalk-button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(167, 200, 255, 0.35), var(--chalk-shadow);
+  box-shadow:
+    0 0 0 2px rgba(167, 200, 255, 0.35),
+    var(--chalk-shadow);
 }
 
 .chalk-button.active {
@@ -287,7 +300,8 @@
 
 /* Subtle pulse for interactive elements */
 @keyframes chalk-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(243, 214, 138, 0.3);
   }
   50% {

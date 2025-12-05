@@ -5,19 +5,20 @@
 :root {
   /* Modern Slate Glass Theme Variables */
   --bg-app: #131314;
-  --bg-surface-1: #1E1E20;
-  --bg-surface-2: #27272A;
-  --text-primary: #F4F4F5;
-  --text-secondary: #A1A1AA;
-  --text-tertiary: #71717A;
-  --border-color: #3F3F46;
+  --bg-surface-1: #1e1e20;
+  --bg-surface-2: #27272a;
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  --border-color: #3f3f46;
 
   /* Viewport Height Fix */
   --vh: 1vh;
 }
 
 @layer base {
-  html, body {
+  html,
+  body {
     @apply bg-bg-app text-ink-primary font-sans antialiased selection:bg-accent-primary/30;
     overscroll-behavior: none; /* Prevent bounce on mobile */
   }
@@ -27,7 +28,12 @@
     background-image: none;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-ink-primary tracking-tight font-semibold;
   }
 }

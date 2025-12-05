@@ -152,11 +152,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         />
 
         {/* Search */}
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Rolle suchen..."
-        />
+        <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Rolle suchen..." />
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4">
@@ -169,7 +165,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
               filters.showFavoritesOnly
                 ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
-                : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10"
+                : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
             )}
           >
             <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
@@ -187,7 +183,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
                 selectedCategory === cat
                   ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
-                  : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10"
+                  : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
               )}
             >
               {cat}
@@ -240,7 +236,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   key={role.id}
                   className={cn(
                     "rounded-2xl border bg-surface-1 transition-all",
-                    isActive ? "border-accent-primary/30" : "border-white/5"
+                    isActive ? "border-accent-primary/30" : "border-white/5",
                   )}
                 >
                   {/* Main Row */}
@@ -249,7 +245,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     <div
                       className={cn(
                         "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
-                        isActive ? "bg-accent-primary/10 text-accent-primary" : "bg-surface-2 text-ink-tertiary"
+                        isActive
+                          ? "bg-accent-primary/10 text-accent-primary"
+                          : "bg-surface-2 text-ink-tertiary",
                       )}
                     >
                       <Users className="h-5 w-5" />
@@ -258,13 +256,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className={cn(
-                          "font-medium text-sm truncate",
-                          isActive ? "text-accent-primary" : "text-ink-primary"
-                        )}>
+                        <span
+                          className={cn(
+                            "font-medium text-sm truncate",
+                            isActive ? "text-accent-primary" : "text-ink-primary",
+                          )}
+                        >
                           {role.name}
                         </span>
-                        {isActive && <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />}
+                        {isActive && (
+                          <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
+                        )}
                       </div>
                       <p className="text-xs text-ink-tertiary truncate mt-0.5">
                         {role.category || "Spezial"}
@@ -278,7 +280,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         className="p-2 text-ink-tertiary hover:text-ink-primary transition-colors"
                         aria-label="Details anzeigen"
                       >
-                        <ChevronDown className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")} />
+                        <ChevronDown
+                          className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
+                        />
                       </button>
                       <Button
                         size="sm"
@@ -301,11 +305,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       {role.tags && role.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
                           {role.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="secondary"
-                              className="text-[10px] px-2 h-5"
-                            >
+                            <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5">
                               {tag}
                             </Badge>
                           ))}

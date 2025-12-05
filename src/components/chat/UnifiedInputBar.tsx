@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { ModelEntry } from "@/config/models";
@@ -93,7 +89,7 @@ export function UnifiedInputBar({
             onClick={() => navigate("/roles")}
             className={cn(
               "flex items-center gap-2 px-3 py-2 text-xs rounded-lg bg-surface-2 hover:bg-surface-3 transition-colors border border-white/5",
-              activeRole ? "text-accent-primary" : "text-ink-secondary hover:text-ink-primary"
+              activeRole ? "text-accent-primary" : "text-ink-secondary hover:text-ink-primary",
             )}
           >
             <User className="h-3.5 w-3.5" />
@@ -111,7 +107,7 @@ export function UnifiedInputBar({
             "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
             showContext
               ? "bg-accent-primary/10 text-accent-primary"
-              : "text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+              : "text-ink-tertiary hover:text-ink-primary hover:bg-surface-2",
           )}
           aria-label="Optionen anzeigen"
         >
@@ -139,7 +135,7 @@ export function UnifiedInputBar({
           className={cn(
             "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200",
             !value.trim() && "text-ink-muted hover:text-ink-tertiary hover:bg-surface-2",
-            isLoading && "opacity-50"
+            isLoading && "opacity-50",
           )}
           aria-label="Senden"
         >

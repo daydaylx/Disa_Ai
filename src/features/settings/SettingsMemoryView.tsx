@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
+import { Button, InfoBanner, useToasts } from "@/ui";
+import { SettingsRow, SettingsSection, SettingsToggleRow } from "@/ui/SettingsRow";
+
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
 import { useSettings } from "../../hooks/useSettings";
 import { History, Shield, Trash2 } from "../../lib/icons";
-import { Button, InfoBanner, useToasts } from "@/ui";
-import { SettingsRow, SettingsSection, SettingsToggleRow } from "@/ui/SettingsRow";
 import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsMemoryView() {
@@ -39,7 +40,11 @@ export function SettingsMemoryView() {
   const handleUpdateProfile = () => {
     const updates = {
       name: name.trim() || undefined,
-      hobbies: hobbies.split(",").map((h) => h.trim()).filter(Boolean) || undefined,
+      hobbies:
+        hobbies
+          .split(",")
+          .map((h) => h.trim())
+          .filter(Boolean) || undefined,
       background: background.trim() || undefined,
     };
 
@@ -54,7 +59,7 @@ export function SettingsMemoryView() {
   const handleClearMemory = () => {
     if (
       confirm(
-        "Wirklich alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+        "Wirklich alle gespeicherten Erinnerungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       )
     ) {
       clearAllMemory();
@@ -180,12 +185,7 @@ export function SettingsMemoryView() {
         {isEnabled && (
           <SettingsSection title="Daten löschen">
             <div className="py-4 space-y-3">
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleClearMemory}
-                className="gap-2"
-              >
+              <Button variant="destructive" size="sm" onClick={handleClearMemory} className="gap-2">
                 <Trash2 className="h-4 w-4" />
                 Alle Erinnerungen löschen
               </Button>
@@ -198,9 +198,8 @@ export function SettingsMemoryView() {
 
         {/* Privacy Notice */}
         <InfoBanner icon={<Shield className="h-4 w-4" />} title="Datenschutz">
-          Alle Gedächtnisinformationen werden nur lokal im Browser gespeichert und niemals
-          an externe Server übertragen. Du kannst diese Daten jederzeit einsehen oder
-          löschen.
+          Alle Gedächtnisinformationen werden nur lokal im Browser gespeichert und niemals an
+          externe Server übertragen. Du kannst diese Daten jederzeit einsehen oder löschen.
         </InfoBanner>
 
         {/* Disabled State */}

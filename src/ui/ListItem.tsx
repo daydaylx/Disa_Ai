@@ -35,14 +35,16 @@ export function ListItem({
         "flex items-center gap-3 w-full px-4 py-3 text-left transition-all",
         onClick && "cursor-pointer hover:bg-surface-2 active:scale-[0.99]",
         isActive && "bg-surface-2",
-        className
+        className,
       )}
     >
       {icon && (
         <div
           className={cn(
             "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
-            isActive ? "bg-accent-primary/10 text-accent-primary" : "bg-surface-2 text-ink-secondary"
+            isActive
+              ? "bg-accent-primary/10 text-accent-primary"
+              : "bg-surface-2 text-ink-secondary",
           )}
         >
           {icon}
@@ -52,7 +54,7 @@ export function ListItem({
         <p
           className={cn(
             "text-sm font-medium truncate",
-            isActive ? "text-accent-primary" : "text-ink-primary"
+            isActive ? "text-accent-primary" : "text-ink-primary",
           )}
         >
           {title}

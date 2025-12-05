@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ArrowLeft, Send, MessageSquare, Bug, Palette, MoreHorizontal } from "@/lib/icons";
-import {
-  Button,
-  Card,
-  useToasts,
-} from "@/ui";
-import { AppShell } from "../components/layout/AppShell";
-import { useMenuDrawer, AppMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { ArrowLeft, Bug, MessageSquare, MoreHorizontal, Palette, Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { Button, Card, useToasts } from "@/ui";
+
+import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { AppShell } from "../components/layout/AppShell";
 
 const FEEDBACK_TYPES = [
   { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-primary" },
@@ -22,7 +19,7 @@ export default function FeedbackPage() {
   const navigate = useNavigate();
   const toasts = useToasts();
   const { isOpen, openMenu, closeMenu } = useMenuDrawer();
-  
+
   const [type, setType] = useState<string>("idea");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -30,7 +27,7 @@ export default function FeedbackPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    
+
     setIsSending(true);
 
     // Simulation of API call
@@ -85,11 +82,18 @@ export default function FeedbackPage() {
                           "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all",
                           isSelected
                             ? "bg-surface-2 border-accent-primary/50 ring-1 ring-accent-primary/20"
-                            : "bg-surface-1 border-white/5 hover:bg-surface-2 hover:border-white/10"
+                            : "bg-surface-1 border-white/5 hover:bg-surface-2 hover:border-white/10",
                         )}
                       >
-                        <Icon className={cn("h-6 w-6", isSelected ? item.color : "text-ink-tertiary")} />
-                        <span className={cn("text-xs font-medium", isSelected ? "text-ink-primary" : "text-ink-secondary")}>
+                        <Icon
+                          className={cn("h-6 w-6", isSelected ? item.color : "text-ink-tertiary")}
+                        />
+                        <span
+                          className={cn(
+                            "text-xs font-medium",
+                            isSelected ? "text-ink-primary" : "text-ink-secondary",
+                          )}
+                        >
                           {item.label}
                         </span>
                       </button>
@@ -113,7 +117,8 @@ export default function FeedbackPage() {
 
               <div className="rounded-lg bg-surface-2/50 p-3 text-xs text-ink-secondary border border-white/5">
                 <p>
-                  Technische Details (Browser, Gerät) werden anonymisiert angehängt, um Fehler schneller zu finden.
+                  Technische Details (Browser, Gerät) werden anonymisiert angehängt, um Fehler
+                  schneller zu finden.
                 </p>
               </div>
 
@@ -136,7 +141,7 @@ export default function FeedbackPage() {
           </Card>
         </div>
       </AppShell>
-      
+
       <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
     </>
   );

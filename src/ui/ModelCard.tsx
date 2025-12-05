@@ -1,11 +1,8 @@
 import React from "react";
 
+import { Star } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/Badge";
-import {
-  Star,
-  Info
-} from "@/lib/icons";
 
 /**
  * ModelCard - Refactored to SimpleModelRow
@@ -42,7 +39,6 @@ export const ModelCard = React.memo(
     className,
     onCardClick,
   }: ModelCardProps) => {
-
     return (
       <div
         onClick={onCardClick}
@@ -52,55 +48,71 @@ export const ModelCard = React.memo(
           isActive
             ? "bg-surface-2 border-accent-primary/30 ring-1 ring-accent-primary/20"
             : "bg-surface-1 border-border-ink hover:bg-surface-2 hover:border-border-ink/80",
-          className
+          className,
         )}
       >
         {/* Left: Visual Anchor (Icon Placeholder or Vendor Logo) */}
-        <div className={cn(
+        <div
+          className={cn(
             "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg font-bold",
-            isActive ? "bg-accent-primary text-white border-accent-primary" : "bg-surface-2 text-ink-secondary border-border-ink"
-        )}>
-            {name.charAt(0).toUpperCase()}
+            isActive
+              ? "bg-accent-primary text-white border-accent-primary"
+              : "bg-surface-2 text-ink-secondary border-border-ink",
+          )}
+        >
+          {name.charAt(0).toUpperCase()}
         </div>
 
         {/* Center: Info */}
         <div className="flex-1 min-w-0 flex flex-col">
-            <div className="flex items-center gap-2">
-                <span className={cn("font-medium truncate", isActive ? "text-ink-primary" : "text-ink-primary")}>
-                    {name}
-                </span>
-                {isActive && (
-                     <span className="flex h-1.5 w-1.5 rounded-full bg-accent-primary shadow-sm" />
-                )}
-            </div>
-            <div className="flex items-center gap-2 text-xs text-ink-tertiary">
-                <span className="truncate">{vendor}</span>
-                <span>•</span>
-                <span>{contextLength}</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "font-medium truncate",
+                isActive ? "text-ink-primary" : "text-ink-primary",
+              )}
+            >
+              {name}
+            </span>
+            {isActive && (
+              <span className="flex h-1.5 w-1.5 rounded-full bg-accent-primary shadow-sm" />
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-ink-tertiary">
+            <span className="truncate">{vendor}</span>
+            <span>•</span>
+            <span>{contextLength}</span>
+          </div>
         </div>
 
         {/* Right: Meta & Action */}
         <div className="flex flex-col items-end gap-2 shrink-0">
-            <Badge variant={isFree ? "success" : "secondary"} className="text-[10px] h-5 px-1.5">
-                {isFree ? "Free" : price}
-            </Badge>
-            
-            {/* Favorite (Only visible if faved or group hover) */}
-            {onToggleFavorite && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleFavorite();
-                    }}
-                    className={cn(
-                        "transition-opacity p-1",
-                        isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100 md:opacity-0" // Always show on mobile if desired, or use opacity logic
-                    )}
-                >
-                     <Star className={cn("h-4 w-4", isFavorite ? "fill-accent-secondary text-accent-secondary" : "text-ink-tertiary hover:text-ink-primary")} />
-                </button>
-            )}
+          <Badge variant={isFree ? "success" : "secondary"} className="text-[10px] h-5 px-1.5">
+            {isFree ? "Free" : price}
+          </Badge>
+
+          {/* Favorite (Only visible if faved or group hover) */}
+          {onToggleFavorite && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite();
+              }}
+              className={cn(
+                "transition-opacity p-1",
+                isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100 md:opacity-0", // Always show on mobile if desired, or use opacity logic
+              )}
+            >
+              <Star
+                className={cn(
+                  "h-4 w-4",
+                  isFavorite
+                    ? "fill-accent-secondary text-accent-secondary"
+                    : "text-ink-tertiary hover:text-ink-primary",
+                )}
+              />
+            </button>
+          )}
         </div>
       </div>
     );

@@ -104,7 +104,7 @@ export function TabbedSettingsView() {
                 "w-full flex items-center gap-4 p-4 rounded-2xl",
                 "bg-surface-1 border border-white/5",
                 "hover:bg-surface-2 active:scale-[0.99] transition-all",
-                "text-left"
+                "text-left",
               )}
             >
               {/* Icon */}

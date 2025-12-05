@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { AppShell } from "../components/layout/AppShell";
-import { useMenuDrawer, AppMenuDrawer } from "../components/layout/AppMenuDrawer";
-import { Button, Card } from "@/ui";
+
 import { ArrowLeft } from "@/lib/icons";
+import { Button, Card } from "@/ui";
+
+import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { AppShell } from "../components/layout/AppShell";
 
 export default function ImpressumPage() {
   const { isOpen, openMenu, closeMenu } = useMenuDrawer();
@@ -10,8 +12,8 @@ export default function ImpressumPage() {
 
   return (
     <>
-      <AppShell 
-        title="Impressum" 
+      <AppShell
+        title="Impressum"
         onMenuClick={openMenu}
         headerActions={
           <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
@@ -36,13 +38,12 @@ export default function ImpressumPage() {
               </div>
 
               <section className="space-y-4">
-                <h2 className="text-lg font-semibold text-ink-primary">
-                  Angaben gemäß § 5 TMG
-                </h2>
+                <h2 className="text-lg font-semibold text-ink-primary">Angaben gemäß § 5 TMG</h2>
                 <div className="text-ink-secondary space-y-2 leading-relaxed">
                   <p className="font-medium text-ink-primary">David Grunert</p>
                   <p>
-                    Kontakt:<br />
+                    Kontakt:
+                    <br />
                     E-Mail:{" "}
                     <a
                       href="mailto:grunert94@hotmail.com"
@@ -53,18 +54,18 @@ export default function ImpressumPage() {
                   </p>
                 </div>
               </section>
-              
+
               <section className="space-y-4 pt-4 border-t border-white/5">
-                 <p className="text-sm text-ink-tertiary">
-                    Da diese Seite rein privat und nicht geschäftsmäßig betrieben wird, besteht keine
-                    Verpflichtung zur Benennung eines Datenschutzbeauftragten.
-                 </p>
+                <p className="text-sm text-ink-tertiary">
+                  Da diese Seite rein privat und nicht geschäftsmäßig betrieben wird, besteht keine
+                  Verpflichtung zur Benennung eines Datenschutzbeauftragten.
+                </p>
               </section>
             </div>
           </Card>
         </div>
       </AppShell>
-      
+
       <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
     </>
   );

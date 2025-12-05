@@ -92,7 +92,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                           "min-w-[120px] lg:min-w-0 lg:w-full",
                           isActive
                             ? "bg-surface-1 border-accent-primary/30 text-ink-primary"
-                            : "bg-transparent border-transparent text-ink-secondary hover:bg-surface-1 hover:text-ink-primary"
+                            : "bg-transparent border-transparent text-ink-secondary hover:bg-surface-1 hover:text-ink-primary",
                         )}
                       >
                         <Icon className={cn("h-4 w-4", isActive && "text-accent-primary")} />

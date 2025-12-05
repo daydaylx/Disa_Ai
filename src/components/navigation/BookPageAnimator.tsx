@@ -11,9 +11,5 @@ interface BookPageAnimatorProps {
 }
 
 export function BookPageAnimator({ children }: BookPageAnimatorProps) {
-  return (
-    <div className="flex flex-col h-full w-full animate-fade-in">
-      {children}
-    </div>
-  );
+  return <div className="flex flex-col h-full w-full animate-fade-in">{children}</div>;
 }
