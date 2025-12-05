@@ -5,7 +5,7 @@ import type { ModelEntry } from "@/config/models";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Cpu, Send, User } from "@/lib/icons";
+import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -71,6 +71,22 @@ export function UnifiedInputBar({
   const modelLabel = settings.preferredModelId.split("/").pop() || "Modell";
   const roleLabel = activeRole?.name || "Standard";
 
+  // Stil-Label aus Discussion Preset
+  const stylePresetLabels: Record<string, string> = {
+    locker_neugierig: "Locker",
+    edgy_provokant: "Provokant",
+    nuechtern_pragmatisch: "Pragmatisch",
+    akademisch_formell: "Akademisch",
+    freundlich_offen: "Freundlich",
+    analytisch_detailliert: "Analytisch",
+    sarkastisch_witzig: "Sarkastisch",
+    fachlich_tiefgehend: "Fachlich",
+  };
+  const styleLabel = stylePresetLabels[settings.discussionPreset] || "Stil";
+
+  // Kreativitäts-Label
+  const creativityLabel = `${settings.creativity}%`;
+
   return (
     <div className={cn("w-full space-y-3", className)}>
       {/* Context Bar (subdued, doesn't compete with primary action) */}
@@ -94,6 +110,20 @@ export function UnifiedInputBar({
           >
             <User className="h-3.5 w-3.5 opacity-70" />
             <span className="truncate max-w-[140px]">{roleLabel}</span>
+          </button>
+          <button
+            onClick={() => navigate("/settings/behavior")}
+            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+          >
+            <Palette className="h-3.5 w-3.5 opacity-70" />
+            <span className="truncate max-w-[90px]">{styleLabel}</span>
+          </button>
+          <button
+            onClick={() => navigate("/settings/behavior")}
+            className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80"
+          >
+            <Sparkles className="h-3.5 w-3.5 opacity-70" />
+            <span className="truncate max-w-[60px]">{creativityLabel}</span>
           </button>
         </div>
         <span className="text-[10px] text-ink-secondary/60 hidden sm:inline">
