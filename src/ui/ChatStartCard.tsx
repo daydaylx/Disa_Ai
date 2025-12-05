@@ -21,7 +21,8 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
     <div
       className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-[var(--border-chalk-strong)] bg-surface px-4 py-7 text-center shadow-[var(--shadow-lg)]"
       style={{
-        backgroundImage: "var(--chalk-noise), radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-primary) 5%, transparent), transparent 70%)",
+        backgroundImage:
+          "var(--chalk-noise), radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-primary) 5%, transparent), transparent 70%)",
         backgroundBlendMode: "overlay, normal",
         boxShadow: "var(--shadow-elevated)",
       }}
@@ -40,7 +41,8 @@ export function ChatStartCard({ onNewChat, conversationCount = 0 }: ChatStartCar
       />
 
       <p className="max-w-md text-[13px] leading-relaxed text-text-secondary tracking-[0.02em]">
-        Klare Antworten statt Deko.<br />
+        Klare Antworten statt Deko.
+        <br />
         Schieferoberfläche, dezente Kreide.
       </p>
 
