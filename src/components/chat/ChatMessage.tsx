@@ -155,8 +155,8 @@ export function ChatMessage({
           className={cn(
             "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-[0_10px_30px_rgba(0,0,0,0.18)]",
             isUser
-              ? "bg-accent-primary text-white rounded-br-md"
-              : "bg-surface-1 text-ink-primary border border-white/5 rounded-bl-md",
+              ? "bg-accent-primary text-white"
+              : "bg-surface-1 text-ink-primary border border-white/5",
           )}
           data-testid="message-bubble"
         >

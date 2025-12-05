@@ -145,7 +145,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header & Filters */}
-      <div className="flex-none px-4 py-4 space-y-4">
+      <div className="flex-none px-4 py-4 pb-3 space-y-4">
         <PageHeader
           title="Rollen"
           description={`${filteredRoles.length} von ${roles.length} verfügbar`}
@@ -154,41 +154,45 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         {/* Search */}
         <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Rolle suchen..." />
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4">
-          {/* Favorites Toggle */}
-          <button
-            onClick={() =>
-              setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-            }
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-              filters.showFavoritesOnly
-                ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
-                : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-            )}
-          >
-            <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
-            Favoriten
-          </button>
-
-          <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-
-          {/* Category Filters */}
-          {CATEGORY_ORDER.map((cat) => (
+        {/* Filter Pills with fade edges for scroll affordance */}
+        <div className="relative -mx-4">
+          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-bg-app to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-bg-app to-transparent z-10 pointer-events-none" />
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-4">
+            {/* Favorites Toggle */}
             <button
-              key={cat}
-              onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+              onClick={() =>
+                setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+              }
               className={cn(
-                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-                selectedCategory === cat
-                  ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                filters.showFavoritesOnly
+                  ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                   : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
               )}
             >
-              {cat}
+              <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+              Favoriten
             </button>
-          ))}
+
+            <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+            {/* Category Filters */}
+            {CATEGORY_ORDER.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                  selectedCategory === cat
+                    ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
+                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Active Filters Summary */}
@@ -226,7 +230,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             }
           />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {filteredRoles.map((role) => {
               const isActive = activeRole?.id === role.id;
               const isExpanded = expandedRoles.has(role.id);
@@ -241,6 +245,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 >
                   {/* Main Row */}
                   <div className="flex items-center gap-3 p-4">
+                    {/* Expand/Collapse Button (subtle, left side) */}
+                    <button
+                      onClick={() => toggleRoleExpansion(role.id)}
+                      className="flex-shrink-0 p-1 text-ink-tertiary hover:text-ink-primary transition-colors -ml-1"
+                      aria-label="Details anzeigen"
+                    >
+                      <ChevronDown
+                        className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
+                      />
+                    </button>
+
                     {/* Icon */}
                     <div
                       className={cn(
@@ -268,31 +283,20 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
                         )}
                       </div>
-                      <p className="text-xs text-ink-tertiary truncate mt-0.5">
+                      <p className="text-xs text-ink-secondary truncate mt-0.5">
                         {role.category || "Spezial"}
                       </p>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => toggleRoleExpansion(role.id)}
-                        className="p-2 text-ink-tertiary hover:text-ink-primary transition-colors"
-                        aria-label="Details anzeigen"
-                      >
-                        <ChevronDown
-                          className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
-                        />
-                      </button>
-                      <Button
-                        size="sm"
-                        variant={isActive ? "secondary" : "primary"}
-                        className="h-8 px-3 text-xs"
-                        onClick={() => handleActivateRole(role)}
-                      >
-                        {isActive ? "Aktiv" : "Wählen"}
-                      </Button>
-                    </div>
+                    {/* Primary Action Button */}
+                    <Button
+                      size="sm"
+                      variant={isActive ? "secondary" : "primary"}
+                      className="h-8 px-4 text-xs flex-shrink-0"
+                      onClick={() => handleActivateRole(role)}
+                    >
+                      {isActive ? "Aktiv" : "Wählen"}
+                    </Button>
                   </div>
 
                   {/* Expanded Details */}

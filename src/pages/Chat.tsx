@@ -271,8 +271,8 @@ export default function Chat() {
             role="log"
             aria-label="Chat messages"
           >
-            <div className="px-4 py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 rounded-3xl border border-white/8 bg-surface-1/80 px-4 sm:px-6 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm flex flex-col gap-4">
+            <div className="px-3 sm:px-4 py-3 sm:py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
+              <div className="flex-1 rounded-3xl border border-white/8 bg-surface-1/80 px-3 sm:px-5 py-4 sm:py-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm flex flex-col gap-4">
                 {isEmpty ? (
                   <div className="flex-1 flex items-center justify-center">
                     <ChatStartCard
