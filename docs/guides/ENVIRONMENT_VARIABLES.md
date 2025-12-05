@@ -27,6 +27,13 @@ Diese Referenz listet alle Umgebungsvariablen auf, die das Projekt aktuell auswe
 | `VITE_PREVIEW_PORT` | optional | `4173` | Port für `npm run preview`. | [`scripts/run-preview.mjs`](../scripts/run-preview.mjs) |
 | `VITE_FF_*` | optional | – | Laufzeit-Feature-Flags (per Präfix `VITE_FF_`). | [`src/config/flags.ts`](../src/config/flags.ts) |
 
+## Runtime (Server, Cloudflare Pages Functions)
+
+| Variable | Pflicht? | Default / Verhalten | Zweck | Referenz |
+| --- | --- | --- | --- | --- |
+| `DISA_FEEDBACK_TO` | nein | `disaai@justmail.de` | Empfänger-Adresse für Feedback-Mails aus `/api/feedback`. | [`functions/api/feedback.ts`](../../functions/api/feedback.ts) |
+| `DISA_FEEDBACK_FROM` | nein | `feedback@disaai.de` | Absender-Adresse für MailChannels Versand. | [`functions/api/feedback.ts`](../../functions/api/feedback.ts) |
+
 ## MCP Server Variablen (Node-Kontext)
 
 | Variable | Pflicht? | Default / Verhalten | Zweck | Referenz |

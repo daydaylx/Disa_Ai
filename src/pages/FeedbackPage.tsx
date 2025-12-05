@@ -26,21 +26,53 @@ export default function FeedbackPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage || isSending) return;
 
     setIsSending(true);
 
-    // Simulation of API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const payload = {
+      message: trimmedMessage,
+      type,
+      context: typeof window !== "undefined" ? window.location.pathname : "unknown",
+      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+    };
 
-    toasts.push({
-      kind: "success",
-      title: "Feedback gesendet",
-      message: "Danke für deine Rückmeldung!",
-    });
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    setIsSending(false);
-    void navigate("/settings");
+      let result: { success?: boolean; error?: string } = {};
+      try {
+        result = await response.json();
+      } catch {
+        // If parsing fails, fall back to status handling below
+      }
+
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || response.statusText);
+      }
+
+      toasts.push({
+        kind: "success",
+        title: "Feedback gesendet",
+        message: "Danke für deine Rückmeldung!",
+      });
+      setMessage("");
+      setIsSending(false);
+      void navigate("/settings");
+    } catch (error) {
+      console.error("Feedback senden fehlgeschlagen", error);
+      toasts.push({
+        kind: "error",
+        title: "Senden fehlgeschlagen",
+        message: "Bitte versuche es in ein paar Minuten erneut.",
+      });
+      setIsSending(false);
+    }
   };
 
   return (
