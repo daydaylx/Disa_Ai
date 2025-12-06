@@ -26,7 +26,7 @@ Beim Aufruf der Anwendung verarbeiten unsere technischen Dienstleister automatis
 raw.githubusercontent.com
 3 Eingesetzte Dienstleister und Drittanbieter
 3.1 Cloudflare (Hosting und Content Delivery Network)
-Unsere Anwendung wird über Cloudflare Pages gehostet. Cloudflare sorgt für die Bereitstellung der statischen Inhalte, die Abwehr von DDoS‑Angriffen und die Auslieferung über ein weltweites CDN. Die in der Datei _headers definierte Content‑Security‑Policy erlaubt Verbindungen zu static.cloudflareinsights.com und cloudflareinsights.com�. Cloudflare verarbeitet technische Daten wie IP‑Adresse, Browser‑Typ, Zeitstempel und angeforderte Ressourcen�.
+Unsere Anwendung wird über Cloudflare Pages gehostet. Cloudflare sorgt für die Bereitstellung der statischen Inhalte, die Abwehr von DDoS‑Angriffen und die Auslieferung über ein weltweites CDN. Die in der Datei \_headers definierte Content‑Security‑Policy erlaubt Verbindungen zu static.cloudflareinsights.com und cloudflareinsights.com�. Cloudflare verarbeitet technische Daten wie IP‑Adresse, Browser‑Typ, Zeitstempel und angeforderte Ressourcen�.
 raw.githubusercontent.com
 raw.githubusercontent.com
 Darüber hinaus ist in der Anwendung Cloudflare Web Analytics (früher „Browser Insights“) aktiv. Laut Cloudflare handelt es sich um eine „privacy‑first“‑Lösung: Das Unternehmen erhebt keine cookies und verwendet keine clientseitigen Speichermechanismen; IP‑Adresse und User‑Agent werden nicht zur Erstellung von Nutzerprofilen genutzt�. Cloudflare erhebt anonyme Metriken (z. B. Seitenaufrufe, Ladezeiten) zur Analyse der Performance�. Wir nutzen diese Statistiken, um die Stabilität und Geschwindigkeit der Anwendung zu verbessern.
