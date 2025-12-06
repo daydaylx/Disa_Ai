@@ -3,7 +3,6 @@ export * from "./Avatar";
 export * from "./Badge";
 export * from "./Button";
 export * from "./Card";
-export * from "./ChatStartCard";
 export * from "./Chip";
 export * from "./CopyButton";
 export * from "./Dialog";

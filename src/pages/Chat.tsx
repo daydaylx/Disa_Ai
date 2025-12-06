@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Bookmark, Cpu } from "@/lib/icons"; // Using Icon directly instead of component
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
-import { ChatStartCard } from "@/ui/ChatStartCard";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
@@ -15,7 +14,6 @@ import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { QUICKSTARTS } from "../config/quickstarts";
 import { useModelCatalog } from "../contexts/ModelCatalogContext";
 import { useRoles } from "../contexts/RolesContext";
-import { useConversationStats } from "../hooks/use-storage";
 import { useChat } from "../hooks/useChat";
 import { useConversationHistory } from "../hooks/useConversationHistory";
 import { useConversationManager } from "../hooks/useConversationManager";
@@ -36,7 +34,6 @@ export default function Chat() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isEnabled: memoryEnabled } = useMemory();
-  const { stats } = useConversationStats();
   const { models: modelCatalog } = useModelCatalog();
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
@@ -214,10 +211,7 @@ export default function Chat() {
     }
   }, [searchParams, navigate, startWithPreset]);
 
-  const { activeConversation, conversationCount } = useConversationHistory(
-    conversations,
-    activeConversationId,
-  );
+  const { activeConversation } = useConversationHistory(conversations, activeConversationId);
 
   const handleStartNewChat = useCallback(() => {
     newConversation();
@@ -285,10 +279,30 @@ export default function Chat() {
               <div className="flex-1 rounded-3xl border border-white/8 bg-surface-1/80 px-3 sm:px-5 py-4 sm:py-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm flex flex-col gap-4">
                 {isEmpty ? (
                   <div className="flex-1 flex items-center justify-center">
-                    <ChatStartCard
-                      onNewChat={handleStartNewChat}
-                      conversationCount={stats?.totalConversations ?? conversationCount}
-                    />
+                    <div className="text-center space-y-3 px-4 max-w-sm">
+                      <p className="text-sm font-semibold text-ink-primary">Direkt loslegen</p>
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        Tippe unten deine erste Nachricht. Deine Gespräche bleiben nur auf diesem
+                        Gerät gespeichert.
+                      </p>
+                      <div className="flex flex-col gap-2 items-center">
+                        <Button
+                          variant="primary"
+                          size="lg"
+                          onClick={handleStartNewChat}
+                          className="w-full max-w-[220px]"
+                        >
+                          Neues Gespräch
+                        </Button>
+                        <button
+                          type="button"
+                          onClick={() => navigate("/settings")}
+                          className="text-[12px] font-medium text-accent-primary hover:text-accent-primary/80 underline underline-offset-4"
+                        >
+                          Mehr zu Disa AI
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <VirtualizedMessageList
