@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { skipOnboarding } from "../utils";
+import { skipOnboarding } from "./utils";
 
 test.describe("Book Concept UI", () => {
   test.beforeEach(async ({ page }) => {

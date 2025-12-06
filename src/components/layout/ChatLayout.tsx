@@ -5,7 +5,7 @@ import { Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
-interface AppShellProps {
+interface ChatLayoutProps {
   children: ReactNode;
   title?: string;
   onMenuClick?: () => void;
@@ -13,13 +13,13 @@ interface AppShellProps {
   headerActions?: ReactNode;
 }
 
-export function AppShell({
+export function ChatLayout({
   children,
   title,
   onMenuClick,
   className,
   headerActions,
-}: AppShellProps) {
+}: ChatLayoutProps) {
   return (
     <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
       {/* Clean Header with Functional Glass */}

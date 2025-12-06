@@ -36,7 +36,7 @@ function HeaderBackAction({ fallbackTo }: { fallbackTo: string }) {
   };
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2">
+    <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2 hidden sm:flex">
       <ArrowLeft className="h-4 w-4" />
       Zurück
     </Button>
@@ -64,7 +64,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/roles",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Rollen & Personas">
           <RolesPage />
         </RouteWrapper>
       ),
@@ -72,7 +72,10 @@ export const appRouter = createBrowserRouter(
     {
       path: "/chat/history",
       element: (
-        <RouteWrapper>
+        <RouteWrapper
+          pageHeaderTitle="Verlauf"
+          pageHeaderActions={<HeaderBackAction fallbackTo="/chat" />}
+        >
           <ChatHistoryPage />
         </RouteWrapper>
       ),
@@ -88,7 +91,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/models",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Modelle">
           <ModelsPage />
         </RouteWrapper>
       ),

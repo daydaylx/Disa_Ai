@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ArrowLeft, MessageSquare, Trash2 } from "@/lib/icons";
+import { MessageSquare, Trash2 } from "@/lib/icons";
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
-import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
-import { AppShell } from "../components/layout/AppShell";
 import {
   type Conversation,
   deleteConversation,
@@ -19,7 +17,6 @@ export default function ChatHistoryPage() {
   const [loading, setLoading] = useState(true);
   const toasts = useToasts();
   const navigate = useNavigate();
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
 
   const loadConversations = useCallback(async () => {
     try {
@@ -68,101 +65,86 @@ export default function ChatHistoryPage() {
   };
 
   return (
-    <>
-      <AppShell
-        title="Verlauf"
-        onMenuClick={openMenu}
-        headerActions={
-          <Button variant="ghost" size="sm" onClick={() => void navigate("/chat")}>
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Zurück
-          </Button>
-        }
-      >
-        <div className="flex flex-col h-full overflow-y-auto px-4 py-6 max-w-3xl mx-auto w-full">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-ink-primary">Gespeicherte Unterhaltungen</h2>
-              <p className="text-sm text-ink-secondary mt-1">
-                Deine vergangenen Chats im Überblick.
-              </p>
-            </div>
+    <div className="flex flex-col w-full max-w-3xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-bold text-ink-primary">Gespeicherte Unterhaltungen</h2>
+          <p className="text-sm text-ink-secondary mt-1">
+            Deine vergangenen Chats im Überblick.
+          </p>
+        </div>
+      </div>
+
+      {loading && (
+        <div className="space-y-3 animate-pulse">
+          <div className="h-24 bg-surface-1 rounded-2xl w-full" />
+          <div className="h-24 bg-surface-1 rounded-2xl w-full" />
+          <div className="h-24 bg-surface-1 rounded-2xl w-full" />
+        </div>
+      )}
+
+      {!loading && conversations.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-white/10 rounded-2xl bg-surface-1/30">
+          <div className="h-12 w-12 bg-surface-2 rounded-full flex items-center justify-center mb-4 text-ink-tertiary">
+            <MessageSquare className="h-6 w-6" />
           </div>
+          <p className="text-ink-primary font-medium">Noch keine Unterhaltungen</p>
+          <p className="text-sm text-ink-secondary mt-1">
+            Starte einen neuen Chat, um ihn hier zu sehen.
+          </p>
+          <Button
+            variant="primary"
+            size="sm"
+            className="mt-4"
+            onClick={() => void navigate("/chat")}
+          >
+            Neuen Chat starten
+          </Button>
+        </div>
+      )}
 
-          {loading && (
-            <div className="space-y-3 animate-pulse">
-              <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-              <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-              <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-            </div>
-          )}
-
-          {!loading && conversations.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-white/10 rounded-2xl bg-surface-1/30">
-              <div className="h-12 w-12 bg-surface-2 rounded-full flex items-center justify-center mb-4 text-ink-tertiary">
-                <MessageSquare className="h-6 w-6" />
-              </div>
-              <p className="text-ink-primary font-medium">Noch keine Unterhaltungen</p>
-              <p className="text-sm text-ink-secondary mt-1">
-                Starte einen neuen Chat, um ihn hier zu sehen.
+      <div className="grid gap-3">
+        {conversations.map((conv) => (
+          <Card
+            key={conv.id}
+            variant="interactive"
+            padding="sm"
+            className="flex items-center justify-between group"
+            onClick={() => void handleOpen(conv.id)}
+          >
+            <div className="min-w-0 flex-1 pr-4">
+              <h3 className="text-base font-semibold text-ink-primary truncate">
+                {conv.title || "Unbenannte Unterhaltung"}
+              </h3>
+              <p className="text-xs text-ink-secondary mt-1">
+                {new Date(conv.updatedAt || conv.createdAt || "").toLocaleString("de-DE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                {" • "}
+                {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten
               </p>
+            </div>
+            <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
               <Button
-                variant="primary"
-                size="sm"
-                className="mt-4"
-                onClick={() => void navigate("/chat")}
+                variant="ghost"
+                size="icon"
+                className="text-ink-secondary hover:text-status-error hover:bg-status-error/10 h-9 w-9"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(conv.id).catch(console.error);
+                }}
+                title="Löschen"
               >
-                Neuen Chat starten
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
-          )}
-
-          <div className="grid gap-3">
-            {conversations.map((conv) => (
-              <Card
-                key={conv.id}
-                variant="interactive"
-                padding="sm"
-                className="flex items-center justify-between group"
-                onClick={() => void handleOpen(conv.id)}
-              >
-                <div className="min-w-0 flex-1 pr-4">
-                  <h3 className="text-base font-semibold text-ink-primary truncate">
-                    {conv.title || "Unbenannte Unterhaltung"}
-                  </h3>
-                  <p className="text-xs text-ink-secondary mt-1">
-                    {new Date(conv.updatedAt || conv.createdAt || "").toLocaleString("de-DE", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    {" • "}
-                    {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten
-                  </p>
-                </div>
-                <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-ink-secondary hover:text-status-error hover:bg-status-error/10 h-9 w-9"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(conv.id).catch(console.error);
-                    }}
-                    title="Löschen"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </AppShell>
-
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
-    </>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 }

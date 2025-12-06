@@ -145,7 +145,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[4rem] z-sticky-content px-4 pt-4">
+      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow */}
           <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 via-transparent to-transparent pointer-events-none" />
@@ -223,7 +223,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-4">
+      <div className="flex-1 overflow-y-auto pb-24 pt-4">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}
@@ -248,6 +248,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <Card
                   key={role.id}
+                  data-testid="role-card"
                   className={cn(
                     "relative transition-all duration-300",
                     isActive

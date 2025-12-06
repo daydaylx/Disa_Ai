@@ -1,4 +1,6 @@
-import { Label, PremiumCard, useToasts } from "@/ui";
+import { useState } from "react";
+
+import { Button, Input, Label, PremiumCard, useToasts } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
 import { Shield } from "../../lib/icons";
@@ -7,54 +9,60 @@ import { SettingsLayout } from "./SettingsLayout";
 export function SettingsYouthFilterView() {
   const { settings, toggleNSFWContent } = useSettings();
   const toasts = useToasts();
+  const [showVerification, setShowVerification] = useState(false);
+  const [birthYear, setBirthYear] = useState("");
 
   const youthProtectionEnabled = !settings.showNSFWContent;
 
-  const confirmBirthYear = () => {
-    const input = window.prompt("Bitte gib dein Geburtsjahr ein (YYYY):")?.trim();
-    if (!input) {
-      toasts.push({
-        kind: "warning",
-        title: "Abbruch",
-        message: "Jugendschutz bleibt aktiv.",
-      });
-      return false;
-    }
-    const year = Number(input);
+  const handleVerify = () => {
+    const year = Number(birthYear.trim());
     const currentYear = new Date().getFullYear();
     const age = currentYear - year;
-    if (!Number.isFinite(year) || input.length !== 4 || year < 1900 || age < 0) {
+
+    if (!birthYear || !Number.isFinite(year) || birthYear.length !== 4 || year < 1900 || age < 0) {
       toasts.push({
         kind: "error",
         title: "Ungültiges Jahr",
         message: "Bitte ein gültiges Geburtsjahr im Format YYYY eingeben.",
       });
-      return false;
+      return;
     }
+
     if (age < 18) {
       toasts.push({
         kind: "error",
         title: "Mindestalter 18",
         message: "Jugendschutz kann nur von volljährigen Nutzern deaktiviert werden.",
       });
-      return false;
+      setShowVerification(false);
+      setBirthYear("");
+      return;
     }
-    return true;
+
+    // Success
+    toggleNSFWContent();
+    toasts.push({
+      kind: "info",
+      title: "Jugendschutz aus",
+      message: "NSFW-Inhalte werden wieder angezeigt.",
+    });
+    setShowVerification(false);
+    setBirthYear("");
   };
 
   const handleToggle = () => {
-    if (youthProtectionEnabled && !confirmBirthYear()) {
-      return;
+    if (youthProtectionEnabled) {
+      // Need to verify
+      setShowVerification(true);
+    } else {
+      // Enable directly
+      toggleNSFWContent();
+      toasts.push({
+        kind: "success",
+        title: "Jugendschutz an",
+        message: "Erwachseneninhalte werden ausgeblendet.",
+      });
     }
-    toggleNSFWContent();
-    const newStateIsYouthOn = youthProtectionEnabled ? "aus" : "an";
-    toasts.push({
-      kind: youthProtectionEnabled ? "info" : "success",
-      title: `Jugendschutz ${newStateIsYouthOn}`,
-      message: youthProtectionEnabled
-        ? "NSFW-Inhalte werden wieder angezeigt."
-        : "Erwachseneninhalte werden ausgeblendet.",
-    });
   };
 
   return (
@@ -105,6 +113,35 @@ export function SettingsYouthFilterView() {
                 Exporte/Im- und Exporte deiner Chats bleiben unverändert.
               </p>
             </div>
+
+            {showVerification && (
+              <div className="rounded-xl border border-border-highlight/50 bg-surface-2 p-4 animate-in fade-in zoom-in-95 duration-200">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-sm font-semibold text-text-primary">Altersbestätigung erforderlich</h4>
+                    <p className="text-xs text-text-secondary mt-1">
+                      Bitte gib dein Geburtsjahr ein, um den Jugendschutz zu deaktivieren.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      placeholder="YYYY"
+                      value={birthYear}
+                      onChange={(e) => setBirthYear(e.target.value)}
+                      className="flex-1"
+                      onKeyDown={(e) => e.key === "Enter" && handleVerify()}
+                    />
+                    <Button onClick={handleVerify} variant="primary">
+                      Bestätigen
+                    </Button>
+                    <Button onClick={() => setShowVerification(false)} variant="ghost">
+                      Abbrechen
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </PremiumCard>
       </div>

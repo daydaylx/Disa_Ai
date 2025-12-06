@@ -15,7 +15,7 @@ import {
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
-  activeTab?: "overview" | "memory" | "behavior" | "youth" | "extras" | "api-data";
+  activeTab?: "overview" | "memory" | "behavior" | "youth" | "extras" | "api-data" | "appearance";
   title?: string;
   description?: string;
 }

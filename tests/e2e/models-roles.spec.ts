@@ -60,7 +60,6 @@ test.describe("Models & Roles Pages", () => {
 
     // Check that clicking a role selects it or navigates to details
     const firstRole = roleCards.first();
-    const firstRoleText = await firstRole.textContent();
     await firstRole.click();
 
     // Should either navigate back to chat or show selection state
@@ -136,7 +135,6 @@ test.describe("Models & Roles Pages", () => {
 
     if ((await roleCards.count()) > 0) {
       const firstRole = roleCards.first();
-      const roleName = await firstRole.textContent();
       await firstRole.click();
     }
 
