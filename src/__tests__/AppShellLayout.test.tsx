@@ -110,4 +110,23 @@ describe("AppShell Layout Logic", () => {
     expect(mainWrapper).toHaveClass("overflow-y-auto");
     expect(mainWrapper).not.toHaveClass("p-0");
   });
+
+  it("renders page header props when provided", () => {
+    vi.mocked(router.useLocation).mockReturnValue({
+      pathname: "/feedback",
+      search: "",
+      hash: "",
+      state: null,
+      key: "default",
+    });
+
+    render(
+      <AppShell pageHeaderTitle="Feedback" pageHeaderActions={<button>Zurück</button>}>
+        <div data-testid="child">Content</div>
+      </AppShell>,
+    );
+
+    expect(screen.getByRole("heading", { level: 1, name: "Feedback" })).toBeInTheDocument();
+    expect(screen.getByText("Zurück")).toBeInTheDocument();
+  });
 });
