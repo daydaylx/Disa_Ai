@@ -22,8 +22,8 @@ export function AppShell({
 }: AppShellProps) {
   return (
     <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
-      {/* Glass Header */}
-      <header className="sticky top-0 z-header border-b border-white/10 bg-bg-app/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
+      {/* Clean Header with Functional Glass */}
+      <header className="sticky top-0 z-header border-b glass-header shadow-sm">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
           {/* Left: Hamburger Menu */}
           <div className="flex items-center gap-3">
@@ -32,7 +32,7 @@ export function AppShell({
               size="icon"
               onClick={onMenuClick}
               aria-label="Hauptmenü öffnen"
-              className="text-ink-primary hover:bg-white/5"
+              className="text-ink-primary hover:bg-surface-2"
             >
               <Menu className="h-5 w-5" />
             </Button>
