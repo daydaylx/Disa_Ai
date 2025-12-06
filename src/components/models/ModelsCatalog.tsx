@@ -72,10 +72,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header */}
-      <div className="flex-none sticky top-[4rem] z-sticky-content px-4 pt-3 lg:top-[4.5rem]">
+      <div className="flex-none sticky top-[4rem] z-sticky-content px-xs pt-2xs lg:top-[4.5rem]">
         <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface-2/90 shadow-sm backdrop-blur">
           <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 via-transparent to-transparent" />
-          <div className="relative space-y-3 px-4 py-4">
+          <div className="relative space-y-3 px-xs py-xs">
             <PageHeader
               title="Modelle"
               description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
@@ -93,7 +93,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-4">
+      <div className="flex-1 overflow-y-auto px-xs pb-4xl pt-2xs">
         <div className="rounded-2xl border border-white/5 bg-surface-2/40 shadow-inner p-3 space-y-2.5">
           {catalog === null ? (
             // Loading skeletons

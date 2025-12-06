@@ -118,7 +118,7 @@ export function SettingsMemoryView() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Optional"
-                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+                className="w-40 h-9 px-2xs text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
               />
             </SettingsRow>
 
@@ -128,7 +128,7 @@ export function SettingsMemoryView() {
                 value={hobbies}
                 onChange={(e) => setHobbies(e.target.value)}
                 placeholder="z.B. Musik, Sport"
-                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+                className="w-40 h-9 px-2xs text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
               />
             </SettingsRow>
 
@@ -138,7 +138,7 @@ export function SettingsMemoryView() {
                 value={background}
                 onChange={(e) => setBackground(e.target.value)}
                 placeholder="Optional"
-                className="w-40 h-9 px-3 text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
+                className="w-40 h-9 px-2xs text-sm bg-surface-2 border border-white/5 rounded-lg text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30"
               />
             </SettingsRow>
 

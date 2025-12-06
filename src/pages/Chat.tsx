@@ -242,7 +242,7 @@ export default function Chat() {
             size="sm"
             onClick={() => setIsHistoryOpen(true)}
             aria-label="Verlauf öffnen"
-            className="gap-2 px-3"
+            className="gap-2 px-2xs"
           >
             <Bookmark className="h-4 w-4 text-ink-secondary" />
             <span className="hidden sm:inline">Verlauf</span>
@@ -254,11 +254,11 @@ export default function Chat() {
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
           {/* Model Pill above chat */}
-          <div className="flex-none px-4 pt-safe-top pb-1">
+          <div className="flex-none px-xs pt-safe-top pb-3xs">
             <div className="max-w-3xl mx-auto">
               <button
                 onClick={() => navigate("/models")}
-                className="flex items-center gap-1.5 rounded-full border glass-subtle px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:border-medium hover:text-ink-primary hover:bg-surface-2"
+                className="flex items-center gap-1.5 rounded-full border glass-subtle px-2xs py-3xs text-sm font-medium text-ink-secondary transition-colors hover:border-medium hover:text-ink-primary hover:bg-surface-2"
               >
                 <Cpu className="h-4 w-4 opacity-70" />
                 <span className="truncate max-w-[160px]">
@@ -275,11 +275,11 @@ export default function Chat() {
             role="log"
             aria-label="Chat messages"
           >
-            <div className="px-3 sm:px-4 py-3 sm:py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 rounded-3xl border bg-surface-1 px-3 sm:px-5 py-4 sm:py-5 shadow-md flex flex-col gap-4">
+            <div className="px-2xs sm:px-xs py-2xs sm:py-xs max-w-3xl mx-auto w-full min-h-full flex flex-col">
+              <div className="flex-1 rounded-3xl border bg-surface-1 px-2xs sm:px-sm py-xs sm:py-sm shadow-md flex flex-col gap-4">
                 {isEmpty ? (
                   <div className="flex-1 flex items-center justify-center">
-                    <div className="text-center space-y-3 px-4 max-w-sm">
+                    <div className="text-center space-y-3 px-xs max-w-sm">
                       <p className="text-sm font-semibold text-ink-primary">Direkt loslegen</p>
                       <p className="text-xs text-ink-secondary leading-relaxed">
                         Tippe unten deine erste Nachricht. Deine Gespräche bleiben nur auf diesem
@@ -327,7 +327,7 @@ export default function Chat() {
 
           {/* Input Area - Fixed at bottom */}
           <div className="flex-none w-full bg-bg-app border-t border-subtle">
-            <div className="max-w-3xl mx-auto px-4 py-3 pb-safe-bottom">
+            <div className="max-w-3xl mx-auto px-xs pt-2xs pb-safe-bottom">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}

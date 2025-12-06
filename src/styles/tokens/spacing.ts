@@ -1,5 +1,5 @@
 /**
- * Spacing tokens built on a refined 4px grid.
+ * Spacing tokens built on an 8px rhythm with a few micro adjustments.
  * Values are emitted in rem to stay device agnostic.
  */
 
@@ -52,32 +52,36 @@ export type SpacingTokens = {
   fixed: FixedSizes;
 };
 
+const spacingScale: SpacingScale = {
+  none: "0px",
+  "3xs": "0.5rem", // 8px
+  "2xs": "0.75rem", // 12px
+  xs: "1rem", // 16px
+  sm: "1.25rem", // 20px
+  md: "1.5rem", // 24px
+  lg: "2rem", // 32px
+  xl: "2.5rem", // 40px
+  "2xl": "3rem", // 48px
+  "3xl": "3.5rem", // 56px
+  "4xl": "4rem", // 64px
+};
+
+const semanticSpacing: SemanticSpacing = {
+  stackXs: spacingScale["2xs"],
+  stackSm: spacingScale.xs,
+  stackMd: spacingScale.sm,
+  stackLg: spacingScale.md,
+  inlineSm: spacingScale["2xs"],
+  inlineMd: spacingScale.xs,
+  inlineLg: spacingScale.sm,
+  section: spacingScale.xl,
+  containerX: spacingScale.xs,
+  containerY: spacingScale.sm,
+};
+
 export const spacingTokens: SpacingTokens = {
-  scale: {
-    none: "0px",
-    "3xs": "0.25rem", // 4px
-    "2xs": "0.5rem", // 8px
-    xs: "0.75rem", // 12px
-    sm: "1rem", // 16px
-    md: "1.5rem", // 24px
-    lg: "2rem", // 32px
-    xl: "3rem", // 48px
-    "2xl": "3rem", // 48px - Deprecated: Use xl instead
-    "3xl": "3rem", // 48px - Deprecated: Use xl instead
-    "4xl": "3rem", // 48px - Deprecated: Use xl instead
-  },
-  semantic: {
-    stackXs: "0.5rem",
-    stackSm: "0.75rem",
-    stackMd: "1rem",
-    stackLg: "1.5rem",
-    inlineSm: "0.5rem",
-    inlineMd: "0.75rem",
-    inlineLg: "1rem",
-    section: "3rem",
-    containerX: "1rem",
-    containerY: "1.5rem",
-  },
+  scale: spacingScale,
+  semantic: semanticSpacing,
   touch: {
     compact: "2.75rem",
     comfortable: "3rem",

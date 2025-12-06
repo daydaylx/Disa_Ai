@@ -70,20 +70,24 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
 
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
-      <div className="flex-1 px-4 py-6 max-w-3xl mx-auto w-full">
+      <div className="flex-1 px-xs py-md max-w-3xl mx-auto w-full">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Navigation (Desktop Sidebar / Mobile Horizontal) */}
           <nav className="lg:w-48 flex-shrink-0">
-            <div className="flex gap-2 overflow-x-auto pb-4 lg:flex-col lg:pb-0 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+            <div className="flex gap-2 overflow-x-auto pb-xs lg:flex-col lg:pb-0 no-scrollbar -mx-xs px-xs lg:mx-0 lg:px-0">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
+                const derivedActive =
+                  activeTab || (location.pathname.includes(item.id) ? item.id : undefined); // Simple active check derived from logic in component
+                // Note: Re-using derivedActive from scope if available, but in this block context I need to ensure it matches logic.
+                // The original code has `const derivedActive` above the return. I can use it.
                 const isActive = derivedActive === item.id;
                 return (
                   <Link
                     key={item.id}
                     to={item.to}
                     className={cn(
-                      "flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border transition-all",
+                      "flex-shrink-0 flex items-center gap-2 px-2xs py-3xs rounded-xl border transition-all",
                       "min-w-[120px] lg:min-w-0 lg:w-full",
                       isActive
                         ? "bg-surface-1 border-accent-primary/30 text-ink-primary"

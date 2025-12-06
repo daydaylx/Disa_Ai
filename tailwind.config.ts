@@ -2,6 +2,16 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 
+import { spacingCssVars } from "./src/styles/tokens/spacing";
+
+const spacingScale = Object.fromEntries(
+  Object.entries(spacingCssVars.scale).map(([key, cssVar]) => [key, `var(${cssVar})`]),
+);
+
+const semanticSpacingScale = Object.fromEntries(
+  Object.entries(spacingCssVars.semantic).map(([key, cssVar]) => [key, `var(${cssVar})`]),
+);
+
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: ["class", "[data-theme='dark']"],
@@ -59,6 +69,8 @@ export default {
         mono: ['"JetBrains Mono"', '"Fira Code"', "monospace"],
       },
       spacing: {
+        ...spacingScale,
+        ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
       },
       borderRadius: {
