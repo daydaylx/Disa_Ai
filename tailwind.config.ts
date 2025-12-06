@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Calm Productivity Palette
+        // Modern Slate Glass - Unified Design System
         bg: {
           app: "#131314", // Deep Dark (OLED friendly but soft)
           surface: "#1E1E20", // Main Surface
@@ -26,17 +26,23 @@ export default {
           muted: "#52525B", // Zinc 600 (Disabled/Very subtle)
         },
         accent: {
-          primary: "#6366f1", // Indigo 500 (Calm, professional accent)
+          primary: "#6366f1", // Indigo 500 (Primary actions & CTAs)
           "primary-dim": "rgba(99, 102, 241, 0.1)", // For backgrounds
-          secondary: "#818CF8", // Indigo 400
+          secondary: "#8b5cf6", // Purple (Brand identity, special features)
+          tertiary: "#06b6d4", // Cyan (Links, info states)
         },
         border: {
           ink: "#27272A", // Very subtle border
+          DEFAULT: "rgba(255, 255, 255, 0.1)", // Standard border (more visible)
+          subtle: "rgba(255, 255, 255, 0.05)", // Subtle border
+          medium: "rgba(255, 255, 255, 0.15)", // Interactive borders
+          strong: "rgba(255, 255, 255, 0.2)", // Focus/active borders
         },
         status: {
           error: "#ef4444", // Red 500
           success: "#22c55e", // Green 500
           warning: "#eab308", // Yellow 500
+          info: "#06b6d4", // Cyan 500
         },
       },
       fontFamily: {
@@ -107,10 +113,15 @@ export default {
             display: "none",
           },
         },
-        // Functional glass, only for sticky headers/overlays
-        ".glass-blur": {
-          "backdrop-filter": "blur(12px)",
-          "-webkit-backdrop-filter": "blur(12px)",
+        // Standardized glass effects - use sparingly
+        ".glass-header": {
+          "@apply bg-surface-2/90 backdrop-blur-md": {},
+        },
+        ".glass-overlay": {
+          "@apply bg-surface-1/80 backdrop-blur-sm": {},
+        },
+        ".glass-subtle": {
+          "@apply bg-surface-1/60": {},
         },
       });
     }),

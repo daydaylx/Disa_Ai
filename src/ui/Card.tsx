@@ -8,16 +8,19 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-border-ink shadow-sm", // Standard Flat Card
-        flat: "border-transparent bg-surface-1 shadow-none", // No border
-        outline: "bg-transparent border-border-ink", // Wireframe
+        default: "border shadow-sm", // Standard card with subtle border
+        flat: "border-transparent bg-surface-1 shadow-none", // No border, no shadow
+        outline: "bg-transparent border", // Wireframe style
         interactive:
-          "border-border-ink hover:border-border-ink/80 hover:bg-surface-2 cursor-pointer active:scale-[0.99]",
+          "border hover:border-medium hover:bg-surface-2 cursor-pointer active:scale-[0.99]",
+        elevated: "border-subtle bg-surface-2 shadow-md", // Raised appearance (from MaterialCard)
+        inset: "border-subtle bg-surface-inset shadow-inset", // Deep inset style
+        premium: "border-subtle bg-surface-2 shadow-md overflow-hidden", // Premium style with optional accent
       },
       padding: {
         none: "p-0",
         sm: "p-3 sm:p-4",
-        default: "p-4 sm:p-5", // Slightly reduced padding for mobile fit
+        default: "p-4 sm:p-5",
         lg: "p-6",
       },
     },
@@ -30,12 +33,38 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  /**
+   * Add accent strip at the top of the card (typically for premium/brand elements)
+   * Only visible when variant="premium"
+   */
+  withAccent?: boolean;
+  /**
+   * Accent color for the strip
+   * @default "primary" (indigo)
+   */
+  accentColor?: "primary" | "secondary" | "tertiary";
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, padding, ...props }, ref) => (
-    <div ref={ref} className={cn(cardVariants({ variant, padding, className }))} {...props} />
-  ),
+  (
+    { className, variant, padding, withAccent = false, accentColor = "secondary", children, ...props },
+    ref,
+  ) => {
+    const showAccent = withAccent && variant === "premium";
+    const accentColorClass = {
+      primary: "bg-accent-primary",
+      secondary: "bg-accent-secondary",
+      tertiary: "bg-accent-tertiary",
+    }[accentColor];
+
+    return (
+      <div ref={ref} className={cn(cardVariants({ variant, padding, className }))} {...props}>
+        {showAccent && <div className={cn("absolute top-0 left-0 right-0 h-1", accentColorClass)} />}
+        {children}
+      </div>
+    );
+  },
 );
 Card.displayName = "Card";
 

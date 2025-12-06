@@ -258,7 +258,7 @@ export default function Chat() {
             <div className="max-w-3xl mx-auto">
               <button
                 onClick={() => navigate("/models")}
-                className="flex items-center gap-1.5 rounded-full border border-white/5 bg-surface-1/60 px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:border-white/10 hover:text-ink-primary hover:bg-surface-2/80 shadow-sm"
+                className="flex items-center gap-1.5 rounded-full border glass-subtle px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:border-medium hover:text-ink-primary hover:bg-surface-2"
               >
                 <Cpu className="h-4 w-4 opacity-70" />
                 <span className="truncate max-w-[160px]">
@@ -276,7 +276,7 @@ export default function Chat() {
             aria-label="Chat messages"
           >
             <div className="px-3 sm:px-4 py-3 sm:py-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 rounded-3xl border border-white/8 bg-surface-1/80 px-3 sm:px-5 py-4 sm:py-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-sm flex flex-col gap-4">
+              <div className="flex-1 rounded-3xl border bg-surface-1 px-3 sm:px-5 py-4 sm:py-5 shadow-md flex flex-col gap-4">
                 {isEmpty ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center space-y-3 px-4 max-w-sm">
@@ -326,7 +326,7 @@ export default function Chat() {
           </main>
 
           {/* Input Area - Fixed at bottom */}
-          <div className="flex-none w-full bg-bg-app/90 backdrop-blur-md border-t border-white/8 shadow-[0_-12px_30px_rgba(0,0,0,0.35)]">
+          <div className="flex-none w-full bg-bg-app border-t border-subtle">
             <div className="max-w-3xl mx-auto px-4 py-3 pb-safe-bottom">
               <UnifiedInputBar
                 value={input}
