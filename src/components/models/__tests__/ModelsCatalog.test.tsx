@@ -2,10 +2,28 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { loadModelCatalog } from "@/config/models";
+
 import { ModelCatalogProvider } from "../../../contexts/ModelCatalogContext";
 import { useModelCatalog } from "../../../contexts/ModelCatalogContext";
 import { SettingsProvider } from "../../../contexts/SettingsContext";
 import { ModelsCatalog } from "../ModelsCatalog";
+
+// Mock the favorites context
+vi.mock("../../../contexts/FavoritesContext", () => ({
+  useFavorites: () => ({
+    favorites: { models: { items: [] } },
+    isFavorite: vi.fn(() => false),
+    isModelFavorite: vi.fn(() => false),
+    toggleFavorite: vi.fn(),
+    toggleModelFavorite: vi.fn(),
+  }),
+}));
+
+// Mock loadModelCatalog
+vi.mock("@/config/models", () => ({
+  loadModelCatalog: vi.fn().mockResolvedValue([]),
+}));
 
 // Mock the model catalog context
 vi.mock("../../../contexts/ModelCatalogContext", async () => {
@@ -37,6 +55,7 @@ const mockModels = [
     context_length: 128000,
     pricing: { prompt: 0.15, completion: 0.6 },
     architecture: { modality: "text->text" },
+    tags: ["gpt", "openai"],
   },
   {
     id: "claude-3-haiku",
@@ -46,6 +65,7 @@ const mockModels = [
     context_length: 200000,
     pricing: { prompt: 0.25, completion: 1.25 },
     architecture: { modality: "text->text" },
+    tags: ["claude", "anthropic"],
   },
 ];
 
@@ -57,6 +77,7 @@ describe("ModelsCatalog", () => {
       isLoading: false,
       error: null,
     });
+    (loadModelCatalog as any).mockResolvedValue(mockModels);
   });
 
   const renderWithProviders = (component: React.ReactElement) => {
@@ -75,11 +96,13 @@ describe("ModelsCatalog", () => {
     expect(screen.getByRole("heading", { level: 1, name: /Modelle/i })).toBeInTheDocument();
   });
 
-  it("should display model cards", () => {
+  it("should display model cards", async () => {
     renderWithProviders(<ModelsCatalog />);
 
     // Check for model names
-    expect(screen.getByText("GPT-4o Mini")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("GPT-4o Mini")).toBeInTheDocument();
+    });
     expect(screen.getByText("Claude 3 Haiku")).toBeInTheDocument();
 
     // Check for model descriptions
@@ -114,10 +137,9 @@ describe("ModelsCatalog", () => {
     renderWithProviders(<ModelsCatalog />);
 
     // Check for loading indicators
-    const loadingElements = screen
-      .getAllByTestId("model-card-skeleton")
-      .or(screen.getAllByRole("status"));
-    expect(loadingElements.length).toBeGreaterThan(0);
+    const skeletons = screen.queryAllByTestId("model-card-skeleton");
+    const statuses = screen.queryAllByRole("status");
+    expect(skeletons.length + statuses.length).toBeGreaterThan(0);
   });
 
   it("should show error state when models fail to load", () => {
@@ -134,8 +156,6 @@ describe("ModelsCatalog", () => {
   });
 
   it("should handle model selection", () => {
-    const mockSetSelectedModelId = vi.fn();
-
     renderWithProviders(<ModelsCatalog />);
 
     // Find first model card and click it
@@ -149,23 +169,31 @@ describe("ModelsCatalog", () => {
     }
   });
 
-  it("should display provider information", () => {
+  it("should display provider information", async () => {
     renderWithProviders(<ModelsCatalog />);
 
-    expect(screen.getByText("OpenAI")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("OpenAI")).toBeInTheDocument();
+    });
     expect(screen.getByText("Anthropic")).toBeInTheDocument();
   });
 
-  it("should display context length information", () => {
+  it("should display context length information", async () => {
     renderWithProviders(<ModelsCatalog />);
 
     // Check for context length displays (might be formatted differently)
-    expect(screen.getByText(/128000|128k/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/128000|128k/i)).toBeInTheDocument();
+    });
     expect(screen.getByText(/200000|200k/i)).toBeInTheDocument();
   });
 
-  it("should have accessible model cards", () => {
+  it("should have accessible model cards", async () => {
     renderWithProviders(<ModelsCatalog />);
+
+    await waitFor(() => {
+      expect(screen.getByText("GPT-4o Mini")).toBeInTheDocument();
+    });
 
     const modelCards = screen
       .getAllByRole("button")

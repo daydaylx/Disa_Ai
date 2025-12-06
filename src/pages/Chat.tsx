@@ -9,7 +9,7 @@ import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
-import { AppShell } from "../components/layout/AppShell";
+import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { QUICKSTARTS } from "../config/quickstarts";
 import { useModelCatalog } from "../contexts/ModelCatalogContext";
@@ -249,7 +249,7 @@ export default function Chat() {
 
   return (
     <>
-      <AppShell
+      <ChatLayout
         title={activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
         headerActions={
@@ -382,7 +382,7 @@ export default function Chat() {
             </div>
           </div>
         </div>
-      </AppShell>
+      </ChatLayout>
 
       {/* Global Menu */}
       <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />

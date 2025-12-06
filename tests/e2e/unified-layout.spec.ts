@@ -16,7 +16,7 @@ test.describe("Unified Layout Tests", () => {
   ];
 
   test("should have consistent header across all pages", async ({ page }) => {
-    for (const { path, name } of pages) {
+    for (const { path } of pages) {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 

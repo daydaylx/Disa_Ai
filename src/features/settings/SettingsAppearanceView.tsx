@@ -1,5 +1,5 @@
 import { SettingsBehaviorView } from "./SettingsBehaviorView";
 
 export function SettingsAppearanceView() {
-  return <SettingsBehaviorView />;
+  return <SettingsBehaviorView activeTab="appearance" />;
 }
