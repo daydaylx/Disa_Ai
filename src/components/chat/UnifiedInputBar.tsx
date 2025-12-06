@@ -153,7 +153,7 @@ export function UnifiedInputBar({
 
       {/* Context Pills */}
       <div className="w-full px-1">
-        <div className="flex w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-1">
           {/* Role Dropdown - Primary */}
           <Select
             value={activeRole?.id || "standard"}
@@ -176,7 +176,7 @@ export function UnifiedInputBar({
               )}
             >
               <User className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="truncate max-w-[120px]">{roleLabel}</span>
+              <span className="truncate">{roleLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
               <SelectItem value="standard">Standard</SelectItem>
@@ -198,7 +198,7 @@ export function UnifiedInputBar({
               className="flex h-11 flex-shrink-0 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/40 px-2.5 text-[11px] font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
             >
               <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="truncate max-w-[140px]">Stil: {discussionPresetLabel}</span>
+              <span className="truncate">Stil: {discussionPresetLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
               {discussionPresetOptions.map((preset) => (
@@ -219,7 +219,7 @@ export function UnifiedInputBar({
               className="flex h-11 flex-shrink-0 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/40 px-2.5 text-[11px] font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
             >
               <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="truncate max-w-[140px]">Kreativität: {creativityShortLabel}</span>
+              <span className="truncate">Kreativität: {creativityShortLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
               {creativityOptions.map((option) => (
