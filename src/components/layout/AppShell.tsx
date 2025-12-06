@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 
+import { BrandWordmark } from "@/app/components/BrandWordmark";
 import { Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
@@ -35,6 +36,10 @@ export function AppShell({
             >
               <Menu className="h-5 w-5" />
             </Button>
+            <div className="flex items-center gap-2">
+              <BrandWordmark className="h-5 w-auto text-ink-primary" state="pulse" />
+              <span className="sr-only">Disa AI</span>
+            </div>
             {title && (
               <h1 className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg">
                 {title}
