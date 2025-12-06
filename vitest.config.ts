@@ -1,6 +1,16 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from "vitest/config";
 import { fileURLToPath, URL } from "node:url";
+import fs from "node:fs";
+import { resolve as resolvePath } from "node:path";
+
+// Keep Vitest/Tailwind from writing caches into /tmp on locked-down runners
+const localTmpDir = resolvePath(".tmp");
+if (!fs.existsSync(localTmpDir)) {
+  fs.mkdirSync(localTmpDir, { recursive: true });
+}
+process.env.TMPDIR ??= localTmpDir;
+process.env.JITI_CACHE_DIR ??= localTmpDir;
 
 // Unit tests configuration - separate from Storybook tests
 export default defineConfig({
@@ -50,6 +60,7 @@ export default defineConfig({
         "**/node_modules/**",
         "**/dist/**",
         "**/dev-dist/**",
+        "**/.tmp/**",
         "**/e2e/**",
         "**/coverage/**",
         "**/playwright-report/**",

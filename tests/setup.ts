@@ -1,9 +1,20 @@
 import "@testing-library/jest-dom/vitest";
 
+import fs from "node:fs";
+import path from "node:path";
+
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeEach } from "vitest";
 
 import { ApiError } from "../src/lib/errors";
+
+// Ensure sandboxed runners (no /tmp write access) can compile Tailwind/JITI caches.
+const repoTmp = path.join(process.cwd(), ".tmp");
+if (!fs.existsSync(repoTmp)) {
+  fs.mkdirSync(repoTmp, { recursive: true });
+}
+process.env.TMPDIR ||= repoTmp;
+process.env.JITI_CACHE_DIR ||= repoTmp;
 
 // Mock performance API for consistent timing
 Object.defineProperty(window, "performance", {

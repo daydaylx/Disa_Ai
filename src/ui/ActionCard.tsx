@@ -40,12 +40,16 @@ export function ActionCard({
     <Card
       className={cn(
         "rounded-[var(--radius-2xl)] p-[var(--space-lg)] cursor-pointer",
-        "transition-all duration-[var(--motion-medium)] ease-[var(--ease-aurora)]",
+        "transition-all",
         "min-h-[var(--touch-target-spacious)] select-none touch-manipulation",
         "active:scale-[0.98]",
         variantClasses[variant],
         className,
       )}
+      style={{
+        transitionDuration: "var(--motion-medium)",
+        transitionTimingFunction: "var(--ease-aurora)",
+      }}
       onClick={onClick}
     >
       <div className="flex items-center gap-[var(--space-inline-sm)]">

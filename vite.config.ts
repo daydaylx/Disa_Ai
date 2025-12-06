@@ -1,9 +1,20 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
+import fs from "node:fs";
+import { resolve as resolvePath } from "node:path";
 import { analyzer } from "vite-bundle-analyzer";
 import { VitePWA } from "vite-plugin-pwa";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+
+// Some CI sandboxes block /tmp writes (jiti cache for Tailwind). Keep builds hermetic by
+// redirecting temp usage into a repo-local .tmp directory.
+const localTmpDir = resolvePath(".tmp");
+if (!fs.existsSync(localTmpDir)) {
+  fs.mkdirSync(localTmpDir, { recursive: true });
+}
+process.env.TMPDIR ??= localTmpDir;
+process.env.JITI_CACHE_DIR ??= localTmpDir;
 
 const analyzerPlugin = analyzer({
   analyzerMode:

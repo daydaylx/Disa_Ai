@@ -10,6 +10,7 @@ import App from "./App";
 import { getEnvConfigSafe, initEnvironment } from "./config/env";
 import mainStylesUrl from "./index.css?url";
 import { initializeA11yEnforcement } from "./lib/a11y/touchTargets";
+import { initializeSentry } from "./lib/monitoring/sentry";
 import { reloadApp, resetApp } from "./lib/recovery/resetApp";
 import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
@@ -63,9 +64,11 @@ function toAbsoluteWithBase(path: string): string {
 }
 
 // Initialize error tracking (must be early in the process)
-void import("./lib/monitoring/sentry")
-  .then((mod) => mod.initializeSentry())
-  .catch((error) => safeError("Sentry initialization failed:", error));
+try {
+  initializeSentry();
+} catch (error) {
+  safeError("Sentry initialization failed:", error);
+}
 
 // Singleton React Root to prevent memory leaks
 let _appRoot: ReactDOM.Root | null = null;

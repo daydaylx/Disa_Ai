@@ -143,9 +143,12 @@ export function AppMenuDrawer({
           variant="hero"
           className={cn(
             "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative bg-[rgba(19,19,20,0.96)] border border-[var(--border-chalk)] shadow-[0_0_0_1px_var(--border-chalk),0_18px_40px_rgba(0,0,0,0.45)]",
-            "transition-transform duration-200 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
+            "transition-transform duration-200",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
+          style={{
+            transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)",
+          }}
           ref={drawerRef}
           role="dialog"
           aria-modal="true"

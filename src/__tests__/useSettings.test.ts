@@ -1,6 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
+import { createElement, type ReactNode } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { SettingsProvider } from "../contexts/SettingsContext";
 import { useSettings } from "../hooks/useSettings";
 
 const STORAGE_KEY = "disa-ai-settings";
@@ -8,12 +10,16 @@ const STORAGE_KEY = "disa-ai-settings";
 describe("useSettings", () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
+
+  const wrapper = ({ children }: { children: ReactNode }) =>
+    createElement(SettingsProvider, null, children);
 
   it("fällt bei korruptem JSON auf Defaults zurück", () => {
     localStorage.setItem(STORAGE_KEY, "{invalid-json");
 
-    const { result } = renderHook(() => useSettings());
+    const { result } = renderHook(() => useSettings(), { wrapper });
 
     expect(result.current.settings.language).toBe("de");
     expect(result.current.settings.showNSFWContent).toBe(false);
@@ -28,7 +34,7 @@ describe("useSettings", () => {
     localStorage.setItem("disa:ui:reduceMotion", "true");
     localStorage.setItem("disa:ui:hapticFeedback", "true");
 
-    const { result } = renderHook(() => useSettings());
+    const { result } = renderHook(() => useSettings(), { wrapper });
 
     expect(result.current.settings.discussionPreset).toBe("sarkastisch_witzig");
     expect(result.current.settings.discussionStrict).toBe(true);
@@ -39,7 +45,7 @@ describe("useSettings", () => {
   });
 
   it("persistiert den Jugendschutz-Toggle konsistent", () => {
-    const { result } = renderHook(() => useSettings());
+    const { result } = renderHook(() => useSettings(), { wrapper });
 
     expect(result.current.settings.showNSFWContent).toBe(false);
 
