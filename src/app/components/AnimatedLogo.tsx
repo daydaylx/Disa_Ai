@@ -45,11 +45,12 @@ export function AnimatedLogo({
   ...props
 }: AnimatedLogoProps) {
   const stateClass = `logo-state-${state}`;
+  const isIdle = state === "idle";
 
   return (
     <span
       className={cn(
-        "inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight",
+        "group inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight select-none cursor-default",
         stateClass,
         className,
       )}
@@ -57,15 +58,33 @@ export function AnimatedLogo({
     >
       <span className="logo-animated inline-flex items-baseline gap-[0.28em]">
         {/* DISA part in hand-written style */}
-        <span className="logo-disa inline-flex items-baseline gap-[0.05em] font-hand text-[1.02em] leading-none tracking-[0.01em]">
-          <span className="logo-letter">D</span>
-          <span className="logo-letter">i</span>
-          <span className="logo-letter">s</span>
-          <span className="logo-letter">a</span>
+        <span
+          className={cn(
+            "logo-disa inline-flex items-baseline gap-[0.05em] font-hand text-[1.02em] leading-none tracking-[0.01em]",
+            isIdle && "motion-safe:animate-logo-float",
+          )}
+        >
+          <span className="logo-letter transition-colors duration-300 group-hover:text-white">
+            D
+          </span>
+          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-75">
+            i
+          </span>
+          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-100">
+            s
+          </span>
+          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-150">
+            a
+          </span>
         </span>
 
         {/* AI part in clean sans, desaturated */}
-        <span className="logo-ai-part inline-flex items-baseline gap-[0.06em] font-sans text-[0.96em] font-medium tracking-[-0.01em] text-ink-primary/90">
+        <span
+          className={cn(
+            "logo-ai-part inline-flex items-baseline gap-[0.06em] font-sans text-[0.96em] font-medium tracking-[-0.01em] text-ink-primary/90 transition-colors duration-300 group-hover:text-accent-secondary",
+            isIdle && "motion-safe:animate-logo-scale-pulse",
+          )}
+        >
           <span className="logo-letter">A</span>
           <span className="logo-letter">I</span>
         </span>

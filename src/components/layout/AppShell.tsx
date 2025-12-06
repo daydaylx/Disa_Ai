@@ -37,7 +37,7 @@ export function AppShell({
               <Menu className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <BrandWordmark className="h-5 w-auto text-ink-primary" state="pulse" />
+              <BrandWordmark className="h-5 w-auto text-ink-primary" state="idle" />
               <span className="sr-only">Disa AI</span>
             </div>
             {title && (
