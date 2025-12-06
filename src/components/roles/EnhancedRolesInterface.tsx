@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Check, ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
@@ -145,190 +145,201 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header & Filters */}
-      <div className="flex-none bg-bg-app px-4 py-2 space-y-2 border-b border-white/5">
-        <PageHeader
-          title="Rollen"
-          description={`${filteredRoles.length} von ${roles.length} verfügbar`}
-        />
+      <div className="flex-none px-4 pt-3">
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface-2/90 shadow-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 via-transparent to-transparent" />
+          <div className="relative space-y-3 px-4 py-4">
+            <PageHeader
+              title="Rollen"
+              description={`${filteredRoles.length} von ${roles.length} verfügbar`}
+              className="mb-0"
+            />
 
-        {/* Search */}
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Rolle suchen..."
-          className="w-full"
-        />
+            {/* Search */}
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rolle suchen..."
+              className="w-full"
+            />
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-2 px-2">
-          {/* Favorites Toggle */}
-          <button
-            onClick={() =>
-              setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-            }
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-              filters.showFavoritesOnly
-                ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
-                : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+            {/* Filter Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-2 px-2">
+              {/* Favorites Toggle */}
+              <button
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+                }
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                  filters.showFavoritesOnly
+                    ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                )}
+              >
+                <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+                Favoriten
+              </button>
+
+              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+              {/* Category Filters */}
+              {CATEGORY_ORDER.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                    selectedCategory === cat
+                      ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
+                      : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            {/* Active Filters Summary */}
+            {hasActiveFilters && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-ink-tertiary">
+                  {filteredRoles.length} Ergebnisse
+                  {selectedCategory && ` in ${selectedCategory}`}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
+                >
+                  <RotateCcw className="h-3 w-3 mr-1" /> Reset
+                </Button>
+              </div>
             )}
-          >
-            <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
-            Favoriten
-          </button>
-
-          <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-
-          {/* Category Filters */}
-          {CATEGORY_ORDER.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-              className={cn(
-                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-                selectedCategory === cat
-                  ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
-                  : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-              )}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        {/* Active Filters Summary */}
-        {hasActiveFilters && (
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-ink-tertiary">
-              {filteredRoles.length} Ergebnisse
-              {selectedCategory && ` in ${selectedCategory}`}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
-            >
-              <RotateCcw className="h-3 w-3 mr-1" /> Reset
-            </Button>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-3">
-        {filteredRoles.length === 0 ? (
-          <EmptyState
-            icon={<Users className="h-6 w-6" />}
-            title="Keine Rollen gefunden"
-            description="Versuche es mit anderen Suchbegriffen oder Filtern."
-            action={
-              hasActiveFilters ? (
-                <Button variant="secondary" size="sm" onClick={clearFilters}>
-                  Filter zurücksetzen
-                </Button>
-              ) : undefined
-            }
-          />
-        ) : (
-          <div className="space-y-2.5">
-            {filteredRoles.map((role) => {
-              const isActive = activeRole?.id === role.id;
-              const isExpanded = expandedRoles.has(role.id);
+      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-4">
+        <div className="rounded-2xl border border-white/5 bg-surface-2/40 shadow-inner p-3 space-y-2.5">
+          {filteredRoles.length === 0 ? (
+            <EmptyState
+              icon={<Users className="h-6 w-6" />}
+              title="Keine Rollen gefunden"
+              description="Versuche es mit anderen Suchbegriffen oder Filtern."
+              action={
+                hasActiveFilters ? (
+                  <Button variant="secondary" size="sm" onClick={clearFilters}>
+                    Filter zurücksetzen
+                  </Button>
+                ) : undefined
+              }
+              className="bg-surface-1 rounded-2xl"
+            />
+          ) : (
+            <div className="space-y-2.5">
+              {filteredRoles.map((role) => {
+                const isActive = activeRole?.id === role.id;
+                const isExpanded = expandedRoles.has(role.id);
 
-              return (
-                <div
-                  key={role.id}
-                  className={cn(
-                    "rounded-2xl border bg-surface-1 transition-all",
-                    isActive ? "border-accent-primary/30" : "border-white/5",
-                  )}
-                >
-                  {/* Main Row */}
-                  <div className="flex items-center gap-3 p-4">
-                    {/* Expand/Collapse Button (subtle, left side) */}
-                    <button
-                      onClick={() => toggleRoleExpansion(role.id)}
-                      className="flex-shrink-0 p-1 text-ink-tertiary hover:text-ink-primary transition-colors -ml-1"
-                      aria-label="Details anzeigen"
-                    >
-                      <ChevronDown
-                        className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
-                      />
-                    </button>
+                return (
+                  <Card
+                    key={role.id}
+                    className={cn(
+                      "transition-all space-y-3",
+                      isActive
+                        ? "border-accent-primary/40 ring-1 ring-accent-primary/30 shadow-md"
+                        : "border-white/5 shadow-sm",
+                    )}
+                  >
+                    {/* Main Row */}
+                    <div className="flex items-center gap-3">
+                      {/* Expand/Collapse Button (subtle, left side) */}
+                      <button
+                        onClick={() => toggleRoleExpansion(role.id)}
+                        className="flex-shrink-0 p-1 text-ink-tertiary hover:text-ink-primary transition-colors -ml-1"
+                        aria-label="Details anzeigen"
+                      >
+                        <ChevronDown
+                          className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
+                        />
+                      </button>
 
-                    {/* Icon */}
-                    <div
-                      className={cn(
-                        "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
-                        isActive
-                          ? "bg-accent-primary/10 text-accent-primary"
-                          : "bg-surface-2 text-ink-tertiary",
-                      )}
-                    >
-                      <Users className="h-5 w-5" />
+                      {/* Icon */}
+                      <div
+                        className={cn(
+                          "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
+                          isActive
+                            ? "bg-accent-primary/10 text-accent-primary"
+                            : "bg-surface-2 text-ink-tertiary",
+                        )}
+                      >
+                        <Users className="h-5 w-5" />
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={cn(
+                              "font-medium text-sm truncate",
+                              isActive ? "text-accent-primary" : "text-ink-primary",
+                            )}
+                          >
+                            {role.name}
+                          </span>
+                          {isActive && (
+                            <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-xs text-ink-secondary truncate mt-0.5">
+                          {role.category || "Spezial"}
+                        </p>
+                      </div>
+
+                      {/* Primary Action Button */}
+                      <Button
+                        size="sm"
+                        variant={isActive ? "secondary" : "primary"}
+                        className="h-8 px-4 text-xs flex-shrink-0"
+                        onClick={() => handleActivateRole(role)}
+                      >
+                        {isActive ? "Aktiv" : "Wählen"}
+                      </Button>
                     </div>
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "font-medium text-sm truncate",
-                            isActive ? "text-accent-primary" : "text-ink-primary",
-                          )}
-                        >
-                          {role.name}
-                        </span>
-                        {isActive && (
-                          <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
+                    {/* Expanded Details */}
+                    {isExpanded && (
+                      <div className="space-y-3 border-t border-white/5 pt-3 animate-fade-in">
+                        <p className="text-sm text-ink-secondary leading-relaxed">
+                          {role.description}
+                        </p>
+
+                        {role.tags && role.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {role.tags.map((tag) => (
+                              <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+
+                        {role.systemPrompt && (
+                          <div className="p-3 rounded-xl bg-surface-2/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
+                            {role.systemPrompt.slice(0, 200)}
+                            {role.systemPrompt.length > 200 && "..."}
+                          </div>
                         )}
                       </div>
-                      <p className="text-xs text-ink-secondary truncate mt-0.5">
-                        {role.category || "Spezial"}
-                      </p>
-                    </div>
-
-                    {/* Primary Action Button */}
-                    <Button
-                      size="sm"
-                      variant={isActive ? "secondary" : "primary"}
-                      className="h-8 px-4 text-xs flex-shrink-0"
-                      onClick={() => handleActivateRole(role)}
-                    >
-                      {isActive ? "Aktiv" : "Wählen"}
-                    </Button>
-                  </div>
-
-                  {/* Expanded Details */}
-                  {isExpanded && (
-                    <div className="px-4 pb-4 pt-0 space-y-3 border-t border-white/5 mt-0 animate-fade-in">
-                      <p className="text-sm text-ink-secondary leading-relaxed pt-3">
-                        {role.description}
-                      </p>
-
-                      {role.tags && role.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
-                          {role.tags.map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-
-                      {role.systemPrompt && (
-                        <div className="p-3 rounded-xl bg-surface-2/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
-                          {role.systemPrompt.slice(0, 200)}
-                          {role.systemPrompt.length > 200 && "..."}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
