@@ -269,7 +269,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   </div>
 
                   {/* Main Row */}
-                  <div className="flex items-center gap-3 p-4 pr-32">
+                  <div className="flex items-center gap-3 p-4">
                     {/* Icon */}
                     <div
                       className={cn(
