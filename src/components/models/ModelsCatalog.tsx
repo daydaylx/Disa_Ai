@@ -71,11 +71,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      {/* Header */}
-      <div className="flex-none sticky top-[4rem] z-sticky-content px-xs pt-2xs lg:top-[4.5rem]">
-        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface-2/90 shadow-sm backdrop-blur">
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 via-transparent to-transparent" />
-          <div className="relative space-y-3 px-xs py-xs">
+      {/* Header Zone - Vibrant Glass */}
+      <div className="flex-none sticky top-[4rem] z-sticky-content px-4 pt-4 lg:top-[4.5rem]">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
+          {/* Ambient Header Glow */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 via-transparent to-transparent pointer-events-none" />
+
+          <div className="relative space-y-3 px-4 py-4">
             <PageHeader
               title="Modelle"
               description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
@@ -86,110 +88,113 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               value={search}
               onChange={setSearch}
               placeholder="Modell suchen..."
-              className="w-full"
+              className="w-full bg-surface-2/50 border-white/10 focus:border-brand-primary/50 focus:ring-brand-primary/20"
             />
           </div>
         </div>
       </div>
 
-      {/* List */}
-      <div className="flex-1 overflow-y-auto px-xs pb-4xl pt-2xs">
-        <div className="rounded-2xl border border-white/5 bg-surface-2/40 shadow-inner p-3 space-y-2.5">
-          {catalog === null ? (
-            // Loading skeletons
-            <div className="space-y-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-20 rounded-2xl bg-surface-1 animate-pulse" />
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <EmptyState
-              icon={<Cpu className="h-6 w-6" />}
-              title="Keine Modelle gefunden"
-              description="Versuche es mit anderen Suchbegriffen."
-              className="bg-surface-1 rounded-2xl"
-            />
-          ) : (
-            <div className="space-y-2.5">
-              {filtered.map((model) => {
-                const isActive = activeModelId === model.id;
-                const isFavorite = isModelFavorite(model.id);
+      {/* Content Zone - Scrollable List */}
+      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-4">
+        {catalog === null ? (
+          // Loading skeletons
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-20 rounded-2xl bg-surface-1/50 animate-pulse" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <EmptyState
+            icon={<Cpu className="h-8 w-8 text-ink-muted" />}
+            title="Keine Modelle gefunden"
+            description="Versuche es mit anderen Suchbegriffen."
+            className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
+          />
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((model) => {
+              const isActive = activeModelId === model.id;
+              const isFavorite = isModelFavorite(model.id);
 
-                return (
-                  <Card
-                    key={model.id}
-                    variant="interactive"
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setPreferredModel(model.id)}
+              return (
+                <Card
+                  key={model.id}
+                  variant="interactive"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setPreferredModel(model.id)}
+                  className={cn(
+                    "w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300",
+                    isActive
+                      ? "bg-brand-primary/5 border-brand-primary/50 ring-1 ring-brand-primary/20 shadow-glow-sm"
+                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-white/10 shadow-sm",
+                  )}
+                >
+                  {/* Icon */}
+                  <div
                     className={cn(
-                      "w-full flex items-center gap-3 min-h-[84px] text-left",
+                      "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                       isActive
-                        ? "border-accent-primary/40 ring-1 ring-accent-primary/30 shadow-md"
-                        : "border-white/5 shadow-sm",
+                        ? "bg-brand-primary/20 text-brand-primary shadow-inner"
+                        : "bg-surface-2/80 text-ink-tertiary",
                     )}
                   >
-                    {/* Icon */}
-                    <div
-                      className={cn(
-                        "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
-                        isActive
-                          ? "bg-accent-primary/10 text-accent-primary"
-                          : "bg-surface-2 text-ink-tertiary",
-                      )}
-                    >
-                      {isFavorite ? (
-                        <Star className="h-5 w-5 fill-current text-status-warning" />
-                      ) : (
-                        <Cpu className="h-5 w-5" />
-                      )}
-                    </div>
+                    {isFavorite ? (
+                      <Star className="h-6 w-6 fill-current text-status-warning drop-shadow-sm" />
+                    ) : (
+                      <Cpu className="h-6 w-6" />
+                    )}
+                  </div>
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "font-medium text-sm truncate",
-                            isActive ? "text-accent-primary" : "text-ink-primary",
-                          )}
-                        >
-                          {model.label ?? model.id}
-                        </span>
-                        {isActive && (
-                          <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          "font-semibold text-sm truncate",
+                          isActive ? "text-brand-primary" : "text-ink-primary",
                         )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5 text-xs text-ink-tertiary">
-                        <span className="truncate">{model.provider}</span>
-                        <span className="text-ink-muted">·</span>
-                        <span>{Math.round(getContextTokens(model) / 1000)}k</span>
-                        <span className="text-ink-muted">·</span>
-                        <span>{getPriceLabel(model)}</span>
-                      </div>
+                      >
+                        {model.label ?? model.id}
+                      </span>
+                      {isActive && (
+                        <Check className="h-4 w-4 text-brand-primary flex-shrink-0 drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
+                      )}
                     </div>
+                    <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium">
+                      <span className="truncate text-ink-secondary">{model.provider}</span>
+                      <span className="text-ink-muted">·</span>
+                      <span className="bg-surface-3/50 px-1.5 py-0.5 rounded text-[10px]">
+                        {Math.round(getContextTokens(model) / 1000)}k
+                      </span>
+                      <span className="text-ink-muted">·</span>
+                      <span>{getPriceLabel(model)}</span>
+                    </div>
+                  </div>
 
-                    {/* Favorite Toggle */}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="flex-shrink-0 text-ink-tertiary hover:text-status-warning h-10 w-10"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleModelFavorite(model.id);
-                      }}
-                      aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
-                    >
-                      <Star
-                        className={cn("h-4 w-4", isFavorite && "fill-current text-status-warning")}
-                      />
-                    </Button>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                  {/* Favorite Toggle */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "flex-shrink-0 h-10 w-10 transition-colors",
+                      isFavorite
+                        ? "text-status-warning hover:text-status-warning/80"
+                        : "text-ink-muted hover:text-ink-primary",
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleModelFavorite(model.id); // Corrected function name
+                    }}
+                    aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
+                  >
+                    <Star className={cn("h-5 w-5", isFavorite && "fill-current")} />
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

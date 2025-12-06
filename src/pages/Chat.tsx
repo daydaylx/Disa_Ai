@@ -242,64 +242,67 @@ export default function Chat() {
             size="sm"
             onClick={() => setIsHistoryOpen(true)}
             aria-label="Verlauf öffnen"
-            className="gap-2 px-2xs"
+            className="gap-2 px-3"
           >
             <Bookmark className="h-4 w-4 text-ink-secondary" />
             <span className="hidden sm:inline">Verlauf</span>
           </Button>
         }
       >
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col relative">
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          {/* Model Pill above chat */}
-          <div className="flex-none px-xs pt-safe-top pb-3xs">
-            <div className="max-w-3xl mx-auto">
-              <button
-                onClick={() => navigate("/models")}
-                className="flex items-center gap-1.5 rounded-full border glass-subtle px-2xs py-3xs text-sm font-medium text-ink-secondary transition-colors hover:border-medium hover:text-ink-primary hover:bg-surface-2"
-              >
-                <Cpu className="h-4 w-4 opacity-70" />
-                <span className="truncate max-w-[160px]">
-                  {settings.preferredModelId.split("/").pop() || "Modell"}
-                </span>
-              </button>
-            </div>
+          {/* Model Pill - Floating Glass */}
+          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
+            <button
+              onClick={() => navigate("/models")}
+              className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-surface-glass border border-white/10 backdrop-blur-md px-3 py-1.5 text-xs font-medium text-ink-secondary transition-all hover:border-brand-primary/30 hover:text-brand-primary hover:shadow-glow-sm"
+            >
+              <Cpu className="h-3.5 w-3.5 opacity-70" />
+              <span className="truncate max-w-[160px]">
+                {settings.preferredModelId.split("/").pop() || "Modell"}
+              </span>
+            </button>
           </div>
 
           {/* Messages Area */}
           <main
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0"
+            className="flex-1 overflow-y-auto min-h-0 pt-12" /* pt-12 to account for floating model pill */
             role="log"
             aria-label="Chat messages"
           >
-            <div className="px-2xs sm:px-xs py-2xs sm:py-xs max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 rounded-3xl border bg-surface-1 px-2xs sm:px-sm py-xs sm:py-sm shadow-md flex flex-col gap-4">
+            <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
+              {/* Removed bg-surface-1 container to allow ambient background to shine through */}
+              <div className="flex-1 flex flex-col gap-6 py-4">
                 {isEmpty ? (
                   <div className="flex-1 flex items-center justify-center">
-                    <div className="text-center space-y-3 px-xs max-w-sm">
-                      <p className="text-sm font-semibold text-ink-primary">Direkt loslegen</p>
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        Tippe unten deine erste Nachricht. Deine Gespräche bleiben nur auf diesem
-                        Gerät gespeichert.
+                    <div className="text-center space-y-4 px-4 max-w-sm bg-surface-glass p-8 rounded-3xl backdrop-blur-xl border border-white/5 shadow-lg">
+                      <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center mx-auto mb-4">
+                        <Sparkles className="w-8 h-8 text-brand-primary" />
+                      </div>
+                      <p className="text-lg font-semibold text-ink-primary">
+                        Willkommen bei Disa AI
                       </p>
-                      <div className="flex flex-col gap-2 items-center">
+                      <p className="text-sm text-ink-secondary leading-relaxed">
+                        Beginne ein neues Gespräch. Deine Nachrichten sind privat und sicher.
+                      </p>
+                      <div className="flex flex-col gap-3 items-center w-full pt-4">
                         <Button
                           variant="primary"
                           size="lg"
                           onClick={handleStartNewChat}
-                          className="w-full max-w-[220px]"
+                          className="w-full"
                         >
-                          Neues Gespräch
+                          Neues Gespräch starten
                         </Button>
                         <button
                           type="button"
                           onClick={() => navigate("/settings")}
-                          className="text-[12px] font-medium text-accent-primary hover:text-accent-primary/80 underline underline-offset-4"
+                          className="text-xs font-medium text-ink-tertiary hover:text-brand-primary transition-colors"
                         >
-                          Mehr zu Disa AI
+                          Einstellungen
                         </button>
                       </div>
                     </div>
@@ -316,7 +319,7 @@ export default function Chat() {
                     onRetry={(_messageId) => {
                       /* TODO: Implement retry logic properly */
                     }}
-                    className="w-full pb-2"
+                    className="w-full pb-4"
                     scrollContainerRef={chatScrollRef}
                   />
                 )}
@@ -325,9 +328,11 @@ export default function Chat() {
             </div>
           </main>
 
-          {/* Input Area - Fixed at bottom */}
-          <div className="flex-none w-full bg-bg-app border-t border-subtle">
-            <div className="max-w-3xl mx-auto px-xs pt-2xs pb-safe-bottom">
+          {/* Input Area - Floating Glass Bottom */}
+          <div className="flex-none w-full pointer-events-none">
+            {" "}
+            {/* Wrapper to let clicks pass through in empty space */}
+            <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
@@ -352,5 +357,23 @@ export default function Chat() {
         onNewChat={handleStartNewChat}
       />
     </>
+  );
+}
+
+// Helper import for the welcome screen icon
+function Sparkles({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+    </svg>
   );
 }

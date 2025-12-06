@@ -14,7 +14,7 @@ describe("Button", () => {
     render(<Button variant="primary">Primary</Button>);
     const button = screen.getByRole("button");
     // Updated to match new Modern Slate Glass Theme
-    expect(button.className).toContain("bg-accent-primary");
+    expect(button.className).toContain("bg-brand-primary");
     expect(button.className).toContain("text-white");
   });
 

@@ -3,33 +3,31 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const cardVariants = cva(
-  "relative rounded-2xl border bg-surface-1 text-ink-primary transition-all",
-  {
-    variants: {
-      variant: {
-        default: "border shadow-sm", // Standard card with subtle border
-        flat: "border-transparent bg-surface-1 shadow-none", // No border, no shadow
-        outline: "bg-transparent border", // Wireframe style
-        interactive:
-          "border hover:border-medium hover:bg-surface-2 cursor-pointer active:scale-[0.99]",
-        elevated: "border-subtle bg-surface-2 shadow-md", // Raised appearance (from MaterialCard)
-        inset: "border-subtle bg-surface-inset shadow-inset", // Deep inset style
-        premium: "border-subtle bg-surface-2 shadow-md overflow-hidden", // Premium style with optional accent
-      },
-      padding: {
-        none: "p-0",
-        sm: "p-3 sm:p-4",
-        default: "p-4 sm:p-5",
-        lg: "p-6",
-      },
+const cardVariants = cva("relative rounded-2xl border transition-all duration-300", {
+  variants: {
+    variant: {
+      default: "bg-surface-1/60 backdrop-blur-md border-white/5 shadow-sm", // Glassy standard
+      flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none", // Subtle grouping
+      outline: "bg-transparent border-white/10", // Wireframe
+      interactive:
+        "bg-surface-1/60 backdrop-blur-md border-white/5 hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]", // Interactive glass
+      elevated: "bg-surface-2 border-white/10 shadow-md", // Raised Opaque
+      inset: "bg-black/20 border-black/10 shadow-inner", // Deep inset
+      premium:
+        "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden", // Premium
     },
-    defaultVariants: {
-      variant: "default",
-      padding: "default",
+    padding: {
+      none: "p-0",
+      sm: "p-3 sm:p-4",
+      default: "p-4 sm:p-5",
+      lg: "p-6",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    padding: "default",
+  },
+});
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -48,19 +46,29 @@ export interface CardProps
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { className, variant, padding, withAccent = false, accentColor = "secondary", children, ...props },
+    {
+      className,
+      variant,
+      padding,
+      withAccent = false,
+      accentColor = "secondary",
+      children,
+      ...props
+    },
     ref,
   ) => {
     const showAccent = withAccent && variant === "premium";
     const accentColorClass = {
-      primary: "bg-accent-primary",
-      secondary: "bg-accent-secondary",
-      tertiary: "bg-accent-tertiary",
+      primary: "bg-brand-primary",
+      secondary: "bg-brand-secondary",
+      tertiary: "bg-brand-tertiary",
     }[accentColor];
 
     return (
       <div ref={ref} className={cn(cardVariants({ variant, padding, className }))} {...props}>
-        {showAccent && <div className={cn("absolute top-0 left-0 right-0 h-1", accentColorClass)} />}
+        {showAccent && (
+          <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
+        )}
         {children}
       </div>
     );
@@ -70,7 +78,7 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col space-y-1 pb-3", className)} {...props} />
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 pb-3", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -80,7 +88,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        "font-medium leading-none tracking-tight text-base text-ink-primary",
+        "font-semibold leading-none tracking-tight text-base text-ink-primary",
         className,
       )}
       {...props}

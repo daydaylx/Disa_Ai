@@ -4,13 +4,13 @@
 
 :root {
   /* Modern Slate Glass Theme Variables */
-  --bg-app: rgb(19 19 20);
-  --bg-surface-1: rgb(30 30 32);
-  --bg-surface-2: rgb(39 39 42);
-  --text-primary: rgb(244 244 245);
-  --text-secondary: rgb(161 161 170);
-  --text-tertiary: rgb(113 113 122);
-  --border-color: rgb(63 63 70);
+  --bg-app: #09090b;
+  --bg-surface-1: #18181b;
+  --bg-surface-2: #27272a;
+  --text-primary: #fafafa;
+  --text-secondary: #d4d4d8;
+  --text-tertiary: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.08);
 
   /* Viewport Height Fix */
   --vh: 1vh;
@@ -19,13 +19,37 @@
 @layer base {
   html,
   body {
-    @apply bg-bg-app text-ink-primary font-sans antialiased selection:bg-accent-primary/30;
+    @apply bg-bg-app text-ink-primary font-sans antialiased selection:bg-brand-primary/30;
     overscroll-behavior: none; /* Prevent bounce on mobile */
   }
 
-  /* Remove chalkboard fonts and complex backgrounds */
-  body {
-    background-image: none;
+  /* Ambient Background Blobs */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(80px);
+    z-index: -2;
+    animation: blob 20s infinite alternate;
+    opacity: 0.8;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(100px);
+    z-index: -2;
+    animation: blob 25s infinite alternate-reverse;
+    opacity: 0.8;
   }
 
   h1,
@@ -40,7 +64,11 @@
 
 @layer components {
   .glass {
-    @apply bg-surface-1/80 backdrop-blur-md border border-white/5;
+    @apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+
+  .glass-card {
+    @apply bg-surface-1/60 backdrop-blur-md border border-white/5 rounded-2xl shadow-sm hover:bg-surface-1/80 transition-all duration-300;
   }
 
   .card-base {
@@ -48,7 +76,7 @@
   }
 
   .input-base {
-    @apply bg-surface-2 border border-white/10 rounded-xl px-4 py-2 text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 transition-all;
+    @apply bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all shadow-inner;
   }
 }
 
@@ -63,9 +91,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-surface-3 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-ink-muted;
+  @apply bg-surface-3/50 rounded-full hover:bg-surface-3 transition-colors;
 }

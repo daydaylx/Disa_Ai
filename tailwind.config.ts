@@ -18,41 +18,48 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Modern Slate Glass - Unified Design System
+        // Vibrant Glass Theme - Deep Dark Base with Electric Accents
         bg: {
-          app: "#131314", // Deep Dark (OLED friendly but soft)
-          surface: "#1E1E20", // Main Surface
+          app: "#09090B", // Zinc 950 (Deepest dark for OLED)
+          surface: "#18181B", // Zinc 900 (Main content background)
         },
         surface: {
-          1: "#1E1E20", // Cards / Panels
-          2: "#27272A", // Inputs / Hover states
-          3: "#3F3F46", // Active / Borders
-          inset: "#09090B", // Deep zones (code blocks)
+          glass: "rgba(24, 24, 27, 0.7)", // Glass effect base
+          1: "#18181B", // Zinc 900 - Panels
+          2: "#27272A", // Zinc 800 - Secondary/Hover
+          3: "#3F3F46", // Zinc 700 - Borders/Active
+          inset: "#000000", // Deep zones
+        },
+        brand: {
+          primary: "#8b5cf6", // Violet 500 - Main Brand Color
+          secondary: "#6366f1", // Indigo 500 - Secondary Accent
+          tertiary: "#ec4899", // Pink 500 - Highlights
         },
         ink: {
-          primary: "#F4F4F5", // Zinc 100 (High contrast text)
-          secondary: "#A1A1AA", // Zinc 400 (Supporting text)
-          tertiary: "#71717A", // Zinc 500 (Meta text)
-          muted: "#52525B", // Zinc 600 (Disabled/Very subtle)
+          primary: "#FAFAFA", // Zinc 50 (Brighter White)
+          secondary: "#D4D4D8", // Zinc 300 (Lighter Grey for better readability)
+          tertiary: "#A1A1AA", // Zinc 400 (Meta text)
+          muted: "#71717A", // Zinc 500
         },
+        // Map old accent names to new brand colors for backward compatibility
         accent: {
-          primary: "#6366f1", // Indigo 500 (Primary actions & CTAs)
-          "primary-dim": "rgba(99, 102, 241, 0.1)", // For backgrounds
-          secondary: "#8b5cf6", // Purple (Brand identity, special features)
-          tertiary: "#06b6d4", // Cyan (Links, info states)
+          primary: "#8b5cf6", // Mapped to Brand Primary (Violet)
+          "primary-dim": "rgba(139, 92, 246, 0.15)",
+          secondary: "#6366f1", // Indigo
+          tertiary: "#06b6d4", // Cyan (kept for info)
         },
         border: {
-          ink: "#27272A", // Very subtle border
-          DEFAULT: "rgba(255, 255, 255, 0.1)", // Standard border (more visible)
-          subtle: "rgba(255, 255, 255, 0.05)", // Subtle border
-          medium: "rgba(255, 255, 255, 0.15)", // Interactive borders
-          strong: "rgba(255, 255, 255, 0.2)", // Focus/active borders
+          DEFAULT: "rgba(255, 255, 255, 0.08)", // Lighter, cleaner border
+          subtle: "rgba(255, 255, 255, 0.04)",
+          medium: "rgba(255, 255, 255, 0.12)",
+          strong: "rgba(255, 255, 255, 0.2)",
+          highlight: "rgba(139, 92, 246, 0.5)", // Primary colored border
         },
         status: {
           error: "#ef4444", // Red 500
-          success: "#22c55e", // Green 500
-          warning: "#eab308", // Yellow 500
-          info: "#06b6d4", // Cyan 500
+          success: "#10b981", // Emerald 500 (More vibrant than Green)
+          warning: "#f59e0b", // Amber 500
+          info: "#0ea5e9", // Sky 500
         },
       },
       fontFamily: {
@@ -72,27 +79,36 @@ export default {
         ...spacingScale,
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-top": "env(safe-area-inset-top)",
+        header: "4rem", // Standard header height
       },
       borderRadius: {
-        "3xl": "1.5rem", // 24px
-        "2xl": "1rem", // 16px (Standard Card)
-        xl: "0.75rem", // 12px (Standard Button)
-        lg: "0.5rem", // 8px
-        md: "0.375rem", // 6px
-        sm: "0.25rem", // 4px
+        "3xl": "1.5rem",
+        "2xl": "1rem",
+        xl: "0.75rem",
+        lg: "0.5rem",
+        md: "0.375rem",
+        sm: "0.25rem",
       },
       boxShadow: {
-        // Functional shadows only, no glow
         sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-        inset: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        md: "0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)",
+        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)",
+        // Glow effects
+        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.3)", // Violet glow
+        "glow-md": "0 0 20px rgba(139, 92, 246, 0.4)",
+        "glow-lg": "0 0 30px rgba(139, 92, 246, 0.5)",
+        "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "hero-glow": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       animation: {
-        "fade-in": "fadeIn 0.2s ease-out",
-        "slide-up": "slideUp 0.3s ease-out",
-        "logo-float": "logo-float 6s ease-in-out infinite",
-        "logo-scale-pulse": "logo-scale-pulse 4s ease-in-out infinite",
+        "fade-in": "fadeIn 0.3s ease-out",
+        "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        "pulse-glow": "pulseGlow 4s ease-in-out infinite",
+        blob: "blob 7s infinite",
       },
       keyframes: {
         fadeIn: {
@@ -100,16 +116,18 @@ export default {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { transform: "translateY(10px)", opacity: "0" },
+          "0%": { transform: "translateY(20px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
-        "logo-float": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-3%)" }, // Very subtle vertical movement
+        pulseGlow: {
+          "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
         },
-        "logo-scale-pulse": {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.85", transform: "scale(0.98)" }, // Subtle breathing effect
+        blob: {
+          "0%": { transform: "translate(0px, 0px) scale(1)" },
+          "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+          "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+          "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
       },
     },
@@ -125,15 +143,15 @@ export default {
             display: "none",
           },
         },
-        // Standardized glass effects - use sparingly
+        // Glass Utilities
+        ".glass-panel": {
+          "@apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg": {},
+        },
         ".glass-header": {
-          "@apply bg-surface-2/90 backdrop-blur-md": {},
+          "@apply bg-bg-app/80 backdrop-blur-xl border-b border-white/5": {},
         },
-        ".glass-overlay": {
-          "@apply bg-surface-1/80 backdrop-blur-sm": {},
-        },
-        ".glass-subtle": {
-          "@apply bg-surface-1/60": {},
+        ".text-balance": {
+          "text-wrap": "balance",
         },
       });
     }),

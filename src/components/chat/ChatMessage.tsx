@@ -27,8 +27,8 @@ function CodeBlock({ children, language }: { children: string; language?: string
   };
 
   return (
-    <div className="relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5">
-      <div className="flex items-center justify-between bg-surface-2/50 px-3 py-1.5">
+    <div className="relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5 shadow-inner">
+      <div className="flex items-center justify-between bg-surface-2/50 px-3 py-1.5 border-b border-white/5">
         <span className="text-[10px] font-medium uppercase tracking-wider text-ink-tertiary">
           {language || "Code"}
         </span>
@@ -153,10 +153,10 @@ export function ChatMessage({
         {/* Bubble */}
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-[0_10px_30px_rgba(0,0,0,0.18)]",
+            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md",
             isUser
-              ? "bg-accent-primary text-white"
-              : "bg-surface-1 text-ink-primary border border-white/5",
+              ? "bg-brand-primary/10 text-ink-primary border border-brand-primary/20 rounded-tr-sm"
+              : "bg-surface-1/60 text-ink-primary border border-white/5 rounded-tl-sm",
           )}
           data-testid="message-bubble"
         >
@@ -167,7 +167,7 @@ export function ChatMessage({
                 ref={textareaRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-ink-primary resize-none text-sm"
+                className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-ink-primary resize-none text-sm"
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
@@ -197,13 +197,13 @@ export function ChatMessage({
         {!isEditing && (
           <div
             className={cn(
-              "flex items-center gap-1 mt-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity",
+              "flex items-center gap-1 mt-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity",
               isUser ? "justify-end" : "justify-start",
             )}
           >
             <button
               onClick={handleCopy}
-              className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors"
+              className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
               title="Kopieren"
             >
               <Copy className="h-3.5 w-3.5" />
@@ -212,7 +212,7 @@ export function ChatMessage({
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors"
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
                 title="Bearbeiten"
               >
                 <Edit2 className="h-3.5 w-3.5" />
@@ -223,7 +223,7 @@ export function ChatMessage({
               <>
                 <button
                   onClick={handleRetry}
-                  className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors"
+                  className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
                   title="Neu generieren"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
@@ -233,8 +233,8 @@ export function ChatMessage({
                   <button
                     onClick={() => setShowFollowUps(!showFollowUps)}
                     className={cn(
-                      "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 rounded-md transition-colors flex items-center gap-1 text-[12px] font-medium",
-                      showFollowUps && "text-accent-primary bg-surface-2",
+                      "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors flex items-center gap-1 text-[12px] font-medium",
+                      showFollowUps && "text-brand-primary bg-brand-primary/10",
                     )}
                     title="Schnellantworten"
                   >
@@ -261,7 +261,7 @@ export function ChatMessage({
               <button
                 key={suggestion}
                 onClick={() => handleFollowUp(suggestion)}
-                className="text-xs bg-surface-1 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary px-3 py-1.5 rounded-full border border-white/5 transition-all"
+                className="text-xs bg-surface-1/60 text-ink-secondary hover:bg-surface-2/80 hover:text-ink-primary px-3 py-1.5 rounded-full border border-white/5 transition-all shadow-sm backdrop-blur-sm"
               >
                 {suggestion}
               </button>
