@@ -6,7 +6,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { Check, Cpu, Star } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -72,111 +72,124 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header */}
-      <div className="flex-none sticky top-[4rem] z-sticky-content bg-bg-app/90 backdrop-blur px-4 py-3 border-b border-white/5 space-y-3 lg:top-[4.5rem]">
-        <PageHeader
-          title="Modelle"
-          description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
-        />
+      <div className="flex-none sticky top-[4rem] z-sticky-content px-4 pt-3 lg:top-[4.5rem]">
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-surface-2/90 shadow-sm backdrop-blur">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 via-transparent to-transparent" />
+          <div className="relative space-y-3 px-4 py-4">
+            <PageHeader
+              title="Modelle"
+              description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
+              className="mb-0"
+            />
 
-        <SearchInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Modell suchen..."
-          className="w-full"
-        />
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Modell suchen..."
+              className="w-full"
+            />
+          </div>
+        </div>
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-3 space-y-2">
-        {catalog === null ? (
-          // Loading skeletons
-          <div className="space-y-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-20 rounded-2xl bg-surface-1 animate-pulse" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={<Cpu className="h-6 w-6" />}
-            title="Keine Modelle gefunden"
-            description="Versuche es mit anderen Suchbegriffen."
-          />
-        ) : (
-          <div className="space-y-2.5">
-            {filtered.map((model) => {
-              const isActive = activeModelId === model.id;
-              const isFavorite = isModelFavorite(model.id);
+      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-4">
+        <div className="rounded-2xl border border-white/5 bg-surface-2/40 shadow-inner p-3 space-y-2.5">
+          {catalog === null ? (
+            // Loading skeletons
+            <div className="space-y-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-20 rounded-2xl bg-surface-1 animate-pulse" />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              icon={<Cpu className="h-6 w-6" />}
+              title="Keine Modelle gefunden"
+              description="Versuche es mit anderen Suchbegriffen."
+              className="bg-surface-1 rounded-2xl"
+            />
+          ) : (
+            <div className="space-y-2.5">
+              {filtered.map((model) => {
+                const isActive = activeModelId === model.id;
+                const isFavorite = isModelFavorite(model.id);
 
-              return (
-                <button
-                  key={model.id}
-                  onClick={() => setPreferredModel(model.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 p-4 rounded-2xl border text-left transition-all min-h-[84px]",
-                    "hover:bg-surface-2 active:scale-[0.99] shadow-sm",
-                    isActive
-                      ? "bg-surface-1 border-accent-primary/30 ring-1 ring-accent-primary/30"
-                      : "bg-surface-1 border-white/5",
-                  )}
-                >
-                  {/* Icon */}
-                  <div
+                return (
+                  <Card
+                    key={model.id}
+                    variant="interactive"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setPreferredModel(model.id)}
                     className={cn(
-                      "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
+                      "w-full flex items-center gap-3 min-h-[84px] text-left",
                       isActive
-                        ? "bg-accent-primary/10 text-accent-primary"
-                        : "bg-surface-2 text-ink-tertiary",
+                        ? "border-accent-primary/40 ring-1 ring-accent-primary/30 shadow-md"
+                        : "border-white/5 shadow-sm",
                     )}
                   >
-                    {isFavorite ? (
-                      <Star className="h-5 w-5 fill-current text-status-warning" />
-                    ) : (
-                      <Cpu className="h-5 w-5" />
-                    )}
-                  </div>
+                    {/* Icon */}
+                    <div
+                      className={cn(
+                        "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center",
+                        isActive
+                          ? "bg-accent-primary/10 text-accent-primary"
+                          : "bg-surface-2 text-ink-tertiary",
+                      )}
+                    >
+                      {isFavorite ? (
+                        <Star className="h-5 w-5 fill-current text-status-warning" />
+                      ) : (
+                        <Cpu className="h-5 w-5" />
+                      )}
+                    </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "font-medium text-sm truncate",
-                          isActive ? "text-accent-primary" : "text-ink-primary",
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "font-medium text-sm truncate",
+                            isActive ? "text-accent-primary" : "text-ink-primary",
+                          )}
+                        >
+                          {model.label ?? model.id}
+                        </span>
+                        {isActive && (
+                          <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
                         )}
-                      >
-                        {model.label ?? model.id}
-                      </span>
-                      {isActive && <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-ink-tertiary">
+                        <span className="truncate">{model.provider}</span>
+                        <span className="text-ink-muted">·</span>
+                        <span>{Math.round(getContextTokens(model) / 1000)}k</span>
+                        <span className="text-ink-muted">·</span>
+                        <span>{getPriceLabel(model)}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-ink-tertiary">
-                      <span className="truncate">{model.provider}</span>
-                      <span className="text-ink-muted">·</span>
-                      <span>{Math.round(getContextTokens(model) / 1000)}k</span>
-                      <span className="text-ink-muted">·</span>
-                      <span>{getPriceLabel(model)}</span>
-                    </div>
-                  </div>
 
-                  {/* Favorite Toggle */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="flex-shrink-0 text-ink-tertiary hover:text-status-warning h-10 w-10"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleModelFavorite(model.id);
-                    }}
-                    aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
-                  >
-                    <Star
-                      className={cn("h-4 w-4", isFavorite && "fill-current text-status-warning")}
-                    />
-                  </Button>
-                </button>
-              );
-            })}
-          </div>
-        )}
+                    {/* Favorite Toggle */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="flex-shrink-0 text-ink-tertiary hover:text-status-warning h-10 w-10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleModelFavorite(model.id);
+                      }}
+                      aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
+                    >
+                      <Star
+                        className={cn("h-4 w-4", isFavorite && "fill-current text-status-warning")}
+                      />
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
