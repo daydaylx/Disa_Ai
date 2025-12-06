@@ -327,7 +327,7 @@ export default function Chat() {
 
           {/* Input Area - Fixed at bottom */}
           <div className="flex-none w-full bg-bg-app border-t border-subtle">
-            <div className="max-w-3xl mx-auto px-xs py-2xs pb-safe-bottom">
+            <div className="max-w-3xl mx-auto px-xs pt-2xs pb-safe-bottom">
               <UnifiedInputBar
                 value={input}
                 onChange={setInput}
