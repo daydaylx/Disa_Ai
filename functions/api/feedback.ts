@@ -143,7 +143,18 @@ export async function onRequest(context: {
     if (!mailResponse.ok) {
       const errorText = await mailResponse.text();
       console.error("MailChannels error", mailResponse.status, errorText);
-      return jsonResponse({ success: false, error: "Failed to dispatch email" }, 500);
+      // Return detailed error for debugging
+      return jsonResponse(
+        {
+          success: false,
+          error: "Failed to send email",
+          debug: {
+            status: mailResponse.status,
+            message: errorText.substring(0, 200), // First 200 chars only
+          },
+        },
+        500,
+      );
     }
 
     return jsonResponse({ success: true }, 200);
