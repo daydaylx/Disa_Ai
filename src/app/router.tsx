@@ -1,6 +1,9 @@
 import { lazy } from "react";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider, useNavigate } from "react-router-dom";
 
+import { Button } from "@/ui";
+
+import { ArrowLeft } from "../lib/icons";
 import { RouteWrapper } from "./components/RouteWrapper";
 
 // Lazy-loaded Routes für bessere Performance
@@ -19,6 +22,26 @@ const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 const FeedbackPage = lazy(() => import("../pages/FeedbackPage"));
 const ThemenPage = lazy(() => import("../pages/ThemenPage"));
+
+function HeaderBackAction({ fallbackTo }: { fallbackTo: string }) {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      void navigate(-1);
+      return;
+    }
+
+    void navigate(fallbackTo);
+  };
+
+  return (
+    <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2">
+      <ArrowLeft className="h-4 w-4" />
+      Zurück
+    </Button>
+  );
+}
 
 export const appRouter = createBrowserRouter(
   [
@@ -73,7 +96,10 @@ export const appRouter = createBrowserRouter(
     {
       path: "/feedback",
       element: (
-        <RouteWrapper>
+        <RouteWrapper
+          pageHeaderTitle="Feedback"
+          pageHeaderActions={<HeaderBackAction fallbackTo="/settings" />}
+        >
           <FeedbackPage />
         </RouteWrapper>
       ),
@@ -81,7 +107,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsOverviewPage />
         </RouteWrapper>
       ),
@@ -89,7 +115,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/memory",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsMemoryPage />
         </RouteWrapper>
       ),
@@ -97,7 +123,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/behavior",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsBehaviorPage />
         </RouteWrapper>
       ),
@@ -105,7 +131,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/youth",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsYouthFilterPage />
         </RouteWrapper>
       ),
@@ -113,7 +139,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/api-data",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsApiDataPage />
         </RouteWrapper>
       ),
@@ -125,7 +151,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/extras",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsExtrasPage />
         </RouteWrapper>
       ),
@@ -133,7 +159,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/settings/appearance",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsAppearancePage />
         </RouteWrapper>
       ),
@@ -153,7 +179,10 @@ export const appRouter = createBrowserRouter(
     {
       path: "/impressum",
       element: (
-        <RouteWrapper>
+        <RouteWrapper
+          pageHeaderTitle="Impressum"
+          pageHeaderActions={<HeaderBackAction fallbackTo="/" />}
+        >
           <ImpressumPage />
         </RouteWrapper>
       ),
@@ -161,7 +190,10 @@ export const appRouter = createBrowserRouter(
     {
       path: "/datenschutz",
       element: (
-        <RouteWrapper>
+        <RouteWrapper
+          pageHeaderTitle="Datenschutz"
+          pageHeaderActions={<HeaderBackAction fallbackTo="/" />}
+        >
           <DatenschutzPage />
         </RouteWrapper>
       ),
