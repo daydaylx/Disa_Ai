@@ -156,6 +156,10 @@ a {
   --inset-r: env(safe-area-inset-right, 0);
   --inset-b: env(safe-area-inset-bottom, 0);
   --inset-l: env(safe-area-inset-left, 0);
+
+  /* Header heights for consistent spacing */
+  --header-height-mobile: 3.5rem;  /* 56px */
+  --header-height-desktop: 4rem;  /* 64px */
 }
 
 .safe-top {
@@ -209,6 +213,20 @@ a {
 }
 .safe-area-right {
   padding-right: env(safe-area-inset-right);
+}
+
+/* ============================================================================
+   HEADER COMPENSATION HELPERS
+   ============================================================================ */
+
+.header-compensation {
+  padding-top: calc(var(--header-height-mobile) + env(safe-area-inset-top, 0px));
+}
+
+@media (min-width: 1024px) {
+  .header-compensation {
+    padding-top: calc(var(--header-height-desktop) + env(safe-area-inset-top, 0px));
+  }
 }
 
 /* ============================================================================

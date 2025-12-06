@@ -260,7 +260,7 @@ export default function Chat() {
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
           {/* Model Pill above chat */}
-          <div className="flex-none px-4 pt-2 pb-1">
+          <div className="flex-none px-4 pt-safe-top pb-1">
             <div className="max-w-3xl mx-auto">
               <button
                 onClick={() => navigate("/models")}

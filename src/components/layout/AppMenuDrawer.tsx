@@ -159,7 +159,7 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 bg-[rgba(19,19,20,0.96)] z-[50] py-3 px-5 border-b border-[var(--border-chalk)] gap-3">
+          <div className="flex items-center justify-between sticky top-0 bg-[rgba(19,19,20,0.96)] z-header py-3 px-5 border-b border-[var(--border-chalk)] gap-3">
             <BrandWordmark className="text-base" />
             <button
               onClick={onClose}

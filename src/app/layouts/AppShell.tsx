@@ -70,8 +70,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
   const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
 
   return (
-    <div className="relative min-h-screen bg-bg-app text-text-primary">
-      <div className="relative flex min-h-screen flex-col lg:flex-row">
+    <div className="relative min-h-screen-mobile bg-bg-app text-text-primary">
+      <div className="relative flex min-h-screen-mobile flex-col lg:flex-row">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-6 focus:py-4 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent tap-target min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -112,19 +112,16 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
           </div>
         </aside>
 
-        <div
-          className="flex min-h-screen flex-1 flex-col"
-          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-        >
+        <div className="flex min-h-screen-mobile flex-1 flex-col safe-area-bottom">
           {/* Header - Clean for Chat Mode (Hidden in Chat, BookLayout handles it) */}
           <header
             className={cn(
-              "sticky top-0 z-header border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
+              "sticky top-0 z-header h-[3.5rem] lg:h-[4rem] border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
               // Hide AppShell header on mobile AND desktop for Chat Mode, as BookLayout has its own
               isChatMode ? "hidden" : "lg:hidden",
             )}
           >
-            <div className="flex items-center gap-3 px-4 py-3 lg:px-6">
+            <div className="flex h-full items-center gap-3 px-4 py-3 lg:px-6">
               <div className="flex flex-1 items-center gap-3 truncate">
                 <MobileBackButton />
                 <div className="flex items-center gap-2 truncate">
@@ -155,7 +152,7 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
                 "mx-auto flex w-full flex-1 flex-col",
                 isChatMode
                   ? "w-full p-0 max-w-none overflow-hidden" // Let BookLayout handle constraints
-                  : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8",
+                  : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",
               )}
             >
               <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "gap-6")}>

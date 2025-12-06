@@ -56,10 +56,10 @@ function AppContent() {
   }, [settings.enableAnalytics]);
 
   return (
-    <div className="bg-app min-h-screen w-full">
+    <div className="bg-app min-h-screen-mobile w-full">
       <SentryErrorBoundary
         fallback={({ error, resetError }) => (
-          <div className="flex min-h-screen flex-col items-center justify-center p-4">
+          <div className="flex min-h-screen-mobile flex-col items-center justify-center p-4">
             <div className="w-full max-w-md rounded-2xl bg-surface-2 p-8 shadow-raiseLg">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-text-primary">Unerwarteter Fehler</h1>

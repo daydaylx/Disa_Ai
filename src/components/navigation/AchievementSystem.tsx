@@ -216,7 +216,7 @@ export function AchievementSystem({
     <>
       {/* Achievement Notification */}
       {showNotification && (
-        <div className="fixed top-4 right-4 z-50 animate-bounce-in">
+        <div className="fixed top-4 right-4 z-notification animate-bounce-in">
           <div
             className={`
             flex items-center gap-3 p-4 rounded-lg shadow-lg border-2

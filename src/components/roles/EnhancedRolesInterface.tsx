@@ -145,7 +145,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header & Filters */}
-      <div className="flex-none sticky top-16 z-20 bg-bg-app/90 backdrop-blur px-4 py-3 space-y-3 border-b border-white/5">
+      <div className="flex-none sticky top-[4rem] z-sticky-content bg-bg-app/90 backdrop-blur px-4 py-3 space-y-3 border-b border-white/5 lg:top-[4.5rem]">
         <PageHeader
           title="Rollen"
           description={`${filteredRoles.length} von ${roles.length} verfügbar`}

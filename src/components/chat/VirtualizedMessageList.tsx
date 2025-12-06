@@ -181,7 +181,7 @@ export function VirtualizedMessageList({
 
         {/* Scroll to Bottom FAB */}
         {!isSticking && (
-          <div className="pointer-events-none fixed bottom-32 left-1/2 z-40 -translate-x-1/2 animate-fade-in">
+          <div className="pointer-events-none fixed bottom-32 left-1/2 z-fab -translate-x-1/2 animate-fade-in">
             <button
               onClick={() => scrollToBottom()}
               className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-surface-3/80 px-4 text-sm font-medium text-ink-primary backdrop-blur hover:bg-surface-3 shadow-lg"

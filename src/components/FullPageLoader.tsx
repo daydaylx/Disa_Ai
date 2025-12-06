@@ -8,7 +8,7 @@ interface FullPageLoaderProps {
 export function FullPageLoader({ message = "Ladevorgang läuft", actionHint }: FullPageLoaderProps) {
   return (
     <div
-      className="bg-surface-base flex min-h-screen items-center justify-center px-4"
+      className="bg-surface-base flex min-h-screen-mobile items-center justify-center px-4"
       aria-busy="true"
     >
       <div className="bg-surface-2 shadow-raise flex w-full max-w-sm flex-col items-center gap-4 rounded-2xl p-6 text-center">
