@@ -555,7 +555,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             )}
           </div>
           {settings.preferredModelId && (
-            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-3 py-2 text-sm text-text-secondary shadow-inset">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-2xs py-3xs text-sm text-text-secondary shadow-inset">
               <span className="font-semibold text-text-primary">Aktives Modell:</span>
               <Badge variant="secondary" className="text-xs">
                 {activeModelLabel ?? settings.preferredModelId}
@@ -738,7 +738,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <p className="text-text-secondary mb-6 max-w-md mx-auto">{modelLoadError}</p>
               <p className="text-sm text-text-meta">
                 Prüfe deine Verbindung zur OpenRouter-API und ob die optionale Datei{" "}
-                <code className="px-2 py-1 bg-surface-inset shadow-inset rounded-sm">
+                <code className="px-3xs py-3xs bg-surface-inset shadow-inset rounded-sm">
                   public/models_metadata.json
                 </code>{" "}
                 vorhanden ist.

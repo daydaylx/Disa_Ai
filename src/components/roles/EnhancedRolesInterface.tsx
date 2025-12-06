@@ -126,7 +126,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   if (rolesLoading) {
     return (
-      <div className="flex flex-col h-full p-4 space-y-4">
+      <div className="flex flex-col h-full p-xs space-y-4">
         <div className="h-12 bg-surface-1 rounded-xl animate-pulse" />
         <div className="flex gap-2">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -145,7 +145,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header & Filters */}
-      <div className="flex-none bg-bg-app px-4 py-2 space-y-2 border-b border-white/5">
+      <div className="flex-none bg-bg-app px-xs py-3xs space-y-2 border-b border-white/5">
         <PageHeader
           title="Rollen"
           description={`${filteredRoles.length} von ${roles.length} verfügbar`}
@@ -160,14 +160,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         />
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-2 px-2">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3xs -mx-3xs px-3xs">
           {/* Favorites Toggle */}
           <button
             onClick={() =>
               setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
             }
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+              "flex items-center gap-1.5 px-2xs py-3xs rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
               filters.showFavoritesOnly
                 ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                 : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -185,7 +185,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               key={cat}
               onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
               className={cn(
-                "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                "px-2xs py-3xs rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
                 selectedCategory === cat
                   ? "bg-accent-primary/10 border-accent-primary/30 text-accent-primary"
                   : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -215,7 +215,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
 
       {/* Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-16 pt-3">
+      <div className="flex-1 overflow-y-auto px-xs pb-4xl pt-2xs">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-6 w-6" />}
@@ -244,7 +244,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   )}
                 >
                   {/* Main Row */}
-                  <div className="flex items-center gap-3 p-4">
+                  <div className="flex items-center gap-3 p-xs">
                     {/* Expand/Collapse Button (subtle, left side) */}
                     <button
                       onClick={() => toggleRoleExpansion(role.id)}
@@ -292,7 +292,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     <Button
                       size="sm"
                       variant={isActive ? "secondary" : "primary"}
-                      className="h-8 px-4 text-xs flex-shrink-0"
+                      className="h-8 px-xs text-xs flex-shrink-0"
                       onClick={() => handleActivateRole(role)}
                     >
                       {isActive ? "Aktiv" : "Wählen"}
@@ -301,7 +301,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                   {/* Expanded Details */}
                   {isExpanded && (
-                    <div className="px-4 pb-4 pt-0 space-y-3 border-t border-white/5 mt-0 animate-fade-in">
+                    <div className="px-xs pb-xs pt-0 space-y-3 border-t border-white/5 mt-0 animate-fade-in">
                       <p className="text-sm text-ink-secondary leading-relaxed pt-3">
                         {role.description}
                       </p>
@@ -309,7 +309,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       {role.tags && role.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
                           {role.tags.map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-[10px] px-2 h-5">
+                            <Badge key={tag} variant="secondary" className="text-[10px] px-3xs h-5">
                               {tag}
                             </Badge>
                           ))}
@@ -317,7 +317,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       )}
 
                       {role.systemPrompt && (
-                        <div className="p-3 rounded-xl bg-surface-2/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
+                        <div className="p-2xs rounded-xl bg-surface-2/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
                           {role.systemPrompt.slice(0, 200)}
                           {role.systemPrompt.length > 200 && "..."}
                         </div>

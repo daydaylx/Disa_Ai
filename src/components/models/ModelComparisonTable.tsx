@@ -52,7 +52,7 @@ export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
           {(model.tags || []).map((tag) => (
             <span
               key={tag}
-              className="px-2 py-1 text-xs rounded-full bg-surface-subtle text-text-secondary"
+              className="px-3xs py-3xs text-xs rounded-full bg-surface-subtle text-text-secondary"
             >
               {tag}
             </span>

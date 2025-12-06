@@ -65,8 +65,8 @@ export function SettingsYouthFilterView() {
     >
       <div className="space-y-4">
         <PremiumCard variant="default" className="max-w-2xl mx-auto">
-          <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 rounded-md border bg-surface-inset">
+          <div className="space-y-6 pb-4xl">
+            <div className="flex items-center justify-between p-xs rounded-md border bg-surface-inset">
               <div className="space-y-1">
                 <Label className="text-base font-semibold text-text-primary">
                   Jugendschutz {youthProtectionEnabled ? "AN" : "AUS"}
@@ -91,14 +91,14 @@ export function SettingsYouthFilterView() {
               </button>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-brand/10 border border-brand/20">
+            <div className="flex items-center gap-2 px-2xs py-3xs rounded-md bg-brand/10 border border-brand/20">
               <Shield className="w-4 h-4 text-brand" />
               <span className="text-sm font-medium text-brand">
                 {youthProtectionEnabled ? "Jugendschutz aktiv" : "NSFW erlaubt"}
               </span>
             </div>
 
-            <div className="rounded-md bg-surface-inset shadow-inset p-3 space-y-1">
+            <div className="rounded-md bg-surface-inset shadow-inset p-2xs space-y-1">
               <p className="text-xs font-medium text-text-primary">Hinweis</p>
               <p className="text-xs text-text-secondary leading-relaxed">
                 Die Einstellung wirkt sofort auf alle neuen Antworten und wird lokal gespeichert.

@@ -52,7 +52,7 @@ export function AdvancedTuningPanel({
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <Label className="text-sm font-medium text-text-primary">Kreativität</Label>
-          <span className="text-xs font-mono bg-surface-inset px-2 py-1 rounded text-text-secondary">
+          <span className="text-xs font-mono bg-surface-inset px-3xs py-3xs rounded text-text-secondary">
             {creativity}% ({getCreativityLabel()})
           </span>
         </div>
@@ -100,7 +100,7 @@ export function AdvancedTuningPanel({
             <button
               key={key}
               onClick={() => onPresetChange(key)}
-              className={`px-3 py-2 rounded-md text-xs font-medium text-left border transition-all ${
+              className={`px-2xs py-3xs rounded-md text-xs font-medium text-left border transition-all ${
                 discussionPreset === key
                   ? "bg-brand/10 border-brand text-brand"
                   : "bg-surface-2 border-transparent text-text-secondary hover:bg-surface-3 hover:text-text-primary"
@@ -123,7 +123,7 @@ export function AdvancedTuningPanel({
             <button
               key={count}
               onClick={() => onMaxSentencesChange(count)}
-              className={`px-4 py-2 rounded-md text-xs font-medium border transition-all whitespace-nowrap ${
+              className={`px-xs py-3xs rounded-md text-xs font-medium border transition-all whitespace-nowrap ${
                 discussionMaxSentences === count
                   ? "bg-brand/10 border-brand text-brand"
                   : "bg-surface-2 border-transparent text-text-secondary hover:bg-surface-3"

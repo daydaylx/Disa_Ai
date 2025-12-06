@@ -240,7 +240,7 @@ export function SettingsApiDataView() {
       title="API & Daten"
       description="OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen."
     >
-      <div className="space-y-4">
+      <div className="space-y-4 pb-4xl">
         <PremiumCard variant="default" className="max-w-3xl mx-auto">
           <div className="space-y-8">
             <section className="space-y-4">
@@ -250,7 +250,7 @@ export function SettingsApiDataView() {
               </div>
 
               {hasApiKey && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-brand/10 border border-brand/20">
+                <div className="flex items-center gap-2 px-2xs py-3xs rounded-md bg-brand/10 border border-brand/20">
                   <div className="w-2 h-2 rounded-full bg-brand shadow-brandGlow" />
                   <span className="text-sm font-medium text-brand">API-Key aktiv</span>
                 </div>
@@ -267,13 +267,13 @@ export function SettingsApiDataView() {
                     value={apiKey}
                     onChange={handleApiKeyChange}
                     placeholder="sk-or-..."
-                    className="pr-12"
+                    className="pr-2xl"
                     autoComplete="off"
                   />
                   <button
                     type="button"
                     onClick={() => setShowKey(!showKey)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-sm text-text-muted hover:text-brand hover:bg-brand/10 transition-all duration-fast"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-3xs rounded-sm text-text-muted hover:text-brand hover:bg-brand/10 transition-all duration-fast"
                     aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
                   >
                     {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
