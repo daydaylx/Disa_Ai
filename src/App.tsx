@@ -12,6 +12,7 @@ import { NekoLayer } from "./components/neko/NekoLayer";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ModelCatalogProvider } from "./contexts/ModelCatalogContext";
 import { RolesProvider } from "./contexts/RolesContext";
+import { SettingsProvider } from "./contexts/SettingsContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
 import { analytics, setAnalyticsEnabled } from "./lib/analytics";
@@ -161,16 +162,18 @@ export default function App() {
   }, []);
 
   return (
-    <TooltipProvider>
-      <RolesProvider>
-        <ModelCatalogProvider>
-          <FavoritesProvider>
-            <ToastsProvider>
-              <AppContent />
-            </ToastsProvider>
-          </FavoritesProvider>
-        </ModelCatalogProvider>
-      </RolesProvider>
-    </TooltipProvider>
+    <SettingsProvider>
+      <TooltipProvider>
+        <RolesProvider>
+          <ModelCatalogProvider>
+            <FavoritesProvider>
+              <ToastsProvider>
+                <AppContent />
+              </ToastsProvider>
+            </FavoritesProvider>
+          </ModelCatalogProvider>
+        </RolesProvider>
+      </TooltipProvider>
+    </SettingsProvider>
   );
 }
