@@ -19,6 +19,7 @@ export default [
       "dist/**",
       "dev-dist/**",
       "build/**",
+      ".tmp/**",
       "coverage/**",
       "node_modules/**",
       "src/lib/openrouter.ts", // Legacy client

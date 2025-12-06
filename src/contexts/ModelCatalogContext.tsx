@@ -18,6 +18,7 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
   const [error, setError] = useState<string | null>(null);
   const hasRequestedRef = useRef(false);
   const isRefreshingRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   const refresh = useCallback(async () => {
     if (isRefreshingRef.current) return;
@@ -28,16 +29,18 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
 
     try {
       const catalog = await loadModelCatalog();
+      if (!isMountedRef.current) return;
       setModels(catalog);
-      if (!catalog.length) {
-        setError("Modelle konnten nicht geladen werden.");
-      }
+      if (!catalog.length) setError("Modelle konnten nicht geladen werden.");
     } catch (err) {
       console.error("Model catalog loading failed", err);
+      if (!isMountedRef.current) return;
       setError("Modelle konnten nicht geladen werden.");
     } finally {
       isRefreshingRef.current = false;
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
@@ -57,6 +60,9 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
     }
 
     void refresh();
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [refresh]);
 
   const value: ModelCatalogContextValue = {
