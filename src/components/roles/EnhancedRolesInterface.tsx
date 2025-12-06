@@ -30,7 +30,7 @@ interface EnhancedRolesInterfaceProps {
 }
 
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
-  const { roles, activeRole, setActiveRole, rolesLoading } = useRoles();
+  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useRoles(); // Added roleLoadError
   const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -124,20 +124,45 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     setFilters((prev) => ({ ...prev, showFavoritesOnly: false }));
   };
 
+  // Conditional rendering for loading and error states
   if (rolesLoading) {
     return (
       <div className="flex flex-col h-full p-4 space-y-4">
-        <div className="h-12 bg-surface-1 rounded-xl animate-pulse" />
+        <div
+          data-testid="role-card-skeleton"
+          className="h-12 bg-surface-1 rounded-xl animate-pulse"
+        />
         <div className="flex gap-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-8 w-20 bg-surface-1 rounded-full animate-pulse" />
+            <div
+              key={i}
+              data-testid="role-card-skeleton"
+              className="h-8 w-20 bg-surface-1 rounded-full animate-pulse"
+            />
           ))}
         </div>
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 bg-surface-1 rounded-2xl animate-pulse" />
+            <div
+              key={i}
+              data-testid="role-card-skeleton"
+              className="h-24 bg-surface-1 rounded-2xl animate-pulse"
+            />
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (roleLoadError) {
+    return (
+      <div className={cn("flex flex-col h-full", className)}>
+        <EmptyState
+          icon={<Users className="h-8 w-8 text-ink-muted" />}
+          title="Fehler beim Laden der Rollen"
+          description={roleLoadError}
+          className="bg-status-error/10 border-status-error/20 text-status-error"
+        />
       </div>
     );
   }
@@ -249,6 +274,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 <Card
                   key={role.id}
                   data-testid="role-card"
+                  variant="interactive"
+                  role="button"
+                  onClick={() => handleActivateRole(role)}
+                  aria-label={`Rolle ${role.name} auswählen`}
+                  aria-pressed={isActive}
                   className={cn(
                     "relative transition-all duration-300",
                     isActive
@@ -315,20 +345,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                     {/* Actions */}
                     <div className="flex flex-col items-end gap-2 pr-10">
-                      <Button
-                        size="sm"
-                        variant={isActive ? "secondary" : "primary"}
-                        className={cn(
-                          "h-8 px-4 text-xs shadow-sm",
-                          !isActive && "shadow-glow-sm hover:shadow-glow-md transition-all",
-                        )}
-                        onClick={() => handleActivateRole(role)}
-                      >
-                        {isActive ? "Aktiv" : "Wählen"}
-                      </Button>
                       <button
                         type="button"
-                        onClick={() => toggleRoleExpansion(role.id)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent card click
+                          toggleRoleExpansion(role.id);
+                        }}
                         className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors"
                         aria-expanded={isExpanded}
                         aria-controls={`role-details-${role.id}`}

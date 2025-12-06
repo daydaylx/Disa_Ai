@@ -17,6 +17,8 @@ export * from "./MaterialPanel";
 export * from "./MetricRow";
 export * from "./ModelCard";
 export * from "./PageComponents";
+export * from "./PageComponents";
+export * from "./PremiumCard";
 export * from "./PremiumCard";
 export * from "./PrimaryButton";
 export * from "./QuickStartCard";

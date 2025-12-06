@@ -28,6 +28,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { settings, setPreferredModel } = useSettings();
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
   const [catalog, setCatalog] = useState<ModelEntry[] | null>(null);
+  const [error, setError] = useState<string | null>(null); // Added error state
   const [search, setSearch] = useState("");
 
   // Load catalog
@@ -37,10 +38,12 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       .then((data) => {
         if (!active) return;
         setCatalog(data);
+        setError(null); // Clear error on success
       })
-      .catch(() => {
+      .catch((e) => {
         if (!active) return;
         setCatalog([]);
+        setError(e.message || "Failed to load models"); // Set error message
       });
     return () => {
       active = false;
@@ -100,9 +103,20 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
           // Loading skeletons
           <div className="space-y-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-20 rounded-2xl bg-surface-1/50 animate-pulse" />
+              <div
+                key={i}
+                data-testid="model-card-skeleton"
+                className="h-20 rounded-2xl bg-surface-1/50 animate-pulse"
+              />
             ))}
           </div>
+        ) : error ? ( // Conditional rendering for error state
+          <EmptyState
+            icon={<Cpu className="h-8 w-8 text-ink-muted" />}
+            title="Fehler beim Laden der Modelle" // More specific error title
+            description={error} // Display the actual error message
+            className="bg-status-error/10 border-status-error/20 text-status-error" // Error styling
+          />
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<Cpu className="h-8 w-8 text-ink-muted" />}

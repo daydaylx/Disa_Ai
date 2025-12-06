@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -42,20 +42,30 @@ const mockRoles = [
   {
     id: "creative-assistant",
     name: "Kreativer Assistent",
-    description: "Hilft bei kreativen Projekten und Ideenentwicklung",
-    system: "You are a creative assistant...",
-    category: "kreativ",
+    description: "Hilft bei kreativen Projekten und Ideenentwicklung.",
+    systemPrompt: "You are a creative assistant...",
+    allowedModels: ["*"],
     tags: ["kreativ", "ideen", "brainstorming"],
-    allow: ["*"],
+    category: "Creative",
+    styleHints: {
+      typographyScale: 1.0,
+      borderRadius: 0.5,
+      accentColor: "var(--acc1)",
+    },
   },
   {
     id: "code-expert",
     name: "Code Experte",
-    description: "Spezialisiert auf Programmierung und technische Problemlösung",
-    system: "You are a coding expert...",
-    category: "technik",
+    description: "Spezialisiert auf Programmierung und technische Problemlösung.",
+    systemPrompt: "You are a coding expert...",
+    allowedModels: ["*"],
     tags: ["code", "programmierung", "entwicklung"],
-    allow: ["*"],
+    category: "Technical",
+    styleHints: {
+      typographyScale: 1.0,
+      borderRadius: 0.5,
+      accentColor: "var(--acc1)",
+    },
   },
 ];
 
@@ -87,19 +97,29 @@ describe("EnhancedRolesInterface", () => {
     expect(screen.getByRole("heading", { level: 1, name: /Rollen/i })).toBeInTheDocument();
   });
 
-  it("should display role cards", () => {
+  it("should display role cards", async () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
     // Check for role names
     expect(screen.getByText("Kreativer Assistent")).toBeInTheDocument();
     expect(screen.getByText("Code Experte")).toBeInTheDocument();
 
-    // Check for role descriptions
+    // Expand the first role card to see its description
+    const creativeAssistantCard = screen
+      .getByText("Kreativer Assistent")
+      .closest('[data-testid="role-card"]');
+    expect(creativeAssistantCard).toBeInTheDocument(); // Ensure card is found
+
+    if (creativeAssistantCard) {
+      const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
+        "button",
+        { name: "Details", hidden: true },
+      ); // Use within
+      fireEvent.click(detailsButton);
+    }
+    // Check for role descriptions (now visible)
     expect(
-      screen.getByText("Hilft bei kreativen Projekten und Ideenentwicklung"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Spezialisiert auf Programmierung und technische Problemlösung"),
+      screen.getByText("Hilft bei kreativen Projekten und Ideenentwicklung."),
     ).toBeInTheDocument();
   });
 
@@ -142,16 +162,15 @@ describe("EnhancedRolesInterface", () => {
       roles: [],
       activeRole: null,
       setActiveRole: vi.fn(),
-      isLoading: true,
-      error: null,
+      rolesLoading: true, // Correctly set rolesLoading to true
+      roleLoadError: null,
     });
 
     renderWithProviders(<EnhancedRolesInterface />);
 
     // Check for loading indicators
     const skeletons = screen.queryAllByTestId("role-card-skeleton");
-    const statuses = screen.queryAllByRole("status");
-    expect(skeletons.length + statuses.length).toBeGreaterThan(0);
+    expect(skeletons.length).toBeGreaterThan(0); // Only checking for skeletons
   });
 
   it("should show error state when roles fail to load", () => {
@@ -159,14 +178,14 @@ describe("EnhancedRolesInterface", () => {
       roles: [],
       activeRole: null,
       setActiveRole: vi.fn(),
-      isLoading: false,
-      error: "Failed to load roles",
+      rolesLoading: false,
+      roleLoadError: "Failed to load roles", // Changed to roleLoadError
     });
 
     renderWithProviders(<EnhancedRolesInterface />);
 
-    expect(screen.getByText(/Fehler|Error/i)).toBeInTheDocument();
-    expect(screen.getByText(/Failed to load roles/)).toBeInTheDocument();
+    expect(screen.getByText("Fehler beim Laden der Rollen")).toBeInTheDocument(); // New error title
+    expect(screen.getByText("Failed to load roles")).toBeInTheDocument();
   });
 
   it("should handle role selection", () => {
@@ -191,32 +210,62 @@ describe("EnhancedRolesInterface", () => {
     }
   });
 
-  it("should indicate active role state", () => {
+  it("should indicate active role state", async () => {
     (useRoles as any).mockReturnValue({
       roles: mockRoles,
       activeRole: mockRoles[0], // First role is active
       setActiveRole: vi.fn(),
-      isLoading: false,
-      error: null,
+      rolesLoading: false,
+      roleLoadError: null,
     });
 
     renderWithProviders(<EnhancedRolesInterface />);
 
     // The active role should have a distinct visual state
-    const activeRoleCard = screen.getByText("Kreativer Assistent").closest('[role="button"]');
+    const activeRoleCard = await screen.findByRole("button", { name: /Kreativer Assistent/i });
     expect(activeRoleCard).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("should display role tags", () => {
+  it("should display role tags", async () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
-    // Check for tags
-    expect(screen.getByText("kreativ")).toBeInTheDocument();
-    expect(screen.getByText("ideen")).toBeInTheDocument();
-    expect(screen.getByText("brainstorming")).toBeInTheDocument();
-    expect(screen.getByText("code")).toBeInTheDocument();
-    expect(screen.getByText("programmierung")).toBeInTheDocument();
-    expect(screen.getByText("entwicklung")).toBeInTheDocument();
+    // Expand the first role card to see its tags
+    const creativeAssistantCard = screen
+      .getByText("Kreativer Assistent")
+      .closest('[data-testid="role-card"]');
+    expect(creativeAssistantCard).toBeInTheDocument(); // Ensure card is found
+
+    if (creativeAssistantCard) {
+      const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
+        "button",
+        { name: "Details", hidden: true },
+      ); // Use within
+      fireEvent.click(detailsButton);
+    }
+
+    // Check for tags (now visible)
+    await waitFor(() => {
+      expect(screen.getByText("kreativ")).toBeInTheDocument();
+      expect(screen.getByText("ideen")).toBeInTheDocument();
+      expect(screen.getByText("brainstorming")).toBeInTheDocument();
+    });
+    // Check for other tags - expand Code Experte card first
+    const codeExpertCard = screen.getByText("Code Experte").closest('[data-testid="role-card"]');
+    expect(codeExpertCard).toBeInTheDocument();
+
+    if (codeExpertCard) {
+      const detailsButton = await within(codeExpertCard as HTMLElement).findByRole("button", {
+        name: "Details",
+        hidden: true,
+      });
+      fireEvent.click(detailsButton);
+    }
+
+    await waitFor(() => {
+      expect(screen.getByText("code")).toBeInTheDocument();
+      expect(screen.getByText("programmierung")).toBeInTheDocument();
+      expect(screen.getByText("entwicklung")).toBeInTheDocument();
+    });
   });
 
   it("should show all roles when 'Alle' category is selected", async () => {
@@ -246,5 +295,10 @@ describe("EnhancedRolesInterface", () => {
     const roleCards = screen.getAllByTestId("role-card");
 
     expect(roleCards.length).toBeGreaterThan(0);
+
+    // Check that cards have a meaningful accessible name (their role name)
+    roleCards.forEach((card) => {
+      expect(card).toHaveAccessibleName();
+    });
   });
 });

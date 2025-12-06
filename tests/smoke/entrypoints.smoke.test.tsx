@@ -166,7 +166,7 @@ describe("Entry-Point Smoke Tests", () => {
 
   it("zeigt die Einstellungsübersicht", async () => {
     renderWithRouter("/settings", <SettingsOverviewPage />);
-    const memoryLink = await screen.findByText(/Gedächtnis/i);
+    const memoryLink = await screen.findByRole("link", { name: /Gedächtnis/i });
     expect(memoryLink).toBeInTheDocument();
   });
 });
