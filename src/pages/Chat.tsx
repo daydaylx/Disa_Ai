@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { Bookmark, Cpu } from "@/lib/icons"; // Using Icon directly instead of component
+import { Bookmark, Cpu, MessageSquare } from "@/lib/icons"; // Using Icon directly instead of component
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 
@@ -19,17 +19,26 @@ import { useConversationHistory } from "../hooks/useConversationHistory";
 import { useConversationManager } from "../hooks/useConversationManager";
 import { useMemory } from "../hooks/useMemory";
 import { useSettings } from "../hooks/useSettings";
+import { useVisualViewport } from "../hooks/useVisualViewport";
 import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
+const STARTER_PROMPTS = [
+  "Schreib ein kurzes Gedicht",
+  "Erkläre mir Quantenphysik",
+  "Was koche ich heute?",
+  "Erzähl mir einen Witz",
+];
+
 export default function Chat() {
   const toasts = useToasts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { activeRole, setActiveRole } = useRoles();
   const { settings } = useSettings();
+  const viewport = useVisualViewport();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -228,6 +237,13 @@ export default function Chat() {
     [selectConversation],
   );
 
+  const handleStarterClick = (prompt: string) => {
+    setInput(prompt);
+    // Optional: Auto-send on click? Usually better to let user confirm.
+    // But for "Starter Prompts" immediate action feels snappy.
+    // Let's just set input for now to be safe and allow editing.
+  };
+
   const hasActiveConversation = !!activeConversationId;
   const isEmpty = !hasActiveConversation && messages.length === 0;
 
@@ -249,7 +265,13 @@ export default function Chat() {
           </Button>
         }
       >
-        <div className="flex h-full flex-col relative">
+        <div
+          className="flex flex-col relative w-full"
+          style={{
+            height: viewport.height ? `${viewport.height}px` : "100%",
+            minHeight: viewport.height ? `${viewport.height}px` : "100dvh",
+          }}
+        >
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
@@ -277,7 +299,7 @@ export default function Chat() {
               {/* Removed bg-surface-1 container to allow ambient background to shine through */}
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {isEmpty ? (
-                  <div className="flex-1 flex items-center justify-center">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20">
                     <div className="text-center space-y-4 px-4 max-w-sm bg-surface-glass p-8 rounded-3xl backdrop-blur-xl border border-white/5 shadow-lg">
                       <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center mx-auto mb-4">
                         <Sparkles className="w-8 h-8 text-brand-primary" />
@@ -305,6 +327,24 @@ export default function Chat() {
                           Einstellungen
                         </button>
                       </div>
+                    </div>
+
+                    {/* Starter Prompts */}
+                    <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                      {STARTER_PROMPTS.map((prompt) => (
+                        <button
+                          key={prompt}
+                          onClick={() => handleStarterClick(prompt)}
+                          className="flex items-center gap-3 p-3 text-left rounded-2xl bg-surface-1/40 border border-white/5 hover:bg-surface-1/60 hover:border-brand-primary/30 hover:shadow-glow-sm transition-all group"
+                        >
+                          <div className="p-2 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-brand-primary transition-colors">
+                            <MessageSquare className="h-4 w-4" />
+                          </div>
+                          <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">
+                            {prompt}
+                          </span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ) : (

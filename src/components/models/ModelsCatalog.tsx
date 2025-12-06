@@ -177,7 +177,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      "flex-shrink-0 h-10 w-10 transition-colors",
+                      "flex-shrink-0 h-11 w-11 transition-colors",
                       isFavorite
                         ? "text-status-warning hover:text-status-warning/80"
                         : "text-ink-muted hover:text-ink-primary",

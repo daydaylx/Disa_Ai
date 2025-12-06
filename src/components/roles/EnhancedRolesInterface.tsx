@@ -272,12 +272,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                       }
                       className={cn(
-                        "flex h-8 w-8 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                        "flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
                         isFavorite
                           ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
                           : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
                       )}
                     >
+                      {" "}
                       <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
                     </button>
                   </div>

@@ -95,12 +95,28 @@ export function useChat({
     stateRef.current = state;
   }, [state]);
 
+  // Cleanup on unmount: Abort any ongoing requests
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, []);
+
   const append = useCallback(
     async (
       message: Omit<ChatMessageType, "id" | "timestamp">,
       customMessages?: ChatMessageType[],
       overrides?: AppendOverrides,
     ) => {
+      // Abort previous request if active
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+
       // Handle rate limiting with exponential backoff
       const now = Date.now();
 
@@ -180,6 +196,8 @@ export function useChat({
             delta: string,
             messageData?: { id?: string; role?: string; timestamp?: number; model?: string },
           ) => {
+            if (controller.signal.aborted) return;
+
             // CRITICAL FIX: Always create assistant message on first delta, even if empty
             // This ensures "KI schreibt" doesn't show without a message being created
             if (!assistantMessage) {
@@ -224,6 +242,7 @@ export function useChat({
               max_tokens: requestOptions?.max_tokens,
             },
             onStart: () => {
+              if (controller.signal.aborted) return;
               // Optionally trigger onResponse callback with a mock response
               if (onResponse) {
                 const mockResponse = new Response(null, {
@@ -239,6 +258,7 @@ export function useChat({
               }
             },
             onDone: () => {
+              if (controller.signal.aborted) return;
               if (assistantMessage) {
                 const finalMessage: ChatMessageType = {
                   ...assistantMessage,
@@ -257,10 +277,21 @@ export function useChat({
       } catch (error) {
         const mappedError = mapError(error);
 
+        // IGNORE ABORT ERRORS
+        if (mappedError.name === "AbortError" || controller.signal.aborted) {
+          // Just stop loading, do not set error state
+          // Restore messages state if needed, or just leave as is (partial response)
+          // Actually, if we abort, we might want to keep partial response?
+          // The original code restored state. Let's stick to safe cleanup.
+          setApiStatus("idle");
+          return;
+        }
+
         const model = stateRef.current.requestOptions?.model || "unknown";
         analytics.trackApiError(mappedError.name || "UnknownError", model);
 
         if (mappedError instanceof RateLimitError) {
+          // ... existing rate limit logic ...
           // Get retry-after header value if available
           const retryAfterHeader = mappedError.headers?.get("retry-after");
           const parsedHeader = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : undefined;
@@ -297,14 +328,6 @@ export function useChat({
           if (onError) {
             onError(friendlyError);
           }
-        } else if (mappedError.name === "AbortError") {
-          // On abort, restore to the original baseHistory state
-          // Do not include userMessage or any assistant messages that were added during this operation
-          dispatch({
-            type: "SET_MESSAGES",
-            messages: customMessages || [...stateRef.current.messages],
-          });
-          setApiStatus("idle");
         } else {
           // Check if it's a "missing key" error
           if (mappedError.message?.includes("NO_API_KEY")) {
@@ -318,10 +341,13 @@ export function useChat({
           }
         }
       } finally {
-        dispatch({ type: "SET_LOADING", isLoading: false });
-        dispatch({ type: "SET_ABORT_CONTROLLER", controller: null });
-        abortControllerRef.current = null;
-        if (!rateLimitedThisCall) {
+        if (abortControllerRef.current === controller) {
+          dispatch({ type: "SET_LOADING", isLoading: false });
+          dispatch({ type: "SET_ABORT_CONTROLLER", controller: null });
+          abortControllerRef.current = null;
+        }
+
+        if (!rateLimitedThisCall && !controller.signal.aborted) {
           retryAttemptsRef.current = 0;
           setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
         }

@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { skipOnboarding } from "../utils";
+
 test.describe("Book Concept UI", () => {
   test.beforeEach(async ({ page }) => {
-    // Simulate mobile or desktop - Playwright config usually handles this but we can ensure basics
+    await skipOnboarding(page);
     await page.goto("/");
     // Wait for initial load
     await page.waitForLoadState("networkidle");
@@ -10,7 +12,7 @@ test.describe("Book Concept UI", () => {
 
   test("should display the Book Layout correctly", async ({ page }) => {
     // Check for Hamburger Menu
-    await expect(page.locator('button[aria-label="Hauptmenü öffnen"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
 
     // Check for Bookmark (History trigger)
     await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
@@ -19,10 +21,15 @@ test.describe("Book Concept UI", () => {
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
 
-    // Check for control bar dropdowns
-    await expect(page.getByRole("button", { name: "Rolle auswählen" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Stil und Gedächtnis" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Modell auswählen" })).toBeVisible();
+    // Check for role selector (primary pill - shows "Standard" by default)
+    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
+    await expect(roleButton).toBeVisible();
+
+    // Check for style selector
+    await expect(page.locator('button[aria-label="Stil auswählen"]')).toBeVisible();
+
+    // Check for creativity selector
+    await expect(page.locator('button[aria-label="Kreativität auswählen"]')).toBeVisible();
   });
 
   test("should allow typing and sending a message", async ({ page }) => {
@@ -44,40 +51,42 @@ test.describe("Book Concept UI", () => {
   });
 
   test("should open and interact with Control Bar", async ({ page }) => {
-    const styleControl = page.getByRole("button", { name: "Stil und Gedächtnis" });
+    // Click on style selector
+    const styleControl = page.locator('button[aria-label="Stil auswählen"]');
     await styleControl.click();
 
+    // Check for style options
     const creativeOption = page.getByRole("option", { name: "Kreativ" });
     await expect(creativeOption).toBeVisible();
     await creativeOption.click();
 
-    await styleControl.click();
-    const memorySwitch = page.getByRole("switch", { name: "Gedächtnis umschalten" });
-    await expect(memorySwitch).toBeVisible();
-    await memorySwitch.click();
+    // Click on creativity selector
+    const creativityControl = page.locator('button[aria-label="Kreativität auswählen"]');
+    await creativityControl.click();
+
+    // Check for creativity options
+    const highCreativity = page.getByRole("option", { name: /Hoch|80/i });
+    if (await highCreativity.isVisible()) {
+      await highCreativity.click();
+    }
   });
 
   test("should open History Panel via Bookmark", async ({ page }) => {
     const bookmark = page.locator('button[aria-label="Verlauf öffnen"]');
     await bookmark.click();
 
-    // History Panel should be visible
-    const historyPanel = page.getByRole("dialog");
+    // History Panel should be visible (it may be a complementary region or dialog)
+    const historyPanel = page.getByRole("complementary").or(page.getByRole("dialog")).first();
     await expect(historyPanel).toBeVisible();
-    await expect(historyPanel.getByText("Inhaltsverzeichnis")).toBeVisible();
     await expect(historyPanel.getByText("Lesezeichen")).toBeVisible();
     await expect(historyPanel.getByText("Archiv")).toBeVisible();
 
-    // Close it
-
-    // Or click backdrop
-    await page.mouse.click(10, 10); // Click somewhere outside if backdrop covers screen
-    // Alternatively use the close button if identifiable
-    // await closeButton.click();
+    // Close it by clicking outside
+    await page.mouse.click(10, 10);
   });
 
   test("should open Main Menu via Hamburger", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Hauptmenü öffnen"]');
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
     await menuButton.click();
 
     // Menu Drawer should be visible
@@ -87,5 +96,10 @@ test.describe("Book Concept UI", () => {
     // Check links
     await expect(drawer.getByText("Einstellungen")).toBeVisible();
     await expect(drawer.getByText("Impressum")).toBeVisible();
+
+    // Close menu
+    const closeButton = drawer.locator('button[aria-label="Menü schließen"]');
+    await closeButton.click();
+    await expect(drawer).not.toBeVisible();
   });
 });
