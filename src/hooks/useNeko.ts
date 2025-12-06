@@ -7,7 +7,7 @@ const MIN_SPAWN_INTERVAL_MS = 60000; // 1 minute cooldown
 const MAX_SPAWNS_PER_SESSION = 5;
 const CHECK_INTERVAL_MS = 5000; // Check every 5s
 const SPAWN_CHANCE = 0.2; // 20% chance every check if cooldown ready
-const INACTIVITY_THRESHOLD_MS = 4000; // Require ~4s idle before spawning
+const INACTIVITY_THRESHOLD_MS = 2000; // Require ~2s idle before spawning (lowered from 4s for better mobile experience)
 
 // Allowed routes (whitelist)
 const ALLOWED_ROUTES = [
@@ -171,11 +171,15 @@ export function useNeko(): NekoController {
   useEffect(() => {
     if (!settings.enableNeko) return;
 
-    const markInteraction = () => {
+    const markInteraction = (event: Event) => {
       lastInteractionRef.current = Date.now();
-      // If the cat is on screen and user interacts, make it flee quickly
+
+      // If the cat is on screen, be more selective about when to flee
       if (isVisibleRef.current && status.state !== "HIDDEN") {
-        triggerFlee();
+        // Only flee on typing (keydown) - allow scrolling/reading without dismissal
+        if (event.type === "keydown") {
+          triggerFlee();
+        }
       }
     };
 

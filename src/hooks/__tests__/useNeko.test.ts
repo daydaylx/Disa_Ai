@@ -152,16 +152,36 @@ describe("useNeko Hook", () => {
   });
 
   describe("User Interaction", () => {
-    it("should trigger flee on pointerdown", () => {
+    it("should NOT trigger flee on pointerdown or scroll", () => {
+      const { result } = renderNekoHook();
+      act(() => advanceTime(6000)); // Spawn
+      expect(result.current.state).not.toBe("HIDDEN");
+      const previousState = result.current.state;
+
+      // Test pointerdown
+      act(() => {
+        window.dispatchEvent(new Event("pointerdown"));
+      });
+      expect(result.current.state).toBe(previousState);
+
+      // Test scroll
+      act(() => {
+        window.dispatchEvent(new Event("scroll"));
+      });
+      expect(result.current.state).toBe(previousState);
+    });
+
+    it("should trigger flee on keydown", () => {
       const { result } = renderNekoHook();
       act(() => advanceTime(6000)); // Spawn
       expect(result.current.state).not.toBe("HIDDEN");
 
+      // Test keydown (typing)
       act(() => {
-        window.dispatchEvent(new Event("pointerdown"));
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
       });
-      // Should be FLEEING or HIDDEN depending on timing, but definitely reacting
-      // Since flee is animation frame based, we might need to advance timers
+
+      // Should trigger flee immediately
       expect(result.current.state).toBe("FLEEING");
     });
   });
