@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Check, ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
+import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
@@ -31,7 +31,7 @@ interface EnhancedRolesInterfaceProps {
 
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { roles, activeRole, setActiveRole, rolesLoading } = useRoles();
-  const { isRoleFavorite, trackRoleUsage, usage } = useFavorites();
+  const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();
 
@@ -242,30 +242,47 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               {filteredRoles.map((role) => {
                 const isActive = activeRole?.id === role.id;
                 const isExpanded = expandedRoles.has(role.id);
+                const isFavorite = isRoleFavorite(role.id);
 
                 return (
                   <Card
                     key={role.id}
                     className={cn(
-                      "transition-all space-y-3",
+                      "relative transition-all",
                       isActive
                         ? "border-accent-primary/40 ring-1 ring-accent-primary/30 shadow-md"
                         : "border-white/5 shadow-sm",
                     )}
                   >
-                    {/* Main Row */}
-                    <div className="flex items-center gap-3">
-                      {/* Expand/Collapse Button (subtle, left side) */}
+                    <div className="absolute right-xs top-xs flex items-center gap-2">
+                      {isActive && (
+                        <Badge variant="success" className="text-[10px] px-2xs h-5 shadow-sm">
+                          Aktiv
+                        </Badge>
+                      )}
                       <button
-                        onClick={() => toggleRoleExpansion(role.id)}
-                        className="flex-shrink-0 p-1 text-ink-tertiary hover:text-ink-primary transition-colors -ml-1"
-                        aria-label="Details anzeigen"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleRoleFavorite(role.id);
+                        }}
+                        aria-pressed={isFavorite}
+                        aria-label={
+                          isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
+                        }
+                        className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                          isFavorite
+                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                        )}
                       >
-                        <ChevronDown
-                          className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
-                        />
+                        <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
                       </button>
+                    </div>
 
+                    {/* Main Row */}
+                    <div className="flex items-center gap-3 p-xs">
                       {/* Icon */}
                       <div
                         className={cn(
@@ -280,62 +297,79 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={cn(
-                              "font-medium text-sm truncate",
-                              isActive ? "text-accent-primary" : "text-ink-primary",
-                            )}
-                          >
-                            {role.name}
-                          </span>
-                          {isActive && (
-                            <Check className="h-4 w-4 text-accent-primary flex-shrink-0" />
+                        <span
+                          className={cn(
+                            "font-medium text-sm truncate block",
+                            isActive ? "text-accent-primary" : "text-ink-primary",
                           )}
-                        </div>
+                        >
+                          {role.name}
+                        </span>
                         <p className="text-xs text-ink-secondary truncate mt-0.5">
                           {role.category || "Spezial"}
                         </p>
                       </div>
 
-                      {/* Primary Action Button */}
-                      <Button
-                        size="sm"
-                        variant={isActive ? "secondary" : "primary"}
-                        className="h-8 px-xs text-xs flex-shrink-0"
-                        onClick={() => handleActivateRole(role)}
-                      >
-                        {isActive ? "Aktiv" : "Wählen"}
-                      </Button>
+                      {/* Actions */}
+                      <div className="flex flex-col items-end gap-1 pr-10">
+                        <Button
+                          size="sm"
+                          variant={isActive ? "secondary" : "primary"}
+                          className="h-8 px-xs text-xs"
+                          onClick={() => handleActivateRole(role)}
+                        >
+                          {isActive ? "Aktiv" : "Wählen"}
+                        </Button>
+                        <button
+                          type="button"
+                          onClick={() => toggleRoleExpansion(role.id)}
+                          className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors"
+                          aria-expanded={isExpanded}
+                          aria-controls={`role-details-${role.id}`}
+                        >
+                          Details
+                          <ChevronDown
+                            className={cn(
+                              "h-3.5 w-3.5 transition-transform",
+                              isExpanded && "rotate-180",
+                            )}
+                          />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Expanded Details */}
                     {isExpanded && (
-                      <div className="space-y-3 border-t border-white/5 pt-3 animate-fade-in">
-                        <p className="text-sm text-ink-secondary leading-relaxed">
-                          {role.description}
-                        </p>
+                      <div
+                        id={`role-details-${role.id}`}
+                        className="px-xs pb-xs pt-0 animate-fade-in"
+                      >
+                        <div className="space-y-3 rounded-xl border border-white/5 bg-surface-2/40 px-xs py-xs">
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            {role.description}
+                          </p>
 
-                        {role.tags && role.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5">
-                            {role.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                variant="secondary"
-                                className="text-[10px] px-3xs h-5"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
+                          {role.tags && role.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
+                              {role.tags.map((tag) => (
+                                <Badge
+                                  key={tag}
+                                  variant="secondary"
+                                  className="text-[10px] px-2xs h-5"
+                                >
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
 
-                        {role.systemPrompt && (
-                          <div className="p-2xs rounded-xl bg-surface-2/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
-                            {role.systemPrompt.slice(0, 200)}
-                            {role.systemPrompt.length > 200 && "..."}
-                          </div>
-                        )}
+                          {role.systemPrompt && (
+                            <div className="p-2xs rounded-xl bg-surface-1/70 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
+                              {role.systemPrompt.slice(0, 200)}
+                              {role.systemPrompt.length > 200 && "..."}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </Card>
