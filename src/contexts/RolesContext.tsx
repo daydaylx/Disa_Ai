@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 
 import { STORAGE_KEYS } from "../config/storageKeys";
 import type { UIRole } from "../data/roles";
-import { getRoles, loadRoles } from "../data/roles";
+import { getRoles, loadRoles, STANDARD_ROLE } from "../data/roles";
 import { useDeferredFetch } from "../hooks/useDeferredFetch";
 
 const LS_ACTIVE_ROLE_KEY = STORAGE_KEYS.ACTIVE_ROLE; // For backward compatibility
@@ -25,7 +25,7 @@ interface RolesContextType {
 const RolesContext = createContext<RolesContextType | undefined>(undefined);
 
 export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeRole, setActiveRoleState] = useState<UIRole | null>(null);
+  const [activeRole, setActiveRoleState] = useState<UIRole>(STANDARD_ROLE);
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
@@ -58,6 +58,7 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return null;
       }
     })();
+
     if (stored) {
       const match = roles.find((r) => r.id === stored);
       if (match) {
@@ -66,26 +67,26 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setTypographyScale(scale ?? 1);
         setBorderRadius(radius ?? 0.5);
       }
+    } else {
+      setActiveRoleState(STANDARD_ROLE);
     }
   }, [roles]);
 
   const setActiveRole = useCallback(
     (role: UIRole | null) => {
-      setActiveRoleState(role);
+      const targetRole = role || STANDARD_ROLE;
+      setActiveRoleState(targetRole);
 
-      if (!role) {
-        setTypographyScale(1);
-        setBorderRadius(0.5);
-        // Behalte accentColor bei Rolle-Zurücksetzen bei, um globale Farbänderungen zu vermeiden
-        return;
-      }
-
-      const { typographyScale: scale, borderRadius: radius } = role.styleHints;
+      const { typographyScale: scale, borderRadius: radius } = targetRole.styleHints;
       setTypographyScale(scale ?? 1);
       setBorderRadius(radius ?? 0.5);
 
       try {
-        localStorage.setItem(LS_ACTIVE_ROLE_KEY, role.id);
+        if (targetRole.id === STANDARD_ROLE.id) {
+          localStorage.removeItem(LS_ACTIVE_ROLE_KEY);
+        } else {
+          localStorage.setItem(LS_ACTIVE_ROLE_KEY, targetRole.id);
+        }
       } catch {
         /* ignore */
       }

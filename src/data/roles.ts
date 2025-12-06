@@ -54,7 +54,7 @@ export async function loadRoles(): Promise<UIRole[]> {
     };
   });
 
-  cachedCombinedRoles = rolesFormatted;
+  cachedCombinedRoles = [STANDARD_ROLE, ...rolesFormatted];
   return cachedCombinedRoles;
 }
 
@@ -181,7 +181,23 @@ function getAccentColorForRole(role: { name: string; tags?: string[] }): string 
   return "var(--acc1)"; // Default Blau
 }
 
+export const STANDARD_ROLE: UIRole = {
+  id: "standard",
+  name: "Standard",
+  description: "Nutze Disa AI ohne spezielle Rolle oder Vorgabe.",
+  systemPrompt: "",
+  allowedModels: ["*"],
+  tags: ["standard", "neutral"],
+  category: "Allgemein",
+  styleHints: {
+    typographyScale: 1.0,
+    borderRadius: 0.5,
+    accentColor: "hsl(var(--primary))",
+  },
+};
+
 export function getRoleById(id: string): UIRole | undefined {
+  if (id === STANDARD_ROLE.id) return STANDARD_ROLE;
   return cachedCombinedRoles.find((p) => p.id === id);
 }
 
