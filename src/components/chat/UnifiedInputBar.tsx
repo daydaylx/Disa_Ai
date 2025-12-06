@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
@@ -27,7 +28,8 @@ export function UnifiedInputBar({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
-  const { settings, setCreativity, setDiscussionPreset } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
+  const { models } = useModelCatalog();
 
   // Auto-resize logic
   useEffect(() => {
@@ -83,8 +85,34 @@ export function UnifiedInputBar({
   const creativityLabel = creativityOption?.label || `${settings.creativity}%`;
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
 
+  const activeModel = models?.find((m) => m.id === settings.preferredModelId);
+  const modelLabel = activeModel?.label || settings.preferredModelId.split("/").pop() || "Modell";
+
   return (
     <div className={cn("w-full space-y-3", className)}>
+      {/* Model Selection - Centered Capsule above input */}
+      <div className="flex justify-center">
+        <Select
+          value={settings.preferredModelId}
+          onValueChange={(value) => setPreferredModel(value)}
+        >
+          <SelectTrigger
+            aria-label="Modell auswählen"
+            className="flex h-8 w-auto min-w-[120px] max-w-[200px] items-center justify-center gap-1.5 rounded-full border border-white/10 bg-surface-glass backdrop-blur-md px-3 text-[11px] font-medium text-ink-secondary transition-all hover:border-brand-primary/30 hover:text-brand-primary hover:bg-surface-1/60 shadow-sm"
+          >
+            <Cpu className="h-3 w-3 opacity-70" />
+            <span className="truncate">{modelLabel}</span>
+          </SelectTrigger>
+          <SelectContent className="max-h-[280px] w-64">
+            {models?.map((model) => (
+              <SelectItem key={model.id} value={model.id}>
+                {model.label || model.id}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Main Input Container - Floating Glass */}
       <div className="relative flex items-end gap-3 rounded-3xl border border-white/10 bg-surface-glass backdrop-blur-xl p-2 shadow-lg focus-within:border-brand-primary/50 focus-within:ring-1 focus-within:ring-brand-primary/30 focus-within:shadow-glow-md transition-all duration-300">
         {/* Textarea */}

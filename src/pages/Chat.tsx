@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { Bookmark, Cpu, MessageSquare } from "@/lib/icons"; // Using Icon directly instead of component
+import { Bookmark, MessageSquare } from "@/lib/icons"; // Using Icon directly instead of component
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 
@@ -275,23 +275,10 @@ export default function Chat() {
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
 
-          {/* Model Pill - Floating Glass */}
-          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
-            <button
-              onClick={() => navigate("/models")}
-              className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-surface-glass border border-white/10 backdrop-blur-md px-3 py-1.5 text-xs font-medium text-ink-secondary transition-all hover:border-brand-primary/30 hover:text-brand-primary hover:shadow-glow-sm"
-            >
-              <Cpu className="h-3.5 w-3.5 opacity-70" />
-              <span className="truncate max-w-[160px]">
-                {settings.preferredModelId.split("/").pop() || "Modell"}
-              </span>
-            </button>
-          </div>
-
           {/* Messages Area */}
           <main
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 pt-12" /* pt-12 to account for floating model pill */
+            className="flex-1 overflow-y-auto min-h-0 pt-4" /* pt-4 reduced from pt-12 as model pill is gone */
             role="log"
             aria-label="Chat messages"
           >
