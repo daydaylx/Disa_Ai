@@ -32,8 +32,8 @@
   "functions": {
     "_routes.json": {
       "version": 1,
-      "include": ["/*"],
-      "exclude": ["/api/*"]
+      "include": ["/api/*"],
+      "exclude": []
     }
   }
 }
