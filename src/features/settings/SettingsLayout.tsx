@@ -4,8 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/ui";
 
-import { AppMenuDrawer, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
-import { AppShell } from "../../components/layout/AppShell";
 import {
   BookOpenCheck,
   Cat,
@@ -63,7 +61,6 @@ const NAV_ITEMS = [
 
 export function SettingsLayout({ children, activeTab, title, description }: SettingsLayoutProps) {
   const location = useLocation();
-  const { isOpen, openMenu, closeMenu } = useMenuDrawer();
 
   const derivedActive = React.useMemo(() => {
     if (activeTab) return activeTab;
@@ -72,50 +69,44 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
   }, [activeTab, location.pathname]);
 
   return (
-    <>
-      <AppShell title="Einstellungen" onMenuClick={openMenu}>
-        <div className="flex flex-col w-full h-full overflow-y-auto">
-          <div className="flex-1 px-4 py-6 max-w-3xl mx-auto w-full">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Navigation (Desktop Sidebar / Mobile Horizontal) */}
-              <nav className="lg:w-48 flex-shrink-0">
-                <div className="flex gap-2 overflow-x-auto pb-4 lg:flex-col lg:pb-0 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
-                  {NAV_ITEMS.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = derivedActive === item.id;
-                    return (
-                      <Link
-                        key={item.id}
-                        to={item.to}
-                        className={cn(
-                          "flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border transition-all",
-                          "min-w-[120px] lg:min-w-0 lg:w-full",
-                          isActive
-                            ? "bg-surface-1 border-accent-primary/30 text-ink-primary"
-                            : "bg-transparent border-transparent text-ink-secondary hover:bg-surface-1 hover:text-ink-primary",
-                        )}
-                      >
-                        <Icon className={cn("h-4 w-4", isActive && "text-accent-primary")} />
-                        <span className="text-sm font-medium">{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </nav>
-
-              {/* Main Content */}
-              <div className="flex-1 min-w-0">
-                {(title || description) && (
-                  <PageHeader title={title || ""} description={description} className="mb-6" />
-                )}
-                {children}
-              </div>
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="flex-1 px-4 py-6 max-w-3xl mx-auto w-full">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Navigation (Desktop Sidebar / Mobile Horizontal) */}
+          <nav className="lg:w-48 flex-shrink-0">
+            <div className="flex gap-2 overflow-x-auto pb-4 lg:flex-col lg:pb-0 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+              {NAV_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const isActive = derivedActive === item.id;
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.to}
+                    className={cn(
+                      "flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border transition-all",
+                      "min-w-[120px] lg:min-w-0 lg:w-full",
+                      isActive
+                        ? "bg-surface-1 border-accent-primary/30 text-ink-primary"
+                        : "bg-transparent border-transparent text-ink-secondary hover:bg-surface-1 hover:text-ink-primary",
+                    )}
+                  >
+                    <Icon className={cn("h-4 w-4", isActive && "text-accent-primary")} />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
             </div>
+          </nav>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {(title || description) && (
+              <PageHeader title={title || ""} description={description} className="mb-6" />
+            )}
+            {children}
           </div>
         </div>
-      </AppShell>
-
-      <AppMenuDrawer isOpen={isOpen} onClose={closeMenu} />
-    </>
+      </div>
+    </div>
   );
 }

@@ -39,19 +39,36 @@ const HAMBURGER_NAV_ITEMS = [
 
 interface AppShellProps {
   children: ReactNode;
+  pageHeaderTitle?: string;
+  pageHeaderActions?: ReactNode;
 }
 
 interface AppShellLayoutProps {
   children: ReactNode;
   location: ReturnType<typeof useLocation>;
+  pageHeaderTitle?: string;
+  pageHeaderActions?: ReactNode;
 }
 
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children, pageHeaderTitle, pageHeaderActions }: AppShellProps) {
   const location = useLocation();
-  return <AppShellLayout location={location}>{children}</AppShellLayout>;
+  return (
+    <AppShellLayout
+      location={location}
+      pageHeaderTitle={pageHeaderTitle}
+      pageHeaderActions={pageHeaderActions}
+    >
+      {children}
+    </AppShellLayout>
+  );
 }
 
-function AppShellLayout({ children, location }: AppShellLayoutProps) {
+function AppShellLayout({
+  children,
+  location,
+  pageHeaderTitle,
+  pageHeaderActions,
+}: AppShellLayoutProps) {
   const menuDrawer = useMenuDrawer();
   const focusMain = useCallback(() => {
     const mainEl = document.getElementById("main");
@@ -66,6 +83,8 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
     const active = PRIMARY_NAV_ITEMS.find((item) => isNavItemActive(item, location.pathname));
     return active?.label ?? "Disa AI";
   }, [location.pathname]);
+
+  const resolvedPageTitle = pageHeaderTitle ?? pageTitle;
 
   const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
 
@@ -156,6 +175,21 @@ function AppShellLayout({ children, location }: AppShellLayoutProps) {
               )}
             >
               <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "gap-6")}>
+                {!isChatMode && (resolvedPageTitle || pageHeaderActions) ? (
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    {resolvedPageTitle ? (
+                      <div className="flex items-center gap-2">
+                        <BrandWordmark className="text-sm text-text-secondary lg:hidden" />
+                        <h1 className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                          {resolvedPageTitle}
+                        </h1>
+                      </div>
+                    ) : null}
+                    {pageHeaderActions ? (
+                      <div className="flex flex-wrap gap-2 sm:justify-end">{pageHeaderActions}</div>
+                    ) : null}
+                  </div>
+                ) : null}
                 {children}
               </div>
             </div>
