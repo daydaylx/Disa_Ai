@@ -19,5 +19,12 @@
     "qualityScore": 92,
     "openness": 0.5,
     "tags": ["balanced", "reliable", "chat", "standard"]
+  },
+  "cognitivecomputations/dolphin-mistral-24b-venice-edition:free": {
+    "label": "Dolphin Mistral 24B",
+    "description": "Kreativ, dialogstark und frei nutzbar.",
+    "qualityScore": 90,
+    "openness": 0.6,
+    "tags": ["creative", "dialog", "chat", "free"]
   }
 }

@@ -14,5 +14,5 @@ export function isAllowedModelId(
 }
 
 // Kuratiertes Fallback aus public/models_metadata.json; wird auf leer gesetzt, falls entfernt.
-const FALLBACK_MODEL_ID = "deepseek/deepseek-r1:free";
+const FALLBACK_MODEL_ID = "cognitivecomputations/dolphin-mistral-24b-venice-edition:free";
 export const DEFAULT_MODEL_ID = isAllowedModelId(FALLBACK_MODEL_ID) ? FALLBACK_MODEL_ID : "";
