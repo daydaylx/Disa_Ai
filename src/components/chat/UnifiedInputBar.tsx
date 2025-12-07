@@ -10,6 +10,8 @@ import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/dis
 import { Button } from "@/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
+import modelsMetadata from "../../../public/models_metadata.json";
+
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -98,7 +100,11 @@ export function UnifiedInputBar({
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
 
   const activeModel = models?.find((m) => m.id === settings.preferredModelId);
-  const modelLabel = activeModel?.label || settings.preferredModelId.split("/").pop() || "Modell";
+  const metadataLabel = (modelsMetadata as Record<string, { label: string }>)[
+    settings.preferredModelId
+  ]?.label;
+  const modelLabel =
+    activeModel?.label || metadataLabel || settings.preferredModelId.split("/").pop() || "Modell";
 
   return (
     <div className={cn("w-full space-y-3", className)}>

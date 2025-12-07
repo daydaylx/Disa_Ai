@@ -61,6 +61,13 @@ export default function Chat() {
     };
   }, [modelCatalog, settings.creativity, settings.preferredModelId]);
 
+  const handleError = useCallback(
+    (error: Error) => {
+      toasts.push(humanErrorToToast(error));
+    },
+    [toasts],
+  );
+
   const {
     messages,
     append,
@@ -74,9 +81,7 @@ export default function Chat() {
     rateLimitInfo,
     error,
   } = useChat({
-    onError: (error) => {
-      toasts.push(humanErrorToToast(error));
-    },
+    onError: handleError,
   });
 
   useEffect(() => {
@@ -209,13 +214,24 @@ export default function Chat() {
     [setCurrentSystemPrompt, append],
   );
 
+  const processedQuickstartRef = useRef<string | null>(null);
+
   useEffect(() => {
     const quickstartId = searchParams.get("quickstart");
     if (quickstartId && QUICKSTARTS.length > 0) {
+      // Prevent infinite loop by checking if we already processed this ID
+      if (processedQuickstartRef.current === quickstartId) {
+        // ID is still in URL but we processed it? Clean it up if needed, but don't re-send.
+        // We can optionally force a navigate here just in case the previous one failed.
+        return;
+      }
+
       const quickstart = QUICKSTARTS.find((q) => q.id === quickstartId);
       if (quickstart) {
+        processedQuickstartRef.current = quickstartId;
         startWithPreset(quickstart.system, quickstart.user);
-        void navigate("/", { replace: true });
+        // Navigate to /chat (clean URL) to remove the query param
+        void navigate("/chat", { replace: true });
       }
     }
   }, [searchParams, navigate, startWithPreset]);

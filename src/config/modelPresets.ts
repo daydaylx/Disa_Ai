@@ -8,7 +8,7 @@ export type LegacyModelOption = {
   isPremium?: boolean;
 };
 
-export const DEFAULT_MODEL_ID = "cognitivecomputations/dolphin-mistral-24b-venice-edition:free";
+export const DEFAULT_MODEL_ID = "meta-llama/llama-3.3-70b-instruct:free";
 
 const LEGACY_MODEL_ORDER = [
   DEFAULT_MODEL_ID,
