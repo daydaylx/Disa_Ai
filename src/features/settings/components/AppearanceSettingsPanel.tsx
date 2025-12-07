@@ -1,4 +1,4 @@
-import { Label } from "@/ui";
+import { Label, Switch } from "@/ui";
 
 import { FONT_SIZE_MAX, FONT_SIZE_MIN, FONT_SIZE_STEP, THEME_OPTIONS } from "../constants";
 
@@ -67,34 +67,12 @@ export function AppearanceSettingsPanel({
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between">
           <span className="text-sm text-text-primary">Animationen reduzieren</span>
-          <button
-            onClick={onReduceMotionToggle}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
-              reduceMotion ? "bg-brand" : "bg-surface-inset border"
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-                reduceMotion ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
+          <Switch checked={reduceMotion} onCheckedChange={onReduceMotionToggle} />
         </div>
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-text-primary">Haptisches Feedback</span>
-          <button
-            onClick={onHapticFeedbackToggle}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
-              hapticFeedback ? "bg-brand" : "bg-surface-inset border"
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-                hapticFeedback ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
+          <Switch checked={hapticFeedback} onCheckedChange={onHapticFeedbackToggle} />
         </div>
       </div>
     </div>

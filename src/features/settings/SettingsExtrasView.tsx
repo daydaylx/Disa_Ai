@@ -1,4 +1,4 @@
-import { Label, PremiumCard, useToasts } from "@/ui";
+import { Label, PremiumCard, Switch, useToasts } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
 import { Cat } from "../../lib/icons";
@@ -49,20 +49,7 @@ export function SettingsExtrasView() {
                 </p>
               </div>
 
-              <button
-                onClick={handleToggleNeko}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast flex-shrink-0 ${
-                  settings.enableNeko
-                    ? "bg-brand shadow-brandGlow"
-                    : "bg-surface-inset border border-surface-2"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-                    settings.enableNeko ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <Switch checked={settings.enableNeko} onCheckedChange={handleToggleNeko} />
             </div>
 
             {/* Info Box */}

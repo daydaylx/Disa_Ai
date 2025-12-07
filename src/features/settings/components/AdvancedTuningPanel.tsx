@@ -1,7 +1,7 @@
 import { DEFAULT_MODEL_ID } from "@/config/modelPresets";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 import { discussionPresetOptions } from "@/prompts/discussion/presets";
-import { Button, Input, Label } from "@/ui";
+import { Button, Input, Label, Switch } from "@/ui";
 
 import {
   CREATIVITY_LABELS,
@@ -78,18 +78,7 @@ export function AdvancedTuningPanel({
           </Label>
           <p className="text-xs text-text-muted">Zusätzliche Filterung für sicherere Antworten.</p>
         </div>
-        <button
-          onClick={onStrictModeToggle}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-fast ${
-            discussionStrict ? "bg-brand shadow-brandGlow" : "bg-surface-2 border"
-          }`}
-        >
-          <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-fast ${
-              discussionStrict ? "translate-x-6" : "translate-x-1"
-            }`}
-          />
-        </button>
+        <Switch checked={discussionStrict} onCheckedChange={onStrictModeToggle} />
       </div>
 
       {/* Discussion Preset Grid */}
