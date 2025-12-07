@@ -45,8 +45,7 @@
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged",
     "verify:dist": "node scripts/verify-dist.mjs",
-    "mcp:visual": "npx tsx tools/zai-vision-mcp.ts",
-    "mcp:visual:legacy": "npx tsx tools/visual-mcp.ts.backup"
+    "mcp:visual": "npx tsx tools/zai-vision-mcp.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
