@@ -71,8 +71,9 @@ describe("ModelsCatalog", () => {
     vi.clearAllMocks();
     (useModelCatalog as any).mockReturnValue({
       models: mockModels,
-      isLoading: false,
+      loading: false,
       error: null,
+      refresh: vi.fn(),
     });
     (loadModelCatalog as any).mockResolvedValue(mockModels);
   });
@@ -130,31 +131,33 @@ describe("ModelsCatalog", () => {
 
   it("should show loading state", () => {
     (useModelCatalog as any).mockReturnValue({
-      models: [],
-      isLoading: true,
+      models: null,
+      loading: true,
       error: null,
+      refresh: vi.fn(),
     });
 
     renderWithProviders(<ModelsCatalog />);
 
-    // Check for loading indicators
+    // Check for loading indicators (skeletons shown when !catalog && loading)
     const skeletons = screen.queryAllByTestId("model-card-skeleton");
-    const statuses = screen.queryAllByRole("status");
-    expect(skeletons.length + statuses.length).toBeGreaterThan(0);
+    expect(skeletons.length).toBeGreaterThan(0);
   });
 
-  it("should show error state when models fail to load", async () => {
-    // Made async
-    // Mock loadModelCatalog to reject for this specific test
-    (loadModelCatalog as any).mockRejectedValue(new Error("Failed to load models"));
+  it("should show error state when models fail to load", () => {
+    // Mock useModelCatalog to return error state directly
+    (useModelCatalog as any).mockReturnValue({
+      models: null,
+      loading: false,
+      error: "Failed to load models",
+      refresh: vi.fn(),
+    });
 
     renderWithProviders(<ModelsCatalog />);
 
-    // Wait for the error state to be rendered
-    await waitFor(() => {
-      expect(screen.getByText("Fehler beim Laden der Modelle")).toBeInTheDocument();
-      expect(screen.getByText("Failed to load models")).toBeInTheDocument();
-    });
+    // Check for error state
+    expect(screen.getByText("Fehler beim Laden der Modelle")).toBeInTheDocument();
+    expect(screen.getByText("Failed to load models")).toBeInTheDocument();
   });
 
   it("should handle model selection", async () => {
