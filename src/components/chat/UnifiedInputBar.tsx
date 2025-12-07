@@ -82,7 +82,6 @@ export function UnifiedInputBar({
   const creativityOption = creativityOptions.find(
     (option) => option.value === String(settings.creativity),
   );
-  const creativityLabel = creativityOption?.label || `${settings.creativity}%`;
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
 
   const activeModel = models?.find((m) => m.id === settings.preferredModelId);
@@ -198,7 +197,7 @@ export function UnifiedInputBar({
               className="flex h-11 flex-shrink-0 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/40 px-2.5 text-[11px] font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
             >
               <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="truncate">Stil: {discussionPresetLabel}</span>
+              <span className="truncate">{discussionPresetLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
               {discussionPresetOptions.map((preset) => (
@@ -219,7 +218,7 @@ export function UnifiedInputBar({
               className="flex h-11 flex-shrink-0 items-center justify-center gap-1 rounded-full border border-white/5 bg-surface-1/40 px-2.5 text-[11px] font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
             >
               <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="truncate">Kreativität: {creativityShortLabel}</span>
+              <span className="truncate">{creativityShortLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
               {creativityOptions.map((option) => (
