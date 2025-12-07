@@ -7,7 +7,7 @@ interface ModelCatalogContextValue {
   models: ModelEntry[] | null;
   loading: boolean;
   error: string | null;
-  refresh: () => Promise<void>;
+  refresh: (force?: boolean) => Promise<void>;
 }
 
 const ModelCatalogContext = createContext<ModelCatalogContextValue | undefined>(undefined);
@@ -20,29 +20,34 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
   const isRefreshingRef = useRef(false);
   const isMountedRef = useRef(true);
 
-  const refresh = useCallback(async () => {
-    if (isRefreshingRef.current) return;
-    isRefreshingRef.current = true;
-    hasRequestedRef.current = true;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const catalog = await loadModelCatalog();
-      if (!isMountedRef.current) return;
-      setModels(catalog);
-      if (!catalog.length) setError("Modelle konnten nicht geladen werden.");
-    } catch (err) {
-      console.error("Model catalog loading failed", err);
-      if (!isMountedRef.current) return;
-      setError("Modelle konnten nicht geladen werden.");
-    } finally {
-      isRefreshingRef.current = false;
-      if (isMountedRef.current) {
-        setLoading(false);
+  const refresh = useCallback(
+    async (force = false) => {
+      if (isRefreshingRef.current) return;
+      isRefreshingRef.current = true;
+      // Only reset loading state if explicitly forced or if we don't have models yet
+      if (force || !models) {
+        setLoading(true);
       }
-    }
-  }, []);
+      setError(null);
+
+      try {
+        const catalog = await loadModelCatalog({ forceRefresh: force });
+        if (!isMountedRef.current) return;
+        setModels(catalog);
+        if (!catalog.length) setError("Modelle konnten nicht geladen werden.");
+      } catch (err) {
+        console.error("Model catalog loading failed", err);
+        if (!isMountedRef.current) return;
+        setError("Modelle konnten nicht geladen werden.");
+      } finally {
+        isRefreshingRef.current = false;
+        if (isMountedRef.current) {
+          setLoading(false);
+        }
+      }
+    },
+    [models],
+  );
 
   useEffect(() => {
     if (hasRequestedRef.current) return;

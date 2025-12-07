@@ -54,6 +54,7 @@ export type ModelEntry = {
 
 export type CatalogOptions = {
   preferOnline?: boolean;
+  forceRefresh?: boolean;
 };
 
 type ModelMetadata = {
@@ -105,10 +106,12 @@ function sortKnownFirst(
 /**
  * Lädt den Hybrid-Katalog: Live-Modelle von OpenRouter + kuratierte Metadaten.
  */
-export async function loadModelCatalog(_opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
+
+export async function loadModelCatalog(opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
+  const forceRefresh = typeof opts === "object" ? opts?.forceRefresh : false;
   try {
     const [apiModels, metadataResponse] = await Promise.all([
-      getRawModels(), // Live-Daten (lokal gecached im Service)
+      getRawModels(undefined, undefined, undefined, forceRefresh), // Live-Daten (lokal gecached im Service)
       fetch(resolvePublicAssetUrl("models_metadata.json"), { cache: "no-store" }).catch(() => null),
     ]);
 

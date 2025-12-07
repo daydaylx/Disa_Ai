@@ -76,14 +76,17 @@ export async function getRawModels(
   explicitKey?: string,
   ttlMs = DEFAULT_TTL_MS,
   toasts?: ToastsArray,
+  forceRefresh = false,
 ): Promise<ORModel[]> {
   try {
-    const tsRaw = localStorage.getItem(LS_MODELS_TS);
-    const dataRaw = localStorage.getItem(LS_MODELS);
-    const ts = tsRaw ? Number(tsRaw) : 0;
-    if (dataRaw && ts && Date.now() - ts < ttlMs) {
-      const parsed = JSON.parse(dataRaw) as unknown;
-      if (Array.isArray(parsed)) return parsed as ORModel[];
+    if (!forceRefresh) {
+      const tsRaw = localStorage.getItem(LS_MODELS_TS);
+      const dataRaw = localStorage.getItem(LS_MODELS);
+      const ts = tsRaw ? Number(tsRaw) : 0;
+      if (dataRaw && ts && Date.now() - ts < ttlMs) {
+        const parsed = JSON.parse(dataRaw) as unknown;
+        if (Array.isArray(parsed)) return parsed as ORModel[];
+      }
     }
   } catch {}
 
@@ -112,7 +115,7 @@ export async function getRawModels(
         actions: [
           {
             label: "Erneut versuchen",
-            onClick: () => getRawModels(explicitKey, ttlMs, toasts),
+            onClick: () => getRawModels(explicitKey, ttlMs, toasts, forceRefresh),
           },
         ],
       });

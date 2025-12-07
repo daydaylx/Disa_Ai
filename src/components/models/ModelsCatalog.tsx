@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { loadModelCatalog, type ModelEntry } from "@/config/models";
+import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, Star } from "@/lib/icons";
+import { Check, Cpu, RefreshCw, Star } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
@@ -27,28 +28,18 @@ function getPriceLabel(entry: ModelEntry) {
 export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { settings, setPreferredModel } = useSettings();
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
-  const [catalog, setCatalog] = useState<ModelEntry[] | null>(null);
-  const [error, setError] = useState<string | null>(null); // Added error state
+  const { models: catalog, loading, error, refresh } = useModelCatalog();
   const [search, setSearch] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Load catalog
-  useEffect(() => {
-    let active = true;
-    loadModelCatalog()
-      .then((data) => {
-        if (!active) return;
-        setCatalog(data);
-        setError(null); // Clear error on success
-      })
-      .catch((e) => {
-        if (!active) return;
-        setCatalog([]);
-        setError(e.message || "Failed to load models"); // Set error message
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refresh(true);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     if (!catalog) return [] as ModelEntry[];
@@ -71,6 +62,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   }, [catalog, search, isModelFavorite]);
 
   const activeModelId = settings.preferredModelId;
+  const isLoading = loading || isRefreshing;
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
@@ -81,11 +73,24 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative space-y-3 px-4 py-4">
-            <PageHeader
-              title="Modelle"
-              description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
-              className="mb-0"
-            />
+            <div className="flex items-start justify-between">
+              <PageHeader
+                title="Modelle"
+                description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
+                className="mb-0 flex-1"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+                aria-label="Modelle aktualisieren"
+                title="Modelliste aktualisieren"
+              >
+                <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+              </Button>
+            </div>
 
             <SearchInput
               value={search}
@@ -99,7 +104,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
       {/* Content Zone - Scrollable List */}
       <div className="flex-1 overflow-y-auto pb-24 pt-4">
-        {catalog === null ? (
+        {!catalog && loading ? (
           // Loading skeletons
           <div className="space-y-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -116,6 +121,11 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             title="Fehler beim Laden der Modelle" // More specific error title
             description={error} // Display the actual error message
             className="bg-status-error/10 border-status-error/20 text-status-error" // Error styling
+            action={
+              <Button onClick={() => handleRefresh()} variant="outline" size="sm">
+                Erneut versuchen
+              </Button>
+            }
           />
         ) : filtered.length === 0 ? (
           <EmptyState
