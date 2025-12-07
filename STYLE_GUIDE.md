@@ -9,57 +9,62 @@
 
 ### Primary Colors (Use These Most)
 
-| Color | Usage | Class |
-|-------|-------|-------|
-| **Indigo** `#6366f1` | Primary CTAs, focus states, Send button | `bg-accent-primary` / `text-accent-primary` |
+| Color                | Usage                                          | Class                                           |
+| -------------------- | ---------------------------------------------- | ----------------------------------------------- |
+| **Indigo** `#6366f1` | Primary CTAs, focus states, Send button        | `bg-accent-primary` / `text-accent-primary`     |
 | **Purple** `#8b5cf6` | Brand identity, active roles, premium features | `bg-accent-secondary` / `text-accent-secondary` |
-| **Cyan** `#06b6d4` | Links, info messages, tertiary actions | `bg-accent-tertiary` / `text-accent-tertiary` |
+| **Cyan** `#06b6d4`   | Links, info messages, tertiary actions         | `bg-accent-tertiary` / `text-accent-tertiary`   |
 
 ### Backgrounds & Surfaces
 
-| Level | Color | Usage | Class |
-|-------|-------|-------|-------|
-| **App** | `#131314` | Page background | `bg-bg-app` |
-| **Surface 1** | `#1E1E20` | Cards, panels | `bg-surface-1` |
-| **Surface 2** | `#27272A` | Inputs, hover states | `bg-surface-2` |
-| **Surface 3** | `#3F3F46` | Active states | `bg-surface-3` |
-| **Inset** | `#09090B` | Code blocks, deep zones | `bg-surface-inset` |
+| Level         | Color     | Usage                   | Class              |
+| ------------- | --------- | ----------------------- | ------------------ |
+| **App**       | `#131314` | Page background         | `bg-bg-app`        |
+| **Surface 1** | `#1E1E20` | Cards, panels           | `bg-surface-1`     |
+| **Surface 2** | `#27272A` | Inputs, hover states    | `bg-surface-2`     |
+| **Surface 3** | `#3F3F46` | Active states           | `bg-surface-3`     |
+| **Inset**     | `#09090B` | Code blocks, deep zones | `bg-surface-inset` |
 
 ### Text Colors
 
-| Level | Color | Usage | Class |
-|-------|-------|-------|-------|
-| **Primary** | `#F4F4F5` | Main text, headings | `text-ink-primary` |
-| **Secondary** | `#A1A1AA` | Supporting text | `text-ink-secondary` |
-| **Tertiary** | `#71717A` | Meta info, timestamps | `text-ink-tertiary` |
-| **Muted** | `#52525B` | Disabled states | `text-ink-muted` |
+| Level         | Color     | Usage                 | Class                |
+| ------------- | --------- | --------------------- | -------------------- |
+| **Primary**   | `#F4F4F5` | Main text, headings   | `text-ink-primary`   |
+| **Secondary** | `#A1A1AA` | Supporting text       | `text-ink-secondary` |
+| **Tertiary**  | `#71717A` | Meta info, timestamps | `text-ink-tertiary`  |
+| **Muted**     | `#52525B` | Disabled states       | `text-ink-muted`     |
 
 ### Borders
 
-| Level | Opacity | Usage | Class |
-|-------|---------|-------|-------|
-| **Default** | `10%` | Standard borders (most common) | `border` |
-| **Subtle** | `5%` | Very subtle separation | `border-subtle` |
-| **Medium** | `15%` | Interactive elements | `border-medium` |
-| **Strong** | `20%` | Active/focus borders | `border-strong` |
+| Level       | Opacity | Usage                          | Class           |
+| ----------- | ------- | ------------------------------ | --------------- |
+| **Default** | `10%`   | Standard borders (most common) | `border`        |
+| **Subtle**  | `5%`    | Very subtle separation         | `border-subtle` |
+| **Medium**  | `15%`   | Interactive elements           | `border-medium` |
+| **Strong**  | `20%`   | Active/focus borders           | `border-strong` |
 
 ---
 
 ## 📐 Spacing (8px Grid)
 
-| Size | Value | Usage | Class |
-|------|-------|-------|-------|
-| **1** | 4px | Tight spacing | `gap-1` / `p-1` |
-| **2** | 8px | Small gaps | `gap-2` / `p-2` |
-| **3** | 12px | Default gaps | `gap-3` / `p-3` |
-| **4** | 16px | Standard padding (mobile) | `gap-4` / `p-4` / `px-4` |
-| **6** | 24px | Desktop padding | `p-6` / `px-6` |
-| **8** | 40px | Section spacing | `py-8` |
+| Size  | Value | Usage                     | Class                    |
+| ----- | ----- | ------------------------- | ------------------------ |
+| **1** | 4px   | Tight spacing             | `gap-1` / `p-1`          |
+| **2** | 8px   | Small gaps                | `gap-2` / `p-2`          |
+| **3** | 12px  | Default gaps              | `gap-3` / `p-3`          |
+| **4** | 16px  | Standard padding (mobile) | `gap-4` / `p-4` / `px-4` |
+| **6** | 24px  | Desktop padding           | `p-6` / `px-6`           |
+| **8** | 40px  | Section spacing           | `py-8`                   |
 
 **Standard Pattern:**
+
 ```tsx
-<div className="p-4 sm:p-6">  {/* 16px mobile, 24px desktop */}
-  <div className="space-y-4">  {/* 16px vertical gaps */}
+<div className="p-4 sm:p-6">
+  {" "}
+  {/* 16px mobile, 24px desktop */}
+  <div className="space-y-4">
+    {" "}
+    {/* 16px vertical gaps */}
     ...
   </div>
 </div>
@@ -69,24 +74,25 @@
 
 ## 🔲 Border Radius
 
-| Size | Value | Usage | Example |
-|------|-------|-------|---------|
-| **rounded-xl** | 12px | **Buttons** | Send button, CTAs |
-| **rounded-2xl** | 16px | **Cards** | Most cards, panels |
-| **rounded-3xl** | 24px | **Input bars** | Chat input container |
-| **rounded-full** | 9999px | **Pills** | Role/context pills, badges |
+| Size             | Value  | Usage          | Example                    |
+| ---------------- | ------ | -------------- | -------------------------- |
+| **rounded-xl**   | 12px   | **Buttons**    | Send button, CTAs          |
+| **rounded-2xl**  | 16px   | **Cards**      | Most cards, panels         |
+| **rounded-3xl**  | 24px   | **Input bars** | Chat input container       |
+| **rounded-full** | 9999px | **Pills**      | Role/context pills, badges |
 
 ---
 
 ## 💫 Shadows (Use Sparingly!)
 
-| Level | Usage | Class |
-|-------|-------|-------|
-| **shadow-sm** | Default cards | `shadow-sm` |
+| Level         | Usage                          | Class       |
+| ------------- | ------------------------------ | ----------- |
+| **shadow-sm** | Default cards                  | `shadow-sm` |
 | **shadow-md** | Interactive cards, input focus | `shadow-md` |
-| **shadow-lg** | Modals, dropdowns | `shadow-lg` |
+| **shadow-lg** | Modals, dropdowns              | `shadow-lg` |
 
 **Rules:**
+
 - ✅ Max ONE shadow per element
 - ❌ No custom shadow values (use Tailwind only)
 - ❌ Don't layer multiple shadows
@@ -95,13 +101,14 @@
 
 ## 🪟 Glass Effects (Use Rarely!)
 
-| Class | Usage | When to Use |
-|-------|-------|-------------|
-| `.glass-header` | Sticky headers | Headers that overlay content |
-| `.glass-overlay` | Drawers, modals | Full-screen overlays |
-| `.glass-subtle` | Subtle transparency | Disabled states, subtle backgrounds |
+| Class            | Usage               | When to Use                         |
+| ---------------- | ------------------- | ----------------------------------- |
+| `.glass-header`  | Sticky headers      | Headers that overlay content        |
+| `.glass-overlay` | Drawers, modals     | Full-screen overlays                |
+| `.glass-subtle`  | Subtle transparency | Disabled states, subtle backgrounds |
 
 **Rules:**
+
 - ✅ Only for functional purposes (headers, overlays)
 - ❌ Not for static cards, message bubbles, inputs
 
@@ -174,8 +181,8 @@
 ### Responsive Padding
 
 ```tsx
-className="px-4 sm:px-6"  // 16px mobile, 24px desktop
-className="p-4 sm:p-6"    // Consistent all-around padding
+className = "px-4 sm:px-6"; // 16px mobile, 24px desktop
+className = "p-4 sm:p-6"; // Consistent all-around padding
 ```
 
 ### Touch Targets
@@ -188,12 +195,12 @@ className="p-4 sm:p-6"    // Consistent all-around padding
 
 ```tsx
 // ✅ Use this (accounts for mobile browser chrome)
-className="h-[calc(var(--vh,1vh)*100)]"
+className = "h-[calc(var(--vh,1vh)*100)]";
 // OR
-className="h-dvh"
+className = "h-dvh";
 
 // ❌ Don't use this
-className="h-screen" // or h-[100vh]
+className = "h-screen"; // or h-[100vh]
 ```
 
 ---
@@ -269,10 +276,14 @@ className="h-screen" // or h-[100vh]
 ### Chat Input Pattern
 
 ```tsx
-<div className="rounded-3xl border bg-surface-1 p-2.5 shadow-md
-     focus-within:border-accent-primary focus-within:shadow-lg">
-  <textarea className="bg-transparent text-ink-primary
-    placeholder:text-ink-tertiary" />
+<div
+  className="rounded-3xl border bg-surface-1 p-2.5 shadow-md
+     focus-within:border-accent-primary focus-within:shadow-lg"
+>
+  <textarea
+    className="bg-transparent text-ink-primary
+    placeholder:text-ink-tertiary"
+  />
   <Button variant="primary" size="icon" />
 </div>
 ```
@@ -280,12 +291,7 @@ className="h-screen" // or h-[100vh]
 ### Interactive Card
 
 ```tsx
-<Card
-  variant="interactive"
-  padding="default"
-  onClick={handleClick}
-  className="hover:shadow-md"
->
+<Card variant="interactive" padding="default" onClick={handleClick} className="hover:shadow-md">
   <CardHeader>
     <CardTitle>Title</CardTitle>
     <CardDescription>Description</CardDescription>

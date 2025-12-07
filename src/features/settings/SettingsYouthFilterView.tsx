@@ -118,7 +118,9 @@ export function SettingsYouthFilterView() {
               <div className="rounded-xl border border-border-highlight/50 bg-surface-2 p-4 animate-in fade-in zoom-in-95 duration-200">
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-text-primary">Altersbestätigung erforderlich</h4>
+                    <h4 className="text-sm font-semibold text-text-primary">
+                      Altersbestätigung erforderlich
+                    </h4>
                     <p className="text-xs text-text-secondary mt-1">
                       Bitte gib dein Geburtsjahr ein, um den Jugendschutz zu deaktivieren.
                     </p>

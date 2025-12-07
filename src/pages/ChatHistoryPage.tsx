@@ -69,9 +69,7 @@ export default function ChatHistoryPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-bold text-ink-primary">Gespeicherte Unterhaltungen</h2>
-          <p className="text-sm text-ink-secondary mt-1">
-            Deine vergangenen Chats im Überblick.
-          </p>
+          <p className="text-sm text-ink-secondary mt-1">Deine vergangenen Chats im Überblick.</p>
         </div>
       </div>
 

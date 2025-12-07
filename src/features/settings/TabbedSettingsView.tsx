@@ -86,10 +86,7 @@ export function TabbedSettingsView() {
   );
 
   return (
-    <SettingsLayout
-      activeTab="overview"
-      description="Passe Disa an deine Bedürfnisse an."
-    >
+    <SettingsLayout activeTab="overview" description="Passe Disa an deine Bedürfnisse an.">
       <div className="space-y-2.5 pb-4xl">
         {SECTIONS.map((section) => {
           const Icon = section.icon;
