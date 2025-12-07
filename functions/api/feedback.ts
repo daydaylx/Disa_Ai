@@ -222,14 +222,16 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
       console.error("[Feedback] Resend API error:", response.status, errorData);
 
-      // Provide helpful error messages
+      // Provide helpful error messages with debug info
       let userMessage = "Failed to send email";
       if (response.status === 401) {
         userMessage = "Invalid API key";
       } else if (response.status === 403) {
-        userMessage = "Email sending not authorized";
+        userMessage = `Email sending not authorized: ${JSON.stringify(errorData)}`;
       } else if (response.status === 429) {
         userMessage = "Rate limit exceeded - please try again later";
+      } else if (response.status === 422) {
+        userMessage = `Validation error: ${JSON.stringify(errorData)}`;
       }
 
       return jsonResponse(
