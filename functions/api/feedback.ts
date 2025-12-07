@@ -32,7 +32,7 @@ interface FeedbackRequestBody {
   type?: unknown;
 }
 
-const DEFAULT_TO = "disaai@justmail.de";
+const DEFAULT_TO = "daydayfay05@gmail.com";
 const MAX_MESSAGE_LENGTH = 4000;
 
 // Resend free tier uses onboarding@resend.dev, or your verified domain
