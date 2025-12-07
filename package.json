@@ -5,27 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:functions": "wrangler pages dev dist --live-reload",
     "generate-tokens": "node scripts/generate-tokens.mjs",
     "prebuild": "node scripts/build-info.js && npm run generate-tokens",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "node ./scripts/run-preview.mjs",
-    "typecheck": "tsc -p tsconfig.build.json --noEmit & tsc -p tsconfig.test.json --noEmit & wait",
-    "typecheck:sequential": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "preview:functions": "wrangler pages dev dist",
+    "typecheck": "npm run typecheck:build && npm run typecheck:test",
+    "typecheck:build": "tsc -p tsconfig.build.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint .",
     "lint:css": "stylelint \"**/*.css\" && node ./tools/check-css-hex.mjs",
     "lint:fix": "eslint . --fix",
     "lint:css:fix": "stylelint \"**/*.css\" --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "test": "vitest",
+    "test": "vitest run",
     "test:unit": "vitest run",
     "test:smoke": "vitest run tests/smoke",
     "test:config": "vitest run tests/build",
     "test:build": "node scripts/test-build.mjs",
     "test:watch": "vitest",
-    "test:ci": "vitest run",
-    "test:e2e": "playwright test",
+    "test:ci": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:live": "PLAYWRIGHT_LIVE=1 playwright test tests/e2e/live",
     "e2e:smoke": "playwright test tests/e2e/chat.smoke.spec.ts",
@@ -127,13 +129,14 @@
     "vite": "7.2.4",
     "vite-bundle-analyzer": "^1.2.3",
     "vite-plugin-pwa": "^1.1.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^3.99.0"
   },
   "overrides": {
     "tmp": "0.2.5"
   },
   "engines": {
-    "node": ">=20.19.0 <24"
+    "node": ">=20.19.0 <23"
   },
   "buildInfo": {
     "buildId": "v1.0.0-f57289a",

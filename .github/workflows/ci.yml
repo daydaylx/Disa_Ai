@@ -33,8 +33,21 @@ jobs:
         run: npm ci
       - name: Run Vitest Smoke
         run: npm run test:smoke
-      - name: Install Playwright with dependencies
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(npm ls @playwright/test --json | jq -r '.dependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
+      - name: Install Playwright deps only
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
       - name: Run Playwright Smoke
         run: npm run e2e:smoke
       - name: Upload Smoke Artifacts
@@ -174,8 +187,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright with dependencies
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(npm ls @playwright/test --json | jq -r '.dependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
+
+      - name: Install Playwright deps only
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
 
       - name: Run Mobile E2E Tests
         run: npm run e2e

@@ -44,17 +44,16 @@ export default defineConfig({
       reporter: ["text", "json-summary", "html", "lcov"],
       reportsDirectory: "./coverage",
       thresholds: {
-        lines: 15,
-        functions: 35,
-        branches: 30,
-        statements: 15,
+        lines: 25,
+        functions: 40,
+        branches: 35,
+        statements: 25,
       },
       exclude: [
         "src/main.tsx",
         "src/app/**/*",
-        "src/components/**/*",
-        "src/features/**/*",
-        "src/ui/**/*",
+        // Note: src/components, src/features, src/ui now included in coverage
+        // Add tests incrementally to improve coverage
         "src/styles/**/*",
         "src/pages/**/*",
         "**/node_modules/**",

@@ -105,7 +105,8 @@ storybook-static
 .env
 .env.*
 !.env.example
-!.env.local.example
+!.env.build.example
+!.dev.vars.example
 
 # local junk
 .venv/
@@ -122,14 +123,10 @@ autopilot.log
 *.sqlite3
 *.backup
 
-# Environment variables
-.env
-.aider*
-
 .gemini/
 gha-creds-*.json
+.aider*
 
 # Cloudflare (CRITICAL - secrets must never be committed!)
 .wrangler/
 .dev.vars
-wrangler.toml

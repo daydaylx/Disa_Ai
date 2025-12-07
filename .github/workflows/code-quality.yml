@@ -16,6 +16,7 @@ jobs:
   prettier:
     name: "Prettier Formatting Check"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -47,6 +48,7 @@ jobs:
   bundle-size:
     name: "Bundle Size Analysis"
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -115,6 +117,7 @@ jobs:
   lint-advanced:
     name: "Advanced Linting"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -140,6 +143,7 @@ jobs:
   performance-audit:
     name: "Performance Audit"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.event_name == 'pull_request'
     steps:
       - name: "Checkout Repository"
@@ -186,6 +190,7 @@ jobs:
   code-quality-summary:
     name: "Code Quality Summary"
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [prettier, bundle-size, lint-advanced]
     if: always()
     steps:

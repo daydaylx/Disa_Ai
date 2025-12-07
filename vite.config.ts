@@ -103,19 +103,6 @@ export default defineConfig(({ mode }) => {
     base = "/";
   }
 
-  // Ensure required environment variables for production
-  if (isProduction) {
-    const requiredEnvVars = [
-      "OPENROUTER_API_KEY", // Runtime from Cloudflare Workers
-    ];
-
-    for (const envVar of requiredEnvVars) {
-      if (!env[envVar]) {
-        console.warn(`⚠️  Missing environment variable: ${envVar} in production mode`);
-      }
-    }
-  }
-
   const devPort = Number.parseInt(env.VITE_PORT || "5173", 10);
   const hmrPort = Number.parseInt(env.VITE_HMR_PORT || `${devPort}`, 10);
   const hmrHost = env.VITE_HMR_HOST || "localhost";

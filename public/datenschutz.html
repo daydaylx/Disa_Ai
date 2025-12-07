@@ -58,15 +58,27 @@
         margin: 0.75rem 0;
       }
 
-      .back-link {
-        display: inline-block;
-        margin-bottom: 2rem;
+      ul {
+        margin: 0.75rem 0;
+        padding-left: 1.5rem;
+      }
+
+      li {
+        margin: 0.5rem 0;
+      }
+
+      a {
         color: #60a5fa;
         text-decoration: none;
       }
 
-      .back-link:hover {
+      a:hover {
         text-decoration: underline;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
       }
     </style>
   </head>
@@ -74,250 +86,205 @@
     <div class="container">
       <div class="header">
         <h1>Datenschutzerklärung</h1>
+        <p style="color: var(--text-secondary)">Stand: Dezember 2025</p>
       </div>
 
       <a href="/" class="back-link">← Zurück zur App</a>
 
       <div class="content">
-        <p style="margin-bottom: 1.5rem; font-style: italic">
-          Diese Datenschutzerklärung beschreibt, welche Daten bei der Nutzung von Disa AI (im
-          Folgenden „Anwendung" oder „wir") verarbeitet werden, zu welchen Zwecken dies geschieht
-          und welche Rechte Sie als betroffene Person haben. Die Anwendung ist ein webbasiertes
-          Chat‑Interface, das auf OpenRouter‑Modelle zugreift und als Progressive‑Web‑App im Browser
-          betrieben wird.
+        <h2>1. Verantwortlicher</h2>
+        <p>
+          Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer nationaler Datenschutzgesetze ist:
         </p>
-        <p style="margin-bottom: 1.5rem; font-style: italic; font-weight: bold">
-          Vorweg: Die Marketing‑Aussage „Deine Daten bleiben auf deinem Gerät" ist irreführend. Ihre
-          Eingaben werden zwangsläufig an externe KI‑Dienste weitergeleitet. Bitte lesen Sie die
-          folgenden Abschnitte sorgfältig und verzichten Sie darauf, vertrauliche Informationen in
-          die Chat‑Felder einzutragen.
-        </p>
-
-        <h2>1. Verantwortliche Stelle und Kontakt</h2>
         <p>
           David Grunert<br />
-          E‑Mail: grunert94@hotmail.com
+          Graßdorfer Straße 9<br />
+          04425 Taucha<br />
+          Deutschland
         </p>
-        <p>
-          Die Anwendung wird privat betrieben. Es besteht daher keine gesetzliche Verpflichtung zur
-          Benennung eines Datenschutzbeauftragten. Bei Fragen zum Datenschutz können Sie sich aber
-          jederzeit an die obige Adresse wenden.
-        </p>
+        <p>E-Mail: grunert94@hotmail.com</p>
 
-        <h2>2. Welche Daten werden verarbeitet?</h2>
-
-        <h3>2.1 Nutzereingaben und Chat‑Daten</h3>
+        <h2>2. Allgemeines zur Datenverarbeitung</h2>
         <p>
-          Wenn Sie im Chat Texte eingeben, werden diese zusammen mit den von Ihnen gewählten
-          Einstellungen (z. B. Modellname, Temperatur) an einen Serverless‑Proxy gesendet, der die
-          Anfrage an die Plattform OpenRouter weiterleitet. Der Quellcode zeigt, dass der Proxy Ihre
-          Chat‑Nachrichten unverändert an die OpenRouter‑API schickt und dabei unseren API‑Schlüssel
-          sowie einen HTTP‑Referer mit der Herkunfts‑URL übermittelt.
+          Ich betreibe disaai.de als privates, nicht-kommerzielles Projekt. Personenbezogene Daten werden nur verarbeitet, soweit dies zur Bereitstellung der Website, der KI-Funktionen oder zur Kommunikation mit Nutzern erforderlich ist.
         </p>
         <p>
-          Die OpenRouter‑Plattform wiederum leitet Ihre Eingaben an den jeweils ausgewählten
-          Modellanbieter (z. B. OpenAI, Mistral, Anthropic) weiter. Wir haben keinerlei Kontrolle
-          darüber, ob diese Anbieter Ihre Inhalte speichern oder für Trainingszwecke nutzen. Laut
-          der OpenRouter‑Privacy‑Policy sammelt OpenRouter personenbezogene Daten, speichert Kopien
-          Ihrer Anfragen und kann Tracking‑Technologien einsetzen. Zusätzlich gibt OpenRouter an,
-          dass die einzelnen Modellanbieter eigene, teils abweichende Datenrichtlinien haben und Sie
-          sich dort informieren müssen.
+          „Personenbezogene Daten" sind alle Informationen, die sich auf eine identifizierte oder identifizierbare Person beziehen (z. B. IP-Adresse, E-Mail-Adresse, Inhalte von Nachrichten).
         </p>
-        <p style="color: #fb923c; font-weight: bold">
-          Wichtig: Wenn Sie im Chat personenbezogene Daten (z. B. Namen, Adressen, Gesundheits‑ oder
-          Finanzdaten) eingeben, gelangen diese an OpenRouter und möglicherweise an Drittanbieter.
-          Wir raten dringend davon ab, vertrauliche Informationen einzugeben.
-        </p>
-
-        <h3>2.2 Lokale Speicherung im Browser</h3>
-        <p>
-          Die Anwendung speichert verschiedene Datensätze in Ihrem Browser
-          (LocalStorage/SessionStorage). Dazu gehören u. a.:
-        </p>
+        <p>Rechtsgrundlagen der Verarbeitung sind insbesondere:</p>
         <ul>
-          <li>Konversationen und Metadaten</li>
-          <li>Nutzerpräferenzen, Theme‑Einstellungen und Favoriten</li>
-          <li>API‑Schlüssel (falls Sie einen eigenen OpenRouter‑API‑Key verwenden)</li>
-          <li>Analyse‑Events und Sitzungen</li>
-        </ul>
-        <p>
-          Diese Informationen verbleiben auf Ihrem Gerät und werden nicht an uns übertragen. Sie
-          können die gespeicherten Daten jederzeit löschen, indem Sie in Ihrem Browser die
-          Website‑Daten (Cookies und Site Data) für disaai.de löschen. Beachten Sie, dass der
-          Chat‑Verlauf dann verloren geht.
-        </p>
-
-        <h3>2.3 Technische Zugriffsdaten</h3>
-        <p>
-          Beim Aufruf der Anwendung verarbeiten unsere technischen Dienstleister automatisch
-          Protokoll‑ und Verbindungsdaten, um die Seite auszuliefern und vor Angriffen zu schützen.
-          Dazu gehören insbesondere IP‑Adresse, Browser‑Typ, Betriebssystem, angeforderte Ressourcen
-          sowie Datum und Uhrzeit des Zugriffs. Diese Daten werden aus Sicherheitsgründen benötigt
-          und begründen ein berechtigtes Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO.
-        </p>
-
-        <h2>3. Eingesetzte Dienstleister und Drittanbieter</h2>
-
-        <h3>3.1 Cloudflare (Hosting und Content Delivery Network)</h3>
-        <p>
-          Unsere Anwendung wird über Cloudflare Pages gehostet. Cloudflare sorgt für die
-          Bereitstellung der statischen Inhalte, die Abwehr von DDoS‑Angriffen und die Auslieferung
-          über ein weltweites CDN. Cloudflare verarbeitet technische Daten wie IP‑Adresse,
-          Browser‑Typ, Zeitstempel und angeforderte Ressourcen.
-        </p>
-        <p>
-          Darüber hinaus ist in der Anwendung Cloudflare Web Analytics (früher „Browser Insights")
-          aktiv. Laut Cloudflare handelt es sich um eine „privacy‑first"‑Lösung: Das Unternehmen
-          erhebt keine Cookies und verwendet keine clientseitigen Speichermechanismen; IP‑Adresse
-          und User‑Agent werden nicht zur Erstellung von Nutzerprofilen genutzt. Cloudflare erhebt
-          anonyme Metriken (z. B. Seitenaufrufe, Ladezeiten) zur Analyse der Performance. Wir nutzen
-          diese Statistiken, um die Stabilität und Geschwindigkeit der Anwendung zu verbessern.
-        </p>
-
-        <h3>3.2 OpenRouter und Modellanbieter</h3>
-        <p>
-          Wie oben erläutert, werden Ihre Chat‑Eingaben an OpenRouter weitergeleitet, das wiederum
-          diverse KI‑Modelle bereitstellt. OpenRouter erhebt und speichert persönliche Daten,
-          einschließlich Ihrer Eingaben, sowie technische Metadaten wie IP‑Adresse,
-          Browser‑Informationen und Cookies. Wir haben keinen Einfluss auf die Datenverarbeitungs‑
-          und Retentions‑praxis der einzelnen Modellanbieter; OpenRouter informiert lediglich
-          darüber, dass die Nutzungsbedingungen je nach Provider variieren.
-        </p>
-
-        <h3>3.3 INWX (Domain‑Provider)</h3>
-        <p>
-          Die Domain disaai.de wird über INWX GmbH & Co. KG verwaltet. INWX verarbeitet technische
-          Daten (z. B. IP‑Adresse, DNS‑Anfragen) zur Domainverwaltung. Diese Verarbeitung erfolgt im
-          berechtigten Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO.
-        </p>
-
-        <h3>3.4 Feedback‑Seite</h3>
-        <p>
-          Im Feedback‑Formular können Sie Ideen, Fehler oder UI‑Vorschläge übermitteln. In der
-          aktuellen Version erfolgt keine tatsächliche Übertragung an einen Server, sondern
-          lediglich eine Simulation. Wenn künftig eine echte API verwendet wird, werden Ihre Angaben
-          und die technischen Details entsprechend an diesen Dienstleister übermittelt. Nutzen Sie
-          das Feedback‑Formular nur, wenn Sie damit einverstanden sind.
-        </p>
-
-        <h2>4. Rechtsgrundlagen der Verarbeitung</h2>
-        <ul>
-          <li>
-            <strong>Erbringung des Dienstes (Vertragsdurchführung)</strong> – Die Verarbeitung Ihrer
-            Chat‑Eingaben und der technische Betrieb der Anwendung erfolgen, um Ihnen die angefragte
-            Funktion zu liefern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
-          </li>
-          <li>
-            <strong>Berechtigtes Interesse</strong> – Die Erhebung von technischen Zugriffsdaten und
-            die Nutzung von Cloudflare Web Analytics dienen der Sicherheit und Leistungsanalyse
-            unserer Website. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
-          </li>
-          <li>
-            <strong>Einwilligung für optionale Funktionen</strong> – Wenn Sie einen eigenen
-            OpenRouter‑API‑Key hinterlegen oder bestimmte Modelle nutzen, erfolgt die Verarbeitung
-            Ihrer Daten auf Grundlage Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Sie
-            können die Einwilligung jederzeit widerrufen, indem Sie den API‑Key aus den
-            Einstellungen entfernen.
-          </li>
+          <li>Art. 6 Abs. 1 lit. b DSGVO (Vertrag / Nutzung der angebotenen Funktionen)</li>
+          <li>Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse, z. B. sichere und stabile Bereitstellung der Website)</li>
+          <li>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), sofern du diese ausdrücklich erteilst</li>
         </ul>
 
-        <h2>5. Datenübermittlungen in Drittstaaten</h2>
+        <h2>3. Bereitstellung der Website und Server-Logfiles</h2>
         <p>
-          Cloudflare Inc. und OpenRouter Inc. haben ihren Sitz in den USA. Bei der Nutzung der
-          Anwendung werden Ihre Daten an Server außerhalb der Europäischen Union übermittelt. Für
-          Cloudflare bestehen Standardvertragsklauseln und zusätzliche Maßnahmen; Cloudflare
-          verspricht ein hohes Datenschutzniveau, weist jedoch darauf hin, dass die USA aus Sicht
-          des Europäischen Gerichtshofs kein gleichwertiges Datenschutzniveau bieten. OpenRouter
-          unterliegt US‑Recht. Wir haben keinen Einfluss auf deren Verarbeitung. Durch die Nutzung
-          der KI‑Funktionen willigen Sie in diese Übermittlung ein.
+          Beim Aufruf von disaai.de werden automatisch technische Daten durch den von mir genutzten Hosting- bzw. CDN-Anbieter verarbeitet. Dazu gehören insbesondere:
+        </p>
+        <ul>
+          <li>IP-Adresse des anfragenden Endgeräts</li>
+          <li>Datum und Uhrzeit des Zugriffs</li>
+          <li>aufgerufene URL / angefragte Ressourcen</li>
+          <li>übertragene Datenmenge</li>
+          <li>verwendeter Browser und Betriebssystem (User-Agent)</li>
+          <li>Referrer-URL (die zuvor besuchte Seite, sofern übertragen)</li>
+        </ul>
+        <p>Diese Daten werden in Server-Logfiles verarbeitet, um:</p>
+        <ul>
+          <li>die Website technisch bereitzustellen</li>
+          <li>Stabilität und Sicherheit zu gewährleisten</li>
+          <li>Missbrauch / Angriffe zu erkennen und abzuwehren</li>
+        </ul>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt in einer sicheren und funktionsfähigen Bereitstellung der Website.
+        </p>
+        <p>
+          Die Logdaten werden vom Hoster bzw. CDN-Anbieter in der Regel für einen begrenzten Zeitraum gespeichert und danach automatisch gelöscht. Die konkrete Speicherdauer bestimmt der jeweilige Anbieter.
         </p>
 
-        <h2>6. Speicherdauer und Löschung</h2>
+        <h3>Einsatz von Content Delivery Network / Hosting-Anbieter</h3>
+        <p>
+          Für die Auslieferung der Website kann ein Content Delivery Network (z. B. Cloudflare) genutzt werden. Dabei werden technische Verbindungsdaten (insbesondere IP-Adresse, Protokoll- und Performance-Daten) über die Infrastruktur des Anbieters verarbeitet, um die Seite schnell und sicher auszuliefern.
+        </p>
+        <p>
+          Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und effizienten Bereitstellung der Website). Soweit dabei Daten in Drittländer (z. B. USA) übertragen werden, erfolgt dies auf Basis der vom Anbieter eingesetzten Schutzmechanismen (z. B. Standardvertragsklauseln).
+        </p>
+
+        <h2>4. Nutzung der KI-Funktion („Disa AI")</h2>
+
+        <h3>4.1 Verarbeitung der Eingaben (Prompts) und Antworten</h3>
+        <p>
+          Wenn du die KI-Funktion der App nutzt, verarbeitest du aktiv Inhalte, indem du Texte eingibst („Prompts"). Diese Inhalte werden:
+        </p>
         <ul>
-          <li>
-            <strong>Lokaler Speicher</strong> – Chat‑Verläufe, Einstellungen und Favoriten
-            verbleiben dauerhaft in Ihrem Browser, bis Sie diese manuell löschen. Wir speichern
-            keine Kopie.
-          </li>
-          <li>
-            <strong>OpenRouter und Modellanbieter</strong> – Wir erhalten keine Informationen
-            darüber, wie lange OpenRouter oder die angeschlossenen Anbieter Ihre Daten aufbewahren.
-            Laut deren eigenen Angaben wird ein Teil der Logs zu Analyse‑ und Sicherheitszwecken
-            gespeichert.
-          </li>
-          <li>
-            <strong>Server‑Logs und Cloudflare‑Analytics</strong> – Technische Zugriffsdaten werden
-            für Sicherheitszwecke gespeichert und anschließend automatisch gelöscht. Cloudflare
-            beschreibt, dass seine Web‑Analytics keine Identifikation einzelner Nutzer ermöglicht
-            und keine langfristigen Profile anlegt.
-          </li>
+          <li>in deinem Browser verarbeitet (Anzeige im Interface), und</li>
+          <li>an die Schnittstelle des Dienstleisters OpenRouter, Inc. übermittelt, um eine KI-Antwort zu erzeugen.</li>
+        </ul>
+        <p>Dabei werden insbesondere folgende Daten verarbeitet:</p>
+        <ul>
+          <li>von dir eingegebene Texte (Prompts, Verlaufsnachrichten)</li>
+          <li>technisch erforderliche Metadaten (z. B. IP-Adresse, Zeitstempel, Modellkennung, Tokenanzahl)</li>
+          <li>die vom KI-Modell generierte Antwort</li>
+        </ul>
+        <p>
+          Die Verarbeitung ist erforderlich, um dir die Kernfunktion der Website (KI-Chat) zur Verfügung zu stellen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung eines Nutzungsverhältnisses / bereitgestellte Funktion).
+        </p>
+
+        <h3>4.2 Einsatz von OpenRouter</h3>
+        <p>
+          Zur Anbindung verschiedener KI-Modelle nutze ich den Dienst OpenRouter (OpenRouter, Inc.). Bei Nutzung der KI-Funktion werden deine Anfragen per API an OpenRouter übermittelt. OpenRouter verarbeitet hierfür Request-Metadaten und leitet deine Inhalte an die von dir bzw. von mir konfigurierte(n) Modellanbieter weiter.
+        </p>
+        <p>Nach aktuellen Angaben von OpenRouter werden:</p>
+        <ul>
+          <li>Prompts und Completions standardmäßig nicht dauerhaft geloggt,</li>
+          <li>es werden jedoch Metadaten (z. B. Timestamp, verwendetes Modell, Tokenanzahl) zu Abrechnungs- und Statistikzwecken gespeichert.</li>
+        </ul>
+        <p>
+          Jeder über OpenRouter angebundene Modellanbieter hat eigene Datenschutz- und Logging-Regeln. OpenRouter stellt Informationen zu den jeweiligen Datenrichtlinien bereit und ermöglicht eine Steuerung, welche Anbieter genutzt werden.
+        </p>
+        <p>
+          Die Verarbeitung kann in Drittländern (insbesondere USA und anderen Staaten außerhalb der EU/EWR) stattfinden. Dort besteht ggf. kein mit der EU vergleichbares Datenschutzniveau. Rechtsgrundlage für diese Übermittlung ist:
+        </p>
+        <ul>
+          <li>Art. 6 Abs. 1 lit. b DSGVO (Nutzung der KI-Funktion auf deinen Wunsch),</li>
+          <li>ggf. Art. 49 Abs. 1 lit. a DSGVO, sofern du im Einzelfall ausdrückliche Einwilligungen erteilst.</li>
+        </ul>
+        <p>
+          Weitere Informationen findest du in der Datenschutzerklärung von OpenRouter:<br />
+          <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener noreferrer">https://openrouter.ai/privacy</a>
+        </p>
+
+        <h3>4.3 Sensible und vertrauliche Inhalte</h3>
+        <p>
+          Bitte gib in der KI-Funktion keine besonders sensiblen personenbezogenen Daten ein (z. B. Gesundheitsdaten, sehr intime Informationen, Daten Dritter, vollständige Klarnamenslisten oder Zahlungsinformationen). Trotz technischer Schutzmaßnahmen können Eingaben über externe Dienstleister verarbeitet werden und sind nie vollständig risikofrei.
+        </p>
+
+        <h2>5. Lokale Speicherung im Browser (LocalStorage / IndexedDB / PWA)</h2>
+        <p>
+          Die App speichert bestimmte Informationen lokal auf deinem Endgerät, um die Nutzung komfortabler zu machen und Funktionen bereitzustellen, z. B.:
+        </p>
+        <ul>
+          <li>persönliche Einstellungen (z. B. Theme, Sprache, UI-Optionen)</li>
+          <li>ggf. Chatverläufe / Sitzungsdaten</li>
+          <li>optional: dein eigener API-Schlüssel für OpenRouter (falls du diese Funktion nutzt)</li>
+        </ul>
+        <p>
+          Diese Daten werden nicht an mich als Betreiber übermittelt, sondern verbleiben in deinem Browser, solange du sie nicht selbst löschst (z. B. über „Website-Daten löschen", „Cache leeren" oder ähnliche Funktionen deines Browsers).
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der gewünschten Funktionen) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer nutzerfreundlichen Anwendung).
+        </p>
+        <p>Du kannst die lokale Speicherung einschränken, indem du:</p>
+        <ul>
+          <li>die PWA-Funktion nicht installierst bzw. wieder entfernst,</li>
+          <li>deinen Browser so konfigurierst, dass lokale Daten regelmäßig gelöscht werden,</li>
+          <li>in den App-Einstellungen (soweit vorhanden) Verlaufs- oder Konfigurationsdaten zurücksetzt.</li>
         </ul>
 
-        <h2>7. Ihre Rechte</h2>
-        <p>Sie haben gegenüber uns und den eingesetzten Dienstleistern folgende Rechte:</p>
+        <h2>6. Cookies und Tracking</h2>
+        <p>Aktuell werden auf disaai.de:</p>
         <ul>
-          <li>
-            <strong>Auskunft (Art. 15 DSGVO)</strong> – Sie können Auskunft darüber verlangen,
-            welche personenbezogenen Daten wir verarbeiten.
-          </li>
-          <li>
-            <strong>Berichtigung (Art. 16 DSGVO)</strong> – Sollten Daten fehlerhaft sein, haben Sie
-            ein Recht auf Berichtigung.
-          </li>
-          <li>
-            <strong>Löschung (Art. 17 DSGVO)</strong> – Sie können die Löschung Ihrer
-            personenbezogenen Daten verlangen, soweit keine gesetzlichen Aufbewahrungspflichten
-            entgegenstehen. Beachten Sie, dass wir keine Chat‑Daten speichern; für Löschungen bei
-            OpenRouter oder den Modellanbietern müssen Sie sich an diese Anbieter wenden.
-          </li>
-          <li>
-            <strong>Einschränkung der Verarbeitung (Art. 18 DSGVO)</strong> – Sie können die
-            Einschränkung der Verarbeitung verlangen.
-          </li>
-          <li>
-            <strong>Datenübertragbarkeit (Art. 20 DSGVO)</strong> – Sie haben das Recht, Daten in
-            einem strukturierten, gängigen Format zu erhalten.
-          </li>
-          <li>
-            <strong>Widerspruch (Art. 21 DSGVO)</strong> – Sie können aus Gründen, die sich aus
-            Ihrer besonderen Situation ergeben, jederzeit der Verarbeitung personenbezogener Daten
-            widersprechen.
-          </li>
-          <li>
-            <strong>Beschwerde bei einer Aufsichtsbehörde</strong> – Wenn Sie der Ansicht sind, dass
-            die Verarbeitung Ihrer Daten gegen Datenschutzrecht verstößt, können Sie sich bei einer
-            Datenschutzaufsichtsbehörde beschweren. Zuständig für uns ist die
-            <a
-              href="https://www.datenschutz-berlin.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              style="color: #60a5fa"
-              >Berliner Beauftragte für Datenschutz und Informationsfreiheit</a
-            >.
-          </li>
+          <li>keine Tracking- oder Marketing-Cookies gesetzt,</li>
+          <li>keine externen Analyse-Tools (wie Google Analytics o. Ä.) verwendet.</li>
+        </ul>
+        <p>
+          Technisch notwendige Cookies oder vergleichbare Technologien können durch den Hosting-/CDN-Anbieter eingesetzt werden, um Sicherheits- und Performancefunktionen bereitzustellen (z. B. Lastverteilung, Schutz vor Angriffen).
+        </p>
+        <p>
+          Rechtsgrundlage für die Nutzung solcher technisch erforderlichen Technologien ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und effizienten Bereitstellung der Website).
+        </p>
+
+        <h2>7. Kontaktaufnahme per E-Mail</h2>
+        <p>
+          Wenn du mich per E-Mail kontaktierst, werden die von dir mitgeteilten Daten (z. B. Name, E-Mail-Adresse, Inhalte deiner Nachricht) gespeichert, um die Anfrage zu bearbeiten.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Anbahnung oder Durchführung eines Nutzungsverhältnisses) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).
+        </p>
+        <p>
+          Die Daten werden gelöscht, sobald sie für die Kommunikation nicht mehr erforderlich sind, es sei denn, gesetzliche Aufbewahrungspflichten stehen dem entgegen.
+        </p>
+
+        <h2>8. Speicherdauer</h2>
+        <p>Soweit in dieser Datenschutzerklärung keine abweichenden Speicherdauern angegeben sind, gilt:</p>
+        <ul>
+          <li>Server-Logfiles werden vom Hoster / CDN-Anbieter nur für einen begrenzten Zeitraum gespeichert und anschließend gelöscht.</li>
+          <li>Lokale Daten in deinem Browser bleiben dort gespeichert, bis du sie selbst entfernst.</li>
+          <li>E-Mail-Korrespondenz wird nur so lange gespeichert, wie dies für die Bearbeitung und ggf. zur Einhaltung gesetzlicher Aufbewahrungspflichten erforderlich ist.</li>
+          <li>Metadaten bei OpenRouter und den Modellanbietern werden entsprechend deren jeweiligen Richtlinien gespeichert.</li>
         </ul>
 
-        <h2>8. Sicherheit und Verschlüsselung</h2>
+        <h2>9. Rechtsgrundlagen im Überblick</h2>
+        <p>Soweit nicht im Einzelfall anders angegeben, stütze ich die Verarbeitung personenbezogener Daten auf folgende Rechtsgrundlagen:</p>
+        <ul>
+          <li><strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Erfüllung eines Vertrags / Bereitstellung der von dir genutzten Funktionen (z. B. KI-Chat)</li>
+          <li><strong>Art. 6 Abs. 1 lit. f DSGVO:</strong> Wahrung berechtigter Interessen (z. B. sichere, stabile und effiziente Bereitstellung der Website)</li>
+          <li><strong>Art. 6 Abs. 1 lit. a DSGVO:</strong> Einwilligung (wenn du diese ausdrücklich erteilst)</li>
+        </ul>
+
+        <h2>10. Deine Rechte als betroffene Person</h2>
+        <p>Dir stehen hinsichtlich der dich betreffenden personenbezogenen Daten folgende Rechte zu (Art. 15 ff. DSGVO):</p>
+        <ul>
+          <li>Recht auf Auskunft über die verarbeiteten Daten</li>
+          <li>Recht auf Berichtigung unrichtiger oder unvollständiger Daten</li>
+          <li>Recht auf Löschung („Recht auf Vergessenwerden"), soweit keine gesetzlichen Pflichten entgegenstehen</li>
+          <li>Recht auf Einschränkung der Verarbeitung</li>
+          <li>Recht auf Datenübertragbarkeit, sofern die Voraussetzungen erfüllt sind</li>
+          <li>Recht auf Widerspruch gegen die Verarbeitung, soweit diese auf Art. 6 Abs. 1 lit. e oder f DSGVO beruht</li>
+          <li>Recht auf Widerruf erteilter Einwilligungen mit Wirkung für die Zukunft</li>
+        </ul>
+        <p>Zur Ausübung deiner Rechte kannst du dich jederzeit an die unter Ziffer 1 genannten Kontaktdaten wenden.</p>
+
+        <h2>11. Beschwerderecht bei einer Aufsichtsbehörde</h2>
         <p>
-          Die Anwendung wird ausschließlich über HTTPS ausgeliefert; dadurch wird der Transportweg
-          verschlüsselt. Wir haben zusätzliche Sicherheits‑Header implementiert (u. a. CSP, HSTS und
-          Permission‑Policy). Dennoch sollten Sie sich darüber im Klaren sein, dass die
-          Vertraulichkeit Ihrer Eingaben nicht gewährleistet werden kann, da die Nachrichten an
-          externe KI‑Dienste übertragen werden und dort verarbeitet werden. Nutzen Sie die Anwendung
-          daher nur für allgemeine Anfragen und nicht für vertrauliche Geschäfts‑ oder
-          Privatangelegenheiten.
+          Wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen die DSGVO verstößt, hast du das Recht, Beschwerde bei einer Datenschutzaufsichtsbehörde einzulegen, insbesondere in dem Mitgliedstaat deines Aufenthaltsorts, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.
         </p>
 
-        <h2>9. Fazit</h2>
+        <h2>12. Änderungen dieser Datenschutzerklärung</h2>
         <p>
-          Disa AI ist ein experimenteller Chat‑Dienst, der externe KI‑Anbieter nutzt. Lokale
-          Speicherung und Cloudflare‑Analytics sind datensparsam umgesetzt, allerdings verlassen
-          Ihre Eingaben spätestens beim Aufruf der OpenRouter‑API Ihr Gerät. Eine „garantiert
-          private" Nutzung, wie in der Werbeaussage suggeriert, existiert daher nicht. Prüfen Sie
-          vor der Nutzung, ob Sie dieses Risiko eingehen möchten.
+          Ich behalte mir vor, diese Datenschutzerklärung bei Änderungen der technischen Umsetzung, der genutzten Dienstleister oder der Rechtslage anzupassen. Es gilt jeweils die auf dieser Website abrufbare aktuelle Version.
         </p>
-
-        <p style="margin-top: 1.5rem; margin-bottom: 0">Stand: 05. Dezember 2025</p>
       </div>
 
       <footer

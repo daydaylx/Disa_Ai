@@ -16,6 +16,7 @@ jobs:
   release-check:
     name: "Release Version Check"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.event_name == 'pull_request'
     steps:
       - name: "Checkout Repository"
@@ -72,6 +73,7 @@ jobs:
   release:
     name: "Automated Release"
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: "Checkout Repository"

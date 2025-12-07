@@ -32,8 +32,8 @@ interface ChatRequest {
 // OpenRouter API endpoint
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-// Allowed origins for CORS (reserved for future CORS validation)
-const _ALLOWED_ORIGINS = [
+// Allowed origins for CORS validation
+const ALLOWED_ORIGINS = [
   "https://disaai.de",
   "https://disa-ai.pages.dev",
   "http://localhost:5173",
@@ -42,13 +42,29 @@ const _ALLOWED_ORIGINS = [
 ];
 
 /**
+ * Check if origin is allowed for CORS
+ */
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.some((allowed) => origin.startsWith(allowed.replace(/:\d+$/, "")));
+}
+
+/**
+ * Get CORS origin header value
+ */
+function getCORSOrigin(request: Request): string {
+  const origin = request.headers.get("Origin");
+  return isAllowedOrigin(origin) ? origin! : ALLOWED_ORIGINS[0];
+}
+
+/**
  * Handle CORS preflight requests
  */
-function handleCORS(): Response {
+function handleCORS(request: Request): Response {
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": getCORSOrigin(request),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Accept",
       "Access-Control-Max-Age": "86400",
@@ -59,12 +75,13 @@ function handleCORS(): Response {
 /**
  * Return JSON error response with CORS headers
  */
-function jsonError(message: string, status: number): Response {
+function jsonError(message: string, status: number, request?: Request): Response {
+  const origin = request ? getCORSOrigin(request) : "*";
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": origin,
     },
   });
 }
@@ -81,12 +98,12 @@ export async function onRequest(context: {
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
-    return handleCORS();
+    return handleCORS(request);
   }
 
   // Only allow POST requests
   if (request.method !== "POST") {
-    return jsonError("Method not allowed. Use POST.", 405);
+    return jsonError("Method not allowed. Use POST.", 405, request);
   }
 
   try {
@@ -96,6 +113,7 @@ export async function onRequest(context: {
       return jsonError(
         "Server configuration error: API key not configured. Please set OPENROUTER_API_KEY in Cloudflare Dashboard.",
         500,
+        request,
       );
     }
 
@@ -104,16 +122,20 @@ export async function onRequest(context: {
     try {
       body = await request.json();
     } catch {
-      return jsonError("Invalid JSON in request body", 400);
+      return jsonError("Invalid JSON in request body", 400, request);
     }
 
     // Validate required fields
     if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
-      return jsonError("Invalid request: 'messages' array is required and must not be empty", 400);
+      return jsonError(
+        "Invalid request: 'messages' array is required and must not be empty",
+        400,
+        request,
+      );
     }
 
     if (!body.model || typeof body.model !== "string") {
-      return jsonError("Invalid request: 'model' string is required", 400);
+      return jsonError("Invalid request: 'model' string is required", 400, request);
     }
 
     // Build OpenRouter request payload
@@ -166,8 +188,10 @@ export async function onRequest(context: {
         errorMessage = `OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`;
       }
 
-      return jsonError(errorMessage, openRouterResponse.status);
+      return jsonError(errorMessage, openRouterResponse.status, request);
     }
+
+    const corsOrigin = getCORSOrigin(request);
 
     // Handle streaming response
     if (body.stream) {
@@ -178,7 +202,7 @@ export async function onRequest(context: {
           "Content-Type": "text/event-stream",
           "Cache-Control": "no-cache",
           Connection: "keep-alive",
-          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Origin": corsOrigin,
         },
       });
     }
@@ -191,12 +215,16 @@ export async function onRequest(context: {
       status: openRouterResponse.status,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": corsOrigin,
       },
     });
   } catch (error) {
     console.error("❌ Unexpected error in /api/chat:", error);
 
-    return jsonError(error instanceof Error ? error.message : "Internal server error", 500);
+    return jsonError(
+      error instanceof Error ? error.message : "Internal server error",
+      500,
+      request,
+    );
   }
 }

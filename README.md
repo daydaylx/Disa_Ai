@@ -1,388 +1,276 @@
 # Disa AI
 
 [![Build & Test CI](https://img.shields.io/github/actions/workflow/status/daydaylx/Disa_Ai/ci.yml?branch=main&label=Build%20%26%20Test&style=for-the-badge)](https://github.com/daydaylx/Disa_Ai/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/npm/v/disa-ai?label=version&style=for-the-badge)](package.json)
-[![License](https://img.shields.io/badge/license-Private-blue?style=for-the-badge)](#-lizenz)
-
-**Disa AI** ist eine professionelle, mobile-first AI-Chat Progressive Web App (PWA), die mit React, Vite, TypeScript und Tailwind CSS entwickelt wurde. Die Anwendung ist speziell für eine optimale Darstellung auf mobilen Endgeräten konzipiert und zeichnet sich durch ein modernes Dramatic Neumorphism Design-System, eine robuste Codebasis und eine auf Sicherheit und Performance ausgerichtete Architektur aus.
+[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](package.json)
+[![License](https://img.shields.io/badge/license-Private-blue?style=for-the-badge)](#lizenz)
 
 ---
 
-## Inhaltsverzeichnis
+## Übersicht
 
-- [🏛️ Architektur-Überblick](#️-architektur-überblick)
-- [⚙️ Detaillierte Funktionsweise](#️-detaillierte-funktionsweise)
-  - [Der Chat-Lebenszyklus](#der-chat-lebenszyklus)
-  - [Komponenten-Architektur](#komponenten-architektur)
-  - [Konfiguration & Feature Flags](#konfiguration--feature-flags)
-  - [PWA und Offline-Fähigkeit](#pwa-und-offline-fähigkeit)
-- [📱 Mobile Navigation & Swipe Gestures](#-mobile-navigation--swipe-gestures)
-- [🧪 Spezifikationstests](#-spezifikationstests)
-- [🛠️ Tech Stack](#-tech-stack)
-- [🚀 Erste Schritte](#-erste-schritte)
-  - [Voraussetzungen](#voraussetzungen)
-  - [Installation & Start](#installation--start)
-- [📜 Verfügbare Skripte](#-verfügbare-skripte)
-- [🧪 Qualitätssicherung & Testing](#-qualitätssicherung--testing)
-- [☁️ Build & Deployment](#️-build--deployment)
-- [🤝 Contributing](#-contributing)
-- [📜 Lizenz](#-lizenz)
+**Disa AI** ist eine mobile-first Progressive Web App (PWA) für KI-gestützte Unterhaltungen. Die App ermöglicht Chats mit verschiedenen KI-Modellen über [OpenRouter](https://openrouter.ai), bietet ein Rollen-/Persona-System und ist vollständig offline-fähig (Shell und UI).
+
+**Zielgruppe:** Private Nutzung als persönlicher KI-Chat. Kein Enterprise-Produkt.
+
+**Live-Demo:** [disaai.de](https://disaai.de)
 
 ---
 
-## 🎨 UI & Design System
+## Features
 
-Das Design der Anwendung ist auf ein modernes, konsistentes und performantes Nutzererlebnis ausgerichtet. Es basiert auf einem durchdachten System aus Design-Tokens, atomaren Komponenten und Utility-First-CSS.
+| Feature             | Beschreibung                                                                       |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| **Chat**            | Streaming-Antworten, Markdown-Rendering, Code-Highlighting, LaTeX-Support          |
+| **Modellwahl**      | Wechsel zwischen verschiedenen KI-Modellen (GPT-4, Claude, Mistral, etc.) pro Chat |
+| **Rollen/Personas** | Vordefinierte Rollen für verschiedene Gesprächstypen (Berater, Recherche, kreativ) |
+| **Jugendschutz**    | Konfigurierbarer Filter für Modelle und Inhalte                                    |
+| **PWA**             | Installierbar, offline-fähige Shell, App-ähnliches Erlebnis                        |
+| **Mobile-First**    | Touch-optimiert, Safe-Area-Support, dynamische Viewport-Höhe                       |
+| **Chat-Verlauf**    | Lokale Speicherung aller Gespräche im Browser (IndexedDB)                          |
+| **Feedback**        | In-App Feedback-Funktion (E-Mail via Resend)                                       |
 
-### Design-Token-System
+---
 
-Das Fundament des Designs bildet ein zweistufiges Token-System:
+## Tech-Stack
 
-1.  **CSS Custom Properties (`src/styles/design-tokens.css`)**: Hier werden alle grundlegenden Design-Entscheidungen als CSS-Variablen definiert. Dies umfasst Farben (`--color-primary`), Abstände (`--spacing-4`), Radien (`--radius-md`), Schatten und Schriftgrößen. Dieses Vorgehen zentralisiert die Design-Sprache und ermöglicht globale Änderungen an einer einzigen Stelle.
+| Kategorie         | Technologie               | Version |
+| ----------------- | ------------------------- | ------- |
+| **Framework**     | React                     | 18.3.1  |
+| **Sprache**       | TypeScript                | 5.9.3   |
+| **Bundler**       | Vite                      | 7.2.4   |
+| **Styling**       | Tailwind CSS              | 3.4.18  |
+| **UI-Primitives** | Radix UI                  | diverse |
+| **Routing**       | React Router              | 7.9.6   |
+| **Validierung**   | Zod                       | 4.1.13  |
+| **PWA**           | vite-plugin-pwa (Workbox) | 1.1.0   |
+| **Unit-Tests**    | Vitest                    | 3.2.4   |
+| **E2E-Tests**     | Playwright                | 1.57.0  |
+| **Hosting**       | Cloudflare Pages          | –       |
 
-2.  **Tailwind-Konfiguration (`tailwind.config.ts`)**: Die Tailwind-Konfiguration konsumiert diese CSS-Variablen, um die Utility-Klassen zu erzeugen. Anstatt Werte hart zu kodieren, werden die Variablen referenziert:
-    ```javascript
-    // tailwind.config.ts
-    theme: {
-      extend: {
-        colors: {
-          primary: 'hsl(var(--primary))',
-        },
-        spacing: {
-          4: 'var(--spacing-4)', // -> 16px
-        }
-      }
-    }
-    ```
-    Dieses Vorgehen kombiniert die Flexibilität von Tailwind mit der Wartbarkeit eines zentralen Token-Systems.
+---
 
-### Komponenten-Bibliothek (`src/components/ui`)
-
-Die Anwendung verfügt über eine eigene, wiederverwendbare Komponenten-Bibliothek, die auf folgenden Prinzipien basiert:
-
-- **Headless-Komponenten von Radix UI**: Für komplexe UI-Elemente wie Dialoge, Dropdowns oder Checkboxen wird Radix UI als ungestylte, barrierefreie Basis verwendet. Dies trennt die Logik und das State-Management der Komponente von ihrem Aussehen.
-- **Styling mit `class-variance-authority`**: Jede Komponente (z.B. `button.tsx`) verwendet `cva` um verschiedene Varianten (z.B. `variant: 'default' | 'destructive'`) und Größen (`size: 'sm' | 'lg'`) zu definieren. Dies erzeugt eine typsichere API zur Erstellung konsistenter UI-Elemente.
-- **Klassen-Management mit `cn` (`src/lib/cn.ts`)**: Eine kleine Hilfsfunktion, die `clsx` und `tailwind-merge` kombiniert. Sie ermöglicht das bedingte Zusammenfügen von Klassen und löst Konflikte bei Tailwind-Klassen automatisch auf (z.B. `p-2` und `p-4` wird korrekt zu `p-4`).
-
-### Styling & Layout
-
-- **UI-Grundsätze**: Ein klares, reduziertes Design-System mit maximaler Funktionalität und dramatischen neumorphen Effekten. Das Dramatic Neumorphism Design-System verwendet tiefe, mehrschichtige Schatten und erhabene Oberflächen für eine taktile, dreidimensionale Benutzererfahrung mit konsistenten Abständen und Farben.
-- **Mobile-First & Safe Area**: Das Layout ist primär für mobile Geräte konzipiert. `env(safe-area-inset-*)` wird in der Tailwind-Konfiguration genutzt, um sicherzustellen, dass UI-Elemente nicht von der "Notch" oder den Home-Indikatoren auf iOS- und Android-Geräten verdeckt werden.
-- **Dynamische Viewport-Höhe**: `App.tsx` enthält eine Logik, die die tatsächliche sichtbare Höhe des Viewports (`window.visualViewport.height`) misst und als CSS-Variable (`--vh`) setzt. Dies löst das klassische Problem auf mobilen Browsern, bei dem die Adressleiste die `100vh`-Einheit verfälscht.
-
-## 📱 Mobile Navigation & Swipe Gestures
-
-Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
-
-## 🧪 Spezifikationstests
-
-Neben den Unit- und E2E-Tests existieren zusätzliche Spezifikationstests, die verschiedene Aspekte der Anwendung dokumentieren und überprüfen:
-
-- **Edge-Swipe-Tests (`test_edge_swipe.md`)**: Dokumentation und Tests für die Swipe-Gesten-Implementierung
-- **Deferred Loading-Tests (`test_deferred_loading.md`)**: Spezifikationen für verzögertes Laden von Inhalten
-- **Lazy Highlighter-Tests (`test_lazy_highlighter.md`)**: Tests für verzögerte Syntax-Hervorhebung
-- **Network Timeline-Tests (`test_network_timeline.md`)**: Dokumentation der Netzwerk-Performance-Optimierungen
-
-## 📱 Mobile Navigation & Swipe Gestures
-
-Die Anwendung verfügt über eine optimierte mobile Navigation mit einem rechtsseitigen Sidepanel, das durch intuitive Gesten gesteuert werden kann:
-
-### Öffnen des Panels
-
-- **Edge-Swipe (Mobil)**: Wische vom rechten Bildschirmrand (innerhalb von 20px) nach links, um das Navigations-Panel zu öffnen. Die Geste benötigt mindestens 40px horizontale Bewegung und respektiert eine vertikale Toleranz von 30px, um nicht mit Scroll-Gesten zu kollidieren.
-- **Menu-Button (Desktop/Mobil)**: Tippe auf das Menu-Icon in der rechten oberen Ecke.
-- **Tastatur**: Navigiere mit Tab zum Menu-Button und drücke Enter oder Space.
-
-### Schließen des Panels
-
-- **Swipe nach links**: Wische das geöffnete Panel nach links.
-- **Schließen-Button**: Tippe auf das X-Icon im Panel-Header.
-- **Backdrop-Klick**: Tippe auf den abgedunkelten Bereich außerhalb des Panels.
-- **Escape-Taste**: Drücke Escape zum Schließen (Tastatur-Barrierefreiheit).
-
-### Technische Details
-
-- **Edge-Detection**: 20px breiter, unsichtbarer Touch-Bereich am rechten Rand
-- **Scroll-Sicherheit**: Vertikales Scrolling bleibt unbeeinträchtigt
-- **Browser-Kompatibilität**: Getestet auf iOS Safari und Android Chrome
-- **Barrierefreiheit**: WCAG 2.1 AA konform, vollständige Tastaturnavigation, Screen-Reader-Unterstützung
-- **Performance**: GPU-beschleunigte Animationen, respektiert `prefers-reduced-motion`
-
-Für detaillierte Informationen siehe [docs/MOBILE_NAVIGATION.md](docs/MOBILE_NAVIGATION.md).
-
-## 🛠️ Tech Stack
-
-| Kategorie           | Technologien & Begründung                                                                                                                                      |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**       | **React 19.2.0, TypeScript 5.9.2, Vite 7.1.6**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                             |
-| **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v7.9.3, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.    |
-| **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
-| **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
-| **Unit-Testing**    | **Vitest, Happy DOM**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung; Mocking von Netzwerk-Anfragen für stabile Tests.                      |
-| **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
-| **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |
-| **Deployment**      | **Cloudflare Pages, Netlify**: Konfigurationen für beide Plattformen vorhanden, Fokus auf statisches Hosting mit CI/CD.                                        |
-
-## 🏛️ Architektur-Überblick
-
-- [🏛️ Architektur-Überblick](#️-architektur-überblick)
-- [🎨 UI & Design System](#-ui--design-system)
-- [⚙️ Detaillierte Funktionsweise](#️-detaillierte-funktionsweise)
-
-Die Anwendung ist als moderne Single-Page-Application (SPA) aufgebaut und folgt einer klaren, modularen Struktur, um Wartbarkeit und Erweiterbarkeit zu gewährleisten.
-
-- **Einstiegspunkt**: `src/main.tsx` initialisiert die React-Anwendung und bindet sie in das DOM ein.
-- **Hauptkomponente (`src/App.tsx`)**: Diese Komponente ist verantwortlich für das globale Setup, einschließlich:
-  - Import globaler CSS-Dateien und Design-Tokens.
-  - Einrichtung von Providern für Kontexte (z.B. `StudioProvider`, `ToastsProvider`).
-  - Implementierung eines Mobile-Gates (`MobileOnlyGate`), um die Nutzung auf Desktops einzuschränken.
-  - Dynamische Anpassung der Viewport-Höhe (`--vh`) zur Behebung von Layout-Problemen auf mobilen Geräten mit virtuellen Tastaturen.
-- **Routing (`src/app/router.tsx`)**: Verwendet `react-router-dom` v7, um die verschiedenen Seiten der Anwendung zu verwalten. Alle Seiten werden mittels `React.lazy()` dynamisch geladen (Code-Splitting), um die initiale Ladezeit zu minimieren. Ein `Suspense`-Fallback sorgt für eine Ladeanzeige.
-- **Business-Logik**: Die Kernlogik ist in wiederverwendbare React-Hooks ausgelagert (z.B. `src/hooks/useChat.ts`), die den Zustand und die Interaktionen verwalten.
-- **UI-Komponenten**: Ein System aus atomaren und zusammengesetzten Komponenten in `src/components/`, das auf `Radix UI` für Barrierefreiheit und `Tailwind CSS` für das Styling setzt.
-
-```
-src/
-├── __tests__/    # Unit and integration tests
-├── api/          # Externe API-Aufrufe (z.B. OpenRouter)
-├── app/          # App-Setup: Router, Layouts, globale Kontexte
-├── bootstrap/    # Initialisierungs- und Bootstrapping-Logik
-├── components/   # Wiederverwendbare UI-Komponenten (atomar & zusammengesetzt)
-├── config/       # Statische Konfiguration: Modelle, Prompts, Feature-Flags
-├── contexts/     # React Kontexte für State-Management
-├── data/         # Datenmodelle und Datenbank-Interaktionen
-├── docs/         # Dokumentationsdateien und -ressourcen
-├── features/     # Feature-spezifische Implementierungen
-├── hooks/        # Zentrale Business-Logik (z.B. useChat, useMemory)
-├── lib/          # Allgemeine, framework-unabhängige Hilfsfunktionen
-├── pages/        # Ansichten für einzelne Routen (z.B. Chat, Settings)
-├── prompts/      # System-Prompts und Prompt-Management
-├── scripts/      # Build- und Entwicklungsskripte
-├── services/     # Hintergrunddienste und Kapselung von Browser-APIs
-├── state/        # Globales Zustandsmanagement (falls über Hooks hinausgehend)
-├── styles/       # Globale Styles, CSS-Variablen und Design-Tokens
-├── test/         # Test-Utilities und Test-Setup
-├── theme/        # Theme- und Design-System Konfigurationen
-├── types/        # Globale TypeScript-Typdefinitionen
-├── ui/           # UI-Komponenten-Bibliothek (alternative Komponentenstruktur)
-└── utils/        # Allgemeine Hilfsfunktionen und Dienstprogramme
-```
-
-## ⚙️ Detaillierte Funktionsweise
-
-### Der Chat-Lebenszyklus
-
-Der Prozess von der Nutzereingabe bis zur Anzeige der KI-Antwort ist eine zentrale Funktion und folgt diesem Ablauf:
-
-1.  **Eingabe**: Der Nutzer tippt eine Nachricht in die `ChatComposer`-Komponente (`src/components/chat/ChatComposer.tsx`). Der Zustand der Eingabe wird lokal verwaltet.
-2.  **Senden**: Bei Klick auf "Senden" oder Drücken der Enter-Taste wird die `append`-Funktion aus dem `useChat`-Hook (`src/hooks/useChat.ts`) aufgerufen.
-3.  **Zustands-Update im Hook**: `useChat` fügt die neue Nutzernachricht sofort zum Nachrichten-Array hinzu und setzt den `isLoading`-Status auf `true`. Dies sorgt für eine sofortige UI-Rückmeldung.
-4.  **API-Anfrage**: Der Hook ruft die `chatStream`-Funktion in `src/api/openrouter.ts` auf. Zuvor werden die Nachrichten-Historie und ein optionaler System-Prompt vorbereitet.
-5.  **Authentifizierung & Fetch**: `openrouter.ts` liest den API-Schlüssel aus dem `sessionStorage` (via `src/lib/openrouter/key.ts`), konstruiert die Header und sendet eine `POST`-Anfrage mit `fetch` an die OpenRouter-API. Die Anfrage nutzt einen `AbortController` zur Abbruchsteuerung.
-6.  **Streaming-Verarbeitung**: Die Antwort der API ist ein `NDJSON` (Newline Delimited JSON) Stream. `chatStream` liest diesen Stream Stueck für Stueck:
-    - Jede Zeile ist ein JSON-Objekt, das ein Text-Delta enthält.
-    - Der Hook `useChat` erhält diese Deltas und aktualisiert die letzte (assistenteigene) Nachricht in Echtzeit, was den "Tipp"-Effekt erzeugt.
-7.  **Abschluss & Fehlerbehandlung**:
-    - Wenn der Stream mit `[DONE]` endet, wird der `isLoading`-Status auf `false` gesetzt.
-    - Fehler (z.B. Netzwerkprobleme, Rate-Limits) werden in `src/lib/errors` abgebildet und im UI-Zustand gespeichert, um dem Nutzer eine verständliche Fehlermeldung anzuzeigen. `RateLimitError` wird speziell behandelt, um eine Cooldown-Periode zu erzwingen.
-
-### Komponenten-Architektur
-
-Die UI ist aus kleinen, wiederverwendbaren Bausteinen aufgebaut.
-
-- **`ChatComposer.tsx`**: Eine kontrollierte Komponente, die das Eingabefeld sowie Senden/Stopp-Logik kapselt (z. B. Enter-Verhalten, Sperren während laufender Streams).
-- **`MobileModelsInterface.tsx`**: Das mobile Modell-Explorer-Interface lädt den Katalog (`src/config/models.ts`), bietet Filter/Sortier-Funktionen und virtualisiert lange Listen.
-- **`ChatMessage.tsx`**: Rendert Chatnachrichten inklusive Inline-Code-Blöcken mit Syntax-Highlighting und Kopierfunktion.
-- **Primitives (`src/components/ui/`)**: Basis-Komponenten wie `Button`, `Card`, `Input` etc. basieren auf `Radix UI` für maximale Barrierefreiheit und werden mit `tailwind-merge` und `clsx` für flexibles Styling erweitert.
-
-### Konfiguration & Personas
-
-Die Anwendung ist hochgradig konfigurierbar, um Flexibilität und einfache Wartung zu gewährleisten. Die Konfiguration ist auf mehrere Dateien im `src/config/`-Verzeichnis und öffentliche JSON-Dateien aufgeteilt.
-
-- **Statische Konstanten (`src/config/defaults.ts`)**
-  Diese Datei ist die "Single Source of Truth" für alle hartkodierten Werte, die an mehreren Stellen in der App verwendet werden. Sie verhindert "magische Strings" und erleichtert globale Änderungen.
-  - `STORAGE_KEYS`: Legt die exakten Namen für Schlüssel im `sessionStorage` und `localStorage` fest (z.B. `disa_api_key`, `disa_settings_v1`).
-  - `REQUEST_CONFIG` & `APP_CONFIG`: Enthalten Timeout-/Retry-Defaults sowie Präfixe und Versionsangaben für gespeicherte Daten.
-
-- **Umgebungsvariablen (`src/config/env.ts`)**
-  Diese Datei ist für die Verarbeitung von Build-Zeit-Variablen zuständig, die über eine `.env`-Datei oder den Build-Prozess bereitgestellt werden (alle mit `VITE_` Präfix).
-  - **Validierung mit Zod**: Ein `zod`-Schema definiert, welche Variablen erwartet werden, welchen Typ sie haben und was ihre Standardwerte sind.
-  - **Typensicherheit**: Nach der Validierung steht ein stark typisiertes `EnvConfig`-Objekt zur Verfügung.
-  - **Beispiele**: `VITE_OPENROUTER_BASE_URL`, `VITE_ENABLE_ANALYTICS` (wird von einem String zu einem Boolean transformiert), `VITE_BUILD_ID`.
-  - **Vollständige Übersicht**: Alle aktuell ausgewerteten Variablen (inkl. Build- und Tooling-Flags) sind in [`docs/ENVIRONMENT_VARIABLES.md`](docs/ENVIRONMENT_VARIABLES.md) dokumentiert.
-
-- **Feature Flags (`src/config/featureFlags.ts`)**
-  Ermöglicht das Umschalten von Funktionen zur Laufzeit, ohne einen neuen Build zu benötigen. Die Zustände werden im `localStorage` gespeichert und können von Entwicklern manuell geändert werden.
-  - `getPreferRolePolicy()` / `setPreferRolePolicy()`: Steuert, ob die Sicherheits-Policy einer Rolle die Modellauswahl einschränken soll.
-  - `getVirtualListEnabled()` / `setVirtualListEnabled()`: Aktiviert/deaktiviert die Virtualisierung der Modell-Liste.
-
-  - **Modell-Katalog (`src/config/models.ts`)**
-    Hybrid-Ansatz: Live-Liste von OpenRouter + optionale kuratierte Metadaten aus `public/models_metadata.json`.
-    - `loadModelCatalog()`: Lädt parallel die OpenRouter-Modelle (`getRawModels()`) und die Metadaten-Datei, filtert strikt kostenlose Modelle (`:free` oder Preis 0) und merged Beschreibungen/Labels/Quality-Scores.
-    - Fallbacks: Wenn Metadaten fehlen, werden API-Beschreibungen und Default-Werte (`qualityScore` 50, `openness` 0.5) verwendet.
-
-  - **Personas / Rollen (`public/persona.json`)**
-    Eine zentrale JSON-Datei, die die verschiedenen "Persönlichkeiten" definiert, die die KI annehmen kann.
-    - **Struktur**: Jede Persona hat eine `id`, einen `name` und einen `system`-Prompt, der das Verhalten der KI steuert.
-    - **Modell-Einschränkungen**: Optional kann ein `allow`-Array von Modell-IDs angegeben werden, um sicherzustellen, dass eine Persona nur mit geeigneten Modellen verwendet wird (z.B. unzensierte Personas nur mit unzensierten Modellen).
-    - **Ladepfad**: `src/config/roleStore.ts` lädt `persona.json` über `resolvePublicAssetUrl()` mit `cache: "no-store"`, damit sowohl Dev-Server als auch Build unter einem Unterpfad ohne 404s funktionieren und bei Fehlern eine klare UI-Fehlermeldung angezeigt wird.
-
-### PWA und Offline-Fähigkeit
-
-Die Anwendung ist als Progressive Web App konzipiert, um eine native-ähnliche Erfahrung zu bieten.
-
-- **Service Worker (`public/sw.js`)**: Ein manuell konfigurierter Service Worker, der auf Workbox basiert. Er implementiert Caching-Strategien, um die App offline verfügbar zu machen:
-  - **Network-First** für das Haupt-HTML-Dokument: Versucht immer, die neueste Version vom Server zu laden. Wenn das fehlschlägt, wird die zwischengespeicherte Version ausgeliefert.
-  - **Stale-While-Revalidate** für Assets (JS, CSS, Bilder): Liefert sofort die zwischengespeicherte Version aus (schnelle Ladezeit) und versucht im Hintergrund, eine neue Version zu laden.
-  - Eine `offline.html` Seite wird als Fallback angezeigt, wenn weder Netzwerk noch Cache verfügbar sind.
-- **Manifest (`public/manifest.webmanifest`)**: Definiert App-Name, Icons, Start-URL und Display-Modus, damit die App zum Startbildschirm hinzugefügt werden kann.
-- **Build-Integration (`vite.config.ts`)**: Das `VitePWA`-Plugin wird verwendet, um den Service Worker zu bauen und das Precache-Manifest (eine Liste aller zu cachenden Assets) automatisch zu injizieren.
-
-## 🛠️ Tech Stack
-
-| Kategorie           | Technologien & Begründung                                                                                                                                      |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**       | **React 19.2.0, TypeScript 5.9.2, Vite 7.1.6**: Für eine moderne, typsichere und performante Entwicklungsumgebung.                                             |
-| **Styling**         | **Tailwind CSS, Radix UI, Lucide Icons**: Utility-First-CSS für schnelles Prototyping; ungestylte, barrierefreie Primitives von Radix; leichtgewichtige Icons. |
-| **State & Routing** | **React Hooks, React Router v7.9.3, Zod**: Lokaler State mit Hooks für Einfachheit; Standard-Router für SPAs; Schema-Validierung mit Zod für robuste Daten.    |
-| **PWA / Offline**   | **Vite PWA Plugin (Workbox)**: Industriestandard zur Erstellung robuster Service Worker und Offline-Fähigkeiten.                                               |
-| **Performance**     | **Virtualized Rendering**: Nachrichten-Virtualisierung für skalierbare Chat-Performance; Lazy Loading für optimierte Ladezeiten.                               |
-| **Unit-Testing**    | **Vitest, Happy DOM**: Schnelle, Vite-native Test-Engine; leichtgewichtige DOM-Umgebung.                                                                       |
-| **E2E-Testing**     | **Playwright, @axe-core/playwright**: Zuverlässiges Browser-Testing über mehrere Engines; integrierte Accessibility-Prüfungen.                                 |
-| **Code-Qualität**   | **ESLint, Prettier, Husky, lint-staged**: Strikte Regeln für Code-Konsistenz, die automatisch vor jedem Commit erzwungen werden.                               |
-| **Deployment**      | **Cloudflare Pages, Netlify**: Konfigurationen für beide Plattformen vorhanden, Fokus auf statisches Hosting mit CI/CD.                                        |
-
-## 🚀 Erste Schritte
+## Installation
 
 ### Voraussetzungen
 
-- **Node.js**: Version `22.19.0` (siehe `.nvmrc` und `package.json`).
-- **npm**: Node Package Manager (wird mit Node.js installiert).
+- **Node.js**: Version `22.19.0` (siehe `.nvmrc`)
+- **npm**: Wird mit Node.js installiert
 
-### Installation & Start
+### Setup
 
-1.  **Repository klonen:**
+```bash
+# Repository klonen
+git clone https://github.com/daydaylx/Disa_Ai.git
+cd Disa_Ai
 
-    ```bash
-    git clone https://github.com/daydaylx/Disa_Ai.git
-    cd Disa_Ai
-    ```
+# Node-Version setzen (falls nvm installiert)
+nvm use
 
-2.  **Abhängigkeiten installieren:**
+# Abhängigkeiten installieren
+npm install
 
-    ```bash
-    npm install
-    ```
+# Entwicklungsserver starten
+npm run dev
+```
 
-3.  **Entwicklungsserver starten:**
+Die App ist dann unter `http://localhost:5173` erreichbar.
 
-    ```bash
-    npm run dev
-    ```
+---
 
-    Die Anwendung ist anschließend unter `http://localhost:5173` erreichbar.
+## Entwicklung
 
-4.  **Qualitätssicherung lokal ausführen (empfohlen):**
+### Wichtige Commands
 
-    ```bash
-    npm run verify
-    ```
+| Command             | Beschreibung                                      |
+| ------------------- | ------------------------------------------------- |
+| `npm run dev`       | Startet Vite Dev-Server mit Hot-Reload            |
+| `npm run build`     | Erstellt Production-Build in `dist/`              |
+| `npm run preview`   | Lokale Vorschau des Production-Builds             |
+| `npm run verify`    | Führt Typecheck + Lint + Unit-Tests aus (CI-Gate) |
+| `npm run typecheck` | TypeScript-Prüfung                                |
+| `npm run lint`      | ESLint-Prüfung                                    |
+| `npm run lint:fix`  | ESLint mit Auto-Fix                               |
+| `npm run test:unit` | Vitest Unit-Tests                                 |
+| `npm run e2e`       | Playwright E2E-Tests                              |
+| `npm run e2e:live`  | E2E-Tests gegen Live-Site (disaai.de)             |
+| `npm run clean`     | Entfernt Build-Artefakte                          |
 
-    Der kombinierte Task führt Type-Checks, Linting sowie Unit- und E2E-Tests aus und entspricht exakt der GitHub-Actions-Pipeline.
+### Qualitäts-Gate
 
-5.  **Produktionsbuild generieren:**
+Vor jedem Push/PR:
 
-    ```bash
-    npm run build
-    npm run preview
-    ```
+```bash
+npm run verify
+```
 
-    Damit wird die im Deployment verwendete `dist/`-Ausgabe erzeugt und direkt geprüft, dass keine unverarbeiteten TypeScript/TSX-Dateien mehr ausliefert werden.
+Dies entspricht der CI-Pipeline und prüft TypeScript, Linting und Unit-Tests.
 
-### API-Key & Sicherheit
+---
 
-- Öffne in der laufenden App den Bereich **Einstellungen → API-Key & Verbindung**.
-- Der Schlüssel wird ausschließlich in `sessionStorage` gespeichert und beim Entfernen vollständig gelöscht.
-- Es existiert kein hartcodierter oder persistenter API-Key im Repository; produktive Deployments setzen auf individuelle Nutzer-Schlüssel.
+## Konfiguration
 
-## 📜 Verfügbare Skripte
+### API-Key
 
-Die wichtigsten Skripte aus `package.json`:
+Die App benötigt einen **OpenRouter API-Key** für KI-Funktionen:
 
-| Befehl              | Beschreibung                                                                                                      |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`       | Startet den Vite-Entwicklungsserver mit Hot-Reloading.                                                            |
-| `npm run build`     | Erstellt einen optimierten Produktions-Build im `dist`-Ordner.                                                    |
-| `npm run preview`   | Startet einen lokalen Server, um den Produktions-Build zu testen.                                                 |
-| `npm run typecheck` | Überprüft das gesamte Projekt auf TypeScript-Fehler.                                                              |
-| `npm run lint`      | Führt ESLint aus, um Code-Stil-Probleme zu finden.                                                                |
-| `npm run test:unit` | Führt alle Unit-Tests mit Vitest aus.                                                                             |
-| `npm run test:e2e`  | Führt alle End-to-End-Tests mit Playwright aus.                                                                   |
-| `npm run e2e:live`  | Testet die Live-Seite (Default `https://disaai.de`), erzeugt Screenshots & Axe-Reports unter `test-results/live`. |
-| `npm run verify`    | Führt `typecheck`, `lint` und `test:unit` nacheinander aus (CI-Skript).                                           |
+1. Account bei [openrouter.ai](https://openrouter.ai) erstellen
+2. API-Key generieren
+3. In der App unter **Einstellungen → API-Key & Verbindung** eingeben
 
-## 🔐 Architektur- und Qualitätsregeln
+Der Key wird im `sessionStorage` gespeichert und verlässt nie den Browser.
 
-Diese Richtlinien sind verbindlich für neue Änderungen.
+### Umgebungsvariablen
 
-1. Qualitäts-Gates
+Für lokale Entwicklung in `.env.local`:
 
-- Lokal und in CI:
-  - `npm run verify` ist das zentrale Gate (typecheck + lint + Tests).
+```bash
+# Optional: Eigene OpenRouter-Basis-URL
+VITE_OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
 
-2. Modul-Grenzen
+# Optional: Debug-Modus
+VITE_ENABLE_DEBUG=true
+```
 
-- `src/lib/**`: Nur Utilities (Logging, Highlighting, Storage, Errors), keine React-Imports.
-- `src/hooks/**`: Business-Logik & Orchestrierung, kein direktes Rendering.
-- `src/components/**`: UI & Interaktion, keine direkten Netzwerk-/Storage-Zugriffe.
-- `src/config/**`: Konfiguration & Env/Flags, ohne unnötige Seiteneffekte.
-- `src/app/**`: Shell, Router, Layouts, globale Provider.
+**Vollständige Referenz:** [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md)
 
-3. Design-System
+### Server-seitige Variablen (Cloudflare)
 
-- Keine rohen Hexfarben in App-Code; nur Tokens/CSS-Variablen.
-- Kein rohes `100vh`; nutze `100dvh`, `--vh` oder bereitgestellte Utilities.
-- Keine `z-[9999]`; nur semantische z-Utilities (`z-skip-link`, `z-toast`, ...).
-- `prefers-reduced-motion` respektieren, keine erzwungenen Dauer-Animationen.
+Für die Feedback-Funktion (Cloudflare Pages Functions):
 
-4. Resilienz & Progressive Enhancement
+| Variable           | Beschreibung                                 |
+| ------------------ | -------------------------------------------- |
+| `RESEND_API_KEY`   | API-Key von [Resend.com](https://resend.com) |
+| `DISA_FEEDBACK_TO` | Empfänger-Adresse (optional)                 |
 
-- Syntax-Highlighting nur über Lazy-Highlighter + Feature-Flags; Fehler → Plaintext.
-- Storage nur über sichere Helper (z.B. `safeStorage`).
-- PWA/Service Worker dürfen nie zu einem Blank Screen führen.
+---
 
-5. Logging
+## Seiten & Navigation
 
-- Neue Pfade nutzen zentrale Logger (`src/lib/logging.ts` bzw. Produktions-Logger), kein wildes `console.log`.
+| Route                  | Seite         | Beschreibung                         |
+| ---------------------- | ------------- | ------------------------------------ |
+| `/chat`                | Chat          | Hauptseite, KI-Unterhaltung          |
+| `/chat/history`        | Verlauf       | Alle gespeicherten Gespräche         |
+| `/models`              | Modelle       | Modell-Katalog mit Filter/Suche      |
+| `/roles`               | Rollen        | Persona-Auswahl und Favoriten        |
+| `/themen`              | Themen        | Quickstart-Themen für neue Gespräche |
+| `/settings`            | Einstellungen | Übersichtsseite                      |
+| `/settings/api-data`   | API & Daten   | API-Key, Verbindungsstatus           |
+| `/settings/memory`     | Gedächtnis    | Kontext-Einstellungen                |
+| `/settings/behavior`   | Verhalten     | Schreibstil, Kreativität             |
+| `/settings/youth`      | Jugendschutz  | Altersfilter, Modell-Einschränkungen |
+| `/settings/appearance` | Darstellung   | Theme, Schriftgröße                  |
+| `/settings/extras`     | Extras        | Experimentelle Features              |
+| `/feedback`            | Feedback      | Bug-Reports, Feature-Requests        |
+| `/impressum`           | Impressum     | Rechtliche Angaben                   |
+| `/datenschutz`         | Datenschutz   | Datenschutzerklärung                 |
 
-## 🧪 Qualitätssicherung & Testing
+**Hinweis:** Die App ist mobile-first konzipiert. Auf Desktop-Geräten erscheint ein Hinweis, dass die Darstellung für mobile Geräte optimiert ist.
 
-- **Unit-Tests (`src/__tests__`)**: Fokussieren sich auf die Business-Logik in Hooks (z.B. Race-Conditions in `useChat`) und kritische Utility-Funktionen.
-- **End-to-End-Tests (`tests/e2e`)**: Simulieren vollständige Nutzer-Flows wie das Senden einer Nachricht, das Ändern von Einstellungen und das Filtern von Modellen. Sie laufen auf einem emulierten "Pixel 7"-Gerät und mocken alle Netzwerk-Anfragen, um unabhängig und deterministisch zu sein.
-- **Barrierefreiheit**: `@axe-core/playwright` ist in die Playwright-Tests integriert, um bei jedem Testlauf automatische Accessibility-Prüfungen durchzuführen.
-- **Changesets**: Das Projekt nutzt `@changesets/cli` für eine systematische Verwaltung von Versionsänderungen und Änderungsprotokollen.
+---
 
-## ☁️ Build & Deployment
+## Projektstruktur
 
-Der Build-Prozess wird durch `vite.config.ts` gesteuert.
+```
+src/
+├── api/              # OpenRouter-API-Integration
+├── app/              # Router, Layouts, Provider
+├── components/       # UI-Komponenten
+│   ├── ui/          # Basis-Komponenten (Button, Card, Dialog, etc.)
+│   ├── chat/        # Chat-spezifische Komponenten
+│   ├── models/      # Modell-Explorer
+│   ├── roles/       # Rollen-Verwaltung
+│   └── navigation/  # Navigation, Sidepanel
+├── config/          # Konfiguration, Feature-Flags, Modell-Katalog
+├── contexts/        # React Contexts
+├── hooks/           # Business-Logik (useChat, useSettings, etc.)
+├── lib/             # Utilities (keine React-Imports)
+├── pages/           # Seiten-Komponenten
+├── services/        # Browser-APIs, Storage
+├── state/           # State-Reducer
+├── styles/          # CSS, Design-Tokens
+└── types/           # TypeScript-Typen
+```
 
-- **Befehl**: `npm run build`
-- **Output**: Das `dist`-Verzeichnis, bereit für statisches Hosting.
-- **Asset-Struktur**: Vite generiert JS, CSS und andere Assets mit Hashes in den Dateinamen für effektives Caching. Die Konfiguration sortiert sie in untergeordnete Verzeichnisse (`assets/js`, `assets/css`, etc.).
-- **CI/CD**: Die Cloudflare Pages/Workers-Konfigurationen (`deploy/cloudflare/cloudflare-pages.json`, `deploy/workers/wrangler.toml`) bleiben für manuelle Deployments bestehen; automatisierte Pages-Publikationen laufen aktuell nicht im GitHub-Workflow.
-- **GitHub Pages (Production)**: Stelle unter `Settings → Pages → Build and deployment` sicher, dass die **Source auf “GitHub Actions”** steht. Der Workflow `.github/workflows/pages.yml` baut ausschließlich `dist/`, kopiert `CNAME` sowie den SPA-Fallback (`dist/404.html`) und veröffentlicht dann via `actions/deploy-pages`. Ein regulärer Push auf `main` oder ein manueller `workflow_dispatch` triggert den Deploy.
-- **Dist Smoke-Test**: Vor jedem Deployment `npm run build` lokal ausführen und `dist/index.html` per `npx serve dist` öffnen. Die HTML darf keine direkten `src/*.tsx`-Referenzen mehr enthalten – nur hashed Bundles aus `assets/`.
-- **Dist-Verifikation**: `npm run verify:dist` prüft nach dem Build automatisch, ob `dist/index.html` korrekt auf gebundelte Dateien unter `assets/js` verweist und keine TypeScript-Quellen (`*.tsx`) mehr ausliefert.
-- **Build-Info-Generierung**: Vor jedem Build wird ein Skript ausgeführt, das Build-Informationen (Build-ID, Zeitstempel, Git-SHA) generiert und in der App verfügbar macht.
+---
 
-## 🤝 Contributing
+## Design-System
 
-- **Commit-Konvention**: Das Projekt folgt der **Conventional Commits** Spezifikation.
-- **Entwicklungsmodell**: Es wird ein **Trunk-Based Development**-Modell mit kurzlebigen Feature-Branches verfolgt.
-- **Versionsverwaltung**: Das Projekt nutzt Changesets für eine systematische Verwaltung von Versionsänderungen. Verwende `npm run changeset:add`, um neue Changeset-Dateien hinzuzufügen.
-- **Vorlagen**: Im `.github`-Verzeichnis befinden sich Vorlagen für Issues und Pull Requests.
+Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 
-## 📜 Lizenz
+- **Token-basiert**: Alle Farben, Abstände und Schatten als CSS-Variablen in `src/styles/design-tokens.css`
+- **Tailwind-Integration**: Tokens werden in `tailwind.config.ts` referenziert
+- **Komponenten-Varianten**: `class-variance-authority` für typsichere Varianten
+- **Radix UI**: Barrierefreie Headless-Komponenten als Basis
+- **Mobile-First**: Touch-Targets min. 44px, Safe-Area-Support
 
-Dieses Projekt ist privat und urheberrechtlich geschützt. Eine Weitergabe, Vervielfältigung oder Modifikation des Quellcodes ist ohne ausdrückliche schriftliche Zustimmung des Autors nicht gestattet.
+**Details:** [`src/styles/DESIGN_SYSTEM.md`](src/styles/DESIGN_SYSTEM.md)
+
+---
+
+## Bekannte Einschränkungen
+
+- **Desktop-Nutzung**: Die App zeigt auf Desktop einen Mobile-Gate-Hinweis. Nutzung ist möglich, aber nicht optimiert.
+- **Safari PWA**: Einige PWA-Features eingeschränkt (iOS-Limitierung).
+- **IndexedDB**: Bei >500 Gesprächen kann die Performance nachlassen.
+- **Service Worker Updates**: Update-Banner kann verzögert erscheinen.
+
+**Vollständige Liste:** [`docs/guides/known-issues.md`](docs/guides/known-issues.md)
+
+---
+
+## Weitere Dokumentation
+
+| Dokument                                                                       | Inhalt                          |
+| ------------------------------------------------------------------------------ | ------------------------------- |
+| [`docs/OVERVIEW.md`](docs/OVERVIEW.md)                                         | App-Nutzung und UI-Erklärung    |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                                 | Technische Architektur          |
+| [`docs/CONFIG.md`](docs/CONFIG.md)                                             | Konfiguration und Feature-Flags |
+| [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md) | Alle Umgebungsvariablen         |
+| [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)               | Feedback-Funktion einrichten    |
+| [`docs/guides/RELEASE_PLAYBOOK.md`](docs/guides/RELEASE_PLAYBOOK.md)           | Release-Prozess                 |
+| [`AGENTS.md`](AGENTS.md)                                                       | Richtlinien für AI-Agenten      |
+| [`CLAUDE.md`](CLAUDE.md)                                                       | Claude Code Referenz            |
+
+---
+
+## Deployment
+
+Die App wird über **Cloudflare Pages** gehostet.
+
+### Build-Output
+
+```bash
+npm run build
+```
+
+Erzeugt `dist/` mit statischen Assets. Der `postbuild`-Schritt kopiert `_headers` und verifiziert den Build.
+
+### Manuelle Verifikation
+
+```bash
+npm run verify:dist
+```
+
+Prüft, dass `dist/index.html` nur auf gebundelte Assets verweist und keine `.tsx`-Dateien enthält.
+
+---
+
+## Contributing
+
+- **Commits**: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(chat): add streaming`)
+- **Branches**: Kurzlebige Feature-Branches von `main`
+- **Changesets**: `npm run changeset:add` für user-facing Changes
+- **PRs**: Müssen `npm run verify` bestehen
+
+---
+
+## Lizenz
+
+Dieses Projekt ist **privat und urheberrechtlich geschützt**. Eine Weitergabe, Vervielfältigung oder Modifikation des Quellcodes ist ohne ausdrückliche schriftliche Zustimmung des Autors nicht gestattet.
+
+---
+
+## Kontakt
+
+- **E-Mail**: grunert94@hotmail.com
+- **Repository**: [github.com/daydaylx/Disa_Ai](https://github.com/daydaylx/Disa_Ai)

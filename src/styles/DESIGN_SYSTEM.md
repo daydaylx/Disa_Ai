@@ -42,6 +42,7 @@ All colors are defined in `tailwind.config.ts` and should never be used as raw h
 - `accent-tertiary`: `#06b6d4` (Cyan) - Links, info states, secondary actions
 
 **Usage Guidelines:**
+
 - **Primary (Indigo)**: Use for main CTAs (Send button, primary actions), focus rings
 - **Secondary (Purple)**: Use for brand elements (active roles, premium features)
 - **Tertiary (Cyan)**: Use for links, informational elements, tertiary actions
@@ -81,6 +82,7 @@ spacing-10: 64px  (4rem)
 ```
 
 **Common Usage:**
+
 - **Component padding**: `p-4 sm:p-6` (16px mobile, 24px desktop)
 - **Vertical gaps**: `gap-3` or `gap-4` between elements
 - **Section spacing**: `py-6` or `py-8`
@@ -103,6 +105,7 @@ rounded-full: 9999px           - Pills, circular buttons
 ```
 
 **Common Usage:**
+
 - **Buttons**: `rounded-xl` (12px)
 - **Cards**: `rounded-2xl` (16px)
 - **Input bars**: `rounded-3xl` (24px)
@@ -123,6 +126,7 @@ shadow-inset: Inset shadow for deep zones
 ```
 
 **Usage Guidelines:**
+
 - **Default cards**: `shadow-sm`
 - **Interactive cards** (hover): `shadow-md`
 - **Modals/overlays**: `shadow-lg`
@@ -145,12 +149,14 @@ Use glass effects **sparingly** and only for functional purposes.
 ### When to Use Glass
 
 ✅ **DO use glass for:**
+
 - Sticky headers that overlay content
 - Modal backgrounds/overlays
 - Drawers and side panels
 - Context menus
 
 ❌ **DON'T use glass for:**
+
 - Static cards or panels
 - Message bubbles
 - Regular buttons
@@ -185,6 +191,7 @@ Variants (defined in `Button.tsx`):
 6. **link**: Text-style links - `text-accent-primary underline`
 
 **Sizes:**
+
 - `sm`: 8px height, small padding (32px min)
 - `default`: 10px height, standard padding (40px min)
 - `lg`: 12px height, large padding (48px min)
@@ -202,6 +209,7 @@ Unified card system (defined in `Card.tsx`):
 6. **inset**: Deep inset style - `bg-surface-inset shadow-inset`
 
 **Padding variants:**
+
 - `none`: No padding
 - `sm`: 12px mobile, 16px desktop
 - `default`: 16px mobile, 20px desktop
@@ -216,6 +224,7 @@ Unified card system (defined in `Card.tsx`):
 5. **Checkbox/Radio**: Standard form controls with accent color
 
 **Focus States:**
+
 - All inputs: `focus:ring-2 focus:ring-accent-primary/50 focus:outline-none`
 - Borders: `focus:border-accent-primary`
 
@@ -231,6 +240,7 @@ Unified card system (defined in `Card.tsx`):
 ## Typography
 
 Font families:
+
 - **Sans-serif**: Inter (primary), system fallbacks
 - **Monospace**: JetBrains Mono, Fira Code
 
@@ -301,6 +311,7 @@ The design system is fully integrated with Tailwind CSS:
 ### Viewport Height
 
 Use dynamic viewport height to account for mobile browser chrome:
+
 ```css
 height: calc(var(--vh, 1vh) * 100)
 /* OR */
@@ -310,6 +321,7 @@ height: 100dvh
 ### Safe Areas
 
 Handle notches and rounded corners:
+
 ```css
 padding-bottom: env(safe-area-inset-bottom)
 padding-top: env(safe-area-inset-top)

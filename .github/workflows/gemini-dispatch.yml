@@ -27,6 +27,7 @@ jobs:
     if: |-
       ${{ fromJSON(vars.DEBUG || vars.ACTIONS_STEP_DEBUG || false) }}
     runs-on: "ubuntu-latest"
+    timeout-minutes: 5
     permissions:
       contents: "read"
     steps:
@@ -59,6 +60,7 @@ jobs:
         contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association || github.event.review.author_association || github.event.issue.author_association)
       )
     runs-on: "ubuntu-latest"
+    timeout-minutes: 10
     permissions:
       contents: "read"
       issues: "write"

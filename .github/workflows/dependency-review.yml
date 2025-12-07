@@ -11,6 +11,7 @@ permissions:
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -30,6 +31,7 @@ jobs:
 
   audit-dependencies:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -37,7 +39,7 @@ jobs:
       - name: "Setup Node.js"
         uses: actions/setup-node@v4
         with:
-          node-version: "22.19.0"
+          node-version-file: ".nvmrc"
           cache: "npm"
 
       - name: "Install dependencies"
