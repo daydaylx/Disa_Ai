@@ -31,8 +31,9 @@ Diese Referenz listet alle Umgebungsvariablen auf, die das Projekt aktuell auswe
 
 | Variable | Pflicht? | Default / Verhalten | Zweck | Referenz |
 | --- | --- | --- | --- | --- |
+| `RESEND_API_KEY` | **ja** | – | API Key von [Resend.com](https://resend.com) für den E-Mail-Versand aus `/api/feedback`. | [`functions/api/feedback.ts`](../../functions/api/feedback.ts) |
 | `DISA_FEEDBACK_TO` | nein | `disaai@justmail.de` | Empfänger-Adresse für Feedback-Mails aus `/api/feedback`. | [`functions/api/feedback.ts`](../../functions/api/feedback.ts) |
-| `DISA_FEEDBACK_FROM` | nein | `feedback@disaai.de` | Absender-Adresse für MailChannels Versand. | [`functions/api/feedback.ts`](../../functions/api/feedback.ts) |
+| `OPENROUTER_API_KEY` | **ja** | – | API Key für OpenRouter Proxy (serverseitiger Chat). | [`functions/api/chat.ts`](../../functions/api/chat.ts) |
 
 ## MCP Server Variablen (Node-Kontext)
 
