@@ -285,8 +285,9 @@ export default function Chat() {
         <div
           className="flex flex-col relative w-full"
           style={{
-            height: viewport.height ? `${viewport.height}px` : "100%",
-            minHeight: viewport.height ? `${viewport.height}px` : "100dvh",
+            // Subtract header height (64px) from viewport height to prevent clipping
+            height: viewport.height ? `${viewport.height - 64}px` : "100%",
+            minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
           }}
         >
           <h1 className="sr-only">Disa AI – Chat</h1>

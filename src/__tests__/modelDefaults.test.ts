@@ -1,17 +1,24 @@
 import { describe, expect, it } from "vitest";
 
 import modelsMetadata from "../../public/models_metadata.json";
-import { DEFAULT_MODEL_ID, isAllowedModelId } from "../config/modelDefaults";
+import { FALLBACK_MODEL_ID, isAllowedModelId } from "../config/modelDefaults";
+
+describe("modelDefaults", () => {
+  it("should validate allowed model IDs", () => {
+    expect(isAllowedModelId(FALLBACK_MODEL_ID)).toBe(true);
+    expect(isAllowedModelId("invalid/model")).toBe(false);
+  });
+});
 
 describe("model defaults", () => {
   const curatedIds = Object.keys(modelsMetadata);
   const knownCuratedId = curatedIds[0];
 
   it("exposes a default model id that is validated against the catalog", () => {
-    if (DEFAULT_MODEL_ID) {
-      expect(isAllowedModelId(DEFAULT_MODEL_ID)).toBe(true);
+    if (FALLBACK_MODEL_ID) {
+      expect(isAllowedModelId(FALLBACK_MODEL_ID)).toBe(true);
     } else {
-      expect(DEFAULT_MODEL_ID).toBe("");
+      expect(FALLBACK_MODEL_ID).toBe("");
     }
   });
 
