@@ -124,9 +124,10 @@ export default function Chat() {
     });
 
   useEffect(() => {
-    // Only scroll if we are near bottom or it's a new message
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+    // Scroll behavior is now handled by VirtualizedMessageList and useStickToBottom
+    // to prevent stuttering during streaming.
+    // This effect is intentionally empty or removed to avoid conflicting scroll actions.
+  }, []);
 
   const handleSend = useCallback(() => {
     if (isLoading) {

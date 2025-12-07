@@ -12,23 +12,25 @@ interface UseStickToBottomOptions {
  * but only if user is already near the bottom
  */
 export function useStickToBottom(options: UseStickToBottomOptions = {}) {
-  const { threshold = 0.8, enabled = true, containerRef } = options;
+  const { threshold = 150, enabled = true, containerRef } = options; // threshold in pixels now
   const internalRef = useRef<HTMLDivElement>(null);
   const scrollRef: MutableRefObject<HTMLDivElement | null> = containerRef ?? internalRef;
   const [isSticking, setIsSticking] = useState(true);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+  const throttleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const checkShouldStick = useCallback(() => {
     if (!enabled || !scrollRef.current) return false;
 
     const element = scrollRef.current;
     const { scrollTop, scrollHeight, clientHeight } = element;
-    const scrollableHeight = scrollHeight - clientHeight;
 
-    if (scrollableHeight <= 0) return true; // No scrollable content
+    // Calculate distance from bottom
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
 
-    const scrollPosition = scrollTop / scrollableHeight;
-    const nearBottom = scrollPosition >= threshold;
+    // Consider "sticking" if we are within the threshold (pixels)
+    // Using a pixel threshold is often more reliable than a percentage for long lists
+    const nearBottom = distanceFromBottom <= threshold;
 
     setIsSticking(nearBottom);
     setShouldAutoScroll(nearBottom);
@@ -55,36 +57,56 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
     scrollToBottom("instant");
   }, [scrollToBottom]);
 
+  // Throttled auto-scroll function
+  const throttleScroll = useCallback(() => {
+    if (!shouldAutoScroll || !scrollRef.current) return;
+
+    if (throttleTimeoutRef.current) return;
+
+    throttleTimeoutRef.current = setTimeout(() => {
+      if (scrollRef.current && shouldAutoScroll) {
+        // Use instant scrolling for updates to avoid "fighting" the animation
+        scrollRef.current.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: "instant",
+        });
+      }
+      throttleTimeoutRef.current = null;
+    }, 100); // 100ms throttle
+  }, [shouldAutoScroll, scrollRef]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (throttleTimeoutRef.current) {
+        clearTimeout(throttleTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Auto-scroll when content changes and should stick
   useEffect(() => {
     if (!enabled || !shouldAutoScroll || !scrollRef.current) return;
 
-    let rafId: number | null = null;
-
     const observer = new MutationObserver(() => {
-      if (shouldAutoScroll && scrollRef.current) {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(() => {
-          if (scrollRef.current) scrollToBottomInstant();
-          rafId = null;
-        });
+      // If we are supposed to stick, scroll down
+      // We throttle this to avoid excessive layout thrashing
+      if (shouldAutoScroll) {
+        throttleScroll();
       }
     });
 
     observer.observe(scrollRef.current, {
       childList: true,
       subtree: true,
-      // Removed characterData: true - causes excessive callbacks during message streaming
-      // We only need to track when new messages are added (childList), not character updates
     });
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
     };
-  }, [enabled, scrollRef, shouldAutoScroll, scrollToBottomInstant]);
+  }, [enabled, scrollRef, shouldAutoScroll, throttleScroll]);
 
-  // Handle scroll events
+  // Handle scroll events to update stickiness state
   useEffect(() => {
     if (!enabled || !scrollRef.current) return;
 
