@@ -6,6 +6,10 @@ dist/
 .tmp/
 .DS_Store
 
+# Build logs
+build.log
+*.log
+
 # Env
 .env.local
 .env.*.local
