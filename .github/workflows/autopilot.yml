@@ -37,7 +37,7 @@ jobs:
           # ESLint auto-fix if configured
           if [ -f "eslint.config.mjs" ] || [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
             echo "Running ESLint auto-fix..." | tee -a autopilot.log
-            npx eslint . --fix --ext .js,.jsx,.ts,.tsx 2>&1 | tee -a autopilot.log || true
+            npx eslint . --fix 2>&1 | tee -a autopilot.log || true
           fi
 
           # Prettier auto-fix if configured
@@ -57,22 +57,10 @@ jobs:
         run: |
           echo "Running local maintenance scripts..." | tee -a autopilot.log
 
-          # Run setup-verify if exists
-          if [ -f "scripts/setup-verify.mjs" ]; then
-            echo "Running setup-verify.mjs..." | tee -a autopilot.log
-            node scripts/setup-verify.mjs 2>&1 | tee -a autopilot.log || true
-          fi
-
-          # Run setup-alias if exists
-          if [ -f "scripts/setup-alias.mjs" ]; then
-            echo "Running setup-alias.mjs..." | tee -a autopilot.log
-            node scripts/setup-alias.mjs 2>&1 | tee -a autopilot.log || true
-          fi
-
-          # Run CSP smoke test if exists
-          if [ -f "scripts/csp-smoke.mjs" ]; then
-            echo "Running CSP smoke test..." | tee -a autopilot.log
-            node scripts/csp-smoke.mjs 2>&1 | tee -a autopilot.log || true
+          # Run verify-dist script to check build integrity
+          if [ -f "scripts/verify-dist.mjs" ]; then
+            echo "Running verify-dist.mjs..." | tee -a autopilot.log
+            node scripts/verify-dist.mjs 2>&1 | tee -a autopilot.log || true
           fi
 
       - name: Build project

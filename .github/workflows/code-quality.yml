@@ -164,7 +164,15 @@ jobs:
       - name: "Start preview server"
         run: |
           npm run preview &
-          sleep 5
+          echo "Waiting for preview server to start..."
+          for i in {1..20}; do
+            if curl -f http://localhost:4173 > /dev/null 2>&1; then
+              echo "Preview server is ready!"
+              break
+            fi
+            echo "Waiting... ($i/20)"
+            sleep 1
+          done
         timeout-minutes: 1
 
       - name: "Basic performance check"
