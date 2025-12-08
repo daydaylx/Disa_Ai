@@ -353,15 +353,19 @@ function combineSignals(signals: AbortSignal[]): AbortSignal {
     controller.abort();
   };
 
+  // Atomic registration: check and register in same iteration without gaps
   for (const signal of signals) {
-    // Double-check in case signal was aborted between checks
+    if (aborted) break; // Stop if already aborted
+
+    // ATOMIC: Check and immediately register listener without any code in between
     if (signal.aborted) {
       abortHandler();
-      return controller.signal;
+      break; // Exit loop after handling abort
+    } else {
+      // Immediately add listener while we know signal is not aborted
+      signal.addEventListener("abort", abortHandler, { once: true });
+      cleanup.push(() => signal.removeEventListener("abort", abortHandler));
     }
-
-    signal.addEventListener("abort", abortHandler, { once: true });
-    cleanup.push(() => signal.removeEventListener("abort", abortHandler));
   }
 
   return controller.signal;
