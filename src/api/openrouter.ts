@@ -11,6 +11,7 @@ import { chatConcurrency } from "../lib/net/concurrency";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { hasApiKey, readApiKey } from "../lib/openrouter/key";
 import type { ChatMessage } from "../types/chat";
+import type { OpenRouterChatResponse, OpenRouterStreamChunk } from "../types/openrouter";
 import { chatOnceViaProxy, chatStreamViaProxy } from "./proxyClient";
 
 const MODEL_KEY = "disa_model";
@@ -94,7 +95,7 @@ async function chatOnceDirect(
       const headers = getHeaders();
       const model = opts?.model ?? getModelFallback();
       const body = { model, messages, stream: false };
-      const data = await fetchJson(ENDPOINT, {
+      const data = await fetchJson<OpenRouterChatResponse>(ENDPOINT, {
         method: "POST",
         headers,
         body,
@@ -103,7 +104,8 @@ async function chatOnceDirect(
         signal: combinedSignal,
       });
 
-      const text = data?.choices?.[0]?.message?.content ?? "";
+      // Type-safe access to response
+      const text = data.choices[0]?.message?.content ?? "";
       return { text, raw: data };
     } catch (error) {
       throw mapError(error);
@@ -226,12 +228,12 @@ async function chatStreamDirect(
 
             if (payload.startsWith("{")) {
               try {
-                const json = JSON.parse(payload);
-                if (json?.error) {
-                  throw new Error(json.error?.message || "Unbekannter API-Fehler");
+                const json = JSON.parse(payload) as OpenRouterStreamChunk;
+                if (json.error) {
+                  throw new Error(json.error.message || "Unbekannter API-Fehler");
                 }
-                const delta = json?.choices?.[0]?.delta?.content ?? "";
-                const messageData = json?.choices?.[0]?.message;
+                const delta = json.choices[0]?.delta?.content ?? "";
+                const messageData = json.choices[0]?.message;
                 if (!started) {
                   started = true;
                   opts?.onStart?.();

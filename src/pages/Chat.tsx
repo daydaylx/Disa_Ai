@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useCallback, useRef, useState } from "react";
 
-import { Bookmark, MessageSquare } from "@/lib/icons"; // Using Icon directly instead of component
-import { useToasts } from "@/ui";
+import { Bookmark, MessageSquare } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -11,20 +9,9 @@ import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageLis
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
-import { QUICKSTARTS } from "../config/quickstarts";
-import { useModelCatalog } from "../contexts/ModelCatalogContext";
-import { useRoles } from "../contexts/RolesContext";
-import { useChat } from "../hooks/useChat";
-import { useConversationHistory } from "../hooks/useConversationHistory";
-import { useConversationManager } from "../hooks/useConversationManager";
-import { useMemory } from "../hooks/useMemory";
-import { useSettings } from "../hooks/useSettings";
+import { useChatPageLogic } from "../hooks/useChatPageLogic";
+import { useChatQuickstart } from "../hooks/useChatQuickstart";
 import { useVisualViewport } from "../hooks/useVisualViewport";
-import { buildSystemPrompt } from "../lib/chat/prompt-builder";
-import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
-import { mapCreativityToParams } from "../lib/creativity";
-import { humanErrorToToast } from "../lib/errors/humanError";
-import { getSamplingCapabilities } from "../lib/modelCapabilities";
 
 const STARTER_PROMPTS = [
   "Schreib ein kurzes Gedicht",
@@ -34,240 +21,57 @@ const STARTER_PROMPTS = [
 ];
 
 export default function Chat() {
-  const toasts = useToasts();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { activeRole, setActiveRole } = useRoles();
-  const { settings } = useSettings();
   const viewport = useVisualViewport();
-
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { isEnabled: memoryEnabled } = useMemory();
-  const { models: modelCatalog } = useModelCatalog();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const requestOptions = useMemo(() => {
-    const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog ?? null);
-    const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
-    return {
-      model: settings.preferredModelId,
-      temperature: capabilities.temperature ? params.temperature : undefined,
-      top_p: capabilities.top_p ? params.top_p : undefined,
-      presence_penalty: capabilities.presence_penalty ? params.presence_penalty : undefined,
-    };
-  }, [modelCatalog, settings.creativity, settings.preferredModelId]);
+  // Preset handler will be defined after chatLogic
+  const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
 
-  const handleError = useCallback(
-    (error: Error) => {
-      toasts.push(humanErrorToToast(error));
-    },
-    [toasts],
-  );
-
-  const {
-    messages,
-    append,
-    isLoading,
-    setMessages,
-    input,
-    setInput,
-    setCurrentSystemPrompt,
-    setRequestOptions,
-    apiStatus,
-    rateLimitInfo,
-    error,
-  } = useChat({
-    onError: handleError,
+  // All business logic encapsulated in custom hook
+  const chatLogic = useChatPageLogic({
+    onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
 
-  useEffect(() => {
-    const combinedPrompt = buildSystemPrompt(settings, activeRole);
-    setCurrentSystemPrompt(combinedPrompt || undefined);
-  }, [activeRole, settings, setCurrentSystemPrompt]);
-
-  useEffect(() => {
-    setRequestOptions(requestOptions);
-  }, [requestOptions, setRequestOptions]);
-
-  useEffect(() => {
-    if (!settings.showNSFWContent && activeRole) {
-      const isMature =
-        activeRole.category === "erwachsene" ||
-        activeRole.tags?.some((t) => ["nsfw", "adult", "18+", "erotic"].includes(t.toLowerCase()));
-
-      if (isMature) {
-        setActiveRole(null);
-        toasts.push({
-          kind: "warning",
-          title: "Rolle deaktiviert",
-          message: "Diese Rolle ist aufgrund deiner Jugendschutz-Einstellungen nicht verfügbar.",
-        });
-      }
-    }
-  }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
-
-  const { activeConversationId, newConversation, conversations, selectConversation } =
-    useConversationManager({
-      messages,
-      isLoading,
-      setMessages,
-      setCurrentSystemPrompt,
-      onNewConversation: () => {
-        setInput("");
-      },
-      saveEnabled: memoryEnabled,
-      restoreEnabled: settings.restoreLastConversation && memoryEnabled,
-    });
-
-  useEffect(() => {
-    // Scroll behavior is now handled by VirtualizedMessageList and useStickToBottom
-    // to prevent stuttering during streaming.
-    // This effect is intentionally empty or removed to avoid conflicting scroll actions.
-  }, []);
-
-  const handleSend = useCallback(() => {
-    if (isLoading) {
-      toasts.push({
-        kind: "warning",
-        title: "Verarbeitung läuft",
-        message: "Bitte warte einen Moment, bis die aktuelle Antwort fertig ist.",
-      });
-      return;
-    }
-
-    const validation = validatePrompt(input);
-
-    if (!validation.valid) {
-      if (validation.reason === "too_long") {
-        toasts.push({
-          kind: "error",
-          title: "Nachricht zu lang",
-          message: `Die Eingabe darf maximal ${MAX_PROMPT_LENGTH.toLocaleString("de-DE")} Zeichen enthalten. Wir haben sie entsprechend gekürzt.`,
-        });
-        setInput(validation.sanitized);
-      } else {
-        toasts.push({
-          kind: "warning",
-          title: "Leere Nachricht",
-          message: "Bitte gib eine Nachricht ein, bevor du sendest.",
-        });
-      }
-      return;
-    }
-
-    void append({ role: "user", content: validation.sanitized }).catch((error: Error) => {
-      toasts.push({
-        kind: "error",
-        title: "Senden fehlgeschlagen",
-        message: error.message || "Die Nachricht konnte nicht gesendet werden.",
-      });
-    });
-    setInput("");
-  }, [append, input, isLoading, setInput, toasts]);
-
-  const handleEdit = useCallback(
-    (messageId: string, newContent: string) => {
-      const messageIndex = messages.findIndex((m) => m.id === messageId);
-      if (messageIndex === -1) return;
-      const newMessages = messages.slice(0, messageIndex);
-      setMessages(newMessages);
-      void append({ role: "user", content: newContent }, newMessages);
-    },
-    [messages, setMessages, append],
-  );
-
-  const handleFollowUp = useCallback(
-    (prompt: string) => {
-      if (isLoading) {
-        toasts.push({
-          kind: "warning",
-          title: "Antwort läuft",
-          message: "Warte kurz, bis die aktuelle Antwort fertig ist.",
-        });
-        return;
-      }
-      setInput(prompt);
-      setTimeout(() => {
-        const validation = validatePrompt(prompt);
-        if (validation.valid) {
-          void append({ role: "user", content: validation.sanitized });
-          setInput("");
-        }
-      }, 100);
-    },
-    [setInput, append, isLoading, toasts],
-  );
-
-  const startWithPreset = useCallback(
+  // Define preset handler now that chatLogic is available
+  startWithPreset.current = useCallback(
     (system: string, user?: string) => {
-      setCurrentSystemPrompt(system);
+      chatLogic.setInput(user || "");
+      // Note: setCurrentSystemPrompt is called internally by useChatPageLogic
       if (user) {
-        void append({
-          role: "user",
-          content: user,
-        });
+        setTimeout(() => chatLogic.handleSend(), 100);
       }
     },
-    [setCurrentSystemPrompt, append],
+    [chatLogic],
   );
 
-  const processedQuickstartRef = useRef<string | null>(null);
+  // Handle quickstart from URL params
+  useChatQuickstart({
+    onStartWithPreset: (system, user) => startWithPreset.current(system, user),
+  });
 
-  useEffect(() => {
-    const quickstartId = searchParams.get("quickstart");
-    if (quickstartId && QUICKSTARTS.length > 0) {
-      // Prevent infinite loop by checking if we already processed this ID
-      if (processedQuickstartRef.current === quickstartId) {
-        // ID is still in URL but we processed it? Clean it up if needed, but don't re-send.
-        // We can optionally force a navigate here just in case the previous one failed.
-        return;
-      }
-
-      const quickstart = QUICKSTARTS.find((q) => q.id === quickstartId);
-      if (quickstart) {
-        processedQuickstartRef.current = quickstartId;
-        startWithPreset(quickstart.system, quickstart.user);
-        // Navigate to /chat (clean URL) to remove the query param
-        void navigate("/chat", { replace: true });
-      }
-    }
-  }, [searchParams, navigate, startWithPreset]);
-
-  const { activeConversation } = useConversationHistory(conversations, activeConversationId);
-
-  const handleStartNewChat = useCallback(() => {
-    newConversation();
-    setInput("");
-    setIsHistoryOpen(false);
-  }, [newConversation, setInput]);
-
-  // History Selection
+  // History selection handlers
   const handleSelectConversation = useCallback(
     (id: string) => {
-      void selectConversation(id);
+      void chatLogic.selectConversation(id);
       setIsHistoryOpen(false);
     },
-    [selectConversation],
+    [chatLogic],
   );
 
-  const handleStarterClick = (prompt: string) => {
-    setInput(prompt);
-    // Optional: Auto-send on click? Usually better to let user confirm.
-    // But for "Starter Prompts" immediate action feels snappy.
-    // Let's just set input for now to be safe and allow editing.
-  };
-
-  const hasActiveConversation = !!activeConversationId;
-  const isEmpty = !hasActiveConversation && messages.length === 0;
+  const handleStartNewChat = useCallback(() => {
+    chatLogic.handleStartNewChat();
+    setIsHistoryOpen(false);
+  }, [chatLogic]);
 
   return (
     <>
       <ChatLayout
-        title={activeConversation?.title || "Neue Unterhaltung"}
+        title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
         headerActions={
           <Button
@@ -291,19 +95,22 @@ export default function Chat() {
           }}
         >
           <h1 className="sr-only">Disa AI – Chat</h1>
-          <ChatStatusBanner status={apiStatus} error={error} rateLimitInfo={rateLimitInfo} />
+          <ChatStatusBanner
+            status={chatLogic.apiStatus}
+            error={chatLogic.error}
+            rateLimitInfo={chatLogic.rateLimitInfo}
+          />
 
           {/* Messages Area */}
           <main
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 pt-4" /* pt-4 reduced from pt-12 as model pill is gone */
+            className="flex-1 overflow-y-auto min-h-0 pt-4"
             role="log"
             aria-label="Chat messages"
           >
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              {/* Removed bg-surface-1 container to allow ambient background to shine through */}
               <div className="flex-1 flex flex-col gap-6 py-4">
-                {isEmpty ? (
+                {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
                     {/* Welcome Message - Simpler, Clearer */}
                     <div className="text-center space-y-3">
@@ -323,15 +130,7 @@ export default function Chat() {
                       {STARTER_PROMPTS.map((prompt) => (
                         <button
                           key={prompt}
-                          onClick={() => {
-                            setInput(prompt);
-                            // Auto-send after a brief delay to allow input to update
-                            setTimeout(() => {
-                              if (input === prompt || input === "") {
-                                handleSend();
-                              }
-                            }, 100);
-                          }}
+                          onClick={() => chatLogic.handleStarterClick(prompt)}
                           className="w-full flex items-start gap-4 p-4 text-left rounded-2xl bg-surface-1/40 border border-white/10 hover:bg-surface-1/80 hover:border-accent-chat/40 hover:shadow-glow-sm transition-all group"
                         >
                           <div className="flex-shrink-0 p-2.5 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-accent-chat group-hover:bg-accent-chat/10 transition-all">
@@ -349,7 +148,7 @@ export default function Chat() {
                     {/* Quick Link to Settings - Subtle */}
                     <button
                       type="button"
-                      onClick={() => navigate("/settings")}
+                      onClick={() => chatLogic.navigate("/settings")}
                       className="text-xs font-medium text-ink-muted hover:text-ink-secondary transition-colors mt-2"
                     >
                       Einstellungen anpassen →
@@ -357,34 +156,14 @@ export default function Chat() {
                   </div>
                 ) : (
                   <VirtualizedMessageList
-                    messages={messages}
-                    isLoading={isLoading}
+                    messages={chatLogic.messages}
+                    isLoading={chatLogic.isLoading}
                     onCopy={(content) => {
                       void navigator.clipboard.writeText(content);
                     }}
-                    onEdit={handleEdit}
-                    onFollowUp={handleFollowUp}
-                    onRetry={(messageId) => {
-                      // Find the assistant message that needs to be retried
-                      const messageIndex = messages.findIndex((m) => m.id === messageId);
-                      if (messageIndex === -1) return;
-
-                      // Find the last user message before this assistant message
-                      let lastUserMessage: ChatMessageType | null = null;
-                      for (let i = messageIndex - 1; i >= 0; i--) {
-                        if (messages[i]?.role === "user") {
-                          lastUserMessage = messages[i] ?? null;
-                          break;
-                        }
-                      }
-
-                      if (!lastUserMessage) return;
-
-                      // Remove the assistant message and retry with the user message
-                      const newMessages = messages.slice(0, messageIndex);
-                      setMessages(newMessages);
-                      void append({ role: "user", content: lastUserMessage.content }, newMessages);
-                    }}
+                    onEdit={chatLogic.handleEdit}
+                    onFollowUp={chatLogic.handleFollowUp}
+                    onRetry={chatLogic.handleRetry}
                     className="w-full pb-4"
                     scrollContainerRef={chatScrollRef}
                   />
@@ -396,14 +175,12 @@ export default function Chat() {
 
           {/* Input Area - Floating Glass Bottom */}
           <div className="flex-none w-full pointer-events-none">
-            {" "}
-            {/* Wrapper to let clicks pass through in empty space */}
             <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
               <UnifiedInputBar
-                value={input}
-                onChange={setInput}
-                onSend={handleSend}
-                isLoading={isLoading}
+                value={chatLogic.input}
+                onChange={chatLogic.setInput}
+                onSend={chatLogic.handleSend}
+                isLoading={chatLogic.isLoading}
               />
             </div>
           </div>
@@ -417,8 +194,8 @@ export default function Chat() {
       <HistorySidePanel
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
-        conversations={conversations}
-        activeId={activeConversationId}
+        conversations={chatLogic.conversations}
+        activeId={chatLogic.activeConversationId}
         onSelect={handleSelectConversation}
         onNewChat={handleStartNewChat}
       />
