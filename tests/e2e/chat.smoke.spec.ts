@@ -19,7 +19,9 @@ test.describe("Chat Smoke Tests", () => {
     // (networkidle kann bei PWAs/Service Workern zu lange dauern)
     await page.waitForLoadState("domcontentloaded");
     // Warte explizit auf ein kritisches UI-Element
-    await page.locator('button[aria-label="Hauptmenü öffnen"]').waitFor({ state: "visible", timeout: 15000 });
+    await page
+      .locator('button[aria-label="Hauptmenü öffnen"]')
+      .waitFor({ state: "visible", timeout: 15000 });
   });
 
   test("should load chat interface with key elements", async ({ page }) => {
@@ -93,7 +95,7 @@ test.describe("Chat Smoke Tests", () => {
     // Prüfe Tabs im History-Panel - warte explizit auf die Buttons
     const bookmarksTab = historyPanel.locator("button", { hasText: "Lesezeichen" });
     const archiveTab = historyPanel.locator("button", { hasText: "Archiv" });
-    
+
     await expect(bookmarksTab).toBeVisible({ timeout: 5000 });
     await expect(archiveTab).toBeVisible({ timeout: 5000 });
 

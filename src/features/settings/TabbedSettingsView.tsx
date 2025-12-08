@@ -99,11 +99,11 @@ export function TabbedSettingsView() {
               className={cn(
                 "w-full flex items-center gap-4 p-xs rounded-2xl text-left",
                 "bg-surface-1 border border-white/5 shadow-sm",
-                "hover:bg-surface-2 active:scale-[0.99] transition-all",
+                "hover:bg-surface-2 hover:border-accent-settings-border/30 active:scale-[0.99] transition-all",
               )}
             >
               {/* Icon */}
-              <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-surface-2 flex items-center justify-center text-ink-secondary">
+              <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-accent-settings-dim flex items-center justify-center text-accent-settings">
                 <Icon className="h-5 w-5" />
               </div>
 

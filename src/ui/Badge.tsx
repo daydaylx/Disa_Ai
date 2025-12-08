@@ -14,6 +14,12 @@ const badgeVariants = cva(
         destructive: "bg-status-error/10 text-status-error border border-status-error/20",
         success: "bg-status-success/10 text-status-success border border-status-success/20",
         warning: "bg-status-warning/10 text-status-warning border border-status-warning/20",
+        // Page-specific accent variants
+        models: "bg-accent-models-dim text-accent-models border border-accent-models-border",
+        roles: "bg-accent-roles-dim text-accent-roles border border-accent-roles-border",
+        settings:
+          "bg-accent-settings-dim text-accent-settings border border-accent-settings-border",
+        chat: "bg-accent-chat-dim text-accent-chat border border-accent-chat-border",
       },
     },
     defaultVariants: {

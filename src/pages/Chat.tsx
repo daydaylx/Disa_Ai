@@ -305,9 +305,9 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20">
-                    <div className="text-center space-y-4 px-4 max-w-sm bg-surface-glass p-8 rounded-3xl backdrop-blur-xl border border-white/5 shadow-lg">
-                      <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center mx-auto mb-4">
-                        <Sparkles className="w-8 h-8 text-brand-primary" />
+                    <div className="text-center space-y-4 px-4 max-w-sm bg-surface-glass p-8 rounded-3xl backdrop-blur-xl border border-accent-chat-border/30 shadow-lg">
+                      <div className="w-16 h-16 rounded-2xl bg-accent-chat-dim flex items-center justify-center mx-auto mb-4 shadow-glow-sm">
+                        <Sparkles className="w-8 h-8 text-accent-chat" />
                       </div>
                       <p className="text-lg font-semibold text-ink-primary">
                         Willkommen bei Disa AI
@@ -327,7 +327,7 @@ export default function Chat() {
                         <button
                           type="button"
                           onClick={() => navigate("/settings")}
-                          className="text-xs font-medium text-ink-tertiary hover:text-brand-primary transition-colors"
+                          className="text-xs font-medium text-ink-tertiary hover:text-accent-chat transition-colors"
                         >
                           Einstellungen
                         </button>
@@ -340,9 +340,9 @@ export default function Chat() {
                         <button
                           key={prompt}
                           onClick={() => handleStarterClick(prompt)}
-                          className="flex items-center gap-3 p-3 text-left rounded-2xl bg-surface-1/40 border border-white/5 hover:bg-surface-1/60 hover:border-brand-primary/30 hover:shadow-glow-sm transition-all group"
+                          className="flex items-center gap-3 p-3 text-left rounded-2xl bg-surface-1/40 border border-white/5 hover:bg-surface-1/60 hover:border-accent-chat-border/30 hover:shadow-glow-sm transition-all group"
                         >
-                          <div className="p-2 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-brand-primary transition-colors">
+                          <div className="p-2 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-accent-chat transition-colors">
                             <MessageSquare className="h-4 w-4" />
                           </div>
                           <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">

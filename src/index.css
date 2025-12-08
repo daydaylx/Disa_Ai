@@ -15,6 +15,19 @@
   --text-tertiary: theme(colors.ink.tertiary);
   --border-color: theme(colors.border.DEFAULT);
 
+  /* Page-specific accent CSS variables for custom use */
+  --accent-chat: theme(colors.accent-chat.DEFAULT);
+  --accent-chat-dim: theme(colors.accent-chat.dim);
+  --accent-chat-glow: theme(colors.accent-chat.glow);
+  --accent-models: theme(colors.accent-models.DEFAULT);
+  --accent-models-dim: theme(colors.accent-models.dim);
+  --accent-models-glow: theme(colors.accent-models.glow);
+  --accent-roles: theme(colors.accent-roles.DEFAULT);
+  --accent-roles-dim: theme(colors.accent-roles.dim);
+  --accent-roles-glow: theme(colors.accent-roles.glow);
+  --accent-settings: theme(colors.accent-settings.DEFAULT);
+  --accent-settings-dim: theme(colors.accent-settings.dim);
+
   /* Viewport Height Fix */
   --vh: 1vh;
 }
@@ -26,7 +39,7 @@
     overscroll-behavior: none; /* Prevent bounce on mobile */
   }
 
-  /* Ambient Background Blobs */
+  /* Ambient Background Blobs - Using accent colors */
   body::before {
     content: "";
     position: fixed;
@@ -34,7 +47,7 @@
     left: -10%;
     width: 50vw;
     height: 50vw;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    background: radial-gradient(circle, var(--accent-chat-glow) 0%, rgba(0, 0, 0, 0) 70%);
     filter: blur(80px);
     z-index: -2;
     animation: blob 20s infinite alternate;
@@ -48,7 +61,7 @@
     right: -10%;
     width: 60vw;
     height: 60vw;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    background: radial-gradient(circle, var(--accent-models-glow) 0%, rgba(0, 0, 0, 0) 70%);
     filter: blur(100px);
     z-index: -2;
     animation: blob 25s infinite alternate-reverse;

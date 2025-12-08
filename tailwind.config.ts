@@ -48,6 +48,36 @@ export default {
           secondary: "#6366f1", // Indigo
           tertiary: "#06b6d4", // Cyan (kept for info)
         },
+        // === PAGE-SPECIFIC ACCENT SYSTEM ===
+        // Each page/category gets a subtle, distinct accent for visual grouping
+        "accent-chat": {
+          DEFAULT: "#8b5cf6", // Violet - Primary brand, chat actions
+          dim: "rgba(139, 92, 246, 0.12)",
+          glow: "rgba(139, 92, 246, 0.25)",
+          border: "rgba(139, 92, 246, 0.35)",
+          surface: "rgba(139, 92, 246, 0.06)",
+        },
+        "accent-models": {
+          DEFAULT: "#06b6d4", // Cyan/Teal - Cool, technical, AI models
+          dim: "rgba(6, 182, 212, 0.12)",
+          glow: "rgba(6, 182, 212, 0.25)",
+          border: "rgba(6, 182, 212, 0.35)",
+          surface: "rgba(6, 182, 212, 0.06)",
+        },
+        "accent-roles": {
+          DEFAULT: "#f472b6", // Pink - Warm, creative, personas
+          dim: "rgba(244, 114, 182, 0.12)",
+          glow: "rgba(244, 114, 182, 0.25)",
+          border: "rgba(244, 114, 182, 0.35)",
+          surface: "rgba(244, 114, 182, 0.06)",
+        },
+        "accent-settings": {
+          DEFAULT: "#a78bfa", // Light Violet - Calm, utility
+          dim: "rgba(167, 139, 250, 0.10)",
+          glow: "rgba(167, 139, 250, 0.20)",
+          border: "rgba(167, 139, 250, 0.30)",
+          surface: "rgba(167, 139, 250, 0.05)",
+        },
         border: {
           DEFAULT: "rgba(255, 255, 255, 0.08)", // Lighter, cleaner border
           subtle: "rgba(255, 255, 255, 0.04)",
@@ -94,10 +124,16 @@ export default {
         sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
         md: "0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)",
         lg: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)",
-        // Glow effects
-        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.3)", // Violet glow
+        // Glow effects - Primary (Violet)
+        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.3)",
         "glow-md": "0 0 20px rgba(139, 92, 246, 0.4)",
         "glow-lg": "0 0 30px rgba(139, 92, 246, 0.5)",
+        // Page-specific glow effects
+        "glow-models": "0 0 12px rgba(6, 182, 212, 0.25)",
+        "glow-models-lg": "0 0 24px rgba(6, 182, 212, 0.35)",
+        "glow-roles": "0 0 12px rgba(244, 114, 182, 0.25)",
+        "glow-roles-lg": "0 0 24px rgba(244, 114, 182, 0.35)",
+        "glow-settings": "0 0 10px rgba(167, 139, 250, 0.20)",
         "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
       },
       backgroundImage: {

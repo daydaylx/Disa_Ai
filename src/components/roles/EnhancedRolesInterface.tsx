@@ -172,8 +172,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 via-transparent to-transparent pointer-events-none" />
+          {/* Ambient Header Glow - Roles accent (Pink) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-roles/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative space-y-3 px-4 py-4">
             <PageHeader
@@ -187,7 +187,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Rolle suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-brand-primary/50 focus:ring-brand-primary/20"
+              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/50 focus:ring-accent-roles/20"
             />
 
             {/* Filter Pills */}
@@ -218,7 +218,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   className={cn(
                     "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
                     selectedCategory === cat
-                      ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-[0_0_10px_rgba(139,92,246,0.2)]"
+                      ? "bg-accent-roles-dim border-accent-roles-border text-accent-roles shadow-glow-roles"
                       : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
                   )}
                 >
@@ -275,6 +275,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   key={role.id}
                   data-testid="role-card"
                   variant="interactive"
+                  accent="roles"
                   role="button"
                   onClick={() => handleActivateRole(role)}
                   aria-label={`Rolle ${role.name} auswählen`}
@@ -282,13 +283,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   className={cn(
                     "relative transition-all duration-300",
                     isActive
-                      ? "bg-brand-primary/5 border-brand-primary/50 ring-1 ring-brand-primary/20 shadow-glow-sm"
-                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-white/10 shadow-sm",
+                      ? "bg-accent-roles-surface border-accent-roles-border ring-1 ring-accent-roles/20 shadow-glow-roles"
+                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-roles-border/50 shadow-sm",
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
                     {isActive && (
-                      <Badge variant="success" className="text-[10px] px-2 h-5 shadow-sm">
+                      <Badge variant="roles" className="text-[10px] px-2 h-5 shadow-sm">
                         Aktiv
                       </Badge>
                     )}
@@ -321,7 +322,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       className={cn(
                         "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                         isActive
-                          ? "bg-brand-primary/20 text-brand-primary shadow-inner"
+                          ? "bg-accent-roles-dim text-accent-roles shadow-inner"
                           : "bg-surface-2/80 text-ink-tertiary",
                       )}
                     >
@@ -333,7 +334,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <span
                         className={cn(
                           "font-semibold text-sm truncate block",
-                          isActive ? "text-brand-primary" : "text-ink-primary",
+                          isActive ? "text-accent-roles" : "text-ink-primary",
                         )}
                       >
                         {role.name}
@@ -369,7 +370,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   {/* Expanded Details */}
                   {isExpanded && (
                     <div id={`role-details-${role.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-                      <div className="space-y-3 rounded-xl border border-white/10 bg-surface-2/30 px-4 py-4">
+                      <div className="space-y-3 rounded-xl border border-accent-roles-border/30 bg-accent-roles-surface px-4 py-4">
                         <p className="text-sm text-ink-secondary leading-relaxed">
                           {role.description}
                         </p>
@@ -377,11 +378,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         {role.tags && role.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
                             {role.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                variant="secondary"
-                                className="text-[10px] px-2 h-5 bg-surface-3/50 border-white/5"
-                              >
+                              <Badge key={tag} variant="roles" className="text-[10px] px-2 h-5">
                                 {tag}
                               </Badge>
                             ))}

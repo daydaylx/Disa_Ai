@@ -86,7 +86,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                       "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200",
                       "min-w-[140px] lg:min-w-0 lg:w-full",
                       isActive
-                        ? "bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-glow-sm"
+                        ? "bg-accent-settings-dim border-accent-settings-border text-accent-settings shadow-glow-settings"
                         : "bg-surface-1/40 border-transparent text-ink-secondary hover:bg-surface-1/60 hover:text-ink-primary hover:border-white/5",
                     )}
                   >
@@ -94,7 +94,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                       className={cn(
                         "h-4 w-4 transition-colors",
                         isActive
-                          ? "text-brand-primary"
+                          ? "text-accent-settings"
                           : "text-ink-tertiary group-hover:text-ink-primary",
                       )}
                     />

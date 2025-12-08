@@ -22,10 +22,37 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       default: "p-4 sm:p-5",
       lg: "p-6",
     },
+    // Page-specific accent variants for visual categorization
+    accent: {
+      none: "",
+      chat: "border-l-2 border-l-accent-chat-border",
+      models: "border-l-2 border-l-accent-models-border",
+      roles: "border-l-2 border-l-accent-roles-border",
+      settings: "border-l-2 border-l-accent-settings-border",
+    },
   },
+  compoundVariants: [
+    // When interactive + accent, enhance hover states
+    {
+      variant: "interactive",
+      accent: "models",
+      className: "hover:border-accent-models-border hover:shadow-glow-models",
+    },
+    {
+      variant: "interactive",
+      accent: "roles",
+      className: "hover:border-accent-roles-border hover:shadow-glow-roles",
+    },
+    {
+      variant: "interactive",
+      accent: "settings",
+      className: "hover:border-accent-settings-border hover:shadow-glow-settings",
+    },
+  ],
   defaultVariants: {
     variant: "default",
     padding: "default",
+    accent: "none",
   },
 });
 
@@ -41,7 +68,7 @@ export interface CardProps
    * Accent color for the strip
    * @default "primary" (indigo)
    */
-  accentColor?: "primary" | "secondary" | "tertiary";
+  accentColor?: "primary" | "secondary" | "tertiary" | "models" | "roles";
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -50,6 +77,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       className,
       variant,
       padding,
+      accent,
       withAccent = false,
       accentColor = "secondary",
       children,
@@ -62,10 +90,16 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       primary: "bg-brand-primary",
       secondary: "bg-brand-secondary",
       tertiary: "bg-brand-tertiary",
+      models: "bg-accent-models",
+      roles: "bg-accent-roles",
     }[accentColor];
 
     return (
-      <div ref={ref} className={cn(cardVariants({ variant, padding, className }))} {...props}>
+      <div
+        ref={ref}
+        className={cn(cardVariants({ variant, padding, accent, className }))}
+        {...props}
+      >
         {showAccent && (
           <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
         )}

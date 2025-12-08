@@ -28,7 +28,8 @@ interface EnvValidationResult {
  */
 const BOOLEAN_TRUE = new Set(["true", "1", "yes", "on"]);
 const BOOLEAN_FALSE = new Set(["false", "0", "no", "off"]);
-const REQUIRED_RUNTIME_ENV_VARS: Array<keyof EnvConfig> = ["VITE_OPENROUTER_BASE_URL"];
+// No required runtime vars - all have working defaults/fallbacks
+const REQUIRED_RUNTIME_ENV_VARS: Array<keyof EnvConfig> = [];
 
 const ENV_VALIDATION_OVERLAY_ID = "env-validation-overlay";
 
