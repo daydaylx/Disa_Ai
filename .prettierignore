@@ -21,3 +21,6 @@ src/styles/design-tokens-consolidated.css
 src/styles/aurora-optimized.css
 src/styles/base.css
 src/styles/components.css
+
+# Auto-generated files
+src/styles/design-tokens.generated.ts
