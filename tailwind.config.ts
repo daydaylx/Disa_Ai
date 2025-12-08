@@ -47,6 +47,11 @@ export default {
           "primary-dim": "rgba(139, 92, 246, 0.15)",
           secondary: "#6366f1", // Indigo
           tertiary: "#06b6d4", // Cyan (kept for info)
+
+          // Semantic Page Accents
+          chat: "#8b5cf6",   // Violet (Same as Brand Primary)
+          models: "#0ea5e9", // Sky 500 (Cool/Tech feel)
+          roles: "#ec4899",  // Pink 500 (Warm/Human feel)
         },
         border: {
           DEFAULT: "rgba(255, 255, 255, 0.08)", // Lighter, cleaner border

@@ -16,6 +16,12 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       premium:
         "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden", // Premium
     },
+    accent: {
+      neutral: "", // Default behavior
+      chat: "", // Handled conditionally
+      models: "",
+      roles: "",
+    },
     padding: {
       none: "p-0",
       sm: "p-3 sm:p-4",
@@ -26,6 +32,7 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
   defaultVariants: {
     variant: "default",
     padding: "default",
+    accent: "neutral",
   },
 });
 
@@ -50,6 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       className,
       variant,
       padding,
+      accent = "neutral",
       withAccent = false,
       accentColor = "secondary",
       children,
@@ -57,6 +65,28 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     },
     ref,
   ) => {
+    // Generate accent-specific classes dynamically based on the prop
+    const accentClasses = React.useMemo(() => {
+      if (accent === "neutral") return "";
+
+      const colors = {
+        chat: "border-accent-chat/20 bg-accent-chat/5 hover:border-accent-chat/40",
+        models: "border-accent-models/20 bg-accent-models/5 hover:border-accent-models/40",
+        roles: "border-accent-roles/20 bg-accent-roles/5 hover:border-accent-roles/40",
+      };
+
+      return colors[accent as keyof typeof colors] || "";
+    }, [accent]);
+
+    // Override variant styles if an accent is provided
+    // If variant is interactive, we merge the accent hover effects
+    const finalClassName = cn(
+      cardVariants({ variant, padding, className }),
+      accentClasses,
+      // Ensure glass effect is maintained if we added a bg tint
+      accent !== "neutral" && variant === "default" && "backdrop-blur-md"
+    );
+
     const showAccent = withAccent && variant === "premium";
     const accentColorClass = {
       primary: "bg-brand-primary",
@@ -65,7 +95,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     }[accentColor];
 
     return (
-      <div ref={ref} className={cn(cardVariants({ variant, padding, className }))} {...props}>
+      <div ref={ref} className={finalClassName} {...props}>
         {showAccent && (
           <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
         )}

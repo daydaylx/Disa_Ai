@@ -7,7 +7,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { Check, Cpu, RefreshCw, Star } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -69,8 +69,8 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 via-transparent to-transparent pointer-events-none" />
+          {/* Ambient Header Glow - Using Models Accent */}
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-models/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative space-y-3 px-4 py-4">
             <div className="flex items-start justify-between">
@@ -96,7 +96,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               value={search}
               onChange={setSearch}
               placeholder="Modell suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-brand-primary/50 focus:ring-brand-primary/20"
+              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-models/50 focus:ring-accent-models/20"
             />
           </div>
         </div>
@@ -144,14 +144,15 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                 <Card
                   key={model.id}
                   variant="interactive"
+                  accent="models"
                   role="button"
                   tabIndex={0}
                   onClick={() => setPreferredModel(model.id)}
                   className={cn(
                     "w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300",
                     isActive
-                      ? "bg-brand-primary/5 border-brand-primary/50 ring-1 ring-brand-primary/20 shadow-glow-sm"
-                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-white/10 shadow-sm",
+                      ? "bg-accent-models/10 border-accent-models/50 ring-1 ring-accent-models/20 shadow-glow-sm"
+                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-models/30 shadow-sm",
                   )}
                 >
                   {/* Icon */}
@@ -159,7 +160,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     className={cn(
                       "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                       isActive
-                        ? "bg-brand-primary/20 text-brand-primary shadow-inner"
+                        ? "bg-accent-models/20 text-accent-models shadow-inner"
                         : "bg-surface-2/80 text-ink-tertiary",
                     )}
                   >
@@ -176,21 +177,21 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       <span
                         className={cn(
                           "font-semibold text-sm truncate",
-                          isActive ? "text-brand-primary" : "text-ink-primary",
+                          isActive ? "text-accent-models" : "text-ink-primary",
                         )}
                       >
                         {model.label ?? model.id}
                       </span>
                       {isActive && (
-                        <Check className="h-4 w-4 text-brand-primary flex-shrink-0 drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
+                        <Check className="h-4 w-4 text-accent-models flex-shrink-0 drop-shadow-[0_0_8px_rgba(14,165,233,0.5)]" />
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium">
                       <span className="truncate text-ink-secondary">{model.provider}</span>
                       <span className="text-ink-muted">·</span>
-                      <span className="bg-surface-3/50 px-1.5 py-0.5 rounded text-[10px]">
+                      <Badge variant="models" className="px-1.5 py-0 text-[10px] h-5 rounded border-0 bg-accent-models/10">
                         {Math.round(getContextTokens(model) / 1000)}k
-                      </span>
+                      </Badge>
                       <span className="text-ink-muted">·</span>
                       <span>{getPriceLabel(model)}</span>
                     </div>
@@ -208,7 +209,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleModelFavorite(model.id); // Corrected function name
+                      toggleModelFavorite(model.id);
                     }}
                     aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
                   >

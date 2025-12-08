@@ -14,6 +14,10 @@ const badgeVariants = cva(
         destructive: "bg-status-error/10 text-status-error border border-status-error/20",
         success: "bg-status-success/10 text-status-success border border-status-success/20",
         warning: "bg-status-warning/10 text-status-warning border border-status-warning/20",
+        // Semantic Accents
+        chat: "bg-accent-chat/10 text-accent-chat border border-accent-chat/20",
+        models: "bg-accent-models/10 text-accent-models border border-accent-models/20",
+        roles: "bg-accent-roles/10 text-accent-roles border border-accent-roles/20",
       },
     },
     defaultVariants: {
