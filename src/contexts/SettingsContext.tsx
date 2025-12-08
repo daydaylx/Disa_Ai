@@ -2,20 +2,6 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 import { isAllowedModelId } from "../config/modelDefaults";
 import { DEFAULT_MODEL_ID } from "../config/modelPresets";
-import {
-  getDiscussionMaxSentences,
-  getDiscussionPreset,
-  getDiscussionStrictMode,
-  getFontSize,
-  getHapticFeedback,
-  getReduceMotion,
-  setDiscussionMaxSentences as setLegacyDiscussionMaxSentences,
-  setDiscussionPreset as setLegacyDiscussionPreset,
-  setDiscussionStrictMode as setLegacyDiscussionStrictMode,
-  setFontSize as setLegacyFontSize,
-  setHapticFeedback as setLegacyHapticFeedback,
-  setReduceMotion as setLegacyReduceMotion,
-} from "../config/settings";
 import { STORAGE_KEYS } from "../config/storageKeys";
 import type { DiscussionPresetKey } from "../prompts/discussion/presets";
 
@@ -81,15 +67,56 @@ function clampFontSize(value: number | undefined): number {
   return Math.max(12, Math.min(24, Math.floor(numeric)));
 }
 
-function readLegacySettings(): Partial<Settings> {
-  return {
-    discussionPreset: getDiscussionPreset(),
-    discussionStrict: getDiscussionStrictMode(),
-    discussionMaxSentences: getDiscussionMaxSentences(),
-    fontSize: getFontSize(),
-    reduceMotion: getReduceMotion(),
-    hapticFeedback: getHapticFeedback(),
-  };
+/**
+ * One-time migration from legacy localStorage keys to unified settings store.
+ * This function reads old individual keys and migrates them to the new structure.
+ * After migration, the legacy keys are left in place for backwards compatibility
+ * with any old code that might still reference them, but they are no longer synced.
+ */
+function migrateLegacySettings(): Partial<Settings> {
+  const legacy: Partial<Settings> = {};
+
+  try {
+    // Migrate discussion preset
+    const discussionPresetRaw = localStorage.getItem("disa_discussion_preset");
+    if (discussionPresetRaw) {
+      legacy.discussionPreset = discussionPresetRaw as DiscussionPresetKey;
+    }
+
+    // Migrate discussion strict mode
+    const discussionStrictRaw = localStorage.getItem("disa_discussion_strict");
+    if (discussionStrictRaw) {
+      legacy.discussionStrict = discussionStrictRaw === "true";
+    }
+
+    // Migrate discussion max sentences
+    const maxSentencesRaw = localStorage.getItem("disa_discussion_max_sentences");
+    if (maxSentencesRaw) {
+      legacy.discussionMaxSentences = parseInt(maxSentencesRaw, 10);
+    }
+
+    // Migrate font size
+    const fontSizeRaw = localStorage.getItem("disa_font_size");
+    if (fontSizeRaw) {
+      legacy.fontSize = parseInt(fontSizeRaw, 10);
+    }
+
+    // Migrate reduce motion
+    const reduceMotionRaw = localStorage.getItem("disa_reduce_motion");
+    if (reduceMotionRaw) {
+      legacy.reduceMotion = reduceMotionRaw === "true";
+    }
+
+    // Migrate haptic feedback
+    const hapticRaw = localStorage.getItem("disa_haptic_feedback");
+    if (hapticRaw) {
+      legacy.hapticFeedback = hapticRaw === "true";
+    }
+  } catch (error) {
+    console.warn("Legacy settings migration failed:", error);
+  }
+
+  return legacy;
 }
 
 function normalizeSettings(raw: Partial<Settings>): Settings {
@@ -134,47 +161,47 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<Settings>(() => {
     if (typeof window === "undefined") return DEFAULT_SETTINGS;
 
-    const legacy = readLegacySettings();
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      if (!saved) return normalizeSettings(legacy);
-      const parsed = JSON.parse(saved) as Partial<Settings>;
-      return normalizeSettings({ ...legacy, ...parsed });
+
+      // If unified settings exist, use them
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<Settings>;
+        return normalizeSettings(parsed);
+      }
+
+      // Otherwise, perform one-time migration from legacy keys
+      const legacy = migrateLegacySettings();
+      const migrated = normalizeSettings(legacy);
+
+      // Save migrated settings to unified store
+      try {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(migrated));
+        console.info("✅ Settings migrated from legacy keys to unified store");
+      } catch (saveError) {
+        console.warn("Failed to save migrated settings:", saveError);
+      }
+
+      return migrated;
     } catch (error) {
-      console.warn("Falling back to default settings due to parse error:", error);
-      return normalizeSettings(legacy);
+      console.warn("Settings initialization failed, using defaults:", error);
+      return DEFAULT_SETTINGS;
     }
   });
 
-  const syncLegacyStores = useCallback((next: Settings) => {
+  const saveSettings = useCallback((updater: SettingsUpdater) => {
     try {
-      setLegacyDiscussionPreset(next.discussionPreset);
-      setLegacyDiscussionStrictMode(next.discussionStrict);
-      setLegacyDiscussionMaxSentences(next.discussionMaxSentences);
-      setLegacyFontSize(next.fontSize);
-      setLegacyReduceMotion(next.reduceMotion);
-      setLegacyHapticFeedback(next.hapticFeedback);
+      setSettings((prev) => {
+        const patch = typeof updater === "function" ? updater(prev) : updater;
+        const updated = normalizeSettings({ ...prev, ...patch });
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
+        // No more legacy sync - unified store is the single source of truth
+        return updated;
+      });
     } catch (error) {
-      console.warn("Legacy settings sync skipped:", error);
+      console.error("Failed to save settings:", error);
     }
   }, []);
-
-  const saveSettings = useCallback(
-    (updater: SettingsUpdater) => {
-      try {
-        setSettings((prev) => {
-          const patch = typeof updater === "function" ? updater(prev) : updater;
-          const updated = normalizeSettings({ ...prev, ...patch });
-          localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
-          syncLegacyStores(updated);
-          return updated;
-        });
-      } catch (error) {
-        console.error("Failed to save settings:", error);
-      }
-    },
-    [syncLegacyStores],
-  );
 
   const toggleNSFWContent = useCallback(() => {
     saveSettings((prev) => ({ showNSFWContent: !prev.showNSFWContent }));
@@ -271,11 +298,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       const resetDefaults = normalizeSettings({});
       setSettings(resetDefaults);
-      syncLegacyStores(resetDefaults);
+      // Save defaults back to unified store
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(resetDefaults));
     } catch (error) {
       console.error("Failed to reset settings:", error);
     }
-  }, [syncLegacyStores]);
+  }, []);
 
   // Side effects
   useEffect(() => {
