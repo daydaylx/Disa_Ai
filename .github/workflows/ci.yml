@@ -83,7 +83,7 @@ jobs:
         run: npm run lint
 
       - name: Unit Tests with Coverage
-        run: npm run test:ci -- --coverage
+        run: npm run test:ci
 
       - name: Upload Coverage Report
         if: always()
