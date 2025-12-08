@@ -23,7 +23,7 @@
     "format:fix": "prettier --write .",
     "test": "vitest run",
     "test:unit": "vitest run",
-    "test:smoke": "vitest run tests/smoke",
+    "test:smoke": "vitest run tests/smoke --coverage.enabled=false",
     "test:config": "vitest run tests/build",
     "test:build": "node scripts/test-build.mjs",
     "test:watch": "vitest",

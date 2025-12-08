@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: Run performance tests
-        run: npm run test:e2e -- --grep "Performance"
+        run: npm run e2e -- --grep "Performance"
         env:
           CI: true
           BUILD_ID: ${{ github.run_id }}
