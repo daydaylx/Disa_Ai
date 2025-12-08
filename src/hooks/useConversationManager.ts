@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
@@ -11,6 +11,7 @@ import {
   saveConversation,
   updateConversation,
 } from "../lib/conversation-manager-modern";
+import { debounceWithCancel } from "../lib/utils/debounce";
 import type { ChatMessageType, Conversation } from "../types";
 
 interface ConversationManagerProps {
@@ -89,30 +90,41 @@ export function useConversationManager({
     }
   }, [messages.length]);
 
+  // Create stable refs for values that debounced function needs
+  const messagesRef = useRef(messages);
+  const activeConversationIdRef = useRef(activeConversationId);
+  const isLoadingRef = useRef(isLoading);
+
   useEffect(() => {
-    const saveConversationIfNeeded = async () => {
-      const lastMessage = messages[messages.length - 1];
+    messagesRef.current = messages;
+    activeConversationIdRef.current = activeConversationId;
+    isLoadingRef.current = isLoading;
+  }, [messages, activeConversationId, isLoading]);
 
-      if (!saveEnabled) return;
+  // Debounced auto-save function (500ms delay to avoid excessive writes)
+  // This function is stable and uses refs to access latest values
+  const debouncedSave = useMemo(
+    () =>
+      debounceWithCancel(async () => {
+        const currentMessages = messagesRef.current;
+        const currentConversationId = activeConversationIdRef.current;
+        const currentIsLoading = isLoadingRef.current;
 
-      const hasMessages = messages.length > 0;
-      const lastMessageRole = lastMessage?.role;
-      const isAssistantCompleted = lastMessageRole === "assistant" && !isLoading;
-      const isUserDraft = lastMessageRole === "user";
+        const lastMessage = currentMessages[currentMessages.length - 1];
 
-      if (!hasMessages || (!isAssistantCompleted && !isUserDraft)) {
-        return;
-      }
+        if (!saveEnabled || !lastMessage || currentMessages.length === 0) return;
 
-      if (lastMessageRole === "assistant" && isLoading) {
-        // Do not persist half-finished assistant replies
-        return;
-      }
+        const lastMessageRole = lastMessage.role;
+        const isAssistantCompleted = lastMessageRole === "assistant" && !currentIsLoading;
+        const isUserDraft = lastMessageRole === "user";
 
-      if (!lastMessage) return;
+        // Only save when assistant is done or user just sent a message
+        if (!isAssistantCompleted && !isUserDraft) return;
 
-      if (messages.length > 0) {
-        const storageMessages = messages.map((msg) => ({
+        // Don't persist half-finished assistant replies
+        if (lastMessageRole === "assistant" && currentIsLoading) return;
+
+        const storageMessages = currentMessages.map((msg) => ({
           id: msg.id,
           role: msg.role,
           content: msg.content,
@@ -126,13 +138,13 @@ export function useConversationManager({
 
           const now = new Date().toISOString();
           const messageCount = storageMessages.length;
-          const model = lastMessage?.model || "default";
+          const model = lastMessage.model || "default";
 
           const firstUserMessage = storageMessages.find((msg) => msg.role === "user");
           const fallbackTitle = `Conversation ${new Date().toLocaleDateString()}`;
           const titleFromUser = firstUserMessage?.content?.slice(0, 80).trim() || fallbackTitle;
 
-          let conversationId = activeConversationId;
+          let conversationId = currentConversationId;
 
           if (conversationId) {
             await updateConversation(conversationId, {
@@ -157,8 +169,6 @@ export function useConversationManager({
             setActiveConversationId(conversationId);
           }
 
-          // Always use the current conversationId to avoid race condition
-          // when activeConversationId hasn't been updated yet
           persistLastConversationId(conversationId ?? null);
           lastSavedSignatureRef.current = signature;
           await refreshConversations();
@@ -170,20 +180,21 @@ export function useConversationManager({
             message: "Die Konversation konnte nicht automatisch gespeichert werden",
           });
         }
-      }
-    };
+      }, 500),
+    [saveEnabled, setActiveConversationId, persistLastConversationId, refreshConversations, toasts],
+  );
 
-    void saveConversationIfNeeded();
-  }, [
-    isLoading,
-    messages,
-    activeConversationId,
-    setActiveConversationId,
-    refreshConversations,
-    toasts,
-    saveEnabled,
-    persistLastConversationId,
-  ]);
+  // Trigger debounced save when messages or loading state changes
+  useEffect(() => {
+    if (!saveEnabled) return;
+
+    debouncedSave();
+
+    // Cleanup: cancel pending saves when component unmounts
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [messages, isLoading, saveEnabled, debouncedSave]);
 
   useEffect(() => {
     if (isHistoryOpen) {

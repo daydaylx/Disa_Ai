@@ -146,8 +146,9 @@ export function useChat({
         ...message,
       };
 
-      // Capture current messages to avoid stale closures
-      const currentMessages = customMessages || [...stateRef.current.messages];
+      // ATOMIC CAPTURE: Snapshot messages at function entry to prevent race conditions
+      // This ensures we work with a consistent message history throughout the async operation
+      const currentMessages = customMessages ?? [...stateRef.current.messages];
       const requestHistory = prepareMessages(currentMessages);
 
       dispatch({ type: "ADD_MESSAGE", message: userMessage });
@@ -354,7 +355,7 @@ export function useChat({
       }
     },
 
-    [onResponse, onFinish, onError, body, prepareMessages, stateRef, getRequestOptions], // Remove state.messages from dependencies to prevent stale closures
+    [onResponse, onFinish, onError, prepareMessages, getRequestOptions], // Refs are stable and don't need to be in deps
   );
 
   const stop = useCallback(() => {
@@ -364,12 +365,14 @@ export function useChat({
   }, []);
 
   const reload = useCallback(async () => {
-    const currentSystemPrompt = state.currentSystemPrompt ?? systemPromptRef.current;
-    const currentRequestOptions = state.requestOptions;
+    // ATOMIC SNAPSHOT: Capture all state at function entry to prevent race conditions
+    const currentState = stateRef.current;
+    const currentSystemPrompt = currentState.currentSystemPrompt ?? systemPromptRef.current;
+    const currentRequestOptions = currentState.requestOptions;
 
     try {
       // ATOMIC OPERATION: Capture current messages at function start
-      const currentMessages = [...state.messages];
+      const currentMessages = [...currentState.messages];
 
       if (currentMessages.length === 0) return;
 
@@ -410,7 +413,7 @@ export function useChat({
         onError(mappedError);
       }
     }
-  }, [append, onError, state.messages, state.currentSystemPrompt, state.requestOptions]); // Include state.messages dependency as required
+  }, [append, onError]); // Using stateRef for message access - no need for state deps
 
   const setMessages = useCallback((messages: ChatMessageType[]) => {
     dispatch({ type: "SET_MESSAGES", messages });

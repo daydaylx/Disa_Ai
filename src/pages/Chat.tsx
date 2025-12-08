@@ -304,53 +304,56 @@ export default function Chat() {
               {/* Removed bg-surface-1 container to allow ambient background to shine through */}
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20">
-                    <div className="text-center space-y-4 px-4 max-w-sm bg-surface-glass p-8 rounded-3xl backdrop-blur-xl border border-accent-chat-border/30 shadow-lg">
-                      <div className="w-16 h-16 rounded-2xl bg-accent-chat-dim flex items-center justify-center mx-auto mb-4 shadow-glow-sm">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
+                    {/* Welcome Message - Simpler, Clearer */}
+                    <div className="text-center space-y-3">
+                      <div className="w-16 h-16 rounded-2xl bg-accent-chat/10 flex items-center justify-center mx-auto shadow-glow-sm">
                         <Sparkles className="w-8 h-8 text-accent-chat" />
                       </div>
-                      <p className="text-lg font-semibold text-ink-primary">
-                        Willkommen bei Disa AI
+                      <h2 className="text-xl font-semibold text-ink-primary">
+                        Was kann ich für dich tun?
+                      </h2>
+                      <p className="text-sm text-ink-secondary max-w-sm">
+                        Tippe unten eine Frage ein oder wähle einen der Vorschläge
                       </p>
-                      <p className="text-sm text-ink-secondary leading-relaxed">
-                        Beginne ein neues Gespräch. Deine Nachrichten sind privat und sicher.
-                      </p>
-                      <div className="flex flex-col gap-3 items-center w-full pt-4">
-                        <Button
-                          variant="primary"
-                          size="lg"
-                          onClick={handleStartNewChat}
-                          className="w-full"
-                        >
-                          Neues Gespräch starten
-                        </Button>
-                        <button
-                          type="button"
-                          onClick={() => navigate("/settings")}
-                          className="text-xs font-medium text-ink-tertiary hover:text-accent-chat transition-colors"
-                        >
-                          Einstellungen
-                        </button>
-                      </div>
                     </div>
 
-                    {/* Starter Prompts */}
-                    <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                    {/* Starter Prompts - Larger, More Visible */}
+                    <div className="w-full max-w-md space-y-3">
                       {STARTER_PROMPTS.map((prompt) => (
                         <button
                           key={prompt}
-                          onClick={() => handleStarterClick(prompt)}
-                          className="flex items-center gap-3 p-3 text-left rounded-2xl bg-surface-1/40 border border-white/5 hover:bg-surface-1/60 hover:border-accent-chat-border/30 hover:shadow-glow-sm transition-all group"
+                          onClick={() => {
+                            setInput(prompt);
+                            // Auto-send after a brief delay to allow input to update
+                            setTimeout(() => {
+                              if (input === prompt || input === "") {
+                                handleSend();
+                              }
+                            }, 100);
+                          }}
+                          className="w-full flex items-start gap-4 p-4 text-left rounded-2xl bg-surface-1/40 border border-white/10 hover:bg-surface-1/80 hover:border-accent-chat/40 hover:shadow-glow-sm transition-all group"
                         >
-                          <div className="p-2 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-accent-chat transition-colors">
-                            <MessageSquare className="h-4 w-4" />
+                          <div className="flex-shrink-0 p-2.5 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-accent-chat group-hover:bg-accent-chat/10 transition-all">
+                            <MessageSquare className="h-5 w-5" />
                           </div>
-                          <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">
-                            {prompt}
-                          </span>
+                          <div className="flex-1 pt-0.5">
+                            <span className="text-sm font-medium text-ink-primary group-hover:text-accent-chat transition-colors leading-relaxed">
+                              {prompt}
+                            </span>
+                          </div>
                         </button>
                       ))}
                     </div>
+
+                    {/* Quick Link to Settings - Subtle */}
+                    <button
+                      type="button"
+                      onClick={() => navigate("/settings")}
+                      className="text-xs font-medium text-ink-muted hover:text-ink-secondary transition-colors mt-2"
+                    >
+                      Einstellungen anpassen →
+                    </button>
                   </div>
                 ) : (
                   <VirtualizedMessageList
@@ -361,8 +364,26 @@ export default function Chat() {
                     }}
                     onEdit={handleEdit}
                     onFollowUp={handleFollowUp}
-                    onRetry={(_messageId) => {
-                      /* TODO: Implement retry logic properly */
+                    onRetry={(messageId) => {
+                      // Find the assistant message that needs to be retried
+                      const messageIndex = messages.findIndex((m) => m.id === messageId);
+                      if (messageIndex === -1) return;
+
+                      // Find the last user message before this assistant message
+                      let lastUserMessage: ChatMessageType | null = null;
+                      for (let i = messageIndex - 1; i >= 0; i--) {
+                        if (messages[i]?.role === "user") {
+                          lastUserMessage = messages[i] ?? null;
+                          break;
+                        }
+                      }
+
+                      if (!lastUserMessage) return;
+
+                      // Remove the assistant message and retry with the user message
+                      const newMessages = messages.slice(0, messageIndex);
+                      setMessages(newMessages);
+                      void append({ role: "user", content: lastUserMessage.content }, newMessages);
                     }}
                     className="w-full pb-4"
                     scrollContainerRef={chatScrollRef}

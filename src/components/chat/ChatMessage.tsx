@@ -93,7 +93,6 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
-  const [showFollowUps, setShowFollowUps] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isUser = message.role === "user";
@@ -124,17 +123,8 @@ export function ChatMessage({
     setIsEditing(!isEditing);
   };
 
-  const handleFollowUp = (prompt: string) => {
-    onFollowUp?.(prompt);
-    setShowFollowUps(false);
-  };
-
-  const followUpSuggestions = [
-    "Erkläre das genauer",
-    "Gib mir Beispiele",
-    "Fasse zusammen",
-    "Einfacher bitte",
-  ];
+  // Follow-up suggestions - only show first 3 to avoid clutter
+  const followUpSuggestions = ["Erkläre das genauer", "Gib mir Beispiele", "Fasse zusammen"];
 
   if (isSystem) return null;
 
@@ -220,29 +210,13 @@ export function ChatMessage({
             )}
 
             {isAssistant && isLast && (
-              <>
-                <button
-                  onClick={handleRetry}
-                  className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
-                  title="Neu generieren"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                </button>
-
-                {onFollowUp && (
-                  <button
-                    onClick={() => setShowFollowUps(!showFollowUps)}
-                    className={cn(
-                      "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors flex items-center gap-1 text-[12px] font-medium",
-                      showFollowUps && "text-brand-primary bg-brand-primary/10",
-                    )}
-                    title="Schnellantworten"
-                  >
-                    <MoreHorizontal className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">Vorschläge</span>
-                  </button>
-                )}
-              </>
+              <button
+                onClick={handleRetry}
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
+                title="Neu generieren"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+              </button>
             )}
 
             <span className="text-[10px] text-ink-muted ml-1 select-none">
@@ -254,14 +228,14 @@ export function ChatMessage({
           </div>
         )}
 
-        {/* Follow-up Suggestions */}
-        {isAssistant && isLast && showFollowUps && (
+        {/* Follow-up Suggestions - Always visible for last assistant message */}
+        {isAssistant && isLast && onFollowUp && (
           <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
             {followUpSuggestions.map((suggestion) => (
               <button
                 key={suggestion}
-                onClick={() => handleFollowUp(suggestion)}
-                className="text-xs bg-surface-1/60 text-ink-secondary hover:bg-surface-2/80 hover:text-ink-primary px-3 py-1.5 rounded-full border border-white/5 transition-all shadow-sm backdrop-blur-sm"
+                onClick={() => onFollowUp(suggestion)}
+                className="text-xs bg-accent-chat/10 text-accent-chat hover:bg-accent-chat/20 hover:text-accent-chat px-3 py-2 rounded-full border border-accent-chat/20 hover:border-accent-chat/40 transition-all shadow-sm backdrop-blur-sm font-medium"
               >
                 {suggestion}
               </button>
