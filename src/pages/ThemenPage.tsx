@@ -26,7 +26,7 @@ export default function ThemenPage() {
         className="group relative flex items-start gap-4 p-4 transition-all duration-300 bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-white/10 shadow-sm"
       >
         {/* Icon */}
-        <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-surface-2/80 flex items-center justify-center text-accent-primary transition-colors group-hover:bg-accent-primary/10">
+        <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-surface-2/80 flex items-center justify-center text-accent-chat transition-colors group-hover:bg-accent-chat/10 group-hover:text-accent-chat">
           <Brain className="h-5 w-5" />
         </div>
 
@@ -67,8 +67,8 @@ export default function ThemenPage() {
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4 px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 via-transparent to-transparent pointer-events-none" />
+          {/* Ambient Header Glow - Chat accent for discussion topics */}
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-chat/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative p-4 sm:p-5">
             <PageHeader

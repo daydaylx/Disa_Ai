@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { Button, Card, useToasts } from "@/ui";
 
 const FEEDBACK_TYPES = [
-  { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-primary" },
+  { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-settings" },
   { id: "bug", label: "Fehler", icon: Bug, color: "text-status-error" },
-  { id: "ui", label: "Design", icon: Palette, color: "text-accent-secondary" },
+  { id: "ui", label: "Design", icon: Palette, color: "text-accent-settings" },
   { id: "other", label: "Sonstiges", icon: MoreHorizontal, color: "text-ink-secondary" },
 ] as const;
 
