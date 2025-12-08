@@ -184,7 +184,6 @@ jobs:
       - name: Build and analyze bundle
         run: |
           npm run build
-          npm run analyze
 
       - name: Check bundle size limits
         run: |
