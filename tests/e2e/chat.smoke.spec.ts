@@ -2,39 +2,48 @@ import { expect, test } from "@playwright/test";
 
 import { skipOnboarding } from "./utils";
 
+/**
+ * E2E-Smoke-Tests für die Chat-Oberfläche
+ *
+ * Diese Tests prüfen die kritischen UI-Elemente und grundlegenden Interaktionen
+ * der Chat-Seite. Sie stellen sicher, dass:
+ * - Alle wichtigen UI-Elemente sichtbar sind
+ * - Nachrichten eingegeben und gesendet werden können
+ * - Navigation und Menüs funktionieren
+ */
 test.describe("Chat Smoke Tests", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
     await page.goto("/");
-    // Wait for the page to fully load
+    // Warte auf vollständiges Laden der Seite
     await page.waitForLoadState("networkidle");
   });
 
   test("should load chat interface with key elements", async ({ page }) => {
-    // Check for main menu button
-    await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
+    // Prüfe Hauptmenü-Button (korrektes aria-label)
+    await expect(page.locator('button[aria-label="Hauptmenü öffnen"]')).toBeVisible();
 
-    // Check for history/bookmark button
+    // Prüfe Verlauf-Button
     await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
-    // Check for composer input
+    // Prüfe Eingabefeld
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
     await expect(input).toHaveAttribute("aria-label", "Nachricht eingeben");
 
-    // Check for send button
+    // Prüfe Senden-Button
     const sendButton = page.locator('button[aria-label="Senden"]');
     await expect(sendButton).toBeVisible();
 
-    // Check for role selector (shows "Standard" by default)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
-    await expect(roleButton).toBeVisible();
+    // Prüfe Rollen-Auswahl (SelectTrigger mit aria-label)
+    const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
+    await expect(roleSelector).toBeVisible();
 
-    // Check for style selector
+    // Prüfe Stil-Auswahl
     const styleSelector = page.locator('button[aria-label="Stil auswählen"]');
     await expect(styleSelector).toBeVisible();
 
-    // Check for creativity selector
+    // Prüfe Kreativitäts-Auswahl
     const creativitySelector = page.locator('button[aria-label="Kreativität auswählen"]');
     await expect(creativitySelector).toBeVisible();
   });
@@ -47,23 +56,24 @@ test.describe("Chat Smoke Tests", () => {
     await expect(sendButton).toBeEnabled();
     await sendButton.click();
 
-    // Input should be cleared after sending
+    // Eingabefeld sollte nach dem Senden geleert sein
     await expect(input).toHaveValue("");
   });
 
   test("should open main menu", async ({ page }) => {
-    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
+    // Korrektes aria-label verwenden
+    const menuButton = page.locator('button[aria-label="Hauptmenü öffnen"]');
     await menuButton.click();
 
-    // Menu drawer should be visible
+    // Menü-Drawer sollte sichtbar sein
     const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
     await expect(menuDrawer).toBeVisible();
 
-    // Check for navigation links
+    // Prüfe Navigation-Links
     await expect(menuDrawer.getByText("Einstellungen")).toBeVisible();
     await expect(menuDrawer.getByText("Impressum")).toBeVisible();
 
-    // Close menu
+    // Menü schließen
     const closeButton = menuDrawer.locator('button[aria-label="Menü schließen"]');
     await closeButton.click();
     await expect(menuDrawer).not.toBeVisible();
@@ -73,38 +83,39 @@ test.describe("Chat Smoke Tests", () => {
     const historyButton = page.locator('button[aria-label="Verlauf öffnen"]');
     await historyButton.click();
 
-    // History panel should be visible
+    // History-Panel sollte sichtbar sein (kann dialog oder complementary sein)
     const historyPanel = page.getByRole("complementary").or(page.getByRole("dialog")).first();
     await expect(historyPanel).toBeVisible();
 
-    // Check for tabs
+    // Prüfe Tabs im History-Panel
     await expect(historyPanel.getByText("Lesezeichen")).toBeVisible();
     await expect(historyPanel.getByText("Archiv")).toBeVisible();
 
-    // Close panel by clicking outside
+    // Panel schließen durch Klick außerhalb
     await page.mouse.click(10, 10);
   });
 
-  test("should navigate to roles selection", async ({ page }) => {
-    // Click on role selector (shows "Standard" by default)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
-    await roleButton.click();
+  test("should interact with role selector", async ({ page }) => {
+    // Klicke auf Rollen-Selektor (SelectTrigger)
+    const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
+    await roleSelector.click();
 
-    // Should navigate to roles page
-    await expect(page).toHaveURL(/\/roles/);
+    // Dropdown sollte geöffnet sein - prüfe auf "Neutral Standard" Option (exakter Name)
+    const neutralOption = page.getByRole("option", { name: "Neutral Standard" });
+    await expect(neutralOption).toBeVisible();
 
-    // Check for roles header
-    await expect(page.getByRole("heading", { level: 1, name: /Rollen/i })).toBeVisible();
+    // Schließe durch Klick auf die Option
+    await neutralOption.click();
   });
 
   test("should send message with Enter key", async ({ page }) => {
     const input = page.getByTestId("composer-input");
     await input.fill("Test with Enter");
 
-    // Send with Enter
+    // Mit Enter senden
     await input.press("Enter");
 
-    // Input should be cleared
+    // Eingabefeld sollte geleert sein
     await expect(input).toHaveValue("");
   });
 
@@ -112,11 +123,11 @@ test.describe("Chat Smoke Tests", () => {
     const input = page.getByTestId("composer-input");
     const sendButton = page.locator('button[aria-label="Senden"]');
 
-    // Send button should be disabled with empty input
+    // Senden-Button sollte bei leerem Input deaktiviert sein
     await expect(input).toHaveValue("");
     await expect(sendButton).toBeDisabled();
 
-    // Button should be enabled with text
+    // Button sollte nach Texteingabe aktiviert sein
     await input.fill("Some text");
     await expect(sendButton).toBeEnabled();
   });
