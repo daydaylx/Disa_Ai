@@ -6,7 +6,9 @@
   /* Modern Slate Glass Theme Variables - Using Tailwind color palette references */
   /* These map to Tailwind's zinc scale defined in tailwind.config.ts */
   --bg-app: theme(colors.bg.app);
+  /* stylelint-disable-next-line @stylistic/number-leading-zero */
   --bg-surface-1: theme(colors.surface.1);
+  /* stylelint-disable-next-line @stylistic/number-leading-zero */
   --bg-surface-2: theme(colors.surface.2);
   --text-primary: theme(colors.ink.primary);
   --text-secondary: theme(colors.ink.secondary);
