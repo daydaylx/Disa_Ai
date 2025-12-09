@@ -19,18 +19,45 @@ export default function ImpressumPage() {
 
           <section className="space-y-4">
             <h2 className="text-lg font-semibold text-ink-primary">Angaben gemäß § 5 TMG</h2>
-            <div className="text-ink-secondary space-y-2 leading-relaxed">
+            <div className="text-ink-secondary space-y-2 leading-relaxed text-sm">
               <p className="font-medium text-ink-primary">David Grunert</p>
               <p>
-                Kontakt:
+                Graßdorfer Straße 9
                 <br />
-                E-Mail{" "}
+                04425 Taucha
+                <br />
+                Deutschland
+              </p>
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-lg font-semibold text-ink-primary">Kontakt</h2>
+            <div className="text-ink-secondary text-sm">
+              <p>
+                E-Mail:{" "}
                 <a
                   href="mailto:grunert94@hotmail.com"
                   className="text-accent-primary hover:text-accent-primary/80 hover:underline transition-colors"
                 >
                   grunert94@hotmail.com
                 </a>
+              </p>
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-lg font-semibold text-ink-primary">
+              Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
+            </h2>
+            <div className="text-ink-secondary space-y-2 text-sm">
+              <p className="font-medium text-ink-primary">David Grunert</p>
+              <p>
+                Graßdorfer Straße 9
+                <br />
+                04425 Taucha
+                <br />
+                Deutschland
               </p>
             </div>
           </section>

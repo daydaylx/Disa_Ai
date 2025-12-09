@@ -1,4 +1,5 @@
 import type { BehaviorPreset } from "@/config/behavior-presets";
+import { BEHAVIOR_PRESET_STYLES } from "@/config/behavior-presets";
 
 interface MetaPresetCardProps {
   preset: BehaviorPreset;
@@ -8,6 +9,7 @@ interface MetaPresetCardProps {
 
 export function MetaPresetCard({ preset, isActive, onApply }: MetaPresetCardProps) {
   const Icon = preset.icon;
+  const styles = BEHAVIOR_PRESET_STYLES[preset.id];
 
   return (
     <button
@@ -18,10 +20,8 @@ export function MetaPresetCard({ preset, isActive, onApply }: MetaPresetCardProp
           : "border-transparent bg-surface-2 hover:bg-surface-3 hover:-translate-y-0.5"
       }`}
     >
-      <div
-        className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${preset.bgColor}`}
-      >
-        <Icon className={`w-5 h-5 ${preset.color}`} />
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${styles.bg}`}>
+        <Icon className={`w-5 h-5 ${styles.text}`} />
       </div>
       <h3 className="font-bold text-text-primary mb-1">{preset.label}</h3>
       <p className="text-xs text-text-secondary leading-relaxed">{preset.description}</p>
