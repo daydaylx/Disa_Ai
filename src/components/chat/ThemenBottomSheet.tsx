@@ -1,6 +1,8 @@
 import { CATEGORY_LABELS, type Quickstart, QUICKSTARTS } from "@/config/quickstarts";
 import { Brain } from "@/lib/icons";
 import { X } from "@/lib/icons";
+import { getThemeCategoryAccent } from "@/lib/utils/categoryAccents";
+import { cn } from "@/lib/utils";
 import { Button } from "@/ui";
 import { Dialog, DialogContent } from "@/ui/Dialog"; // Assuming shadcn Dialog
 
@@ -36,16 +38,30 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
               const categoryInfo = quickstart.category
                 ? CATEGORY_LABELS[quickstart.category]
                 : null;
+              const accent = getThemeCategoryAccent(quickstart.category);
               return (
-                <Button
+                <button
                   key={quickstart.id}
-                  variant="ghost"
-                  className="justify-start h-auto p-3 rounded-xl hover:bg-surface-1 border border-border-ink/50 text-left"
+                  className={cn(
+                    "relative flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all",
+                    "bg-surface-1/60 border border-white/10",
+                    "hover:bg-surface-1/80 hover:shadow-sm",
+                    `hover:border-accent-${accent}-border/50`,
+                    `before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-r-full`,
+                    `before:bg-accent-${accent} before:opacity-60 before:transition-opacity`,
+                    `hover:before:opacity-100`,
+                  )}
                   onClick={() => handleStart(quickstart)}
                 >
                   <div className="flex items-center gap-3 w-full">
-                    <div className="h-10 w-10 flex shrink-0 items-center justify-center rounded-lg bg-surface-2 border">
-                      <Icon className="h-5 w-5 text-ink-primary" />
+                    <div
+                      className={cn(
+                        "h-10 w-10 flex shrink-0 items-center justify-center rounded-lg border transition-colors",
+                        `bg-accent-${accent}-surface border-accent-${accent}-border/30`,
+                        `text-accent-${accent}`,
+                      )}
+                    >
+                      <Icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-ink-primary text-sm leading-tight">
@@ -53,13 +69,18 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
                       </p>
                       <p className="text-xs text-ink-secondary mt-1">{quickstart.description}</p>
                       {categoryInfo && (
-                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-xs bg-blue-50 text-blue-700">
+                        <span
+                          className={cn(
+                            "inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium border",
+                            categoryInfo.color,
+                          )}
+                        >
                           {categoryInfo.label}
                         </span>
                       )}
                     </div>
                   </div>
-                </Button>
+                </button>
               );
             })}
           </div>
