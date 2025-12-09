@@ -186,29 +186,31 @@ const CATEGORY_MAPPING: Record<string, string> = {
 };
 
 export function getCategoryStyle(category?: string | null): CategoryColorTheme["colors"] {
-  if (!category) return THEMES.slate;
+  if (!category) return THEMES.slate!;
 
   // Direct match
-  if (THEMES[category]) return THEMES[category];
+  if (THEMES[category]) return THEMES[category]!;
 
   // Mapped match
   const mapped = CATEGORY_MAPPING[category];
-  if (mapped && THEMES[mapped]) return THEMES[mapped];
+  if (mapped && THEMES[mapped]) return THEMES[mapped]!;
 
   // Fuzzy search / fallback
   const lowerCat = category.toLowerCase();
   for (const [key, themeName] of Object.entries(CATEGORY_MAPPING)) {
     if (lowerCat.includes(key.toLowerCase())) {
-      return THEMES[themeName];
+      const theme = THEMES[themeName];
+      if (theme) return theme;
     }
   }
 
-  return THEMES.slate;
+  return THEMES.slate!;
 }
 
 // Helper to cycle colors for lists without categories
 const COLOR_KEYS = Object.keys(THEMES).filter((k) => k !== "slate");
 export function getCycleColor(index: number): CategoryColorTheme["colors"] {
   const key = COLOR_KEYS[index % COLOR_KEYS.length];
-  return THEMES[key];
+  if (!key) return THEMES.slate!;
+  return THEMES[key]!;
 }
