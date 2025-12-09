@@ -10,10 +10,13 @@ export type CategoryColorTheme = {
     badge: string; // Badge bg (e.g., bg-indigo-500/10)
     badgeText: string; // Badge text (e.g., text-indigo-300)
     glow: string; // Shadow glow (e.g., shadow-indigo-500/20)
+    // Gradient for role cards (subtle color to dark)
+    gradient: string; // Card gradient (e.g., bg-gradient-to-br from-indigo-500/8 via-indigo-500/3 to-black/40)
     // Variants for hover/group-hover (Pre-calculated for Tailwind static analysis)
     hoverBg: string;
     hoverBorder: string;
     hoverGlow: string;
+    hoverGradient: string; // Hover gradient variant
     groupHoverIconBg: string;
     groupHoverIconText: string;
     groupHoverText: string;
@@ -32,9 +35,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-indigo-500/10",
     badgeText: "text-indigo-300",
     glow: "shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]", // indigo-500
+    gradient: "bg-gradient-to-br from-indigo-500/8 via-indigo-500/3 to-black/40",
     hoverBg: "hover:bg-indigo-500/5",
     hoverBorder: "hover:border-indigo-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-indigo-500/12 hover:via-indigo-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-indigo-500/10",
     groupHoverIconText: "group-hover:text-indigo-400",
     groupHoverText: "group-hover:text-indigo-400",
@@ -50,9 +56,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-pink-500/10",
     badgeText: "text-pink-300",
     glow: "shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]", // pink-500
+    gradient: "bg-gradient-to-br from-pink-500/8 via-pink-500/3 to-black/40",
     hoverBg: "hover:bg-pink-500/5",
     hoverBorder: "hover:border-pink-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-pink-500/12 hover:via-pink-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-pink-500/10",
     groupHoverIconText: "group-hover:text-pink-400",
     groupHoverText: "group-hover:text-pink-400",
@@ -68,9 +77,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-amber-500/10",
     badgeText: "text-amber-300",
     glow: "shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]", // amber-500
+    gradient: "bg-gradient-to-br from-amber-500/8 via-amber-500/3 to-black/40",
     hoverBg: "hover:bg-amber-500/5",
     hoverBorder: "hover:border-amber-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-amber-500/12 hover:via-amber-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-amber-500/10",
     groupHoverIconText: "group-hover:text-amber-400",
     groupHoverText: "group-hover:text-amber-400",
@@ -86,9 +98,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-emerald-500/10",
     badgeText: "text-emerald-300",
     glow: "shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]", // emerald-500
+    gradient: "bg-gradient-to-br from-emerald-500/8 via-emerald-500/3 to-black/40",
     hoverBg: "hover:bg-emerald-500/5",
     hoverBorder: "hover:border-emerald-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-emerald-500/12 hover:via-emerald-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-emerald-500/10",
     groupHoverIconText: "group-hover:text-emerald-400",
     groupHoverText: "group-hover:text-emerald-400",
@@ -104,9 +119,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-cyan-500/10",
     badgeText: "text-cyan-300",
     glow: "shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]", // cyan-500
+    gradient: "bg-gradient-to-br from-cyan-500/8 via-cyan-500/3 to-black/40",
     hoverBg: "hover:bg-cyan-500/5",
     hoverBorder: "hover:border-cyan-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-cyan-500/12 hover:via-cyan-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-cyan-500/10",
     groupHoverIconText: "group-hover:text-cyan-400",
     groupHoverText: "group-hover:text-cyan-400",
@@ -122,9 +140,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-violet-500/10",
     badgeText: "text-violet-300",
     glow: "shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]", // violet-500
+    gradient: "bg-gradient-to-br from-violet-500/8 via-violet-500/3 to-black/40",
     hoverBg: "hover:bg-violet-500/5",
     hoverBorder: "hover:border-violet-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-violet-500/12 hover:via-violet-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-violet-500/10",
     groupHoverIconText: "group-hover:text-violet-400",
     groupHoverText: "group-hover:text-violet-400",
@@ -140,9 +161,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-rose-500/10",
     badgeText: "text-rose-300",
     glow: "shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]", // rose-500
+    gradient: "bg-gradient-to-br from-rose-500/8 via-rose-500/3 to-black/40",
     hoverBg: "hover:bg-rose-500/5",
     hoverBorder: "hover:border-rose-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-rose-500/12 hover:via-rose-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-rose-500/10",
     groupHoverIconText: "group-hover:text-rose-400",
     groupHoverText: "group-hover:text-rose-400",
@@ -158,9 +182,12 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-slate-500/10",
     badgeText: "text-slate-300",
     glow: "shadow-none",
+    gradient: "bg-gradient-to-br from-slate-500/8 via-slate-500/3 to-black/40",
     hoverBg: "hover:bg-slate-500/5",
     hoverBorder: "hover:border-slate-500/20",
     hoverGlow: "hover:shadow-none",
+    hoverGradient:
+      "hover:bg-gradient-to-br hover:from-slate-500/12 hover:via-slate-500/5 hover:to-black/50",
     groupHoverIconBg: "group-hover:bg-slate-500/10",
     groupHoverIconText: "group-hover:text-slate-400",
     groupHoverText: "group-hover:text-slate-400",

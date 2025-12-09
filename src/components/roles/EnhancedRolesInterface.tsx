@@ -287,16 +287,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   aria-label={`Rolle ${role.name} auswählen`}
                   aria-pressed={isActive}
                   className={cn(
-                    "relative transition-all duration-300 group",
+                    "relative transition-all duration-300 group overflow-hidden",
                     isActive
                       ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-                      : cn(
-                          "bg-surface-1/60",
-                          theme.bg,
-                          theme.border,
-                          theme.hoverBg,
-                          theme.hoverGlow,
-                        ),
+                      : cn(theme.gradient, theme.border, theme.hoverGradient, theme.hoverGlow),
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
