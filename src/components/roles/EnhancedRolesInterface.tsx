@@ -174,7 +174,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Roles accent (Pink) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-roles/10 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-role-gradient opacity-90 pointer-events-none" />
 
           <div className="relative space-y-3 px-4 py-4">
             <PageHeader
@@ -289,8 +289,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   className={cn(
                     "relative transition-all duration-300 group overflow-hidden",
                     isActive
-                      ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-                      : cn(theme.gradient, theme.border, theme.hoverGradient, theme.hoverGlow),
+                      ? cn("bg-role-gradient ring-1", theme.border, theme.glow)
+                      : cn(
+                          "bg-role-gradient border-white/5 hover:brightness-110",
+                          theme.hoverBorder,
+                        ),
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
