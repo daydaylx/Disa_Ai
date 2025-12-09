@@ -4,6 +4,7 @@ export type CategoryColorTheme = {
     bg: string; // Background tint (e.g., bg-indigo-500/10)
     border: string; // Border color (e.g., border-indigo-500/20)
     text: string; // Text color (e.g., text-indigo-400)
+    textBg: string; // Background version of the text color (e.g. bg-indigo-400)
     iconBg: string; // Icon background (e.g., bg-indigo-500/20)
     iconText: string; // Icon text color (e.g., text-indigo-300)
     badge: string; // Badge bg (e.g., bg-indigo-500/10)
@@ -25,6 +26,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-indigo-500/5",
     border: "border-indigo-500/20",
     text: "text-indigo-400",
+    textBg: "bg-indigo-400",
     iconBg: "bg-indigo-500/10",
     iconText: "text-indigo-400",
     badge: "bg-indigo-500/10",
@@ -42,6 +44,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-pink-500/5",
     border: "border-pink-500/20",
     text: "text-pink-400",
+    textBg: "bg-pink-400",
     iconBg: "bg-pink-500/10",
     iconText: "text-pink-400",
     badge: "bg-pink-500/10",
@@ -59,6 +62,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-amber-500/5",
     border: "border-amber-500/20",
     text: "text-amber-400",
+    textBg: "bg-amber-400",
     iconBg: "bg-amber-500/10",
     iconText: "text-amber-400",
     badge: "bg-amber-500/10",
@@ -76,6 +80,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-emerald-500/5",
     border: "border-emerald-500/20",
     text: "text-emerald-400",
+    textBg: "bg-emerald-400",
     iconBg: "bg-emerald-500/10",
     iconText: "text-emerald-400",
     badge: "bg-emerald-500/10",
@@ -93,6 +98,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-cyan-500/5",
     border: "border-cyan-500/20",
     text: "text-cyan-400",
+    textBg: "bg-cyan-400",
     iconBg: "bg-cyan-500/10",
     iconText: "text-cyan-400",
     badge: "bg-cyan-500/10",
@@ -110,6 +116,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-violet-500/5",
     border: "border-violet-500/20",
     text: "text-violet-400",
+    textBg: "bg-violet-400",
     iconBg: "bg-violet-500/10",
     iconText: "text-violet-400",
     badge: "bg-violet-500/10",
@@ -127,6 +134,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-rose-500/5",
     border: "border-rose-500/20",
     text: "text-rose-400",
+    textBg: "bg-rose-400",
     iconBg: "bg-rose-500/10",
     iconText: "text-rose-400",
     badge: "bg-rose-500/10",
@@ -144,6 +152,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     bg: "bg-slate-500/5",
     border: "border-slate-500/20",
     text: "text-slate-400",
+    textBg: "bg-slate-400",
     iconBg: "bg-slate-500/10",
     iconText: "text-slate-400",
     badge: "bg-slate-500/10",

@@ -83,12 +83,7 @@ export const ModelCard = React.memo(
               {name}
             </span>
             {isActive && (
-              <span
-                className={cn(
-                  "flex h-1.5 w-1.5 rounded-full shadow-sm",
-                  theme.text.replace("text-", "bg-"),
-                )}
-              />
+              <span className={cn("flex h-1.5 w-1.5 rounded-full shadow-sm", theme.textBg)} />
             )}
           </div>
           <div className="flex items-center gap-2 text-xs text-ink-tertiary">
