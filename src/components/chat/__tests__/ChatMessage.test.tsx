@@ -9,7 +9,7 @@
  * - Retry-Funktion für Assistant-Nachrichten
  * - Zeitstempel-Anzeige
  */
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -241,33 +241,26 @@ describe("ChatMessage", () => {
     it("zeigt Vorschläge-Button nur für letzte Assistant-Nachricht", () => {
       render(<ChatMessage message={assistantMessage} isLast={true} onFollowUp={vi.fn()} />);
 
-      expect(screen.getByTitle("Schnellantworten")).toBeInTheDocument();
+      // Follow-up suggestions are now directly visible, not behind a button
+      expect(screen.getByText("Erkläre das genauer")).toBeInTheDocument();
     });
 
-    it("zeigt Follow-Up-Optionen beim Klick", async () => {
+    it("zeigt Follow-Up-Optionen beim Klick", () => {
       render(<ChatMessage message={assistantMessage} isLast={true} onFollowUp={vi.fn()} />);
 
-      const followUpButton = screen.getByTitle("Schnellantworten");
-      await userEvent.click(followUpButton);
-
-      await waitFor(() => {
-        expect(screen.getByText("Erkläre das genauer")).toBeInTheDocument();
-        expect(screen.getByText("Gib mir Beispiele")).toBeInTheDocument();
-        expect(screen.getByText("Fasse zusammen")).toBeInTheDocument();
-        expect(screen.getByText("Einfacher bitte")).toBeInTheDocument();
-      });
+      // Follow-up suggestions are now directly visible without needing to click
+      // Only 3 suggestions are shown to avoid clutter
+      expect(screen.getByText("Erkläre das genauer")).toBeInTheDocument();
+      expect(screen.getByText("Gib mir Beispiele")).toBeInTheDocument();
+      expect(screen.getByText("Fasse zusammen")).toBeInTheDocument();
     });
 
     it("ruft onFollowUp beim Klick auf einen Vorschlag auf", async () => {
       const onFollowUp = vi.fn();
       render(<ChatMessage message={assistantMessage} isLast={true} onFollowUp={onFollowUp} />);
 
-      const followUpButton = screen.getByTitle("Schnellantworten");
-      await userEvent.click(followUpButton);
-
-      await waitFor(() => {
-        expect(screen.getByText("Erkläre das genauer")).toBeInTheDocument();
-      });
+      // Suggestions are directly visible now
+      expect(screen.getByText("Erkläre das genauer")).toBeInTheDocument();
 
       await userEvent.click(screen.getByText("Erkläre das genauer"));
 

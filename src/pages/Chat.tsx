@@ -39,7 +39,7 @@ export default function Chat() {
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
-    (system: string, user?: string) => {
+    (_system: string, user?: string) => {
       chatLogic.setInput(user || "");
       // Note: setCurrentSystemPrompt is called internally by useChatPageLogic
       if (user) {

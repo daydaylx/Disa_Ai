@@ -142,7 +142,7 @@ export function humanError(error: unknown): HumanError {
 export function humanErrorToToast(error: unknown): {
   kind: "error";
   title: string;
-  message?: string;
+  message: string;
 } {
   const humanErr = humanError(error);
 

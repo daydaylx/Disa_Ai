@@ -99,12 +99,6 @@ describe("UnifiedInputBar", () => {
       // Kreativitäts-Auswahl
       expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
     });
-
-    it("rendert den Modell-Selektor", () => {
-      render(<UnifiedInputBar {...defaultProps} />);
-
-      expect(screen.getByRole("combobox", { name: "Modell auswählen" })).toBeInTheDocument();
-    });
   });
 
   describe("Texteingabe", () => {
@@ -243,7 +237,7 @@ describe("UnifiedInputBar", () => {
       expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
       expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
       expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
-      expect(screen.getByRole("combobox", { name: "Modell auswählen" })).toBeInTheDocument();
+      // Model selector has been moved to settings
     });
   });
 });

@@ -77,38 +77,48 @@ function migrateLegacySettings(): Partial<Settings> {
   const legacy: Partial<Settings> = {};
 
   try {
-    // Migrate discussion preset
-    const discussionPresetRaw = localStorage.getItem("disa_discussion_preset");
+    // Migrate discussion preset (check both underscore and colon variants)
+    const discussionPresetRaw =
+      localStorage.getItem("disa:discussion:preset") ||
+      localStorage.getItem("disa_discussion_preset");
     if (discussionPresetRaw) {
       legacy.discussionPreset = discussionPresetRaw as DiscussionPresetKey;
     }
 
     // Migrate discussion strict mode
-    const discussionStrictRaw = localStorage.getItem("disa_discussion_strict");
+    const discussionStrictRaw =
+      localStorage.getItem("disa:discussion:strict") ||
+      localStorage.getItem("disa_discussion_strict");
     if (discussionStrictRaw) {
       legacy.discussionStrict = discussionStrictRaw === "true";
     }
 
     // Migrate discussion max sentences
-    const maxSentencesRaw = localStorage.getItem("disa_discussion_max_sentences");
+    const maxSentencesRaw =
+      localStorage.getItem("disa:discussion:maxSentences") ||
+      localStorage.getItem("disa_discussion_max_sentences");
     if (maxSentencesRaw) {
       legacy.discussionMaxSentences = parseInt(maxSentencesRaw, 10);
     }
 
     // Migrate font size
-    const fontSizeRaw = localStorage.getItem("disa_font_size");
+    const fontSizeRaw =
+      localStorage.getItem("disa:ui:fontSize") || localStorage.getItem("disa_font_size");
     if (fontSizeRaw) {
       legacy.fontSize = parseInt(fontSizeRaw, 10);
     }
 
     // Migrate reduce motion
-    const reduceMotionRaw = localStorage.getItem("disa_reduce_motion");
+    const reduceMotionRaw =
+      localStorage.getItem("disa:ui:reduceMotion") || localStorage.getItem("disa_reduce_motion");
     if (reduceMotionRaw) {
       legacy.reduceMotion = reduceMotionRaw === "true";
     }
 
     // Migrate haptic feedback
-    const hapticRaw = localStorage.getItem("disa_haptic_feedback");
+    const hapticRaw =
+      localStorage.getItem("disa:ui:hapticFeedback") ||
+      localStorage.getItem("disa_haptic_feedback");
     if (hapticRaw) {
       legacy.hapticFeedback = hapticRaw === "true";
     }
@@ -177,7 +187,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       // Save migrated settings to unified store
       try {
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(migrated));
-        console.info("✅ Settings migrated from legacy keys to unified store");
+        console.warn("✅ Settings migrated from legacy keys to unified store");
       } catch (saveError) {
         console.warn("Failed to save migrated settings:", saveError);
       }
