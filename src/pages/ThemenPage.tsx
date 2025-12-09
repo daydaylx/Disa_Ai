@@ -30,7 +30,8 @@ export default function ThemenPage() {
         className={cn(
           "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm",
           "bg-surface-1/60 border-white/5",
-          `hover:${theme.bg} hover:${theme.border}`,
+          theme.hoverBg,
+          theme.hoverBorder,
         )}
       >
         {/* Icon */}
@@ -38,7 +39,8 @@ export default function ThemenPage() {
           className={cn(
             "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
             "bg-surface-2/80 text-ink-secondary",
-            `group-hover:${theme.iconBg} group-hover:${theme.iconText}`,
+            theme.groupHoverIconBg,
+            theme.groupHoverIconText,
           )}
         >
           <Brain className="h-5 w-5" />
@@ -50,7 +52,7 @@ export default function ThemenPage() {
             <h3
               className={cn(
                 "text-sm font-semibold truncate transition-colors",
-                `group-hover:${theme.text}`,
+                theme.groupHoverText,
                 "text-ink-primary",
               )}
             >

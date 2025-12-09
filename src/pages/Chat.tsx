@@ -3,7 +3,6 @@ import { useCallback, useRef, useState } from "react";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -139,14 +138,17 @@ export default function Chat() {
                             className={cn(
                               "flex items-center gap-3 p-3 text-left rounded-2xl transition-all group",
                               "bg-surface-1/40 border border-white/5",
-                              `hover:${theme.bg} hover:${theme.border} hover:${theme.glow}`,
+                              theme.hoverBg,
+                              theme.hoverBorder,
+                              theme.hoverGlow,
                             )}
                           >
                             <div
                               className={cn(
                                 "p-2 rounded-xl transition-colors",
                                 "bg-surface-2/50 text-ink-tertiary",
-                                `group-hover:${theme.iconBg} group-hover:${theme.iconText}`,
+                                theme.groupHoverIconBg,
+                                theme.groupHoverIconText,
                               )}
                             >
                               <MessageSquare className="h-4 w-4" />

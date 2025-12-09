@@ -51,7 +51,7 @@ export const ModelCard = React.memo(
           // Active State
           isActive
             ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-            : cn("bg-surface-1 border-border-ink hover:bg-surface-2", `hover:${theme.border}`),
+            : cn("bg-surface-1 border-border-ink hover:bg-surface-2", theme.hoverBorder),
           className,
         )}
       >
@@ -63,8 +63,8 @@ export const ModelCard = React.memo(
               ? cn(theme.bg, theme.text, theme.border)
               : cn(
                   "bg-surface-2 text-ink-secondary border-border-ink",
-                  `group-hover:${theme.text}`,
-                  `group-hover:${theme.border}`,
+                  theme.groupHoverText,
+                  theme.groupHoverBorder,
                 ),
           )}
         >

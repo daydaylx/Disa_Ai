@@ -2,7 +2,7 @@ import { CATEGORY_LABELS, type Quickstart, QUICKSTARTS } from "@/config/quicksta
 import { Brain } from "@/lib/icons";
 import { X } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { getThemeCategoryAccent } from "@/lib/utils/categoryAccents";
+import { getAccentVariants, getThemeCategoryAccent } from "@/lib/utils/categoryAccents";
 import { Button } from "@/ui";
 import { Dialog, DialogContent } from "@/ui/Dialog"; // Assuming shadcn Dialog
 
@@ -38,7 +38,9 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
               const categoryInfo = quickstart.category
                 ? CATEGORY_LABELS[quickstart.category]
                 : null;
-              const accent = getThemeCategoryAccent(quickstart.category);
+              const accentName = getThemeCategoryAccent(quickstart.category);
+              const accent = getAccentVariants(accentName);
+
               return (
                 <button
                   key={quickstart.id}
@@ -46,9 +48,10 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
                     "relative flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all",
                     "bg-surface-1/60 border border-white/10",
                     "hover:bg-surface-1/80 hover:shadow-sm",
-                    `hover:border-accent-${accent}-border/50`,
+                    accent.hoverBorderAlpha,
                     `before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-r-full`,
-                    `before:bg-accent-${accent} before:opacity-60 before:transition-opacity`,
+                    accent.beforeBg,
+                    "before:opacity-60 before:transition-opacity",
                     `hover:before:opacity-100`,
                   )}
                   onClick={() => handleStart(quickstart)}
@@ -57,8 +60,9 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
                     <div
                       className={cn(
                         "h-10 w-10 flex shrink-0 items-center justify-center rounded-lg border transition-colors",
-                        `bg-accent-${accent}-surface border-accent-${accent}-border/30`,
-                        `text-accent-${accent}`,
+                        accent.surface,
+                        accent.surfaceBorderAlpha,
+                        accent.text,
                       )}
                     >
                       <Icon className="h-5 w-5" />

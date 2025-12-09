@@ -9,6 +9,14 @@ export type CategoryColorTheme = {
     badge: string; // Badge bg (e.g., bg-indigo-500/10)
     badgeText: string; // Badge text (e.g., text-indigo-300)
     glow: string; // Shadow glow (e.g., shadow-indigo-500/20)
+    // Variants for hover/group-hover (Pre-calculated for Tailwind static analysis)
+    hoverBg: string;
+    hoverBorder: string;
+    hoverGlow: string;
+    groupHoverIconBg: string;
+    groupHoverIconText: string;
+    groupHoverText: string;
+    groupHoverBorder: string;
   };
 };
 
@@ -22,6 +30,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-indigo-500/10",
     badgeText: "text-indigo-300",
     glow: "shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]", // indigo-500
+    hoverBg: "hover:bg-indigo-500/5",
+    hoverBorder: "hover:border-indigo-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]",
+    groupHoverIconBg: "group-hover:bg-indigo-500/10",
+    groupHoverIconText: "group-hover:text-indigo-400",
+    groupHoverText: "group-hover:text-indigo-400",
+    groupHoverBorder: "group-hover:border-indigo-500/20",
   },
   pink: {
     bg: "bg-pink-500/5",
@@ -32,6 +47,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-pink-500/10",
     badgeText: "text-pink-300",
     glow: "shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]", // pink-500
+    hoverBg: "hover:bg-pink-500/5",
+    hoverBorder: "hover:border-pink-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]",
+    groupHoverIconBg: "group-hover:bg-pink-500/10",
+    groupHoverIconText: "group-hover:text-pink-400",
+    groupHoverText: "group-hover:text-pink-400",
+    groupHoverBorder: "group-hover:border-pink-500/20",
   },
   amber: {
     bg: "bg-amber-500/5",
@@ -42,6 +64,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-amber-500/10",
     badgeText: "text-amber-300",
     glow: "shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]", // amber-500
+    hoverBg: "hover:bg-amber-500/5",
+    hoverBorder: "hover:border-amber-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]",
+    groupHoverIconBg: "group-hover:bg-amber-500/10",
+    groupHoverIconText: "group-hover:text-amber-400",
+    groupHoverText: "group-hover:text-amber-400",
+    groupHoverBorder: "group-hover:border-amber-500/20",
   },
   emerald: {
     bg: "bg-emerald-500/5",
@@ -52,6 +81,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-emerald-500/10",
     badgeText: "text-emerald-300",
     glow: "shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]", // emerald-500
+    hoverBg: "hover:bg-emerald-500/5",
+    hoverBorder: "hover:border-emerald-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]",
+    groupHoverIconBg: "group-hover:bg-emerald-500/10",
+    groupHoverIconText: "group-hover:text-emerald-400",
+    groupHoverText: "group-hover:text-emerald-400",
+    groupHoverBorder: "group-hover:border-emerald-500/20",
   },
   cyan: {
     bg: "bg-cyan-500/5",
@@ -62,6 +98,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-cyan-500/10",
     badgeText: "text-cyan-300",
     glow: "shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]", // cyan-500
+    hoverBg: "hover:bg-cyan-500/5",
+    hoverBorder: "hover:border-cyan-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]",
+    groupHoverIconBg: "group-hover:bg-cyan-500/10",
+    groupHoverIconText: "group-hover:text-cyan-400",
+    groupHoverText: "group-hover:text-cyan-400",
+    groupHoverBorder: "group-hover:border-cyan-500/20",
   },
   violet: {
     bg: "bg-violet-500/5",
@@ -72,6 +115,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-violet-500/10",
     badgeText: "text-violet-300",
     glow: "shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]", // violet-500
+    hoverBg: "hover:bg-violet-500/5",
+    hoverBorder: "hover:border-violet-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]",
+    groupHoverIconBg: "group-hover:bg-violet-500/10",
+    groupHoverIconText: "group-hover:text-violet-400",
+    groupHoverText: "group-hover:text-violet-400",
+    groupHoverBorder: "group-hover:border-violet-500/20",
   },
   rose: {
     bg: "bg-rose-500/5",
@@ -82,6 +132,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-rose-500/10",
     badgeText: "text-rose-300",
     glow: "shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]", // rose-500
+    hoverBg: "hover:bg-rose-500/5",
+    hoverBorder: "hover:border-rose-500/20",
+    hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]",
+    groupHoverIconBg: "group-hover:bg-rose-500/10",
+    groupHoverIconText: "group-hover:text-rose-400",
+    groupHoverText: "group-hover:text-rose-400",
+    groupHoverBorder: "group-hover:border-rose-500/20",
   },
   slate: {
     bg: "bg-slate-500/5",
@@ -92,6 +149,13 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badge: "bg-slate-500/10",
     badgeText: "text-slate-300",
     glow: "shadow-none",
+    hoverBg: "hover:bg-slate-500/5",
+    hoverBorder: "hover:border-slate-500/20",
+    hoverGlow: "hover:shadow-none",
+    groupHoverIconBg: "group-hover:bg-slate-500/10",
+    groupHoverIconText: "group-hover:text-slate-400",
+    groupHoverText: "group-hover:text-slate-400",
+    groupHoverBorder: "group-hover:border-slate-500/20",
   },
 };
 

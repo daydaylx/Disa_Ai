@@ -6,6 +6,7 @@
  */
 
 import type { QuickstartCategory } from "@/config/quickstarts";
+import { ACCENT_VARIANTS } from "@/styles/theme-variants";
 
 // ============================================================================
 // ROLE CATEGORY TYPES
@@ -138,12 +139,14 @@ export function getCategoryCardClasses(
       ? getRoleCategoryAccent(category)
       : getThemeCategoryAccent(category as QuickstartCategory);
 
+  const variants = ACCENT_VARIANTS[accent] || ACCENT_VARIANTS.chat;
+
   return {
-    surface: `bg-accent-${accent}-surface`,
-    border: `border-accent-${accent}-border`,
-    glow: `shadow-glow-${accent}`,
-    text: `text-accent-${accent}`,
-    dim: `bg-accent-${accent}-dim`,
+    surface: variants.surface,
+    border: variants.border,
+    glow: variants.glow,
+    text: variants.text,
+    dim: variants.dim,
   };
 }
 
@@ -171,4 +174,12 @@ export function getCategoryAccent(
   }
 
   return fallback;
+}
+
+/**
+ * Gets the full accent variant object for a given accent name.
+ * Safe to use for static analysis as it relies on the static ACCENT_VARIANTS map.
+ */
+export function getAccentVariants(accent: AccentName) {
+  return ACCENT_VARIANTS[accent] || ACCENT_VARIANTS.chat;
 }
