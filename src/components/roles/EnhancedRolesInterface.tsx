@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { getRoleCategoryAccent } from "@/lib/utils/categoryAccents";
 import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -269,6 +270,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const isActive = activeRole?.id === role.id;
               const isExpanded = expandedRoles.has(role.id);
               const isFavorite = isRoleFavorite(role.id);
+              const categoryAccent = getRoleCategoryAccent(role.category);
 
               return (
                 <Card
@@ -282,9 +284,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   aria-pressed={isActive}
                   className={cn(
                     "relative transition-all duration-300",
+                    "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
+                    `before:bg-accent-${categoryAccent}`,
                     isActive
-                      ? "bg-accent-roles-surface border-accent-roles-border ring-1 ring-accent-roles/20 shadow-glow-roles"
-                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-roles-border/50 shadow-sm",
+                      ? `bg-accent-${categoryAccent}-surface/40 border-accent-${categoryAccent}-border ring-1 ring-accent-${categoryAccent}/20 shadow-glow-${categoryAccent} before:opacity-100`
+                      : `bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-${categoryAccent}-border/50 shadow-sm before:opacity-40 hover:before:opacity-80`,
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
@@ -320,10 +324,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     {/* Icon */}
                     <div
                       className={cn(
-                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors border",
                         isActive
-                          ? "bg-accent-roles-dim text-accent-roles shadow-inner"
-                          : "bg-surface-2/80 text-ink-tertiary",
+                          ? `bg-accent-${categoryAccent}-dim text-accent-${categoryAccent} border-accent-${categoryAccent}-border/50 shadow-inner`
+                          : `bg-surface-2/60 text-ink-tertiary border-white/5 group-hover:bg-accent-${categoryAccent}-surface group-hover:text-accent-${categoryAccent} group-hover:border-accent-${categoryAccent}-border/30`,
                       )}
                     >
                       <Users className="h-6 w-6" />
@@ -370,7 +374,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   {/* Expanded Details */}
                   {isExpanded && (
                     <div id={`role-details-${role.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-                      <div className="space-y-3 rounded-xl border border-accent-roles-border/30 bg-accent-roles-surface px-4 py-4">
+                      <div className={cn(
+                        "space-y-3 rounded-xl border px-4 py-4",
+                        `border-accent-${categoryAccent}-border/30 bg-accent-${categoryAccent}-surface`,
+                      )}>
                         <p className="text-sm text-ink-secondary leading-relaxed">
                           {role.description}
                         </p>

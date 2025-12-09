@@ -262,10 +262,10 @@ function PerformanceBar({
   const percentage = Math.min((value / maxValue) * 100, 100);
 
   const colorClasses = {
-    primary: "bg-accent-primary",
-    success: "bg-accent-secondary",
-    warning: "bg-status-warning",
-    error: "bg-status-danger",
+    primary: "bg-accent-models",
+    success: "bg-accent-research",
+    warning: "bg-accent-kultur",
+    error: "bg-status-error",
   };
 
   // Material Design Performance Bar - Inset container with raised fill
@@ -572,8 +572,12 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                   <MaterialCard
                     variant="raised"
                     className={cn(
-                      "p-4 cursor-pointer hover:shadow-raiseLg transition-all duration-fast animate-card-enter",
-                      isActive && "ring-2 ring-brand shadow-raiseLg",
+                      "relative p-4 cursor-pointer transition-all duration-fast animate-card-enter",
+                      "bg-surface-1/60 border border-white/10",
+                      "hover:bg-surface-1/80 hover:border-accent-models-border/50 hover:shadow-glow-models",
+                      "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
+                      "before:bg-accent-models before:opacity-40 hover:before:opacity-80",
+                      isActive && "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 bg-accent-models-surface/30 border-accent-models-border",
                     )}
                     onClick={() => handleSelectModel(model)}
                   >

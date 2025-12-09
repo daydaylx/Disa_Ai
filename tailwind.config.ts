@@ -78,6 +78,100 @@ export default {
           border: "rgba(167, 139, 250, 0.30)",
           surface: "rgba(167, 139, 250, 0.05)",
         },
+        // === CATEGORY-SPECIFIC ACCENTS ===
+        // Theme/Discussion categories
+        "accent-wissenschaft": {
+          DEFAULT: "#10b981", // Emerald 500 - Fresh, scientific, growth
+          dim: "rgba(16, 185, 129, 0.12)",
+          glow: "rgba(16, 185, 129, 0.25)",
+          border: "rgba(16, 185, 129, 0.35)",
+          surface: "rgba(16, 185, 129, 0.06)",
+        },
+        "accent-realpolitik": {
+          DEFAULT: "#0ea5e9", // Sky 500 - Trustworthy, serious, stable
+          dim: "rgba(14, 165, 233, 0.12)",
+          glow: "rgba(14, 165, 233, 0.25)",
+          border: "rgba(14, 165, 233, 0.35)",
+          surface: "rgba(14, 165, 233, 0.06)",
+        },
+        "accent-hypothetisch": {
+          DEFAULT: "#a855f7", // Purple 500 - Speculative, imaginative
+          dim: "rgba(168, 85, 247, 0.12)",
+          glow: "rgba(168, 85, 247, 0.25)",
+          border: "rgba(168, 85, 247, 0.35)",
+          surface: "rgba(168, 85, 247, 0.06)",
+        },
+        "accent-kultur": {
+          DEFAULT: "#f59e0b", // Amber 500 - Warm, cultural, vibrant
+          dim: "rgba(245, 158, 11, 0.12)",
+          glow: "rgba(245, 158, 11, 0.25)",
+          border: "rgba(245, 158, 11, 0.35)",
+          surface: "rgba(245, 158, 11, 0.06)",
+        },
+        "accent-verschwörung": {
+          DEFAULT: "#71717a", // Zinc 500 - Neutral, mysterious
+          dim: "rgba(113, 113, 122, 0.12)",
+          glow: "rgba(113, 113, 122, 0.20)",
+          border: "rgba(113, 113, 122, 0.30)",
+          surface: "rgba(113, 113, 122, 0.05)",
+        },
+        // Role categories
+        "accent-technical": {
+          DEFAULT: "#14b8a6", // Teal 500 - Technical, precise
+          dim: "rgba(20, 184, 166, 0.12)",
+          glow: "rgba(20, 184, 166, 0.25)",
+          border: "rgba(20, 184, 166, 0.35)",
+          surface: "rgba(20, 184, 166, 0.06)",
+        },
+        "accent-business": {
+          DEFAULT: "#059669", // Emerald 600 - Professional, growth
+          dim: "rgba(5, 150, 105, 0.12)",
+          glow: "rgba(5, 150, 105, 0.25)",
+          border: "rgba(5, 150, 105, 0.35)",
+          surface: "rgba(5, 150, 105, 0.06)",
+        },
+        "accent-creative": {
+          DEFAULT: "#fb7185", // Rose 400 - Creative, expressive
+          dim: "rgba(251, 113, 133, 0.12)",
+          glow: "rgba(251, 113, 133, 0.25)",
+          border: "rgba(251, 113, 133, 0.35)",
+          surface: "rgba(251, 113, 133, 0.06)",
+        },
+        "accent-assistance": {
+          DEFAULT: "#818cf8", // Indigo 400 - Helpful, supportive
+          dim: "rgba(129, 140, 248, 0.12)",
+          glow: "rgba(129, 140, 248, 0.25)",
+          border: "rgba(129, 140, 248, 0.35)",
+          surface: "rgba(129, 140, 248, 0.06)",
+        },
+        "accent-analysis": {
+          DEFAULT: "#22d3ee", // Cyan 400 - Analytical, clear
+          dim: "rgba(34, 211, 238, 0.12)",
+          glow: "rgba(34, 211, 238, 0.25)",
+          border: "rgba(34, 211, 238, 0.35)",
+          surface: "rgba(34, 211, 238, 0.06)",
+        },
+        "accent-research": {
+          DEFAULT: "#34d399", // Emerald 400 - Exploratory, discovery
+          dim: "rgba(52, 211, 153, 0.12)",
+          glow: "rgba(52, 211, 153, 0.25)",
+          border: "rgba(52, 211, 153, 0.35)",
+          surface: "rgba(52, 211, 153, 0.06)",
+        },
+        "accent-education": {
+          DEFAULT: "#fbbf24", // Amber 400 - Learning, enlightening
+          dim: "rgba(251, 191, 36, 0.12)",
+          glow: "rgba(251, 191, 36, 0.25)",
+          border: "rgba(251, 191, 36, 0.35)",
+          surface: "rgba(251, 191, 36, 0.06)",
+        },
+        "accent-entertainment": {
+          DEFAULT: "#f472b6", // Pink 400 - Fun, engaging (same as roles)
+          dim: "rgba(244, 114, 182, 0.12)",
+          glow: "rgba(244, 114, 182, 0.25)",
+          border: "rgba(244, 114, 182, 0.35)",
+          surface: "rgba(244, 114, 182, 0.06)",
+        },
         border: {
           DEFAULT: "rgba(255, 255, 255, 0.08)", // Lighter, cleaner border
           subtle: "rgba(255, 255, 255, 0.04)",
@@ -135,6 +229,18 @@ export default {
         "glow-roles-lg": "0 0 24px rgba(244, 114, 182, 0.35)",
         "glow-settings": "0 0 10px rgba(167, 139, 250, 0.20)",
         "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
+        // Category-specific glow effects
+        "glow-wissenschaft": "0 0 12px rgba(16, 185, 129, 0.25)",
+        "glow-realpolitik": "0 0 12px rgba(14, 165, 233, 0.25)",
+        "glow-hypothetisch": "0 0 12px rgba(168, 85, 247, 0.25)",
+        "glow-kultur": "0 0 12px rgba(245, 158, 11, 0.25)",
+        "glow-technical": "0 0 12px rgba(20, 184, 166, 0.25)",
+        "glow-business": "0 0 12px rgba(5, 150, 105, 0.25)",
+        "glow-creative": "0 0 12px rgba(251, 113, 133, 0.25)",
+        "glow-assistance": "0 0 12px rgba(129, 140, 248, 0.25)",
+        "glow-analysis": "0 0 12px rgba(34, 211, 238, 0.25)",
+        "glow-research": "0 0 12px rgba(52, 211, 153, 0.25)",
+        "glow-education": "0 0 12px rgba(251, 191, 36, 0.25)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

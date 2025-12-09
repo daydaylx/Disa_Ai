@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 
-import { Bookmark, MessageSquare } from "@/lib/icons";
+import { Bookmark, MessageSquare, Sparkles } from "@/lib/icons";
 import { Button } from "@/ui/Button";
+import { cn } from "@/lib/utils";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
@@ -131,9 +132,20 @@ export default function Chat() {
                         <button
                           key={prompt}
                           onClick={() => chatLogic.handleStarterClick(prompt)}
-                          className="w-full flex items-start gap-4 p-4 text-left rounded-2xl bg-surface-1/40 border border-white/10 hover:bg-surface-1/80 hover:border-accent-chat/40 hover:shadow-glow-sm transition-all group"
+                          className={cn(
+                            "relative w-full flex items-start gap-4 p-4 text-left rounded-2xl transition-all group",
+                            "bg-surface-1/60 border border-white/10",
+                            "hover:bg-surface-1/80 hover:border-accent-chat-border/50 hover:shadow-glow-sm",
+                            "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full",
+                            "before:bg-accent-chat before:opacity-0 before:transition-opacity",
+                            "hover:before:opacity-80",
+                          )}
                         >
-                          <div className="flex-shrink-0 p-2.5 rounded-xl bg-surface-2/50 text-ink-tertiary group-hover:text-accent-chat group-hover:bg-accent-chat/10 transition-all">
+                          <div className={cn(
+                            "flex-shrink-0 p-2.5 rounded-xl border transition-all",
+                            "bg-surface-2/60 text-ink-tertiary border-white/5",
+                            "group-hover:text-accent-chat group-hover:bg-accent-chat-dim group-hover:border-accent-chat-border/30",
+                          )}>
                             <MessageSquare className="h-5 w-5" />
                           </div>
                           <div className="flex-1 pt-0.5">
