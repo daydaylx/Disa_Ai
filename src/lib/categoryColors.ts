@@ -37,7 +37,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-indigo-300",
     glow: "shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]", // indigo-500
     gradient: "bg-gradient-to-br from-indigo-500/8 via-indigo-500/3 to-black/40",
-    roleGradient: "linear-gradient(90deg, #1c1c2e 0%, #050507 60%)",
+    roleGradient: "linear-gradient(90deg, #101a30 0%, #050507 60%)",
     hoverBg: "hover:bg-indigo-500/5",
     hoverBorder: "hover:border-indigo-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]",
@@ -81,7 +81,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-amber-300",
     glow: "shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]", // amber-500
     gradient: "bg-gradient-to-br from-amber-500/8 via-amber-500/3 to-black/40",
-    roleGradient: "linear-gradient(90deg, #2e1f10 0%, #050507 60%)",
+    roleGradient: "linear-gradient(90deg, #2b210f 0%, #050507 60%)",
     hoverBg: "hover:bg-amber-500/5",
     hoverBorder: "hover:border-amber-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]",
@@ -125,7 +125,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-cyan-300",
     glow: "shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]", // cyan-500
     gradient: "bg-gradient-to-br from-cyan-500/8 via-cyan-500/3 to-black/40",
-    roleGradient: "linear-gradient(90deg, #0e2226 0%, #050507 60%)",
+    roleGradient: "linear-gradient(90deg, #0f2124 0%, #050507 60%)",
     hoverBg: "hover:bg-cyan-500/5",
     hoverBorder: "hover:border-cyan-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]",
@@ -147,7 +147,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-violet-300",
     glow: "shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]", // violet-500
     gradient: "bg-gradient-to-br from-violet-500/8 via-violet-500/3 to-black/40",
-    roleGradient: "linear-gradient(90deg, #20152e 0%, #050507 60%)",
+    roleGradient: "linear-gradient(90deg, #221236 0%, #050507 60%)",
     hoverBg: "hover:bg-violet-500/5",
     hoverBorder: "hover:border-violet-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]",
@@ -169,7 +169,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-rose-300",
     glow: "shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]", // rose-500
     gradient: "bg-gradient-to-br from-rose-500/8 via-rose-500/3 to-black/40",
-    roleGradient: "linear-gradient(90deg, #27101c 0%, #050507 60%)",
+    roleGradient: "linear-gradient(90deg, #31102a 0%, #050507 60%)",
     hoverBg: "hover:bg-rose-500/5",
     hoverBorder: "hover:border-rose-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]",
@@ -206,27 +206,27 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
 
 const CATEGORY_MAPPING: Record<string, string> = {
   // Roles
-  "Business & Karriere": "indigo",
-  "Kreativ & Unterhaltung": "pink",
+  "Business & Karriere": "rose",
+  "Kreativ & Unterhaltung": "violet",
   "Lernen & Bildung": "amber",
   "Leben & Familie": "emerald",
   "Experten & Beratung": "cyan",
-  Alltag: "slate",
-  Erwachsene: "rose",
+  Alltag: "cyan",
+  Erwachsene: "pink",
   Spezial: "violet",
 
   // Quickstarts / Topics
-  business: "indigo",
-  creative: "pink",
-  writing: "pink",
+  business: "rose",
+  creative: "violet",
+  writing: "violet",
   education: "amber",
   life: "emerald",
   expert: "cyan",
   science: "cyan",
-  tech: "cyan",
+  tech: "indigo",
   fun: "pink",
   culture: "violet",
-  everyday: "slate",
+  everyday: "cyan",
   verschwörungstheorien: "violet",
 };
 
