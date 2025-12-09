@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Check, Copy, Edit2, MoreHorizontal, RotateCcw } from "@/lib/icons";
+import { Check, Copy, Edit2, RotateCcw } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 
 import { cn } from "../../lib/utils";

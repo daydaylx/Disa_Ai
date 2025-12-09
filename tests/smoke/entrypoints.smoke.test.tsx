@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import React, { useState } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeAll, describe, expect, it, vi } from "vitest";
@@ -149,7 +148,6 @@ function renderWithRouter(pathname: string, element: React.ReactElement) {
 
 describe("Entry-Point Smoke Tests", () => {
   it("rendert den Chat-Einstieg inklusive Composer", async () => {
-    const user = userEvent.setup();
     renderWithRouter("/chat", <Chat />);
 
     // Das Heading ist jetzt sr-only (screen reader only)
@@ -159,8 +157,7 @@ describe("Entry-Point Smoke Tests", () => {
     });
     expect(heading).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Neues Gespräch/i }));
-
+    // The composer input should be visible directly now
     expect(await screen.findByTestId("composer-input")).toBeVisible();
   });
 

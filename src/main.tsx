@@ -59,10 +59,6 @@ function withBasePath(path: string): string {
   return `${normalizedBasePath}${sanitizedPath}`;
 }
 
-function toAbsoluteWithBase(path: string): string {
-  return new URL(withBasePath(path), window.location.origin).toString();
-}
-
 // Initialize error tracking (must be early in the process)
 try {
   initializeSentry();

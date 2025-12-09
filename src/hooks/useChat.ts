@@ -50,7 +50,7 @@ export function useChat({
   onFinish,
   onError,
   headers: _headers,
-  body,
+  body: _body,
   prepareMessages: prepareMessagesOpt,
   systemPrompt: _systemPrompt,
   getRequestOptions,
@@ -235,7 +235,7 @@ export function useChat({
           },
           {
             signal: controller.signal,
-            model: requestOptions?.model ?? (body as any)?.model,
+            model: requestOptions?.model,
             params: {
               temperature: requestOptions?.temperature,
               top_p: requestOptions?.top_p,

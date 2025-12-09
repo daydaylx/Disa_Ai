@@ -9,24 +9,28 @@ This PR implements all fixes and improvements from the comprehensive technical a
 ## 🐛 Critical Bug Fixes
 
 ### Race Condition in useChat
+
 - **Problem:** State dependencies causing stale closures and potential message loss
 - **Fix:** Use `stateRef` consistently for atomic state snapshots
 - **Impact:** Stable chat experience, no more lost messages during rapid interactions
 - **Files:** `src/hooks/useChat.ts`
 
 ### Auto-Save Performance Issue
+
 - **Problem:** Auto-save triggered on every message update → hundreds of IndexedDB writes per chat
 - **Fix:** Implemented 500ms debouncing with stable refs
 - **Impact:** Dramatically reduced I/O operations, improved mobile performance
 - **Files:** `src/hooks/useConversationManager.ts`, `src/lib/utils/debounce.ts` (new)
 
 ### combineSignals Race Condition
+
 - **Problem:** Gap between abort check and listener registration
 - **Fix:** Atomic check-and-register pattern
 - **Impact:** No more hanging requests
 - **Files:** `src/api/openrouter.ts`
 
 ### Missing Retry Logic
+
 - **Problem:** Retry button did nothing (TODO comment)
 - **Fix:** Implemented proper retry by finding last user message and resending
 - **Impact:** Users can now retry failed responses
@@ -37,24 +41,28 @@ This PR implements all fixes and improvements from the comprehensive technical a
 ## 🎨 UX Improvements
 
 ### Empty State Redesign
+
 - **Before:** Confusing "Neues Gespräch starten" button when already in chat
 - **After:** Clear "Was kann ich für dich tun?" message with auto-send starter prompts
 - **Impact:** Better first-use experience, clearer call-to-action
 - **Files:** `src/pages/Chat.tsx`
 
 ### Follow-Up Suggestions Always Visible
+
 - **Before:** Hidden behind "Vorschläge" toggle button
 - **After:** Directly visible for last assistant message with prominent styling
 - **Impact:** Better discoverability, increased feature usage
 - **Files:** `src/components/chat/ChatMessage.tsx`
 
 ### Cleaner Input Area
+
 - **Before:** Model selector above input taking vertical space
 - **After:** Removed from input bar (available in settings)
 - **Impact:** More space for messages, less clutter
 - **Files:** `src/components/chat/UnifiedInputBar.tsx`
 
 ### Improved Starter Prompts
+
 - **Before:** Small, grid layout, text-xs
 - **After:** Larger, single column, better visibility
 - **Impact:** Higher conversion for first message
@@ -65,6 +73,7 @@ This PR implements all fixes and improvements from the comprehensive technical a
 ## 🏗️ Architectural Refactorings
 
 ### 1. Settings Store Consolidation
+
 - **Problem:**
   - Dual storage system (unified + legacy keys)
   - 8 localStorage writes per setting change (redundant sync)
@@ -83,6 +92,7 @@ This PR implements all fixes and improvements from the comprehensive technical a
 - **Files:** `src/contexts/SettingsContext.tsx`
 
 ### 2. Chat.tsx Decomposition
+
 - **Problem:**
   - 424-line monolith mixing concerns
   - Business logic + state + routing + view in one file
@@ -106,6 +116,7 @@ This PR implements all fixes and improvements from the comprehensive technical a
   - `src/pages/Chat.tsx` (refactored)
 
 ### 3. Unified Error Handling
+
 - **Problem:**
   - Inconsistent patterns (some use mapError, some don't)
   - Direct `error.message` access (unsafe)
@@ -127,6 +138,7 @@ This PR implements all fixes and improvements from the comprehensive technical a
   - `src/hooks/useChatPageLogic.ts` (uses new pattern)
 
 ### 4. OpenRouter API Type Safety
+
 - **Problem:**
   - API responses typed as `any`
   - Runtime errors on schema changes
@@ -151,6 +163,7 @@ This PR implements all fixes and improvements from the comprehensive technical a
 ## 📊 Metrics
 
 ### Code Changes
+
 ```
 Commit 1 (Bug Fixes):     +238 / -252 lines
 Commit 2 (Refactorings):  +680 / -334 lines
@@ -159,6 +172,7 @@ Total:                    +918 / -586 lines
 ```
 
 ### Key Improvements
+
 - **Chat.tsx:** 424 → 213 lines (**-50%**)
 - **Settings writes:** 2x → 1x per change (**-50% overhead**)
 - **New utilities:** 4 files (useChatPageLogic, useChatQuickstart, errorHandler, openrouter types)
@@ -169,6 +183,7 @@ Total:                    +918 / -586 lines
 ## 🧪 Testing Notes
 
 **Manual Testing Checklist:**
+
 - [ ] Chat messages send and receive correctly
 - [ ] Retry button works for failed messages
 - [ ] Follow-up suggestions appear and work
@@ -179,6 +194,7 @@ Total:                    +918 / -586 lines
 - [ ] Mobile experience is smooth
 
 **Automated Tests:**
+
 - All existing tests should pass
 - Type checking passes (`npm run typecheck`)
 - Linting passes (`npm run lint`)
@@ -190,10 +206,12 @@ Total:                    +918 / -586 lines
 **Breaking Changes:** None - fully backwards compatible
 
 **Migration:**
+
 - Settings will automatically migrate from legacy keys on first load
 - Users will see a console info message: "✅ Settings migrated from legacy keys to unified store"
 
 **Rollback Plan:**
+
 - If issues arise, revert both commits
 - No data loss - legacy keys are preserved
 
