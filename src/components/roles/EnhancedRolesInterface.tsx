@@ -290,7 +290,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     "relative transition-all duration-300 group",
                     isActive
                       ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-                      : cn("bg-surface-1/60 border-white/5 hover:bg-surface-2", theme.hoverBorder),
+                      : cn(
+                          "bg-surface-1/60",
+                          theme.bg,
+                          theme.border,
+                          theme.hoverBg,
+                          theme.hoverGlow,
+                        ),
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
@@ -335,7 +341,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                         isActive
                           ? cn(theme.iconBg, theme.iconText, "shadow-inner")
-                          : cn("bg-surface-2/80 text-ink-tertiary", theme.groupHoverText),
+                          : cn(theme.iconBg, theme.iconText, theme.groupHoverIconBg),
                       )}
                     >
                       <Users className="h-6 w-6" />
