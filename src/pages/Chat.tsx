@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 
-import { Bookmark, MessageSquare, Sparkles } from "@/lib/icons";
-import { Button } from "@/ui/Button";
+import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
@@ -141,11 +141,13 @@ export default function Chat() {
                             "hover:before:opacity-80",
                           )}
                         >
-                          <div className={cn(
-                            "flex-shrink-0 p-2.5 rounded-xl border transition-all",
-                            "bg-surface-2/60 text-ink-tertiary border-white/5",
-                            "group-hover:text-accent-chat group-hover:bg-accent-chat-dim group-hover:border-accent-chat-border/30",
-                          )}>
+                          <div
+                            className={cn(
+                              "flex-shrink-0 p-2.5 rounded-xl border transition-all",
+                              "bg-surface-2/60 text-ink-tertiary border-white/5",
+                              "group-hover:text-accent-chat group-hover:bg-accent-chat-dim group-hover:border-accent-chat-border/30",
+                            )}
+                          >
                             <MessageSquare className="h-5 w-5" />
                           </div>
                           <div className="flex-1 pt-0.5">

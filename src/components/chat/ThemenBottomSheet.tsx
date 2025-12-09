@@ -1,8 +1,8 @@
 import { CATEGORY_LABELS, type Quickstart, QUICKSTARTS } from "@/config/quickstarts";
 import { Brain } from "@/lib/icons";
 import { X } from "@/lib/icons";
-import { getThemeCategoryAccent } from "@/lib/utils/categoryAccents";
 import { cn } from "@/lib/utils";
+import { getThemeCategoryAccent } from "@/lib/utils/categoryAccents";
 import { Button } from "@/ui";
 import { Dialog, DialogContent } from "@/ui/Dialog"; // Assuming shadcn Dialog
 
