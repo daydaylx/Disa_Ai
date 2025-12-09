@@ -43,30 +43,66 @@ export const ModelCard = React.memo(
     // Use 'expert' (Cyan) for free models, 'business' (Indigo) for premium models
     const theme = getCategoryStyle(isFree ? "expert" : "business");
 
+    const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (isActive) return;
+      const card = e.currentTarget;
+      const icon = card.querySelector(".theme-icon") as HTMLElement;
+
+      card.style.borderColor = theme.border;
+
+      if (icon) {
+        icon.style.color = theme.text;
+        icon.style.borderColor = theme.border;
+      }
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (isActive) return;
+      const card = e.currentTarget;
+      const icon = card.querySelector(".theme-icon") as HTMLElement;
+
+      card.style.borderColor = "";
+
+      if (icon) {
+        icon.style.color = "";
+        icon.style.borderColor = "";
+      }
+    };
+
     return (
       <div
         onClick={onCardClick}
         className={cn(
           "group relative flex items-center gap-4 p-4 rounded-2xl border transition-all duration-200 cursor-pointer",
-          // Active State
-          isActive
-            ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-            : cn("bg-surface-1 border-border-ink hover:bg-surface-2", `hover:${theme.border}`),
+          isActive ? "bg-surface-2 ring-1" : "bg-surface-1 border-border-ink hover:bg-surface-2",
           className,
         )}
+        style={
+          isActive
+            ? {
+                borderColor: theme.border,
+                boxShadow: theme.glow,
+              }
+            : undefined
+        }
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Left: Visual Anchor (Icon Placeholder or Vendor Logo) */}
         <div
           className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg font-bold transition-colors",
-            isActive
-              ? cn(theme.bg, theme.text, theme.border)
-              : cn(
-                  "bg-surface-2 text-ink-secondary border-border-ink",
-                  `group-hover:${theme.text}`,
-                  `group-hover:${theme.border}`,
-                ),
+            "theme-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg font-bold transition-colors",
+            isActive ? "" : "bg-surface-2 text-ink-secondary border-border-ink",
           )}
+          style={
+            isActive
+              ? {
+                  backgroundColor: theme.bg,
+                  color: theme.text,
+                  borderColor: theme.border,
+                }
+              : undefined
+          }
         >
           {name.charAt(0).toUpperCase()}
         </div>
@@ -77,17 +113,16 @@ export const ModelCard = React.memo(
             <span
               className={cn(
                 "font-medium truncate transition-colors",
-                isActive ? theme.text : "text-ink-primary group-hover:text-ink-primary",
+                isActive ? "" : "text-ink-primary group-hover:text-ink-primary",
               )}
+              style={isActive ? { color: theme.text } : undefined}
             >
               {name}
             </span>
             {isActive && (
               <span
-                className={cn(
-                  "flex h-1.5 w-1.5 rounded-full shadow-sm",
-                  theme.text.replace("text-", "bg-"),
-                )}
+                className="flex h-1.5 w-1.5 rounded-full shadow-sm"
+                style={{ backgroundColor: theme.text }}
               />
             )}
           </div>
@@ -102,7 +137,15 @@ export const ModelCard = React.memo(
         <div className="flex flex-col items-end gap-2 shrink-0">
           <Badge
             variant={isFree ? "success" : "secondary"}
-            className={cn("text-[10px] h-5 px-1.5", !isFree && cn(theme.badge, theme.badgeText))}
+            className="text-[10px] h-5 px-1.5"
+            style={
+              !isFree
+                ? {
+                    backgroundColor: theme.badge,
+                    color: theme.badgeText,
+                  }
+                : undefined
+            }
           >
             {isFree ? "Free" : price}
           </Badge>
@@ -116,7 +159,7 @@ export const ModelCard = React.memo(
               }}
               className={cn(
                 "transition-opacity p-1",
-                isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100 md:opacity-0", // Always show on mobile if desired, or use opacity logic
+                isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100 md:opacity-0",
               )}
             >
               <Star
