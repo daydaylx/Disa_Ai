@@ -374,10 +374,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   {/* Expanded Details */}
                   {isExpanded && (
                     <div id={`role-details-${role.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-                      <div className={cn(
-                        "space-y-3 rounded-xl border px-4 py-4",
-                        `border-accent-${categoryAccent}-border/30 bg-accent-${categoryAccent}-surface`,
-                      )}>
+                      <div
+                        className={cn(
+                          "space-y-3 rounded-xl border px-4 py-4",
+                          `border-accent-${categoryAccent}-border/30 bg-accent-${categoryAccent}-surface`,
+                        )}
+                      >
                         <p className="text-sm text-ink-secondary leading-relaxed">
                           {role.description}
                         </p>
