@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-24bf202",
-  "buildTime": "2025-12-09T22:04:34.066Z",
-  "gitSha": "24bf20254cb2728aba442ba0660634c8d6302683",
-  "gitBranch": "claude/add-closed-card-colors-01LjZR6bqHfUBoKvHQSWW9Rm",
+  "buildId": "v1.0.0-573758f",
+  "buildTime": "2025-12-09T22:19:04.231Z",
+  "gitSha": "573758fe7643bab5e5a8b99817b28a5b0d4b27d2",
+  "gitBranch": "claude/style-role-cards-gradient-01SpgBxUfHeSnkk1FbH2i9Ni",
   "version": "1.0.0"
 }
