@@ -577,7 +577,8 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                       "hover:bg-surface-1/80 hover:border-accent-models-border/50 hover:shadow-glow-models",
                       "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
                       "before:bg-accent-models before:opacity-40 hover:before:opacity-80",
-                      isActive && "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 bg-accent-models-surface/30 border-accent-models-border",
+                      isActive &&
+                        "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 bg-accent-models-surface/30 border-accent-models-border",
                     )}
                     onClick={() => handleSelectModel(model)}
                   >

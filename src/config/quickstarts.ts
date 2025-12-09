@@ -22,10 +22,22 @@ export interface Quickstart {
 }
 
 export const CATEGORY_LABELS: Record<QuickstartCategory, { label: string; color: string }> = {
-  realpolitik: { label: "Realpolitik", color: "bg-accent-realpolitik-dim text-accent-realpolitik border-accent-realpolitik-border" },
-  hypothetisch: { label: "Gedankenexperiment", color: "bg-accent-hypothetisch-dim text-accent-hypothetisch border-accent-hypothetisch-border" },
-  wissenschaft: { label: "Wissenschaft", color: "bg-accent-wissenschaft-dim text-accent-wissenschaft border-accent-wissenschaft-border" },
-  kultur: { label: "Kultur", color: "bg-accent-kultur-dim text-accent-kultur border-accent-kultur-border" },
+  realpolitik: {
+    label: "Realpolitik",
+    color: "bg-accent-realpolitik-dim text-accent-realpolitik border-accent-realpolitik-border",
+  },
+  hypothetisch: {
+    label: "Gedankenexperiment",
+    color: "bg-accent-hypothetisch-dim text-accent-hypothetisch border-accent-hypothetisch-border",
+  },
+  wissenschaft: {
+    label: "Wissenschaft",
+    color: "bg-accent-wissenschaft-dim text-accent-wissenschaft border-accent-wissenschaft-border",
+  },
+  kultur: {
+    label: "Kultur",
+    color: "bg-accent-kultur-dim text-accent-kultur border-accent-kultur-border",
+  },
   verschwörungstheorien: {
     label: "Verschwörungstheorien",
     color: "bg-accent-verschwörung-dim text-accent-verschwörung border-accent-verschwörung-border",
