@@ -168,13 +168,20 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     );
   }
 
+  const headerTheme = selectedCategory
+    ? getCategoryStyle(selectedCategory)
+    : getCategoryStyle("Entertainment"); // Use "Entertainment" (Pink) as default since it matches "accent-roles"
+
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Roles accent (Pink) */}
-          <div className="absolute inset-0 bg-role-gradient opacity-90 pointer-events-none" />
+          {/* Ambient Header Glow - Roles accent (Pink) or Selected Category */}
+          <div
+            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            style={{ background: headerTheme.roleGradient }}
+          />
 
           <div className="relative space-y-3 px-4 py-4">
             <PageHeader
@@ -286,14 +293,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   onClick={() => handleActivateRole(role)}
                   aria-label={`Rolle ${role.name} auswählen`}
                   aria-pressed={isActive}
+                  style={{ background: theme.roleGradient }}
                   className={cn(
                     "relative transition-all duration-300 group overflow-hidden",
                     isActive
-                      ? cn("bg-role-gradient ring-1", theme.border, theme.glow)
-                      : cn(
-                          "bg-role-gradient border-white/5 hover:brightness-110",
-                          theme.hoverBorder,
-                        ),
+                      ? cn("ring-1", theme.border, theme.glow)
+                      : cn("border-white/5 hover:brightness-110", theme.hoverBorder),
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">

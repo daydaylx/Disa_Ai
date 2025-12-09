@@ -12,6 +12,7 @@ export type CategoryColorTheme = {
     glow: string; // Shadow glow (e.g., shadow-indigo-500/20)
     // Gradient for role cards (subtle color to dark)
     gradient: string; // Card gradient (e.g., bg-gradient-to-br from-indigo-500/8 via-indigo-500/3 to-black/40)
+    roleGradient: string; // Specific gradient for role cards: linear-gradient(...)
     // Variants for hover/group-hover (Pre-calculated for Tailwind static analysis)
     hoverBg: string;
     hoverBorder: string;
@@ -36,6 +37,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-indigo-300",
     glow: "shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]", // indigo-500
     gradient: "bg-gradient-to-br from-indigo-500/8 via-indigo-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #1c1c2e 0%, #050507 60%)",
     hoverBg: "hover:bg-indigo-500/5",
     hoverBorder: "hover:border-indigo-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(99,102,241,0.3)]",
@@ -57,6 +59,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-pink-300",
     glow: "shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]", // pink-500
     gradient: "bg-gradient-to-br from-pink-500/8 via-pink-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #27101c 0%, #050507 60%)",
     hoverBg: "hover:bg-pink-500/5",
     hoverBorder: "hover:border-pink-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(236,72,153,0.3)]",
@@ -78,6 +81,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-amber-300",
     glow: "shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]", // amber-500
     gradient: "bg-gradient-to-br from-amber-500/8 via-amber-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #2e1f10 0%, #050507 60%)",
     hoverBg: "hover:bg-amber-500/5",
     hoverBorder: "hover:border-amber-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(245,158,11,0.3)]",
@@ -99,6 +103,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-emerald-300",
     glow: "shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]", // emerald-500
     gradient: "bg-gradient-to-br from-emerald-500/8 via-emerald-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #0c2118 0%, #050507 60%)",
     hoverBg: "hover:bg-emerald-500/5",
     hoverBorder: "hover:border-emerald-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(16,185,129,0.3)]",
@@ -120,6 +125,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-cyan-300",
     glow: "shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]", // cyan-500
     gradient: "bg-gradient-to-br from-cyan-500/8 via-cyan-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #0e2226 0%, #050507 60%)",
     hoverBg: "hover:bg-cyan-500/5",
     hoverBorder: "hover:border-cyan-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(6,182,212,0.3)]",
@@ -141,6 +147,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-violet-300",
     glow: "shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]", // violet-500
     gradient: "bg-gradient-to-br from-violet-500/8 via-violet-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #20152e 0%, #050507 60%)",
     hoverBg: "hover:bg-violet-500/5",
     hoverBorder: "hover:border-violet-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(139,92,246,0.3)]",
@@ -162,6 +169,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-rose-300",
     glow: "shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]", // rose-500
     gradient: "bg-gradient-to-br from-rose-500/8 via-rose-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #27101c 0%, #050507 60%)",
     hoverBg: "hover:bg-rose-500/5",
     hoverBorder: "hover:border-rose-500/20",
     hoverGlow: "hover:shadow-[0_0_20px_-10px_rgba(244,63,94,0.3)]",
@@ -183,6 +191,7 @@ const THEMES: Record<string, CategoryColorTheme["colors"]> = {
     badgeText: "text-slate-300",
     glow: "shadow-none",
     gradient: "bg-gradient-to-br from-slate-500/8 via-slate-500/3 to-black/40",
+    roleGradient: "linear-gradient(90deg, #18181b 0%, #050507 60%)",
     hoverBg: "hover:bg-slate-500/5",
     hoverBorder: "hover:border-slate-500/20",
     hoverGlow: "hover:shadow-none",
