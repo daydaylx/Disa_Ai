@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getCategoryStyle } from "@/lib/categoryColors";
 import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { getRoleCategoryAccent } from "@/lib/utils/categoryAccents";
 import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -212,20 +212,24 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <div className="w-px h-4 bg-white/10 flex-shrink-0" />
 
               {/* Category Filters */}
-              {CATEGORY_ORDER.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
-                    selectedCategory === cat
-                      ? "bg-accent-roles-dim border-accent-roles-border text-accent-roles shadow-glow-roles"
-                      : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
+              {CATEGORY_ORDER.map((cat) => {
+                const isSelected = selectedCategory === cat;
+                const catTheme = getCategoryStyle(cat);
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                      isSelected
+                        ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
+                        : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                    )}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
             </div>
             {/* Active Filters Summary */}
             {hasActiveFilters && (
@@ -270,30 +274,37 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const isActive = activeRole?.id === role.id;
               const isExpanded = expandedRoles.has(role.id);
               const isFavorite = isRoleFavorite(role.id);
-              const categoryAccent = getRoleCategoryAccent(role.category);
+              const theme = getCategoryStyle(role.category);
 
               return (
                 <Card
                   key={role.id}
                   data-testid="role-card"
                   variant="interactive"
-                  accent="roles"
+                  // accent="roles" // Removed to use dynamic theme
                   role="button"
                   onClick={() => handleActivateRole(role)}
                   aria-label={`Rolle ${role.name} auswählen`}
                   aria-pressed={isActive}
                   className={cn(
-                    "relative transition-all duration-300",
-                    "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
-                    `before:bg-accent-${categoryAccent}`,
+                    "relative transition-all duration-300 group",
                     isActive
-                      ? `bg-accent-${categoryAccent}-surface/40 border-accent-${categoryAccent}-border ring-1 ring-accent-${categoryAccent}/20 shadow-glow-${categoryAccent} before:opacity-100`
-                      : `bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-${categoryAccent}-border/50 shadow-sm before:opacity-40 hover:before:opacity-80`,
+                      ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
+                      : cn(
+                          "bg-surface-1/60 border-white/5 hover:bg-surface-2",
+                          `hover:${theme.border}`,
+                        ),
                   )}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
                     {isActive && (
-                      <Badge variant="roles" className="text-[10px] px-2 h-5 shadow-sm">
+                      <Badge
+                        className={cn(
+                          "text-[10px] px-2 h-5 shadow-sm",
+                          theme.badge,
+                          theme.badgeText,
+                        )}
+                      >
                         Aktiv
                       </Badge>
                     )}
@@ -324,10 +335,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     {/* Icon */}
                     <div
                       className={cn(
-                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors border",
+                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                         isActive
-                          ? `bg-accent-${categoryAccent}-dim text-accent-${categoryAccent} border-accent-${categoryAccent}-border/50 shadow-inner`
-                          : `bg-surface-2/60 text-ink-tertiary border-white/5 group-hover:bg-accent-${categoryAccent}-surface group-hover:text-accent-${categoryAccent} group-hover:border-accent-${categoryAccent}-border/30`,
+                          ? cn(theme.iconBg, theme.iconText, "shadow-inner")
+                          : cn("bg-surface-2/80 text-ink-tertiary", `group-hover:${theme.text}`),
                       )}
                     >
                       <Users className="h-6 w-6" />
@@ -338,7 +349,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <span
                         className={cn(
                           "font-semibold text-sm truncate block",
-                          isActive ? "text-accent-roles" : "text-ink-primary",
+                          isActive ? theme.text : "text-ink-primary group-hover:text-ink-primary",
                         )}
                       >
                         {role.name}
@@ -377,7 +388,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <div
                         className={cn(
                           "space-y-3 rounded-xl border px-4 py-4",
-                          `border-accent-${categoryAccent}-border/30 bg-accent-${categoryAccent}-surface`,
+                          theme.bg,
+                          theme.border,
                         )}
                       >
                         <p className="text-sm text-ink-secondary leading-relaxed">
@@ -387,7 +399,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         {role.tags && role.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
                             {role.tags.map((tag) => (
-                              <Badge key={tag} variant="roles" className="text-[10px] px-2 h-5">
+                              <Badge
+                                key={tag}
+                                className={cn("text-[10px] px-2 h-5", theme.badge, theme.badgeText)}
+                              >
                                 {tag}
                               </Badge>
                             ))}

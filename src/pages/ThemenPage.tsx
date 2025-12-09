@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import type { Quickstart } from "@/config/quickstarts";
 import { CATEGORY_LABELS, QUICKSTARTS } from "@/config/quickstarts";
+import { getCategoryStyle } from "@/lib/categoryColors";
 import { AlertTriangle, ArrowRight, Brain } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { Badge, Button, Card, PageHeader } from "@/ui";
 
 const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
@@ -17,24 +19,49 @@ export default function ThemenPage() {
 
   const renderCard = (quickstart: Quickstart) => {
     const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
+    const theme = getCategoryStyle(quickstart.category);
+
     return (
       <Card
         key={quickstart.id}
         variant="interactive"
         role="button"
         onClick={() => handleStartQuickstart(quickstart)}
-        className="group relative flex items-start gap-4 p-4 transition-all duration-300 bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-white/10 shadow-sm"
+        className={cn(
+          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm",
+          "bg-surface-1/60 border-white/5",
+          `hover:${theme.bg} hover:${theme.border}`,
+        )}
       >
         {/* Icon */}
-        <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-surface-2/80 flex items-center justify-center text-accent-chat transition-colors group-hover:bg-accent-chat/10 group-hover:text-accent-chat">
+        <div
+          className={cn(
+            "flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
+            "bg-surface-2/80 text-ink-secondary",
+            `group-hover:${theme.iconBg} group-hover:${theme.iconText}`,
+          )}
+        >
           <Brain className="h-5 w-5" />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-sm font-semibold text-ink-primary truncate">{quickstart.title}</h3>
-            <ArrowRight className="h-4 w-4 text-ink-tertiary opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+            <h3
+              className={cn(
+                "text-sm font-semibold truncate transition-colors",
+                `group-hover:${theme.text}`,
+                "text-ink-primary",
+              )}
+            >
+              {quickstart.title}
+            </h3>
+            <ArrowRight
+              className={cn(
+                "h-4 w-4 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0",
+                theme.text,
+              )}
+            />
           </div>
 
           <p className="text-xs text-ink-secondary line-clamp-2 leading-relaxed">
@@ -45,8 +72,7 @@ export default function ThemenPage() {
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             {categoryInfo && (
               <Badge
-                variant="secondary"
-                className="text-[10px] px-2 h-5 bg-surface-3/50 border-white/5"
+                className={cn("text-[10px] px-2 h-5 border-white/5", theme.badge, theme.badgeText)}
               >
                 {categoryInfo.label}
               </Badge>

@@ -1,7 +1,9 @@
 import { useCallback, useRef, useState } from "react";
 
+import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -126,37 +128,35 @@ export default function Chat() {
                       </p>
                     </div>
 
-                    {/* Starter Prompts - Larger, More Visible */}
-                    <div className="w-full max-w-md space-y-3">
-                      {STARTER_PROMPTS.map((prompt) => (
-                        <button
-                          key={prompt}
-                          onClick={() => chatLogic.handleStarterClick(prompt)}
-                          className={cn(
-                            "relative w-full flex items-start gap-4 p-4 text-left rounded-2xl transition-all group",
-                            "bg-surface-1/60 border border-white/10",
-                            "hover:bg-surface-1/80 hover:border-accent-chat-border/50 hover:shadow-glow-sm",
-                            "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full",
-                            "before:bg-accent-chat before:opacity-0 before:transition-opacity",
-                            "hover:before:opacity-80",
-                          )}
-                        >
-                          <div
+                    {/* Starter Prompts */}
+                    <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                      {STARTER_PROMPTS.map((prompt, index) => {
+                        const theme = getCycleColor(index);
+                        return (
+                          <button
+                            key={prompt}
+                            onClick={() => chatLogic.handleStarterClick(prompt)}
                             className={cn(
-                              "flex-shrink-0 p-2.5 rounded-xl border transition-all",
-                              "bg-surface-2/60 text-ink-tertiary border-white/5",
-                              "group-hover:text-accent-chat group-hover:bg-accent-chat-dim group-hover:border-accent-chat-border/30",
+                              "flex items-center gap-3 p-3 text-left rounded-2xl transition-all group",
+                              "bg-surface-1/40 border border-white/5",
+                              `hover:${theme.bg} hover:${theme.border} hover:${theme.glow}`,
                             )}
                           >
-                            <MessageSquare className="h-5 w-5" />
-                          </div>
-                          <div className="flex-1 pt-0.5">
-                            <span className="text-sm font-medium text-ink-primary group-hover:text-accent-chat transition-colors leading-relaxed">
+                            <div
+                              className={cn(
+                                "p-2 rounded-xl transition-colors",
+                                "bg-surface-2/50 text-ink-tertiary",
+                                `group-hover:${theme.iconBg} group-hover:${theme.iconText}`,
+                              )}
+                            >
+                              <MessageSquare className="h-4 w-4" />
+                            </div>
+                            <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">
                               {prompt}
                             </span>
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     {/* Quick Link to Settings - Subtle */}

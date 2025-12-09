@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getCategoryStyle } from "@/lib/categoryColors";
 import { Star } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/Badge";
@@ -39,6 +40,9 @@ export const ModelCard = React.memo(
     className,
     onCardClick,
   }: ModelCardProps) => {
+    // Use 'expert' (Cyan) for free models, 'business' (Indigo) for premium models
+    const theme = getCategoryStyle(isFree ? "expert" : "business");
+
     return (
       <div
         onClick={onCardClick}
@@ -46,18 +50,22 @@ export const ModelCard = React.memo(
           "group relative flex items-center gap-4 p-4 rounded-2xl border transition-all duration-200 cursor-pointer",
           // Active State
           isActive
-            ? "bg-surface-2 border-accent-primary/30 ring-1 ring-accent-primary/20"
-            : "bg-surface-1 border-border-ink hover:bg-surface-2 hover:border-border-ink/80",
+            ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
+            : cn("bg-surface-1 border-border-ink hover:bg-surface-2", `hover:${theme.border}`),
           className,
         )}
       >
         {/* Left: Visual Anchor (Icon Placeholder or Vendor Logo) */}
         <div
           className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg font-bold",
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg font-bold transition-colors",
             isActive
-              ? "bg-accent-primary text-white border-accent-primary"
-              : "bg-surface-2 text-ink-secondary border-border-ink",
+              ? cn(theme.bg, theme.text, theme.border)
+              : cn(
+                  "bg-surface-2 text-ink-secondary border-border-ink",
+                  `group-hover:${theme.text}`,
+                  `group-hover:${theme.border}`,
+                ),
           )}
         >
           {name.charAt(0).toUpperCase()}
@@ -68,14 +76,19 @@ export const ModelCard = React.memo(
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "font-medium truncate",
-                isActive ? "text-ink-primary" : "text-ink-primary",
+                "font-medium truncate transition-colors",
+                isActive ? theme.text : "text-ink-primary group-hover:text-ink-primary",
               )}
             >
               {name}
             </span>
             {isActive && (
-              <span className="flex h-1.5 w-1.5 rounded-full bg-accent-primary shadow-sm" />
+              <span
+                className={cn(
+                  "flex h-1.5 w-1.5 rounded-full shadow-sm",
+                  theme.text.replace("text-", "bg-"),
+                )}
+              />
             )}
           </div>
           <div className="flex items-center gap-2 text-xs text-ink-tertiary">
@@ -87,7 +100,10 @@ export const ModelCard = React.memo(
 
         {/* Right: Meta & Action */}
         <div className="flex flex-col items-end gap-2 shrink-0">
-          <Badge variant={isFree ? "success" : "secondary"} className="text-[10px] h-5 px-1.5">
+          <Badge
+            variant={isFree ? "success" : "secondary"}
+            className={cn("text-[10px] h-5 px-1.5", !isFree && cn(theme.badge, theme.badgeText))}
+          >
             {isFree ? "Free" : price}
           </Badge>
 
