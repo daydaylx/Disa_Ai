@@ -276,12 +276,31 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const isFavorite = isRoleFavorite(role.id);
               const theme = getCategoryStyle(role.category);
 
+              const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+                if (isActive) return;
+                const card = e.currentTarget;
+                const icon = card.querySelector(".theme-icon") as HTMLElement;
+                card.style.borderColor = theme.border;
+                if (icon) {
+                  icon.style.color = theme.text;
+                }
+              };
+
+              const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+                if (isActive) return;
+                const card = e.currentTarget;
+                const icon = card.querySelector(".theme-icon") as HTMLElement;
+                card.style.borderColor = "";
+                if (icon) {
+                  icon.style.color = "";
+                }
+              };
+
               return (
                 <Card
                   key={role.id}
                   data-testid="role-card"
                   variant="interactive"
-                  // accent="roles" // Removed to use dynamic theme
                   role="button"
                   onClick={() => handleActivateRole(role)}
                   aria-label={`Rolle ${role.name} auswählen`}
@@ -289,21 +308,28 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   className={cn(
                     "relative transition-all duration-300 group",
                     isActive
-                      ? cn("bg-surface-2 ring-1", theme.border, theme.glow)
-                      : cn(
-                          "bg-surface-1/60 border-white/5 hover:bg-surface-2",
-                          `hover:${theme.border}`,
-                        ),
+                      ? "bg-surface-2 ring-1"
+                      : "bg-surface-1/60 border-white/5 hover:bg-surface-2",
                   )}
+                  style={
+                    isActive
+                      ? {
+                          borderColor: theme.border,
+                          boxShadow: theme.glow,
+                        }
+                      : undefined
+                  }
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
                     {isActive && (
                       <Badge
-                        className={cn(
-                          "text-[10px] px-2 h-5 shadow-sm",
-                          theme.badge,
-                          theme.badgeText,
-                        )}
+                        className="text-[10px] px-2 h-5 shadow-sm"
+                        style={{
+                          backgroundColor: theme.badge,
+                          color: theme.badgeText,
+                        }}
                       >
                         Aktiv
                       </Badge>
@@ -335,11 +361,17 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     {/* Icon */}
                     <div
                       className={cn(
-                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
-                        isActive
-                          ? cn(theme.iconBg, theme.iconText, "shadow-inner")
-                          : cn("bg-surface-2/80 text-ink-tertiary", `group-hover:${theme.text}`),
+                        "theme-icon flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                        isActive ? "shadow-inner" : "bg-surface-2/80 text-ink-tertiary",
                       )}
+                      style={
+                        isActive
+                          ? {
+                              backgroundColor: theme.iconBg,
+                              color: theme.iconText,
+                            }
+                          : undefined
+                      }
                     >
                       <Users className="h-6 w-6" />
                     </div>
@@ -349,8 +381,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <span
                         className={cn(
                           "font-semibold text-sm truncate block",
-                          isActive ? theme.text : "text-ink-primary group-hover:text-ink-primary",
+                          isActive ? "" : "text-ink-primary",
                         )}
+                        style={isActive ? { color: theme.text } : undefined}
                       >
                         {role.name}
                       </span>
@@ -386,11 +419,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   {isExpanded && (
                     <div id={`role-details-${role.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
                       <div
-                        className={cn(
-                          "space-y-3 rounded-xl border px-4 py-4",
-                          theme.bg,
-                          theme.border,
-                        )}
+                        className="space-y-3 rounded-xl border px-4 py-4"
+                        style={{
+                          backgroundColor: theme.bg,
+                          borderColor: theme.border,
+                        }}
                       >
                         <p className="text-sm text-ink-secondary leading-relaxed">
                           {role.description}
@@ -401,7 +434,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             {role.tags.map((tag) => (
                               <Badge
                                 key={tag}
-                                className={cn("text-[10px] px-2 h-5", theme.badge, theme.badgeText)}
+                                className="text-[10px] px-2 h-5"
+                                style={{
+                                  backgroundColor: theme.badge,
+                                  color: theme.badgeText,
+                                }}
                               >
                                 {tag}
                               </Badge>

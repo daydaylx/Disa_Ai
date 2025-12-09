@@ -2,8 +2,6 @@ import { useCallback, useRef, useState } from "react";
 
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
-import { cn } from "@/lib/utils";
-import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -132,23 +130,44 @@ export default function Chat() {
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
                       {STARTER_PROMPTS.map((prompt, index) => {
                         const theme = getCycleColor(index);
+
+                        const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+                          const button = e.currentTarget;
+                          const icon = button.querySelector(".theme-icon") as HTMLElement;
+
+                          button.style.backgroundColor = theme.bg;
+                          button.style.borderColor = theme.border;
+                          button.style.boxShadow = theme.glow;
+
+                          if (icon) {
+                            icon.style.backgroundColor = theme.iconBg;
+                            icon.style.color = theme.iconText;
+                          }
+                        };
+
+                        const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+                          const button = e.currentTarget;
+                          const icon = button.querySelector(".theme-icon") as HTMLElement;
+
+                          button.style.backgroundColor = "";
+                          button.style.borderColor = "";
+                          button.style.boxShadow = "";
+
+                          if (icon) {
+                            icon.style.backgroundColor = "";
+                            icon.style.color = "";
+                          }
+                        };
+
                         return (
                           <button
                             key={prompt}
                             onClick={() => chatLogic.handleStarterClick(prompt)}
-                            className={cn(
-                              "flex items-center gap-3 p-3 text-left rounded-2xl transition-all group",
-                              "bg-surface-1/40 border border-white/5",
-                              `hover:${theme.bg} hover:${theme.border} hover:${theme.glow}`,
-                            )}
+                            className="flex items-center gap-3 p-3 text-left rounded-2xl transition-all group bg-surface-1/40 border border-white/5"
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
                           >
-                            <div
-                              className={cn(
-                                "p-2 rounded-xl transition-colors",
-                                "bg-surface-2/50 text-ink-tertiary",
-                                `group-hover:${theme.iconBg} group-hover:${theme.iconText}`,
-                              )}
-                            >
+                            <div className="theme-icon p-2 rounded-xl transition-colors bg-surface-2/50 text-ink-tertiary">
                               <MessageSquare className="h-4 w-4" />
                             </div>
                             <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">
