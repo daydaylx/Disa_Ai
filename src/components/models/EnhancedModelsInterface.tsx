@@ -29,6 +29,7 @@ import { loadModelCatalog, type ModelEntry } from "../../config/models";
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import { useSettings } from "../../hooks/useSettings";
+import { getCategoryStyle } from "../../lib/categoryColors";
 import { cn } from "../../lib/utils";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
 import { ModelComparisonTable } from "./ModelComparisonTable";
@@ -567,18 +568,21 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredModels.map((model) => {
               const isActive = settings.preferredModelId === model.id;
+              const theme = getCategoryStyle(model.category);
+
               return (
                 <div key={model.id} className="space-y-2">
                   <MaterialCard
                     variant="raised"
+                    style={{ background: theme.roleGradient }}
                     className={cn(
-                      "relative p-4 cursor-pointer transition-all duration-fast animate-card-enter",
-                      "bg-surface-1/60 border border-white/10",
-                      "hover:bg-surface-1/80 hover:border-accent-models-border/50 hover:shadow-glow-models",
+                      "relative p-4 cursor-pointer transition-all duration-fast animate-card-enter overflow-hidden",
+                      "border border-white/10",
+                      "hover:brightness-110 hover:border-accent-models-border/50 hover:shadow-glow-models",
                       "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
                       "before:bg-accent-models before:opacity-40 hover:before:opacity-80",
                       isActive &&
-                        "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 bg-accent-models-surface/30 border-accent-models-border",
+                        "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 border-accent-models-border",
                     )}
                     onClick={() => handleSelectModel(model)}
                   >

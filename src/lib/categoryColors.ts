@@ -228,6 +228,17 @@ const CATEGORY_MAPPING: Record<string, string> = {
   culture: "violet",
   everyday: "cyan",
   verschwörungstheorien: "violet",
+
+  // Model Categories
+  "quick-free": "cyan",
+  "strong-free": "emerald",
+  multimodal: "violet",
+  "creative-uncensored": "violet",
+  "budget-specialist": "amber",
+  "premium-models": "rose",
+  "chat-allrounder": "indigo",
+  free: "cyan",
+  premium: "rose",
 };
 
 export function getCategoryStyle(category?: string | null): CategoryColorTheme["colors"] {

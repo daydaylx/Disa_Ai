@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getCategoryStyle } from "@/lib/categoryColors";
 import { MessageSquare, Trash2 } from "@/lib/icons";
 import { useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
@@ -17,6 +18,7 @@ export default function ChatHistoryPage() {
   const [loading, setLoading] = useState(true);
   const toasts = useToasts();
   const navigate = useNavigate();
+  const theme = getCategoryStyle("generic"); // Fallback to Slate
 
   const loadConversations = useCallback(async () => {
     try {
@@ -107,7 +109,8 @@ export default function ChatHistoryPage() {
             key={conv.id}
             variant="interactive"
             padding="sm"
-            className="flex items-center justify-between group"
+            style={{ background: theme.roleGradient }}
+            className="flex items-center justify-between group border-white/5 hover:brightness-110"
             onClick={() => void handleOpen(conv.id)}
           >
             <div className="min-w-0 flex-1 pr-4">

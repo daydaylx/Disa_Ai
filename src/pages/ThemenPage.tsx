@@ -12,6 +12,7 @@ const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwÃ
 
 export default function ThemenPage() {
   const navigate = useNavigate();
+  const headerTheme = getCategoryStyle("Spezial");
 
   const handleStartQuickstart = (quickstart: Quickstart) => {
     void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
@@ -27,10 +28,10 @@ export default function ThemenPage() {
         variant="interactive"
         role="button"
         onClick={() => handleStartQuickstart(quickstart)}
+        style={{ background: theme.roleGradient }}
         className={cn(
-          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm",
-          "bg-surface-1/60 border-white/5",
-          theme.hoverBg,
+          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm overflow-hidden",
+          "border-white/5 hover:brightness-110",
           theme.hoverBorder,
         )}
       >
@@ -96,7 +97,10 @@ export default function ThemenPage() {
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4 px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Chat accent for discussion topics */}
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-chat/10 via-transparent to-transparent pointer-events-none" />
+          <div
+            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            style={{ background: headerTheme.roleGradient }}
+          />
 
           <div className="relative p-4 sm:p-5">
             <PageHeader
