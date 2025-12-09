@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-5d7e7e8",
-  "buildTime": "2025-12-08T22:01:35.319Z",
-  "gitSha": "5d7e7e86dd711e1f4d1e4340552af9d11c3206cd",
-  "gitBranch": "claude/fix-model-list-loading-011duLhwfrKmW75txeBjPPxg",
+  "buildId": "v1.0.0-5b71e4d",
+  "buildTime": "2025-12-09T09:51:50.627Z",
+  "gitSha": "5b71e4db03c18f972e7938cfd07cb0c3d18b69ee",
+  "gitBranch": "claude/debug-live-colors-01RBA4qCKbavYfpNyLGLfBHA",
   "version": "1.0.0"
 }
