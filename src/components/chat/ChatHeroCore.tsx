@@ -237,7 +237,7 @@ export function ChatHeroCore({
           >
             {dataSegments.map((segment, index) => (
               <span
-                key={`segment-${segment.angle}`}
+                key={`segment-${index}`}
                 className={cn(
                   "absolute left-1/2 top-1/2 origin-left rounded-full",
                   segment.long ? "h-[3px] w-3" : "h-[2px] w-2",
