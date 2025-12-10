@@ -1,3 +1,4 @@
+import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Mic, Paperclip, Send, Smile } from "@/lib/icons";
@@ -16,8 +17,26 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    }
+
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -79,8 +98,14 @@ export function MobileChatComposer({
   };
 
   const handleEmoji = () => {
-    // TODO: Implement emoji picker
-    console.warn("Emoji picker not yet implemented");
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const onEmojiClick = (emojiData: EmojiClickData) => {
+    setMessage((prev) => prev + emojiData.emoji);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   };
 
   return (
@@ -94,7 +119,25 @@ export function MobileChatComposer({
         zIndex: 50,
       }}
     >
-      <div className="flex items-end gap-2 max-w-screen-lg mx-auto">
+      <div className="flex items-end gap-2 max-w-screen-lg mx-auto relative">
+        {/* Emoji Picker Popover */}
+        {showEmojiPicker && (
+          <div
+            ref={emojiPickerRef}
+            className="absolute bottom-full left-0 mb-2 z-50 shadow-xl rounded-xl overflow-hidden"
+          >
+            <EmojiPicker
+              onEmojiClick={onEmojiClick}
+              theme={Theme.AUTO}
+              searchDisabled={false}
+              skinTonesDisabled={true}
+              previewConfig={{ showPreview: false }}
+              height={350}
+              width={300}
+            />
+          </div>
+        )}
+
         {/* Attachment Button */}
         <Button
           variant="ghost"
@@ -113,7 +156,10 @@ export function MobileChatComposer({
           size="sm"
           onClick={handleEmoji}
           disabled={disabled}
-          className="flex-shrink-0 text-text-secondary hover:text-primary"
+          className={cn(
+            "flex-shrink-0 text-text-secondary hover:text-primary",
+            showEmojiPicker && "text-primary bg-surface-2",
+          )}
           title="Emoji auswählen"
         >
           <Smile className="h-5 w-5" />
