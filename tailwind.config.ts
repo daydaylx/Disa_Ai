@@ -364,6 +364,10 @@ export default {
         "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         "pulse-glow": "pulseGlow 4s ease-in-out infinite",
         blob: "blob 7s infinite",
+        "core-pulse": "corePulse 3s ease-in-out infinite",
+        "core-ring-spin": "coreRingSpin 8s linear infinite",
+        "core-wave": "coreWave 2s ease-out infinite",
+        "core-error-shake": "coreErrorShake 0.5s ease-in-out",
       },
       keyframes: {
         fadeIn: {
@@ -383,6 +387,24 @@ export default {
           "33%": { transform: "translate(30px, -50px) scale(1.1)" },
           "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
           "100%": { transform: "translate(0px, 0px) scale(1)" },
+        },
+        corePulse: {
+          "0%, 100%": { transform: "scale(0.95)", opacity: "0.9" },
+          "50%": { transform: "scale(1.05)", opacity: "1" },
+        },
+        coreRingSpin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        coreWave: {
+          "0%": { transform: "scale(1)", opacity: "0.4" },
+          "100%": { transform: "scale(1.3)", opacity: "0" },
+        },
+        coreErrorShake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-5px)" },
+          "50%": { transform: "translateX(5px)" },
+          "75%": { transform: "translateX(-5px)" },
         },
       },
     },

@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -16,10 +16,7 @@ interface ChatHeroCoreProps {
 const CORE_VISUAL_CONFIG: Record<
   CoreStatus,
   {
-    glowIntensity: number;
-    pulseDurationMs: number;
     ringVisible: boolean;
-    ringRotationDurationMs: number;
     waveEnabled: boolean;
     baseColorClass: string;
     accentColorClass: string;
@@ -27,40 +24,28 @@ const CORE_VISUAL_CONFIG: Record<
   }
 > = {
   idle: {
-    glowIntensity: 0.4,
-    pulseDurationMs: 3000,
     ringVisible: false,
-    ringRotationDurationMs: 0,
     waveEnabled: false,
     baseColorClass: "bg-brand-primary",
     accentColorClass: "bg-brand-secondary",
     glowColorClass: "shadow-glow-md",
   },
   thinking: {
-    glowIntensity: 0.7,
-    pulseDurationMs: 1500,
     ringVisible: true,
-    ringRotationDurationMs: 6000,
     waveEnabled: false,
     baseColorClass: "bg-brand-primary",
     accentColorClass: "bg-brand-secondary",
     glowColorClass: "shadow-glow-lg",
   },
   streaming: {
-    glowIntensity: 0.9,
-    pulseDurationMs: 1000,
     ringVisible: true,
-    ringRotationDurationMs: 4000,
     waveEnabled: true,
     baseColorClass: "bg-brand-primary",
     accentColorClass: "bg-accent-chat",
     glowColorClass: "shadow-glow-lg",
   },
   error: {
-    glowIntensity: 0.6,
-    pulseDurationMs: 500,
     ringVisible: false,
-    ringRotationDurationMs: 0,
     waveEnabled: false,
     baseColorClass: "bg-status-error",
     accentColorClass: "bg-red-600",
@@ -87,122 +72,51 @@ export function ChatHeroCore({
     return undefined;
   }, [status]);
 
-  // Determine variants for the core pulse
-  const coreVariants: Variants = useMemo(
-    () => ({
-      idle: {
-        scale: [1, 1.05, 1],
-        opacity: [0.9, 1, 0.9],
-        transition: {
-          duration: config.pulseDurationMs / 1000,
-          repeat: Infinity,
-          ease: "easeInOut" as const,
-        },
-      },
-      thinking: {
-        scale: [1, 1.1, 1],
-        opacity: [0.8, 1, 0.8],
-        transition: {
-          duration: config.pulseDurationMs / 1000,
-          repeat: Infinity,
-          ease: "easeInOut" as const,
-        },
-      },
-      streaming: {
-        scale: [1, 1.05, 1], // More subtle pulse during streaming as waves dominate
-        transition: {
-          duration: config.pulseDurationMs / 1000,
-          repeat: Infinity,
-          ease: "linear" as const,
-        },
-      },
-      error: {
-        x: showErrorShake ? [0, -5, 5, -5, 5, 0] : 0,
-        scale: 1,
-        transition: { duration: 0.4 },
-      },
-    }),
-    [config, showErrorShake],
-  );
-
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
       {/* Visual Core Container */}
       <div className="relative w-32 h-32 flex items-center justify-center">
         {/* Background Glow Layer */}
-        <motion.div
+        <div
           className={cn(
-            "absolute inset-0 rounded-full blur-2xl opacity-40 transition-colors duration-500",
+            "absolute inset-0 rounded-full blur-2xl opacity-40 transition-all duration-500",
             status === "error" ? "bg-red-500" : "bg-brand-primary",
+            status === "thinking" || status === "streaming" ? "scale-125 opacity-50" : "scale-100",
           )}
-          animate={{
-            scale: status === "thinking" || status === "streaming" ? 1.2 : 1,
-            opacity: status === "idle" ? 0.3 : 0.5,
-          }}
-          transition={{ duration: 0.5 }}
         />
 
         {/* Outer Ring (Thinking/Streaming) */}
-        <AnimatePresence>
-          {config.ringVisible && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
-              animate={{
-                opacity: 1,
-                scale: 1.3,
-                rotate: 360,
-              }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{
-                rotate: {
-                  duration: config.ringRotationDurationMs / 1000,
-                  repeat: Infinity,
-                  ease: "linear",
-                },
-                scale: { duration: 0.5 },
-                opacity: { duration: 0.3 },
-              }}
-              className="absolute inset-0 rounded-full border border-white/20 border-t-brand-primary/80 border-r-transparent"
-            />
-          )}
-        </AnimatePresence>
+        {config.ringVisible && (
+          <div className="absolute inset-0 animate-core-ring-spin">
+            <div className="w-full h-full rounded-full border border-white/20 border-t-brand-primary/80 border-r-transparent" />
+          </div>
+        )}
 
         {/* Waves (Streaming) */}
-        <AnimatePresence>
-          {config.waveEnabled && (
-            <>
-              {[0, 1].map((i) => (
-                <motion.div
-                  key={`wave-${i}`}
-                  className="absolute inset-0 rounded-full border border-brand-primary/30"
-                  initial={{ opacity: 0.6, scale: 1 }}
-                  animate={{ opacity: 0, scale: 1.8 }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: i * 0.8,
-                    ease: "easeOut",
-                  }}
-                />
-              ))}
-            </>
-          )}
-        </AnimatePresence>
+        {config.waveEnabled && (
+          <>
+            <div className="absolute inset-0 rounded-full border border-brand-primary/30 animate-core-wave" />
+            <div
+              className="absolute inset-0 rounded-full border border-brand-primary/30 animate-core-wave"
+              style={{ animationDelay: "0.8s" }}
+            />
+          </>
+        )}
 
         {/* The Core Itself */}
-        <motion.div
+        <div
           className={cn(
             "relative w-16 h-16 rounded-full flex items-center justify-center z-10 transition-colors duration-500",
             config.baseColorClass,
             config.glowColorClass,
             "bg-gradient-to-br from-white/20 to-transparent", // Inner highlight
+            // Always animate pulse unless error shake is active
+            showErrorShake ? "animate-core-error-shake" : "animate-core-pulse",
           )}
-          variants={coreVariants}
-          animate={status}
         >
           {/* Inner accent dot */}
           <div className="w-6 h-6 rounded-full bg-white/20 blur-[1px]" />
-        </motion.div>
+        </div>
       </div>
 
       {/* Text Block */}
