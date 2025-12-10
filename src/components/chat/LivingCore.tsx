@@ -33,34 +33,34 @@ type LivingCoreVisualConfig = {
 
 const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
   idle: {
-    primaryGradient: "from-cyan-400 via-blue-500 to-indigo-600",
-    secondaryGradient: "from-blue-300 to-cyan-400",
-    coreGlow: "bg-blue-500/30",
-    outerGlow: "bg-cyan-500/20",
+    primaryGradient: "from-cyan-400 via-purple-500 to-fuchsia-600",
+    secondaryGradient: "from-cyan-300 to-purple-400",
+    coreGlow: "bg-cyan-500/30",
+    outerGlow: "bg-purple-500/20",
     ringColor: "border-cyan-400/40",
-    particleColors: ["bg-blue-300", "bg-cyan-300", "bg-indigo-300"],
+    particleColors: ["bg-cyan-300", "bg-purple-300", "bg-fuchsia-300"],
     breathingScale: 1.08,
     rotationSpeed: { slow: 25, medium: 15, fast: 8 },
     particleIntensity: 0.7,
   },
   thinking: {
-    primaryGradient: "from-violet-500 via-purple-500 to-fuchsia-600",
-    secondaryGradient: "from-purple-400 to-violet-500",
-    coreGlow: "bg-violet-500/40",
-    outerGlow: "bg-purple-500/25",
-    ringColor: "border-violet-400/50",
-    particleColors: ["bg-violet-300", "bg-purple-300", "bg-fuchsia-300"],
+    primaryGradient: "from-cyan-500 via-purple-500 to-fuchsia-600",
+    secondaryGradient: "from-purple-400 to-cyan-500",
+    coreGlow: "bg-purple-500/40",
+    outerGlow: "bg-cyan-500/25",
+    ringColor: "border-purple-400/50",
+    particleColors: ["bg-cyan-300", "bg-purple-300", "bg-fuchsia-300"],
     breathingScale: 1.12,
     rotationSpeed: { slow: 8, medium: 5, fast: 3 },
     particleIntensity: 0.9,
   },
   streaming: {
-    primaryGradient: "from-emerald-400 via-cyan-500 to-blue-600",
-    secondaryGradient: "from-cyan-300 to-emerald-400",
+    primaryGradient: "from-cyan-400 via-purple-500 to-fuchsia-600",
+    secondaryGradient: "from-cyan-300 to-purple-400",
     coreGlow: "bg-cyan-500/45",
-    outerGlow: "bg-emerald-500/30",
+    outerGlow: "bg-purple-500/30",
     ringColor: "border-cyan-400/60",
-    particleColors: ["bg-cyan-200", "bg-emerald-300", "bg-blue-300"],
+    particleColors: ["bg-cyan-200", "bg-purple-300", "bg-fuchsia-300"],
     breathingScale: 1.15,
     rotationSpeed: { slow: 5, medium: 3, fast: 2 },
     particleIntensity: 1.0,
@@ -77,6 +77,29 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
     particleIntensity: 0.5,
   },
 };
+
+// Lightning bolt path generator
+function generateLightningPath(
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  segments: number = 5,
+): string {
+  const points: Array<{ x: number; y: number }> = [];
+  points.push({ x: startX, y: startY });
+
+  for (let i = 1; i < segments; i++) {
+    const t = i / segments;
+    const x = startX + (endX - startX) * t + (Math.random() - 0.5) * 15;
+    const y = startY + (endY - startY) * t + (Math.random() - 0.5) * 15;
+    points.push({ x, y });
+  }
+
+  points.push({ x: endX, y: endY });
+
+  return points.map((p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(" ");
+}
 
 export function LivingCore({
   status,
@@ -122,6 +145,42 @@ export function LivingCore({
     setTimeout(() => setTapPulse(false), 300);
   };
 
+  // Lightning bolt state - regenerate periodically
+  const [lightningPaths, setLightningPaths] = useState<string[]>([]);
+
+  useEffect(() => {
+    const regenerateLightning = () => {
+      const center = 50; // SVG center point (viewBox is 100x100)
+      const numBolts = status === "idle" ? 4 : status === "streaming" ? 8 : 6;
+      const paths = [];
+
+      for (let i = 0; i < numBolts; i++) {
+        const angle = (i / numBolts) * Math.PI * 2;
+        const innerRadius = 12 + Math.random() * 8; // Start from inner ring
+        const outerRadius = 35 + Math.random() * 10; // End at outer ring
+
+        const startX = center + Math.cos(angle) * innerRadius;
+        const startY = center + Math.sin(angle) * innerRadius;
+        const endX = center + Math.cos(angle + (Math.random() - 0.5) * 0.5) * outerRadius;
+        const endY = center + Math.sin(angle + (Math.random() - 0.5) * 0.5) * outerRadius;
+
+        paths.push(
+          generateLightningPath(startX, startY, endX, endY, 4 + Math.floor(Math.random() * 3)),
+        );
+      }
+
+      setLightningPaths(paths);
+    };
+
+    regenerateLightning();
+    const interval = setInterval(
+      regenerateLightning,
+      status === "streaming" ? 400 : status === "thinking" ? 600 : 1200,
+    );
+
+    return () => clearInterval(interval);
+  }, [status]);
+
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
       {/* Living Core Container */}
@@ -143,37 +202,48 @@ export function LivingCore({
         onClick={handleTap}
         style={{ scale: intensityMod.scale }}
       >
-        {/* Multi-layer Glows */}
-        {/* Outer Atmosphere Glow */}
+        {/* Multi-layer Glows - Enhanced */}
+        {/* Outer Atmosphere Glow - Cyan Hue */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full blur-3xl transition-all duration-700 opacity-30",
-            config.outerGlow,
-            tapPulse && "opacity-60 scale-125 duration-300",
+            "absolute inset-0 rounded-full blur-3xl transition-all duration-700 opacity-40",
+            "bg-cyan-500/30",
+            tapPulse && "opacity-70 scale-125 duration-300",
             status === "streaming" && "animate-pulse",
           )}
-          style={{ opacity: intensityMod.opacity * 0.5 }}
+          style={{ opacity: intensityMod.opacity * 0.6 }}
+        />
+
+        {/* Outer Atmosphere Glow - Purple Hue */}
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full blur-3xl transition-all duration-700 opacity-35",
+            "bg-purple-500/30",
+            tapPulse && "opacity-65 scale-125 duration-300",
+            status === "streaming" && "animate-pulse",
+          )}
+          style={{ opacity: intensityMod.opacity * 0.55 }}
         />
 
         {/* Middle Radiant Glow */}
         <div
           className={cn(
-            "absolute inset-2 rounded-full blur-2xl transition-all duration-700 opacity-40 mix-blend-screen",
+            "absolute inset-2 rounded-full blur-2xl transition-all duration-700 opacity-50 mix-blend-screen",
             config.coreGlow,
-            tapPulse && "opacity-80 scale-110 duration-200",
+            tapPulse && "opacity-90 scale-110 duration-200",
             status === "idle" && "animate-pulse-subtle",
           )}
-          style={{ opacity: intensityMod.opacity * 0.6 }}
+          style={{ opacity: intensityMod.opacity * 0.7 }}
         />
 
         {/* Inner Sharp Glow */}
         <div
           className={cn(
-            "absolute inset-8 rounded-full blur-xl transition-all duration-700 opacity-50",
+            "absolute inset-8 rounded-full blur-xl transition-all duration-700 opacity-60",
             config.coreGlow,
             "animate-pulse-glow",
           )}
-          style={{ opacity: intensityMod.opacity * 0.7 }}
+          style={{ opacity: intensityMod.opacity * 0.8 }}
         />
 
         {/* Radial Pulse Rings for Active States */}
@@ -231,19 +301,35 @@ export function LivingCore({
 
           {/* Eye-like Central Focus */}
           <div className="absolute inset-0 rounded-full overflow-hidden">
-            {/* Central Pupil */}
+            {/* Central Dark Core */}
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.div
                 className={cn(
-                  "w-8 h-8 rounded-full bg-gradient-to-br opacity-90 mix-blend-screen",
-                  "from-white/20 to-transparent",
+                  "w-10 h-10 rounded-full bg-gradient-radial opacity-95",
+                  "from-slate-950/90 via-indigo-950/80 to-transparent",
                 )}
                 animate={{
                   scale:
-                    status === "thinking" || status === "streaming" ? [1, 1.3, 1] : [1, 1.1, 1],
+                    status === "thinking" || status === "streaming" ? [1, 1.15, 1] : [1, 1.08, 1],
                 }}
                 transition={{
                   duration: status === "thinking" ? 1.5 : 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              {/* Inner glow ring */}
+              <motion.div
+                className={cn(
+                  "absolute w-12 h-12 rounded-full border border-cyan-400/40",
+                  "shadow-[0_0_10px_rgba(6,182,212,0.6)]",
+                )}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.4, 0.7, 0.4],
+                }}
+                transition={{
+                  duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
@@ -289,6 +375,75 @@ export function LivingCore({
 
           {/* Central Light Reflection */}
           <div className="absolute top-2 left-2 w-4 h-4 rounded-full bg-white/30 blur-md" />
+        </div>
+
+        {/* Electric Lightning Arcs Layer */}
+        <div className="absolute inset-0 pointer-events-none">
+          <svg
+            viewBox="0 0 100 100"
+            className="w-full h-full"
+            style={{
+              filter: "drop-shadow(0 0 3px currentColor) drop-shadow(0 0 8px currentColor)",
+            }}
+          >
+            <defs>
+              <linearGradient id="lightningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgb(6 182 212)" stopOpacity="0.9" />
+                <stop offset="50%" stopColor="rgb(168 85 247)" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="rgb(236 72 153)" stopOpacity="0.9" />
+              </linearGradient>
+            </defs>
+            {lightningPaths.map((path, index) => (
+              <motion.path
+                key={`lightning-${index}`}
+                d={path}
+                stroke="url(#lightningGradient)"
+                strokeWidth="0.5"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ opacity: 0, pathLength: 0 }}
+                animate={{
+                  opacity: [0, 0.8, 0.6, 0.9, 0],
+                  pathLength: [0, 1, 1, 1, 1],
+                }}
+                transition={{
+                  duration: status === "streaming" ? 0.3 : 0.5,
+                  ease: "easeOut",
+                  opacity: {
+                    times: [0, 0.1, 0.5, 0.7, 1],
+                  },
+                }}
+                style={{
+                  filter: "brightness(1.5)",
+                }}
+              />
+            ))}
+            {/* Secondary dimmer lightning for depth */}
+            {lightningPaths.slice(0, Math.floor(lightningPaths.length / 2)).map((path, index) => (
+              <motion.path
+                key={`lightning-secondary-${index}`}
+                d={path}
+                stroke="url(#lightningGradient)"
+                strokeWidth="0.3"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: [0, 0.4, 0.3, 0],
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: "easeOut",
+                  delay: 0.05,
+                }}
+                style={{
+                  filter: "blur(1px)",
+                }}
+              />
+            ))}
+          </svg>
         </div>
 
         {/* Enhanced Orbital Ring System */}
