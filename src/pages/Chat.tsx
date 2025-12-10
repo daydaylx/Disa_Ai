@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 
-import { ChatHeroCore, type CoreStatus } from "@/components/chat/ChatHeroCore";
+import { ChatHeroCore } from "@/components/chat/ChatHeroCore";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
+import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -53,18 +54,12 @@ export default function Chat() {
     onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
 
-  // Derived Core Status
-  const coreStatus: CoreStatus = useMemo(() => {
-    if (chatLogic.error) return "error";
-    if (chatLogic.isLoading) {
-      const lastMsg = chatLogic.messages[chatLogic.messages.length - 1];
-      // If we have an assistant message that is streaming, it's 'streaming'.
-      // Otherwise (user msg is last, or empty msg list but loading), it's 'thinking'.
-      if (lastMsg?.role === "assistant") return "streaming";
-      return "thinking";
-    }
-    return "idle";
-  }, [chatLogic.error, chatLogic.isLoading, chatLogic.messages]);
+  // Derived Core Status (centralized via hook)
+  const coreStatus = useCoreStatus({
+    isLoading: chatLogic.isLoading,
+    error: chatLogic.error,
+    messages: chatLogic.messages,
+  });
 
   // Derived Meta Info
   const modelName = useMemo(() => {
@@ -158,7 +153,7 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Living Core Header */}
+                    {/* Living Energy Orb Core Header */}
                     <ChatHeroCore
                       status={coreStatus}
                       modelName={modelName}
