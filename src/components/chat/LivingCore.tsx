@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import type { CoreStatus } from "@/types/core";
 
-export type CoreStatus = "idle" | "thinking" | "streaming" | "error";
+export type { CoreStatus };
 
 interface LivingCoreProps {
   status: CoreStatus;

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 
-import { LivingCore } from "@/components/chat/LivingCore";
+import { ChatHeroCore3D } from "@/components/chat/ChatHeroCore3D";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
@@ -154,7 +154,7 @@ export default function Chat() {
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
                     {/* Living Energy Orb Core Header */}
-                    <LivingCore
+                    <ChatHeroCore3D
                       status={coreStatus}
                       modelName={modelName}
                       toneLabel={toneLabel}
