@@ -72,86 +72,147 @@ export function ChatHeroCore({
     return undefined;
   }, [status]);
 
+  const [tapPulse, setTapPulse] = useState(false);
+
+  const handleTap = () => {
+    setTapPulse(true);
+    // Haptic feedback if available (navigator.vibrate) - usually 10-20ms is enough for a "click" feel
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(15);
+    }
+    setTimeout(() => setTapPulse(false), 300);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
-      {/* Energy Sphere Container */}
-      <div className={cn("relative w-40 h-40 flex items-center justify-center")}>
-        {/* Background Ambient Glow */}
+      {/* Energy Sphere Container - Now Interactive & Floating */}
+      <motion.div
+        className={cn("relative w-40 h-40 flex items-center justify-center cursor-pointer")}
+        animate={{
+          y: [0, -8, 0], // Gentle levitation
+          scale: status === "idle" && !tapPulse ? [1, 1.02, 1] : 1, // Breathing effect when idle and not tapped
+        }}
+        transition={{
+          y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+          scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }, // Slower for breathing
+        }}
+        whileTap={{ scale: 0.95 }}
+        onClick={handleTap}
+      >
+        {/* Background Ambient Glow - Pulsing */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full blur-3xl transition-colors duration-700 opacity-40",
+            "absolute inset-0 rounded-full blur-3xl transition-all duration-700 opacity-40 animate-pulse",
             config.glowColor,
-            glitching && "animate-pulse"
+            glitching && "animate-pulse",
+            tapPulse && "opacity-80 scale-110 duration-150", // Flash on tap
+            // Synchronize glow with breathing effect
+            status === "idle" && !tapPulse && "animate-pulse-subtle", // Custom pulse for breathing
           )}
         />
 
+        {/* Secondary Static Glow for Depth */}
+        <div
+          className={cn(
+            "absolute inset-4 rounded-full blur-2xl transition-colors duration-700 opacity-30 mix-blend-screen",
+            config.glowColor,
+          )}
+        />
+
+        {/* Shockwave Effect (Expanding Ring) */}
+        {(status === "thinking" || status === "streaming" || tapPulse) && (
+          <div
+            className={cn(
+              "absolute inset-0 rounded-full border opacity-0",
+              config.ringColor,
+              "animate-ping-slow",
+            )}
+            style={{ animationDuration: tapPulse ? "0.6s" : "3s" }}
+          />
+        )}
+
         {/* Core Energy Ball */}
         <div className="relative w-16 h-16 flex items-center justify-center z-10">
+          {/* Base Core Gradient */}
           <div
             className={cn(
               "absolute inset-0 rounded-full bg-gradient-to-br blur-md opacity-80 transition-all duration-700",
-              config.coreColor
+              config.coreColor,
+              tapPulse && "brightness-150 scale-105",
             )}
           />
+
+          {/* Internal Plasma/Turbulence (Spinning Conic) */}
+          <div className="absolute inset-0 rounded-full overflow-hidden opacity-60 mix-blend-overlay">
+            <div
+              className={cn(
+                "w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 bg-[conic-gradient(from_0deg,transparent_0deg,rgba(255,255,255,0.5)_180deg,transparent_360deg)] animate-spin-slow",
+                tapPulse && "duration-[500ms]", // Spin faster on tap
+              )}
+            />
+          </div>
+
+          {/* Core Highlight/Rim */}
           <div
             className={cn(
               "absolute inset-1 rounded-full bg-gradient-to-tl mix-blend-screen transition-all duration-700",
               config.coreColor,
-              "animate-pulse-glow"
+              "animate-pulse-glow",
             )}
           />
         </div>
 
         {/* Rotating Rings (Orbits) */}
-        {/* Ring 1 - Outer Horizontal-ish */}
+        {/* Ring 1 - Outer Horizontal-ish - Complex Segmented */}
         <motion.div
           className={cn(
-            "absolute w-32 h-32 rounded-full border border-dashed opacity-60",
-            config.ringColor
+            "absolute w-36 h-36 rounded-full border border-dashed opacity-40",
+            config.ringColor,
+            tapPulse && "border-solid opacity-80",
           )}
           style={{ borderTopColor: "transparent", borderBottomColor: "transparent" }}
           animate={{
-            rotateX: [60, 60],
+            rotateX: [70, 70],
             rotateY: [0, 360],
             rotateZ: [0, 360],
             scale: [1, 1.05, 1],
           }}
           transition={{
-            duration: config.rotationSpeed,
+            duration: tapPulse ? 0.5 : config.rotationSpeed * 1.2,
             repeat: Infinity,
             ease: "linear",
           }}
         />
 
-        {/* Ring 2 - Vertical-ish */}
+        {/* Ring 2 - Vertical-ish - Fine Dotted */}
         <motion.div
           className={cn(
-            "absolute w-28 h-28 rounded-full border-[1.5px] border-dotted opacity-50",
-            config.ringColor
+            "absolute w-32 h-32 rounded-full border-[1.5px] border-dotted opacity-60",
+            config.ringColor,
           )}
           style={{ borderLeftColor: "transparent", borderRightColor: "transparent" }}
           animate={{
             rotateX: [0, 360],
-            rotateY: [45, 45],
+            rotateY: [30, 30],
             rotateZ: [0, -360],
           }}
           transition={{
-            duration: config.rotationSpeed * 1.5,
+            duration: tapPulse ? 0.5 : config.rotationSpeed * 1.5,
             repeat: Infinity,
             ease: "linear",
           }}
         />
 
-        {/* Ring 3 - Inner Fast Orbit */}
+        {/* Ring 3 - Inner Fast Orbit - Solid Arc */}
         <motion.div
           className={cn(
-            "absolute w-20 h-20 rounded-full border border-solid opacity-40",
-            config.ringColor
+            "absolute w-24 h-24 rounded-full border-[2px] opacity-70",
+            config.ringColor,
           )}
           style={{
             borderTopColor: "transparent",
             borderLeftColor: "transparent",
-            borderWidth: "1px",
+            borderRightColor: "transparent", // Only 1/4 circle
           }}
           animate={{
             rotateX: [45, 225],
@@ -159,36 +220,96 @@ export function ChatHeroCore({
             rotateZ: [0, 360],
           }}
           transition={{
-            duration: config.rotationSpeed * 0.8,
+            duration: tapPulse ? 0.5 : config.rotationSpeed * 0.8,
             repeat: Infinity,
             ease: "linear",
           }}
         />
 
-        {/* Floating Particles */}
-        <div className="absolute inset-0 pointer-events-none">
-           {/* We can use simple CSS animation for particles or just static positions with a parent rotation */}
-           <motion.div 
-             className="absolute inset-0"
-             animate={{ rotate: 360 }}
-             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-           >
-              <div className={cn("absolute top-0 left-1/2 w-1.5 h-1.5 rounded-full blur-[1px]", config.particleColor)} />
-              <div className={cn("absolute bottom-4 right-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70", config.particleColor)} />
-              <div className={cn("absolute top-1/3 left-2 w-1 h-1 rounded-full blur-[0.5px] opacity-60", config.particleColor)} />
-           </motion.div>
-           
-           <motion.div 
-             className="absolute inset-0"
-             animate={{ rotate: -360 }}
-             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-           >
-              <div className={cn("absolute bottom-0 right-1/2 w-1.5 h-1.5 rounded-full blur-[1px]", config.particleColor)} />
-              <div className={cn("absolute top-4 left-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70", config.particleColor)} />
-           </motion.div>
-        </div>
+        {/* Ring 4 - Counter Rotation Arc */}
+        <motion.div
+          className={cn(
+            "absolute w-28 h-28 rounded-full border border-solid opacity-30",
+            config.ringColor,
+          )}
+          style={{
+            borderTopColor: "transparent",
+            borderBottomColor: "transparent",
+            borderRightColor: "transparent",
+          }}
+          animate={{
+            rotateX: [20, -20],
+            rotateY: [0, -360],
+            rotateZ: [10, -10],
+          }}
+          transition={{
+            duration: tapPulse ? 1 : config.rotationSpeed,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
 
-      </div>
+        {/* Floating Particles - Layer 1 (Slow) */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute inset-0"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            <div
+              className={cn(
+                "absolute top-0 left-1/2 w-1.5 h-1.5 rounded-full blur-[1px]",
+                config.particleColor,
+              )}
+            />
+            <div
+              className={cn(
+                "absolute bottom-8 right-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70",
+                config.particleColor,
+              )}
+            />
+            <div
+              className={cn(
+                "absolute top-1/3 left-4 w-1 h-1 rounded-full blur-[0.5px] opacity-60",
+                config.particleColor,
+              )}
+            />
+          </motion.div>
+
+          {/* Floating Particles - Layer 2 (Fast Counter) */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          >
+            <div
+              className={cn(
+                "absolute bottom-2 right-1/2 w-1.5 h-1.5 rounded-full blur-[1px]",
+                config.particleColor,
+              )}
+            />
+            <div
+              className={cn(
+                "absolute top-6 left-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70",
+                config.particleColor,
+              )}
+            />
+          </motion.div>
+
+          {/* Floating Particles - Layer 3 (Vertical Orbit) */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{ rotateX: 360, rotateY: 45 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          >
+            <div
+              className={cn(
+                "absolute top-0 left-1/2 w-1 h-1 rounded-full bg-white blur-[0.5px] opacity-80",
+              )}
+            />
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* Text Content */}
       <div className="text-center space-y-2 max-w-sm px-4">
@@ -222,7 +343,7 @@ export function ChatHeroCore({
           <span
             className={cn(
               "font-medium transition-colors duration-500",
-              status === "streaming" || status === "thinking" ? "text-accent-chat" : ""
+              status === "streaming" || status === "thinking" ? "text-accent-chat" : "",
             )}
           >
             {status === "idle"

@@ -383,6 +383,7 @@ export default {
         "orb-pupil-streaming": "orbPupilPulse 0.5s ease-in-out infinite",
         "orb-wave": "orbWave 2s ease-out infinite",
         "orb-shake": "orbShake 0.4s ease-in-out",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
       },
       keyframes: {
         fadeIn: {
@@ -550,6 +551,10 @@ export default {
           "70%": { transform: "translate(-3px, 1px)" },
           "80%": { transform: "translate(2px, -1px)" },
           "90%": { transform: "translate(-1px, 2px)" },
+        },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.5" },
         },
       },
     },
