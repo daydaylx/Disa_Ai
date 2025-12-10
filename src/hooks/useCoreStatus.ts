@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import type { CoreStatus } from "@/components/chat/ChatHeroCore";
+import type { CoreStatus } from "@/components/chat/LivingCore";
 import type { ChatMessageType } from "@/types/chatMessage";
 
 export interface UseCoreStatusOptions {

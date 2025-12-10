@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.0-d1ade99",
-  "buildTime": "2025-12-10T02:34:54.573Z",
-  "gitSha": "d1ade9979d1b4b0e45c738c3c6b4664958f81c57",
-  "gitBranch": "claude/fix-chat-history-stats-01K6TP51pgnvrMxLn5FqAfXt",
+  "buildId": "v1.0.0-945deb6",
+  "buildTime": "2025-12-10T13:09:01.061Z",
+  "gitSha": "945deb649606ec773eda921039877eabb00b5aef",
+  "gitBranch": "main",
   "version": "1.0.0"
 }

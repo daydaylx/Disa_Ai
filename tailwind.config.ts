@@ -384,6 +384,7 @@ export default {
         "orb-wave": "orbWave 2s ease-out infinite",
         "orb-shake": "orbShake 0.4s ease-in-out",
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
+        "ping-slow": "pingSlow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
       keyframes: {
         fadeIn: {
@@ -555,6 +556,12 @@ export default {
         "pulse-subtle": {
           "0%, 100%": { opacity: "0.4" },
           "50%": { opacity: "0.5" },
+        },
+        pingSlow: {
+          "75%, 100%": {
+            transform: "scale(2)",
+            opacity: "0",
+          },
         },
       },
     },
