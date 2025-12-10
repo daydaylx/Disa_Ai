@@ -13,13 +13,13 @@ describe("LivingCore", () => {
 
   it("renders the main greeting text", () => {
     render(<LivingCore {...defaultProps} />);
-    expect(screen.getByText("Was kann ich für dich tun?")).toBeInTheDocument();
+    expect(screen.getByText("Wie kann ich helfen?")).toBeInTheDocument();
   });
 
   it("renders the subtitle", () => {
     render(<LivingCore {...defaultProps} />);
     expect(
-      screen.getByText("Tippe unten eine Frage ein oder wähle einen der Vorschläge."),
+      screen.getByText("Stelle eine Frage oder wähle ein Thema."),
     ).toBeInTheDocument();
   });
 
@@ -37,7 +37,7 @@ describe("LivingCore", () => {
 
   it("shows thinking status when thinking", () => {
     render(<LivingCore {...defaultProps} status="thinking" />);
-    expect(screen.getByText("Denkt nach...")).toBeInTheDocument();
+    expect(screen.getByText("Verarbeite...")).toBeInTheDocument();
   });
 
   it("shows streaming status when streaming", () => {
@@ -48,7 +48,7 @@ describe("LivingCore", () => {
   it("shows error message when error", () => {
     const errorMessage = "Test error message";
     render(<LivingCore {...defaultProps} status="error" lastErrorMessage={errorMessage} />);
-    expect(screen.getByText("Ein Fehler ist aufgetreten")).toBeInTheDocument();
+    expect(screen.getByText("Systemfehler")).toBeInTheDocument();
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
     expect(screen.getByText("Fehler")).toBeInTheDocument();
   });
