@@ -1,10 +1,9 @@
-import { Fragment, useMemo } from "react";
+import { motion } from "framer-motion";
 
-import { ThreeEnergyEyeScene } from "@/components/chat/ThreeEnergyEyeScene";
 import { cn } from "@/lib/utils";
-import type { CoreStatus } from "@/types/core";
 
-export type { CoreStatus };
+import type { CoreStatus } from "./ThreeEnergyEyeScene";
+import { ThreeEnergyEyeScene } from "./ThreeEnergyEyeScene";
 
 interface ChatHeroCore3DProps {
   status: CoreStatus;
@@ -14,13 +13,6 @@ interface ChatHeroCore3DProps {
   lastErrorMessage?: string;
 }
 
-const statusText: Record<CoreStatus, { label: string; color: string; accent: string }> = {
-  idle: { label: "Bereit", color: "text-cyan-200", accent: "bg-cyan-500/40" },
-  thinking: { label: "Denkt", color: "text-violet-200", accent: "bg-violet-500/40" },
-  streaming: { label: "Streamt", color: "text-sky-100", accent: "bg-emerald-500/40" },
-  error: { label: "Fehler", color: "text-amber-100", accent: "bg-amber-500/40" },
-};
-
 export function ChatHeroCore3D({
   status,
   modelName,
@@ -28,75 +20,93 @@ export function ChatHeroCore3D({
   creativityLabel,
   lastErrorMessage,
 }: ChatHeroCore3DProps) {
-  const statusInfo = statusText[status];
-
-  const subtitle = useMemo(
-    () =>
-      [toneLabel, creativityLabel]
-        .filter(Boolean)
-        .map((text) => text.trim())
-        .join(" · "),
-    [creativityLabel, toneLabel],
-  );
+  // Simple error handling/fallback logic can be expanded here if needed
 
   return (
-    <div className="w-full flex flex-col items-center gap-5 pb-6 pt-[calc(env(safe-area-inset-top,0px)+10px)] animate-fade-in">
-      <div className="relative">
-        <div className="absolute inset-[-18%] rounded-full bg-gradient-to-br from-indigo-600/30 via-sky-500/10 to-cyan-500/25 blur-3xl" />
-        <div className="absolute inset-[-10%] rounded-full bg-gradient-to-tr from-white/8 via-white/4 to-transparent blur-2xl" />
+    <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-4 w-full animate-fade-in relative z-0">
+      {/* 3D Container - Mobile optimized sizing */}
+      <motion.div
+        className={cn(
+          "relative flex items-center justify-center",
+          "w-[clamp(180px,50vw,280px)] h-[clamp(180px,50vw,280px)]", // Bigger container for 3D goodness
+        )}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        {/* Background ambient glow (cheap fallback/enhancement) */}
         <div
           className={cn(
-            "relative aspect-square",
-            "w-[clamp(5.5rem,30vw,10.5rem)] h-[clamp(5.5rem,30vw,10.5rem)]",
-            "md:w-[clamp(6.25rem,18vw,12rem)] md:h-[clamp(6.25rem,18vw,12rem)]",
-            "rounded-full overflow-hidden border border-white/8 shadow-[0_0_60px_rgba(99,102,241,0.25)]",
-            "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950",
+            "absolute inset-[15%] rounded-full blur-3xl opacity-40 transition-colors duration-1000",
+            status === "error"
+              ? "bg-red-600"
+              : status === "thinking"
+                ? "bg-fuchsia-600"
+                : status === "streaming"
+                  ? "bg-blue-600"
+                  : "bg-cyan-600",
           )}
-        >
-          <div className="absolute inset-0 z-10 pointer-events-none border border-white/10 rounded-full mix-blend-screen" />
+        />
+
+        {/* The 3D Scene */}
+        <div className="w-full h-full relative z-10">
           <ThreeEnergyEyeScene status={status} />
         </div>
-        <div className="absolute inset-[-14%] rounded-full border border-white/5 opacity-60 blur-xl" />
-        <div className="absolute inset-[-22%] rounded-full border border-cyan-400/25 opacity-60 blur-[72px]" />
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col items-center text-center gap-1 px-6">
-        <span className="text-xs uppercase tracking-[0.18em] text-ink-tertiary">Disa Core</span>
-        <h2 className="text-lg font-semibold text-ink-primary drop-shadow-sm">{modelName}</h2>
-        <p className="text-sm text-ink-secondary/90">{subtitle}</p>
-        <div className="flex items-center gap-3 mt-2">
+      {/* Text Content */}
+      <div className="text-center space-y-2 max-w-sm px-4 relative z-10 -mt-4">
+        <motion.h2
+          className="text-xl font-semibold text-ink-primary"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          {status === "error" ? "Systemfehler" : "Wie kann ich helfen?"}
+        </motion.h2>
+
+        <motion.p
+          className="text-sm text-ink-secondary"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          {status === "error" && lastErrorMessage
+            ? lastErrorMessage
+            : "Stelle eine Frage oder wähle ein Thema."}
+        </motion.p>
+
+        {/* Status Line */}
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 0.3 }}
+        >
           <span
             className={cn(
-              "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border border-white/10",
-              statusInfo.accent,
-              statusInfo.color,
+              "font-medium transition-colors duration-500",
+              status === "streaming" || status === "thinking" ? "text-accent-chat" : "",
             )}
           >
-            <span
-              className="inline-block h-2 w-2 rounded-full bg-white/70 shadow-[0_0_20px_rgba(255,255,255,0.8)]"
-              aria-hidden
-            />
-            {statusInfo.label}
+            <StatusIndicator status={status} />
           </span>
-          <span className="text-xs text-ink-tertiary">{creativityLabel}</span>
-        </div>
-      </div>
-
-      {status === "error" && lastErrorMessage ? (
-        <p className="text-xs text-amber-200/90 bg-amber-500/10 border border-amber-400/20 rounded-xl px-4 py-2 backdrop-blur">
-          {lastErrorMessage}
-        </p>
-      ) : null}
-
-      <div className="w-full max-w-xl flex flex-wrap justify-center gap-2 px-4 text-[11px] text-ink-tertiary">
-        {["Volumetrische Iris", "Data-Rings", "Post-Processing Bloom", "GPU Noise"].map((item) => (
-          <Fragment key={item}>
-            <span className="rounded-full bg-white/5 border border-white/5 px-3 py-1 backdrop-blur-sm text-ink-secondary/80">
-              {item}
-            </span>
-          </Fragment>
-        ))}
+          <span>•</span>
+          <span className="truncate max-w-[80px] sm:max-w-[120px]">{modelName}</span>
+          <span>•</span>
+          <span>{toneLabel}</span>
+          <span>•</span>
+          <span>{creativityLabel}</span>
+        </motion.div>
       </div>
     </div>
   );
+}
+
+function StatusIndicator({ status }: { status: CoreStatus }) {
+  if (status === "idle") return <>Bereit</>;
+  if (status === "thinking") return <>Verarbeite...</>;
+  if (status === "streaming") return <>Antwortet...</>;
+  if (status === "error") return <>Fehler</>;
+  return null;
 }

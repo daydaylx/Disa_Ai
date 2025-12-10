@@ -1,10 +1,9 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import type { CoreStatus } from "@/types/core";
 
-export type { CoreStatus };
+export type CoreStatus = "idle" | "thinking" | "streaming" | "error";
 
 interface LivingCoreProps {
   status: CoreStatus;
@@ -17,326 +16,196 @@ interface LivingCoreProps {
 }
 
 type LivingCoreVisualConfig = {
+  // Colors & Gradients
   irisGradient: string;
-  irisVeins: string;
-  irisRings: string;
-  rimGradient: string;
+  pupilColor: string;
   glowColor: string;
-  haloColor: string;
+  dataRingColor: string;
   particleColor: string;
-  particleAccent: string;
-  dataSegmentColor: string;
-  innerSegmentColor: string;
-  highlightColor: string;
-  scanlineColor: string;
-  waveColor: string;
-  breathRange: [number, number];
-  pupilPulseRange: [number, number];
-  irisDuration: number;
-  detailDuration: number;
-  segmentDuration: number;
-  scanlineDuration: number;
-  glareDuration: number;
-  waveDelay?: number;
+
+  // Animation Parameters
+  breathingScale: number;
+  rotationDuration: number; // seconds for full rotation
+  pulseSpeed: number; // seconds
+  particleActivity: number; // 0-1 multiplier
 };
 
 const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
   idle: {
-    irisGradient:
-      "conic-gradient(from 0deg, rgba(14,165,233,0.95) 0deg, rgba(124,58,237,0.9) 140deg, rgba(14,165,233,0.95) 360deg)",
-    irisVeins:
-      "repeating-conic-gradient(from 10deg, rgba(255,255,255,0.09) 0deg, transparent 4deg, rgba(255,255,255,0.06) 8deg, transparent 12deg)",
-    irisRings:
-      "radial-gradient(circle at 50% 50%, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 54%, rgba(255,255,255,0.07) 58%, transparent 65%)",
-    rimGradient: "linear-gradient(135deg, rgba(59,201,255,0.22), rgba(129,140,248,0.2))",
-    glowColor: "rgba(34,211,238,0.25)",
-    haloColor: "rgba(129,140,248,0.18)",
-    particleColor: "rgba(165,243,252,0.95)",
-    particleAccent: "rgba(59,130,246,0.8)",
-    dataSegmentColor: "rgba(180,198,255,0.8)",
-    innerSegmentColor: "rgba(132,204,255,0.9)",
-    highlightColor: "rgba(255,255,255,0.9)",
-    scanlineColor: "rgba(255,255,255,0.08)",
-    waveColor: "rgba(59,201,255,0.18)",
-    breathRange: [0.97, 1.02],
-    pupilPulseRange: [0.96, 1.03],
-    irisDuration: 32,
-    detailDuration: 44,
-    segmentDuration: 18,
-    scanlineDuration: 12,
-    glareDuration: 9,
+    irisGradient: "conic-gradient(from 0deg, #0891b2 0%, #a855f7 45%, #0891b2 100%)", // Cyan -> Purple
+    pupilColor: "bg-slate-950",
+    glowColor: "shadow-cyan-500/20",
+    dataRingColor: "bg-cyan-500/30",
+    particleColor: "bg-cyan-400",
+    breathingScale: 1.05,
+    rotationDuration: 60,
+    pulseSpeed: 4,
+    particleActivity: 0.3,
   },
   thinking: {
-    irisGradient:
-      "conic-gradient(from 0deg, rgba(168,85,247,0.95) 0deg, rgba(217,70,239,0.9) 150deg, rgba(168,85,247,0.95) 360deg)",
-    irisVeins:
-      "repeating-conic-gradient(from 20deg, rgba(255,255,255,0.16) 0deg, transparent 4deg, rgba(255,255,255,0.1) 10deg, transparent 14deg)",
-    irisRings:
-      "radial-gradient(circle at 50% 50%, transparent 44%, rgba(255,255,255,0.18) 50%, transparent 56%, rgba(255,255,255,0.12) 62%, transparent 70%)",
-    rimGradient: "linear-gradient(145deg, rgba(192,132,252,0.25), rgba(236,72,153,0.22))",
-    glowColor: "rgba(139,92,246,0.3)",
-    haloColor: "rgba(236,72,153,0.24)",
-    particleColor: "rgba(233,213,255,0.95)",
-    particleAccent: "rgba(217,70,239,0.85)",
-    dataSegmentColor: "rgba(244,200,255,0.92)",
-    innerSegmentColor: "rgba(233,140,255,0.92)",
-    highlightColor: "rgba(255,255,255,0.95)",
-    scanlineColor: "rgba(255,255,255,0.12)",
-    waveColor: "rgba(226,119,255,0.18)",
-    breathRange: [0.98, 1.05],
-    pupilPulseRange: [0.95, 1.06],
-    irisDuration: 18,
-    detailDuration: 22,
-    segmentDuration: 12,
-    scanlineDuration: 10,
-    glareDuration: 8,
+    irisGradient: "conic-gradient(from 0deg, #a855f7 0%, #d946ef 50%, #a855f7 100%)", // Purple -> Fuchsia
+    pupilColor: "bg-indigo-950",
+    glowColor: "shadow-purple-500/40",
+    dataRingColor: "bg-fuchsia-500/50",
+    particleColor: "bg-fuchsia-400",
+    breathingScale: 1.1,
+    rotationDuration: 3,
+    pulseSpeed: 1.5,
+    particleActivity: 0.8,
   },
   streaming: {
-    irisGradient:
-      "conic-gradient(from 0deg, rgba(6,182,212,0.95) 0deg, rgba(59,130,246,0.92) 140deg, rgba(16,185,129,0.9) 280deg, rgba(6,182,212,0.95) 360deg)",
-    irisVeins:
-      "repeating-conic-gradient(from 12deg, rgba(255,255,255,0.16) 0deg, transparent 3deg, rgba(255,255,255,0.1) 9deg, transparent 13deg)",
-    irisRings:
-      "radial-gradient(circle at 50% 50%, transparent 42%, rgba(255,255,255,0.22) 48%, transparent 54%, rgba(255,255,255,0.14) 60%, transparent 68%)",
-    rimGradient:
-      "linear-gradient(150deg, rgba(16,185,129,0.28), rgba(6,182,212,0.26), rgba(59,130,246,0.24))",
-    glowColor: "rgba(56,189,248,0.32)",
-    haloColor: "rgba(6,182,212,0.26)",
-    particleColor: "rgba(204,251,241,0.95)",
-    particleAccent: "rgba(125,211,252,0.9)",
-    dataSegmentColor: "rgba(152,251,210,0.92)",
-    innerSegmentColor: "rgba(125,211,252,0.95)",
-    highlightColor: "rgba(255,255,255,0.98)",
-    scanlineColor: "rgba(255,255,255,0.16)",
-    waveColor: "rgba(103,232,249,0.3)",
-    breathRange: [0.99, 1.07],
-    pupilPulseRange: [0.94, 1.07],
-    irisDuration: 12,
-    detailDuration: 16,
-    segmentDuration: 8,
-    scanlineDuration: 8,
-    glareDuration: 7,
-    waveDelay: 1.6,
+    irisGradient: "conic-gradient(from 0deg, #06b6d4 0%, #3b82f6 50%, #06b6d4 100%)", // Cyan -> Blue
+    pupilColor: "bg-slate-900",
+    glowColor: "shadow-blue-500/50",
+    dataRingColor: "bg-sky-400/60",
+    particleColor: "bg-sky-300",
+    breathingScale: 1.15,
+    rotationDuration: 8, // Faster than idle, slower than thinking
+    pulseSpeed: 1, // Quick pulse
+    particleActivity: 1.0,
   },
   error: {
-    irisGradient:
-      "conic-gradient(from 0deg, rgba(239,68,68,0.95) 0deg, rgba(249,115,22,0.92) 160deg, rgba(239,68,68,0.95) 360deg)",
-    irisVeins:
-      "repeating-conic-gradient(from 18deg, rgba(255,255,255,0.2) 0deg, transparent 4deg, rgba(255,255,255,0.14) 8deg, transparent 12deg)",
-    irisRings:
-      "radial-gradient(circle at 50% 50%, transparent 44%, rgba(255,255,255,0.18) 50%, transparent 56%, rgba(255,255,255,0.12) 62%, transparent 70%)",
-    rimGradient: "linear-gradient(145deg, rgba(239,68,68,0.28), rgba(249,115,22,0.26))",
-    glowColor: "rgba(248,113,113,0.3)",
-    haloColor: "rgba(251,146,60,0.24)",
-    particleColor: "rgba(254,215,170,0.9)",
-    particleAccent: "rgba(248,113,113,0.85)",
-    dataSegmentColor: "rgba(255,237,213,0.9)",
-    innerSegmentColor: "rgba(254,178,128,0.95)",
-    highlightColor: "rgba(255,255,255,0.95)",
-    scanlineColor: "rgba(255,255,255,0.18)",
-    waveColor: "rgba(252,211,77,0.28)",
-    breathRange: [0.98, 1.03],
-    pupilPulseRange: [0.95, 1.02],
-    irisDuration: 50,
-    detailDuration: 28,
-    segmentDuration: 16,
-    scanlineDuration: 9,
-    glareDuration: 7,
+    irisGradient: "conic-gradient(from 0deg, #ef4444 0%, #f97316 50%, #ef4444 100%)", // Red -> Orange
+    pupilColor: "bg-red-950",
+    glowColor: "shadow-red-500/50",
+    dataRingColor: "bg-red-500/70",
+    particleColor: "bg-red-500",
+    breathingScale: 1.05,
+    rotationDuration: 0.5, // Glitchy/Fast
+    pulseSpeed: 0.2,
+    particleActivity: 0.5,
   },
 };
 
+// --- Sub-components for better organization ---
+
 function IrisTexture({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
-  const radialRays = useMemo(
-    () =>
-      Array.from({ length: 36 }).map((_, index) => ({
-        id: index,
-        rotation: (360 / 36) * index + (index % 2 === 0 ? 6 : -4),
-        opacity: 0.2 + (index % 5) * 0.12,
-      })),
-    [],
-  );
+  // SVG overlay for the radial lines/rays
+  const rays = useMemo(() => {
+    return Array.from({ length: 24 }).map((_, i) => (
+      <line
+        key={i}
+        x1="50"
+        y1="15"
+        x2="50"
+        y2="35"
+        transform={`rotate(${i * 15} 50 50)`}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        strokeOpacity={Math.random() * 0.5 + 0.2}
+        strokeDasharray="2 1"
+      />
+    ));
+  }, []);
 
   return (
     <div className="absolute inset-0 rounded-full overflow-hidden">
+      {/* Base Conic Gradient */}
       <motion.div
-        className="absolute inset-[-45%] w-[190%] h-[190%]"
+        className="absolute inset-[-50%] w-[200%] h-[200%]"
         style={{ background: config.irisGradient }}
         animate={{ rotate: 360 }}
-        transition={{ duration: config.irisDuration, repeat: Infinity, ease: "linear" }}
-      />
-
-      <motion.div
-        className="absolute inset-[-30%] w-[160%] h-[160%] opacity-70"
-        style={{ background: config.irisVeins }}
-        animate={{ rotate: status === "thinking" || status === "streaming" ? -360 : -90 }}
-        transition={{ duration: config.detailDuration, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="absolute inset-0" style={{ backgroundImage: config.irisRings }} />
-
-      <div
-        className="absolute inset-[8%] rounded-full opacity-60 mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "repeating-conic-gradient(from 0deg, rgba(255,255,255,0.2) 0deg 2deg, transparent 2deg 4deg)",
+        transition={{
+          duration: config.rotationDuration,
+          repeat: Infinity,
+          ease: "linear",
         }}
       />
 
-      <div
-        className="absolute inset-[12%] rounded-full mix-blend-screen opacity-70"
-        style={{
-          backgroundImage:
-            "repeating-conic-gradient(from 12deg, rgba(255,255,255,0.08) 0deg 1.5deg, transparent 1.5deg 4deg)",
-          maskImage:
-            "radial-gradient(circle at 50% 50%, transparent 0%, black 55%, transparent 70%)",
-        }}
-      />
+      {/* Noise Overlay */}
+      <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[url('/noise.svg')] bg-repeat" />
 
-      <div
-        className="absolute inset-[6%] rounded-full opacity-30 mix-blend-screen"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 45%, rgba(255,255,255,0.35), transparent 35%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.2), transparent 35%)",
-        }}
-      />
+      {/* Radial Rays SVG */}
+      <motion.svg
+        viewBox="0 0 100 100"
+        className="absolute inset-0 w-full h-full text-white/40 mix-blend-overlay"
+        animate={{ rotate: status === "thinking" ? -360 : 0 }}
+        transition={{ duration: config.rotationDuration * 1.5, repeat: Infinity, ease: "linear" }}
+      >
+        {rays}
+      </motion.svg>
 
-      <div
-        className="absolute inset-0 opacity-25 mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.14) 0.7px, transparent 0.7px)",
-          backgroundSize: "10px 10px",
-        }}
-      />
-
-      {radialRays.map((ray) => (
-        <div
-          key={`ray-${ray.id}`}
-          className="absolute left-1/2 top-1/2 h-[18%] w-[0.75px] origin-bottom bg-white/30"
-          style={{
-            transform: `rotate(${ray.rotation}deg) translateY(-36%)`,
-            opacity: ray.opacity,
-          }}
-        />
-      ))}
-
-      <div className="absolute inset-0 rounded-full shadow-[inset_0_0_14px_rgba(0,0,0,0.65)]" />
+      {/* Inner Shadow to soften the pupil edge */}
+      <div className="absolute inset-0 rounded-full shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]" />
     </div>
   );
 }
 
 function Pupil({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
   return (
-    <div className="absolute inset-[30%] rounded-full z-20 flex items-center justify-center pointer-events-none">
-      <div className="absolute inset-[-12%] rounded-full bg-gradient-to-b from-black/20 via-black/10 to-white/5 opacity-50 mix-blend-screen" />
+    <div className="absolute inset-[28%] rounded-full z-20 flex items-center justify-center pointer-events-none">
+      {/* Outer Pupil Ring (softer) */}
       <motion.div
-        className="absolute inset-0 rounded-full shadow-[0_0_28px_rgba(0,0,0,0.45)] bg-gradient-to-b from-slate-950 via-black to-slate-950"
-        animate={{
-          scale: [config.pupilPulseRange[0], config.pupilPulseRange[1], config.pupilPulseRange[0]],
-        }}
-        transition={{
-          duration: status === "thinking" ? 1.6 : status === "streaming" ? 1.1 : 2.6,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+        className={cn(
+          "absolute inset-0 rounded-full opacity-80 mix-blend-multiply",
+          config.pupilColor,
+        )}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: config.pulseSpeed, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div className="absolute inset-[14%] rounded-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 shadow-inner" />
-      <div className="absolute inset-[30%] rounded-full bg-gradient-to-br from-black via-slate-950 to-black" />
-      <div
-        className="absolute inset-[38%] rounded-full"
-        style={{ background: config.highlightColor }}
-      />
+
+      {/* Inner Pupil Core (Dark & Sharp) */}
+      <div className="absolute inset-1 rounded-full bg-black shadow-[0_0_10px_rgba(0,0,0,1)]" />
+
+      {/* Depth/Reflection Highlight */}
       <motion.div
-        className="absolute h-5 w-5 rounded-full bg-white/70 blur-[8px]"
-        style={{ top: "22%", left: "30%" }}
+        className="absolute top-[20%] left-[25%] w-[15%] h-[15%] rounded-full bg-white/10 blur-[1px]"
         animate={{
-          x: [0, status === "streaming" ? 3 : 2, 0],
-          y: [0, status === "streaming" ? -3 : -2, 0],
-          opacity: [0.55, 0.9, 0.55],
-          scale: [0.94, 1.06, 0.94],
+          opacity: [0.1, 0.3, 0.1],
+          x: status === "thinking" ? [0, 2, 0] : 0,
         }}
-        transition={{
-          duration: status === "streaming" ? 2.2 : 2.8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+        transition={{ duration: 2, repeat: Infinity }}
       />
+
+      {/* Tiny sharp specular highlight */}
+      <div className="absolute top-[25%] left-[28%] w-[8%] h-[8%] rounded-full bg-white/80 shadow-[0_0_5px_white]" />
     </div>
   );
 }
 
-function BinaryRings({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
-  const outerSegments = useMemo(
-    () =>
-      Array.from({ length: 32 }).map((_, index) => ({
-        rotation: (360 / 32) * index,
-        long: index % 3 === 0,
-      })),
-    [],
-  );
-
-  const innerSegments = useMemo(
-    () =>
-      Array.from({ length: 18 }).map((_, index) => ({
-        rotation: (360 / 18) * index + (index % 2 === 0 ? 6 : -8),
-      })),
-    [],
-  );
-
-  const segmentAnimationClass =
-    status === "streaming"
-      ? "animate-orb-bit-chase-fast"
-      : status === "thinking"
-        ? "animate-orb-bit-chase"
-        : "";
+function DataRing({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
+  // Binary/Data segments ring
+  // Fixed positioning logic: Rotate the container, place element at specific radius
+  const segments = useMemo(() => {
+    return Array.from({ length: 32 }).map((_, i) => {
+      return (
+        <motion.div
+          key={i}
+          className="absolute inset-0 flex justify-center"
+          style={{ rotate: `${i * (360 / 32)}deg` }}
+        >
+          <motion.div
+            className={cn("w-[2px] h-[6px] rounded-full", config.dataRingColor)}
+            style={{ marginTop: "15%" }} // Position at 15% from top edge (inside radius)
+            initial={{ opacity: 0.2 }}
+            animate={{
+              opacity:
+                status === "thinking"
+                  ? [0.2, 0.8, 0.2] // Pulse wave effect in thinking
+                  : status === "streaming"
+                    ? [0.3, 0.6, 0.3]
+                    : 0.2,
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              delay: i * 0.05, // Stagger for wave effect
+            }}
+          />
+        </motion.div>
+      );
+    });
+  }, [config.dataRingColor, status]);
 
   return (
-    <div className="absolute inset-0 z-10 pointer-events-none overflow-visible rounded-full">
+    <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden rounded-full">
+      {/* Rotating container for the segments */}
       <motion.div
-        className="absolute inset-[-4%]"
-        animate={{ rotate: status === "idle" ? 0 : 360 }}
-        transition={{ duration: config.segmentDuration, repeat: Infinity, ease: "linear" }}
+        className="w-full h-full relative"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
       >
-        {outerSegments.map((segment, index) => (
-          <span
-            key={`segment-${segment.rotation}`}
-            className={cn(
-              "absolute left-1/2 top-1/2 origin-left rounded-full shadow-[0_0_8px_rgba(255,255,255,0.12)]",
-              segmentAnimationClass,
-            )}
-            style={{
-              height: segment.long ? 6 : 4,
-              width: segment.long ? 10 : 7,
-              backgroundColor: config.dataSegmentColor,
-              transform: `rotate(${segment.rotation}deg) translateX(52%)`,
-              animationDelay: `${index * 45}ms`,
-            }}
-          />
-        ))}
-      </motion.div>
-
-      <motion.div
-        className="absolute inset-[3%]"
-        animate={{ rotate: status === "idle" ? 0 : -360 }}
-        transition={{ duration: config.segmentDuration * 1.1, repeat: Infinity, ease: "linear" }}
-      >
-        {innerSegments.map((segment, index) => (
-          <span
-            key={`inner-${segment.rotation}`}
-            className={cn(
-              "absolute left-1/2 top-1/2 origin-left rounded-full",
-              segmentAnimationClass || "opacity-80",
-            )}
-            style={{
-              height: 3,
-              width: 8,
-              backgroundColor: config.innerSegmentColor,
-              transform: `rotate(${segment.rotation}deg) translateX(35%)`,
-              boxShadow: "0 0 6px rgba(255,255,255,0.18)",
-              animationDelay: `${index * 65}ms`,
-            }}
-          />
-        ))}
+        {segments}
       </motion.div>
     </div>
   );
@@ -345,57 +214,53 @@ function BinaryRings({ status, config }: { status: CoreStatus; config: LivingCor
 function ParticleBelt({
   count,
   radiusPercent,
-  color,
-  accent,
+  config,
   speedDuration,
   reverse = false,
-  activity,
 }: {
   count: number;
-  radiusPercent: number;
-  color: string;
-  accent: string;
+  radiusPercent: number; // 100 = at the edge of the container
+  config: LivingCoreVisualConfig;
   speedDuration: number;
   reverse?: boolean;
-  activity: number;
 }) {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: count }).map((_, index) => ({
-        angle: (index / count) * 360 + (index % 2 === 0 ? -8 : 12),
-        size: 1 + Math.random() * 2.5,
-        opacity: 0.35 + Math.random() * 0.5,
-        offset: Math.random() * 12,
-        accent: index % 4 === 0,
-      })),
-    [count],
-  );
+  const particles = useMemo(() => {
+    return Array.from({ length: count }).map((_, i) => ({
+      angle: (i / count) * 360 + Math.random() * 20,
+      size: Math.random() * 2 + 1,
+      opacity: Math.random() * 0.5 + 0.2,
+      offset: Math.random() * 10,
+    }));
+  }, [count]);
 
+  // Radius calculation:
+  // If radiusPercent is 100, we want it at the edge.
+  // Since we are placing relative to center, 0% is center, 50% is edge.
+  // Wait, better approach:
+  // Use a full-size container, rotate it.
+  // Place particle at top: (50 - radius/2)%
   const topPosition = `${50 - radiusPercent / 2}%`;
 
   return (
     <motion.div
-      className="absolute inset-[-60%] w-[220%] h-[220%] pointer-events-none flex items-center justify-center"
+      className="absolute inset-[-50%] w-[200%] h-[200%] pointer-events-none flex items-center justify-center"
       animate={{ rotate: reverse ? -360 : 360 }}
       transition={{ duration: speedDuration, repeat: Infinity, ease: "linear" }}
     >
-      {particles.map((particle, index) => (
+      {particles.map((p, i) => (
         <div
-          key={`belt-${index}`}
+          key={i}
           className="absolute inset-0 flex justify-center"
-          style={{ rotate: `${particle.angle}deg` }}
+          style={{ rotate: `${p.angle}deg` }}
         >
-          <span
-            className="rounded-full animate-orb-particle-jitter mix-blend-screen"
+          <div
+            className={cn("rounded-full", config.particleColor)}
             style={{
-              width: particle.size,
-              height: particle.size,
-              marginTop: topPosition,
-              opacity: particle.opacity * activity,
-              background: particle.accent ? accent : color,
-              transform: `translateY(${particle.offset}px)`,
-              animationDuration: `${1.6 + (index % 6) * 0.2}s`,
-              animationDelay: `${index * 35}ms`,
+              width: p.size,
+              height: p.size,
+              marginTop: topPosition, // Push out from center
+              opacity: p.opacity,
+              transform: `translateY(${p.offset}px)`, // Small random jitter
             }}
           />
         </div>
@@ -404,34 +269,29 @@ function ParticleBelt({
   );
 }
 
-function Overlays({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
+function Overlays({ status }: { status: CoreStatus }) {
   return (
     <>
-      <div className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.12)_0%,transparent_40%)] pointer-events-none z-30" />
+      {/* Glass Glare/Reflection Top */}
+      <div className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.1)_0%,transparent_40%)] pointer-events-none z-30" />
 
+      {/* Scanline Effect - Subtle horizontal lines */}
       <div className="absolute inset-0 rounded-full overflow-hidden z-20 opacity-20 pointer-events-none mix-blend-overlay">
-        <div
-          className="w-full h-[220%] bg-[length:100%_5px] animate-orb-scan-glide"
-          style={{
-            animationDuration: `${status === "idle" ? config.scanlineDuration * 1.4 : config.scanlineDuration}s`,
-            backgroundImage: `linear-gradient(transparent 55%, ${config.scanlineColor} 55%)`,
+        <motion.div
+          className="w-full h-[200%] bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"
+          animate={{ translateY: status === "idle" ? 0 : "-50%" }}
+          transition={{
+            duration: status === "idle" ? 0 : 20, // Slow scan on active
+            repeat: Infinity,
+            ease: "linear",
           }}
         />
       </div>
-
-      <div
-        className={cn(
-          "absolute inset-[-6%] rounded-full opacity-35 mix-blend-screen pointer-events-none",
-          status === "error"
-            ? "from-white/10 via-white/14 to-white/12"
-            : "from-white/12 via-white/20 to-white/16",
-          "bg-gradient-to-tr animate-orb-glare-sweep",
-        )}
-        style={{ animationDuration: `${config.glareDuration}s` }}
-      />
     </>
   );
 }
+
+// --- Main Component ---
 
 export function LivingCore({
   status,
@@ -446,152 +306,115 @@ export function LivingCore({
   const [glitching, setGlitching] = useState(false);
   const [tapPulse, setTapPulse] = useState(false);
 
+  // Responsive Size Control - Mobile optimized (smaller base)
+  // Mobile: 96px (24) -> SM: 128px (32) -> Desktop: 160px (40)
   const containerSizeClass =
     size === "mobile"
-      ? "w-[clamp(5rem,16vw,6.25rem)] h-[clamp(5rem,16vw,6.25rem)]"
+      ? "w-24 h-24"
       : size === "desktop"
-        ? "w-[clamp(6.5rem,12vw,10.5rem)] h-[clamp(6.5rem,12vw,10.5rem)]"
-        : "w-[clamp(5rem,18vw,7.5rem)] h-[clamp(5rem,18vw,7.5rem)] sm:w-[clamp(6rem,14vw,9.5rem)] md:w-[clamp(6.5rem,12vw,10.5rem)]";
+        ? "w-40 h-40"
+        : "w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40";
 
-  const opacityMod = intensity === "subtle" ? 0.65 : intensity === "strong" ? 1 : 0.85;
+  // Intensity Logic
+  const opacityMod = intensity === "subtle" ? 0.6 : intensity === "strong" ? 1 : 0.85;
 
   useEffect(() => {
     if (status === "error") {
       setGlitching(true);
-      const timer = setTimeout(() => setGlitching(false), 700);
+      const timer = setTimeout(() => setGlitching(false), 600);
       return () => clearTimeout(timer);
     }
-    setGlitching(false);
     return undefined;
   }, [status]);
 
   const handleTap = () => {
     setTapPulse(true);
     if (typeof navigator !== "undefined" && navigator.vibrate) {
-      navigator.vibrate(12);
+      navigator.vibrate(10);
     }
-    setTimeout(() => setTapPulse(false), 320);
+    setTimeout(() => setTapPulse(false), 300);
   };
 
-  const activityMultiplier = status === "streaming" ? 1 : status === "thinking" ? 0.85 : 0.55;
-
   return (
-    <div className="flex flex-col items-center justify-center gap-6 pb-8 pt-[calc(env(safe-area-inset-top,0px)+10px)] w-full animate-fade-in relative z-0">
+    <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-4 w-full animate-fade-in relative z-0">
+      {/* ORB CONTAINER */}
       <motion.div
         className={cn(
           "relative flex items-center justify-center cursor-pointer",
           containerSizeClass,
-          "max-w-[11rem] min-w-[4.5rem]",
         )}
         animate={{
-          y: [0, -9, 0],
-          scale: tapPulse
-            ? 0.96
-            : [config.breathRange[0], config.breathRange[1], config.breathRange[0]],
-          x: glitching ? [0, -6, 4, -3, 2, 0] : 0,
+          y: [0, -8, 0], // Gentle levitation
+          scale: tapPulse ? 0.95 : [1, config.breathingScale, 1],
+          x: glitching ? [0, -5, 5, -2, 2, 0] : 0, // Glitch shake
         }}
         transition={{
-          y: { duration: 5.2, repeat: Infinity, ease: "easeInOut" },
-          scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          x: { duration: glitching ? 0.45 : 0 },
+          y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+          scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+          x: { duration: 0.4 }, // Fast glitch
         }}
-        whileTap={{ scale: 0.94 }}
         onClick={handleTap}
         style={{ opacity: opacityMod }}
       >
-        <div
-          className="absolute inset-[-14%] rounded-full blur-3xl transition-all duration-700"
-          style={{ backgroundColor: config.haloColor, opacity: tapPulse ? 0.9 : 0.7 }}
-        />
-        <div
-          className="absolute inset-[-8%] rounded-full blur-2xl transition-all duration-700 opacity-70"
-          style={{ backgroundColor: config.glowColor }}
-        />
-
-        <div className="absolute inset-0">
-          <div
-            className="absolute inset-[-6%] rounded-full border border-white/5 opacity-80"
-            style={{ background: config.rimGradient }}
-          />
-
-          <BinaryRings status={status} config={config} />
-
-          <ParticleBelt
-            count={26}
-            radiusPercent={152}
-            color={config.particleColor}
-            accent={config.particleAccent}
-            speedDuration={40}
-            activity={activityMultiplier}
-          />
-          <ParticleBelt
-            count={18}
-            radiusPercent={118}
-            color={config.particleColor}
-            accent={config.particleAccent}
-            speedDuration={22}
-            reverse
-            activity={activityMultiplier + 0.15}
-          />
-        </div>
-
+        {/* 1. ATMOSPHERE / GLOW LAYERS (Cheapest rendering first) */}
         <div
           className={cn(
-            "relative inset-0 w-full h-full rounded-full overflow-visible bg-gradient-to-br shadow-2xl ring-1 ring-white/10",
-            glitching && "animate-orb-shake",
-            tapPulse && "scale-[1.01] duration-150",
+            "absolute inset-[-20%] rounded-full blur-3xl transition-colors duration-1000",
+            status === "error" ? "bg-red-500/20" : "bg-cyan-500/20",
           )}
-          style={{
-            backgroundImage: "linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.9))",
-          }}
-        >
-          <div className="absolute inset-[6%] rounded-full border border-white/8 shadow-[0_0_16px_rgba(255,255,255,0.06)] bg-white/5" />
-          <motion.div
-            className="absolute inset-[8%] rounded-full"
-            style={{
-              backgroundImage:
-                "conic-gradient(from 120deg, rgba(255,255,255,0.14), transparent 36deg, rgba(255,255,255,0.08) 210deg, transparent 270deg, rgba(255,255,255,0.14))",
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: config.irisDuration * 1.05, repeat: Infinity, ease: "linear" }}
-          />
-
-          <motion.div
-            className="absolute inset-[14%] rounded-full overflow-hidden shadow-inner"
-            style={{ background: config.irisGradient }}
-            animate={{ rotate: status === "idle" ? 0 : 360 }}
-            transition={{ duration: config.irisDuration, repeat: Infinity, ease: "linear" }}
-          >
-            <IrisTexture status={status} config={config} />
-            <BinaryRings status={status} config={config} />
-            <Pupil status={status} config={config} />
-            <Overlays status={status} config={config} />
-          </motion.div>
-
-          {status === "streaming" && (
-            <motion.div
-              className="absolute inset-[10%] rounded-full border"
-              style={{ borderColor: config.innerSegmentColor, backgroundColor: config.waveColor }}
-              animate={{ scale: [0.92, 1.55], opacity: [0.6, 0] }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                repeatDelay: config.waveDelay ?? 1.6,
-                ease: "easeOut",
-              }}
-            />
+        />
+        <motion.div
+          className={cn(
+            "absolute inset-[-5%] rounded-full blur-xl transition-all duration-700 opacity-60",
+            config.glowColor,
           )}
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          style={{ boxShadow: `0 0 40px currentColor` }} // Hardware accel glow
+        />
 
-          {status === "error" && glitching && (
-            <motion.div
-              className="absolute inset-[9%] rounded-full border border-orange-300/60 mix-blend-screen"
-              animate={{ x: [-3, 2, -1, 0], opacity: [0.8, 1, 0.7, 0.9] }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-            />
-          )}
+        {/* 2. OUTER STRUCTURES */}
+
+        {/* Outer Particle Belt (Loose, slow) */}
+        {/* Radius 150% means 50% larger than the container */}
+        <ParticleBelt count={12} radiusPercent={150} config={config} speedDuration={45} />
+
+        {/* Inner Particle Belt (Closer, faster) */}
+        {/* Radius 110% means just outside the container edge */}
+        <ParticleBelt count={18} radiusPercent={110} config={config} speedDuration={25} reverse />
+
+        {/* 3. MAIN ORB BODY */}
+        <div className="absolute inset-0 rounded-full shadow-2xl overflow-hidden z-10 ring-1 ring-white/10">
+          <IrisTexture status={status} config={config} />
+          <DataRing status={status} config={config} />
+          <Pupil status={status} config={config} />
+          <Overlays status={status} />
         </div>
+
+        {/* 4. ACTIVE STATE RINGS (Streaming/Thinking/Error) */}
+        <AnimatePresence>
+          {(status === "thinking" || status === "streaming") && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1.3 }}
+              exit={{ opacity: 0, scale: 1.5 }}
+              className={cn(
+                "absolute inset-0 rounded-full border border-dashed opacity-30 pointer-events-none",
+                config.dataRingColor.replace("bg-", "border-"),
+              )}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
+                className="w-full h-full rounded-full border-t border-current"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
+      {/* TEXT CONTENT (Original Layout Preserved) */}
       <div className="text-center space-y-2 max-w-sm px-4 relative z-10">
         <motion.h2
           className="text-xl font-semibold text-ink-primary"
@@ -613,10 +436,11 @@ export function LivingCore({
             : "Stelle eine Frage oder wähle ein Thema."}
         </motion.p>
 
+        {/* Status Line */}
         <motion.div
           className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
+          animate={{ opacity: 0.7 }}
           transition={{ delay: 0.3 }}
         >
           <span

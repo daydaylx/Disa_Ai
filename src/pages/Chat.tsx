@@ -153,7 +153,7 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Living Energy Orb Core Header */}
+                    {/* Cinematic 3D Core Header */}
                     <ChatHeroCore3D
                       status={coreStatus}
                       modelName={modelName}
