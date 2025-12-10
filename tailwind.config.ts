@@ -383,6 +383,13 @@ export default {
         "orb-pupil-streaming": "orbPupilPulse 0.5s ease-in-out infinite",
         "orb-wave": "orbWave 2s ease-out infinite",
         "orb-shake": "orbShake 0.4s ease-in-out",
+        "orb-bits": "orbBits 3s linear infinite",
+        "orb-bits-fast": "orbBits 1.6s linear infinite",
+        "orb-bits-subtle": "orbBits 4.2s linear infinite",
+        "orb-twinkle": "orbTwinkle 2.6s ease-in-out infinite",
+        "orb-scanline": "orbScanline 8s linear infinite",
+        "orb-scanline-slow": "orbScanline 14s linear infinite",
+        "orb-glare": "orbGlare 10s ease-in-out infinite",
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
         "ping-slow": "pingSlow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
@@ -552,6 +559,26 @@ export default {
           "70%": { transform: "translate(-3px, 1px)" },
           "80%": { transform: "translate(2px, -1px)" },
           "90%": { transform: "translate(-1px, 2px)" },
+        },
+        orbBits: {
+          "0%": { opacity: "0.6", transform: "scale(1)" },
+          "30%": { opacity: "0.9" },
+          "60%": { opacity: "0.55", transform: "scale(1.05)" },
+          "100%": { opacity: "0.6", transform: "scale(1)" },
+        },
+        orbTwinkle: {
+          "0%": { opacity: "0.4", transform: "scale(0.9)" },
+          "50%": { opacity: "1", transform: "scale(1.25)" },
+          "100%": { opacity: "0.45", transform: "scale(0.9)" },
+        },
+        orbScanline: {
+          "0%": { transform: "translateY(120%)" },
+          "100%": { transform: "translateY(-120%)" },
+        },
+        orbGlare: {
+          "0%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
+          "50%": { transform: "translate3d(4%, 6%, 0) rotate(4deg)", opacity: "0.58" },
+          "100%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "0.4" },
