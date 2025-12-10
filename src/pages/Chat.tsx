@@ -1,8 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
+import { ChatHeroCore, type CoreStatus } from "@/components/chat/ChatHeroCore";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -13,6 +16,7 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
+import { useSettings } from "../hooks/useSettings";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const STARTER_PROMPTS = [
@@ -21,6 +25,12 @@ const STARTER_PROMPTS = [
   "Was koche ich heute?",
   "Erzähl mir einen Witz",
 ];
+
+function getCreativityLabel(value: number): string {
+  if (value < 30) return "Präzise";
+  if (value < 70) return "Ausgewogen";
+  return "Kreativ";
+}
 
 export default function Chat() {
   const viewport = useVisualViewport();
@@ -31,6 +41,10 @@ export default function Chat() {
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
+  // Settings & Meta
+  const { settings } = useSettings();
+  const { models } = useModelCatalog();
+
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
 
@@ -38,6 +52,36 @@ export default function Chat() {
   const chatLogic = useChatPageLogic({
     onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
+
+  // Derived Core Status
+  const coreStatus: CoreStatus = useMemo(() => {
+    if (chatLogic.error) return "error";
+    if (chatLogic.isLoading) {
+      const lastMsg = chatLogic.messages[chatLogic.messages.length - 1];
+      // If we have an assistant message that is streaming, it's 'streaming'.
+      // Otherwise (user msg is last, or empty msg list but loading), it's 'thinking'.
+      if (lastMsg?.role === "assistant") return "streaming";
+      return "thinking";
+    }
+    return "idle";
+  }, [chatLogic.error, chatLogic.isLoading, chatLogic.messages]);
+
+  // Derived Meta Info
+  const modelName = useMemo(() => {
+    const m = models?.find((x) => x.id === settings.preferredModelId);
+    return m?.label || settings.preferredModelId || "Unbekannt";
+  }, [models, settings.preferredModelId]);
+
+  const toneLabel = useMemo(() => {
+    return (
+      discussionPresetOptions.find((o) => o.key === settings.discussionPreset)?.label || "Standard"
+    );
+  }, [settings.discussionPreset]);
+
+  const creativityLabel = useMemo(
+    () => getCreativityLabel(settings.creativity),
+    [settings.creativity],
+  );
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
@@ -114,18 +158,14 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Welcome Message - Simpler, Clearer */}
-                    <div className="text-center space-y-3">
-                      <div className="w-16 h-16 rounded-2xl bg-accent-chat/10 flex items-center justify-center mx-auto shadow-glow-sm">
-                        <Sparkles className="w-8 h-8 text-accent-chat" />
-                      </div>
-                      <h2 className="text-xl font-semibold text-ink-primary">
-                        Was kann ich für dich tun?
-                      </h2>
-                      <p className="text-sm text-ink-secondary max-w-sm">
-                        Tippe unten eine Frage ein oder wähle einen der Vorschläge
-                      </p>
-                    </div>
+                    {/* Living Core Header */}
+                    <ChatHeroCore
+                      status={coreStatus}
+                      modelName={modelName}
+                      toneLabel={toneLabel}
+                      creativityLabel={creativityLabel}
+                      lastErrorMessage={chatLogic.error?.message}
+                    />
 
                     {/* Starter Prompts */}
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
@@ -216,23 +256,5 @@ export default function Chat() {
         onNewChat={handleStartNewChat}
       />
     </>
-  );
-}
-
-// Helper import for the welcome screen icon
-function Sparkles({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-    </svg>
   );
 }
