@@ -76,46 +76,78 @@ export function ChatHeroCore({
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
       {/* Visual Core Container */}
       <div className="relative w-32 h-32 flex items-center justify-center">
-        {/* Background Glow Layer */}
+        {/* Background Glow Layer (Square) */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full blur-2xl opacity-40 transition-all duration-500",
+            "absolute inset-0 rounded-3xl blur-2xl opacity-40 transition-all duration-500",
             status === "error" ? "bg-red-500" : "bg-brand-primary",
-            status === "thinking" || status === "streaming" ? "scale-125 opacity-50" : "scale-100",
+            status === "thinking" || status === "streaming" ? "scale-110 opacity-50" : "scale-100",
           )}
         />
 
-        {/* Outer Ring (Thinking/Streaming) */}
+        {/* Outer Ring (Thinking/Streaming) - Dashed Square */}
         {config.ringVisible && (
-          <div className="absolute inset-0 animate-core-ring-spin">
-            <div className="w-full h-full rounded-full border border-white/20 border-t-brand-primary/80 border-r-transparent" />
+          <div className="absolute inset-[-4px] animate-core-ring-spin opacity-60">
+            <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+              <rect
+                x="2"
+                y="2"
+                width="96"
+                height="96"
+                rx="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeDasharray="10 10"
+                className="text-brand-primary"
+              />
+            </svg>
           </div>
         )}
 
-        {/* Waves (Streaming) */}
+        {/* Waves (Streaming) - Expanding Squares */}
         {config.waveEnabled && (
           <>
-            <div className="absolute inset-0 rounded-full border border-brand-primary/30 animate-core-wave" />
+            <div className="absolute inset-0 rounded-3xl border border-brand-primary/30 animate-core-wave" />
             <div
-              className="absolute inset-0 rounded-full border border-brand-primary/30 animate-core-wave"
+              className="absolute inset-0 rounded-3xl border border-brand-primary/30 animate-core-wave"
               style={{ animationDelay: "0.8s" }}
             />
           </>
         )}
 
-        {/* The Core Itself */}
+        {/* The Core Itself (Artifact) */}
         <div
           className={cn(
-            "relative w-16 h-16 rounded-full flex items-center justify-center z-10 transition-colors duration-500",
+            "relative w-20 h-20 rounded-3xl flex items-center justify-center z-10 transition-colors duration-500 overflow-hidden border border-white/10",
             config.baseColorClass,
             config.glowColorClass,
-            "bg-gradient-to-br from-white/20 to-transparent", // Inner highlight
+            "bg-gradient-to-br from-white/10 to-transparent backdrop-blur-sm", // Glassy surface
             // Always animate pulse unless error shake is active
             showErrorShake ? "animate-core-error-shake" : "animate-core-pulse",
           )}
         >
-          {/* Inner accent dot */}
-          <div className="w-6 h-6 rounded-full bg-white/20 blur-[1px]" />
+          {/* Internal Tech Grid Pattern */}
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)",
+              backgroundSize: "8px 8px",
+            }}
+          />
+
+          {/* Corner Accents (Inside) */}
+          <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-white/40 rounded-tl-sm" />
+          <div className="absolute top-1 right-1 w-2 h-2 border-t border-r border-white/40 rounded-tr-sm" />
+          <div className="absolute bottom-1 left-1 w-2 h-2 border-b border-l border-white/40 rounded-bl-sm" />
+          <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-white/40 rounded-br-sm" />
+
+          {/* Center Element - Floating Diamond */}
+          <div className="relative w-8 h-8 flex items-center justify-center">
+            <div className="absolute inset-0 bg-white/20 rotate-45 rounded-sm animate-pulse" />
+            <div className="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_white]" />
+          </div>
         </div>
       </div>
 
