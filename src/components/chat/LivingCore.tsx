@@ -22,6 +22,7 @@ type LivingCoreVisualConfig = {
   glowColor: string;
   dataRingColor: string;
   particleColor: string;
+  strokeColor: string;
 
   // Animation Parameters
   breathingScale: number;
@@ -37,6 +38,7 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
     glowColor: "shadow-cyan-500/20",
     dataRingColor: "bg-cyan-500/30",
     particleColor: "bg-cyan-400",
+    strokeColor: "text-cyan-500",
     breathingScale: 1.05,
     rotationDuration: 60,
     pulseSpeed: 4,
@@ -48,6 +50,7 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
     glowColor: "shadow-purple-500/40",
     dataRingColor: "bg-fuchsia-500/50",
     particleColor: "bg-fuchsia-400",
+    strokeColor: "text-fuchsia-500",
     breathingScale: 1.1,
     rotationDuration: 3,
     pulseSpeed: 1.5,
@@ -59,6 +62,7 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
     glowColor: "shadow-blue-500/50",
     dataRingColor: "bg-sky-400/60",
     particleColor: "bg-sky-300",
+    strokeColor: "text-sky-400",
     breathingScale: 1.15,
     rotationDuration: 8, // Faster than idle, slower than thinking
     pulseSpeed: 1, // Quick pulse
@@ -70,6 +74,7 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
     glowColor: "shadow-red-500/50",
     dataRingColor: "bg-red-500/70",
     particleColor: "bg-red-500",
+    strokeColor: "text-red-500",
     breathingScale: 1.05,
     rotationDuration: 0.5, // Glitchy/Fast
     pulseSpeed: 0.2,
@@ -79,21 +84,57 @@ const LIVING_CORE_CONFIG: Record<CoreStatus, LivingCoreVisualConfig> = {
 
 // --- Sub-components for better organization ---
 
+function OrbitalRings({ config }: { config: LivingCoreVisualConfig }) {
+  return (
+    <div className={cn("absolute inset-[-40%] pointer-events-none z-0", config.strokeColor)}>
+      <motion.svg viewBox="0 0 200 200" className="w-full h-full opacity-20 overflow-visible">
+        {/* Ring 1 - Tilted */}
+        <motion.ellipse
+          cx="100"
+          cy="100"
+          rx="90"
+          ry="25"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          strokeDasharray="10 20"
+          initial={{ rotate: -15 }}
+          animate={{ rotate: 345 }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        />
+        {/* Ring 2 - Opposing Tilt */}
+        <motion.ellipse
+          cx="100"
+          cy="100"
+          rx="80"
+          ry="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.3"
+          initial={{ rotate: 15 }}
+          animate={{ rotate: -345 }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+        />
+      </motion.svg>
+    </div>
+  );
+}
+
 function IrisTexture({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
   // SVG overlay for the radial lines/rays
   const rays = useMemo(() => {
-    return Array.from({ length: 24 }).map((_, i) => (
+    return Array.from({ length: 36 }).map((_, i) => (
       <line
         key={i}
         x1="50"
-        y1="15"
+        y1="10"
         x2="50"
-        y2="35"
-        transform={`rotate(${i * 15} 50 50)`}
+        y2="40"
+        transform={`rotate(${i * 10} 50 50)`}
         stroke="currentColor"
-        strokeWidth="0.5"
-        strokeOpacity={Math.random() * 0.5 + 0.2}
-        strokeDasharray="2 1"
+        strokeWidth={i % 2 === 0 ? "0.2" : "0.5"} // Varying width
+        strokeOpacity={Math.random() * 0.3 + 0.1}
+        strokeDasharray={i % 3 === 0 ? "2 2" : undefined}
       />
     ));
   }, []);
@@ -113,12 +154,21 @@ function IrisTexture({ status, config }: { status: CoreStatus; config: LivingCor
       />
 
       {/* Noise Overlay */}
-      <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[url('/noise.svg')] bg-repeat" />
+      <div className="absolute inset-0 opacity-20 mix-blend-overlay bg-[url('/noise.svg')] bg-repeat" />
+
+      {/* 3D Sphere Radial Gradient Overlay - Adds depth */}
+      <div
+        className="absolute inset-0 z-10 mix-blend-multiply pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.8) 100%)",
+        }}
+      />
 
       {/* Radial Rays SVG */}
       <motion.svg
         viewBox="0 0 100 100"
-        className="absolute inset-0 w-full h-full text-white/40 mix-blend-overlay"
+        className="absolute inset-0 w-full h-full text-white/30 mix-blend-overlay z-0"
         animate={{ rotate: status === "thinking" ? -360 : 0 }}
         transition={{ duration: config.rotationDuration * 1.5, repeat: Infinity, ease: "linear" }}
       >
@@ -126,18 +176,18 @@ function IrisTexture({ status, config }: { status: CoreStatus; config: LivingCor
       </motion.svg>
 
       {/* Inner Shadow to soften the pupil edge */}
-      <div className="absolute inset-0 rounded-full shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]" />
+      <div className="absolute inset-0 rounded-full shadow-[inset_0_0_15px_rgba(0,0,0,0.9)] z-20" />
     </div>
   );
 }
 
-function Pupil({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
+function Pupil({ config }: { config: LivingCoreVisualConfig }) {
   return (
     <div className="absolute inset-[28%] rounded-full z-20 flex items-center justify-center pointer-events-none">
       {/* Outer Pupil Ring (softer) */}
       <motion.div
         className={cn(
-          "absolute inset-0 rounded-full opacity-80 mix-blend-multiply",
+          "absolute inset-0 rounded-full opacity-90 mix-blend-multiply blur-[1px]",
           config.pupilColor,
         )}
         animate={{ scale: [1, 1.05, 1] }}
@@ -145,51 +195,58 @@ function Pupil({ status, config }: { status: CoreStatus; config: LivingCoreVisua
       />
 
       {/* Inner Pupil Core (Dark & Sharp) */}
-      <div className="absolute inset-1 rounded-full bg-black shadow-[0_0_10px_rgba(0,0,0,1)]" />
+      <div className="absolute inset-2 rounded-full bg-black shadow-[inset_0_0_8px_rgba(0,0,0,1)]" />
 
-      {/* Depth/Reflection Highlight */}
+      {/* Depth/Reflection Highlight - Subtle Lens effect */}
       <motion.div
-        className="absolute top-[20%] left-[25%] w-[15%] h-[15%] rounded-full bg-white/10 blur-[1px]"
+        className="absolute top-[15%] left-[20%] w-[25%] h-[20%] rounded-[100%] bg-gradient-to-br from-white/20 to-transparent blur-[2px]"
         animate={{
           opacity: [0.1, 0.3, 0.1],
-          x: status === "thinking" ? [0, 2, 0] : 0,
+          rotate: [0, 5, 0],
         }}
-        transition={{ duration: 2, repeat: Infinity }}
+        transition={{ duration: 4, repeat: Infinity }}
       />
-
-      {/* Tiny sharp specular highlight */}
-      <div className="absolute top-[25%] left-[28%] w-[8%] h-[8%] rounded-full bg-white/80 shadow-[0_0_5px_white]" />
     </div>
   );
 }
 
 function DataRing({ status, config }: { status: CoreStatus; config: LivingCoreVisualConfig }) {
-  // Binary/Data segments ring
-  // Fixed positioning logic: Rotate the container, place element at specific radius
+  // Refined Data Segments
   const segments = useMemo(() => {
-    return Array.from({ length: 32 }).map((_, i) => {
+    return Array.from({ length: 48 }).map((_, i) => {
+      const isMajor = i % 4 === 0;
       return (
         <motion.div
           key={i}
           className="absolute inset-0 flex justify-center"
-          style={{ rotate: `${i * (360 / 32)}deg` }}
+          style={{ rotate: `${i * (360 / 48)}deg` }}
         >
           <motion.div
-            className={cn("w-[2px] h-[6px] rounded-full", config.dataRingColor)}
-            style={{ marginTop: "15%" }} // Position at 15% from top edge (inside radius)
-            initial={{ opacity: 0.2 }}
+            className={cn("rounded-full", config.dataRingColor)}
+            style={{
+              width: isMajor ? "2px" : "1px",
+              height: isMajor ? "8px" : "4px",
+              marginTop: "14%", // Closer to edge
+            }}
+            initial={{ opacity: 0.1 }}
             animate={{
               opacity:
                 status === "thinking"
-                  ? [0.2, 0.8, 0.2] // Pulse wave effect in thinking
+                  ? [0.1, 0.6, 0.1]
                   : status === "streaming"
-                    ? [0.3, 0.6, 0.3]
-                    : 0.2,
+                    ? [0.2, 0.5, 0.2]
+                    : 0.15,
+              height:
+                status === "thinking"
+                  ? isMajor
+                    ? ["8px", "12px", "8px"]
+                    : ["4px", "6px", "4px"]
+                  : undefined,
             }}
             transition={{
-              duration: 1,
+              duration: 1.5,
               repeat: Infinity,
-              delay: i * 0.05, // Stagger for wave effect
+              delay: i * 0.02,
             }}
           />
         </motion.div>
@@ -199,11 +256,10 @@ function DataRing({ status, config }: { status: CoreStatus; config: LivingCoreVi
 
   return (
     <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden rounded-full">
-      {/* Rotating container for the segments */}
       <motion.div
         className="w-full h-full relative"
         animate={{ rotate: 360 }}
-        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
       >
         {segments}
       </motion.div>
@@ -233,12 +289,6 @@ function ParticleBelt({
     }));
   }, [count]);
 
-  // Radius calculation:
-  // If radiusPercent is 100, we want it at the edge.
-  // Since we are placing relative to center, 0% is center, 50% is edge.
-  // Wait, better approach:
-  // Use a full-size container, rotate it.
-  // Place particle at top: (50 - radius/2)%
   const topPosition = `${50 - radiusPercent / 2}%`;
 
   return (
@@ -258,9 +308,9 @@ function ParticleBelt({
             style={{
               width: p.size,
               height: p.size,
-              marginTop: topPosition, // Push out from center
+              marginTop: topPosition,
               opacity: p.opacity,
-              transform: `translateY(${p.offset}px)`, // Small random jitter
+              transform: `translateY(${p.offset}px)`,
             }}
           />
         </div>
@@ -276,7 +326,7 @@ function Overlays({ status }: { status: CoreStatus }) {
       <div className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.1)_0%,transparent_40%)] pointer-events-none z-30" />
 
       {/* Scanline Effect - Subtle horizontal lines */}
-      <div className="absolute inset-0 rounded-full overflow-hidden z-20 opacity-20 pointer-events-none mix-blend-overlay">
+      <div className="absolute inset-0 rounded-full overflow-hidden z-20 opacity-15 pointer-events-none mix-blend-overlay">
         <motion.div
           className="w-full h-[200%] bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]"
           animate={{ translateY: status === "idle" ? 0 : "-50%" }}
@@ -287,6 +337,11 @@ function Overlays({ status }: { status: CoreStatus }) {
           }}
         />
       </div>
+
+      {/* Micro-grid Texture (New Detail) */}
+       <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-10 pointer-events-none mix-blend-overlay">
+           <div className="w-full h-full bg-[url('/noise.svg')] bg-[length:4px_4px]" />
+       </div>
     </>
   );
 }
@@ -383,11 +438,14 @@ export function LivingCore({
         {/* Radius 110% means just outside the container edge */}
         <ParticleBelt count={18} radiusPercent={110} config={config} speedDuration={25} reverse />
 
+        {/* Orbital Rings - New Detail */}
+        <OrbitalRings config={config} />
+
         {/* 3. MAIN ORB BODY */}
         <div className="absolute inset-0 rounded-full shadow-2xl overflow-hidden z-10 ring-1 ring-white/10">
           <IrisTexture status={status} config={config} />
           <DataRing status={status} config={config} />
-          <Pupil status={status} config={config} />
+          <Pupil config={config} />
           <Overlays status={status} />
         </div>
 
