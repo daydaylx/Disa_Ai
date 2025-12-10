@@ -16,31 +16,31 @@ interface ThreeEnergyEyeSceneProps {
 // Config maps
 const STATUS_CONFIG = {
   idle: {
-    colorMain: "#06b6d4", // Cyan
-    colorAccent: "#8b5cf6", // Violet
-    intensity: 0.2,
+    colorMain: "#22d3ee", // Cyan-400 (softer)
+    colorAccent: "#a78bfa", // Violet-400 (softer)
+    intensity: 0.3,
     speed: 0.5,
     statusVal: 0.0,
   },
   thinking: {
-    colorMain: "#d946ef", // Fuchsia
-    colorAccent: "#8b5cf6", // Violet
-    intensity: 0.8,
+    colorMain: "#e879f9", // Fuchsia-400 (softer)
+    colorAccent: "#c084fc", // Purple-400 (softer)
+    intensity: 0.7,
     speed: 1.2,
     statusVal: 1.0,
   },
   streaming: {
-    colorMain: "#3b82f6", // Blue
-    colorAccent: "#06b6d4", // Cyan
-    intensity: 1.0,
-    speed: 2.0,
+    colorMain: "#60a5fa", // Blue-400 (softer)
+    colorAccent: "#38bdf8", // Sky-400 (softer)
+    intensity: 0.85,
+    speed: 1.8,
     statusVal: 2.0,
   },
   error: {
-    colorMain: "#ef4444", // Red
-    colorAccent: "#f97316", // Orange
+    colorMain: "#f87171", // Red-400 (softer)
+    colorAccent: "#fb923c", // Orange-400 (softer)
     intensity: 0.6,
-    speed: 3.0,
+    speed: 2.5,
     statusVal: 3.0,
   },
 };
@@ -84,7 +84,7 @@ function EyeMesh({ status }: { status: CoreStatus }) {
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1.5, 64, 64]} />
+      <sphereGeometry args={[1.5, 32, 32]} />
       {/* @ts-ignore - EnergyEyeMaterial is extended */}
       <energyEyeMaterial
         ref={materialRef}
@@ -114,13 +114,27 @@ function DataRings({ status }: { status: CoreStatus }) {
     <group ref={groupRef}>
       {/* Outer Ring */}
       <mesh rotation={[1.5, 0, 0]}>
-        <torusGeometry args={[1.8, 0.02, 16, 100]} />
-        <meshBasicMaterial color={config.colorAccent} transparent opacity={0.3} />
+        <torusGeometry args={[1.8, 0.04, 16, 100]} />
+        <meshStandardMaterial
+          color={config.colorAccent}
+          transparent
+          opacity={0.6}
+          emissive={config.colorAccent}
+          emissiveIntensity={0.3}
+          toneMapped={false}
+        />
       </mesh>
       {/* Inner Ring - offset */}
       <mesh rotation={[1.2, 0.4, 0]}>
-        <torusGeometry args={[1.65, 0.015, 16, 100]} />
-        <meshBasicMaterial color={config.colorMain} transparent opacity={0.4} />
+        <torusGeometry args={[1.65, 0.035, 16, 100]} />
+        <meshStandardMaterial
+          color={config.colorMain}
+          transparent
+          opacity={0.65}
+          emissive={config.colorMain}
+          emissiveIntensity={0.4}
+          toneMapped={false}
+        />
       </mesh>
     </group>
   );
@@ -131,11 +145,11 @@ function Particles({ status }: { status: CoreStatus }) {
   const config = STATUS_CONFIG[status];
 
   // Create random particles
-  const particleCount = 150;
+  const particleCount = 80;
   const positions = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
-      const r = 2.0 + Math.random() * 1.5;
+      const r = 2.0 + Math.random() * 1.2;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
 
@@ -167,10 +181,10 @@ function Particles({ status }: { status: CoreStatus }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.05}
+        size={0.08}
         color={config.colorMain}
         transparent
-        opacity={0.4}
+        opacity={0.6}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
@@ -186,6 +200,9 @@ export function ThreeEnergyEyeScene({ status }: ThreeEnergyEyeSceneProps) {
     >
       <PerspectiveCamera makeDefault position={[0, 0, 4.5]} fov={45} />
 
+      {/* Lighting for StandardMaterial */}
+      <ambientLight intensity={0.5} />
+
       {/* Scene Content */}
       <group>
         <EyeMesh status={status} />
@@ -195,8 +212,8 @@ export function ThreeEnergyEyeScene({ status }: ThreeEnergyEyeSceneProps) {
 
       {/* Post Processing */}
       <EffectComposer>
-        <Bloom luminanceThreshold={0.5} luminanceSmoothing={0.9} height={300} intensity={1.5} />
-        <Vignette eskil={false} offset={0.1} darkness={0.5} />
+        <Bloom luminanceThreshold={0.7} luminanceSmoothing={0.85} height={300} intensity={0.7} />
+        <Vignette eskil={false} offset={0.1} darkness={0.15} />
       </EffectComposer>
     </Canvas>
   );
