@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Mic, Paperclip, Send, Smile } from "@/lib/icons";
+import { FileText, Image, Mic, Paperclip, Send, Smile, X } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
 interface MobileChatComposerProps {
-  onSend: (message: string) => void;
+  onSend: (message: string, attachments?: File[]) => void;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -16,8 +16,10 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
+  const [attachments, setAttachments] = useState<File[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -51,9 +53,10 @@ export function MobileChatComposer({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedMessage = message.trim();
-    if (trimmedMessage && !disabled) {
-      onSend(trimmedMessage);
+    if ((trimmedMessage || attachments.length > 0) && !disabled) {
+      onSend(trimmedMessage, attachments);
       setMessage("");
+      setAttachments([]);
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
       }
@@ -74,8 +77,22 @@ export function MobileChatComposer({
   };
 
   const handleAttachment = () => {
-    // TODO: Implement file attachment
-    console.warn("Attachment not yet implemented");
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setAttachments((prev) => [...prev, ...newFiles]);
+    }
+    // Reset file input so same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const removeAttachment = (indexToRemove: number) => {
+    setAttachments((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const handleEmoji = () => {
@@ -94,11 +111,48 @@ export function MobileChatComposer({
         zIndex: 50,
       }}
     >
+      <input
+        type="file"
+        multiple
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+
+      {/* Attachments Preview */}
+      {attachments.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 px-1 max-w-screen-lg mx-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          {attachments.map((file, index) => (
+            <div
+              key={`${file.name}-${index}`}
+              className="flex items-center gap-2 bg-surface-2 rounded-lg px-3 py-1.5 border border-border flex-shrink-0 max-w-[200px]"
+            >
+              {file.type.startsWith("image/") ? (
+                <Image className="h-4 w-4 text-accent-primary" />
+              ) : (
+                <FileText className="h-4 w-4 text-text-secondary" />
+              )}
+              <span className="text-xs truncate flex-1 text-text-primary">
+                {file.name}
+              </span>
+              <button
+                type="button"
+                onClick={() => removeAttachment(index)}
+                className="text-text-secondary hover:text-red-500 p-0.5 rounded-full hover:bg-surface-hover"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex items-end gap-2 max-w-screen-lg mx-auto">
         {/* Attachment Button */}
         <Button
           variant="ghost"
           size="sm"
+          type="button"
           onClick={handleAttachment}
           disabled={disabled}
           className="flex-shrink-0 text-text-secondary hover:text-text-primary"
@@ -111,6 +165,7 @@ export function MobileChatComposer({
         <Button
           variant="ghost"
           size="sm"
+          type="button"
           onClick={handleEmoji}
           disabled={disabled}
           className="flex-shrink-0 text-text-secondary hover:text-primary"
@@ -157,6 +212,7 @@ export function MobileChatComposer({
         <Button
           variant="ghost"
           size="sm"
+          type="button"
           onClick={handleVoiceInput}
           disabled={disabled}
           className="flex-shrink-0 text-text-secondary hover:text-text-primary"
@@ -169,11 +225,11 @@ export function MobileChatComposer({
         <Button
           type="submit"
           ref={submitButtonRef}
-          disabled={disabled || !message.trim()}
+          disabled={disabled || (!message.trim() && attachments.length === 0)}
           size="sm"
           className={cn(
             "flex-shrink-0 rounded-full p-2",
-            message.trim()
+            message.trim() || attachments.length > 0
               ? "bg-accent-primary hover:bg-accent-primary/90 text-white"
               : "bg-surface-2 text-text-secondary cursor-not-allowed",
           )}
