@@ -436,7 +436,7 @@ export function ChatHeroCore({
             >
               {dataSegments.slice(0, 16).map((segment, index) => (
                 <span
-                  key={`inner-segment-${segment.angle}`}
+                  key={`inner-segment-${index}`}
                   className={cn(
                     "absolute left-1/2 top-1/2 origin-left h-[2px] w-2 rounded-full",
                     config.segmentColor,
