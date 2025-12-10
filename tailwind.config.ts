@@ -386,10 +386,15 @@ export default {
         "orb-bits": "orbBits 3s linear infinite",
         "orb-bits-fast": "orbBits 1.6s linear infinite",
         "orb-bits-subtle": "orbBits 4.2s linear infinite",
+        "orb-bit-chase": "orbBitChase 3.2s linear infinite",
+        "orb-bit-chase-fast": "orbBitChase 1.6s linear infinite",
         "orb-twinkle": "orbTwinkle 2.6s ease-in-out infinite",
         "orb-scanline": "orbScanline 8s linear infinite",
         "orb-scanline-slow": "orbScanline 14s linear infinite",
         "orb-glare": "orbGlare 10s ease-in-out infinite",
+        "orb-particle-jitter": "orbParticleJitter 2.6s ease-in-out infinite",
+        "orb-scan-glide": "orbScanGlide 12s linear infinite",
+        "orb-glare-sweep": "orbGlareSweep 8s ease-in-out infinite",
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
         "ping-slow": "pingSlow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
@@ -566,12 +571,26 @@ export default {
           "60%": { opacity: "0.55", transform: "scale(1.05)" },
           "100%": { opacity: "0.6", transform: "scale(1)" },
         },
+        orbBitChase: {
+          "0%": { opacity: "0.35", transform: "scale(0.9)" },
+          "45%": { opacity: "1", transform: "scale(1.25)" },
+          "100%": { opacity: "0.4", transform: "scale(0.9)" },
+        },
         orbTwinkle: {
           "0%": { opacity: "0.4", transform: "scale(0.9)" },
           "50%": { opacity: "1", transform: "scale(1.25)" },
           "100%": { opacity: "0.45", transform: "scale(0.9)" },
         },
+        orbParticleJitter: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) scale(1)", opacity: "0.6" },
+          "40%": { transform: "translate3d(1px, -2px, 0) scale(1.15)", opacity: "1" },
+          "70%": { transform: "translate3d(-1px, 1px, 0) scale(0.95)", opacity: "0.7" },
+        },
         orbScanline: {
+          "0%": { transform: "translateY(120%)" },
+          "100%": { transform: "translateY(-120%)" },
+        },
+        orbScanGlide: {
           "0%": { transform: "translateY(120%)" },
           "100%": { transform: "translateY(-120%)" },
         },
@@ -579,6 +598,12 @@ export default {
           "0%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
           "50%": { transform: "translate3d(4%, 6%, 0) rotate(4deg)", opacity: "0.58" },
           "100%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
+        },
+        orbGlareSweep: {
+          "0%": { transform: "translate3d(-8%, -6%, 0) rotate(-8deg)", opacity: "0.2" },
+          "40%": { transform: "translate3d(6%, 8%, 0) rotate(6deg)", opacity: "0.48" },
+          "70%": { transform: "translate3d(-4%, 4%, 0) rotate(-4deg)", opacity: "0.32" },
+          "100%": { transform: "translate3d(-8%, -6%, 0) rotate(-8deg)", opacity: "0.2" },
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "0.4" },
