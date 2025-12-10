@@ -20,7 +20,7 @@ export function ChatHeroCore3D({ status }: ChatHeroCore3DProps) {
       <motion.div
         className={cn(
           "relative flex items-center justify-center",
-          "w-[clamp(180px,50vw,280px)] h-[clamp(180px,50vw,280px)]", // Bigger container for 3D goodness
+          "w-[clamp(160px,40vw,220px)] h-[clamp(160px,40vw,220px)]", // Optimized size for better balance
         )}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
