@@ -18,6 +18,8 @@ type OrbLayerConfig = {
   irisGradient: string;
   rimGradient: string;
   glowColor: string;
+  haloGradient: string;
+  backdropGradient: string;
   ringColor: string;
   particleColor: string;
   segmentColor: string;
@@ -29,6 +31,7 @@ type OrbLayerConfig = {
   scanlineDuration: number;
   glareDuration: number;
   breathRange: [number, number];
+  backdropParticleColor: string;
   waveDelay?: number;
 };
 
@@ -37,11 +40,15 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     coreGradient: "from-cyan-500 via-indigo-500 to-violet-600",
     irisGradient: "from-slate-950 via-slate-900 to-slate-800",
     rimGradient: "from-cyan-200/70 via-indigo-200/60 to-violet-200/60",
-    glowColor: "bg-cyan-500/18",
-    ringColor: "border-cyan-300/35",
-    particleColor: "bg-cyan-200/70",
-    segmentColor: "bg-indigo-200/70",
-    highlightColor: "bg-white/80",
+    glowColor: "rgba(154, 130, 255, 0.32)",
+    haloGradient:
+      "radial-gradient(circle at 40% 36%, rgba(203, 186, 255, 0.4), rgba(139, 92, 246, 0.24) 45%, rgba(99, 102, 241, 0.18) 60%, transparent 72%)",
+    backdropGradient:
+      "radial-gradient(circle at 50% 50%, rgba(88, 28, 135, 0.25), rgba(49, 29, 91, 0.08) 50%, transparent 70%)",
+    ringColor: "border-indigo-100/30",
+    particleColor: "bg-violet-200/60",
+    segmentColor: "bg-indigo-200/65",
+    highlightColor: "bg-white/75",
     scanlineColor: "rgba(255,255,255,0.08)",
     waveColor: "rgba(59, 207, 255, 0.28)",
     irisDuration: 36,
@@ -49,16 +56,21 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     scanlineDuration: 12,
     glareDuration: 10,
     breathRange: [0.97, 1.02],
+    backdropParticleColor: "rgba(209, 196, 255, 0.45)",
   },
   thinking: {
     coreGradient: "from-violet-500 via-fuchsia-500 to-indigo-400",
     irisGradient: "from-slate-950 via-indigo-900 to-slate-800",
     rimGradient: "from-violet-200/80 via-fuchsia-200/70 to-indigo-200/70",
-    glowColor: "bg-violet-500/24",
-    ringColor: "border-violet-300/45",
-    particleColor: "bg-violet-200/85",
-    segmentColor: "bg-fuchsia-200/85",
-    highlightColor: "bg-white/90",
+    glowColor: "rgba(174, 124, 255, 0.34)",
+    haloGradient:
+      "radial-gradient(circle at 46% 40%, rgba(225, 200, 255, 0.45), rgba(196, 181, 253, 0.28) 44%, rgba(167, 139, 250, 0.22) 62%, transparent 76%)",
+    backdropGradient:
+      "radial-gradient(circle at 55% 52%, rgba(99, 46, 168, 0.3), rgba(67, 36, 121, 0.12) 50%, transparent 72%)",
+    ringColor: "border-violet-100/35",
+    particleColor: "bg-violet-200/70",
+    segmentColor: "bg-fuchsia-200/70",
+    highlightColor: "bg-white/80",
     scanlineColor: "rgba(255,255,255,0.12)",
     waveColor: "rgba(232, 121, 249, 0.26)",
     irisDuration: 18,
@@ -66,16 +78,21 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     scanlineDuration: 8,
     glareDuration: 8,
     breathRange: [0.98, 1.04],
+    backdropParticleColor: "rgba(224, 204, 255, 0.42)",
   },
   streaming: {
     coreGradient: "from-emerald-400 via-cyan-400 to-blue-500",
     irisGradient: "from-slate-950 via-cyan-900 to-slate-800",
     rimGradient: "from-emerald-200/80 via-cyan-200/80 to-blue-200/80",
-    glowColor: "bg-cyan-500/30",
-    ringColor: "border-cyan-300/60",
-    particleColor: "bg-cyan-200",
-    segmentColor: "bg-emerald-200/90",
-    highlightColor: "bg-white/95",
+    glowColor: "rgba(147, 117, 255, 0.36)",
+    haloGradient:
+      "radial-gradient(circle at 44% 38%, rgba(212, 191, 255, 0.46), rgba(167, 139, 250, 0.32) 50%, rgba(129, 140, 248, 0.26) 64%, transparent 78%)",
+    backdropGradient:
+      "radial-gradient(circle at 48% 50%, rgba(94, 41, 170, 0.32), rgba(62, 33, 123, 0.14) 52%, transparent 74%)",
+    ringColor: "border-cyan-100/35",
+    particleColor: "bg-cyan-200/85",
+    segmentColor: "bg-emerald-200/75",
+    highlightColor: "bg-white/85",
     scanlineColor: "rgba(255,255,255,0.16)",
     waveColor: "rgba(103, 232, 249, 0.34)",
     irisDuration: 12,
@@ -83,17 +100,22 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     scanlineDuration: 6,
     glareDuration: 6,
     breathRange: [0.99, 1.05],
+    backdropParticleColor: "rgba(214, 196, 255, 0.44)",
     waveDelay: 1.8,
   },
   error: {
     coreGradient: "from-red-600 via-orange-600 to-amber-500",
     irisGradient: "from-black via-red-950 to-amber-900",
     rimGradient: "from-orange-200/80 via-red-200/70 to-amber-200/70",
-    glowColor: "bg-red-500/30",
-    ringColor: "border-orange-300/60",
-    particleColor: "bg-orange-200",
-    segmentColor: "bg-orange-200/90",
-    highlightColor: "bg-white",
+    glowColor: "rgba(180, 94, 255, 0.34)",
+    haloGradient:
+      "radial-gradient(circle at 52% 46%, rgba(221, 186, 255, 0.46), rgba(168, 85, 247, 0.26) 48%, rgba(88, 28, 135, 0.2) 64%, transparent 78%)",
+    backdropGradient:
+      "radial-gradient(circle at 50% 54%, rgba(110, 16, 143, 0.3), rgba(76, 0, 92, 0.16) 52%, transparent 74%)",
+    ringColor: "border-orange-100/35",
+    particleColor: "bg-orange-200/80",
+    segmentColor: "bg-orange-200/75",
+    highlightColor: "bg-white/90",
     scanlineColor: "rgba(255,255,255,0.18)",
     waveColor: "rgba(252, 211, 77, 0.32)",
     irisDuration: 50,
@@ -101,8 +123,19 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     scanlineDuration: 10,
     glareDuration: 7,
     breathRange: [0.98, 1.03],
+    backdropParticleColor: "rgba(229, 195, 255, 0.5)",
   },
 };
+
+const backdropParticles = [
+  { top: "18%", left: "24%", size: 18, opacity: 0.38, blurClass: "blur-[14px]" },
+  { top: "30%", left: "68%", size: 22, opacity: 0.42, blurClass: "blur-[18px]" },
+  { top: "62%", left: "32%", size: 16, opacity: 0.4, blurClass: "blur-[12px]" },
+  { top: "70%", left: "62%", size: 20, opacity: 0.44, blurClass: "blur-[16px]" },
+  { top: "46%", left: "50%", size: 26, opacity: 0.36, blurClass: "blur-[20px]" },
+  { top: "40%", left: "18%", size: 12, opacity: 0.35, blurClass: "blur-[10px]" },
+  { top: "58%", left: "78%", size: 14, opacity: 0.38, blurClass: "blur-[12px]" },
+];
 
 const innerParticles = Array.from({ length: 14 }, (_, index) => ({
   angle: (360 / 14) * index + (index % 2 === 0 ? 6 : -4),
@@ -187,27 +220,91 @@ export function ChatHeroCore({
         onClick={handleTap}
       >
         {/* Ambient Glow */}
-        <div
-          className={cn(
-            "absolute inset-[-10%] rounded-full blur-3xl transition-all duration-700 opacity-60",
-            config.glowColor,
-            glitching && "animate-orb-shake",
-            tapPulse && "opacity-90",
-          )}
+        <motion.div
+          className="absolute inset-[-26%] rounded-full blur-[150px] pointer-events-none"
+          style={{ background: config.backdropGradient }}
+          animate={{
+            scale: tapPulse ? 1.06 : [1, status === "streaming" ? 1.1 : 1.07, 1],
+            opacity: tapPulse ? 0.78 : [0.5, 0.68, 0.5],
+          }}
+          transition={{
+            duration: status === "streaming" ? 6 : 7.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
         />
-        <div
-          className={cn(
-            "absolute inset-2 rounded-full blur-2xl opacity-40 mix-blend-screen transition-colors duration-700",
-            config.glowColor,
-          )}
+        <motion.div
+          className="absolute inset-[-18%] rounded-full blur-[120px] pointer-events-none mix-blend-screen"
+          style={{ background: config.haloGradient }}
+          animate={{
+            scale: tapPulse
+              ? 1.04
+              : [config.breathRange[0], config.breathRange[1] + 0.06, config.breathRange[0]],
+            opacity: tapPulse ? 0.92 : [0.62, 0.82, 0.62],
+          }}
+          transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
         />
+        <motion.div
+          className="absolute inset-[-12%] rounded-full blur-[100px] pointer-events-none mix-blend-screen"
+          style={{ backgroundColor: config.glowColor }}
+          animate={{
+            scale: tapPulse ? 1.02 : [1, 1.04, 1],
+            opacity: tapPulse ? 0.8 : [0.55, 0.7, 0.55],
+          }}
+          transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute inset-[4%] rounded-full blur-3xl pointer-events-none mix-blend-screen"
+          style={{ backgroundColor: config.glowColor }}
+          animate={{
+            scale: tapPulse ? 1.01 : [1, 1.03, 1],
+            opacity: tapPulse ? 0.68 : [0.45, 0.6, 0.45],
+          }}
+          transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute inset-[-16%] pointer-events-none"
+          animate={{
+            scale: tapPulse
+              ? 1.04
+              : [config.breathRange[0], config.breathRange[1] + 0.04, config.breathRange[0]],
+            opacity: tapPulse ? 0.9 : [0.6, 0.8, 0.6],
+          }}
+          transition={{ duration: 6.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          {backdropParticles.map((particle, index) => (
+            <motion.span
+              key={`backdrop-${index}`}
+              className={cn("absolute rounded-full mix-blend-screen", particle.blurClass)}
+              style={{
+                width: particle.size,
+                height: particle.size,
+                top: particle.top,
+                left: particle.left,
+                backgroundColor: config.backdropParticleColor,
+              }}
+              animate={{
+                scale: tapPulse ? 1.12 : [0.9, 1.12, 0.9],
+                opacity: tapPulse
+                  ? 0.82
+                  : [particle.opacity * 0.6, particle.opacity, particle.opacity * 0.6],
+              }}
+              transition={{
+                duration: 4 + index * 0.35,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.12,
+              }}
+            />
+          ))}
+        </motion.div>
 
         {/* Outer shell and particle belts */}
         <div className="absolute inset-0">
           {/* scope container */}
           <div
             className={cn(
-              "absolute inset-[-4%] rounded-full border border-white/5 bg-gradient-to-br opacity-80",
+              "absolute inset-[-4%] rounded-full border border-white/5 bg-gradient-to-br opacity-70",
               config.ringColor,
             )}
           />
@@ -225,7 +322,7 @@ export function ChatHeroCore({
                   "absolute left-1/2 top-1/2 origin-left rounded-full",
                   segment.long ? "h-[3px] w-3" : "h-[2px] w-2",
                   config.segmentColor,
-                  "shadow-[0_0_8px_rgba(255,255,255,0.08)]",
+                  "shadow-[0_0_6px_rgba(255,255,255,0.06)]",
                   status === "streaming"
                     ? "animate-orb-bits-fast"
                     : status === "thinking"
@@ -381,7 +478,7 @@ export function ChatHeroCore({
                   className={cn(
                     "absolute left-1/2 top-1/2 origin-left h-[2px] w-2 rounded-full",
                     config.segmentColor,
-                    "opacity-80 animate-orb-bits-subtle",
+                    "opacity-70 animate-orb-bits-subtle",
                   )}
                   style={{
                     transform: `rotate(${segment.angle * 1.5}deg) translateX(32%)`,
