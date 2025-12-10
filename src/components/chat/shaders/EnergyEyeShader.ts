@@ -90,11 +90,11 @@ export const EnergyEyeMaterial = shaderMaterial(
       // Pupil (center black hole)
       float pupilSize = 0.3 - (u_intensity * 0.05); // Dilate when active
       if (u_status > 2.5) { // Error
-         pupilSize = 0.2 + snoise(vec2(time*10.0, 0.0)) * 0.05; // Glitch pupil
+         pupilSize = 0.25 + snoise(vec2(time*8.0, 0.0)) * 0.02; // Subtle glitch pupil
       } else if (u_status > 1.5) { // Streaming
          pupilSize = 0.3 + sin(time * 5.0) * 0.02; // Pulse fast
       } else if (u_status > 0.5) { // Thinking
-         pupilSize = 0.3 + sin(time * 2.0) * 0.05; // Breath slow
+         pupilSize = 0.3 + sin(time * 2.0) * 0.04; // Breath slow
       }
 
       float pupilMask = smoothstep(pupilSize, pupilSize + 0.05, r);
@@ -111,7 +111,7 @@ export const EnergyEyeMaterial = shaderMaterial(
 
       // Highlights based on noise
       float highlight = smoothstep(0.4, 0.8, n2 * pupilMask);
-      color += highlight * vec3(1.0) * 0.8;
+      color += highlight * vec3(1.0) * 0.4;
 
       // --- STATE SPECIFIC EFFECTS ---
       
@@ -124,8 +124,8 @@ export const EnergyEyeMaterial = shaderMaterial(
       // Error: Glitch overlay
       if (u_status > 2.5) {
          float glitch = step(0.98, fract(uv.y * 10.0 + time * 5.0));
-         color += glitch * vec3(1.0, 0.0, 0.0);
-         color.r += snoise(uv * 10.0 + time) * 0.2;
+         color += glitch * vec3(1.0, 0.0, 0.0) * 0.6;
+         color.r += snoise(uv * 10.0 + time) * 0.1;
       }
 
       // Final Masking
