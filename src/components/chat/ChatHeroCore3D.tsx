@@ -13,17 +13,9 @@ interface ChatHeroCore3DProps {
   lastErrorMessage?: string;
 }
 
-export function ChatHeroCore3D({
-  status,
-  modelName,
-  toneLabel,
-  creativityLabel,
-  lastErrorMessage,
-}: ChatHeroCore3DProps) {
-  // Simple error handling/fallback logic can be expanded here if needed
-
+export function ChatHeroCore3D({ status }: ChatHeroCore3DProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-4 w-full animate-fade-in relative z-0">
+    <div className="flex flex-col items-center justify-center w-full animate-fade-in relative z-0">
       {/* 3D Container - Mobile optimized sizing */}
       <motion.div
         className={cn(
@@ -53,60 +45,6 @@ export function ChatHeroCore3D({
           <ThreeEnergyEyeScene status={status} />
         </div>
       </motion.div>
-
-      {/* Text Content */}
-      <div className="text-center space-y-2 max-w-sm px-4 relative z-10 -mt-4">
-        <motion.h2
-          className="text-xl font-semibold text-ink-primary"
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          {status === "error" ? "Systemfehler" : "Wie kann ich helfen?"}
-        </motion.h2>
-
-        <motion.p
-          className="text-sm text-ink-secondary"
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          {status === "error" && lastErrorMessage
-            ? lastErrorMessage
-            : "Stelle eine Frage oder wähle ein Thema."}
-        </motion.p>
-
-        {/* Status Line */}
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.7 }}
-          transition={{ delay: 0.3 }}
-        >
-          <span
-            className={cn(
-              "font-medium transition-colors duration-500",
-              status === "streaming" || status === "thinking" ? "text-accent-chat" : "",
-            )}
-          >
-            <StatusIndicator status={status} />
-          </span>
-          <span>•</span>
-          <span className="truncate max-w-[80px] sm:max-w-[120px]">{modelName}</span>
-          <span>•</span>
-          <span>{toneLabel}</span>
-          <span>•</span>
-          <span>{creativityLabel}</span>
-        </motion.div>
-      </div>
     </div>
   );
-}
-
-function StatusIndicator({ status }: { status: CoreStatus }) {
-  if (status === "idle") return <>Bereit</>;
-  if (status === "thinking") return <>Verarbeite...</>;
-  if (status === "streaming") return <>Antwortet...</>;
-  if (status === "error") return <>Fehler</>;
-  return null;
 }
