@@ -373,6 +373,16 @@ export default {
         "cube-glitch": "cubeGlitch 0.7s ease-in-out",
         "cube-orbit": "cubeOrbit 12s linear infinite",
         "cube-wave": "cubeWave 2.4s ease-out infinite",
+        // Orb specific animations
+        "orb-breathe": "orbScale 4s ease-in-out infinite",
+        "orb-rotate-slow": "orbRotate 40s linear infinite",
+        "orb-rotate-medium": "orbRotate 15s linear infinite",
+        "orb-rotate-fast": "orbRotate 3s linear infinite", // For streaming modulation if needed
+        "orb-pupil-idle": "orbPupilPulse 5s ease-in-out infinite",
+        "orb-pupil-thinking": "orbPupilPulse 1.5s ease-in-out infinite",
+        "orb-pupil-streaming": "orbPupilPulse 0.5s ease-in-out infinite",
+        "orb-wave": "orbWave 2s ease-out infinite",
+        "orb-shake": "orbShake 0.4s ease-in-out",
       },
       keyframes: {
         fadeIn: {
@@ -510,6 +520,36 @@ export default {
         cubeWave: {
           "0%": { transform: "scale(1)", opacity: "0.5" },
           "100%": { transform: "scale(1.25)", opacity: "0" },
+        },
+        // Orb Animations
+        orbScale: {
+          "0%, 100%": { transform: "scale(0.98)" },
+          "50%": { transform: "scale(1.02)" },
+        },
+        orbRotate: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        orbPupilPulse: {
+          "0%, 100%": { transform: "scale(0.95)" },
+          "50%": { transform: "scale(1.05)" },
+        },
+        orbWave: {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "20%": { opacity: "0.4" },
+          "100%": { transform: "scale(1.5)", opacity: "0" },
+        },
+        orbShake: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "10%": { transform: "translate(-2px, 2px)" },
+          "20%": { transform: "translate(2px, -2px)" },
+          "30%": { transform: "translate(-3px, 0)" },
+          "40%": { transform: "translate(3px, 2px)" },
+          "50%": { transform: "translate(-1px, -1px)" },
+          "60%": { transform: "translate(1px, 2px)" },
+          "70%": { transform: "translate(-3px, 1px)" },
+          "80%": { transform: "translate(2px, -1px)" },
+          "90%": { transform: "translate(-1px, 2px)" },
         },
       },
     },

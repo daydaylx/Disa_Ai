@@ -13,136 +13,44 @@ interface ChatHeroCoreProps {
   lastErrorMessage?: string;
 }
 
-type CubeVariant = "A" | "B";
-
-type CubeVisualConfig = {
-  strokeClass: string;
-  accentClass: string;
-  glowClass: string;
-  orbitVisible: boolean;
-  waveVisible: boolean;
-  shadowClass: string;
+type OrbVisualConfig = {
+  irisRotationClass: string;
+  glowColorClass: string;
+  pupilAnimationClass: string;
+  waveEnabled: boolean;
+  irisColorClass: string;
 };
 
-const CUBE_VISUAL_CONFIG: Record<CoreStatus, CubeVisualConfig> = {
+const ORB_VISUAL_CONFIG: Record<CoreStatus, OrbVisualConfig> = {
   idle: {
-    strokeClass: "text-brand-primary",
-    accentClass: "text-brand-secondary",
-    glowClass: "bg-brand-primary/25",
-    orbitVisible: false,
-    waveVisible: false,
-    shadowClass: "shadow-glow-md",
+    irisRotationClass: "animate-orb-rotate-slow",
+    glowColorClass: "bg-brand-primary/20",
+    pupilAnimationClass: "animate-orb-pupil-idle",
+    waveEnabled: false,
+    irisColorClass: "from-brand-primary to-brand-secondary",
   },
   thinking: {
-    strokeClass: "text-brand-primary",
-    accentClass: "text-brand-secondary",
-    glowClass: "bg-brand-primary/30",
-    orbitVisible: true,
-    waveVisible: false,
-    shadowClass: "shadow-glow-lg",
+    irisRotationClass: "animate-orb-rotate-medium",
+    glowColorClass: "bg-brand-primary/30",
+    pupilAnimationClass: "animate-orb-pupil-thinking",
+    waveEnabled: false,
+    irisColorClass: "from-brand-primary to-brand-secondary",
   },
   streaming: {
-    strokeClass: "text-accent-chat",
-    accentClass: "text-brand-primary",
-    glowClass: "bg-accent-chat/30",
-    orbitVisible: true,
-    waveVisible: true,
-    shadowClass: "shadow-glow-lg",
+    irisRotationClass: "animate-orb-rotate-medium", // Slightly faster handled if needed, or keep medium
+    glowColorClass: "bg-accent-chat/40",
+    pupilAnimationClass: "animate-orb-pupil-streaming",
+    waveEnabled: true,
+    irisColorClass: "from-accent-chat to-brand-primary",
   },
   error: {
-    strokeClass: "text-status-error",
-    accentClass: "text-status-error",
-    glowClass: "bg-status-error/30",
-    orbitVisible: false,
-    waveVisible: false,
-    shadowClass: "shadow-[0_0_20px_rgba(239,68,68,0.35)]",
+    irisRotationClass: "animate-none",
+    glowColorClass: "bg-status-error/40",
+    pupilAnimationClass: "scale-90",
+    waveEnabled: false,
+    irisColorClass: "from-status-error to-red-600",
   },
 };
-
-type CubeWireframeProps = {
-  variant: CubeVariant;
-  animationStatus: CoreStatus;
-  strokeClass: string;
-  accentClass: string;
-  glitching: boolean;
-};
-
-function getCubeAnimationClass(
-  animationStatus: CoreStatus,
-  variant: CubeVariant,
-  glitching: boolean,
-) {
-  if (glitching) return "animate-cube-glitch";
-  if (animationStatus === "thinking")
-    return variant === "A" ? "animate-cube-a-thinking" : "animate-cube-b-thinking";
-  if (animationStatus === "streaming")
-    return variant === "A" ? "animate-cube-a-streaming" : "animate-cube-b-streaming";
-  if (animationStatus === "error") return "animate-cube-glitch";
-  return variant === "A" ? "animate-cube-a-idle" : "animate-cube-b-idle";
-}
-
-function CubeWireframe({
-  variant,
-  animationStatus,
-  strokeClass,
-  accentClass,
-  glitching,
-}: CubeWireframeProps) {
-  const animationClass = getCubeAnimationClass(animationStatus, variant, glitching);
-
-  return (
-    <div
-      data-testid={`cube-${variant.toLowerCase()}`}
-      className={cn(
-        "absolute inset-0 flex items-center justify-center pointer-events-none [transform-style:preserve-3d]",
-        variant === "A" ? "z-20" : "z-10",
-        animationClass,
-      )}
-      aria-hidden
-    >
-      <svg
-        viewBox="0 0 80 80"
-        className={cn(
-          "w-[76%] h-[76%] transition-[filter] duration-500",
-          variant === "B" ? "scale-95" : "scale-100",
-        )}
-        role="presentation"
-      >
-        <g
-          className={cn("opacity-90", strokeClass)}
-          stroke="currentColor"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        >
-          <rect x="18" y="22" width="32" height="32" rx="3" />
-          <rect x="26" y="14" width="32" height="32" rx="3" />
-          <line x1="18" y1="22" x2="26" y2="14" />
-          <line x1="50" y1="22" x2="58" y2="14" />
-          <line x1="50" y1="54" x2="58" y2="46" />
-          <line x1="18" y1="54" x2="26" y2="46" />
-        </g>
-
-        <g
-          className={cn("opacity-70 transition-opacity duration-500", accentClass)}
-          stroke="currentColor"
-          strokeWidth={1}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        >
-          <line x1="26" y1="14" x2="58" y2="14" strokeDasharray="6 8" />
-          <line x1="18" y1="22" x2="50" y2="22" strokeDasharray="8 10" />
-          <line x1="26" y1="46" x2="58" y2="46" strokeDasharray="6 8" />
-          <line x1="18" y1="54" x2="50" y2="54" strokeDasharray="8 10" />
-          <line x1="26" y1="46" x2="26" y2="14" strokeDasharray="4 8" />
-          <line x1="50" y1="54" x2="50" y2="22" strokeDasharray="4 8" />
-        </g>
-      </svg>
-    </div>
-  );
-}
 
 export function ChatHeroCore({
   status,
@@ -151,75 +59,87 @@ export function ChatHeroCore({
   creativityLabel,
   lastErrorMessage,
 }: ChatHeroCoreProps) {
-  const config = CUBE_VISUAL_CONFIG[status];
+  const config = ORB_VISUAL_CONFIG[status];
   const [glitching, setGlitching] = useState(false);
 
   useEffect(() => {
     if (status === "error") {
       setGlitching(true);
-      const timer = setTimeout(() => setGlitching(false), 750);
+      const timer = setTimeout(() => setGlitching(false), 600);
       return () => clearTimeout(timer);
     }
     setGlitching(false);
     return undefined;
   }, [status]);
 
-  const animationStatus: CoreStatus = glitching ? "error" : status === "error" ? "idle" : status;
+  const containerAnimationClass = glitching ? "animate-orb-shake" : "animate-orb-breathe";
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
+      {/* Orb Container */}
       <div
-        className={cn("relative w-32 h-32 flex items-center justify-center", config.shadowClass)}
-        data-testid="cube-core"
+        className={cn(
+          "relative w-32 h-32 flex items-center justify-center",
+          containerAnimationClass,
+        )}
       >
+        {/* Layer 1: Outer Glow Ring */}
         <div
           className={cn(
-            "absolute inset-4 rounded-[28%] blur-2xl opacity-40 transition-all duration-500 pointer-events-none",
-            config.glowClass,
-            status === "thinking" || status === "streaming" ? "opacity-60" : "",
-            status === "error" ? "opacity-70" : "",
+            "absolute -inset-4 rounded-full blur-xl transition-colors duration-700 opacity-60",
+            config.glowColorClass,
           )}
         />
 
-        {config.orbitVisible && (
+        {/* Streaming Wave Effect */}
+        {config.waveEnabled && (
+          <div className="absolute inset-0 rounded-full border-2 border-accent-chat/30 animate-orb-wave pointer-events-none" />
+        )}
+
+        {/* Layer 2: Sclera (Eye Body) */}
+        <div className="relative w-full h-full rounded-full bg-surface-inset shadow-2xl overflow-hidden border border-white/5 ring-1 ring-black/50">
+          {/* Subtle Sclera Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
+
+          {/* Layer 3: Iris Container (Rotates) */}
+          <div className={cn("absolute inset-[10%] rounded-full", config.irisRotationClass)}>
+            {/* Iris Gradient */}
+            <div
+              className={cn(
+                "absolute inset-0 rounded-full opacity-80 mix-blend-screen bg-[conic-gradient(var(--tw-gradient-stops))] transition-all duration-700",
+                config.irisColorClass,
+                status === "idle" ? "via-brand-secondary" : "via-transparent",
+              )}
+            />
+
+            {/* Iris Texture / Striations */}
+            <div className="absolute inset-0 rounded-full opacity-40 bg-[repeating-conic-gradient(transparent_0deg,transparent_2deg,rgba(0,0,0,0.5)_3deg,transparent_4deg)] mix-blend-overlay" />
+          </div>
+
+          {/* Layer 4: Pupil */}
           <div
-            data-testid="cube-orbit"
             className={cn(
-              "absolute inset-[-8px] rounded-[32%] border border-dashed animate-cube-orbit opacity-60 pointer-events-none",
-              status === "streaming" ? "border-accent-chat/30" : "border-brand-primary/25",
+              "absolute inset-[36%] bg-[#050505] rounded-full shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] transition-transform duration-500",
+              config.pupilAnimationClass,
             )}
-          />
-        )}
+          >
+            {/* Tiny Pupil Reflection */}
+            <div className="absolute top-[20%] left-[25%] w-[15%] h-[15%] bg-white/20 rounded-full blur-[0.5px]" />
+          </div>
 
-        {config.waveVisible && (
-          <>
-            <div
-              data-testid="cube-wave"
-              className="absolute inset-0 rounded-[30%] border border-accent-chat/25 opacity-70 animate-cube-wave pointer-events-none"
-            />
-            <div
-              className="absolute inset-0 rounded-[30%] border border-accent-chat/20 opacity-60 animate-cube-wave pointer-events-none"
-              style={{ animationDelay: "0.9s" }}
-            />
-          </>
-        )}
+          {/* Layer 5: Glare / Reflection (Static relative to Sclera) */}
+          {/* Top Glare */}
+          <div className="absolute top-[12%] left-[18%] w-[40%] h-[20%] bg-gradient-to-b from-white/20 to-transparent rounded-[100%] -rotate-45 blur-[2px] opacity-60" />
 
-        <CubeWireframe
-          variant="A"
-          animationStatus={animationStatus}
-          strokeClass={config.strokeClass}
-          accentClass={config.accentClass}
-          glitching={glitching}
-        />
-        <CubeWireframe
-          variant="B"
-          animationStatus={animationStatus}
-          strokeClass={config.strokeClass}
-          accentClass={config.accentClass}
-          glitching={glitching}
-        />
+          {/* Hard Specular Highlight */}
+          <div className="absolute top-[22%] left-[24%] w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_4px_white] opacity-90" />
+
+          {/* Bottom Rim Light */}
+          <div className="absolute bottom-[5%] inset-x-[20%] h-[15%] bg-gradient-to-t from-white/10 to-transparent rounded-[100%] opacity-30 blur-md" />
+        </div>
       </div>
 
+      {/* Text Content */}
       <div className="text-center space-y-2 max-w-sm px-4">
         <motion.h2
           className="text-xl font-semibold text-ink-primary"
@@ -238,17 +158,25 @@ export function ChatHeroCore({
         >
           {status === "error" && lastErrorMessage
             ? lastErrorMessage
-            : "Tippe unten eine Frage ein oder wähle einen der Vorschläge"}
+            : "Tippe unten eine Frage ein oder wähle einen der Vorschläge."}
         </motion.p>
 
         {/* Status Line */}
         <motion.div
-          className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
+          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.7 }}
           transition={{ delay: 0.3 }}
         >
-          <span>{status === "idle" ? "Bereit" : status === "error" ? "Fehler" : "Aktiv"}</span>
+          <span className={cn("font-medium", status === "streaming" ? "text-accent-chat" : "")}>
+            {status === "idle"
+              ? "Bereit"
+              : status === "error"
+                ? "Fehler"
+                : status === "streaming"
+                  ? "Antwortet..."
+                  : "Denkt nach..."}
+          </span>
           <span>•</span>
           <span className="truncate max-w-[80px] sm:max-w-[120px]">{modelName}</span>
           <span>•</span>
