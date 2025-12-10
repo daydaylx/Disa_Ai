@@ -402,7 +402,7 @@ export function ChatHeroCore({
             >
               {lightningArcs.map((arc, index) => (
                 <span
-                  key={`arc-${arc.angle}-${index}`}
+                  key={`arc-${index}`}
                   className="absolute left-1/2 top-1/2 origin-left rounded-full blur-[0.2px]"
                   style={{
                     height: `${arc.thickness}px`,
