@@ -210,3 +210,11 @@ export async function getStoragePerformance(): Promise<{
     totalOperations: 2,
   };
 }
+
+export async function syncMetadataFromConversations(): Promise<{
+  synced: number;
+  alreadySynced: number;
+  errors: string[];
+}> {
+  return modernStorage.syncMetadataFromConversations();
+}

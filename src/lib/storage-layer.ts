@@ -828,6 +828,101 @@ export class ModernStorageLayer {
 
     return { used: 0, quota: 0 };
   }
+
+  async syncMetadataFromConversations(): Promise<{
+    synced: number;
+    alreadySynced: number;
+    errors: string[];
+  }> {
+    const db = await this.ensureDB();
+    const result = {
+      synced: 0,
+      alreadySynced: 0,
+      errors: [] as string[],
+    };
+
+    if (!db) {
+      const conversationIds = new Set(fallbackStore.conversations.keys());
+      const metadataIds = new Set(fallbackStore.metadata.keys());
+
+      for (const id of conversationIds) {
+        if (metadataIds.has(id)) {
+          result.alreadySynced++;
+          continue;
+        }
+
+        const conversation = fallbackStore.conversations.get(id);
+        if (!conversation) continue;
+
+        try {
+          fallbackStore.metadata.set(id, {
+            id: conversation.id,
+            title: conversation.title,
+            createdAt: conversation.createdAt,
+            updatedAt: conversation.updatedAt,
+            model: conversation.model,
+            messageCount: conversation.messageCount,
+          });
+          result.synced++;
+        } catch (error) {
+          result.errors.push(`Failed to sync metadata for conversation ${id}: ${error}`);
+        }
+      }
+
+      if (result.synced > 0) {
+        persistFallbackStore();
+      }
+
+      return result;
+    }
+
+    try {
+      const conversations = await db.conversations.toArray();
+      const existingMetadata = await db.metadata.toArray();
+      const existingMetadataIds = new Set(existingMetadata.map((m) => m.id));
+
+      const missingMetadata: ConversationMetadata[] = [];
+
+      for (const conversation of conversations) {
+        if (existingMetadataIds.has(conversation.id)) {
+          result.alreadySynced++;
+          continue;
+        }
+
+        missingMetadata.push({
+          id: conversation.id,
+          title: conversation.title,
+          createdAt: conversation.createdAt,
+          updatedAt: conversation.updatedAt,
+          model: conversation.model,
+          messageCount: conversation.messageCount,
+        });
+      }
+
+      if (missingMetadata.length > 0) {
+        await db.transaction("rw", db.metadata, async () => {
+          for (const metadata of missingMetadata) {
+            try {
+              await db.metadata.put(metadata);
+              result.synced++;
+            } catch (error) {
+              result.errors.push(`Failed to sync metadata for ${metadata.id}: ${error}`);
+            }
+          }
+        });
+
+        console.warn(
+          `[Storage] Synced ${result.synced} missing metadata entries from conversations table`,
+        );
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Failed to sync metadata from conversations:", error);
+      result.errors.push(`Sync failed: ${error}`);
+      return result;
+    }
+  }
 }
 
 let modernStorageInstance = new ModernStorageLayer();
