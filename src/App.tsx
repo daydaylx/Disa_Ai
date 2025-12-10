@@ -16,6 +16,7 @@ import { SettingsProvider } from "./contexts/SettingsContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
 import { analytics, setAnalyticsEnabled } from "./lib/analytics";
+import { syncMetadataFromConversations } from "./lib/conversation-manager-modern";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
 declare global {
@@ -55,6 +56,24 @@ function AppContent() {
       analytics.trackPageView(window.location.pathname);
     }
   }, [settings.enableAnalytics]);
+
+  // Sync metadata from conversations on startup to fix any missing metadata entries
+  useEffect(() => {
+    void syncMetadataFromConversations()
+      .then((result) => {
+        if (result.synced > 0) {
+          console.warn(
+            `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
+          );
+        }
+        if (result.errors.length > 0) {
+          console.warn("[Storage] Sync errors:", result.errors);
+        }
+      })
+      .catch((error) => {
+        console.error("[Storage] Failed to sync metadata:", error);
+      });
+  }, []);
 
   return (
     <div className="bg-app min-h-screen-mobile w-full">
