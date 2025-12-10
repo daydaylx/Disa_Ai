@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -12,83 +13,45 @@ interface ChatHeroCoreProps {
   lastErrorMessage?: string;
 }
 
-/**
- * Configuration object for the Energy Orb Core.
- * Controls all visual parameters and animation speeds per status.
- */
-type OrbCoreConfig = {
-  // Iris rotation speed (Tailwind animation class)
-  irisRotationClass: string;
-  // Pupil pulsing animation
-  pupilAnimationClass: string;
-  // Enable wave effect (for streaming)
-  waveEnabled: boolean;
-  // Main orb color tokens
-  irisColorFrom: string;
-  irisColorTo: string;
-  irisColorVia?: string;
+type EnergyVisualConfig = {
+  coreColor: string;
   glowColor: string;
-  glowOpacity: string;
-  // Halo particle intensity (0–1 scale, controls opacity/flicker)
-  haloIntensity: number;
+  ringColor: string;
+  particleColor: string;
+  rotationSpeed: number;
 };
 
-const ORB_CORE_CONFIG: Record<CoreStatus, OrbCoreConfig> = {
+const ENERGY_VISUAL_CONFIG: Record<CoreStatus, EnergyVisualConfig> = {
   idle: {
-    irisRotationClass: "animate-orb-rotate-slow", // 40s rotation
-    pupilAnimationClass: "animate-orb-pupil-idle", // slow pulse
-    waveEnabled: false,
-    irisColorFrom: "from-brand-primary", // violet
-    irisColorTo: "to-brand-secondary", // indigo
-    irisColorVia: "via-brand-secondary",
-    glowColor: "bg-brand-primary",
-    glowOpacity: "opacity-20",
-    haloIntensity: 0.4,
+    coreColor: "from-cyan-500 via-blue-500 to-indigo-500",
+    glowColor: "bg-blue-500/20",
+    ringColor: "border-blue-400/30",
+    particleColor: "bg-blue-400",
+    rotationSpeed: 20,
   },
   thinking: {
-    irisRotationClass: "animate-orb-rotate-medium", // 15s rotation
-    pupilAnimationClass: "animate-orb-pupil-thinking", // medium pulse
-    waveEnabled: false,
-    irisColorFrom: "from-brand-primary",
-    irisColorTo: "to-accent-chat",
-    irisColorVia: "via-brand-secondary",
-    glowColor: "bg-brand-primary",
-    glowOpacity: "opacity-30",
-    haloIntensity: 0.6,
+    coreColor: "from-violet-500 via-purple-500 to-fuchsia-500",
+    glowColor: "bg-violet-500/30",
+    ringColor: "border-violet-400/40",
+    particleColor: "bg-violet-400",
+    rotationSpeed: 5, // Faster (duration is lower)
   },
   streaming: {
-    irisRotationClass: "animate-orb-rotate-medium", // keep medium, add wave
-    pupilAnimationClass: "animate-orb-pupil-streaming", // fast pulse
-    waveEnabled: true,
-    irisColorFrom: "from-accent-chat",
-    irisColorTo: "to-brand-primary",
-    irisColorVia: "via-brand-secondary",
-    glowColor: "bg-accent-chat",
-    glowOpacity: "opacity-40",
-    haloIntensity: 0.8,
+    coreColor: "from-emerald-400 via-cyan-400 to-blue-500",
+    glowColor: "bg-cyan-500/40",
+    ringColor: "border-cyan-400/50",
+    particleColor: "bg-cyan-300",
+    rotationSpeed: 3, // Fastest
   },
   error: {
-    irisRotationClass: "animate-none", // stop rotation
-    pupilAnimationClass: "scale-90", // contracted pupil
-    waveEnabled: false,
-    irisColorFrom: "from-status-error",
-    irisColorTo: "to-red-600",
-    glowColor: "bg-status-error",
-    glowOpacity: "opacity-40",
-    haloIntensity: 0.3,
+    coreColor: "from-red-600 via-orange-600 to-red-500",
+    glowColor: "bg-red-500/40",
+    ringColor: "border-red-500/40",
+    particleColor: "bg-red-500",
+    rotationSpeed: 50, // Very slow or erratic
   },
 };
 
-/**
- * ChatHeroCore: Energy Orb Eye
- *
- * A living, multi-layered orb resembling an abstract AI eye with:
- * - Outer glow backdrop
- * - Particle halo (ring of small light points)
- * - Energy iris (rotating, segmented ring)
- * - Pupil with highlight
- * - Status-driven animations (rotation, pulsing, waves, glitch)
- */
 export function ChatHeroCore({
   status,
   modelName,
@@ -96,10 +59,9 @@ export function ChatHeroCore({
   creativityLabel,
   lastErrorMessage,
 }: ChatHeroCoreProps) {
-  const config = ORB_CORE_CONFIG[status];
+  const config = ENERGY_VISUAL_CONFIG[status];
   const [glitching, setGlitching] = useState(false);
 
-  // Trigger glitch animation on error
   useEffect(() => {
     if (status === "error") {
       setGlitching(true);
@@ -110,115 +72,157 @@ export function ChatHeroCore({
     return undefined;
   }, [status]);
 
-  // Container animation: breathe when idle, shake on error
-  const containerAnimationClass = glitching ? "animate-orb-shake" : "animate-orb-breathe";
-
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-6 pt-2 w-full animate-fade-in">
-      {/* Orb Container */}
-      <div
-        className={cn(
-          "relative w-28 h-28 flex items-center justify-center",
-          containerAnimationClass,
-        )}
-      >
-        {/* Layer 1: Outer Glow Backdrop */}
+      {/* Energy Sphere Container */}
+      <div className={cn("relative w-40 h-40 flex items-center justify-center")}>
+        {/* Background Ambient Glow */}
         <div
           className={cn(
-            "absolute -inset-8 rounded-full blur-2xl transition-all duration-700",
+            "absolute inset-0 rounded-full blur-3xl transition-colors duration-700 opacity-40",
             config.glowColor,
-            config.glowOpacity,
+            glitching && "animate-pulse"
           )}
         />
 
-        {/* Layer 2: Particle Halo (small glowing dots around the orb) */}
-        <ParticleHalo intensity={config.haloIntensity} status={status} />
-
-        {/* Streaming Wave Effect (expands outward from iris) */}
-        {config.waveEnabled && (
+        {/* Core Energy Ball */}
+        <div className="relative w-16 h-16 flex items-center justify-center z-10">
           <div
             className={cn(
-              "absolute inset-0 rounded-full border-2 animate-orb-wave pointer-events-none",
-              "border-accent-chat/30",
+              "absolute inset-0 rounded-full bg-gradient-to-br blur-md opacity-80 transition-all duration-700",
+              config.coreColor
             )}
           />
-        )}
-
-        {/* Layer 3: Main Orb Body (Sclera/Background) */}
-        <div className="relative w-full h-full rounded-full bg-surface-inset shadow-2xl overflow-hidden border border-white/5 ring-1 ring-black/50">
-          {/* Subtle gradient for depth */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
-
-          {/* Layer 4: Energy Iris (Rotating Ring) */}
           <div
             className={cn(
-              "absolute inset-[12%] rounded-full transition-all duration-700",
-              config.irisRotationClass,
+              "absolute inset-1 rounded-full bg-gradient-to-tl mix-blend-screen transition-all duration-700",
+              config.coreColor,
+              "animate-pulse-glow"
             )}
-          >
-            {/* Conic gradient iris with radial structure */}
-            <div
-              className={cn(
-                "absolute inset-0 rounded-full opacity-80 mix-blend-screen transition-all duration-700",
-                "bg-[conic-gradient(var(--tw-gradient-stops))]",
-                config.irisColorFrom,
-                config.irisColorTo,
-                config.irisColorVia ? config.irisColorVia : "",
-              )}
-            />
-
-            {/* Iris Texture: Radial Segments (Striations) */}
-            <div
-              className={cn(
-                "absolute inset-0 rounded-full opacity-40 mix-blend-overlay",
-                "bg-[repeating-conic-gradient(transparent_0deg,transparent_2deg,rgba(0,0,0,0.5)_3deg,transparent_4deg)]",
-              )}
-            />
-          </div>
-
-          {/* Layer 5: Pupil (Dark Core) */}
-          <div
-            className={cn(
-              "absolute inset-[38%] rounded-full transition-transform duration-500",
-              "bg-[#050505] shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]",
-              config.pupilAnimationClass,
-            )}
-          >
-            {/* Tiny Pupil Highlight */}
-            <div className="absolute top-[20%] left-[25%] w-[15%] h-[15%] bg-white/20 rounded-full blur-[0.5px]" />
-          </div>
-
-          {/* Layer 6: Specular Highlights (Static relative to sclera) */}
-          {/* Top Glare */}
-          <div className="absolute top-[14%] left-[20%] w-[40%] h-[18%] bg-gradient-to-b from-white/20 to-transparent rounded-[100%] -rotate-45 blur-[2px] opacity-60" />
-
-          {/* Hard Specular Highlight */}
-          <div className="absolute top-[24%] left-[26%] w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_4px_white] opacity-90" />
-
-          {/* Bottom Rim Light */}
-          <div className="absolute bottom-[6%] inset-x-[22%] h-[14%] bg-gradient-to-t from-white/10 to-transparent rounded-[100%] opacity-30 blur-md" />
+          />
         </div>
+
+        {/* Rotating Rings (Orbits) */}
+        {/* Ring 1 - Outer Horizontal-ish */}
+        <motion.div
+          className={cn(
+            "absolute w-32 h-32 rounded-full border border-dashed opacity-60",
+            config.ringColor
+          )}
+          style={{ borderTopColor: "transparent", borderBottomColor: "transparent" }}
+          animate={{
+            rotateX: [60, 60],
+            rotateY: [0, 360],
+            rotateZ: [0, 360],
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: config.rotationSpeed,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        {/* Ring 2 - Vertical-ish */}
+        <motion.div
+          className={cn(
+            "absolute w-28 h-28 rounded-full border-[1.5px] border-dotted opacity-50",
+            config.ringColor
+          )}
+          style={{ borderLeftColor: "transparent", borderRightColor: "transparent" }}
+          animate={{
+            rotateX: [0, 360],
+            rotateY: [45, 45],
+            rotateZ: [0, -360],
+          }}
+          transition={{
+            duration: config.rotationSpeed * 1.5,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        {/* Ring 3 - Inner Fast Orbit */}
+        <motion.div
+          className={cn(
+            "absolute w-20 h-20 rounded-full border border-solid opacity-40",
+            config.ringColor
+          )}
+          style={{
+            borderTopColor: "transparent",
+            borderLeftColor: "transparent",
+            borderWidth: "1px",
+          }}
+          animate={{
+            rotateX: [45, 225],
+            rotateY: [45, 225],
+            rotateZ: [0, 360],
+          }}
+          transition={{
+            duration: config.rotationSpeed * 0.8,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        {/* Floating Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+           {/* We can use simple CSS animation for particles or just static positions with a parent rotation */}
+           <motion.div 
+             className="absolute inset-0"
+             animate={{ rotate: 360 }}
+             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+           >
+              <div className={cn("absolute top-0 left-1/2 w-1.5 h-1.5 rounded-full blur-[1px]", config.particleColor)} />
+              <div className={cn("absolute bottom-4 right-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70", config.particleColor)} />
+              <div className={cn("absolute top-1/3 left-2 w-1 h-1 rounded-full blur-[0.5px] opacity-60", config.particleColor)} />
+           </motion.div>
+           
+           <motion.div 
+             className="absolute inset-0"
+             animate={{ rotate: -360 }}
+             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+           >
+              <div className={cn("absolute bottom-0 right-1/2 w-1.5 h-1.5 rounded-full blur-[1px]", config.particleColor)} />
+              <div className={cn("absolute top-4 left-1/4 w-1 h-1 rounded-full blur-[0.5px] opacity-70", config.particleColor)} />
+           </motion.div>
+        </div>
+
       </div>
 
       {/* Text Content */}
       <div className="text-center space-y-2 max-w-sm px-4">
-        <h2 className="text-xl font-semibold text-ink-primary transition-all duration-300">
+        <motion.h2
+          className="text-xl font-semibold text-ink-primary"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
           {status === "error" ? "Ein Fehler ist aufgetreten" : "Was kann ich für dich tun?"}
-        </h2>
+        </motion.h2>
 
-        <p className="text-sm text-ink-secondary transition-all duration-300">
+        <motion.p
+          className="text-sm text-ink-secondary"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           {status === "error" && lastErrorMessage
             ? lastErrorMessage
             : "Tippe unten eine Frage ein oder wähle einen der Vorschläge."}
-        </p>
+        </motion.p>
 
         {/* Status Line */}
-        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5 transition-all duration-300">
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 0.3 }}
+        >
           <span
             className={cn(
-              "font-medium transition-colors",
-              status === "streaming" ? "text-accent-chat" : "",
-              status === "error" ? "text-status-error" : "",
+              "font-medium transition-colors duration-500",
+              status === "streaming" || status === "thinking" ? "text-accent-chat" : ""
             )}
           >
             {status === "idle"
@@ -235,60 +239,8 @@ export function ChatHeroCore({
           <span>{toneLabel}</span>
           <span>•</span>
           <span>{creativityLabel}</span>
-        </div>
+        </motion.div>
       </div>
-    </div>
-  );
-}
-
-/**
- * ParticleHalo: Ring of small glowing particles around the orb
- * Particles flicker subtly based on intensity.
- */
-function ParticleHalo({ intensity, status }: { intensity: number; status: CoreStatus }) {
-  // Generate 16 particles in a ring
-  const particleCount = 16;
-  const particles = Array.from({ length: particleCount }, (_, i) => {
-    const angle = (i / particleCount) * 360;
-    // Radius from center (orb is w-28 = 7rem = 112px, so radius ~56px, halo at ~70px)
-    const radius = 58; // px
-    const x = Math.cos((angle * Math.PI) / 180) * radius;
-    const y = Math.sin((angle * Math.PI) / 180) * radius;
-
-    // Vary size and opacity slightly for organic feel
-    const size = 2 + Math.random() * 2; // 2–4px
-    const baseOpacity = 0.3 + Math.random() * 0.3; // 0.3–0.6
-    const finalOpacity = baseOpacity * intensity;
-
-    // Stagger animation delay for flicker effect
-    const delay = Math.random() * 2000; // 0–2s
-
-    return { x, y, size, opacity: finalOpacity, delay, angle };
-  });
-
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      {particles.map((p, idx) => (
-        <div
-          key={idx}
-          className={cn(
-            "absolute rounded-full transition-all duration-700",
-            status === "streaming" ? "animate-pulse" : "",
-            status === "thinking" ? "animate-pulse" : "",
-          )}
-          style={{
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            left: `calc(50% + ${p.x}px)`,
-            top: `calc(50% + ${p.y}px)`,
-            transform: "translate(-50%, -50%)",
-            backgroundColor: status === "error" ? "#ef4444" : "#8b5cf6",
-            opacity: p.opacity,
-            animationDelay: `${p.delay}ms`,
-            animationDuration: status === "streaming" ? "1s" : "2s",
-          }}
-        />
-      ))}
     </div>
   );
 }
