@@ -364,10 +364,15 @@ export default {
         "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         "pulse-glow": "pulseGlow 4s ease-in-out infinite",
         blob: "blob 7s infinite",
-        "core-pulse": "corePulse 3s ease-in-out infinite",
-        "core-ring-spin": "coreRingSpin 8s linear infinite",
-        "core-wave": "coreWave 2s ease-out infinite",
-        "core-error-shake": "coreErrorShake 0.5s ease-in-out",
+        "cube-a-idle": "cubeFloatAIdle 3.6s ease-in-out infinite",
+        "cube-b-idle": "cubeFloatBIdle 3.6s ease-in-out infinite",
+        "cube-a-thinking": "cubeFloatAThinking 3s ease-in-out infinite",
+        "cube-b-thinking": "cubeFloatBThinking 3s ease-in-out infinite",
+        "cube-a-streaming": "cubeFloatAStreaming 2.4s ease-in-out infinite",
+        "cube-b-streaming": "cubeFloatBStreaming 2.4s ease-in-out infinite",
+        "cube-glitch": "cubeGlitch 0.7s ease-in-out",
+        "cube-orbit": "cubeOrbit 12s linear infinite",
+        "cube-wave": "cubeWave 2.4s ease-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -388,23 +393,123 @@ export default {
           "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
           "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
-        corePulse: {
-          "0%, 100%": { transform: "scale(0.95)", opacity: "0.9" },
-          "50%": { transform: "scale(1.05)", opacity: "1" },
+        cubeFloatAIdle: {
+          "0%": {
+            transform:
+              "translate3d(-4px, 3px, 0) rotateX(2deg) rotateY(-4deg) rotateZ(-3deg) scale(0.98)",
+            opacity: "0.9",
+          },
+          "50%": {
+            transform:
+              "translate3d(5px, -5px, 0) rotateX(-2deg) rotateY(6deg) rotateZ(4deg) scale(1.02)",
+            opacity: "1",
+          },
+          "100%": {
+            transform:
+              "translate3d(-4px, 3px, 0) rotateX(2deg) rotateY(-4deg) rotateZ(-3deg) scale(0.98)",
+            opacity: "0.9",
+          },
         },
-        coreRingSpin: {
+        cubeFloatBIdle: {
+          "0%": {
+            transform:
+              "translate3d(4px, -2px, 0) rotateX(-2deg) rotateY(3deg) rotateZ(2deg) scale(0.99)",
+            opacity: "0.9",
+          },
+          "50%": {
+            transform:
+              "translate3d(-6px, 4px, 0) rotateX(3deg) rotateY(-6deg) rotateZ(-3deg) scale(1.02)",
+            opacity: "1",
+          },
+          "100%": {
+            transform:
+              "translate3d(4px, -2px, 0) rotateX(-2deg) rotateY(3deg) rotateZ(2deg) scale(0.99)",
+            opacity: "0.9",
+          },
+        },
+        cubeFloatAThinking: {
+          "0%": {
+            transform:
+              "translate3d(-6px, 4px, 0) rotateX(4deg) rotateY(-7deg) rotateZ(-5deg) scale(0.97)",
+          },
+          "50%": {
+            transform:
+              "translate3d(7px, -7px, 0) rotateX(-4deg) rotateY(9deg) rotateZ(6deg) scale(1.05)",
+          },
+          "100%": {
+            transform:
+              "translate3d(-6px, 4px, 0) rotateX(4deg) rotateY(-7deg) rotateZ(-5deg) scale(0.97)",
+          },
+        },
+        cubeFloatBThinking: {
+          "0%": {
+            transform:
+              "translate3d(6px, -4px, 0) rotateX(-4deg) rotateY(6deg) rotateZ(5deg) scale(1)",
+          },
+          "50%": {
+            transform:
+              "translate3d(-8px, 7px, 0) rotateX(5deg) rotateY(-9deg) rotateZ(-6deg) scale(1.06)",
+          },
+          "100%": {
+            transform:
+              "translate3d(6px, -4px, 0) rotateX(-4deg) rotateY(6deg) rotateZ(5deg) scale(1)",
+          },
+        },
+        cubeFloatAStreaming: {
+          "0%": {
+            transform:
+              "translate3d(-6px, 4px, 0) rotateX(6deg) rotateY(-9deg) rotateZ(-6deg) scale(0.97)",
+          },
+          "50%": {
+            transform:
+              "translate3d(9px, -9px, 0) rotateX(-6deg) rotateY(11deg) rotateZ(7deg) scale(1.07)",
+          },
+          "100%": {
+            transform:
+              "translate3d(-6px, 4px, 0) rotateX(6deg) rotateY(-9deg) rotateZ(-6deg) scale(0.97)",
+          },
+        },
+        cubeFloatBStreaming: {
+          "0%": {
+            transform:
+              "translate3d(7px, -5px, 0) rotateX(-6deg) rotateY(8deg) rotateZ(6deg) scale(1)",
+          },
+          "50%": {
+            transform:
+              "translate3d(-10px, 8px, 0) rotateX(7deg) rotateY(-11deg) rotateZ(-7deg) scale(1.08)",
+          },
+          "100%": {
+            transform:
+              "translate3d(7px, -5px, 0) rotateX(-6deg) rotateY(8deg) rotateZ(6deg) scale(1)",
+          },
+        },
+        cubeGlitch: {
+          "0%": { transform: "translate3d(0, 0, 0) rotateZ(0deg) scale(1)", opacity: "1" },
+          "20%": {
+            transform: "translate3d(-3px, 2px, 0) rotateZ(-3deg) scale(0.99)",
+            opacity: "0.9",
+          },
+          "40%": {
+            transform: "translate3d(4px, -2px, 0) rotateZ(2deg) scale(1.01)",
+            opacity: "0.85",
+          },
+          "60%": {
+            transform: "translate3d(-2px, -3px, 0) rotateZ(1deg) scale(1.02)",
+            opacity: "0.9",
+          },
+          "80%": {
+            transform: "translate3d(3px, 3px, 0) rotateZ(-2deg) scale(0.98)",
+            opacity: "0.95",
+          },
+          "100%": { transform: "translate3d(0, 0, 0) rotateZ(0deg) scale(1)", opacity: "1" },
+        },
+        cubeOrbit: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
-        coreWave: {
-          "0%": { transform: "scale(1)", opacity: "0.4" },
-          "100%": { transform: "scale(1.3)", opacity: "0" },
-        },
-        coreErrorShake: {
-          "0%, 100%": { transform: "translateX(0)" },
-          "25%": { transform: "translateX(-5px)" },
-          "50%": { transform: "translateX(5px)" },
-          "75%": { transform: "translateX(-5px)" },
+        cubeWave: {
+          "0%": { transform: "scale(1)", opacity: "0.5" },
+          "100%": { transform: "scale(1.25)", opacity: "0" },
         },
       },
     },

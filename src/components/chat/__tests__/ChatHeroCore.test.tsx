@@ -24,45 +24,27 @@ describe("ChatHeroCore", () => {
     expect(screen.getByText("Bereit")).toBeInTheDocument();
     expect(screen.getByText("Test Model")).toBeInTheDocument();
 
-    // Check that thinking/streaming elements are NOT present
-    // The dashed ring has a specific class or attribute we can look for,
-    // or we can check simply that the SVG container for the ring isn't there
-    const svgRing = document.querySelector("rect[stroke-dasharray='10 10']");
-    expect(svgRing).not.toBeInTheDocument();
+    // Idle state should render the two cubes but no orbit or waves
+    expect(screen.getByTestId("cube-a")).toBeInTheDocument();
+    expect(screen.getByTestId("cube-b")).toBeInTheDocument();
+    expect(screen.queryByTestId("cube-orbit")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("cube-wave")).not.toBeInTheDocument();
   });
 
-  it("renders thinking state with dashed ring", () => {
+  it("renders thinking state with orbit", () => {
     render(<ChatHeroCore {...defaultProps} status="thinking" />);
 
     expect(screen.getByText("Aktiv")).toBeInTheDocument();
-
-    // Check for the dashed ring SVG
-    // Note: render creates a container, we query inside document body which works with RTL
-    // But to be safe with Vitest/RTL setup, we can use container.querySelector if returned from render
-    const { container } = render(<ChatHeroCore {...defaultProps} status="thinking" />);
-    // Re-rendering in same test might be confusing, let's rely on the first render or clean up.
-    // Actually RTL cleanup is auto. Let's just use a fresh render in a variable.
-  });
-
-  it("renders thinking state visual elements", () => {
-    const { container } = render(<ChatHeroCore {...defaultProps} status="thinking" />);
-
-    // Look for the dashed rect which represents the thinking ring
-    const dashedRect = container.querySelector("rect[stroke-dasharray='10 10']");
-    expect(dashedRect).toBeInTheDocument();
+    expect(screen.getByTestId("cube-orbit")).toBeInTheDocument();
+    expect(screen.queryByTestId("cube-wave")).not.toBeInTheDocument();
   });
 
   it("renders streaming state with waves", () => {
-    const { container } = render(<ChatHeroCore {...defaultProps} status="streaming" />);
-
+    render(<ChatHeroCore {...defaultProps} status="streaming" />);
     expect(screen.getByText("Aktiv")).toBeInTheDocument();
 
-    // Should have dashed ring AND waves
-    const dashedRect = container.querySelector("rect[stroke-dasharray='10 10']");
-    expect(dashedRect).toBeInTheDocument();
-
-    // Waves have specific animation class
-    const waves = container.querySelectorAll(".animate-core-wave");
+    expect(screen.getByTestId("cube-orbit")).toBeInTheDocument();
+    const waves = screen.getAllByTestId("cube-wave");
     expect(waves.length).toBeGreaterThan(0);
   });
 
@@ -78,8 +60,9 @@ describe("ChatHeroCore", () => {
     // Checking for specific class presence is a bit brittle but verifies the visual intent
     // We can check if the status dot/indicator logic applied correct class
     const { container } = render(<ChatHeroCore {...defaultProps} status="error" />);
-    // The glow layer gets bg-red-500 in error state
-    const redGlow = container.querySelector(".bg-red-500");
-    expect(redGlow).toBeInTheDocument();
+    const redStroke = container.querySelectorAll(".text-status-error");
+    expect(redStroke.length).toBeGreaterThan(0);
+    expect(screen.queryByTestId("cube-orbit")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("cube-wave")).not.toBeInTheDocument();
   });
 });
