@@ -1,3 +1,4 @@
+import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Mic, Paperclip, Send, Smile } from "@/lib/icons";
@@ -16,6 +17,7 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -54,6 +56,7 @@ export function MobileChatComposer({
     if (trimmedMessage && !disabled) {
       onSend(trimmedMessage);
       setMessage("");
+      setShowEmojiPicker(false);
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
       }
@@ -79,8 +82,11 @@ export function MobileChatComposer({
   };
 
   const handleEmoji = () => {
-    // TODO: Implement emoji picker
-    console.warn("Emoji picker not yet implemented");
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setMessage((prev) => prev + emojiData.emoji);
   };
 
   return (
@@ -94,6 +100,21 @@ export function MobileChatComposer({
         zIndex: 50,
       }}
     >
+      {showEmojiPicker && (
+        <div className="absolute bottom-full left-0 right-0 z-50 flex justify-center pb-2">
+          <div className="shadow-lg rounded-xl overflow-hidden">
+            <EmojiPicker
+              onEmojiClick={handleEmojiClick}
+              theme={Theme.DARK}
+              lazyLoadEmojis={true}
+              height={300}
+              width="100%"
+              previewConfig={{ showPreview: false }}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="flex items-end gap-2 max-w-screen-lg mx-auto">
         {/* Attachment Button */}
         <Button
