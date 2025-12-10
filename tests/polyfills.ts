@@ -42,3 +42,28 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: vi.fn(),
   })),
 });
+
+class ResizeObserver {
+  callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+
+  observe(): void {
+    // no-op for tests
+  }
+
+  unobserve(): void {
+    // no-op for tests
+  }
+
+  disconnect(): void {
+    // no-op for tests
+  }
+}
+
+Object.defineProperty(global, "ResizeObserver", {
+  writable: true,
+  value: ResizeObserver,
+});

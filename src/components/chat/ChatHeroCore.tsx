@@ -24,6 +24,8 @@ type OrbLayerConfig = {
   highlightColor: string;
   scanlineColor: string;
   waveColor: string;
+  streakRotateDuration: number;
+  streakFlowDuration: number;
   irisDuration: number;
   segmentDuration: number;
   scanlineDuration: number;
@@ -44,6 +46,8 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     highlightColor: "bg-white/80",
     scanlineColor: "rgba(255,255,255,0.08)",
     waveColor: "rgba(59, 207, 255, 0.28)",
+    streakRotateDuration: 28,
+    streakFlowDuration: 8,
     irisDuration: 36,
     segmentDuration: 18,
     scanlineDuration: 12,
@@ -61,6 +65,8 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     highlightColor: "bg-white/90",
     scanlineColor: "rgba(255,255,255,0.12)",
     waveColor: "rgba(232, 121, 249, 0.26)",
+    streakRotateDuration: 18,
+    streakFlowDuration: 6,
     irisDuration: 18,
     segmentDuration: 10,
     scanlineDuration: 8,
@@ -78,6 +84,8 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     highlightColor: "bg-white/95",
     scanlineColor: "rgba(255,255,255,0.16)",
     waveColor: "rgba(103, 232, 249, 0.34)",
+    streakRotateDuration: 14,
+    streakFlowDuration: 4.5,
     irisDuration: 12,
     segmentDuration: 6,
     scanlineDuration: 6,
@@ -96,6 +104,8 @@ const ORB_CORE_CONFIG: Record<CoreStatus, OrbLayerConfig> = {
     highlightColor: "bg-white",
     scanlineColor: "rgba(255,255,255,0.18)",
     waveColor: "rgba(252, 211, 77, 0.32)",
+    streakRotateDuration: 22,
+    streakFlowDuration: 7.5,
     irisDuration: 50,
     segmentDuration: 20,
     scanlineDuration: 10,
@@ -122,6 +132,77 @@ const dataSegments = Array.from({ length: 28 }, (_, index) => ({
   angle: (360 / 28) * index,
   long: index % 3 === 0,
 }));
+
+const streakPalette = [
+  "color-mix(in srgb, var(--accent-chat) 78%, white)",
+  "var(--accent-chat)",
+  "color-mix(in srgb, var(--accent-settings) 70%, var(--accent-chat) 30%)",
+  "color-mix(in srgb, var(--accent-chat) 64%, black 36%)",
+] as const;
+
+const streakPaths = [
+  {
+    radius: 39,
+    startAngle: -40,
+    endAngle: 240,
+    width: 1.6,
+    dashArray: "18 14",
+    speedMultiplier: 1,
+    opacity: 0.7,
+  },
+  {
+    radius: 33,
+    startAngle: 80,
+    endAngle: 350,
+    width: 1.2,
+    dashArray: "14 11",
+    speedMultiplier: 0.9,
+    opacity: 0.6,
+  },
+  {
+    radius: 27,
+    startAngle: -120,
+    endAngle: 140,
+    width: 1.1,
+    dashArray: "12 10",
+    speedMultiplier: 1.1,
+    opacity: 0.5,
+  },
+  {
+    radius: 21,
+    startAngle: 160,
+    endAngle: 20,
+    width: 1,
+    dashArray: "10 9",
+    speedMultiplier: 1.2,
+    opacity: 0.45,
+  },
+];
+
+const polarToCartesian = (
+  centerX: number,
+  centerY: number,
+  radius: number,
+  angleInDegrees: number,
+) => {
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+
+  return {
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians),
+  };
+};
+
+const describeArc = (radius: number, startAngle: number, endAngle: number) => {
+  const start = polarToCartesian(50, 50, radius, endAngle);
+  const end = polarToCartesian(50, 50, radius, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+  return [
+    `M ${start.x} ${start.y}`,
+    `A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
+  ].join(" ");
+};
 
 export function ChatHeroCore({
   status,
@@ -418,6 +499,66 @@ export function ChatHeroCore({
               )}
               style={{ animationDuration: `${config.glareDuration}s` }}
             />
+          </motion.div>
+
+          {/* Flowing streak overlay */}
+          <motion.div
+            className="absolute inset-[11%] pointer-events-none mix-blend-screen"
+            animate={{ rotate: 360 }}
+            transition={{ duration: config.streakRotateDuration, repeat: Infinity, ease: "linear" }}
+            style={{ willChange: "transform" }}
+          >
+            <motion.svg
+              viewBox="0 0 100 100"
+              className="w-full h-full"
+              preserveAspectRatio="xMidYMid meet"
+              animate={{ rotate: status === "streaming" ? 4 : status === "thinking" ? -3 : 0 }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+              }}
+              style={{ filter: "drop-shadow(0 0 8px rgba(192,132,252,0.32))" }}
+            >
+              <defs>
+                {streakPalette.map((color, index) => (
+                  <linearGradient
+                    id={`orb-streak-${index}`}
+                    key={`orb-streak-${index}`}
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                    gradientTransform="rotate(45)"
+                  >
+                    <stop offset="0%" stopColor={color} stopOpacity={0.1} />
+                    <stop offset="50%" stopColor={color} stopOpacity={0.9} />
+                    <stop offset="100%" stopColor={color} stopOpacity={0.18} />
+                  </linearGradient>
+                ))}
+              </defs>
+
+              {streakPaths.map((path, index) => (
+                <motion.path
+                  key={`streak-${index}`}
+                  d={describeArc(path.radius, path.startAngle, path.endAngle)}
+                  stroke={`url(#orb-streak-${index % streakPalette.length})`}
+                  strokeWidth={path.width}
+                  strokeDasharray={path.dashArray}
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity={path.opacity}
+                  initial={{ strokeDashoffset: 120 }}
+                  animate={{ strokeDashoffset: [-120, 120] }}
+                  transition={{
+                    duration: config.streakFlowDuration / path.speedMultiplier,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              ))}
+            </motion.svg>
           </motion.div>
 
           {/* Pupil with depth */}
