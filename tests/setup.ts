@@ -8,6 +8,28 @@ import { afterEach, beforeEach } from "vitest";
 
 import { ApiError } from "../src/lib/errors";
 
+// ResizeObserver polyfill for JSDOM
+// This is required by react-three-fiber or react-use-measure in test environments
+class ResizeObserver {
+  callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+
+  observe() {
+    // Trigger callback with empty entries on next tick
+    setTimeout(() => {
+      this.callback([], this);
+    }, 0);
+  }
+
+  unobserve() {}
+  disconnect() {}
+}
+
+global.ResizeObserver = ResizeObserver as unknown as typeof globalThis.ResizeObserver;
+
 // Ensure sandboxed runners (no /tmp write access) can compile Tailwind/JITI caches.
 const repoTmp = path.join(process.cwd(), ".tmp");
 if (!fs.existsSync(repoTmp)) {
