@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 
 import { Mic, Paperclip, Send, Smile } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -16,8 +17,10 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -38,6 +41,8 @@ export function MobileChatComposer({
           composer.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
       }, 100);
+      // Close emoji picker on focus
+      setShowEmojiPicker(false);
     };
 
     const textarea = textareaRef.current;
@@ -48,12 +53,31 @@ export function MobileChatComposer({
     return undefined;
   }, []);
 
+  // Handle click outside to close picker
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        pickerRef.current &&
+        !pickerRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('button[title="Emoji auswählen"]')
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showEmojiPicker]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedMessage = message.trim();
     if (trimmedMessage && !disabled) {
       onSend(trimmedMessage);
       setMessage("");
+      setShowEmojiPicker(false);
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
       }
@@ -79,8 +103,11 @@ export function MobileChatComposer({
   };
 
   const handleEmoji = () => {
-    // TODO: Implement emoji picker
-    console.warn("Emoji picker not yet implemented");
+    setShowEmojiPicker((prev) => !prev);
+  };
+
+  const onEmojiClick = (emojiData: any) => {
+    setMessage((prev) => prev + emojiData.emoji);
   };
 
   return (
@@ -94,6 +121,24 @@ export function MobileChatComposer({
         zIndex: 50,
       }}
     >
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+        <div
+          ref={pickerRef}
+          className="absolute bottom-full left-0 right-0 mb-2 mx-2 shadow-xl rounded-lg overflow-hidden"
+          style={{ zIndex: 60 }}
+        >
+          <EmojiPicker
+            onEmojiClick={onEmojiClick}
+            width="100%"
+            height={300}
+            theme={Theme.DARK}
+            emojiStyle={EmojiStyle.NATIVE}
+            previewConfig={{ showPreview: false }}
+          />
+        </div>
+      )}
+
       <div className="flex items-end gap-2 max-w-screen-lg mx-auto">
         {/* Attachment Button */}
         <Button
@@ -103,6 +148,7 @@ export function MobileChatComposer({
           disabled={disabled}
           className="flex-shrink-0 text-text-secondary hover:text-text-primary"
           title="Datei anhängen"
+          type="button"
         >
           <Paperclip className="h-5 w-5" />
         </Button>
@@ -113,8 +159,12 @@ export function MobileChatComposer({
           size="sm"
           onClick={handleEmoji}
           disabled={disabled}
-          className="flex-shrink-0 text-text-secondary hover:text-primary"
+          className={cn(
+            "flex-shrink-0 transition-colors",
+            showEmojiPicker ? "text-primary" : "text-text-secondary hover:text-primary"
+          )}
           title="Emoji auswählen"
+          type="button"
         >
           <Smile className="h-5 w-5" />
         </Button>
@@ -161,6 +211,7 @@ export function MobileChatComposer({
           disabled={disabled}
           className="flex-shrink-0 text-text-secondary hover:text-text-primary"
           title="Spracheingabe"
+          type="button"
         >
           <Mic className="h-5 w-5" />
         </Button>
