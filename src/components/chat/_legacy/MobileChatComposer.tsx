@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Mic, Paperclip, Send, Smile } from "@/lib/icons";
+
+const EMOJI_LIST = [
+  "😊", "😂", "🥰", "😍", "😒", "😭", "😩", "🥺", "😁", "😉",
+  "👍", "👎", "👌", "🙏", "💪", "🔥", "✨", "❤️", "💔", "💯",
+  "👋", "🙌", "🤔", "🤷", "🤦", "👀", "🚀", "💀", "🎉", "💩",
+  "🤖", "👻", "🤡", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤠",
+  "😈", "👿", "👺", "👹", "🥴", "😵", "🤯", "😤", "😠", "😡",
+];
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -16,6 +24,7 @@ export function MobileChatComposer({
   placeholder = "Nachricht schreiben...",
 }: MobileChatComposerProps) {
   const [message, setMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -54,6 +63,7 @@ export function MobileChatComposer({
     if (trimmedMessage && !disabled) {
       onSend(trimmedMessage);
       setMessage("");
+      setShowEmojiPicker(false);
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
       }
@@ -79,8 +89,26 @@ export function MobileChatComposer({
   };
 
   const handleEmoji = () => {
-    // TODO: Implement emoji picker
-    console.warn("Emoji picker not yet implemented");
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const insertEmoji = (emoji: string) => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const newValue =
+        message.substring(0, start) + emoji + message.substring(end);
+      setMessage(newValue);
+
+      // Restore focus and cursor position after state update
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + emoji.length, start + emoji.length);
+      }, 0);
+    } else {
+      setMessage((prev) => prev + emoji);
+    }
   };
 
   return (
@@ -94,6 +122,23 @@ export function MobileChatComposer({
         zIndex: 50,
       }}
     >
+      {showEmojiPicker && (
+        <div className="absolute bottom-full left-0 right-0 mb-2 px-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="bg-surface-2 border border-border/50 rounded-2xl shadow-lg p-3 grid grid-cols-8 gap-2 overflow-y-auto max-h-56 backdrop-blur-xl">
+            {EMOJI_LIST.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                onClick={() => insertEmoji(emoji)}
+                className="flex items-center justify-center text-2xl hover:bg-white/10 hover:scale-110 p-2 rounded-lg transition-all duration-200"
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-end gap-2 max-w-screen-lg mx-auto">
         {/* Attachment Button */}
         <Button
