@@ -1,92 +1,30 @@
-# Guide: Customizing the Chat Hero Core (The Orb)
+# Guide: Animated Chat Hero Core (Gradient Blob)
 
-Das `ChatHeroCore`-Element (auch "The Orb" genannt) ist das zentrale visuelle Element auf der leeren Chat-Seite. Es visualisiert den Status der KI (`idle`, `thinking`, `streaming`, `error`) durch ein animiertes, mehrschichtiges Auge.
+Der Chat-Hero-Bereich nutzt jetzt einen subtil animierten Gradient-Blob statt des alten 3D-Orbs. Der Fokus liegt auf einer organischen, mobilenfreundlichen Lichtfläche direkt hinter der Headline.
 
-## 1. Architektur & Datei-Struktur
+## Architektur & Dateien
+- React-Komponente: `src/components/chat/AnimatedCoreBackground.tsx`
+- Styles/Keyframes: `src/styles/animated-core.css` (wird über `src/index.css` importiert)
+- Status-Ableitung: `src/hooks/useCoreStatus.ts` liefert `CoreStatus` (`"idle" | "thinking" | "streaming" | "error"`).
 
-Die Komponente befindet sich in:
-`src/components/chat/ChatHeroCore.tsx`
+## Zustände & Texte
+Die sichtbaren Texte werden in `STATUS_COPY` innerhalb der Komponente gepflegt. Für den Fehlerzustand kann eine individuelle Fehlermeldung über `lastErrorMessage` angezeigt werden.
 
-Sie ist strikt getrennt in **Logik** (Zustandsverwaltung) und **Konfiguration** (Visuelles Styling).
+| Status | Titel | Beschreibung | Badge |
+| --- | --- | --- | --- |
+| `idle` | Was kann ich für dich tun? | Hinweise zu Vorschlägen/Eingabe | Bereit |
+| `thinking` | Nachdenken … | Kurzer Hinweis, dass Ideen gesammelt werden | Denken |
+| `streaming` | Antwort wird erstellt | Hinweis auf laufende Formulierung | Aktiv |
+| `error` | Ein Fehler ist aufgetreten | Standard- oder übergebene Fehlermeldung | Fehler |
 
-### Zustände (`CoreStatus`)
-Der Orb reagiert auf vier definierte Zustände:
+## Visuals anpassen
+- **Farben**: Die Gradients nutzen CSS-Custom-Properties aus `src/index.css` (`--accent-chat`, `--accent-roles`, `--accent-models`, `--accent-settings`). Passe die Intensitäten in `animated-core.css` via `color-mix` an.
+- **Animationen**: Keyframes `core-gradient-sway`, `core-rotate` und `core-pulse` sitzen ebenfalls in `animated-core.css`. Für ruhigere Bewegungen die Dauer erhöhen oder die `transform`-Werte reduzieren.
+- **Badge-Farben**: Die Verlaufsklassen für das Status-Badge werden in `badgeAccent` im Component-Code definiert und können durch Tailwind-Gradients ersetzt werden.
 
-| Status | Bedeutung | Visuelles Verhalten |
-|--------|-----------|---------------------|
-| `idle` | Wartet auf Eingabe | Langsame Rotation, sanftes "Atmen", Pupille ruhig. |
-| `thinking` | Request gesendet, wartet auf Server | Mittlere Rotation, Fokus-Pupille, leicht erhöhter Glow. |
-| `streaming` | Empfängt Antwort-Tokens | "Wellen"-Effekt nach außen, schnellere Modulation. |
-| `error` | Fehler aufgetreten | Roter Glow, "Shake"-Animation, Iris stoppt. |
+## Motion & Accessibility
+- `prefers-reduced-motion` wird in `animated-core.css` berücksichtigt und verlangsamt die Animationen automatisch.
+- Das Gradient-Konstrukt ist `aria-hidden`, die Texte bleiben klar lesbar (hoher Kontrast, keine Überblendung des Headlines).
 
-## 2. Visuelle Konfiguration (`ORB_VISUAL_CONFIG`)
-
-Das Aussehen für jeden Status wird zentral im `ORB_VISUAL_CONFIG`-Objekt in `ChatHeroCore.tsx` gesteuert. Du musst nicht das JSX ändern, um Farben oder Geschwindigkeiten anzupassen.
-
-Beispiel-Konfiguration:
-
-```typescript
-const ORB_VISUAL_CONFIG: Record<CoreStatus, OrbVisualConfig> = {
-  idle: {
-    irisRotationClass: "animate-orb-rotate-slow",       // Geschwindigkeit der Iris
-    glowColorClass: "bg-brand-primary/20",              // Farbe des äußeren Glows
-    pupilAnimationClass: "animate-orb-pupil-idle",      // Verhalten der Pupille
-    waveEnabled: false,                                 // Wellen-Effekt an/aus
-    irisColorClass: "from-brand-primary to-brand-secondary", // Farbverlauf der Iris
-  },
-  // ... andere Zustände
-};
-```
-
-### Anpassungsmöglichkeiten
-
-#### Farben ändern
-Ändere einfach die Tailwind-Klassen in `irisColorClass` oder `glowColorClass`.
-*   **Iris:** Nutzt `conic-gradient` via Tailwind (`from-...`, `via-...`, `to-...`).
-*   **Glow:** Nutzt Background-Colors mit Opacity (z.B. `bg-brand-primary/20`).
-
-#### Geschwindigkeit ändern
-Die Animationsgeschwindigkeiten sind in `irisRotationClass` definiert. Diese Klassen mappen auf Konfigurationen in der `tailwind.config.ts`.
-
-Verfügbare Rotations-Klassen:
-*   `animate-orb-rotate-slow` (40s)
-*   `animate-orb-rotate-medium` (15s)
-*   `animate-orb-rotate-fast` (3s)
-
-## 3. Aufbau der Layer (JSX)
-
-Der Orb besteht aus 5 visuellen Schichten (von hinten nach vorne), die im JSX übereinander gestapelt sind:
-
-1.  **Outer Glow Ring**: Ein `div` hinter dem Auge für den atmosphärischen Schein.
-2.  **Streaming Wave**: Ein optionaler Ring (`waveEnabled`), der bei Aktivität nach außen pulsiert.
-3.  **Sclera (Augapfel)**: Der dunkle Hauptkörper (`bg-surface-inset`), maskiert den Inhalt (`overflow-hidden`).
-4.  **Iris**: Ein rotierender Container mit `conic-gradient` und Overlay-Textur.
-5.  **Pupil**: Der schwarze Kern, der unabhängig animiert wird (Pulsieren).
-6.  **Glare/Highlights**: Statische Lichtreflexe oben drüber (reines CSS/Tailwind), um den "Glas/Feucht"-Look zu erzeugen.
-
-## 4. Animationen anpassen (`tailwind.config.ts`)
-
-Wenn du das Timing ("Atmen", "Pulsieren") ändern willst, bearbeite die `extend.animation` und `extend.keyframes` Sektion in `tailwind.config.ts`.
-
-Wichtige Keyframes:
-*   `orbScale`: Das Atmen des gesamten Auges.
-*   `orbPupilPulse`: Das Fokus-Verhalten der Pupille (Größenänderung).
-*   `orbWave`: Die Schockwelle im `streaming`-Modus.
-
-## 5. Neuen Status hinzufügen
-
-Möchtest du einen Status wie `busy` oder `listening` ergänzen:
-
-1.  **TypeScript**: Erweitere den Type `CoreStatus` in `ChatHeroCore.tsx`:
-    ```typescript
-    export type CoreStatus = "idle" | "thinking" | "streaming" | "error" | "listening";
-    ```
-2.  **Config**: Füge einen Eintrag in `ORB_VISUAL_CONFIG` hinzu:
-    ```typescript
-    listening: {
-      irisRotationClass: "animate-orb-rotate-fast",
-      glowColorClass: "bg-emerald-500/30",
-      // ...
-    }
-    ```
-3.  **Logik**: Stelle sicher, dass die Eltern-Komponente (`Chat.tsx`) den neuen Status auch übergibt (z.B. basierend auf WebSpeech API Events).
+## Integration im Chat
+`AnimatedCoreBackground` wird auf der leeren Chat-Ansicht oberhalb der Vorschlags-Buttons gerendert. Der Container ist so skaliert, dass er auf Mobile vollständig sichtbar bleibt, ohne den Input-Bereich aus dem Viewport zu schieben.
