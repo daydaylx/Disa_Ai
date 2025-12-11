@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
-import { AnimatedCoreBackground } from "@/components/chat/AnimatedCoreBackground";
+import { ChatHeroBackground } from "@/components/chat/ChatHeroBackground";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -122,8 +122,8 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4">
-                    <AnimatedCoreBackground
+                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4 relative z-0">
+                    <ChatHeroBackground
                       status={coreStatus}
                       lastErrorMessage={chatLogic.error?.message}
                     />
