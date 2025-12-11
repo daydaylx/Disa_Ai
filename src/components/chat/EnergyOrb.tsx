@@ -413,8 +413,9 @@ function PlasmaCore({ status }: { status: CoreStatus }) {
         fragmentShader={plasmaCoreFragmentShader}
         transparent
         side={THREE.DoubleSide}
-        blending={THREE.AdditiveBlending}
+        blending={THREE.NormalBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -467,6 +468,7 @@ function LightningLayer({ status }: { status: CoreStatus }) {
         side={THREE.DoubleSide}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -511,6 +513,7 @@ function GlassShell({ status }: { status: CoreStatus }) {
         side={THREE.BackSide}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -547,6 +550,7 @@ function GlowHalo({ status }: { status: CoreStatus }) {
         opacity={0.15}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -777,7 +781,12 @@ export function EnergyOrb({
         {shouldRenderCanvas ? (
           <Canvas
             className="w-full h-full"
-            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+              toneMapping: THREE.NoToneMapping,
+            }}
             dpr={useReducedPerformance ? 1 : [1, 2]}
           >
             <Scene status={status} />
