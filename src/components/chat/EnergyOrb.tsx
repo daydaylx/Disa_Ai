@@ -11,9 +11,6 @@ export type CoreStatus = "idle" | "thinking" | "streaming" | "error";
 
 interface EnergyOrbProps {
   status: CoreStatus;
-  modelName: string;
-  toneLabel: string;
-  creativityLabel: string;
   lastErrorMessage?: string;
 }
 
@@ -35,15 +32,15 @@ const COLORS = {
   orange400: 0xfb923c,
 } as const;
 
-// Status-based configuration - Enhanced for dramatic visual impact
+// Status-based configuration - Balanced for stability and visibility
 const STATUS_CONFIG = {
   idle: {
     color: new THREE.Color(COLORS.plasmaCyan), // Bright electric cyan core
     accentColor: new THREE.Color(COLORS.plasmaMagenta), // Vivid magenta outer glow
-    emissiveIntensity: 2.5, // Dramatically increased for visibility
+    emissiveIntensity: 1.0, // Moderate intensity
     rotationSpeed: 0.28,
     particleSpeed: 0.4,
-    glowIntensity: 2.8, // Much higher for strong bloom
+    glowIntensity: 1.2, // Moderate bloom
     noiseSpeed: 0.25,
     noiseScale: 2.2,
     pulseSpeed: 0.8,
@@ -51,10 +48,10 @@ const STATUS_CONFIG = {
   thinking: {
     color: new THREE.Color(COLORS.plasmaMagenta), // Vivid magenta when thinking
     accentColor: new THREE.Color(COLORS.plasmaViolet), // Deep violet accent
-    emissiveIntensity: 3.0, // Very bright when thinking
+    emissiveIntensity: 1.3, // Higher when thinking
     rotationSpeed: 0.9,
     particleSpeed: 1.0,
-    glowIntensity: 3.2, // Maximum glow
+    glowIntensity: 1.5,
     noiseSpeed: 0.9,
     noiseScale: 3.6,
     pulseSpeed: 1.6,
@@ -62,10 +59,10 @@ const STATUS_CONFIG = {
   streaming: {
     color: new THREE.Color(COLORS.plasmaBlue), // Electric blue for streaming
     accentColor: new THREE.Color(COLORS.plasmaCyan), // Bright cyan accent
-    emissiveIntensity: 3.2, // Brightest state
+    emissiveIntensity: 1.4, // Highest intensity
     rotationSpeed: 1.25,
     particleSpeed: 1.8,
-    glowIntensity: 3.5, // Maximum bloom when streaming
+    glowIntensity: 1.6,
     noiseSpeed: 1.25,
     noiseScale: 4.0,
     pulseSpeed: 2.1,
@@ -73,10 +70,10 @@ const STATUS_CONFIG = {
   error: {
     color: new THREE.Color(COLORS.red400),
     accentColor: new THREE.Color(COLORS.orange400),
-    emissiveIntensity: 2.0, // Bright enough to be visible
+    emissiveIntensity: 1.0,
     rotationSpeed: 0.15,
     particleSpeed: 0.45,
-    glowIntensity: 2.2,
+    glowIntensity: 1.2,
     noiseSpeed: 0.35,
     noiseScale: 1.6,
     pulseSpeed: 0.5,
@@ -205,32 +202,32 @@ const plasmaCoreFragmentShader = `
     // Enhanced plasma with more dramatic variation
     float plasma = clamp(0.5 + swirl * 0.5 + ripples * 0.3 + turbulence * 0.2, 0.3, 1.0);
 
-    // Bright, vibrant color mixing - significantly boosted
-    vec3 baseColor = mix(color1 * 2.5, color2 * 2.2, plasma * 0.7 + 0.3);
+    // Vibrant but controlled color mixing
+    vec3 baseColor = mix(color1 * 1.5, color2 * 1.4, plasma * 0.7 + 0.3);
 
     vec3 viewDirection = normalize(cameraPosition - vPosition);
     float fresnel = pow(1.0 - abs(dot(viewDirection, vNormal)), 2.5);
 
-    // More dramatic pulse and breathing
-    float pulse = sin(time * (1.2 + pulseStrength * 0.4)) * 0.15 + 1.0;
-    float pulse2 = sin(time * (1.8 + pulseStrength * 0.3) + plasma * 2.0) * 0.1 + 1.0;
-    float breathing = 1.0 + sin(time * 0.7) * 0.1;
+    // Controlled pulse and breathing
+    float pulse = sin(time * (1.2 + pulseStrength * 0.4)) * 0.1 + 0.95;
+    float pulse2 = sin(time * (1.8 + pulseStrength * 0.3) + plasma * 2.0) * 0.08 + 0.92;
+    float breathing = 1.0 + sin(time * 0.7) * 0.08;
 
-    // Much stronger glow for visibility
-    float innerGlow = smoothstep(0.0, 1.0, 1.0 - radius * 0.5) * 2.5;
-    float coreHotspot = smoothstep(0.4, 0.0, radius) * 1.5;
-    float edgeGlow = fresnel * 1.2;
+    // Balanced glow
+    float innerGlow = smoothstep(0.0, 1.0, 1.0 - radius * 0.5) * 1.8;
+    float coreHotspot = smoothstep(0.4, 0.0, radius) * 1.0;
+    float edgeGlow = fresnel * 0.9;
 
-    // Bright base lighting with guaranteed minimum brightness
-    float totalGlow = innerGlow + edgeGlow + coreHotspot + 1.5;
+    // Balanced lighting
+    float totalGlow = innerGlow + edgeGlow + coreHotspot + 1.0;
     vec3 finalColor = baseColor * totalGlow * pulse * pulse2 * breathing;
 
-    // Ensure minimum brightness
-    finalColor = max(finalColor, color1 * 0.3);
+    // Clamp to prevent overexposure
+    finalColor = clamp(finalColor, vec3(0.0), vec3(2.0));
 
     float alpha = 0.85 + innerGlow * 0.15;
 
-    gl_FragColor = vec4(finalColor * intensity * 2.0, alpha);
+    gl_FragColor = vec4(finalColor * intensity, alpha);
   }
 `;
 
@@ -280,23 +277,24 @@ const lightningFragmentShader = `
     // Lower threshold for more visible filaments
     float filamentMask = smoothstep(0.3, 0.85, arcs) * radialSpread;
 
-    // More dramatic shimmer effect
-    float shimmer = sin(t * 2.5 + dir.z * 12.0) * 0.3 + 1.0;
-    float shimmer2 = sin(t * 3.0 - dir.y * 10.0) * 0.2 + 1.0;
+    // Controlled shimmer effect
+    float shimmer = sin(t * 2.5 + dir.z * 12.0) * 0.2 + 0.9;
+    float shimmer2 = sin(t * 3.0 - dir.y * 10.0) * 0.15 + 0.9;
 
-    // Very bright color mixing for electric visibility
-    vec3 color = mix(colorA * 3.0, colorB * 2.8, filamentMask * 0.6 + 0.4) * shimmer * shimmer2;
+    // Balanced color mixing for visibility
+    vec3 color = mix(colorA * 1.8, colorB * 1.6, filamentMask * 0.6 + 0.4) * shimmer * shimmer2;
 
     float fresnel = pow(1.0 - abs(dot(normalize(cameraPosition - vPosition), vNormal)), 2.0);
 
-    // High alpha for strong visibility
-    float alpha = filamentMask * (0.9 + fresnel * 0.6) * intensity * 1.8;
+    // Balanced alpha
+    float alpha = filamentMask * (0.8 + fresnel * 0.5) * intensity * 1.2;
 
-    // Very low discard threshold
-    if (alpha < 0.015) discard;
+    // Threshold for filaments
+    if (alpha < 0.02) discard;
 
-    // Maximum brightness boost
-    gl_FragColor = vec4(color * (2.0 + filamentMask * 1.5), alpha);
+    // Controlled brightness
+    color = clamp(color, vec3(0.0), vec3(2.5));
+    gl_FragColor = vec4(color * (1.5 + filamentMask * 1.0), alpha);
   }
 `;
 
@@ -334,20 +332,23 @@ const glassShellFragmentShader = `
     float noise = fbm(vNormal * 5.0 + vec3(time * 0.6, time * 0.4, time * 0.7)) * 0.5 + 0.5;
     float noise2 = fbm(vNormal * 8.0 - vec3(time * 0.3, time * 0.5, time * 0.2)) * 0.3 + 0.7;
 
-    // Brighter pulse
-    float pulse = sin(time * 1.4) * 0.2 + 1.0;
-    float pulse2 = sin(time * 2.0 + noise * 3.14) * 0.15 + 1.0;
+    // Controlled pulse
+    float pulse = sin(time * 1.4) * 0.15 + 0.95;
+    float pulse2 = sin(time * 2.0 + noise * 3.14) * 0.1 + 0.95;
 
-    // Much stronger glow
-    float glowStrength = (fresnel + 0.3) * (1.0 + noise * 0.5) * pulse * pulse2 * intensity * 2.5;
+    // Balanced glow
+    float glowStrength = (fresnel + 0.2) * (0.9 + noise * 0.4) * pulse * pulse2 * intensity * 1.5;
 
-    // Brighter energy ripples
-    float ripple = sin(fresnel * 10.0 - time * 2.0) * 0.2 + 1.0;
+    // Controlled energy ripples
+    float ripple = sin(fresnel * 10.0 - time * 2.0) * 0.15 + 0.9;
 
-    vec3 finalColor = glowColor * glowStrength * noise2 * ripple * 2.5;
+    vec3 finalColor = glowColor * glowStrength * noise2 * ripple * 1.6;
 
-    // Higher alpha and base brightness
-    float alpha = (glowStrength * 1.3 + 0.2) * (0.8 + fresnel * 0.4);
+    // Clamp to prevent overexposure
+    finalColor = clamp(finalColor, vec3(0.0), vec3(2.0));
+
+    // Balanced alpha
+    float alpha = (glowStrength * 1.1 + 0.15) * (0.75 + fresnel * 0.35);
 
     gl_FragColor = vec4(finalColor, alpha);
   }
@@ -482,7 +483,7 @@ function GlassShell({ status }: { status: CoreStatus }) {
     () => ({
       time: { value: 0 },
       glowColor: { value: config.accentColor.clone() },
-      intensity: { value: config.emissiveIntensity * 1.9 }, // Increased from 1.6
+      intensity: { value: config.emissiveIntensity * 1.2 },
     }),
     [config],
   );
@@ -666,12 +667,11 @@ function Scene({ status }: { status: CoreStatus }) {
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 4.6]} fov={42} />
 
-      {/* Enhanced lighting for maximum visibility */}
-      <ambientLight intensity={0.5} />
-      <pointLight position={[4, 4, 5]} intensity={1.5} color={config.color} />
-      <pointLight position={[-5, -3, 4]} intensity={1.4} color={config.accentColor} />
-      <pointLight position={[0, 0, -3]} intensity={0.8} color={config.accentColor} />
-      <pointLight position={[0, 3, 0]} intensity={1.0} color={new THREE.Color(0xffffff)} />
+      {/* Balanced lighting */}
+      <ambientLight intensity={0.3} />
+      <pointLight position={[4, 4, 5]} intensity={0.8} color={config.color} />
+      <pointLight position={[-5, -3, 4]} intensity={0.7} color={config.accentColor} />
+      <pointLight position={[0, 0, -3]} intensity={0.5} color={config.accentColor} />
 
       <group ref={groupRef}>
         <PlasmaCore status={status} />
@@ -684,11 +684,11 @@ function Scene({ status }: { status: CoreStatus }) {
 
       <EffectComposer>
         <Bloom
-          intensity={config.glowIntensity * 1.5}
-          luminanceThreshold={0.01}
-          luminanceSmoothing={0.95}
+          intensity={config.glowIntensity}
+          luminanceThreshold={0.2}
+          luminanceSmoothing={0.9}
           mipmapBlur
-          radius={0.9}
+          radius={0.8}
         />
       </EffectComposer>
     </>
@@ -737,13 +737,7 @@ function StaticOrbFallback({ status }: { status: CoreStatus }) {
   );
 }
 
-export function EnergyOrb({
-  status,
-  modelName,
-  toneLabel,
-  creativityLabel,
-  lastErrorMessage,
-}: EnergyOrbProps) {
+export function EnergyOrb({ status, lastErrorMessage }: EnergyOrbProps) {
   const [useReducedPerformance, setUseReducedPerformance] = useState(false);
   const [canUseWebGL, setCanUseWebGL] = useState(false);
 
@@ -816,34 +810,6 @@ export function EnergyOrb({
             ? lastErrorMessage
             : "Tippe unten eine Frage ein oder wähle einen der Vorschläge."}
         </motion.p>
-
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] uppercase tracking-wider text-ink-tertiary mt-2 pt-2 border-t border-white/5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-          transition={{ delay: 0.3 }}
-        >
-          <span
-            className={cn(
-              "font-medium transition-colors duration-500",
-              status === "streaming" || status === "thinking" ? "text-accent-chat" : "",
-            )}
-          >
-            {status === "idle"
-              ? "Bereit"
-              : status === "error"
-                ? "Fehler"
-                : status === "streaming"
-                  ? "Antwortet..."
-                  : "Denkt nach..."}
-          </span>
-          <span>•</span>
-          <span className="truncate max-w-[80px] sm:max-w-[120px]">{modelName}</span>
-          <span>•</span>
-          <span>{toneLabel}</span>
-          <span>•</span>
-          <span>{creativityLabel}</span>
-        </motion.div>
       </div>
     </div>
   );
