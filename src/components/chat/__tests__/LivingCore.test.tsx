@@ -18,9 +18,7 @@ describe("LivingCore", () => {
 
   it("renders the subtitle", () => {
     render(<LivingCore {...defaultProps} />);
-    expect(
-      screen.getByText("Stelle eine Frage oder wähle ein Thema."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Stelle eine Frage oder wähle ein Thema.")).toBeInTheDocument();
   });
 
   it("displays model information", () => {
