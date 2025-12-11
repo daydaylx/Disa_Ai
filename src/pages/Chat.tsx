@@ -1,12 +1,10 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { EnergyOrb } from "@/components/chat/EnergyOrb";
-import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -17,7 +15,6 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
-import { useSettings } from "../hooks/useSettings";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const STARTER_PROMPTS = [
@@ -27,12 +24,6 @@ const STARTER_PROMPTS = [
   "Erzähl mir einen Witz",
 ];
 
-function getCreativityLabel(value: number): string {
-  if (value < 30) return "Präzise";
-  if (value < 70) return "Ausgewogen";
-  return "Kreativ";
-}
-
 export default function Chat() {
   const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -41,10 +32,6 @@ export default function Chat() {
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-
-  // Settings & Meta
-  const { settings } = useSettings();
-  const { models } = useModelCatalog();
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
@@ -60,23 +47,6 @@ export default function Chat() {
     error: chatLogic.error,
     messages: chatLogic.messages,
   });
-
-  // Derived Meta Info
-  const modelName = useMemo(() => {
-    const m = models?.find((x) => x.id === settings.preferredModelId);
-    return m?.label || settings.preferredModelId || "Unbekannt";
-  }, [models, settings.preferredModelId]);
-
-  const toneLabel = useMemo(() => {
-    return (
-      discussionPresetOptions.find((o) => o.key === settings.discussionPreset)?.label || "Standard"
-    );
-  }, [settings.discussionPreset]);
-
-  const creativityLabel = useMemo(
-    () => getCreativityLabel(settings.creativity),
-    [settings.creativity],
-  );
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
@@ -154,13 +124,7 @@ export default function Chat() {
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4">
                     {/* Energy Orb - Clean 3D Implementation */}
-                    <EnergyOrb
-                      status={coreStatus}
-                      modelName={modelName}
-                      toneLabel={toneLabel}
-                      creativityLabel={creativityLabel}
-                      lastErrorMessage={chatLogic.error?.message}
-                    />
+                    <EnergyOrb status={coreStatus} lastErrorMessage={chatLogic.error?.message} />
 
                     {/* Starter Prompts */}
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3">
