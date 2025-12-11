@@ -412,6 +412,19 @@ export default {
           "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
           "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
+        "blob-float-1": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
+          "33%": { transform: "translate(30px, -30px) scale(1.1)", opacity: "0.7" },
+          "66%": { transform: "translate(-20px, 20px) scale(0.9)", opacity: "0.6" },
+        },
+        "blob-float-2": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
+          "50%": { transform: "translate(-30px, 40px) scale(1.1)", opacity: "0.7" },
+        },
+        "blob-float-3": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
+          "50%": { transform: "translate(20px, -20px) scale(1.05)", opacity: "0.7" },
+        },
         cubeFloatAIdle: {
           "0%": {
             transform:
