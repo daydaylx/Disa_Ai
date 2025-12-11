@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
-import type { CoreStatus } from "@/components/chat/EnergyOrb";
 import type { ChatMessageType } from "@/types/chatMessage";
+import type { CoreStatus } from "@/types/orb";
 
 export interface UseCoreStatusOptions {
   isLoading: boolean;

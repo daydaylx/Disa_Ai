@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./styles/animated-core.css";
+
 :root {
   /* Modern Slate Glass Theme Variables - Using Tailwind color palette references */
   /* These map to Tailwind's zinc scale defined in tailwind.config.ts */

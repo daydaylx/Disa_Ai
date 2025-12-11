@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
-import { EnergyOrb } from "@/components/chat/EnergyOrb";
+import { AnimatedCoreBackground } from "@/components/chat/AnimatedCoreBackground";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -123,8 +123,10 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4">
-                    {/* Energy Orb - Clean 3D Implementation */}
-                    <EnergyOrb status={coreStatus} lastErrorMessage={chatLogic.error?.message} />
+                    <AnimatedCoreBackground
+                      status={coreStatus}
+                      lastErrorMessage={chatLogic.error?.message}
+                    />
 
                     {/* Starter Prompts */}
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3">
