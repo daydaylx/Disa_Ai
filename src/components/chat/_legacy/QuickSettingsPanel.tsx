@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { DEFAULT_MODEL_ID } from "@/config/modelPresets";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ interface QuickSettingsPanelProps {
 }
 
 export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const { settings, setCreativity, setPreferredModel } = useSettings();
   const { modelOptions } = useLegacyModelOptions();
@@ -127,8 +129,7 @@ export function QuickSettingsPanel({ className }: QuickSettingsPanelProps) {
               size="sm"
               className="w-full justify-start gap-2 text-xs h-8"
               onClick={() => {
-                // Navigate to full settings (could be implemented as navigation)
-                // TODO: Implement navigation to settings page
+                navigate("/settings");
               }}
             >
               <Settings className="h-3 w-3" />
