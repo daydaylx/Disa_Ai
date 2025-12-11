@@ -13,16 +13,15 @@ import { useSettings } from "../../hooks/useSettings";
 import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
 import { roleFilterFn, roleSortFn } from "./roles-filter";
 
-// Role category order for filters
+// Role category order for filters (matching categorizeRole in roles.ts)
 const CATEGORY_ORDER = [
-  "Assistance",
-  "Creative",
-  "Technical",
-  "Analysis",
-  "Research",
-  "Education",
-  "Business",
-  "Entertainment",
+  "Alltag",
+  "Business & Karriere",
+  "Kreativ & Unterhaltung",
+  "Lernen & Bildung",
+  "Leben & Familie",
+  "Experten & Beratung",
+  "Erwachsene",
   "Spezial",
 ] as const;
 

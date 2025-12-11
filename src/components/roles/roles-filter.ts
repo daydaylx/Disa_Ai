@@ -1,5 +1,17 @@
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 
+// Category order for consistent grouping (matching CATEGORY_ORDER in EnhancedRolesInterface.tsx)
+const CATEGORY_ORDER = [
+  "Alltag",
+  "Business & Karriere",
+  "Kreativ & Unterhaltung",
+  "Lernen & Bildung",
+  "Leben & Familie",
+  "Experten & Beratung",
+  "Erwachsene",
+  "Spezial",
+] as const;
+
 export function roleFilterFn(
   role: EnhancedRole,
   filters: FilterState,
@@ -52,6 +64,13 @@ export function roleFilterFn(
   return true;
 }
 
+// Helper function to get category order index
+function getCategoryIndex(category: string | undefined): number {
+  if (!category) return CATEGORY_ORDER.length; // Put uncategorized items at the end
+  const index = CATEGORY_ORDER.indexOf(category as any);
+  return index === -1 ? CATEGORY_ORDER.length : index;
+}
+
 export function roleSortFn(
   a: EnhancedRole,
   b: EnhancedRole,
@@ -61,8 +80,12 @@ export function roleSortFn(
   const direction = filters.sortDirection === "asc" ? 1 : -1;
 
   switch (filters.sortBy) {
-    case "name":
+    case "name": {
+      // First sort by category, then by name within each category
+      const categoryComparison = getCategoryIndex(a.category) - getCategoryIndex(b.category);
+      if (categoryComparison !== 0) return categoryComparison;
       return direction * a.name.localeCompare(b.name);
+    }
     case "usage": {
       const aUsage = usage.roles[a.id]?.count || 0;
       const bUsage = usage.roles[b.id]?.count || 0;
@@ -73,8 +96,12 @@ export function roleSortFn(
       const bLastUsed = usage.roles[b.id]?.lastUsed?.getTime() || 0;
       return direction * (bLastUsed - aLastUsed);
     }
-    case "category":
-      return direction * (a.category || "").localeCompare(b.category || "");
+    case "category": {
+      // Sort by category order, then by name within each category
+      const categoryComparison = getCategoryIndex(a.category) - getCategoryIndex(b.category);
+      if (categoryComparison !== 0) return direction * categoryComparison;
+      return a.name.localeCompare(b.name);
+    }
     default:
       return 0;
   }
