@@ -1,8 +1,8 @@
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { PerspectiveCamera } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { motion } from "framer-motion";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 import { cn } from "@/lib/utils";
@@ -34,52 +34,51 @@ const STATUS_CONFIG = {
   idle: {
     color: new THREE.Color(COLORS.cyan400),
     accentColor: new THREE.Color(COLORS.violet400),
-    emissiveIntensity: 0.6,
-    rotationSpeed: 0.3,
-    particleSpeed: 0.5,
-    glowIntensity: 0.4,
-    noiseSpeed: 0.2,
-    noiseScale: 2.0,
-    pulseSpeed: 0.5,
+    emissiveIntensity: 0.7,
+    rotationSpeed: 0.28,
+    particleSpeed: 0.4,
+    glowIntensity: 0.55,
+    noiseSpeed: 0.25,
+    noiseScale: 2.2,
+    pulseSpeed: 0.8,
   },
   thinking: {
     color: new THREE.Color(COLORS.fuchsia400),
     accentColor: new THREE.Color(COLORS.purple400),
-    emissiveIntensity: 0.9,
-    rotationSpeed: 1.0,
-    particleSpeed: 1.2,
-    glowIntensity: 0.7,
-    noiseSpeed: 0.8,
-    noiseScale: 3.0,
-    pulseSpeed: 1.5,
+    emissiveIntensity: 1.0,
+    rotationSpeed: 0.9,
+    particleSpeed: 1.0,
+    glowIntensity: 0.85,
+    noiseSpeed: 0.9,
+    noiseScale: 3.6,
+    pulseSpeed: 1.6,
   },
   streaming: {
     color: new THREE.Color(COLORS.blue400),
     accentColor: new THREE.Color(COLORS.sky400),
-    emissiveIntensity: 1.1,
-    rotationSpeed: 1.5,
-    particleSpeed: 2.0,
-    glowIntensity: 0.9,
-    noiseSpeed: 1.2,
-    noiseScale: 3.5,
-    pulseSpeed: 2.0,
+    emissiveIntensity: 1.2,
+    rotationSpeed: 1.25,
+    particleSpeed: 1.8,
+    glowIntensity: 1.0,
+    noiseSpeed: 1.25,
+    noiseScale: 4.0,
+    pulseSpeed: 2.1,
   },
   error: {
     color: new THREE.Color(COLORS.red400),
     accentColor: new THREE.Color(COLORS.orange400),
-    emissiveIntensity: 0.7,
-    rotationSpeed: 0.1,
-    particleSpeed: 0.3,
-    glowIntensity: 0.6,
-    noiseSpeed: 0.3,
-    noiseScale: 1.5,
-    pulseSpeed: 0.3,
+    emissiveIntensity: 0.8,
+    rotationSpeed: 0.15,
+    particleSpeed: 0.45,
+    glowIntensity: 0.7,
+    noiseSpeed: 0.35,
+    noiseScale: 1.6,
+    pulseSpeed: 0.5,
   },
 };
 
 // Simplex-like 3D noise function (approximation)
 const noiseGLSL = `
-  // Simple 3D noise implementation
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -129,10 +128,10 @@ const noiseGLSL = `
     vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
     vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
 
-    vec3 p0 = vec3(a0.xy, h.x);
-    vec3 p1 = vec3(a0.zw, h.y);
-    vec3 p2 = vec3(a1.xy, h.z);
-    vec3 p3 = vec3(a1.zw, h.w);
+    vec3 p0 = vec3(a0.xy,h.x);
+    vec3 p1 = vec3(a0.zw,h.y);
+    vec3 p2 = vec3(a1.xy,h.z);
+    vec3 p3 = vec3(a1.zw,h.w);
 
     vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
     p0 *= norm.x;
@@ -143,6 +142,18 @@ const noiseGLSL = `
     vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
     m = m * m;
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+  }
+
+  float fbm(vec3 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.5;
+    for (int i = 0; i < 4; i++) {
+      value += amplitude * snoise(p * frequency);
+      frequency *= 2.2;
+      amplitude *= 0.55;
+    }
+    return value;
   }
 `;
 
@@ -167,6 +178,7 @@ const plasmaCoreFragmentShader = `
   uniform float noiseScale;
   uniform float noiseSpeed;
   uniform float intensity;
+  uniform float pulseStrength;
 
   varying vec3 vNormal;
   varying vec3 vPosition;
@@ -175,38 +187,81 @@ const plasmaCoreFragmentShader = `
   ${noiseGLSL}
 
   void main() {
-    // Animated noise layers
-    vec3 pos = vPosition * noiseScale;
     float t = time * noiseSpeed;
+    vec3 dir = normalize(vPosition);
+    float radius = length(vPosition);
 
-    float noise1 = snoise(pos + vec3(t, 0.0, 0.0));
-    float noise2 = snoise(pos * 2.0 + vec3(0.0, t * 1.3, 0.0));
-    float noise3 = snoise(pos * 3.0 + vec3(0.0, 0.0, t * 0.7));
+    float swirl = fbm(dir * noiseScale + vec3(t * 0.8, t * 1.1, t * 0.6));
+    float ripples = fbm(dir * (noiseScale * 1.6) - vec3(t * 0.6, t * 0.4, t * 0.9));
+    float plasma = clamp(0.55 + swirl * 0.5 + ripples * 0.25, 0.0, 1.2);
 
-    // Combine noise layers for plasma effect
-    float plasma = (noise1 + noise2 * 0.5 + noise3 * 0.25) / 1.75;
-    plasma = plasma * 0.5 + 0.5; // Normalize to 0-1
+    vec3 baseColor = mix(color1, color2, plasma);
 
-    // Mix colors based on plasma
-    vec3 color = mix(color1, color2, plasma);
-
-    // Add glow based on view angle (Fresnel-like)
     vec3 viewDirection = normalize(cameraPosition - vPosition);
-    float fresnel = pow(1.0 - abs(dot(viewDirection, vNormal)), 2.0);
+    float fresnel = pow(1.0 - abs(dot(viewDirection, vNormal)), 2.8);
 
-    // Pulsing effect
-    float pulse = sin(time * 2.0) * 0.1 + 0.9;
+    float pulse = sin(time * (1.2 + pulseStrength * 0.4)) * 0.08 + 0.92;
+    float breathing = 1.0 + sin(time * 0.7) * 0.05;
 
-    // Combine everything
-    vec3 finalColor = color * (1.0 + fresnel * 0.5) * pulse;
-    float alpha = 0.85 + plasma * 0.15;
+    float innerGlow = smoothstep(0.0, 0.85, 1.0 - radius) * 1.2;
+    float edgeGlow = fresnel * 0.75;
+
+    vec3 finalColor = baseColor * (innerGlow + edgeGlow + 0.4) * pulse * breathing;
+    float alpha = 0.75 + innerGlow * 0.25;
 
     gl_FragColor = vec4(finalColor * intensity, alpha);
   }
 `;
 
-// Fresnel Shell Shader (Outer rim glow)
-const fresnelShellVertexShader = `
+// Lightning filaments shader (branching plasma)
+const lightningVertexShader = `
+  varying vec3 vNormal;
+  varying vec3 vPosition;
+
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vPosition = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const lightningFragmentShader = `
+  uniform float time;
+  uniform vec3 colorA;
+  uniform vec3 colorB;
+  uniform float intensity;
+
+  varying vec3 vNormal;
+  varying vec3 vPosition;
+
+  ${noiseGLSL}
+
+  void main() {
+    float t = time * 1.1;
+    vec3 dir = normalize(vPosition);
+    float radius = length(vPosition);
+
+    float branchNoise = fbm(dir * 8.0 + vec3(t * 0.8, -t * 0.6, t * 1.2));
+    float jagged = abs(sin(dir.x * 12.0 + t) * cos(dir.y * 14.0 - t * 0.9));
+    float arcs = pow(1.0 - jagged, 3.0) * (0.6 + branchNoise * 0.4);
+
+    float radialSpread = smoothstep(0.18, 0.95, radius) * (1.2 - radius);
+    float filamentMask = smoothstep(0.5, 0.95, arcs) * radialSpread;
+
+    float shimmer = sin(t * 2.0 + dir.z * 10.0) * 0.2 + 0.8;
+    vec3 color = mix(colorA, colorB, filamentMask) * shimmer;
+
+    float fresnel = pow(1.0 - abs(dot(normalize(cameraPosition - vPosition), vNormal)), 2.5);
+    float alpha = filamentMask * (0.65 + fresnel * 0.35) * intensity;
+
+    if (alpha < 0.04) discard;
+
+    gl_FragColor = vec4(color * (1.0 + filamentMask * 0.8), alpha);
+  }
+`;
+
+// Glass shell shader with rim light and subtle distortion
+const glassShellVertexShader = `
   varying vec3 vNormal;
   varying vec3 vPosition;
 
@@ -217,7 +272,7 @@ const fresnelShellVertexShader = `
   }
 `;
 
-const fresnelShellFragmentShader = `
+const glassShellFragmentShader = `
   uniform float time;
   uniform vec3 glowColor;
   uniform float intensity;
@@ -228,25 +283,19 @@ const fresnelShellFragmentShader = `
   ${noiseGLSL}
 
   void main() {
-    // Calculate Fresnel effect (rim lighting)
     vec3 viewDirection = normalize(cameraPosition - vPosition);
     float fresnel = pow(1.0 - abs(dot(viewDirection, vNormal)), 3.0);
 
-    // Add subtle noise to the rim
-    float noise = snoise(vPosition * 2.0 + vec3(time * 0.5)) * 0.1 + 0.9;
+    float noise = fbm(vNormal * 4.0 + vec3(time * 0.6, time * 0.4, time * 0.7)) * 0.5 + 0.5;
+    float pulse = sin(time * 1.4) * 0.12 + 0.9;
 
-    // Pulsing effect
-    float pulse = sin(time * 1.5) * 0.15 + 0.85;
-
-    // Combine effects
-    float glowStrength = fresnel * noise * pulse * intensity;
+    float glowStrength = fresnel * (0.75 + noise * 0.35) * pulse * intensity;
     vec3 finalColor = glowColor * glowStrength;
 
-    gl_FragColor = vec4(finalColor, fresnel * 0.6);
+    gl_FragColor = vec4(finalColor, glowStrength * 0.9);
   }
 `;
 
-// Core Sphere with Custom Plasma Shader
 function PlasmaCore({ status }: { status: CoreStatus }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const config = STATUS_CONFIG[status];
@@ -254,37 +303,53 @@ function PlasmaCore({ status }: { status: CoreStatus }) {
   const uniforms = useMemo(
     () => ({
       time: { value: 0 },
-      color1: { value: config.color },
-      color2: { value: config.accentColor },
+      color1: { value: config.color.clone() },
+      color2: { value: config.accentColor.clone() },
       noiseScale: { value: config.noiseScale },
       noiseSpeed: { value: config.noiseSpeed },
       intensity: { value: config.emissiveIntensity },
+      pulseStrength: { value: config.pulseSpeed },
     }),
     [config],
   );
 
   useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += delta * config.rotationSpeed;
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.15;
+      meshRef.current.rotation.y += delta * (config.rotationSpeed * 0.6);
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.18;
+      meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.3) * 0.12;
 
-      // Update shader uniforms
       const material = meshRef.current.material as THREE.ShaderMaterial;
-      material.uniforms.time.value = state.clock.elapsedTime;
+      const uniforms = material.uniforms as Record<string, { value: number | THREE.Color }>;
 
-      // Smooth transition of colors
-      material.uniforms.color1.value.lerp(config.color, 0.05);
-      material.uniforms.color2.value.lerp(config.accentColor, 0.05);
-      material.uniforms.intensity.value +=
-        (config.emissiveIntensity - material.uniforms.intensity.value) * 0.05;
-      material.uniforms.noiseSpeed.value = config.noiseSpeed;
-      material.uniforms.noiseScale.value = config.noiseScale;
+      if (
+        uniforms.time &&
+        uniforms.color1 &&
+        uniforms.color2 &&
+        uniforms.intensity &&
+        uniforms.noiseSpeed &&
+        uniforms.noiseScale &&
+        uniforms.pulseStrength
+      ) {
+        uniforms.time.value = state.clock.elapsedTime;
+        (uniforms.color1.value as THREE.Color).lerp(config.color, 0.05);
+        (uniforms.color2.value as THREE.Color).lerp(config.accentColor, 0.05);
+        const currentIntensity =
+          typeof uniforms.intensity.value === "number"
+            ? uniforms.intensity.value
+            : config.emissiveIntensity;
+        uniforms.intensity.value =
+          currentIntensity + (config.emissiveIntensity - currentIntensity) * 0.04;
+        uniforms.noiseSpeed.value = config.noiseSpeed;
+        uniforms.noiseScale.value = config.noiseScale;
+        uniforms.pulseStrength.value = config.pulseSpeed;
+      }
     }
   });
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[1, 96, 96]} />
       <shaderMaterial
         uniforms={uniforms}
         vertexShader={plasmaCoreVertexShader}
@@ -298,38 +363,93 @@ function PlasmaCore({ status }: { status: CoreStatus }) {
   );
 }
 
-// Fresnel Glow Shell (Outer layer)
-function FresnelShell({ status }: { status: CoreStatus }) {
+function LightningLayer({ status }: { status: CoreStatus }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const config = STATUS_CONFIG[status];
 
   const uniforms = useMemo(
     () => ({
       time: { value: 0 },
-      glowColor: { value: config.accentColor },
-      intensity: { value: config.emissiveIntensity * 1.5 },
+      colorA: { value: config.color.clone() },
+      colorB: { value: config.accentColor.clone() },
+      intensity: { value: config.emissiveIntensity * 1.25 },
     }),
     [config],
   );
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y -= delta * config.rotationSpeed * 0.3;
-      meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.4) * 0.1;
+      meshRef.current.rotation.y -= state.clock.getDelta() * (config.rotationSpeed * 0.5);
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.6) * 0.1;
 
       const material = meshRef.current.material as THREE.ShaderMaterial;
-      material.uniforms.time.value = state.clock.elapsedTime;
-      material.uniforms.glowColor.value.lerp(config.accentColor, 0.05);
+      const uniforms = material.uniforms as Record<string, { value: number | THREE.Color }>;
+
+      if (uniforms.time && uniforms.colorA && uniforms.colorB && uniforms.intensity) {
+        uniforms.time.value = state.clock.elapsedTime;
+        (uniforms.colorA.value as THREE.Color).lerp(config.color, 0.08);
+        (uniforms.colorB.value as THREE.Color).lerp(config.accentColor, 0.08);
+        const currentIntensity =
+          typeof uniforms.intensity.value === "number"
+            ? uniforms.intensity.value
+            : config.emissiveIntensity * 1.3;
+        uniforms.intensity.value =
+          currentIntensity + (config.emissiveIntensity * 1.3 - currentIntensity) * 0.05;
+      }
     }
   });
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[1.15, 64, 64]} />
+      <sphereGeometry args={[0.98, 96, 96]} />
       <shaderMaterial
         uniforms={uniforms}
-        vertexShader={fresnelShellVertexShader}
-        fragmentShader={fresnelShellFragmentShader}
+        vertexShader={lightningVertexShader}
+        fragmentShader={lightningFragmentShader}
+        transparent
+        side={THREE.DoubleSide}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
+function GlassShell({ status }: { status: CoreStatus }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const config = STATUS_CONFIG[status];
+
+  const uniforms = useMemo(
+    () => ({
+      time: { value: 0 },
+      glowColor: { value: config.accentColor.clone() },
+      intensity: { value: config.emissiveIntensity * 1.6 },
+    }),
+    [config],
+  );
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += state.clock.getDelta() * (config.rotationSpeed * 0.25);
+      meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.35) * 0.08;
+
+      const material = meshRef.current.material as THREE.ShaderMaterial;
+      const uniforms = material.uniforms as Record<string, { value: number | THREE.Color }>;
+
+      if (uniforms.time && uniforms.glowColor) {
+        uniforms.time.value = state.clock.elapsedTime;
+        (uniforms.glowColor.value as THREE.Color).lerp(config.accentColor, 0.04);
+      }
+    }
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[1.12, 96, 96]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={glassShellVertexShader}
+        fragmentShader={glassShellFragmentShader}
         transparent
         side={THREE.BackSide}
         blending={THREE.AdditiveBlending}
@@ -339,65 +459,46 @@ function FresnelShell({ status }: { status: CoreStatus }) {
   );
 }
 
-// Enhanced Energy Bands (replacing simple rings)
-function EnergyBands({ status }: { status: CoreStatus }) {
-  const groupRef = useRef<THREE.Group>(null);
+function GlowHalo({ status }: { status: CoreStatus }) {
+  const meshRef = useRef<THREE.Mesh>(null);
   const config = STATUS_CONFIG[status];
 
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.z += delta * 0.3 * config.rotationSpeed;
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.4;
-      groupRef.current.rotation.y += delta * 0.1 * config.rotationSpeed;
+  useFrame((state) => {
+    if (meshRef.current) {
+      const pulse =
+        Math.sin(state.clock.elapsedTime * (0.6 + config.pulseSpeed * 0.2)) * 0.04 + 1.0;
+      meshRef.current.scale.setScalar(1.8 * pulse);
+      meshRef.current.rotation.z += state.clock.getDelta() * 0.05;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Outer Band */}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.6, 0.04, 16, 100]} />
-        <meshBasicMaterial
-          color={config.accentColor}
-          transparent
-          opacity={0.6}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* Inner Band - Tilted */}
-      <mesh rotation={[Math.PI / 3, Math.PI / 4, 0]}>
-        <torusGeometry args={[1.4, 0.035, 16, 100]} />
-        <meshBasicMaterial color={config.color} transparent opacity={0.5} toneMapped={false} />
-      </mesh>
-
-      {/* Diagonal Band */}
-      <mesh rotation={[Math.PI / 6, 0, Math.PI / 3]}>
-        <torusGeometry args={[1.5, 0.03, 16, 100]} />
-        <meshBasicMaterial
-          color={config.accentColor}
-          transparent
-          opacity={0.4}
-          toneMapped={false}
-        />
-      </mesh>
-    </group>
+    <mesh ref={meshRef} rotation={[Math.PI / 2, 0, 0]}>
+      <ringGeometry args={[1.4, 1.9, 80]} />
+      <meshBasicMaterial
+        color={config.accentColor}
+        transparent
+        opacity={0.08}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </mesh>
   );
 }
 
-// Enhanced Particle System
 function EnhancedParticles({ status }: { status: CoreStatus }) {
   const pointsRef = useRef<THREE.Points>(null);
   const config = STATUS_CONFIG[status];
 
-  const particleCount = 100;
+  const particleCount = 280;
+
   const { positions, sizes, colors } = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
     const colors = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      const radius = 1.8 + Math.random() * 0.8;
+      const radius = 1.9 + Math.random() * 0.9;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
 
@@ -405,10 +506,9 @@ function EnhancedParticles({ status }: { status: CoreStatus }) {
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = radius * Math.cos(phi);
 
-      sizes[i] = Math.random() * 0.08 + 0.02;
+      sizes[i] = Math.random() * 0.07 + 0.02;
 
-      // Vary particle colors slightly
-      const colorVariation = Math.random() * 0.3;
+      const colorVariation = Math.random() * 0.25;
       colors[i * 3] = config.accentColor.r * (1 - colorVariation);
       colors[i * 3 + 1] = config.accentColor.g * (1 - colorVariation);
       colors[i * 3 + 2] = config.accentColor.b * (1 - colorVariation);
@@ -417,21 +517,20 @@ function EnhancedParticles({ status }: { status: CoreStatus }) {
     return { positions, sizes, colors };
   }, [config.accentColor]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.15 * config.particleSpeed;
-      pointsRef.current.rotation.x += delta * 0.08 * config.particleSpeed;
+      pointsRef.current.rotation.y += delta * 0.12 * config.particleSpeed;
+      pointsRef.current.rotation.x += delta * 0.07 * config.particleSpeed;
 
-      // Update colors smoothly
       const colorAttr = pointsRef.current.geometry.attributes.color as THREE.BufferAttribute;
       for (let i = 0; i < particleCount; i++) {
         const currentR = colorAttr.getX(i);
         const currentG = colorAttr.getY(i);
         const currentB = colorAttr.getZ(i);
 
-        const targetR = config.accentColor.r * (1 - Math.random() * 0.3);
-        const targetG = config.accentColor.g * (1 - Math.random() * 0.3);
-        const targetB = config.accentColor.b * (1 - Math.random() * 0.3);
+        const targetR = config.accentColor.r * (1 - Math.random() * 0.25);
+        const targetG = config.accentColor.g * (1 - Math.random() * 0.25);
+        const targetB = config.accentColor.b * (1 - Math.random() * 0.25);
 
         colorAttr.setXYZ(
           i,
@@ -480,36 +579,41 @@ function EnhancedParticles({ status }: { status: CoreStatus }) {
   );
 }
 
-// Main Scene
 function Scene({ status }: { status: CoreStatus }) {
   const config = STATUS_CONFIG[status];
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y = state.clock.elapsedTime * (0.15 + config.rotationSpeed * 0.15);
+      const pulseScale =
+        1 + Math.sin(state.clock.elapsedTime * (0.8 + config.pulseSpeed * 0.3)) * 0.02;
+      groupRef.current.scale.setScalar(pulseScale);
+    }
+  });
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={45} />
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={0.5}
-        minPolarAngle={Math.PI / 2.5}
-        maxPolarAngle={Math.PI / 1.5}
-      />
+      <PerspectiveCamera makeDefault position={[0, 0, 4.6]} fov={42} />
 
-      <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={0.6} color={config.color} />
-      <pointLight position={[-5, -5, 5]} intensity={0.4} color={config.accentColor} />
+      <ambientLight intensity={0.22} />
+      <pointLight position={[4, 4, 5]} intensity={0.55} color={config.color} />
+      <pointLight position={[-5, -3, 4]} intensity={0.5} color={config.accentColor} />
 
-      <PlasmaCore status={status} />
-      <FresnelShell status={status} />
-      <EnergyBands status={status} />
+      <group ref={groupRef}>
+        <PlasmaCore status={status} />
+        <LightningLayer status={status} />
+        <GlassShell status={status} />
+        <GlowHalo status={status} />
+      </group>
+
       <EnhancedParticles status={status} />
 
       <EffectComposer>
         <Bloom
           intensity={config.glowIntensity}
-          luminanceThreshold={0.1}
-          luminanceSmoothing={0.9}
+          luminanceThreshold={0.12}
+          luminanceSmoothing={0.85}
           mipmapBlur
         />
       </EffectComposer>
@@ -517,38 +621,48 @@ function Scene({ status }: { status: CoreStatus }) {
   );
 }
 
-// Performance check
 function shouldUseReducedPerformance(): boolean {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof window === "undefined") return false;
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isLowEndDevice = window.devicePixelRatio < 2;
   return prefersReducedMotion || isLowEndDevice;
 }
 
-// Fallback Component (for reduced motion or low-end devices)
+function isWebGLAvailable(): boolean {
+  if (typeof document === "undefined") return false;
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+  return !!gl;
+}
+
 function StaticOrbFallback({ status }: { status: CoreStatus }) {
   const config = STATUS_CONFIG[status];
 
   return (
     <div
       className={cn(
-        "relative w-full h-full flex items-center justify-center",
-        "rounded-full transition-all duration-1000",
+        "relative w-full h-full flex items-center justify-center rounded-full overflow-hidden",
+        "bg-gradient-to-br from-slate-900/60 via-indigo-900/40 to-black/70",
       )}
     >
-      {/* Static gradient sphere */}
       <div
-        className="w-3/4 h-3/4 rounded-full transition-all duration-1000"
+        className="absolute inset-4 rounded-full blur-3xl opacity-40"
         style={{
           background: `radial-gradient(circle at 30% 30%, ${config.color.getStyle()}, ${config.accentColor.getStyle()})`,
-          boxShadow: `0 0 60px ${config.color.getStyle()}, 0 0 100px ${config.accentColor.getStyle()}`,
-          opacity: 0.9,
         }}
+      />
+      <img
+        src="/plasma-orb-fallback.svg"
+        alt="Statischer Plasma Orb"
+        className="w-full h-full object-contain drop-shadow-[0_0_60px_rgba(56,189,248,0.25)]"
+        loading="lazy"
       />
     </div>
   );
 }
 
-// Main Component
 export function EnergyOrb({
   status,
   modelName,
@@ -556,24 +670,30 @@ export function EnergyOrb({
   creativityLabel,
   lastErrorMessage,
 }: EnergyOrbProps) {
-  const useReducedPerformance = shouldUseReducedPerformance();
+  const [useReducedPerformance, setUseReducedPerformance] = useState(false);
+  const [canUseWebGL, setCanUseWebGL] = useState(false);
+
+  useEffect(() => {
+    setUseReducedPerformance(shouldUseReducedPerformance());
+    setCanUseWebGL(isWebGLAvailable());
+  }, []);
+
+  const shouldRenderCanvas = canUseWebGL && !useReducedPerformance;
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 pb-8 pt-4 w-full animate-fade-in">
-      {/* 3D Canvas Container */}
       <motion.div
         className={cn(
           "relative flex items-center justify-center",
-          "w-[clamp(200px,45vw,280px)] h-[clamp(200px,45vw,280px)]",
+          "w-[clamp(240px,55vw,340px)] h-[clamp(240px,55vw,340px)]",
         )}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
       >
-        {/* Background Glow */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full blur-3xl opacity-30 transition-all duration-1000",
+            "absolute inset-0 rounded-full blur-3xl opacity-40 transition-all duration-1000",
             status === "error"
               ? "bg-red-500/60"
               : status === "thinking"
@@ -584,25 +704,19 @@ export function EnergyOrb({
           )}
         />
 
-        {/* 3D Canvas or Static Fallback */}
-        {useReducedPerformance ? (
-          <StaticOrbFallback status={status} />
-        ) : (
+        {shouldRenderCanvas ? (
           <Canvas
             className="w-full h-full"
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: "high-performance",
-            }}
-            dpr={[1, 2]} // Limit pixel ratio for performance
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            dpr={useReducedPerformance ? 1 : [1, 2]}
           >
             <Scene status={status} />
           </Canvas>
+        ) : (
+          <StaticOrbFallback status={status} />
         )}
       </motion.div>
 
-      {/* Text Content */}
       <div className="text-center space-y-2 max-w-sm px-4">
         <motion.h2
           className="text-xl font-semibold text-ink-primary"
