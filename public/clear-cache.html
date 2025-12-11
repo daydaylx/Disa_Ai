@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cache Leeren - Disa AI</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .status {
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      background: #2a2a2a;
+    }
+    .success {
+      background: #0f5132;
+      color: #d1e7dd;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #00e5ff;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #00ccdd;
+    }
+    .code {
+      background: #000;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧹 Cache & Service Worker Leeren</h1>
+
+  <div class="status" id="status">
+    <p><strong>Status:</strong> Bereit zum Leeren</p>
+  </div>
+
+  <h2>Automatisch:</h2>
+  <button onclick="clearEverything()">🗑️ Alles Leeren (Empfohlen)</button>
+  <button onclick="clearCacheOnly()">Cache Leeren</button>
+  <button onclick="unregisterSW()">Service Worker Entfernen</button>
+
+  <h2>Manuell (Alternative):</h2>
+  <ol>
+    <li><strong>Chrome/Edge:</strong> Drücke <code>Ctrl+Shift+R</code> (Windows) oder <code>Cmd+Shift+R</code> (Mac)</li>
+    <li><strong>Firefox:</strong> Drücke <code>Ctrl+F5</code> oder <code>Cmd+Shift+R</code></li>
+    <li><strong>Safari:</strong> Drücke <code>Cmd+Option+R</code></li>
+  </ol>
+
+  <h3>Oder über DevTools:</h3>
+  <ol>
+    <li>Öffne DevTools (F12)</li>
+    <li>Gehe zu "Application" Tab (Chrome) oder "Storage" (Firefox)</li>
+    <li>Klicke auf "Service Workers"</li>
+    <li>Klicke "Unregister" beim Disa AI Worker</li>
+    <li>Unter "Cache Storage" → Alle Caches löschen</li>
+    <li>Seite neu laden</li>
+  </ol>
+
+  <button onclick="goToApp()">✨ Zur App (Nach Cache-Leerung)</button>
+
+  <script>
+    const status = document.getElementById('status');
+
+    function updateStatus(message, success = false) {
+      status.innerHTML = `<p>${message}</p>`;
+      status.className = success ? 'status success' : 'status';
+    }
+
+    async function clearEverything() {
+      updateStatus('🔄 Lösche alles...');
+      let results = [];
+
+      // 1. Unregister Service Worker
+      if ('serviceWorker' in navigator) {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (let registration of registrations) {
+            await registration.unregister();
+            results.push('✅ Service Worker entfernt');
+          }
+        } catch (e) {
+          results.push('❌ Service Worker Fehler: ' + e.message);
+        }
+      }
+
+      // 2. Clear all caches
+      if ('caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          for (let cacheName of cacheNames) {
+            await caches.delete(cacheName);
+            results.push(`✅ Cache gelöscht: ${cacheName}`);
+          }
+        } catch (e) {
+          results.push('❌ Cache Fehler: ' + e.message);
+        }
+      }
+
+      // 3. Clear LocalStorage & SessionStorage
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        results.push('✅ LocalStorage & SessionStorage geleert');
+      } catch (e) {
+        results.push('❌ Storage Fehler: ' + e.message);
+      }
+
+      // 4. Clear IndexedDB
+      if ('indexedDB' in window) {
+        try {
+          const dbs = await indexedDB.databases();
+          for (let db of dbs) {
+            if (db.name) {
+              indexedDB.deleteDatabase(db.name);
+              results.push(`✅ IndexedDB gelöscht: ${db.name}`);
+            }
+          }
+        } catch (e) {
+          results.push('⚠️ IndexedDB: ' + e.message);
+        }
+      }
+
+      updateStatus(
+        '<strong>✅ Fertig!</strong><br><br>' + results.join('<br>') +
+        '<br><br><strong>Jetzt neu laden:</strong> Drücke Ctrl+Shift+R (oder Cmd+Shift+R auf Mac)',
+        true
+      );
+    }
+
+    async function clearCacheOnly() {
+      updateStatus('🔄 Lösche Caches...');
+      if ('caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          let deleted = [];
+          for (let cacheName of cacheNames) {
+            await caches.delete(cacheName);
+            deleted.push(cacheName);
+          }
+          updateStatus(`✅ ${deleted.length} Caches gelöscht: ${deleted.join(', ')}`, true);
+        } catch (e) {
+          updateStatus('❌ Fehler: ' + e.message);
+        }
+      } else {
+        updateStatus('❌ Cache API nicht verfügbar');
+      }
+    }
+
+    async function unregisterSW() {
+      updateStatus('🔄 Entferne Service Worker...');
+      if ('serviceWorker' in navigator) {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          if (registrations.length === 0) {
+            updateStatus('⚠️ Kein Service Worker gefunden');
+            return;
+          }
+          for (let registration of registrations) {
+            await registration.unregister();
+          }
+          updateStatus(`✅ ${registrations.length} Service Worker(s) entfernt`, true);
+        } catch (e) {
+          updateStatus('❌ Fehler: ' + e.message);
+        }
+      } else {
+        updateStatus('❌ Service Worker nicht unterstützt');
+      }
+    }
+
+    function goToApp() {
+      // Force reload without cache
+      window.location.href = '/?nocache=' + Date.now();
+      window.location.reload(true);
+    }
+
+    // Auto-clear on page load (optional - disabled by default)
+    // window.addEventListener('load', () => {
+    //   const auto = new URLSearchParams(window.location.search).get('auto');
+    //   if (auto === 'true') {
+    //     clearEverything();
+    //   }
+    // });
+  </script>
+</body>
+</html>

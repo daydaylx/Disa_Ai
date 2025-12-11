@@ -40,10 +40,10 @@ const STATUS_CONFIG = {
   idle: {
     color: new THREE.Color(COLORS.plasmaCyan), // Bright electric cyan core
     accentColor: new THREE.Color(COLORS.plasmaMagenta), // Vivid magenta outer glow
-    emissiveIntensity: 1.2, // Increased from 0.7
+    emissiveIntensity: 2.5, // Dramatically increased for visibility
     rotationSpeed: 0.28,
     particleSpeed: 0.4,
-    glowIntensity: 1.4, // Increased from 0.55 for stronger outer glow
+    glowIntensity: 2.8, // Much higher for strong bloom
     noiseSpeed: 0.25,
     noiseScale: 2.2,
     pulseSpeed: 0.8,
@@ -51,10 +51,10 @@ const STATUS_CONFIG = {
   thinking: {
     color: new THREE.Color(COLORS.plasmaMagenta), // Vivid magenta when thinking
     accentColor: new THREE.Color(COLORS.plasmaViolet), // Deep violet accent
-    emissiveIntensity: 1.5, // Increased from 1.0
+    emissiveIntensity: 3.0, // Very bright when thinking
     rotationSpeed: 0.9,
     particleSpeed: 1.0,
-    glowIntensity: 1.6, // Increased from 0.85
+    glowIntensity: 3.2, // Maximum glow
     noiseSpeed: 0.9,
     noiseScale: 3.6,
     pulseSpeed: 1.6,
@@ -62,10 +62,10 @@ const STATUS_CONFIG = {
   streaming: {
     color: new THREE.Color(COLORS.plasmaBlue), // Electric blue for streaming
     accentColor: new THREE.Color(COLORS.plasmaCyan), // Bright cyan accent
-    emissiveIntensity: 1.6, // Increased from 1.2
+    emissiveIntensity: 3.2, // Brightest state
     rotationSpeed: 1.25,
     particleSpeed: 1.8,
-    glowIntensity: 1.8, // Increased from 1.0
+    glowIntensity: 3.5, // Maximum bloom when streaming
     noiseSpeed: 1.25,
     noiseScale: 4.0,
     pulseSpeed: 2.1,
@@ -73,10 +73,10 @@ const STATUS_CONFIG = {
   error: {
     color: new THREE.Color(COLORS.red400),
     accentColor: new THREE.Color(COLORS.orange400),
-    emissiveIntensity: 1.0, // Increased from 0.8
+    emissiveIntensity: 2.0, // Bright enough to be visible
     rotationSpeed: 0.15,
     particleSpeed: 0.45,
-    glowIntensity: 1.1, // Increased from 0.7
+    glowIntensity: 2.2,
     noiseSpeed: 0.35,
     noiseScale: 1.6,
     pulseSpeed: 0.5,
@@ -203,31 +203,34 @@ const plasmaCoreFragmentShader = `
     float turbulence = fbm(dir * (noiseScale * 2.5) + vec3(-t * 0.5, t * 0.8, -t * 0.7));
 
     // Enhanced plasma with more dramatic variation
-    float plasma = clamp(0.45 + swirl * 0.6 + ripples * 0.3 + turbulence * 0.2, 0.0, 1.3);
+    float plasma = clamp(0.5 + swirl * 0.5 + ripples * 0.3 + turbulence * 0.2, 0.3, 1.0);
 
-    // More vibrant color mixing with boost
-    vec3 baseColor = mix(color1 * 1.2, color2 * 1.15, plasma * 0.8 + 0.2);
+    // Bright, vibrant color mixing - significantly boosted
+    vec3 baseColor = mix(color1 * 2.5, color2 * 2.2, plasma * 0.7 + 0.3);
 
     vec3 viewDirection = normalize(cameraPosition - vPosition);
     float fresnel = pow(1.0 - abs(dot(viewDirection, vNormal)), 2.5);
 
     // More dramatic pulse and breathing
-    float pulse = sin(time * (1.2 + pulseStrength * 0.4)) * 0.12 + 0.93;
-    float pulse2 = sin(time * (1.8 + pulseStrength * 0.3) + plasma * 2.0) * 0.08 + 0.92;
-    float breathing = 1.0 + sin(time * 0.7) * 0.08;
+    float pulse = sin(time * (1.2 + pulseStrength * 0.4)) * 0.15 + 1.0;
+    float pulse2 = sin(time * (1.8 + pulseStrength * 0.3) + plasma * 2.0) * 0.1 + 1.0;
+    float breathing = 1.0 + sin(time * 0.7) * 0.1;
 
-    // Stronger inner volumetric glow
-    float innerGlow = smoothstep(0.0, 0.9, 1.0 - radius) * 1.5;
-    float coreHotspot = smoothstep(0.3, 0.0, radius) * 0.8; // Bright center
-    float edgeGlow = fresnel * 0.9;
+    // Much stronger glow for visibility
+    float innerGlow = smoothstep(0.0, 1.0, 1.0 - radius * 0.5) * 2.5;
+    float coreHotspot = smoothstep(0.4, 0.0, radius) * 1.5;
+    float edgeGlow = fresnel * 1.2;
 
-    // Layered lighting for depth
-    vec3 finalColor = baseColor * (innerGlow + edgeGlow + coreHotspot + 0.5) * pulse * pulse2 * breathing;
+    // Bright base lighting with guaranteed minimum brightness
+    float totalGlow = innerGlow + edgeGlow + coreHotspot + 1.5;
+    vec3 finalColor = baseColor * totalGlow * pulse * pulse2 * breathing;
 
-    // Higher alpha for more solid volumetric appearance
-    float alpha = 0.82 + innerGlow * 0.18;
+    // Ensure minimum brightness
+    finalColor = max(finalColor, color1 * 0.3);
 
-    gl_FragColor = vec4(finalColor * intensity * 1.2, alpha);
+    float alpha = 0.85 + innerGlow * 0.15;
+
+    gl_FragColor = vec4(finalColor * intensity * 2.0, alpha);
   }
 `;
 
@@ -272,28 +275,28 @@ const lightningFragmentShader = `
     arcs += pow(1.0 - jagged2, 3.0) * (0.3 + branchNoise2 * 0.4) * 0.6;
 
     // Broader radial spread for more visible lightning throughout the sphere
-    float radialSpread = smoothstep(0.15, 0.98, radius) * (1.3 - radius * 0.7);
+    float radialSpread = smoothstep(0.1, 1.0, radius) * (1.4 - radius * 0.5);
 
     // Lower threshold for more visible filaments
-    float filamentMask = smoothstep(0.35, 0.9, arcs) * radialSpread;
+    float filamentMask = smoothstep(0.3, 0.85, arcs) * radialSpread;
 
     // More dramatic shimmer effect
-    float shimmer = sin(t * 2.5 + dir.z * 12.0) * 0.25 + 0.85;
-    float shimmer2 = sin(t * 3.0 - dir.y * 10.0) * 0.15 + 0.85;
+    float shimmer = sin(t * 2.5 + dir.z * 12.0) * 0.3 + 1.0;
+    float shimmer2 = sin(t * 3.0 - dir.y * 10.0) * 0.2 + 1.0;
 
-    // Vibrant color mixing with higher intensity
-    vec3 color = mix(colorA * 1.3, colorB * 1.2, filamentMask * 0.7 + 0.3) * shimmer * shimmer2;
+    // Very bright color mixing for electric visibility
+    vec3 color = mix(colorA * 3.0, colorB * 2.8, filamentMask * 0.6 + 0.4) * shimmer * shimmer2;
 
     float fresnel = pow(1.0 - abs(dot(normalize(cameraPosition - vPosition), vNormal)), 2.0);
 
-    // Increased base alpha and fresnel contribution for more visible lightning
-    float alpha = filamentMask * (0.8 + fresnel * 0.5) * intensity * 1.4;
+    // High alpha for strong visibility
+    float alpha = filamentMask * (0.9 + fresnel * 0.6) * intensity * 1.8;
 
-    // Lower discard threshold to show more lightning
-    if (alpha < 0.025) discard;
+    // Very low discard threshold
+    if (alpha < 0.015) discard;
 
-    // Boost color intensity for bright, electric look
-    gl_FragColor = vec4(color * (1.2 + filamentMask * 1.2), alpha);
+    // Maximum brightness boost
+    gl_FragColor = vec4(color * (2.0 + filamentMask * 1.5), alpha);
   }
 `;
 
@@ -331,20 +334,20 @@ const glassShellFragmentShader = `
     float noise = fbm(vNormal * 5.0 + vec3(time * 0.6, time * 0.4, time * 0.7)) * 0.5 + 0.5;
     float noise2 = fbm(vNormal * 8.0 - vec3(time * 0.3, time * 0.5, time * 0.2)) * 0.3 + 0.7;
 
-    // More dramatic pulse
-    float pulse = sin(time * 1.4) * 0.18 + 0.92;
-    float pulse2 = sin(time * 2.0 + noise * 3.14) * 0.1 + 0.9;
+    // Brighter pulse
+    float pulse = sin(time * 1.4) * 0.2 + 1.0;
+    float pulse2 = sin(time * 2.0 + noise * 3.14) * 0.15 + 1.0;
 
-    // Enhanced glow with multiple layers
-    float glowStrength = fresnel * (0.9 + noise * 0.4) * pulse * pulse2 * intensity * 1.3;
+    // Much stronger glow
+    float glowStrength = (fresnel + 0.3) * (1.0 + noise * 0.5) * pulse * pulse2 * intensity * 2.5;
 
-    // Add energy ripples
-    float ripple = sin(fresnel * 10.0 - time * 2.0) * 0.15 + 0.85;
+    // Brighter energy ripples
+    float ripple = sin(fresnel * 10.0 - time * 2.0) * 0.2 + 1.0;
 
-    vec3 finalColor = glowColor * glowStrength * noise2 * ripple * 1.4;
+    vec3 finalColor = glowColor * glowStrength * noise2 * ripple * 2.5;
 
-    // Higher alpha for more visible glass shell
-    float alpha = glowStrength * 1.1 * (0.7 + fresnel * 0.3);
+    // Higher alpha and base brightness
+    float alpha = (glowStrength * 1.3 + 0.2) * (0.8 + fresnel * 0.4);
 
     gl_FragColor = vec4(finalColor, alpha);
   }
@@ -410,8 +413,9 @@ function PlasmaCore({ status }: { status: CoreStatus }) {
         fragmentShader={plasmaCoreFragmentShader}
         transparent
         side={THREE.DoubleSide}
-        blending={THREE.AdditiveBlending}
+        blending={THREE.NormalBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -464,6 +468,7 @@ function LightningLayer({ status }: { status: CoreStatus }) {
         side={THREE.DoubleSide}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -508,6 +513,7 @@ function GlassShell({ status }: { status: CoreStatus }) {
         side={THREE.BackSide}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -544,6 +550,7 @@ function GlowHalo({ status }: { status: CoreStatus }) {
         opacity={0.15}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
+        toneMapped={false}
       />
     </mesh>
   );
@@ -659,11 +666,12 @@ function Scene({ status }: { status: CoreStatus }) {
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 4.6]} fov={42} />
 
-      {/* Enhanced lighting for more dramatic effect */}
-      <ambientLight intensity={0.3} />
-      <pointLight position={[4, 4, 5]} intensity={0.8} color={config.color} />
-      <pointLight position={[-5, -3, 4]} intensity={0.75} color={config.accentColor} />
-      <pointLight position={[0, 0, -3]} intensity={0.4} color={config.accentColor} />
+      {/* Enhanced lighting for maximum visibility */}
+      <ambientLight intensity={0.5} />
+      <pointLight position={[4, 4, 5]} intensity={1.5} color={config.color} />
+      <pointLight position={[-5, -3, 4]} intensity={1.4} color={config.accentColor} />
+      <pointLight position={[0, 0, -3]} intensity={0.8} color={config.accentColor} />
+      <pointLight position={[0, 3, 0]} intensity={1.0} color={new THREE.Color(0xffffff)} />
 
       <group ref={groupRef}>
         <PlasmaCore status={status} />
@@ -676,10 +684,11 @@ function Scene({ status }: { status: CoreStatus }) {
 
       <EffectComposer>
         <Bloom
-          intensity={config.glowIntensity * 1.2}
-          luminanceThreshold={0.08}
-          luminanceSmoothing={0.9}
+          intensity={config.glowIntensity * 1.5}
+          luminanceThreshold={0.01}
+          luminanceSmoothing={0.95}
           mipmapBlur
+          radius={0.9}
         />
       </EffectComposer>
     </>
@@ -772,7 +781,12 @@ export function EnergyOrb({
         {shouldRenderCanvas ? (
           <Canvas
             className="w-full h-full"
-            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+              toneMapping: THREE.NoToneMapping,
+            }}
             dpr={useReducedPerformance ? 1 : [1, 2]}
           >
             <Scene status={status} />
