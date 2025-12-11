@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 
-import { ChatHeroCore3D } from "@/components/chat/ChatHeroCore3D";
+import { EnergyOrb } from "@/components/chat/EnergyOrb";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
@@ -153,8 +153,8 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4">
-                    {/* Cinematic 3D Core Header */}
-                    <ChatHeroCore3D
+                    {/* Energy Orb - Clean 3D Implementation */}
+                    <EnergyOrb
                       status={coreStatus}
                       modelName={modelName}
                       toneLabel={toneLabel}
