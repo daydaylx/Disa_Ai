@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
+import { AnimatedBlobBackground } from "@/components/chat/AnimatedBlobBackground";
 import { EnergyOrb } from "@/components/chat/EnergyOrb";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
@@ -122,53 +123,55 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-8 px-4">
-                    {/* Energy Orb - Clean 3D Implementation */}
-                    <EnergyOrb status={coreStatus} lastErrorMessage={chatLogic.error?.message} />
+                  <AnimatedBlobBackground className="flex-1">
+                    <div className="flex flex-col items-center justify-center gap-8 pb-8 px-4 min-h-[40vh]">
+                      {/* Energy Orb - Clean 3D Implementation */}
+                      <EnergyOrb status={coreStatus} lastErrorMessage={chatLogic.error?.message} />
 
-                    {/* Starter Prompts */}
-                    <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {STARTER_PROMPTS.map((prompt, index) => {
-                        const theme = getCycleColor(index);
-                        return (
-                          <button
-                            key={prompt}
-                            onClick={() => chatLogic.handleStarterClick(prompt)}
-                            className={cn(
-                              "flex items-center gap-3 p-4 text-left rounded-2xl transition-all group",
-                              "bg-surface-1/40 border border-white/5 hover:scale-[1.02]",
-                              theme.hoverBg,
-                              theme.hoverBorder,
-                              theme.hoverGlow,
-                            )}
-                          >
-                            <div
+                      {/* Starter Prompts */}
+                      <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {STARTER_PROMPTS.map((prompt, index) => {
+                          const theme = getCycleColor(index);
+                          return (
+                            <button
+                              key={prompt}
+                              onClick={() => chatLogic.handleStarterClick(prompt)}
                               className={cn(
-                                "p-2 rounded-xl transition-colors",
-                                "bg-surface-2/50 text-ink-tertiary",
-                                theme.groupHoverIconBg,
-                                theme.groupHoverIconText,
+                                "flex items-center gap-3 p-4 text-left rounded-2xl transition-all group",
+                                "bg-surface-1/40 border border-white/5 hover:scale-[1.02]",
+                                theme.hoverBg,
+                                theme.hoverBorder,
+                                theme.hoverGlow,
                               )}
                             >
-                              <MessageSquare className="h-4 w-4" />
-                            </div>
-                            <span className="text-sm font-medium text-ink-secondary group-hover:text-ink-primary">
-                              {prompt}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                              <div
+                                className={cn(
+                                  "p-2 rounded-xl transition-colors",
+                                  "bg-surface-2/50 text-ink-tertiary",
+                                  theme.groupHoverIconBg,
+                                  theme.groupHoverIconText,
+                                )}
+                              >
+                                <MessageSquare className="h-4 w-4" />
+                              </div>
+                              <span className="text-sm font-medium text-ink-secondary group-hover:text-ink-primary">
+                                {prompt}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                    {/* Quick Link to Settings - Subtle */}
-                    <button
-                      type="button"
-                      onClick={() => chatLogic.navigate("/settings")}
-                      className="text-sm font-medium text-ink-tertiary hover:text-brand-primary transition-all duration-200 mt-1 hover:scale-105"
-                    >
-                      Einstellungen anpassen →
-                    </button>
-                  </div>
+                      {/* Quick Link to Settings - Subtle */}
+                      <button
+                        type="button"
+                        onClick={() => chatLogic.navigate("/settings")}
+                        className="text-sm font-medium text-ink-tertiary hover:text-brand-primary transition-all duration-200 mt-1 hover:scale-105"
+                      >
+                        Einstellungen anpassen →
+                      </button>
+                    </div>
+                  </AnimatedBlobBackground>
                 ) : (
                   <VirtualizedMessageList
                     messages={chatLogic.messages}

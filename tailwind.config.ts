@@ -392,6 +392,10 @@ export default {
         "orb-glare": "orbGlare 10s ease-in-out infinite",
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
         "ping-slow": "pingSlow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
+        // Blob Background Animations (CSS-based, organic gradient morphing)
+        "blob-float-1": "blobFloat1 15s ease-in-out infinite alternate",
+        "blob-float-2": "blobFloat2 18s ease-in-out infinite alternate",
+        "blob-float-3": "blobFloat3 20s ease-in-out infinite alternate",
       },
       keyframes: {
         fadeIn: {
@@ -588,6 +592,49 @@ export default {
           "75%, 100%": {
             transform: "scale(2)",
             opacity: "0",
+          },
+        },
+        // Blob Float Animations (Organic gradient blob morphing)
+        blobFloat1: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "33%": {
+            transform: "translate(-25px, 20px) scale(1.08)",
+          },
+          "66%": {
+            transform: "translate(20px, -15px) scale(0.95)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+        },
+        blobFloat2: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "33%": {
+            transform: "translate(30px, -25px) scale(1.1)",
+          },
+          "66%": {
+            transform: "translate(-20px, 18px) scale(0.92)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+        },
+        blobFloat3: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "33%": {
+            transform: "translate(-18px, -20px) scale(0.96)",
+          },
+          "66%": {
+            transform: "translate(25px, 22px) scale(1.06)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
           },
         },
       },
