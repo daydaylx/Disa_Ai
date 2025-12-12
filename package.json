@@ -47,7 +47,13 @@
     "lh": "lhci autorun --config=./lighthouserc.cjs",
     "lint-staged": "lint-staged",
     "verify:dist": "node scripts/verify-dist.mjs",
-    "mcp:visual": "npx tsx tools/zai-vision-mcp.ts"
+    "mcp:visual": "npx tsx tools/zai-vision-mcp.ts",
+    "mcp:setup": "bash scripts/setup-mcp.sh",
+    "mcp:test": "npx @modelcontextprotocol/server-filesystem --help && npx @modelcontextprotocol/server-git --help",
+    "mcp:update": "npm update @modelcontextprotocol/server-* --save-dev",
+    "jules:docs": "cat .claude/JULES_WORKFLOWS.md",
+    "jules:quick": "cat .claude/JULES_QUICK_REFERENCE.md",
+    "jules:help": "echo '📚 Jules Documentation:' && echo '  npm run jules:docs     - Vollständige Workflows' && echo '  npm run jules:quick    - Quick Reference' && echo '  cat .claude/JULES_INTEGRATION.md - Setup Guide'"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
