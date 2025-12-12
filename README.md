@@ -228,6 +228,8 @@ Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 | [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md) | Alle Umgebungsvariablen         |
 | [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)               | Feedback-Funktion einrichten    |
 | [`docs/guides/RELEASE_PLAYBOOK.md`](docs/guides/RELEASE_PLAYBOOK.md)           | Release-Prozess                 |
+| [`AGENTS.md`](AGENTS.md)                                                       | Richtlinien für AI-Agenten      |
+| [`CLAUDE.md`](CLAUDE.md)                                                       | Claude Code Referenz            |
 
 ---
 
