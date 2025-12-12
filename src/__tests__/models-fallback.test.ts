@@ -6,11 +6,11 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { getRawModels } from "../api/openrouter";
 import { loadModelCatalog } from "../config/models";
 import { resolvePublicAssetUrl } from "../lib/publicAssets";
-import { getRawModels } from "../services/openrouter";
 
-vi.mock("../services/openrouter", () => ({
+vi.mock("../api/openrouter", () => ({
   getRawModels: vi.fn(),
 }));
 

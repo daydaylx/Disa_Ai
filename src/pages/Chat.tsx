@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useRef, useState } from "react";
 
-import { ChatHeroCore3D } from "@/components/chat/ChatHeroCore3D";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
@@ -19,6 +18,11 @@ import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
 import { useSettings } from "../hooks/useSettings";
 import { useVisualViewport } from "../hooks/useVisualViewport";
+
+// Lazy load 3D component to reduce initial bundle (Three.js is ~1MB)
+const ChatHeroCore3D = lazy(() =>
+  import("@/components/chat/ChatHeroCore3D").then((m) => ({ default: m.ChatHeroCore3D })),
+);
 
 const STARTER_PROMPTS = [
   "Schreib ein kurzes Gedicht",
@@ -153,14 +157,25 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Cinematic 3D Core Header */}
-                    <ChatHeroCore3D
-                      status={coreStatus}
-                      modelName={modelName}
-                      toneLabel={toneLabel}
-                      creativityLabel={creativityLabel}
-                      lastErrorMessage={chatLogic.error?.message}
-                    />
+                    {/* Cinematic 3D Core Header (lazy loaded) */}
+                    <Suspense
+                      fallback={
+                        <div className="flex items-center justify-center w-full min-h-[320px]">
+                          <div className="animate-pulse flex flex-col items-center gap-3">
+                            <div className="w-32 h-32 bg-surface-3/30 rounded-3xl" />
+                            <div className="h-4 w-24 bg-surface-3/30 rounded-full" />
+                          </div>
+                        </div>
+                      }
+                    >
+                      <ChatHeroCore3D
+                        status={coreStatus}
+                        modelName={modelName}
+                        toneLabel={toneLabel}
+                        creativityLabel={creativityLabel}
+                        lastErrorMessage={chatLogic.error?.message}
+                      />
+                    </Suspense>
 
                     {/* Starter Prompts */}
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">

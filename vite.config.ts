@@ -121,11 +121,8 @@ export default defineConfig(({ mode }) => {
       ],
       exclude: [
         "react-markdown", // CDN
-        "katex", // CDN
-        "prismjs", // Lazy
         "@radix-ui/react-avatar", // Lass Vite auto-discovery
         "@radix-ui/react-dialog",
-        "@radix-ui/react-dropdown-menu",
       ],
       esbuildOptions: {
         target: "es2020",
@@ -312,15 +309,9 @@ export default defineConfig(({ mode }) => {
             // Router
             "router-vendor": ["react-router-dom"],
             // UI-Komponenten
-            "ui-vendor": [
-              "@radix-ui/react-avatar",
-              "@radix-ui/react-dialog",
-              "@radix-ui/react-dropdown-menu",
-            ],
+            "ui-vendor": ["@radix-ui/react-avatar", "@radix-ui/react-dialog"],
             // Utility-Bibliotheken
             "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge", "nanoid"],
-            // Math/Code Rendering
-            "syntax-vendor": ["katex", "prismjs"],
           },
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",

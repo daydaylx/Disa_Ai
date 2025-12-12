@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getRawModels } from "../services/openrouter";
+import { getRawModels } from "../api/openrouter";
 
 describe("getRawModels cache", () => {
   it("uses cache within TTL and avoids fetch", async () => {

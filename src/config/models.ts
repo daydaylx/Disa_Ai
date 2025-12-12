@@ -1,5 +1,5 @@
+import { getRawModels, type ORModel } from "../api/openrouter";
 import { resolvePublicAssetUrl } from "../lib/publicAssets";
-import { getRawModels, type ORModel } from "../services/openrouter";
 
 /** Policy-Typ (wird von rolePolicy/roleStore/Settings importiert) */
 export type Safety = "any" | "moderate" | "strict" | "loose";
