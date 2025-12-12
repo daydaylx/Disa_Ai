@@ -86,14 +86,13 @@ export function ChatHeroBackground({ status, lastErrorMessage }: ChatHeroBackgro
         Using motion-reduce:animate-none to respect accessibility settings.
       */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
-
         {/* Blob 1: Cyan -> Violet (Top Center/Left) */}
         <div
           className={cn(
             "absolute left-1/2 top-1/4 h-[50vw] w-[50vw] -translate-x-1/2 rounded-full",
             "bg-gradient-to-r from-[#32e0ff] to-[#7b5cff]",
             "opacity-20 blur-[80px] md:blur-[100px]",
-            "animate-blob-float-1 motion-reduce:animate-none"
+            "animate-blob-float-1 motion-reduce:animate-none",
           )}
         />
 
@@ -103,7 +102,7 @@ export function ChatHeroBackground({ status, lastErrorMessage }: ChatHeroBackgro
             "absolute bottom-0 left-0 h-[60vw] w-[60vw] -translate-x-1/3 translate-y-1/4 rounded-full",
             "bg-gradient-to-tr from-[#ff4fd8] to-[#7b5cff]",
             "opacity-20 blur-[90px] md:blur-[120px]",
-            "animate-blob-float-2 motion-reduce:animate-none"
+            "animate-blob-float-2 motion-reduce:animate-none",
           )}
         />
 
@@ -113,7 +112,7 @@ export function ChatHeroBackground({ status, lastErrorMessage }: ChatHeroBackgro
             "absolute right-0 top-0 h-[45vw] w-[45vw] translate-x-1/4 -translate-y-1/4 rounded-full",
             "bg-gradient-to-bl from-[#7b5cff] via-[#32e0ff] to-transparent",
             "opacity-15 blur-[70px] md:blur-[90px]",
-            "animate-blob-float-3 motion-reduce:animate-none"
+            "animate-blob-float-3 motion-reduce:animate-none",
           )}
         />
       </div>
@@ -123,7 +122,6 @@ export function ChatHeroBackground({ status, lastErrorMessage }: ChatHeroBackgro
         Z-index ensured to be above blobs.
       */}
       <div className="relative z-10 flex flex-col items-center space-y-5 px-4 text-center">
-
         {/* Badge */}
         <div className="flex justify-center">
           <span
