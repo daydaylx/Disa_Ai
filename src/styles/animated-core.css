@@ -16,8 +16,16 @@
 
   .animated-core__layer--primary {
     background:
-      radial-gradient(120% 120% at 28% 34%, color-mix(in srgb, var(--accent-chat) 78%, transparent) 0%, transparent 68%),
-      radial-gradient(120% 120% at 68% 66%, color-mix(in srgb, var(--accent-roles) 72%, transparent) 0%, transparent 70%);
+      radial-gradient(
+        120% 120% at 28% 34%,
+        color-mix(in srgb, var(--accent-chat) 78%, transparent) 0%,
+        transparent 68%
+      ),
+      radial-gradient(
+        120% 120% at 68% 66%,
+        color-mix(in srgb, var(--accent-roles) 72%, transparent) 0%,
+        transparent 70%
+      );
     mix-blend-mode: screen;
     animation: core-gradient-sway 26s ease-in-out infinite alternate;
   }
@@ -25,8 +33,16 @@
   .animated-core__layer--secondary {
     inset: 16%;
     background:
-      radial-gradient(110% 110% at 42% 36%, color-mix(in srgb, var(--accent-models) 74%, transparent) 0%, transparent 70%),
-      radial-gradient(110% 110% at 62% 72%, color-mix(in srgb, var(--accent-settings) 72%, transparent) 0%, transparent 68%);
+      radial-gradient(
+        110% 110% at 42% 36%,
+        color-mix(in srgb, var(--accent-models) 74%, transparent) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        110% 110% at 62% 72%,
+        color-mix(in srgb, var(--accent-settings) 72%, transparent) 0%,
+        transparent 68%
+      );
     filter: blur(64px);
     opacity: 0.78;
     mix-blend-mode: screen;
@@ -54,7 +70,11 @@
     position: absolute;
     inset: 4%;
     border-radius: 9999px;
-    background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent-chat-glow) 85%, transparent) 0%, transparent 70%);
+    background: radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--accent-chat-glow) 85%, transparent) 0%,
+      transparent 70%
+    );
     filter: blur(26px);
     opacity: 0.42;
     animation: core-pulse 18s ease-in-out infinite;
