@@ -380,7 +380,7 @@ export function EyeOrbLayer({ phase, className }: EyeOrbLayerProps) {
               ref={containerRef}
               className={cn(
                 "relative aspect-square",
-                "w-[clamp(12.5rem,56vw,20rem)] sm:w-[clamp(16rem,30vw,28rem)]",
+                "w-[clamp(11rem,50vw,18rem)] sm:w-[clamp(14rem,26vw,22rem)]",
                 prefersReducedMotion ? "opacity-70" : "opacity-100",
               )}
               style={{
