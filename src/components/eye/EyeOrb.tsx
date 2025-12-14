@@ -2,11 +2,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-import {
-  type CoreStatus,
-} from "@/types/orb";
+import { type CoreStatus } from "@/types/orb";
 
-import { eyeFragmentShader,eyeVertexShader } from "./shaders/eyeShaders";
+import { eyeFragmentShader, eyeVertexShader } from "./shaders/eyeShaders";
 
 // --- Types & Constants ---
 
@@ -35,7 +33,7 @@ function useGyro() {
 
       // Check for iOS 13+ permission API
       // @ts-ignore
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
         // Need to wait for user interaction to request
         setPermissionGranted(false);
       } else {
@@ -70,34 +68,42 @@ function useGyro() {
       targetRotation.current = { x, y };
     };
 
-    window.addEventListener('deviceorientation', handleOrientation);
-    return () => window.removeEventListener('deviceorientation', handleOrientation);
+    window.addEventListener("deviceorientation", handleOrientation);
+    return () => window.removeEventListener("deviceorientation", handleOrientation);
   }, [permissionGranted]);
 
   const requestPermission = async () => {
     // @ts-ignore
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
       try {
         // @ts-ignore
         const response = await DeviceOrientationEvent.requestPermission();
-        if (response === 'granted') {
+        if (response === "granted") {
           setPermissionGranted(true);
         }
       } catch (e) {
         console.error(e);
       }
     } else {
-        setPermissionGranted(true);
+      setPermissionGranted(true);
     }
   };
 
   return { targetRotation, isSupported, permissionGranted, requestPermission };
 }
 
-
 // --- Three.js Component: The Eye ---
 
-function EyeMesh({ status, gyroTarget }: { status: CoreStatus, gyroTarget: React.MutableRefObject<{x: number, y: number}> }) {
+function EyeMesh({
+  status,
+  gyroTarget,
+}: {
+  status: CoreStatus;
+  gyroTarget: React.MutableRefObject<{ x: number; y: number }>;
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
@@ -109,10 +115,14 @@ function EyeMesh({ status, gyroTarget }: { status: CoreStatus, gyroTarget: React
     // Colors from memory/existing theme
     // Idle (Cyan/Blue), Thinking (Purple), Streaming (Sky/Blue), Error (Red)
     switch (status) {
-      case 'thinking': return { iris: new THREE.Color(0xc084fc), pupil: new THREE.Color(0x1a0b2e) };
-      case 'streaming': return { iris: new THREE.Color(0x60a5fa), pupil: new THREE.Color(0x0f172a) };
-      case 'error': return { iris: new THREE.Color(0xef4444), pupil: new THREE.Color(0x2a0a0a) };
-      default: return { iris: new THREE.Color(0x3b82f6), pupil: new THREE.Color(0x020617) }; // Idle
+      case "thinking":
+        return { iris: new THREE.Color(0xc084fc), pupil: new THREE.Color(0x1a0b2e) };
+      case "streaming":
+        return { iris: new THREE.Color(0x60a5fa), pupil: new THREE.Color(0x0f172a) };
+      case "error":
+        return { iris: new THREE.Color(0xef4444), pupil: new THREE.Color(0x2a0a0a) };
+      default:
+        return { iris: new THREE.Color(0x3b82f6), pupil: new THREE.Color(0x020617) }; // Idle
     }
   }, [status]);
 
@@ -135,10 +145,10 @@ function EyeMesh({ status, gyroTarget }: { status: CoreStatus, gyroTarget: React
     let microX = 0;
     let microY = 0;
 
-    if (status === 'thinking' || status === 'idle') {
-        // Slow breathing movement
-        microX = Math.sin(time * 0.5 + noiseOffset.current.x) * 0.05;
-        microY = Math.cos(time * 0.3 + noiseOffset.current.y) * 0.05;
+    if (status === "thinking" || status === "idle") {
+      // Slow breathing movement
+      microX = Math.sin(time * 0.5 + noiseOffset.current.x) * 0.05;
+      microY = Math.cos(time * 0.3 + noiseOffset.current.y) * 0.05;
     }
 
     // 3. Apply Rotation
@@ -147,34 +157,34 @@ function EyeMesh({ status, gyroTarget }: { status: CoreStatus, gyroTarget: React
 
     // 4. Update Shader Uniforms
     if (materialRef.current.uniforms.uTime) {
-        materialRef.current.uniforms.uTime.value = time;
+      materialRef.current.uniforms.uTime.value = time;
     }
 
     // Color transitions
     if (materialRef.current.uniforms.uColorIris) {
-        materialRef.current.uniforms.uColorIris.value.lerp(theme.iris, delta * 2.0);
+      materialRef.current.uniforms.uColorIris.value.lerp(theme.iris, delta * 2.0);
     }
     if (materialRef.current.uniforms.uColorPupil) {
-        materialRef.current.uniforms.uColorPupil.value.lerp(theme.pupil, delta * 2.0);
+      materialRef.current.uniforms.uColorPupil.value.lerp(theme.pupil, delta * 2.0);
     }
 
     // Pupil dilation
     let targetPupilScale = 0.25;
-    if (status === 'thinking') targetPupilScale = 0.28 + Math.sin(time * 2.0) * 0.02;
-    if (status === 'error') targetPupilScale = 0.15;
-    if (status === 'streaming') targetPupilScale = 0.3 + Math.sin(time * 10.0) * 0.01;
+    if (status === "thinking") targetPupilScale = 0.28 + Math.sin(time * 2.0) * 0.02;
+    if (status === "error") targetPupilScale = 0.15;
+    if (status === "streaming") targetPupilScale = 0.3 + Math.sin(time * 10.0) * 0.01;
 
     if (materialRef.current.uniforms.uPupilScale) {
-        const currentPupil = materialRef.current.uniforms.uPupilScale.value.x;
-        const newPupil = THREE.MathUtils.lerp(currentPupil, targetPupilScale, delta * 3.0);
-        materialRef.current.uniforms.uPupilScale.value.set(newPupil, 1.0);
+      const currentPupil = materialRef.current.uniforms.uPupilScale.value.x;
+      const newPupil = THREE.MathUtils.lerp(currentPupil, targetPupilScale, delta * 3.0);
+      materialRef.current.uniforms.uPupilScale.value.set(newPupil, 1.0);
     }
   });
 
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
-      <sphereGeometry args={[2.5, 64, 64]} />
-      {/* 2.5 radius ensures it covers enough screen space but curves nicely */}
+      <sphereGeometry args={[1.9, 64, 64]} />
+      {/* Slightly smaller radius to keep the eye proportionate on reduced viewport sizes */}
       <shaderMaterial
         ref={materialRef}
         vertexShader={eyeVertexShader}
@@ -185,14 +195,13 @@ function EyeMesh({ status, gyroTarget }: { status: CoreStatus, gyroTarget: React
           uColorPupil: { value: new THREE.Color(0x000000) },
           uColorSclera: { value: new THREE.Color(0xffffff) }, // Usually hidden or dark in this style
           uPupilScale: { value: new THREE.Vector2(0.25, 1.0) },
-          uLook: { value: new THREE.Vector2(0, 0) }
+          uLook: { value: new THREE.Vector2(0, 0) },
         }}
         transparent={true}
       />
     </mesh>
   );
 }
-
 
 // --- Main Exported Component ---
 
@@ -201,24 +210,26 @@ export function EyeOrb({ status }: EyeOrbProps) {
   const { targetRotation, isSupported, permissionGranted, requestPermission } = useGyro();
 
   // Performance / Tiering logic
-  const [tier, setTier] = useState<'high' | 'medium' | 'low'>('high');
+  const [tier, setTier] = useState<"high" | "medium" | "low">("high");
 
   useEffect(() => {
     // Basic tier detection
-    const isLowPower = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isLowPower = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // @ts-ignore
     const memory = navigator.deviceMemory || 4; // Default to 4GB if unknown
 
     if (isLowPower || memory < 4) {
-      setTier('low');
+      setTier("low");
     }
   }, []);
 
-  if (tier === 'low') {
+  if (tier === "low") {
     // Fallback: simple CSS orb
     return (
       <div className="w-full h-full flex items-center justify-center opacity-30">
-        <div className={`w-64 h-64 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-3xl`} />
+        <div
+          className={`w-64 h-64 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-3xl`}
+        />
       </div>
     );
   }
@@ -226,27 +237,27 @@ export function EyeOrb({ status }: EyeOrbProps) {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
       {/* Container for the 3D scene */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] max-w-[800px] max-h-[800px] opacity-40 sm:opacity-20 transition-opacity duration-1000">
-          <Canvas
-            dpr={[1, Math.min(window.devicePixelRatio, 1.5)]}
-            gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-            camera={{ position: [0, 0, 5], fov: 45 }}
-          >
-            <Suspense fallback={null}>
-               <EyeMesh status={status} gyroTarget={targetRotation} />
-            </Suspense>
-          </Canvas>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[88vw] h-[88vw] max-w-[720px] max-h-[720px] opacity-40 sm:opacity-20 transition-opacity duration-1000">
+        <Canvas
+          dpr={[1, Math.min(window.devicePixelRatio, 1.5)]}
+          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+          camera={{ position: [0, 0, 5.5], fov: 45 }}
+        >
+          <Suspense fallback={null}>
+            <EyeMesh status={status} gyroTarget={targetRotation} />
+          </Suspense>
+        </Canvas>
       </div>
 
       {/* iOS Gyro Trigger */}
       {isSupported && !permissionGranted && (
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 pointer-events-auto z-10">
-           <button
-             onClick={requestPermission}
-             className="bg-black/20 backdrop-blur-md border border-white/10 text-white/50 text-[10px] px-2 py-1 rounded-full hover:text-white hover:bg-black/40 transition-all"
-           >
-             Enable Motion
-           </button>
+          <button
+            onClick={requestPermission}
+            className="bg-black/20 backdrop-blur-md border border-white/10 text-white/50 text-[10px] px-2 py-1 rounded-full hover:text-white hover:bg-black/40 transition-all"
+          >
+            Enable Motion
+          </button>
         </div>
       )}
     </div>
