@@ -79,38 +79,20 @@ export function ChatHeroCore3D({
   const meta = STATUS_META[status];
 
   return (
-    <div className="w-full flex flex-col items-center gap-5 pb-6 pt-[calc(env(safe-area-inset-top,0px)+6px)] animate-fade-in relative z-10">
+    <div className="w-full flex flex-col items-center gap-5 pb-6 pt-[calc(env(safe-area-inset-top,0px)+6px)] animate-fade-in relative">
       <motion.div
         className="relative flex flex-col items-center gap-4"
         initial={{ opacity: 0, y: 12, scale: 0.94 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        {/* Removed 3D Orb Container, kept Status Text */}
+        {/* Eye-Orb appears here as background overlay from Chat.tsx */}
 
-        {/* Invisible spacer to push text down slightly if needed, or just let it float */}
-        <div className="h-16 w-full" />
+        {/* Spacer for Eye-Orb */}
+        <div className="h-64 w-full" />
 
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "text-[11px] font-semibold uppercase tracking-[0.12em] px-3 py-1 rounded-full",
-                "backdrop-blur-md",
-                meta.chip,
-              )}
-            >
-              {meta.label}
-            </span>
-            <span className="text-xs text-ink-tertiary/80">{meta.subline}</span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            <InfoChip label="Modell" value={modelName} />
-            <InfoChip label="Ton" value={toneLabel} />
-            <InfoChip label="Kreativität" value={creativityLabel} />
-          </div>
-
+        {/* Status text below Eye-Orb */}
+        <div className="flex flex-col items-center gap-2 text-center relative z-10">
           {status === "error" && lastErrorMessage && (
             <p className="text-[11px] text-red-100/90 max-w-xs leading-relaxed">
               {lastErrorMessage}

@@ -82,7 +82,7 @@ export function SimpleCssEyeOrb({ status, isObscured = false }: SimpleCssEyeOrbP
       aria-hidden="true"
       style={{
         ...statusVars,
-        opacity: isObscured ? 0.1 : 0.4,
+        opacity: isObscured ? 0.1 : 0.95,
         transition: "opacity 0.5s ease",
       }}
     >
