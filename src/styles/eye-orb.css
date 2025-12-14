@@ -1,0 +1,257 @@
+/**
+ * Simple CSS Eye Orb Styles
+ * Lightweight alternative to WebGL/Three.js implementation
+ */
+
+/* Container */
+.eye-orb-container {
+  position: relative;
+  width: clamp(120px, 35vw, 200px);
+  height: clamp(120px, 35vw, 200px);
+  perspective: 800px;
+}
+
+/* Eye Sphere - 3D Transform Container */
+.eye-sphere {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.1), transparent 70%);
+}
+
+/* Iris - Main colored area */
+.iris {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.4),
+    transparent 25%
+  ),
+    radial-gradient(circle at center, var(--eye-color-primary, hsl(200, 70%, 50%)), var(--eye-color-secondary, hsl(210, 65%, 45%)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Pupil - Central dark circle */
+.pupil {
+  width: 35%;
+  height: 35%;
+  background: radial-gradient(circle, #000 0%, #111 70%, #000 100%);
+  border-radius: 50%;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+/* Highlight - Cornea reflection */
+.highlight {
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 20%;
+  height: 20%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+/* Breathing Animation */
+@keyframes breath {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* Thinking Pulse Animation */
+@keyframes thinking-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+/* Streaming Glow Animation */
+@keyframes streaming-glow {
+  0%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 10px var(--eye-color-primary));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 20px var(--eye-color-primary));
+  }
+}
+
+/* Error Shake Animation */
+@keyframes error-shake {
+  0%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(-5px) scale(0.98);
+  }
+  75% {
+    transform: translateX(5px) scale(0.98);
+  }
+}
+
+/* Error Flash Animation */
+@keyframes error-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ==================== STATUS STATES ==================== */
+
+/* Idle State */
+[data-status="idle"] .eye-sphere {
+  animation: breath 4s ease-in-out infinite;
+}
+
+[data-status="idle"] .pupil {
+  width: 35%;
+  height: 35%;
+}
+
+/* Thinking State */
+[data-status="thinking"] .eye-sphere {
+  animation: breath 2s ease-in-out infinite;
+}
+
+[data-status="thinking"] .pupil {
+  width: 25%;
+  height: 25%;
+  animation: thinking-pulse 1.5s ease-in-out infinite;
+}
+
+[data-status="thinking"] .iris {
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.4),
+    transparent 25%
+  ),
+    radial-gradient(circle at center, var(--eye-color-primary), var(--eye-color-secondary));
+}
+
+/* Streaming State */
+[data-status="streaming"] .eye-sphere {
+  animation: breath 3s ease-in-out infinite, streaming-glow 2s ease-in-out infinite;
+}
+
+[data-status="streaming"] .pupil {
+  width: 30%;
+  height: 30%;
+}
+
+/* Error State */
+[data-status="error"] .eye-sphere {
+  animation: error-shake 0.5s ease-in-out 3;
+}
+
+[data-status="error"] .iris {
+  animation: error-flash 0.2s ease-in-out 4;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 255, 255, 0.4),
+    transparent 25%
+  ),
+    radial-gradient(circle at center, var(--eye-color-primary), var(--eye-color-secondary));
+}
+
+[data-status="error"] .pupil {
+  width: 40%;
+  height: 40%;
+}
+
+/* ==================== PERFORMANCE TIERS ==================== */
+
+/* High Tier - Full Animations + Effects */
+[data-tier="high"] .eye-sphere {
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.3));
+}
+
+[data-tier="high"] .iris {
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--eye-color-primary, hsl(200, 70%, 50%));
+}
+
+/* Medium Tier - Reduced Effects */
+[data-tier="medium"] .eye-sphere {
+  filter: none;
+  animation-duration: 6s !important;
+}
+
+[data-tier="medium"] .iris {
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+[data-tier="medium"] .thinking-pulse,
+[data-tier="medium"] .streaming-glow {
+  animation: none !important;
+}
+
+/* Low Tier - Static */
+[data-tier="low"] .eye-sphere,
+[data-tier="low"] .pupil,
+[data-tier="low"] .iris {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-tier="low"] .eye-sphere {
+  filter: none;
+}
+
+[data-tier="low"] .iris {
+  box-shadow: none;
+}
+
+/* ==================== REDUCED MOTION ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .eye-sphere,
+  .pupil,
+  .iris,
+  .highlight {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  [data-tier="high"] .eye-sphere {
+    filter: none;
+  }
+
+  [data-tier="high"] .iris {
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 640px) {
+  .eye-orb-container {
+    width: clamp(100px, 30vw, 160px);
+    height: clamp(100px, 30vw, 160px);
+  }
+}

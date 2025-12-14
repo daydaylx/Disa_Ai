@@ -8,7 +8,35 @@ import type { CoreStatus } from "@/types/orb";
 
 interface ChatHeroCore3DProps {
   status: CoreStatus;
+  modelName: string;
+  toneLabel: string;
+  creativityLabel: string;
   lastErrorMessage?: string;
+}
+
+function InfoChip({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-0.5 rounded-xl px-3 py-2 bg-white/5 border border-white/10",
+        "backdrop-blur-md text-left min-w-[5.5rem]",
+        className,
+      )}
+    >
+      <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-ink-tertiary">
+        {label}
+      </span>
+      <span className="text-xs font-semibold text-ink-primary truncate">{value}</span>
+    </div>
+  );
 }
 
 const STATUS_META: Record<
@@ -41,7 +69,13 @@ const STATUS_META: Record<
   },
 };
 
-export function ChatHeroCore3D({ status, lastErrorMessage }: ChatHeroCore3DProps) {
+export function ChatHeroCore3D({
+  status,
+  modelName,
+  toneLabel,
+  creativityLabel,
+  lastErrorMessage,
+}: ChatHeroCore3DProps) {
   const meta = STATUS_META[status];
 
   return (
@@ -69,6 +103,12 @@ export function ChatHeroCore3D({ status, lastErrorMessage }: ChatHeroCore3DProps
               {meta.label}
             </span>
             <span className="text-xs text-ink-tertiary/80">{meta.subline}</span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <InfoChip label="Modell" value={modelName} />
+            <InfoChip label="Ton" value={toneLabel} />
+            <InfoChip label="Kreativität" value={creativityLabel} />
           </div>
 
           {status === "error" && lastErrorMessage && (

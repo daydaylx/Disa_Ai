@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import "./styles/animated-core.css";
+@import "./styles/eye-orb.css";
 
 :root {
   /* Modern Slate Glass Theme Variables - Using Tailwind color palette references */

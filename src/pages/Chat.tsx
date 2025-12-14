@@ -1,10 +1,12 @@
-import { lazy, Suspense, useCallback, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useRef, useState } from "react";
 
-import { EyeOrb } from "@/components/eye/EyeOrb";
+import { SimpleCssEyeOrb } from "@/components/eye/SimpleCssEyeOrb";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -15,8 +17,10 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
+import { useSettings } from "../hooks/useSettings";
+import { useVisualViewport } from "../hooks/useVisualViewport";
 
-// Lazy load ChatHeroCore3D (Text status only now)
+// Lazy load 3D component to reduce initial bundle (Three.js is ~1MB)
 const ChatHeroCore3D = lazy(() =>
   import("@/components/chat/ChatHeroCore3D").then((m) => ({ default: m.ChatHeroCore3D })),
 );
@@ -28,13 +32,24 @@ const STARTER_PROMPTS = [
   "Erzähl mir einen Witz",
 ];
 
+function getCreativityLabel(value: number): string {
+  if (value < 30) return "Präzise";
+  if (value < 70) return "Ausgewogen";
+  return "Kreativ";
+}
+
 export default function Chat() {
+  const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  // Settings & Meta
+  const { settings } = useSettings();
+  const { models } = useModelCatalog();
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
@@ -50,6 +65,23 @@ export default function Chat() {
     error: chatLogic.error,
     messages: chatLogic.messages,
   });
+
+  // Derived Meta Info
+  const modelName = useMemo(() => {
+    const m = models?.find((x) => x.id === settings.preferredModelId);
+    return m?.label || settings.preferredModelId || "Unbekannt";
+  }, [models, settings.preferredModelId]);
+
+  const toneLabel = useMemo(() => {
+    return (
+      discussionPresetOptions.find((o) => o.key === settings.discussionPreset)?.label || "Standard"
+    );
+  }, [settings.discussionPreset]);
+
+  const creativityLabel = useMemo(
+    () => getCreativityLabel(settings.creativity),
+    [settings.creativity],
+  );
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
@@ -100,9 +132,16 @@ export default function Chat() {
           </Button>
         }
       >
-        <div className="flex flex-col relative w-full h-[100dvh] pt-[4rem]">
-          {/* Background Eye Orb - Always present, Behind Content */}
-          <EyeOrb status={coreStatus} isObscured={isMenuOpen || isHistoryOpen} />
+        <div
+          className="flex flex-col relative w-full"
+          style={{
+            // Subtract header height (64px) from viewport height to prevent clipping
+            height: viewport.height ? `${viewport.height - 64}px` : "100%",
+            minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
+          }}
+        >
+          {/* Background Eye Orb - CSS Version */}
+          <SimpleCssEyeOrb status={coreStatus} isObscured={isMenuOpen || isHistoryOpen} />
 
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner
@@ -111,10 +150,10 @@ export default function Chat() {
             rateLimitInfo={chatLogic.rateLimitInfo}
           />
 
-          {/* Messages Area - with transparent background to show Orb */}
+          {/* Messages Area */}
           <main
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 pt-4 z-10 relative"
+            className="flex-1 overflow-y-auto min-h-0 pt-4"
             role="log"
             aria-label="Chat messages"
           >
@@ -122,15 +161,27 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Status Header (Text Only now) */}
-                    <Suspense fallback={null}>
+                    {/* Cinematic 3D Core Header (lazy loaded) */}
+                    <Suspense
+                      fallback={
+                        <div className="flex items-center justify-center w-full min-h-[320px]">
+                          <div className="animate-pulse flex flex-col items-center gap-3">
+                            <div className="w-32 h-32 bg-surface-3/30 rounded-3xl" />
+                            <div className="h-4 w-24 bg-surface-3/30 rounded-full" />
+                          </div>
+                        </div>
+                      }
+                    >
                       <ChatHeroCore3D
                         status={coreStatus}
+                        modelName={modelName}
+                        toneLabel={toneLabel}
+                        creativityLabel={creativityLabel}
                         lastErrorMessage={chatLogic.error?.message}
                       />
                     </Suspense>
 
-                    {/* Starter Prompts - Glassy to float over orb */}
+                    {/* Starter Prompts */}
                     <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
                       {STARTER_PROMPTS.map((prompt, index) => {
                         const theme = getCycleColor(index);
@@ -140,7 +191,7 @@ export default function Chat() {
                             onClick={() => chatLogic.handleStarterClick(prompt)}
                             className={cn(
                               "flex items-center gap-3 p-3 text-left rounded-2xl transition-all group",
-                              "bg-surface-1/40 border border-white/5 backdrop-blur-sm",
+                              "bg-surface-2 border border-border-subtle",
                               theme.hoverBg,
                               theme.hoverBorder,
                               theme.hoverGlow,
@@ -149,7 +200,7 @@ export default function Chat() {
                             <div
                               className={cn(
                                 "p-2 rounded-xl transition-colors",
-                                "bg-surface-2/50 text-ink-tertiary",
+                                "bg-surface-3 text-ink-tertiary",
                                 theme.groupHoverIconBg,
                                 theme.groupHoverIconText,
                               )}
@@ -168,7 +219,7 @@ export default function Chat() {
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="text-xs font-medium text-ink-muted hover:text-ink-secondary transition-colors mt-2 backdrop-blur-sm bg-black/10 px-3 py-1 rounded-full"
+                      className="text-xs font-medium text-ink-muted hover:text-ink-secondary transition-colors mt-2"
                     >
                       Einstellungen anpassen →
                     </button>
