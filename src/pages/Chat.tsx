@@ -111,7 +111,7 @@ export default function Chat() {
           }}
         >
           {/* Background Eye Orb - Always present, Behind Content */}
-          <EyeOrb status={coreStatus} />
+          <EyeOrb status={coreStatus} isObscured={isMenuOpen || isHistoryOpen} />
 
           <h1 className="sr-only">Disa AI – Chat</h1>
           <ChatStatusBanner

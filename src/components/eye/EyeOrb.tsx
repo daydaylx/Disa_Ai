@@ -1,7 +1,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { type MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
+import { cn } from "@/lib/utils";
 import { type CoreStatus } from "@/types/orb";
 
 import { eyeFragmentShader, eyeVertexShader } from "./shaders/eyeShaders";
@@ -10,6 +11,7 @@ import { eyeFragmentShader, eyeVertexShader } from "./shaders/eyeShaders";
 
 interface EyeOrbProps {
   status: CoreStatus;
+  isObscured?: boolean;
 }
 
 // Minimal permission UI trigger handled by parent or internal state
@@ -102,7 +104,7 @@ function EyeMesh({
   gyroTarget,
 }: {
   status: CoreStatus;
-  gyroTarget: React.MutableRefObject<{ x: number; y: number }>;
+  gyroTarget: MutableRefObject<{ x: number; y: number }>;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
@@ -184,7 +186,6 @@ function EyeMesh({
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
       <sphereGeometry args={[1.9, 64, 64]} />
-      {/* Slightly smaller radius to keep the eye proportionate on reduced viewport sizes */}
       <shaderMaterial
         ref={materialRef}
         vertexShader={eyeVertexShader}
@@ -205,12 +206,14 @@ function EyeMesh({
 
 // --- Main Exported Component ---
 
-export function EyeOrb({ status }: EyeOrbProps) {
+export function EyeOrb({ status, isObscured = false }: EyeOrbProps) {
+  const maxDpr = typeof window !== "undefined" ? Math.min(window.devicePixelRatio ?? 1, 1.5) : 1.5;
+
   // Gyro logic
   const { targetRotation, isSupported, permissionGranted, requestPermission } = useGyro();
 
   // Performance / Tiering logic
-  const [tier, setTier] = useState<"high" | "medium" | "low">("high");
+  const [tier, setTier] = useState<"high" | "low">("high");
 
   useEffect(() => {
     // Basic tier detection
@@ -223,30 +226,51 @@ export function EyeOrb({ status }: EyeOrbProps) {
     }
   }, []);
 
-  if (tier === "low") {
-    // Fallback: simple CSS orb
-    return (
-      <div className="w-full h-full flex items-center justify-center opacity-30">
-        <div
-          className={`w-64 h-64 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-3xl`}
-        />
+  const orbContent =
+    tier === "low" ? (
+      <div className="relative h-full w-full rounded-full overflow-hidden">
+        <div className="absolute inset-0 rounded-full bg-accent-chat-surface/40 blur-2xl" />
+        <div className="absolute inset-[10%] rounded-full bg-surface-1/50 border border-white/5" />
+        <div className="absolute inset-[28%] rounded-full bg-accent-chat-dim/70" />
+        <div className="absolute inset-[44%] rounded-full bg-surface-inset/80" />
       </div>
+    ) : (
+      <Canvas
+        className="relative h-full w-full"
+        dpr={[1, maxDpr]}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        camera={{ position: [0, 0, 5.4], fov: 45 }}
+      >
+        <Suspense fallback={null}>
+          <EyeMesh status={status} gyroTarget={targetRotation} />
+        </Suspense>
+      </Canvas>
     );
-  }
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      {/* Container for the 3D scene */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[88vw] h-[88vw] max-w-[720px] max-h-[720px] opacity-40 sm:opacity-20 transition-opacity duration-1000">
-        <Canvas
-          dpr={[1, Math.min(window.devicePixelRatio, 1.5)]}
-          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          camera={{ position: [0, 0, 5.5], fov: 45 }}
-        >
-          <Suspense fallback={null}>
-            <EyeMesh status={status} gyroTarget={targetRotation} />
-          </Suspense>
-        </Canvas>
+    <div className="absolute inset-0 z-background pointer-events-none" aria-hidden="true">
+      <div
+        className={cn(
+          "absolute inset-0 transition-opacity duration-500",
+          isObscured ? "opacity-0" : "opacity-100",
+        )}
+      >
+        {/* Anchor the orb subtly in the top-right and keep it off critical UI */}
+        <div className="absolute right-0 top-0 translate-x-1/6 -translate-y-1/6 sm:translate-x-1/5 sm:-translate-y-1/5">
+          <div
+            className="relative aspect-square w-[clamp(11rem,48vw,18rem)] sm:w-[clamp(14rem,26vw,22rem)]"
+            style={{
+              WebkitMaskImage:
+                "radial-gradient(circle at center, rgba(0,0,0,0.92) 58%, rgba(0,0,0,0) 88%)",
+              maskImage:
+                "radial-gradient(circle at center, rgba(0,0,0,0.92) 58%, rgba(0,0,0,0) 88%)",
+            }}
+          >
+            <div className="absolute inset-0 rounded-full bg-accent-chat-surface blur-3xl opacity-70" />
+            <div className="absolute inset-0 rounded-full bg-surface-1/20 border border-white/5" />
+            {orbContent}
+          </div>
+        </div>
       </div>
 
       {/* iOS Gyro Trigger */}
