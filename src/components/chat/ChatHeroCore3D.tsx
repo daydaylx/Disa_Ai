@@ -41,10 +41,7 @@ const STATUS_META: Record<
   },
 };
 
-export function ChatHeroCore3D({
-  status,
-  lastErrorMessage,
-}: ChatHeroCore3DProps) {
+export function ChatHeroCore3D({ status, lastErrorMessage }: ChatHeroCore3DProps) {
   const meta = STATUS_META[status];
 
   return (
