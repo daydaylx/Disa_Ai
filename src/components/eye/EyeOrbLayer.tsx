@@ -375,7 +375,7 @@ export function EyeOrbLayer({ phase, className }: EyeOrbLayerProps) {
           )}
         >
           {/* Orb anchor: subtle, partially offscreen so chat stays readable */}
-          <div className="absolute right-0 top-0 translate-x-1/3 -translate-y-1/3">
+          <div className="absolute right-4 top-4 sm:right-6 sm:top-6 translate-x-1/6 -translate-y-1/6">
             <div
               ref={containerRef}
               className={cn(
@@ -384,8 +384,8 @@ export function EyeOrbLayer({ phase, className }: EyeOrbLayerProps) {
                 prefersReducedMotion ? "opacity-70" : "opacity-100",
               )}
               style={{
-                WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 86%)",
-                maskImage: "radial-gradient(circle, rgba(0,0,0,1) 56%, rgba(0,0,0,0) 86%)",
+                WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 82%)",
+                maskImage: "radial-gradient(circle, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 82%)",
               }}
             >
               <div className="absolute inset-0 rounded-full bg-accent-chat-surface blur-3xl opacity-70" />
