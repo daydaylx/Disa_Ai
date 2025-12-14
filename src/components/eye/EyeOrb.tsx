@@ -75,9 +75,9 @@ function useGyro() {
   }, [permissionGranted]);
 
   const requestPermission = async () => {
-    // @ts-ignore
     if (
       typeof DeviceOrientationEvent !== "undefined" &&
+      // @ts-ignore - iOS-specific API
       typeof DeviceOrientationEvent.requestPermission === "function"
     ) {
       try {
