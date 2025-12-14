@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { CoreStatus } from "@/types/orb";
 
-import { ThreeEnergyEyeScene } from "./ThreeEnergyEyeScene";
+// Removed ThreeEnergyEyeScene import to be "transparent"
+// import { ThreeEnergyEyeScene } from "./ThreeEnergyEyeScene";
 
 interface ChatHeroCore3DProps {
   status: CoreStatus;
@@ -47,34 +48,17 @@ export function ChatHeroCore3D({
   const meta = STATUS_META[status];
 
   return (
-    <div className="w-full flex flex-col items-center gap-5 pb-6 pt-[calc(env(safe-area-inset-top,0px)+6px)] animate-fade-in">
+    <div className="w-full flex flex-col items-center gap-5 pb-6 pt-[calc(env(safe-area-inset-top,0px)+6px)] animate-fade-in relative z-10">
       <motion.div
         className="relative flex flex-col items-center gap-4"
         initial={{ opacity: 0, y: 12, scale: 0.94 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        <div
-          className={cn(
-            "absolute inset-[-12%] rounded-full blur-2xl pointer-events-none",
-            "bg-gradient-to-br opacity-40",
-            meta.glow,
-          )}
-        />
+        {/* Removed 3D Orb Container, kept Status Text */}
 
-        <div
-          className={cn(
-            "relative flex items-center justify-center aspect-square",
-            "w-[clamp(7rem,36vw,11rem)] max-w-[12rem] min-w-[6rem]",
-            "rounded-3xl backdrop-blur-md bg-surface-2/30",
-            "border border-white/5 overflow-hidden",
-          )}
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.04),transparent_52%)]" />
-          <div className="relative w-full h-full">
-            <ThreeEnergyEyeScene status={status} />
-          </div>
-        </div>
+        {/* Invisible spacer to push text down slightly if needed, or just let it float */}
+        <div className="h-16 w-full" />
 
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex items-center gap-2">
