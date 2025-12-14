@@ -15,7 +15,6 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
-import { useVisualViewport } from "../hooks/useVisualViewport";
 
 // Lazy load ChatHeroCore3D (Text status only now)
 const ChatHeroCore3D = lazy(() =>
@@ -30,7 +29,6 @@ const STARTER_PROMPTS = [
 ];
 
 export default function Chat() {
-  const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
@@ -102,14 +100,7 @@ export default function Chat() {
           </Button>
         }
       >
-        <div
-          className="flex flex-col relative w-full"
-          style={{
-            // Subtract header height (64px) from viewport height to prevent clipping
-            height: viewport.height ? `${viewport.height - 64}px` : "100%",
-            minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
-          }}
-        >
+        <div className="flex flex-col relative w-full h-[100dvh] pt-[4rem]">
           {/* Background Eye Orb - Always present, Behind Content */}
           <EyeOrb status={coreStatus} isObscured={isMenuOpen || isHistoryOpen} />
 
