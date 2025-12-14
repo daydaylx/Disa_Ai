@@ -361,6 +361,8 @@ export function EyeOrbLayer({ phase, className }: EyeOrbLayerProps) {
     orientation.needsPermission &&
     orientation.permissionState === "prompt";
 
+  const isDimmedTier = tier === "medium" || tier === "low";
+
   return (
     <>
       <div
@@ -381,7 +383,12 @@ export function EyeOrbLayer({ phase, className }: EyeOrbLayerProps) {
               className={cn(
                 "relative aspect-square",
                 "w-[clamp(11rem,50vw,18rem)] sm:w-[clamp(14rem,26vw,22rem)]",
-                prefersReducedMotion ? "opacity-70" : "opacity-100",
+                "transition-transform duration-500",
+                prefersReducedMotion
+                  ? "scale-95 opacity-70"
+                  : isDimmedTier
+                    ? "scale-95 opacity-80"
+                    : "opacity-100",
               )}
               style={{
                 WebkitMaskImage: "radial-gradient(circle, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 82%)",
