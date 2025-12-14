@@ -22,7 +22,7 @@ export function ThemenBottomSheet({ isOpen, onClose, onStart }: ThemenBottomShee
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md fixed bottom-0 left-0 right-0 sm:top-0 sm:left-auto sm:right-4 sm:w-96 rounded-t-3xl max-h-[90vh] p-0 border-0 bg-bg-page shadow-2xl">
+      <DialogContent className="sm:max-w-md fixed bottom-0 left-0 right-0 sm:top-0 sm:left-auto sm:right-4 sm:w-96 rounded-t-3xl max-h-[90vh] p-0 border-0 bg-bg-page shadow-2xl pb-safe-bottom">
         <div className="p-6 pb-4 border-b border-border-ink">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-ink-primary">Themen auswählen</h3>

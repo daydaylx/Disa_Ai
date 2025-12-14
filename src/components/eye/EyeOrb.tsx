@@ -24,11 +24,20 @@ const MAX_LOOK_ANGLE = 25; // Degrees
 function useGyro() {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
 
   // Target rotation in degrees { x: pitch (beta), y: yaw (gamma) }
   const targetRotation = useRef({ x: 0, y: 0 });
+  const lastUpdate = useRef(0);
 
   useEffect(() => {
+    // Check reduced motion preference
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setIsReducedMotion(mediaQuery.matches);
+
+    const handleMotionChange = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handleMotionChange);
+
     // Check if DeviceOrientationEvent is defined
     if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
       setIsSupported(true);
@@ -43,12 +52,19 @@ function useGyro() {
         setPermissionGranted(true);
       }
     }
+
+    return () => mediaQuery.removeEventListener("change", handleMotionChange);
   }, []);
 
   useEffect(() => {
-    if (!permissionGranted) return;
+    if (!permissionGranted || isReducedMotion) return;
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
+      const now = performance.now();
+      // Throttle to ~60fps (16ms) to avoid event flood
+      if (now - lastUpdate.current < 16) return;
+      lastUpdate.current = now;
+
       let { beta, gamma } = event; // beta: front-back (-180 to 180), gamma: left-right (-90 to 90)
 
       if (beta === null || gamma === null) return;
@@ -72,7 +88,7 @@ function useGyro() {
 
     window.addEventListener("deviceorientation", handleOrientation);
     return () => window.removeEventListener("deviceorientation", handleOrientation);
-  }, [permissionGranted]);
+  }, [permissionGranted, isReducedMotion]);
 
   const requestPermission = async () => {
     if (
@@ -94,7 +110,7 @@ function useGyro() {
     }
   };
 
-  return { targetRotation, isSupported, permissionGranted, requestPermission };
+  return { targetRotation, isSupported, permissionGranted, requestPermission, isReducedMotion };
 }
 
 // --- Three.js Component: The Eye ---
@@ -142,15 +158,15 @@ function EyeMesh({
     currentRotation.current.x += (targetX - currentRotation.current.x) * SMOOTHING_FACTOR;
     currentRotation.current.y += (targetY - currentRotation.current.y) * SMOOTHING_FACTOR;
 
-    // 2. Add "Life" (Micro-movements / Saccades)
+    // 2. Add "Life" (Micro-movements / Saccades) - Reduced amplitude for stability
     const time = state.clock.elapsedTime;
     let microX = 0;
     let microY = 0;
 
     if (status === "thinking" || status === "idle") {
-      // Slow breathing movement
-      microX = Math.sin(time * 0.5 + noiseOffset.current.x) * 0.05;
-      microY = Math.cos(time * 0.3 + noiseOffset.current.y) * 0.05;
+      // Slow breathing movement - subtler than before
+      microX = Math.sin(time * 0.5 + noiseOffset.current.x) * 0.03;
+      microY = Math.cos(time * 0.3 + noiseOffset.current.y) * 0.03;
     }
 
     // 3. Apply Rotation
@@ -210,21 +226,21 @@ export function EyeOrb({ status, isObscured = false }: EyeOrbProps) {
   const maxDpr = typeof window !== "undefined" ? Math.min(window.devicePixelRatio ?? 1, 1.5) : 1.5;
 
   // Gyro logic
-  const { targetRotation, isSupported, permissionGranted, requestPermission } = useGyro();
+  const { targetRotation, isSupported, permissionGranted, requestPermission, isReducedMotion } =
+    useGyro();
 
   // Performance / Tiering logic
   const [tier, setTier] = useState<"high" | "low">("high");
 
   useEffect(() => {
     // Basic tier detection
-    const isLowPower = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // @ts-ignore
     const memory = navigator.deviceMemory || 4; // Default to 4GB if unknown
 
-    if (isLowPower || memory < 4) {
+    if (isReducedMotion || memory < 4) {
       setTier("low");
     }
-  }, []);
+  }, [isReducedMotion]);
 
   const orbContent =
     tier === "low" ? (
@@ -236,7 +252,7 @@ export function EyeOrb({ status, isObscured = false }: EyeOrbProps) {
       </div>
     ) : (
       <Canvas
-        className="relative h-full w-full"
+        className="relative h-full w-full pointer-events-none"
         dpr={[1, maxDpr]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 5.4], fov: 45 }}
@@ -248,7 +264,7 @@ export function EyeOrb({ status, isObscured = false }: EyeOrbProps) {
     );
 
   return (
-    <div className="absolute inset-0 z-background pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
       <div
         className={cn(
           "absolute inset-0 transition-opacity duration-500",
@@ -274,7 +290,7 @@ export function EyeOrb({ status, isObscured = false }: EyeOrbProps) {
       </div>
 
       {/* iOS Gyro Trigger */}
-      {isSupported && !permissionGranted && (
+      {isSupported && !permissionGranted && !isReducedMotion && (
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 pointer-events-auto z-10">
           <button
             onClick={requestPermission}
