@@ -78,11 +78,11 @@ export function SimpleCssEyeOrb({ status, isObscured = false }: SimpleCssEyeOrbP
 
   return (
     <div
-      className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center"
+      className="absolute inset-0 z-[5] pointer-events-none flex items-center justify-center"
       aria-hidden="true"
       style={{
         ...statusVars,
-        opacity: isObscured ? 0.2 : 1,
+        opacity: isObscured ? 0.1 : 0.4,
         transition: "opacity 0.5s ease",
       }}
     >
