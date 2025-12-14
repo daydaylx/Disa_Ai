@@ -50,7 +50,7 @@ export async function loadEyeAssets(tier: EyeOrbQualityTier): Promise<EyeAssets>
       }
 
       ctx.drawImage(texture.image, 0, 0, 256, 256);
-      texture.image = canvas;
+      texture.image = canvas as unknown as HTMLImageElement;
       texture.needsUpdate = true;
     }
 
