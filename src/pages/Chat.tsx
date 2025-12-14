@@ -5,7 +5,6 @@ import { useCoreStatus } from "@/hooks/useCoreStatus";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -30,12 +29,6 @@ const STARTER_PROMPTS = [
   "Was koche ich heute?",
   "Erzähl mir einen Witz",
 ];
-
-function getCreativityLabel(value: number): string {
-  if (value < 30) return "Präzise";
-  if (value < 70) return "Ausgewogen";
-  return "Kreativ";
-}
 
 export default function Chat() {
   const viewport = useVisualViewport();
@@ -64,23 +57,6 @@ export default function Chat() {
     error: chatLogic.error,
     messages: chatLogic.messages,
   });
-
-  // Derived Meta Info
-  const modelName = useMemo(() => {
-    const m = models?.find((x) => x.id === settings.preferredModelId);
-    return m?.label || settings.preferredModelId || "Unbekannt";
-  }, [models, settings.preferredModelId]);
-
-  const toneLabel = useMemo(() => {
-    return (
-      discussionPresetOptions.find((o) => o.key === settings.discussionPreset)?.label || "Standard"
-    );
-  }, [settings.discussionPreset]);
-
-  const creativityLabel = useMemo(
-    () => getCreativityLabel(settings.creativity),
-    [settings.creativity],
-  );
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
@@ -170,9 +146,6 @@ export default function Chat() {
                     >
                       <ChatHeroCore3D
                         status={coreStatus}
-                        modelName={modelName}
-                        toneLabel={toneLabel}
-                        creativityLabel={creativityLabel}
                         lastErrorMessage={chatLogic.error?.message}
                       />
                     </Suspense>
