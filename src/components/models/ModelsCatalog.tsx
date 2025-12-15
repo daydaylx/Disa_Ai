@@ -7,7 +7,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { Check, Cpu, RefreshCw, Star } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -141,24 +141,36 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               const isFavorite = isModelFavorite(model.id);
 
               return (
-                <Card
+                <div
                   key={model.id}
-                  variant="interactive"
-                  accent="models"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setPreferredModel(model.id)}
+                  data-testid="model-card"
                   className={cn(
-                    "w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300",
+                    "relative w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300 rounded-2xl border p-4",
                     isActive
                       ? "bg-accent-models-surface border-accent-models-border ring-1 ring-accent-models/20 shadow-glow-models"
                       : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-models-border/50 shadow-sm",
                   )}
                 >
+                  {/* Clickable Area */}
+                  <div
+                    className="absolute inset-0 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setPreferredModel(model.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setPreferredModel(model.id);
+                      }
+                    }}
+                    aria-label={`Modell ${model.label ?? model.id} auswählen`}
+                    aria-current={isActive ? "true" : undefined}
+                  />
+
                   {/* Icon */}
                   <div
                     className={cn(
-                      "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                      "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors pointer-events-none",
                       isActive
                         ? "bg-accent-models-dim text-accent-models shadow-inner"
                         : "bg-surface-2/80 text-ink-tertiary",
@@ -172,7 +184,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0">
+                  <div className="relative flex-1 min-w-0 pointer-events-none">
                     <div className="flex items-center gap-2">
                       <span
                         className={cn(
@@ -186,7 +198,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         <Check className="h-4 w-4 text-accent-models flex-shrink-0 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" />
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium">
+                    <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium pointer-events-none">
                       <span className="truncate text-ink-secondary">{model.provider}</span>
                       <span className="text-ink-muted">·</span>
                       <span className="bg-surface-3/50 px-1.5 py-0.5 rounded text-[10px]">
@@ -198,24 +210,31 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   </div>
 
                   {/* Favorite Toggle */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
+                  <div
+                    role="button"
+                    tabIndex={0}
                     className={cn(
-                      "flex-shrink-0 h-11 w-11 transition-colors",
+                      "flex-shrink-0 h-11 w-11 transition-colors flex items-center justify-center rounded-lg cursor-pointer",
                       isFavorite
                         ? "text-status-warning hover:text-status-warning/80"
                         : "text-ink-muted hover:text-ink-primary",
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleModelFavorite(model.id); // Corrected function name
+                      toggleModelFavorite(model.id);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleModelFavorite(model.id);
+                      }
                     }}
                     aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
                   >
                     <Star className={cn("h-5 w-5", isFavorite && "fill-current")} />
-                  </Button>
-                </Card>
+                  </div>
+                </div>
               );
             })}
           </div>

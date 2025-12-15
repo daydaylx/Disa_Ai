@@ -30,7 +30,7 @@ export function BookLayout({
             variant="ghost"
             size="icon"
             onClick={onMenuClick}
-            aria-label="Hauptmenü öffnen"
+            aria-label="Menü öffnen"
             className="text-ink-primary hover:bg-[rgba(255,255,255,0.06)] chalk-focus"
           >
             <Menu className="h-5 w-5" />
@@ -47,7 +47,7 @@ export function BookLayout({
       </header>
 
       {/* Main Page Content Area */}
-      <main
+      <div
         className={cn(
           "flex-1 relative flex flex-col max-w-5xl mx-auto w-full shadow-[0_0_0_1px_var(--border-chalk)] sm:my-4 sm:border sm:border-[var(--border-chalk)] sm:rounded-2xl",
           className,
@@ -62,7 +62,7 @@ export function BookLayout({
 
         {/* Bookmark Hanging on the Right Edge */}
         {onBookmarkClick && <Bookmark onClick={onBookmarkClick} />}
-      </main>
+      </div>
     </div>
   );
 }

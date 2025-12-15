@@ -9,7 +9,7 @@ import { afterEach, beforeEach } from "vitest";
 import { ApiError } from "../src/lib/errors";
 
 // ResizeObserver polyfill for JSDOM
-// This is required by react-three-fiber or react-use-measure in test environments
+// Some UI libraries expect ResizeObserver to exist in the runtime.
 class ResizeObserver {
   callback: ResizeObserverCallback;
 

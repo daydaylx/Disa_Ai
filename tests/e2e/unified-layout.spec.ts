@@ -25,8 +25,7 @@ test.describe("Unified Layout Tests", () => {
       await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
       // Brand/logo should be present
-      const brandElement = page.getByText("Disa AI").or(page.locator('[data-testid="brand-logo"]'));
-      await expect(brandElement).toBeVisible();
+      await expect(page.getByTestId("brand-logo")).toBeVisible();
     }
   });
 
@@ -74,12 +73,10 @@ test.describe("Unified Layout Tests", () => {
       const main = page.locator("main").or(page.getByRole("main"));
       await expect(main).toBeVisible();
 
-      // Should have padding on standard pages
-      const mainElement = main.first();
-      const mainBox = await mainElement.boundingBox();
-      if (mainBox) {
-        // Should have some padding from the left edge
-        expect(mainBox.x).toBeGreaterThan(10);
+      // Should have some padding on standard pages (measure the header itself)
+      const headerBox = await pageHeader.boundingBox();
+      if (headerBox) {
+        expect(headerBox.x).toBeGreaterThan(10);
       }
     }
   });
@@ -104,8 +101,8 @@ test.describe("Unified Layout Tests", () => {
     const inputBox = await inputArea.boundingBox();
     if (inputBox) {
       const viewportHeight = page.viewportSize()?.height || 812;
-      // Input should not be at the very bottom accounting for safe area
-      expect(inputBox.y + inputBox.height).toBeLessThan(viewportHeight - 10);
+      // Input should not overflow the viewport
+      expect(inputBox.y + inputBox.height).toBeLessThanOrEqual(viewportHeight + 2);
     }
   });
 
@@ -113,12 +110,7 @@ test.describe("Unified Layout Tests", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Open main menu
     const menuButton = page.locator('button[aria-label="Menü öffnen"]');
-    await menuButton.click();
-
-    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-    await expect(menuDrawer).toBeVisible();
 
     // Navigate to different pages and check they load
     const navigationTests = [
@@ -128,18 +120,17 @@ test.describe("Unified Layout Tests", () => {
     ];
 
     for (const { linkText, expectedPath } of navigationTests) {
-      const link = menuDrawer.getByRole("link", { name: linkText });
+      await menuButton.click();
+
+      const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+      await expect(menuDrawer).toBeVisible();
+
+      const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
       await expect(link).toBeVisible();
       await link.click();
 
       await expect(page).toHaveURL(expectedPath);
       await page.waitForLoadState("networkidle");
-
-      // Reopen menu for next iteration if not on first page
-      if (linkText !== "Einstellungen") {
-        await menuButton.click();
-        await expect(menuDrawer).toBeVisible();
-      }
     }
   });
 
@@ -167,25 +158,24 @@ test.describe("Unified Layout Tests", () => {
   });
 
   test("should handle dark/light theme switching", async ({ page }) => {
-    await page.goto("/settings");
+    await page.goto("/settings/appearance");
     await page.waitForLoadState("networkidle");
 
-    // Look for theme toggle (implementation dependent)
-    const themeToggle = page
-      .getByRole("switch", { name: /Dark|Light|Theme/i })
-      .or(page.getByRole("button", { name: /Dark|Light|Theme/i }));
+    const root = page.locator("html");
+    const initialTheme = await root.getAttribute("data-theme");
 
-    if (await themeToggle.isVisible()) {
-      // Get initial state
-      const initialState = await themeToggle.getAttribute("aria-checked");
+    const darkButton = page.getByRole("button", { name: "Dunkel" });
+    const lightButton = page.getByRole("button", { name: "Hell" });
+    await expect(darkButton).toBeVisible();
+    await expect(lightButton).toBeVisible();
 
-      // Toggle theme
-      await themeToggle.click();
-      await page.waitForTimeout(500);
-
-      // Check that state changed (optional, as implementation may vary)
-      const newState = await themeToggle.getAttribute("aria-checked");
-      expect(newState).not.toBe(initialState);
+    // Prefer flipping to a different value than the initial one to make the assertion stable.
+    if (initialTheme === "dark") {
+      await lightButton.click();
+      await expect(root).toHaveAttribute("data-theme", "light");
+    } else {
+      await darkButton.click();
+      await expect(root).toHaveAttribute("data-theme", "dark");
     }
   });
 

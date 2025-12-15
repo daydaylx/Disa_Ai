@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import * as router from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
@@ -10,6 +10,7 @@ vi.mock("react-router-dom", async () => {
   return {
     ...actual,
     useLocation: vi.fn(),
+    useNavigate: vi.fn(() => vi.fn()),
     Link: ({ children }: any) => <div>{children}</div>,
     NavLink: ({ children }: any) => <div>{children}</div>,
   };
@@ -126,7 +127,8 @@ describe("AppShell Layout Logic", () => {
       </AppShell>,
     );
 
-    expect(screen.getByRole("heading", { level: 1, name: "Feedback" })).toBeInTheDocument();
+    const main = screen.getByTestId("app-main");
+    expect(within(main).getByText("Feedback")).toBeInTheDocument();
     expect(screen.getByText("Zurück")).toBeInTheDocument();
   });
 });

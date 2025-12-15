@@ -31,19 +31,23 @@ export function ChatLayout({
               variant="ghost"
               size="icon"
               onClick={onMenuClick}
-              aria-label="Hauptmenü öffnen"
+              aria-label="Menü öffnen"
               className="text-ink-primary hover:bg-surface-2"
             >
               <Menu className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <BrandWordmark className="h-5 w-auto text-ink-primary" state="idle" />
+              <BrandWordmark
+                className="h-5 w-auto text-ink-primary"
+                state="idle"
+                data-testid="brand-logo"
+              />
               <span className="sr-only">Disa AI</span>
             </div>
             {title && (
-              <h1 className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg">
+              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg">
                 {title}
-              </h1>
+              </p>
             )}
           </div>
 
@@ -53,14 +57,15 @@ export function ChatLayout({
       </header>
 
       {/* Main Page Content Area */}
-      <main
+      <div
         className={cn(
           "flex-1 relative flex flex-col w-full max-w-5xl mx-auto overflow-hidden px-4 sm:px-6",
           className,
         )}
       >
+        <h1 className="sr-only">Disa AI – Chat</h1>
         {children}
-      </main>
+      </div>
     </div>
   );
 }

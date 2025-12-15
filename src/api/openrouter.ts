@@ -479,6 +479,9 @@ export async function getRawModels(
   toasts?: ToastsArray,
   forceRefresh = false,
 ): Promise<ORModel[]> {
+  const resolvedKey = explicitKey ?? readApiKey() ?? "";
+  const hasAuthKey = Boolean(resolvedKey);
+
   // Helper to get cached data regardless of age
   const getCachedData = (): ORModel[] | null => {
     try {
@@ -492,6 +495,14 @@ export async function getRawModels(
     }
     return null;
   };
+
+  // If there is no API key, avoid long retries/timeouts and use cached/static fallback immediately.
+  // The OpenRouter models endpoint frequently requires auth; waiting blocks UI and E2E stability.
+  if (!hasAuthKey) {
+    const cached = getCachedData();
+    if (cached && cached.length > 0) return cached;
+    return FALLBACK_FREE_MODELS;
+  }
 
   // Try to return fresh cache first (if not forcing refresh)
   if (!forceRefresh) {

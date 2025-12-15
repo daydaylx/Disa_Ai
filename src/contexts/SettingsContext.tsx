@@ -2,10 +2,8 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 import { isAllowedModelId } from "../config/modelDefaults";
 import { DEFAULT_MODEL_ID } from "../config/modelPresets";
-import { DEFAULT_ORB_SETTINGS } from "../config/orbPresets";
 import { STORAGE_KEYS } from "../config/storageKeys";
 import type { DiscussionPresetKey } from "../prompts/discussion/presets";
-import type { OrbSettings } from "../types/orb";
 
 interface Settings {
   showNSFWContent: boolean;
@@ -23,7 +21,6 @@ interface Settings {
   reduceMotion: boolean;
   hapticFeedback: boolean;
   restoreLastConversation: boolean;
-  orb: OrbSettings; // Orb configuration
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -42,7 +39,6 @@ const DEFAULT_SETTINGS: Settings = {
   reduceMotion: false,
   hapticFeedback: false,
   restoreLastConversation: true,
-  orb: DEFAULT_ORB_SETTINGS,
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);

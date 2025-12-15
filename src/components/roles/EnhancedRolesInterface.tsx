@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getCategoryStyle } from "@/lib/categoryColors";
 import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Badge, Button, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
@@ -201,12 +201,20 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             {/* Filter Pills */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
               {/* Favorites Toggle */}
-              <button
+              <div
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
                 }
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }));
+                  }
+                }}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
                   filters.showFavoritesOnly
                     ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                     : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -214,7 +222,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               >
                 <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
                 Favoriten
-              </button>
+              </div>
 
               <div className="w-px h-4 bg-white/10 flex-shrink-0" />
 
@@ -223,18 +231,26 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 const isSelected = selectedCategory === cat;
                 const catTheme = getCategoryStyle(cat);
                 return (
-                  <button
+                  <div
                     key={cat}
                     onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedCategory((prev) => (prev === cat ? null : cat));
+                      }
+                    }}
                     className={cn(
-                      "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap",
+                      "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
                       isSelected
                         ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
                         : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
                     )}
                   >
                     {cat}
-                  </button>
+                  </div>
                 );
               })}
             </div>
@@ -284,22 +300,16 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const theme = getCategoryStyle(role.category);
 
               return (
-                <Card
+                <div
                   key={role.id}
                   data-testid="role-card"
-                  variant="interactive"
-                  // accent="roles" // Removed to use dynamic theme
-                  role="button"
-                  onClick={() => handleActivateRole(role)}
-                  aria-label={`Rolle ${role.name} auswählen`}
-                  aria-pressed={isActive}
-                  style={{ background: theme.roleGradient }}
                   className={cn(
-                    "relative transition-all duration-300 group overflow-hidden",
+                    "relative transition-all duration-300 group overflow-hidden rounded-2xl border p-0",
                     isActive
                       ? cn("ring-1", theme.border, theme.glow)
                       : cn("border-white/5 hover:brightness-110", theme.hoverBorder),
                   )}
+                  style={{ background: theme.roleGradient }}
                 >
                   <div className="absolute right-3 top-3 flex items-center gap-2">
                     {isActive && (
@@ -313,18 +323,25 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         Aktiv
                       </Badge>
                     )}
-                    <button
-                      type="button"
+                    <div
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleRoleFavorite(role.id);
                       }}
-                      aria-pressed={isFavorite}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleRoleFavorite(role.id);
+                        }
+                      }}
                       aria-label={
                         isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                       }
                       className={cn(
-                        "flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                        "relative z-10 flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors cursor-pointer pointer-events-auto",
                         isFavorite
                           ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
                           : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
@@ -332,15 +349,33 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     >
                       {" "}
                       <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
-                    </button>
+                    </div>
                   </div>
 
-                  {/* Main Row */}
-                  <div className="flex items-center gap-4 p-4">
+                  {/* Main Row - Clickable area */}
+                  <div
+                    className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none"
+                    aria-label={`Rolle ${role.name} auswählen`}
+                    aria-current={isActive ? "true" : undefined}
+                  >
+                    {/* Invisible clickable overlay */}
+                    <div
+                      className="absolute inset-0 cursor-pointer pointer-events-auto"
+                      onClick={() => handleActivateRole(role)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleActivateRole(role);
+                        }
+                      }}
+                      aria-label={`Rolle ${role.name} auswählen`}
+                    />
                     {/* Icon */}
                     <div
                       className={cn(
-                        "flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                        "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
                         isActive
                           ? cn(theme.iconBg, theme.iconText, "shadow-inner")
                           : cn(theme.iconBg, theme.iconText, theme.groupHoverIconBg),
@@ -350,7 +385,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     </div>
 
                     {/* Info */}
-                    <div className="flex-1 min-w-0">
+                    <div className="relative flex-1 min-w-0">
                       <span
                         className={cn(
                           "font-semibold text-sm truncate block",
@@ -365,16 +400,16 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-col items-end gap-2 pr-10">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent card click
-                          toggleRoleExpansion(role.id);
+                    <div className="flex flex-col items-end gap-2 pr-10 relative z-10 pointer-events-auto">
+                      <span
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleRoleExpansion(role.id);
+                          }
                         }}
-                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors"
-                        aria-expanded={isExpanded}
-                        aria-controls={`role-details-${role.id}`}
+                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer"
                       >
                         Details
                         <ChevronDown
@@ -383,7 +418,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             isExpanded && "rotate-180",
                           )}
                         />
-                      </button>
+                      </span>
                     </div>
                   </div>
 
@@ -423,7 +458,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       </div>
                     </div>
                   )}
-                </Card>
+                </div>
               );
             })}
           </div>

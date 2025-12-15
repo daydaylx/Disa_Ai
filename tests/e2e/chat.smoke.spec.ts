@@ -20,13 +20,13 @@ test.describe("Chat Smoke Tests", () => {
     await page.waitForLoadState("domcontentloaded");
     // Warte explizit auf ein kritisches UI-Element
     await page
-      .locator('button[aria-label="Hauptmenü öffnen"]')
+      .locator('button[aria-label="Menü öffnen"]')
       .waitFor({ state: "visible", timeout: 15000 });
   });
 
   test("should load chat interface with key elements", async ({ page }) => {
     // Prüfe Hauptmenü-Button (korrektes aria-label)
-    await expect(page.locator('button[aria-label="Hauptmenü öffnen"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
 
     // Prüfe Verlauf-Button
     await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
@@ -67,7 +67,7 @@ test.describe("Chat Smoke Tests", () => {
 
   test("should open main menu", async ({ page }) => {
     // Korrektes aria-label verwenden
-    const menuButton = page.locator('button[aria-label="Hauptmenü öffnen"]');
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
     await menuButton.click();
 
     // Menü-Drawer sollte sichtbar sein

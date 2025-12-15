@@ -56,19 +56,18 @@ test.describe("Book Concept UI", () => {
     await styleControl.click();
 
     // Check for style options
-    const creativeOption = page.getByRole("option", { name: "Kreativ" });
-    await expect(creativeOption).toBeVisible();
-    await creativeOption.click();
+    const styleOption = page.getByRole("option", { name: "Locker & neugierig" });
+    await expect(styleOption).toBeVisible();
+    await styleOption.click();
 
     // Click on creativity selector
     const creativityControl = page.locator('button[aria-label="Kreativität auswählen"]');
     await creativityControl.click();
 
     // Check for creativity options
-    const highCreativity = page.getByRole("option", { name: /Hoch|80/i });
-    if (await highCreativity.isVisible()) {
-      await highCreativity.click();
-    }
+    const creativeLevel = page.getByRole("option", { name: /Kreativ/i });
+    await expect(creativeLevel).toBeVisible();
+    await creativeLevel.click();
   });
 
   test("should open History Panel via Bookmark", async ({ page }) => {

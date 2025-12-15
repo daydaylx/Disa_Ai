@@ -25,8 +25,27 @@ test.describe("Models & Roles Pages", () => {
       .getByPlaceholder(/Suchen|Search/i)
       .or(page.getByRole("textbox", { name: /Suchen|Filter/i }));
     if (await searchInput.isVisible()) {
+      const initialCount = await modelCards.count();
       await searchInput.fill("gpt");
       await page.waitForTimeout(500); // Wait for debounce
+
+      // The query may legitimately yield 0 results (e.g. curated free models contain no "gpt").
+      // Ensure the UI reacts without crashing.
+      const filteredCount = await modelCards.count();
+      if (initialCount > 0) {
+        if (filteredCount === 0) {
+          await expect(
+            page.getByRole("heading", { level: 3, name: /Keine Modelle gefunden/i }),
+          ).toBeVisible();
+        } else {
+          await expect(modelCards.first()).toBeVisible();
+        }
+        expect(filteredCount).toBeLessThanOrEqual(initialCount);
+      }
+
+      // Reset filter so interaction tests stay stable
+      await searchInput.fill("");
+      await page.waitForTimeout(250);
     }
 
     // Check that clicking a model shows details or selects it
@@ -67,58 +86,53 @@ test.describe("Models & Roles Pages", () => {
   });
 
   test("should select role from chat and apply it", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
-    // Click on role selector (shows "Standard" by default)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
-    await roleButton.click();
+    const roleTrigger = page.locator('button[aria-label="Rolle auswählen"]');
+    await expect(roleTrigger).toBeVisible();
+    await roleTrigger.click();
 
-    // Should navigate to roles page
-    await expect(page).toHaveURL(/\/roles/);
+    const roleOptions = page.getByRole("option");
+    const optionCount = await roleOptions.count();
 
-    // Select a specific role
-    const roleCards = page
-      .locator('[data-testid="role-card"]')
-      .or(page.locator('[role="button"]').filter({ has: page.locator("text=/Rolle|Persona/") }));
+    // Option 0 is always "Standard" – pick the first real role if available
+    if (optionCount > 1) {
+      const firstRoleOption = roleOptions.nth(1);
+      const roleName = (await firstRoleOption.textContent())?.trim();
+      await firstRoleOption.click();
 
-    if ((await roleCards.count()) > 1) {
-      const firstRole = roleCards.first();
-      const roleName = await firstRole.textContent();
-      await firstRole.click();
-
-      // Should navigate back to chat
-      await expect(page).toHaveURL("/");
-
-      // Check that the role is now selected
-      await expect(
-        page.locator("button").filter({ hasText: new RegExp(roleName || "") }),
-      ).toBeVisible();
+      if (roleName) {
+        await expect(roleTrigger).toContainText(roleName);
+      }
     }
   });
 
   test("should navigate between main pages using navigation", async ({ page }) => {
     // Start at chat
-    await page.goto("/");
+    await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
     // Open main menu
     const menuButton = page.locator('button[aria-label="Menü öffnen"]');
     await menuButton.click();
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(menuDrawer).toBeVisible();
 
     // Navigate to settings
-    const settingsLink = page.getByRole("link", { name: "Einstellungen" });
+    const settingsLink = menuDrawer.getByRole("link", { name: /^Einstellungen\b/i });
     await expect(settingsLink).toBeVisible();
     await settingsLink.click();
     await expect(page).toHaveURL(/\/settings/);
 
     // Navigate back to chat
-    await page.goto("/");
+    await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
     // Navigate to models using menu
     await menuButton.click();
-    const modelsLink = page.getByRole("link", { name: "Modelle" });
+    await expect(menuDrawer).toBeVisible();
+    const modelsLink = menuDrawer.getByRole("link", { name: /^Modelle\b/i });
     await expect(modelsLink).toBeVisible();
     await modelsLink.click();
     await expect(page).toHaveURL(/\/models/);
@@ -133,21 +147,30 @@ test.describe("Models & Roles Pages", () => {
       .locator('[data-testid="role-card"]')
       .or(page.locator('[role="button"]').filter({ has: page.locator("text=/Rolle|Persona/") }));
 
-    if ((await roleCards.count()) > 0) {
-      const firstRole = roleCards.first();
-      await firstRole.click();
-    }
+    const firstRole = roleCards.first();
+    await expect(firstRole).toBeVisible();
+
+    const ariaLabel = (await firstRole.getAttribute("aria-label")) ?? "";
+    const roleName = ariaLabel
+      .replace(/^Rolle\s+/i, "")
+      .replace(/\s+auswählen$/i, "")
+      .trim();
+    await firstRole.click();
+    await expect(page).toHaveURL(/\/chat/);
 
     // Go to settings and check something there
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
 
     // Navigate back to chat - role should still be selected
-    await page.goto("/");
+    await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
     // Check if the role persisted (this might depend on implementation)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
-    await expect(roleButton).toBeVisible();
+    const roleTrigger = page.locator('button[aria-label="Rolle auswählen"]');
+    await expect(roleTrigger).toBeVisible();
+    if (roleName) {
+      await expect(roleTrigger).toContainText(roleName);
+    }
   });
 });

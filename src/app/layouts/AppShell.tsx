@@ -1,17 +1,17 @@
 /* c8 ignore start */
 import { type ReactNode, useCallback, useMemo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
-import { Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
+import { Bookmark, Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
 
 const HAMBURGER_NAV_ITEMS = [
-  { id: "models", label: "Models", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
+  { id: "models", label: "Modelle", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
   { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
   {
     id: "settings",
@@ -70,6 +70,7 @@ function AppShellLayout({
   pageHeaderActions,
 }: AppShellLayoutProps) {
   const menuDrawer = useMenuDrawer();
+  const navigate = useNavigate();
   const focusMain = useCallback(() => {
     const mainEl = document.getElementById("main");
     if (!mainEl) return;
@@ -132,27 +133,37 @@ function AppShellLayout({
         </aside>
 
         <div className="flex min-h-screen-mobile flex-1 flex-col safe-area-bottom">
-          {/* Header - Clean for Chat Mode (Hidden in Chat, BookLayout handles it) */}
-          <header
-            className={cn(
-              "sticky top-0 z-header h-[3.5rem] lg:h-[4rem] border-b border-border-ink/30 bg-surface-2/95 backdrop-blur",
-              // Hide AppShell header on mobile AND desktop for Chat Mode, as BookLayout has its own
-              isChatMode ? "hidden" : "lg:hidden",
-            )}
-          >
-            <div className="flex h-full items-center gap-3 px-4 py-3 lg:px-6">
-              <div className="flex flex-1 items-center gap-3 truncate">
-                <MobileBackButton />
-                <div className="flex items-center gap-2 truncate">
-                  <BrandWordmark className="text-sm lg:hidden" />
-                  <span className="text-sm font-semibold text-text-primary truncate">
-                    {pageTitle}
-                  </span>
+          {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
+          {!isChatMode ? (
+            <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] border-b border-border-ink/30 bg-surface-2/95 backdrop-blur lg:hidden">
+              <div className="flex h-full items-center gap-3 px-4 py-3 lg:px-6">
+                <div className="flex flex-1 items-center gap-3 truncate">
+                  <MobileBackButton />
+                  <div className="flex items-center gap-2 truncate">
+                    <BrandWordmark className="text-sm lg:hidden" data-testid="brand-logo" />
+                    <span className="text-sm font-semibold text-text-primary truncate">
+                      {pageTitle}
+                    </span>
+                  </div>
+                </div>
+                <div className="ml-auto flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void navigate("/chat/history")}
+                    className={cn(
+                      "relative flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg",
+                      "text-ink-primary hover:bg-surface-2 transition-colors",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
+                    )}
+                    aria-label="Verlauf öffnen"
+                  >
+                    <Bookmark className="h-5 w-5" />
+                  </button>
+                  <MenuIcon onClick={menuDrawer.openMenu} />
                 </div>
               </div>
-              <MenuIcon onClick={menuDrawer.openMenu} className="ml-auto" />
-            </div>
-          </header>
+            </header>
+          ) : null}
 
           <div
             id="main"
@@ -180,9 +191,9 @@ function AppShellLayout({
                     {resolvedPageTitle ? (
                       <div className="flex items-center gap-2">
                         <BrandWordmark className="text-sm text-text-secondary lg:hidden" />
-                        <h1 className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                        <p className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
                           {resolvedPageTitle}
-                        </h1>
+                        </p>
                       </div>
                     ) : null}
                     {pageHeaderActions ? (

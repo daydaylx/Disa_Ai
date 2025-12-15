@@ -16,50 +16,46 @@ export function ModelCatalogProvider({ children }: { children: React.ReactNode }
   const [models, setModels] = useState<ModelEntry[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const hasRequestedRef = useRef(false);
   const isRefreshingRef = useRef(false);
   const isMountedRef = useRef(true);
-
-  const refresh = useCallback(
-    async (force = false) => {
-      if (isRefreshingRef.current) return;
-      isRefreshingRef.current = true;
-      // Only reset loading state if explicitly forced or if we don't have models yet
-      if (force || !models) {
-        setLoading(true);
-      }
-      setError(null);
-
-      try {
-        const catalog = await loadModelCatalog({ forceRefresh: force });
-        if (!isMountedRef.current) return;
-        setModels(catalog);
-        if (!catalog.length) setError("Modelle konnten nicht geladen werden.");
-      } catch (err) {
-        console.error("Model catalog loading failed", err);
-        if (!isMountedRef.current) return;
-        setError("Modelle konnten nicht geladen werden.");
-      } finally {
-        isRefreshingRef.current = false;
-        if (isMountedRef.current) {
-          setLoading(false);
-        }
-      }
-    },
-    [models],
-  );
+  const modelsRef = useRef<ModelEntry[] | null>(models);
 
   useEffect(() => {
-    if (hasRequestedRef.current) return;
-    hasRequestedRef.current = true;
+    modelsRef.current = models;
+  }, [models]);
+
+  const refresh = useCallback(async (force = false) => {
+    if (isRefreshingRef.current) return;
+    isRefreshingRef.current = true;
+    // Only reset loading state if explicitly forced or if we don't have models yet
+    if (force || !modelsRef.current) {
+      setLoading(true);
+    }
+    setError(null);
+
+    try {
+      const catalog = await loadModelCatalog({ forceRefresh: force });
+      if (!isMountedRef.current) return;
+      setModels(catalog);
+      modelsRef.current = catalog;
+      if (!catalog.length) setError("Modelle konnten nicht geladen werden.");
+    } catch (err) {
+      console.error("Model catalog loading failed", err);
+      if (!isMountedRef.current) return;
+      setError("Modelle konnten nicht geladen werden.");
+    } finally {
+      isRefreshingRef.current = false;
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // React StrictMode runs effects twice in dev; reset mount guard each time.
+    isMountedRef.current = true;
 
     if (typeof window === "undefined") {
-      setLoading(false);
-      return;
-    }
-
-    const isTestEnv = typeof (globalThis as any).vitest !== "undefined";
-    if (isTestEnv) {
       setLoading(false);
       return;
     }
