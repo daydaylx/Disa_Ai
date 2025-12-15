@@ -10,6 +10,7 @@ import { fetchJson } from "../lib/http";
 import { chatConcurrency } from "../lib/net/concurrency";
 import { fetchWithTimeoutAndRetry } from "../lib/net/fetchTimeout";
 import { hasApiKey, readApiKey } from "../lib/openrouter/key";
+import { safeWarn } from "../lib/utils/production-logger";
 import type { ChatMessage } from "../types/chat";
 import type { OpenRouterChatResponse, OpenRouterStreamChunk } from "../types/openrouter";
 import { chatOnceViaProxy, chatStreamViaProxy } from "./proxyClient";
@@ -538,11 +539,11 @@ export async function getRawModels(
     return list;
   } catch (error) {
     // API failed - try to use stale cache as fallback
-    console.warn("Failed to fetch models from API:", mapError(error));
+    safeWarn("Failed to fetch models from API", mapError(error));
 
     const staleCache = getCachedData();
     if (staleCache && staleCache.length > 0) {
-      console.warn("Using stale cached models as fallback");
+      safeWarn("Using stale cached models as fallback");
       if (toasts) {
         toasts.push({
           kind: "warning",
@@ -555,7 +556,7 @@ export async function getRawModels(
     }
 
     // No cache available - use static fallback
-    console.warn("No cache available, using static fallback models");
+    safeWarn("No cache available, using static fallback models");
     if (toasts) {
       toasts.push({
         kind: "warning",

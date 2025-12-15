@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useToasts } from "@/ui";
 
 import { STORAGE_KEYS } from "../config/storageKeys";
+import { safeError } from "../lib/utils/production-logger";
 import {
   deleteConversation as deleteFromDb,
   getAllConversations,
@@ -75,7 +76,7 @@ export function useConversationManager({
         persistLastConversationId(null);
       }
     } catch (error) {
-      console.error("Failed to refresh conversations:", error);
+      safeError("Failed to refresh conversations", error);
       toasts.push({
         kind: "error",
         title: "Fehler",
@@ -173,7 +174,7 @@ export function useConversationManager({
           lastSavedSignatureRef.current = signature;
           await refreshConversations();
         } catch (error) {
-          console.error("Failed to auto-save:", error);
+          safeError("Failed to auto-save", error);
           toasts.push({
             kind: "warning",
             title: "Speichern fehlgeschlagen",
@@ -261,7 +262,7 @@ export function useConversationManager({
           });
         }
       } catch (error) {
-        console.error("Failed to load conversation:", error);
+        safeError("Failed to load conversation", error);
         if (!opts?.silent) {
           toasts.push({
             kind: "error",

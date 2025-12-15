@@ -5,6 +5,13 @@ import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 import { ChatMessage } from "./ChatMessage";
 
+// Configuration constants
+const SCROLL_POSITION_RATIO = 0.2; // 20% from top after loading older messages
+const DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD = 0.8; // 80% scrolled to show "scroll to bottom" button
+const DEFAULT_INITIAL_RENDER_COUNT = 50; // Initial number of messages to render
+const DEFAULT_LOAD_MORE_COUNT = 30; // Number of additional messages to load
+const DEFAULT_VIRTUALIZATION_THRESHOLD = 20; // Minimum messages before virtualization kicks in
+
 // Memoized ChatMessage for performance optimization
 const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
   return (
@@ -37,14 +44,14 @@ export function VirtualizedMessageList({
   onFollowUp,
   isLoading = false,
   className,
-  initialRenderCount = 50,
-  loadMoreCount = 30,
-  virtualizationThreshold = 20,
+  initialRenderCount = DEFAULT_INITIAL_RENDER_COUNT,
+  loadMoreCount = DEFAULT_LOAD_MORE_COUNT,
+  virtualizationThreshold = DEFAULT_VIRTUALIZATION_THRESHOLD,
   scrollContainerRef,
 }: VirtualizedMessageListProps) {
   const [visibleCount, setVisibleCount] = useState(initialRenderCount);
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
-    threshold: 0.8,
+    threshold: DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD,
     enabled: true,
     containerRef: scrollContainerRef,
   });
@@ -76,8 +83,12 @@ export function VirtualizedMessageList({
 
     requestAnimationFrame(() => {
       const container = scrollRef.current;
-      if (container) {
-        container.scrollTop = container.scrollHeight * 0.2;
+      if (container && container.scrollHeight > 0) {
+        try {
+          container.scrollTop = container.scrollHeight * SCROLL_POSITION_RATIO;
+        } catch {
+          // Ignore scroll errors (can happen during DOM mutations)
+        }
       }
     });
   }, [messages.length, loadMoreCount, scrollRef]);
