@@ -5,7 +5,7 @@ import { BrandWordmark } from "../app/components/BrandWordmark";
 
 describe("BrandWordmark", () => {
   it("renders consistent brand markup without separators", () => {
-    const { container } = render(<BrandWordmark />);
+    const { container, getByTestId } = render(<BrandWordmark />);
 
     // Check that the logo contains all letters (may be split into spans for animation)
     expect(container.textContent).toContain("D");
@@ -15,9 +15,9 @@ describe("BrandWordmark", () => {
     expect(container.textContent).toContain("A");
     expect(container.textContent).toContain("I");
 
-    // Check for logo animation classes
-    expect(container.querySelector(".logo-animated")).toBeInTheDocument();
-    expect(container.querySelector(".logo-ai-part")).toBeInTheDocument();
+    // Check for animated logo with presence mark
+    expect(getByTestId("animated-logo")).toBeInTheDocument();
+    expect(container.querySelector(".presence-mark")).toBeInTheDocument();
 
     // Ensure no separators are present
     expect(container.textContent?.includes("|")).toBe(false);
