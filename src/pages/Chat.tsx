@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
+import { type LogoState } from "@/app/components/AnimatedLogo";
 import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -39,6 +40,14 @@ export default function Chat() {
     onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
 
+  // Calculate logo state for presence animation
+  const getLogoState = (): LogoState => {
+    if (chatLogic.error) return "error";
+    if (chatLogic.isLoading) return "thinking";
+    if (chatLogic.input && chatLogic.input.trim().length > 0) return "typing";
+    return "idle";
+  };
+
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
     (_system: string, user?: string) => {
@@ -75,6 +84,7 @@ export default function Chat() {
       <ChatLayout
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={openMenu}
+        logoState={getLogoState()}
         headerActions={
           <Button
             variant="secondary"

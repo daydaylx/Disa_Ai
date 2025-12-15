@@ -1,5 +1,18 @@
 import type { EnhancedRole, FilterState } from "../../types/enhanced-interfaces";
 
+// Role category order for filters and sorting
+export const CATEGORY_ORDER = [
+  "Assistance",
+  "Creative",
+  "Technical",
+  "Analysis",
+  "Research",
+  "Education",
+  "Business",
+  "Entertainment",
+  "Spezial",
+] as const;
+
 export function roleFilterFn(
   role: EnhancedRole,
   filters: FilterState,
@@ -73,8 +86,26 @@ export function roleSortFn(
       const bLastUsed = usage.roles[b.id]?.lastUsed?.getTime() || 0;
       return direction * (bLastUsed - aLastUsed);
     }
-    case "category":
-      return direction * (a.category || "").localeCompare(b.category || "");
+    case "category": {
+      // Sort by defined category order
+      const catA = a.category || "Spezial";
+      const catB = b.category || "Spezial";
+
+      const indexA = CATEGORY_ORDER.indexOf(catA as any);
+      const indexB = CATEGORY_ORDER.indexOf(catB as any);
+
+      // If categories have different indices, sort by index
+      if (indexA !== -1 && indexB !== -1 && indexA !== indexB) {
+        return direction * (indexA - indexB);
+      }
+
+      // Handle known vs unknown categories (put unknown at end)
+      if (indexA !== -1 && indexB === -1) return -direction;
+      if (indexA === -1 && indexB !== -1) return direction;
+
+      // Fallback to alphabetical for same category or both unknown
+      return direction * catA.localeCompare(catB);
+    }
     default:
       return 0;
   }

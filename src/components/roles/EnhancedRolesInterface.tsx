@@ -11,20 +11,7 @@ import { useRoles } from "../../contexts/RolesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
 import { useSettings } from "../../hooks/useSettings";
 import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
-import { roleFilterFn, roleSortFn } from "./roles-filter";
-
-// Role category order for filters
-const CATEGORY_ORDER = [
-  "Assistance",
-  "Creative",
-  "Technical",
-  "Analysis",
-  "Research",
-  "Education",
-  "Business",
-  "Entertainment",
-  "Spezial",
-] as const;
+import { CATEGORY_ORDER, roleFilterFn, roleSortFn } from "./roles-filter";
 
 interface EnhancedRolesInterfaceProps {
   className?: string;
@@ -57,7 +44,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       requiredCapabilities: [],
       maxPriceRange: [0, 1],
     },
-    sortBy: "name",
+    sortBy: "category",
     sortDirection: "asc",
   });
 
@@ -303,6 +290,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 <div
                   key={role.id}
                   data-testid="role-card"
+                  aria-label={role.name}
                   className={cn(
                     "relative transition-all duration-300 group overflow-hidden rounded-2xl border p-0",
                     isActive
@@ -356,7 +344,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   <div
                     className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none"
                     aria-label={`Rolle ${role.name} auswählen`}
-                    aria-current={isActive ? "true" : undefined}
                   >
                     {/* Invisible clickable overlay */}
                     <div
@@ -371,6 +358,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         }
                       }}
                       aria-label={`Rolle ${role.name} auswählen`}
+                      aria-pressed={isActive}
                     />
                     {/* Icon */}
                     <div
@@ -401,15 +389,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                     {/* Actions */}
                     <div className="flex flex-col items-end gap-2 pr-10 relative z-10 pointer-events-auto">
-                      <span
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            toggleRoleExpansion(role.id);
-                          }
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleRoleExpansion(role.id);
                         }}
-                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-none p-0"
                       >
                         Details
                         <ChevronDown
@@ -418,7 +404,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             isExpanded && "rotate-180",
                           )}
                         />
-                      </span>
+                      </button>
                     </div>
                   </div>
 

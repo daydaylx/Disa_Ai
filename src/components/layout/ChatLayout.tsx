@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 
+import { type LogoState } from "@/app/components/AnimatedLogo";
 import { BrandWordmark } from "@/app/components/BrandWordmark";
 import { Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ interface ChatLayoutProps {
   onMenuClick?: () => void;
   className?: string;
   headerActions?: ReactNode;
+  logoState?: LogoState;
 }
 
 export function ChatLayout({
@@ -19,6 +21,7 @@ export function ChatLayout({
   onMenuClick,
   className,
   headerActions,
+  logoState = "idle",
 }: ChatLayoutProps) {
   return (
     <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
@@ -39,7 +42,7 @@ export function ChatLayout({
             <div className="flex items-center gap-2">
               <BrandWordmark
                 className="h-5 w-auto text-ink-primary"
-                state="idle"
+                state={logoState}
                 data-testid="brand-logo"
               />
               <span className="sr-only">Disa AI</span>

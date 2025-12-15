@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 /**
  * Logo animation states
  */
-export type LogoState = "idle" | "loading" | "thinking" | "success" | "error";
+export type LogoState = "idle" | "loading" | "typing" | "thinking" | "success" | "error";
 
 export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "children"> {
   /**
@@ -30,6 +30,7 @@ export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "childre
  * - Wave animation during loading
  * - Blinking cursor during thinking
  * - Success/Error visual feedback
+ * - Presence animation (subtle glow/halo) for all states
  *
  * @example
  * ```tsx
@@ -50,13 +51,16 @@ export function AnimatedLogo({
   return (
     <span
       className={cn(
-        "group inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight select-none cursor-default",
+        "group relative inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight select-none cursor-default isolation-auto",
         stateClass,
         className,
       )}
       {...props}
     >
-      <span className="logo-animated inline-flex items-baseline gap-[0.28em]">
+      {/* Presence Mark - Subtle background glow/animation */}
+      <span className="presence-mark" aria-hidden="true" data-state={state} />
+
+      <span className="logo-animated inline-flex items-baseline gap-[0.28em] relative z-10">
         {/* DISA part in hand-written style */}
         <span
           className={cn(
