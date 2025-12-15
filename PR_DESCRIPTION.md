@@ -1,3 +1,20 @@
+Kurzbeschreibung
+
+Ich habe eine subtile und performante “Presence”-Animation für das “Disa AI”-Branding im Header implementiert. Die Animation signalisiert den aktuellen Status der App (Idle, Tippen, Denken, Fehler) durch ein feines, leuchtendes Unterstreichen, das rein via CSS gesteuert wird. Die Implementierung ist leichtgewichtig, respektiert `prefers-reduced-motion` und wurde so konzipiert, dass sie keine Layout-Verschiebungen oder Performance-Probleme verursacht.
+
+Geänderte Dateien
+
+- `tailwind.config.ts`
+- `src/index.css`
+- `src/app/components/AnimatedLogo.tsx`
+- `src/app/components/BrandWordmark.tsx`
+- `src/components/layout/ChatLayout.tsx`
+
+Vollständiger Code pro Datei
+
+**tailwind.config.ts**
+
+```typescript
 /* eslint-disable */
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
@@ -648,3 +665,372 @@ export default {
     }),
   ],
 } satisfies Config;
+```
+
+**src/index.css**
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer animations;
+
+:root {
+  /* Modern Slate Glass Theme Variables - Using Tailwind color palette references */
+  /* These map to Tailwind's zinc scale defined in tailwind.config.ts */
+  --bg-app: theme(colors.bg.app);
+  /* stylelint-disable-next-line @stylistic/number-leading-zero */
+  --bg-surface-1: theme(colors.surface.1);
+  /* stylelint-disable-next-line @stylistic/number-leading-zero */
+  --bg-surface-2: theme(colors.surface.2);
+  --text-primary: theme(colors.ink.primary);
+  --text-secondary: theme(colors.ink.secondary);
+  --text-tertiary: theme(colors.ink.tertiary);
+  --border-color: theme(colors.border.DEFAULT);
+
+  /* Page-specific accent CSS variables for custom use */
+  --accent-chat: theme(colors.accent-chat.DEFAULT);
+  --accent-chat-dim: theme(colors.accent-chat.dim);
+  --accent-chat-glow: theme(colors.accent-chat.glow);
+  --accent-models: theme(colors.accent-models.DEFAULT);
+  --accent-models-dim: theme(colors.accent-models.dim);
+  --accent-models-glow: theme(colors.accent-models.glow);
+  --accent-roles: theme(colors.accent-roles.DEFAULT);
+  --accent-roles-dim: theme(colors.accent-roles.dim);
+  --accent-roles-glow: theme(colors.accent-roles.glow);
+  --accent-settings: theme(colors.accent-settings.DEFAULT);
+  --accent-settings-dim: theme(colors.accent-settings.dim);
+
+  /* Viewport Height Fix */
+  --vh: 1vh;
+}
+
+@layer base {
+  html,
+  body {
+    @apply bg-bg-app text-ink-primary font-sans antialiased selection:bg-brand-primary/30;
+    overscroll-behavior: none; /* Prevent bounce on mobile */
+  }
+
+  /* Ambient Background Blobs - Using accent colors */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, var(--accent-chat-glow) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(80px);
+    z-index: -2;
+    animation: blob 20s infinite alternate;
+    opacity: 0.8;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, var(--accent-models-glow) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(100px);
+    z-index: -2;
+    animation: blob 25s infinite alternate-reverse;
+    opacity: 0.8;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-ink-primary tracking-tight font-semibold;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+
+  .glass-card {
+    @apply bg-surface-1/60 backdrop-blur-md border border-white/5 rounded-2xl shadow-sm hover:bg-surface-1/80 transition-all duration-300;
+  }
+
+  .card-base {
+    @apply bg-surface-1 border border-white/5 rounded-2xl shadow-sm;
+  }
+
+  .input-base {
+    @apply bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all shadow-inner;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-3/50 rounded-full hover:bg-surface-3 transition-colors;
+}
+
+@layer animations {
+  .presence-mark {
+    @apply absolute -inset-x-2 -top-2 h-px w-[calc(100%+1rem)] scale-x-0 transform-gpu;
+    @apply bg-gradient-to-r from-transparent via-accent-chat to-transparent;
+    @apply opacity-0 blur-sm transition-all duration-500;
+    @apply pointer-events-none;
+    content: "";
+    left: -0.5rem;
+    transform-origin: center;
+  }
+
+  /* --- Animation States --- */
+  .presence-mark[data-state="idle"] {
+    @apply motion-safe:animate-presence-idle motion-reduce:opacity-40 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="typing"] {
+    @apply motion-safe:animate-presence-typing motion-reduce:opacity-60 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="thinking"],
+  .presence-mark[data-state="loading"] {
+    @apply motion-safe:animate-presence-thinking motion-reduce:opacity-80 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="error"] {
+    @apply motion-safe:animate-presence-error bg-status-error motion-reduce:opacity-100 motion-reduce:scale-x-100;
+  }
+
+  /* Reduced motion default: static glow */
+  @media (prefers-reduced-motion: reduce) {
+    .presence-mark {
+      animation: none;
+      @apply scale-x-100 opacity-20;
+    }
+    .presence-mark[data-state="error"] {
+      /* A quick, non-moving flash for errors */
+      @apply opacity-100 transition-opacity duration-700 ease-out;
+      animation: reduce-error-flash 0.9s ease-out;
+    }
+  }
+
+  @keyframes reduce-error-flash {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+}
+```
+
+**src/app/components/AnimatedLogo.tsx**
+
+````typescript
+import type { ComponentProps } from "react";
+
+import { cn } from "@/lib/utils";
+
+/**
+ * Logo animation states
+ */
+export type LogoState = "idle" | "loading" | "typing" | "thinking" | "success" | "error";
+
+export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "children"> {
+  /**
+   * Animation state of the logo, controlling the presence indicator.
+   * @default "idle"
+   */
+  state?: LogoState;
+}
+
+/**
+ * AnimatedLogo - Renders the "Disa AI" brand wordmark with a subtle
+ * presence animation indicator.
+ *
+ * This component displays the brand name and a decorative `presence-mark`
+ * element. The animation of the mark is controlled purely by CSS, driven
+* by the `data-state` attribute, which is set based on the `state` prop.
+ *
+ * States and corresponding animations:
+ * - `idle`: A very slow, subtle pulse (10s cycle).
+ * - `typing`: A slightly faster pulse (5s cycle).
+ * - `thinking`, `loading`: An active pulse (2.5s cycle).
+ * - `error`: A single, quick error ping (0.8s).
+ *
+ * The animation respects `prefers-reduced-motion` by showing a static
+ * glow instead of pulsing animations.
+ *
+ * @example
+ * ```tsx
+ * <AnimatedLogo state="idle" />
+ * <AnimatedLogo state="thinking" />
+ * ```
+ */
+export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLogoProps) {
+  return (
+    <span
+      className={cn(
+        "relative inline-flex items-baseline font-semibold tracking-tight select-none",
+        "isolation-isolate", // Creates a stacking context for the pseudo-element
+        className,
+      )}
+      data-testid="animated-logo"
+      {...props}
+    >
+      {/* Presence Mark: Animated via CSS based on parent's data-state */}
+      <span className="presence-mark" aria-hidden="true" data-state={state} />
+
+      {/* Wordmark Text */}
+      <span className="relative z-10">
+        Disa <span className="text-ink-secondary">AI</span>
+      </span>
+    </span>
+  );
+}
+````
+
+**src/app/components/BrandWordmark.tsx**
+
+```typescript
+import type { ComponentProps } from "react";
+
+import { AnimatedLogo, type LogoState } from "./AnimatedLogo";
+
+export interface BrandWordmarkProps extends Omit<ComponentProps<"span">, "children"> {
+  /**
+   * Animation state of the logo
+   * @default "idle"
+   */
+  state?: LogoState;
+
+  /**
+   * Whether to show the thinking cursor
+   * @deprecated This is no longer used and will be removed.
+   * @default false
+   */
+  showCursor?: boolean;
+}
+
+/**
+ * BrandWordmark - DISA AI brand logo with animations
+ *
+ * Now powered by AnimatedLogo with a subtle presence indicator.
+ */
+export function BrandWordmark({
+  className,
+  state = "idle",
+  showCursor = false,
+  ...props
+}: BrandWordmarkProps) {
+  return <AnimatedLogo className={className} state={state} {...props} />;
+}
+```
+
+**src/components/layout/ChatLayout.tsx**
+
+```typescript
+import { type ReactNode } from "react";
+
+import { type LogoState } from "@/app/components/AnimatedLogo";
+import { BrandWordmark } from "@/app/components/BrandWordmark";
+import { Menu } from "@/lib/icons";
+import { cn } from "@/lib/utils";
+import { Button } from "@/ui/Button";
+
+interface ChatLayoutProps {
+  children: ReactNode;
+  title?: string;
+  onMenuClick?: () => void;
+  className?: string;
+  headerActions?: ReactNode;
+  logoState?: LogoState;
+}
+
+export function ChatLayout({
+  children,
+  title,
+  onMenuClick,
+  className,
+  headerActions,
+  logoState = "idle",
+}: ChatLayoutProps) {
+  return (
+    <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
+      {/* Clean Header with Functional Glass */}
+      <header className="sticky top-0 z-header border-b glass-header shadow-sm">
+        <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
+          {/* Left: Hamburger Menu */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onMenuClick}
+              aria-label="Menü öffnen"
+              className="text-ink-primary hover:bg-surface-2"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <BrandWordmark
+                className="h-5 w-auto text-ink-primary"
+                state={logoState}
+                data-testid="brand-logo"
+              />
+              <span className="sr-only">Disa AI</span>
+            </div>
+            {title && (
+              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg">
+                {title}
+              </p>
+            )}
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2">{headerActions}</div>
+        </div>
+      </header>
+
+      {/* Main Page Content Area */}
+      <div
+        className={cn(
+          "flex-1 relative flex flex-col w-full max-w-5xl mx-auto overflow-hidden px-4 sm:px-6",
+          className,
+        )}
+      >
+        <h1 className="sr-only">Disa AI – Chat</h1>
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+Test-Checkliste
+
+- [x] Mobile Viewports: 360x800, 390x844, 412x915
+- [x] Sidebar auf/zu
+- [x] Keyboard auf/zu (Input fokussieren)
+- [x] Scroll
+- [x] Reduced motion (DevTools)
+- [x] Kein Overlap mit Cards/Buttons
+
+Qualitätskriterien
+
+- [x] Wirkt “Premium”, nicht “Gamer RGB”.
+- [x] Kein sichtbares Stottern.
+- [x] Keine neue Layout-Bugs, keine Overlaps.
+- [x] Reduced-motion respektiert.

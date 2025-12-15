@@ -1,0 +1,112 @@
+/* Presence Branding - Premium Glow Effects for Disa AI Header */
+
+/* Base styles for presence elements */
+.presence-arc,
+.presence-line {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  isolation: isolate;
+  z-index: 1;
+}
+
+/* Presence Arc - Elliptical glow above the logo */
+.presence-arc {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--presence-glow-color, #3b82f6) 0%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  opacity: 0.15;
+}
+
+/* Presence Line - Subtle underline below the logo */
+.presence-line {
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--presence-glow-color, #3b82f6),
+    transparent
+  );
+  opacity: 0.2;
+}
+
+/* State-based animations */
+[data-state="idle"] .presence-arc,
+[data-state="idle"] .presence-line {
+  animation: presence-pulse 10s ease-in-out infinite;
+}
+
+[data-state="typing"] .presence-arc,
+[data-state="typing"] .presence-line {
+  animation: presence-pulse 5s ease-in-out infinite;
+  opacity: 0.25;
+}
+
+[data-state="thinking"],
+[data-state="loading"] .presence-arc,
+[data-state="thinking"],
+[data-state="loading"] .presence-line {
+  animation: presence-pulse 2.5s ease-in-out infinite;
+  opacity: 0.35;
+}
+
+[data-state="error"] .presence-arc,
+[data-state="error"] .presence-line {
+  animation: presence-error-ping 0.75s ease-out;
+  opacity: 0.5;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .presence-arc,
+  .presence-line {
+    animation: none;
+    opacity: 0.1;
+  }
+}
+
+/* Keyframe animations */
+@keyframes presence-pulse {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+@keyframes presence-error-ping {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 0.15;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Custom properties for theming */
+:root {
+  --presence-glow-color: #3b82f6;
+}

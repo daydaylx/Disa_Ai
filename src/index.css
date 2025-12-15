@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer animations;
 
 :root {
   /* Modern Slate Glass Theme Variables - Using Tailwind color palette references */
@@ -108,4 +109,57 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-surface-3/50 rounded-full hover:bg-surface-3 transition-colors;
+}
+
+@layer animations {
+  .presence-mark {
+    @apply absolute -inset-x-2 -top-2 h-px w-[calc(100%+1rem)] scale-x-0 transform-gpu;
+    @apply bg-gradient-to-r from-transparent via-accent-chat to-transparent;
+    @apply opacity-0 blur-sm transition-all duration-500;
+    @apply pointer-events-none;
+    content: "";
+    left: -0.5rem;
+    transform-origin: center;
+  }
+
+  /* --- Animation States --- */
+  .presence-mark[data-state="idle"] {
+    @apply motion-safe:animate-presence-idle motion-reduce:opacity-40 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="typing"] {
+    @apply motion-safe:animate-presence-typing motion-reduce:opacity-60 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="thinking"],
+  .presence-mark[data-state="loading"] {
+    @apply motion-safe:animate-presence-thinking motion-reduce:opacity-80 motion-reduce:scale-x-100;
+  }
+
+  .presence-mark[data-state="error"] {
+    @apply motion-safe:animate-presence-error bg-status-error motion-reduce:opacity-100 motion-reduce:scale-x-100;
+  }
+
+  /* Reduced motion default: static glow */
+  @media (prefers-reduced-motion: reduce) {
+    .presence-mark {
+      animation: none;
+      @apply scale-x-100 opacity-20;
+    }
+    .presence-mark[data-state="error"] {
+      /* A quick, non-moving flash for errors */
+      @apply opacity-100 transition-opacity duration-700 ease-out;
+      animation: reduce-error-flash 0.9s ease-out;
+    }
+  }
+
+  @keyframes reduce-error-flash {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
 }
