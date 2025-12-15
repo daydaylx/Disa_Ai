@@ -9,94 +9,58 @@ export type LogoState = "idle" | "loading" | "typing" | "thinking" | "success" |
 
 export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "children"> {
   /**
-   * Animation state of the logo
+   * Animation state of the logo, controlling the presence indicator.
    * @default "idle"
    */
   state?: LogoState;
-
-  /**
-   * Whether to show the thinking cursor after "AI"
-   * @default false
-   */
-  showCursor?: boolean;
 }
 
 /**
- * AnimatedLogo - Animated DISA AI wordmark with multiple states
+ * AnimatedLogo - Renders the "Disa AI" brand wordmark with a subtle
+ * premium presence animation indicator.
  *
- * Features:
- * - Breathing animation in idle state
- * - Letter-by-letter bounce on hover
- * - Wave animation during loading
- * - Blinking cursor during thinking
- * - Success/Error visual feedback
- * - Presence animation (subtle glow/halo) for all states
+ * This component displays the brand name and a decorative `presence-mark`
+ * element. The animation of the mark is controlled purely by CSS, driven
+ * by the `data-state` attribute, which is set based on the `state` prop.
+ *
+ * **Animation Philosophy**: Premium, slow, non-intrusive. Timings are deliberately
+ * extended to create a high-quality, ambient presence rather than distracting motion.
+ *
+ * **States and Animation Timings**:
+ * - `idle`: Ultra-slow, barely visible pulse (10s cycle, opacity: 0.08-0.18)
+ * - `typing`: Slightly more active pulse (5s cycle, opacity: 0.2-0.45)
+ * - `thinking`, `loading`: Active streaming pulse (2.5s cycle, opacity: 0.3-0.65)
+ * - `error`: Single quick ping (0.75s one-shot, then returns to idle)
+ *
+ * **Accessibility**: Respects `prefers-reduced-motion` by showing static,
+ * reduced-opacity glows instead of animated pulsing.
+ *
+ * **Performance**: Uses only `transform`, `opacity`, and `filter` (no layout changes).
+ * Includes `pointer-events: none` to prevent interaction blocking.
  *
  * @example
  * ```tsx
  * <AnimatedLogo state="idle" />
- * <AnimatedLogo state="loading" />
- * <AnimatedLogo state="thinking" showCursor />
+ * <AnimatedLogo state="thinking" />
  * ```
  */
-export function AnimatedLogo({
-  state = "idle",
-  showCursor = false,
-  className,
-  ...props
-}: AnimatedLogoProps) {
-  const stateClass = `logo-state-${state}`;
-  const isIdle = state === "idle";
-
+export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLogoProps) {
   return (
     <span
       className={cn(
-        "group relative inline-flex items-baseline gap-1 text-ink-primary text-lg font-semibold tracking-tight select-none cursor-default isolation-auto",
-        stateClass,
+        "relative inline-flex items-baseline font-semibold tracking-tight select-none",
+        "isolation-isolate", // Creates a stacking context for the pseudo-element
         className,
       )}
+      data-testid="animated-logo"
       {...props}
     >
-      {/* Presence Mark - Subtle background glow/animation */}
+      {/* Presence Mark: Animated via CSS based on parent's data-state */}
       <span className="presence-mark" aria-hidden="true" data-state={state} />
 
-      <span className="logo-animated inline-flex items-baseline gap-[0.28em] relative z-10">
-        {/* DISA part in hand-written style */}
-        <span
-          className={cn(
-            "logo-disa inline-flex items-baseline gap-[0.05em] font-hand text-[1.02em] leading-none tracking-[0.01em]",
-            isIdle && "motion-safe:animate-logo-float",
-          )}
-        >
-          <span className="logo-letter transition-colors duration-300 group-hover:text-white">
-            D
-          </span>
-          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-75">
-            i
-          </span>
-          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-100">
-            s
-          </span>
-          <span className="logo-letter transition-colors duration-300 group-hover:text-white delay-150">
-            a
-          </span>
-        </span>
-
-        {/* AI part in clean sans, desaturated */}
-        <span
-          className={cn(
-            "logo-ai-part inline-flex items-baseline gap-[0.06em] font-sans text-[0.96em] font-medium tracking-[-0.01em] text-ink-primary/90 transition-colors duration-300 group-hover:text-accent-secondary",
-            isIdle && "motion-safe:animate-logo-scale-pulse",
-          )}
-        >
-          <span className="logo-letter">A</span>
-          <span className="logo-letter">I</span>
-        </span>
-
-        {/* Thinking cursor (only visible in thinking state) */}
-        {(state === "thinking" || showCursor) && (
-          <span className="logo-cursor" aria-hidden="true" />
-        )}
+      {/* Wordmark Text */}
+      <span className="relative z-10">
+        Disa <span className="text-ink-secondary">AI</span>
       </span>
     </span>
   );
