@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Upload performance artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: performance-test-results
@@ -76,7 +76,7 @@ jobs:
           retention-days: 30
 
       - name: Upload performance summary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: performance-summary
@@ -157,7 +157,7 @@ jobs:
           LHCI_BUILD_CONTEXT__REPO: ${{ github.repository }}
 
       - name: Upload Lighthouse reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: lighthouse-reports
@@ -203,7 +203,7 @@ jobs:
           fi
 
       - name: Upload bundle analysis
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: bundle-analysis

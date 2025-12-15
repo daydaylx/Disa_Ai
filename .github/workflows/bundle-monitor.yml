@@ -159,7 +159,7 @@ jobs:
             }
 
       - name: "Upload bundle artifacts"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: bundle-analysis-${{ github.sha }}
           path: |
