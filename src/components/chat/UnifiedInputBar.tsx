@@ -6,8 +6,8 @@ import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
+import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
-import { NotchFrame } from "@/ui/NotchFrame";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
 export interface UnifiedInputBarProps {
@@ -100,8 +100,13 @@ export function UnifiedInputBar({
     <div className={cn("w-full space-y-3", className)}>
       {/* Model selection moved to settings - cleaner input area */}
 
-      {/* Main Input Container - NotchFrame pattern */}
-      <NotchFrame variant="input" size="sm" className="relative flex items-end gap-3 p-2">
+      {/* Main Input Container */}
+      <BrandCard
+        variant="plain"
+        padding="sm"
+        className="relative flex items-end gap-3"
+        aria-label="Eingabebereich"
+      >
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -136,12 +141,12 @@ export function UnifiedInputBar({
             <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
           )}
         </Button>
-      </NotchFrame>
+      </BrandCard>
 
       {/* Context Pills */}
       <div className="w-full px-1">
         <div className="flex w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
-          {/* Role Dropdown - Primary (NotchFrame when active) */}
+          {/* Role Dropdown */}
           <Select
             value={activeRole?.id || "standard"}
             onValueChange={(id) => {
@@ -158,10 +163,8 @@ export function UnifiedInputBar({
               className={cn(
                 "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none transition-all",
                 activeRole
-                  ? // Active state - NotchFrame styling
-                    "notch-frame notch-frame--sm notch-frame--active rounded-2xl border-[var(--frame-border-color-focus)] bg-brand-secondary/10 text-brand-secondary hover:bg-brand-secondary/15"
-                  : // Inactive state - normal chip
-                    "rounded-full border border-white/5 bg-surface-1/40 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-1/60",
+                  ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
+                  : "rounded-full border border-white/5 bg-surface-1/40 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-1/60",
               )}
             >
               <User className="h-4 w-4 flex-shrink-0" />

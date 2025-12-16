@@ -341,6 +341,14 @@ padding-top: env(safe-area-inset-top)
 - Use `will-change` sparingly and remove after animation
 - Optimize images and use WebP format
 
+### Brand Card Variants
+
+- `BrandCard` centralizes the card + tint system. Variants:
+  - `plain`: neutral dark card (no tint) for settings, lists, or input chrome.
+  - `tinted`: subtle left-to-right tint using `--tint-alpha-soft` for home hero/suggestions and branded containers.
+  - `roleStrong`: stronger tint based on `--tint-alpha-strong` for Role/Theme showcases.
+- Adjust tint hue by passing `tintRgb` (e.g. `"45, 212, 191"` for teal) instead of hardcoding gradients.
+
 ---
 
 ## Version & Updates
