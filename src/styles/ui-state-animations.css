@@ -189,7 +189,7 @@
   z-index: 0;
   filter: blur(10px);
   will-change: opacity, transform;
-  /* Default Idle State - Using brand primary #8B5CF6 (139, 92, 246) - Mobile optimized */
+  /* Default Idle State - Using brand primary violet (139, 92, 246) - Mobile optimized */
   background: radial-gradient(
     circle,
     rgba(139, 92, 246, 0.45) 0%,
