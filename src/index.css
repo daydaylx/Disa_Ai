@@ -325,6 +325,8 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
+    --card-notch-size: var(--notch-size-md);
+    --card-edge-highlight: var(--notch-edge-highlight);
     border-radius: var(--card-radius);
     border: var(--card-border-width) solid var(--card-border-color);
     background: var(--card-bg);
@@ -348,6 +350,24 @@
     opacity: 1;
   }
 
+  .brand-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent calc(var(--card-notch-size) - 1px),
+        var(--card-edge-highlight) calc(var(--card-notch-size) - 1px),
+        var(--card-edge-highlight)
+      ),
+      linear-gradient(to left, var(--bg-app) var(--card-notch-size), transparent var(--card-notch-size));
+    background-repeat: no-repeat;
+    background-size: 1px 100%, var(--card-notch-size) var(--card-notch-size);
+    background-position: right top, right top;
+  }
+
   .brand-card--plain {
     --card-tint-alpha: 0;
   }
@@ -365,21 +385,30 @@
   }
 
   .brand-card--interactive:hover {
+    --card-edge-highlight: var(--frame-border-color-hover);
     border-color: var(--card-border-color-hover);
     box-shadow: var(--card-shadow-hover);
     transform: translateY(-1px);
   }
 
   .brand-card--interactive:active {
+    --card-edge-highlight: var(--notch-edge-highlight-active);
     transform: translateY(1px);
     box-shadow: var(--card-shadow-pressed);
   }
 
   .brand-card:focus-visible,
   .brand-card:focus-within {
+    --card-edge-highlight: var(--notch-edge-highlight-active);
     outline: none;
     border-color: var(--card-border-color-focus);
     box-shadow: var(--card-shadow-focus);
+  }
+
+  @media (max-width: 640px) {
+    .brand-card {
+      --card-notch-size: var(--notch-size-sm);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
