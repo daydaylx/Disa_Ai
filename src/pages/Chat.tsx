@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
-import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { LivingCore } from "../components/chat/LivingCore";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
@@ -122,29 +122,10 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4">
-                    {/* Animated Halo */}
-                    <div className="relative w-full flex items-center justify-center mb-4">
-                      <div className="relative">
-                        {/* Main glowing ring */}
-                        <div
-                          className="w-48 h-12 rounded-full bg-transparent border-2 border-brand-primary/60 shadow-[0_0_20px_rgba(59,130,246,0.5),0_0_40px_rgba(59,130,246,0.3),0_0_60px_rgba(59,130,246,0.1)]"
-                          style={{
-                            animation: "pulse-glow 3s ease-in-out infinite",
-                          }}
-                        />
-                        {/* Secondary pulse ring */}
-                        <div
-                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-14 rounded-full bg-transparent border border-brand-primary/30 opacity-50"
-                          style={{
-                            animation: "pulse-glow 3s ease-in-out infinite 0.5s",
-                          }}
-                        />
-                        {/* Inner glow */}
-                        <div
-                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-12 rounded-full bg-gradient-to-r from-brand-primary/20 via-brand-secondary/10 to-brand-primary/20 blur-xl animate-pulse-glow"
-                        />
-                      </div>
+                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
+                    {/* Living Core Visualization */}
+                    <div className="relative w-full flex items-center justify-center mb-8">
+                      <LivingCore state={getLogoState()} size="lg" />
                     </div>
 
                     {/* Disa AI Branding */}
@@ -172,11 +153,10 @@ export default function Chat() {
                         <button
                           key={prompt}
                           onClick={() => chatLogic.handleStarterClick(prompt)}
+                          style={{ animationDelay: `${index * 100}ms` }}
                           className={cn(
-                            "flex items-center gap-4 p-4 text-left rounded-2xl transition-all group",
-                            "bg-surface-1/60 border border-white/10",
-                            "hover:bg-surface-1/80 hover:border-brand-primary/30",
-                            "hover:shadow-[0_0_20px_-8px_rgba(59,130,246,0.3)]",
+                            "flex items-center gap-4 p-4 text-left rounded-2xl transition-all group glass-card animate-slide-up opacity-0 fill-mode-forwards",
+                            "hover:border-brand-primary/30 hover:shadow-glow-sm",
                           )}
                         >
                           <div
