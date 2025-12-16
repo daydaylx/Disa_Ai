@@ -3,12 +3,14 @@
 
 // Import pre-calculated tokens for optimal performance
 import { type CssVariableMap, preCalculatedTokens } from "./design-tokens.generated";
+import { cardTokens, generateCardCssVariables } from "./tokens/card";
 import { generateCategoryTokens } from "./tokens/category-colors";
 import {
   generateCategorySemanticTokens,
   generateCategoryTonalTokens,
 } from "./tokens/category-tonal-scales";
 import { colorTokens, type ThemeMode } from "./tokens/color";
+import { frameTokens, generateFrameCssVariables } from "./tokens/frame";
 import { motionCssVars, motionTokens } from "./tokens/motion";
 import { radiusCssVars, radiusTokens } from "./tokens/radius";
 import { shadowTokens } from "./tokens/shadow";
@@ -64,6 +66,14 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
   };
   Object.assign(baseTokens, categoryTonalTokens);
 
+  // Add frame/notch tokens (Disa AI signature visual element)
+  const frameCssVariables = generateFrameCssVariables();
+  Object.assign(baseTokens, frameCssVariables);
+
+  // Add brand card/tint tokens
+  const cardCssVariables = generateCardCssVariables();
+  Object.assign(baseTokens, cardCssVariables);
+
   return baseTokens;
 }
 
@@ -74,6 +84,8 @@ export const designTokens = {
   shadow: shadowTokens,
   motion: motionTokens,
   typography: typographyTokens,
+  frame: frameTokens,
+  card: cardTokens,
 } as const;
 
 export type DesignTokens = typeof designTokens;

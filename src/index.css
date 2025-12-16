@@ -31,20 +31,44 @@
   /* Viewport Height Fix */
   --vh: 1vh;
 
-  /* Card Branding System - New Design Tokens */
-  --card-page-bg-rgb: var(--card-page-bg-rgb);
-  --card-bg-rgb: var(--card-bg-rgb);
-  --card-border-rgb: var(--card-border-rgb);
-  --card-border-alpha: var(--card-border-alpha);
-  --card-radius: var(--card-radius);
-  --card-shadow: var(--card-shadow);
-  --card-shadow-pressed: var(--card-shadow-pressed);
-  --tint-fade: var(--tint-fade);
-  --tint-alpha-soft: var(--tint-alpha-soft);
-  --tint-alpha-strong: var(--tint-alpha-strong);
-  --brand-rgb: var(--brand-rgb);
-  --role-primary-rgb: var(--role-primary-rgb);
-  --role-secondary-rgb: var(--role-secondary-rgb);
+  /* Card + Tint System */
+  --card-radius: 18px;
+  --card-bg: rgba(12, 12, 18, 0.72);
+  --card-border-width: 1px;
+  --card-border-color: rgba(255, 255, 255, 0.08);
+  --card-border-color-hover: rgba(255, 255, 255, 0.14);
+  --card-border-color-focus: rgba(139, 92, 246, 0.4);
+  --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+  --card-shadow-focus: 0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35);
+  --card-shadow-pressed: 0 6px 24px rgba(0, 0, 0, 0.45);
+
+  --tint-angle: 115deg;
+  --tint-fade-x: 72%;
+  --tint-alpha-soft: 0.08;
+  --tint-alpha-strong: 0.25;
+  --tint-color-rgb-default: 139, 92, 246;
+
+  --role-teal-rgb: 45, 212, 191;
+  --role-magenta-rgb: 236, 72, 153;
+
+  /* Frame/Notch System - Disa AI Signature Visual */
+  --frame-radius: 16px;
+  --frame-border-width: 1px;
+  --frame-border-color: rgba(255, 255, 255, 0.12);
+  --frame-border-color-hover: rgba(255, 255, 255, 0.18);
+  --frame-border-color-focus: rgba(139, 92, 246, 0.4);
+  --frame-border-color-active: rgba(139, 92, 246, 0.5);
+  --frame-bg: rgba(15, 15, 20, 0.6);
+  --frame-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --frame-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --frame-shadow-focus: 0 4px 16px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --notch-size-sm: 10px;
+  --notch-size-md: 14px;
+  --notch-edge-highlight: transparent;
+  --notch-edge-highlight-active: rgba(139, 92, 246, 0.6);
+  --frame-transition-duration: 200ms;
+  --frame-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
@@ -249,5 +273,150 @@
 
   .animate-fade-in-scale {
     animation: fade-in-scale 0.6s ease-out;
+  }
+
+  /* Wordmark intro animation - plays once on load */
+  @keyframes wordmark-intro {
+    0% {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-wordmark-intro {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Staggered wordmark intro for child elements */
+  .animate-wordmark-intro-delay-1 {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+    opacity: 0;
+  }
+
+  .animate-wordmark-intro-delay-2 {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+    opacity: 0;
+  }
+
+  /* Reduced motion - disable all intro animations */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-wordmark-intro,
+    .animate-wordmark-intro-delay-1,
+    .animate-wordmark-intro-delay-2,
+    .animate-pulse-slow,
+    .animate-gradient-shift,
+    .animate-pulse-subtle,
+    .animate-bounce-subtle,
+    .animate-text-shimmer {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+/* Brand Card primitive with tint overlay */
+@layer components {
+  .brand-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    --card-notch-size: var(--notch-size-md);
+    --card-edge-highlight: var(--notch-edge-highlight);
+    border-radius: var(--card-radius);
+    border: var(--card-border-width) solid var(--card-border-color);
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    transition:
+      border-color var(--frame-transition-duration) var(--frame-transition-easing),
+      box-shadow var(--frame-transition-duration) var(--frame-transition-easing),
+      transform var(--frame-transition-duration) var(--frame-transition-easing);
+  }
+
+  .brand-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      var(--tint-angle),
+      rgba(var(--card-tint-rgb, var(--tint-color-rgb-default)), var(--card-tint-alpha, 0)) 0%,
+      rgba(6, 7, 10, 0) var(--tint-fade-x)
+    );
+    opacity: 1;
+  }
+
+  .brand-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent calc(var(--card-notch-size) - 1px),
+        var(--card-edge-highlight) calc(var(--card-notch-size) - 1px),
+        var(--card-edge-highlight)
+      ),
+      linear-gradient(to left, var(--bg-app) var(--card-notch-size), transparent var(--card-notch-size));
+    background-repeat: no-repeat;
+    background-size: 1px 100%, var(--card-notch-size) var(--card-notch-size);
+    background-position: right top, right top;
+  }
+
+  .brand-card--plain {
+    --card-tint-alpha: 0;
+  }
+
+  .brand-card--tinted {
+    --card-tint-alpha: var(--tint-alpha-soft);
+  }
+
+  .brand-card--role {
+    --card-tint-alpha: var(--tint-alpha-strong);
+  }
+
+  .brand-card--interactive {
+    cursor: pointer;
+  }
+
+  .brand-card--interactive:hover {
+    --card-edge-highlight: var(--frame-border-color-hover);
+    border-color: var(--card-border-color-hover);
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .brand-card--interactive:active {
+    --card-edge-highlight: var(--notch-edge-highlight-active);
+    transform: translateY(1px);
+    box-shadow: var(--card-shadow-pressed);
+  }
+
+  .brand-card:focus-visible,
+  .brand-card:focus-within {
+    --card-edge-highlight: var(--notch-edge-highlight-active);
+    outline: none;
+    border-color: var(--card-border-color-focus);
+    box-shadow: var(--card-shadow-focus);
+  }
+
+  @media (max-width: 640px) {
+    .brand-card {
+      --card-notch-size: var(--notch-size-sm);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-card,
+    .brand-card--interactive:hover,
+    .brand-card--interactive:active {
+      transform: none !important;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
   }
 }
