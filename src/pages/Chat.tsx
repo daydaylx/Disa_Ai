@@ -4,6 +4,7 @@ import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
+import { Card } from "@/ui/Card";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
