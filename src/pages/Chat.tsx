@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { LivingCore } from "../components/chat/LivingCore";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
@@ -123,11 +122,6 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Living Core Visualization */}
-                    <div className="relative w-full flex items-center justify-center mb-8">
-                      <LivingCore state={getLogoState()} size="lg" />
-                    </div>
-
                     {/* Disa AI Branding */}
                     <div className="w-full max-w-md text-center space-y-6">
                       <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
