@@ -67,11 +67,12 @@ export function LivingCore({ state, size = "lg", className }: LivingCoreProps) {
     <div
       className={cn("relative flex items-center justify-center", sizeClasses[size], className)}
       aria-hidden="true"
+      style={{ contain: "layout style paint" }}
     >
-      {/* Outer Glow / Atmosphere */}
+      {/* Outer Glow / Atmosphere - Reduced blur for performance */}
       <div
         className={cn(
-          "absolute inset-0 rounded-full opacity-20 blur-2xl transition-all duration-700",
+          "absolute inset-0 rounded-full opacity-20 blur-xl transition-all duration-700",
           config.primary,
         )}
       />
@@ -86,6 +87,7 @@ export function LivingCore({ state, size = "lg", className }: LivingCoreProps) {
           "relative w-full h-full rounded-full flex items-center justify-center transition-all duration-700",
           config.glow,
         )}
+        style={{ willChange: "transform" }}
       >
         {/* Glass Shell */}
         <div
@@ -96,10 +98,10 @@ export function LivingCore({ state, size = "lg", className }: LivingCoreProps) {
           )}
         />
 
-        {/* Inner Iris */}
+        {/* Inner Iris - Reduced blur */}
         <div
           className={cn(
-            "w-[70%] h-[70%] rounded-full opacity-40 blur-md transition-colors duration-700",
+            "w-[70%] h-[70%] rounded-full opacity-40 blur-sm transition-colors duration-700",
             config.inner,
           )}
         />
@@ -113,8 +115,8 @@ export function LivingCore({ state, size = "lg", className }: LivingCoreProps) {
           )}
         />
 
-        {/* Glare/Reflection for realism */}
-        <div className="absolute top-[20%] right-[20%] w-[15%] h-[15%] bg-white/60 rounded-full blur-[1px]" />
+        {/* Glare/Reflection for realism - Removed blur for performance */}
+        <div className="absolute top-[20%] right-[20%] w-[15%] h-[15%] bg-white/60 rounded-full" />
       </div>
     </div>
   );

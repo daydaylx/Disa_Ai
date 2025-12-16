@@ -25,7 +25,7 @@ export interface BrandWordmarkProps extends Omit<ComponentProps<"span">, "childr
 export function BrandWordmark({
   className,
   state = "idle",
-  showCursor = false, // Not used currently, reserved for future cursor animation
+  showCursor: _showCursor = false, // Not used currently, reserved for future cursor animation
   ...props
 }: BrandWordmarkProps) {
   return <AnimatedLogo className={className} state={state} {...props} />;
