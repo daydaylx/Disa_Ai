@@ -3,8 +3,8 @@ import { useCallback, useRef, useState } from "react";
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
-import { NotchFrame } from "@/ui/NotchFrame";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
@@ -123,11 +123,11 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    {/* Hero Section with NotchFrame */}
-                    <NotchFrame
-                      variant="hero"
-                      size="md"
-                      className="w-full max-w-md p-8 text-center"
+                    {/* Hero Section with brand tint */}
+                    <BrandCard
+                      variant="tinted"
+                      padding="lg"
+                      className="w-full max-w-md text-center"
                     >
                       {/* Wordmark as Hero - Intro animation */}
                       <div className="space-y-6 animate-wordmark-intro">
@@ -157,20 +157,21 @@ export default function Chat() {
                           </p>
                         </div>
                       </div>
-                    </NotchFrame>
+                    </BrandCard>
 
-                    {/* Starter Prompts - NotchFrame Cards */}
+                    {/* Starter Prompts - Tinted Cards */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
                       {STARTER_PROMPTS.slice(0, 3).map((prompt, index) => (
-                        <NotchFrame
+                        <BrandCard
                           key={prompt}
                           as="button"
-                          variant="card"
-                          size="sm"
+                          variant="tinted"
+                          interactive
+                          padding="md"
                           onClick={() => chatLogic.handleStarterClick(prompt)}
                           style={{ animationDelay: `${(index + 1) * 100 + 300}ms` }}
                           className={cn(
-                            "flex items-center gap-4 p-4 text-left w-full",
+                            "flex items-center gap-4 text-left w-full",
                             "animate-slide-up opacity-0 fill-mode-forwards",
                           )}
                         >
@@ -186,7 +187,7 @@ export default function Chat() {
                           <span className="text-sm font-medium text-ink-primary flex-1">
                             {prompt}
                           </span>
-                        </NotchFrame>
+                        </BrandCard>
                       ))}
                     </div>
 

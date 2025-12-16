@@ -3,6 +3,7 @@
 
 // Import pre-calculated tokens for optimal performance
 import { type CssVariableMap, preCalculatedTokens } from "./design-tokens.generated";
+import { cardTokens, generateCardCssVariables } from "./tokens/card";
 import { generateCategoryTokens } from "./tokens/category-colors";
 import {
   generateCategorySemanticTokens,
@@ -69,6 +70,10 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
   const frameCssVariables = generateFrameCssVariables();
   Object.assign(baseTokens, frameCssVariables);
 
+  // Add brand card/tint tokens
+  const cardCssVariables = generateCardCssVariables();
+  Object.assign(baseTokens, cardCssVariables);
+
   return baseTokens;
 }
 
@@ -80,6 +85,7 @@ export const designTokens = {
   motion: motionTokens,
   typography: typographyTokens,
   frame: frameTokens,
+  card: cardTokens,
 } as const;
 
 export type DesignTokens = typeof designTokens;
