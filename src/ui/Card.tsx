@@ -15,6 +15,10 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       inset: "bg-black/20 border-black/10 shadow-inner", // Deep inset
       premium:
         "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden", // Premium
+      // New branding variants
+      plain: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // No tint
+      tinted: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // Subtle tint
+      roleStrong: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // Strong role tint
     },
     padding: {
       none: "p-0",
@@ -29,6 +33,17 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       models: "border-l-2 border-l-accent-models-border",
       roles: "border-l-2 border-l-accent-roles-border",
       settings: "border-l-2 border-l-accent-settings-border",
+    },
+    // Notch variant for cutout effect
+    notch: {
+      none: "",
+      cutout: "card-notch-cutout",
+    },
+    // Notch size
+    notchSize: {
+      sm: "card-notch-sm",
+      default: "card-notch-default",
+      lg: "card-notch-lg",
     },
   },
   compoundVariants: [
@@ -48,11 +63,24 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       accent: "settings",
       className: "hover:border-accent-settings-border hover:shadow-glow-settings",
     },
+    // Tint variants with notch
+    {
+      variant: "tinted",
+      notch: "cutout",
+      className: "card-tinted-with-notch",
+    },
+    {
+      variant: "roleStrong",
+      notch: "cutout",
+      className: "card-role-strong-with-notch",
+    },
   ],
   defaultVariants: {
     variant: "default",
     padding: "default",
     accent: "none",
+    notch: "none",
+    notchSize: "default",
   },
 });
 
@@ -69,6 +97,15 @@ export interface CardProps
    * @default "primary" (indigo)
    */
   accentColor?: "primary" | "secondary" | "tertiary" | "models" | "roles";
+  /**
+   * Tint color for tinted and roleStrong variants
+   * Can be CSS variable name or hex color
+   */
+  tintColor?: string;
+  /**
+   * Role color for roleStrong variant (RGB format)
+   */
+  roleColor?: string;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -78,8 +115,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       variant,
       padding,
       accent,
+      notch,
+      notchSize = "default",
       withAccent = false,
       accentColor = "secondary",
+      tintColor,
+      roleColor,
       children,
       ...props
     },
@@ -94,15 +135,76 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       roles: "bg-accent-roles",
     }[accentColor];
 
+    // Determine tint strength based on variant
+    const tintAlpha = React.useMemo(() => {
+      if (variant === "tinted") return "var(--tint-alpha-soft)";
+      if (variant === "roleStrong") return "var(--tint-alpha-strong)";
+      return "0"; // No tint for other variants
+    }, [variant]);
+
+    // Generate tint style
+    const tintStyle = React.useMemo(() => {
+      if (!tintColor || variant === "plain") return {};
+
+      if (variant === "roleStrong" && roleColor) {
+        // For roleStrong, use RGB format for better performance
+        return {
+          "--card-tint-color": `rgb(${roleColor})`,
+          "--card-tint-alpha": tintAlpha,
+        };
+      }
+
+      // For tinted variant, use the provided tintColor
+      return {
+        "--card-tint-color": tintColor,
+        "--card-tint-alpha": tintAlpha,
+      };
+    }, [tintColor, roleColor, variant, tintAlpha]);
+
+    // Notch size classes
+    const notchSizeClasses = {
+      sm: "w-4 h-4",
+      default: "w-5 h-5",
+      lg: "w-6 h-6",
+    };
+
     return (
       <div
         ref={ref}
-        className={cn(cardVariants({ variant, padding, accent, className }))}
+        className={cn(cardVariants({ variant, padding, accent, notch, notchSize, className }))}
+        style={tintStyle}
         {...props}
       >
         {showAccent && (
           <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
         )}
+
+        {/* Tint Overlay - uses CSS variables for performance */}
+        {(variant === "tinted" || variant === "roleStrong") && (
+          <div
+            className="absolute inset-0 pointer-events-none rounded-[inherit]"
+            style={{
+              backgroundColor: `rgb(var(--card-tint-color) / var(--card-tint-alpha))`,
+            }}
+          />
+        )}
+
+        {/* Notch Cutout Element */}
+        {notch === "cutout" && (
+          <div
+            className={cn(
+              "absolute top-0 right-0 pointer-events-none z-20",
+              notchSizeClasses[notchSize],
+              "card-notch-element",
+            )}
+            style={{
+              backgroundColor: `rgb(var(--card-page-bg-rgb))`,
+              borderLeft: "1px solid rgba(var(--card-border-rgb), var(--card-border-alpha))",
+              borderBottom: "1px solid rgba(var(--card-border-rgb), var(--card-border-alpha))",
+            }}
+          />
+        )}
+
         {children}
       </div>
     );

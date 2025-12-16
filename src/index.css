@@ -30,6 +30,21 @@
 
   /* Viewport Height Fix */
   --vh: 1vh;
+
+  /* Card Branding System - New Design Tokens */
+  --card-page-bg-rgb: var(--card-page-bg-rgb);
+  --card-bg-rgb: var(--card-bg-rgb);
+  --card-border-rgb: var(--card-border-rgb);
+  --card-border-alpha: var(--card-border-alpha);
+  --card-radius: var(--card-radius);
+  --card-shadow: var(--card-shadow);
+  --card-shadow-pressed: var(--card-shadow-pressed);
+  --tint-fade: var(--tint-fade);
+  --tint-alpha-soft: var(--tint-alpha-soft);
+  --tint-alpha-strong: var(--tint-alpha-strong);
+  --brand-rgb: var(--brand-rgb);
+  --role-primary-rgb: var(--role-primary-rgb);
+  --role-secondary-rgb: var(--role-secondary-rgb);
 }
 
 @layer base {

@@ -18,6 +18,23 @@ export type SurfaceTokens = {
   overlay: string;
 };
 
+// Card Branding System Tokens
+export type CardBrandingTokens = {
+  pageBgRgb: string; // RGB values for page background (for notch cutout)
+  cardBgRgb: string; // RGB values for card background
+  cardBorderRgb: string; // RGB values for card border
+  cardBorderAlpha: string; // Default border alpha (0..1)
+  cardRadius: string; // Card radius in px
+  cardShadow: string; // Default card shadow
+  cardShadowPressed: string; // Pressed state shadow
+  tintFade: string; // Tint fade percentage
+  tintAlphaSoft: string; // Global subtle tint alpha (0.06-0.10)
+  tintAlphaStrong: string; // Role/theme strong tint alpha (0.15-0.25)
+  brandRgb: string; // Brand color in RGB format
+  rolePrimaryRgb: string; // Primary role color in RGB
+  roleSecondaryRgb: string; // Secondary role color in RGB
+};
+
 export type TextTokens = {
   primary: string;
   secondary: string;
@@ -141,6 +158,7 @@ export type ColorScheme = {
   controls: ControlTokens;
   table: TableTokens;
   overlay: OverlayTokens;
+  cardBranding: CardBrandingTokens;
 };
 
 export const colorTokens: Record<ThemeMode, ColorScheme> = {
@@ -270,6 +288,21 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       dialogBg: "#f9faff",
       dialogBorder: "rgba(15, 23, 36, 0.1)",
     },
+    cardBranding: {
+      pageBgRgb: "15 23 36", // RGB values for light mode page background
+      cardBgRgb: "253 253 255", // RGB for card background
+      cardBorderRgb: "15 23 36", // RGB for card border
+      cardBorderAlpha: "0.08", // Default border alpha
+      cardRadius: "16px", // Standard card radius
+      cardShadow: "0 2px 8px rgba(0, 0, 0, 0.08)", // Subtle shadow
+      cardShadowPressed: "0 1px 4px rgba(0, 0, 0, 0.12)", // Pressed state
+      tintFade: "65%", // Tint fade percentage
+      tintAlphaSoft: "0.08", // Global subtle tint
+      tintAlphaStrong: "0.20", // Role/theme strong tint
+      brandRgb: "139 92 246", // Brand purple RGB
+      rolePrimaryRgb: "139 92 246", // Primary role color
+      roleSecondaryRgb: "167 139 250", // Secondary role color
+    },
   },
   dark: {
     surfaces: {
@@ -396,6 +429,21 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       toastAccent: "#8B5CF6",
       dialogBg: "#141b2f",
       dialogBorder: "rgba(255, 255, 255, 0.08)",
+    },
+    cardBranding: {
+      pageBgRgb: "15 24 32", // RGB values for dark mode page background
+      cardBgRgb: "21 29 49", // RGB for card background
+      cardBorderRgb: "255 255 255", // RGB for card border
+      cardBorderAlpha: "0.12", // Default border alpha
+      cardRadius: "16px", // Standard card radius
+      cardShadow: "0 2px 8px rgba(0, 0, 0, 0.3)", // Subtle shadow
+      cardShadowPressed: "0 1px 4px rgba(0, 0, 0, 0.4)", // Pressed state
+      tintFade: "65%", // Tint fade percentage
+      tintAlphaSoft: "0.10", // Global subtle tint (slightly stronger in dark)
+      tintAlphaStrong: "0.25", // Role/theme strong tint
+      brandRgb: "139 92 246", // Brand purple RGB
+      rolePrimaryRgb: "139 92 246", // Primary role color
+      roleSecondaryRgb: "167 139 250", // Secondary role color
     },
   },
 } as const;
@@ -525,5 +573,20 @@ export const colorCssVars = {
     toastAccent: "--color-overlay-toast-accent",
     dialogBg: "--color-overlay-dialog-bg",
     dialogBorder: "--color-overlay-dialog-border",
+  },
+  cardBranding: {
+    pageBgRgb: "--card-page-bg-rgb",
+    cardBgRgb: "--card-bg-rgb",
+    cardBorderRgb: "--card-border-rgb",
+    cardBorderAlpha: "--card-border-alpha",
+    cardRadius: "--card-radius",
+    cardShadow: "--card-shadow",
+    cardShadowPressed: "--card-shadow-pressed",
+    tintFade: "--tint-fade",
+    tintAlphaSoft: "--tint-alpha-soft",
+    tintAlphaStrong: "--tint-alpha-strong",
+    brandRgb: "--brand-rgb",
+    rolePrimaryRgb: "--role-primary-rgb",
+    roleSecondaryRgb: "--role-secondary-rgb",
   },
 } as const;

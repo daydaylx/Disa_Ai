@@ -94,6 +94,19 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
     "--color-overlay-toast-accent": "#8B5CF6",
     "--color-overlay-dialog-bg": "#f9faff",
     "--color-overlay-dialog-border": "rgba(15, 23, 36, 0.1)",
+    "--card-page-bg-rgb": "15 23 36",
+    "--card-bg-rgb": "253 253 255",
+    "--card-border-rgb": "15 23 36",
+    "--card-border-alpha": "0.08",
+    "--card-radius": "16px",
+    "--card-shadow": "0 2px 8px rgba(0, 0, 0, 0.08)",
+    "--card-shadow-pressed": "0 1px 4px rgba(0, 0, 0, 0.12)",
+    "--tint-fade": "65%",
+    "--tint-alpha-soft": "0.08",
+    "--tint-alpha-strong": "0.20",
+    "--brand-rgb": "139 92 246",
+    "--role-primary-rgb": "139 92 246",
+    "--role-secondary-rgb": "167 139 250",
     "--space-none": "0px",
     "--space-3xs": "0.5rem",
     "--space-2xs": "0.75rem",
@@ -213,6 +226,19 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
     "--color-overlay-toast-accent": "#8B5CF6",
     "--color-overlay-dialog-bg": "#141b2f",
     "--color-overlay-dialog-border": "rgba(255, 255, 255, 0.08)",
+    "--card-page-bg-rgb": "15 24 32",
+    "--card-bg-rgb": "21 29 49",
+    "--card-border-rgb": "255 255 255",
+    "--card-border-alpha": "0.12",
+    "--card-radius": "16px",
+    "--card-shadow": "0 2px 8px rgba(0, 0, 0, 0.3)",
+    "--card-shadow-pressed": "0 1px 4px rgba(0, 0, 0, 0.4)",
+    "--tint-fade": "65%",
+    "--tint-alpha-soft": "0.10",
+    "--tint-alpha-strong": "0.25",
+    "--brand-rgb": "139 92 246",
+    "--role-primary-rgb": "139 92 246",
+    "--role-secondary-rgb": "167 139 250",
     "--space-none": "0px",
     "--space-3xs": "0.5rem",
     "--space-2xs": "0.75rem",
@@ -247,5 +273,5 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
 } as const;
 
 // Performance: Pre-calculated tokens eliminate ~4ms runtime calculation per theme switch
-// Generated: 2025-12-14T23:11:56.085Z
-// Tokens: 117 variables per theme
+// Generated: 2025-12-16T16:10:45.197Z
+// Tokens: 130 variables per theme

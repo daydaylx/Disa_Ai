@@ -94,8 +94,108 @@
     animation: favorite-pop 300ms var(--ease-bounce);
   }
 
+  /* ========================================================================
+     CARD SURFACE UTILITIES
+     ======================================================================== */
+
   .animate-press {
     animation: press-feedback var(--motion-instant) var(--ease-in-out);
+  }
+
+  /* ========================================================================
+     CARD BRANDING SYSTEM - New Design Tokens
+     ======================================================================== */
+
+  /* Base Card Styles */
+  .card-notch-cutout {
+    position: relative;
+    overflow: visible !important; /* Important to show notch outside */
+  }
+
+  /* Notch Element - Cutout Effect */
+  .card-notch-element {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%);
+    transform: translate(50%, -50%) rotate(45deg);
+    transform-origin: center;
+  }
+
+  /* Notch Size Variants */
+  .card-notch-sm {
+    width: 16px;
+    height: 16px;
+  }
+
+  .card-notch-default {
+    width: 20px;
+    height: 20px;
+  }
+
+  .card-notch-lg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Tinted Card Variant */
+  .card-tinted-with-notch {
+    /* Specific styles for tinted cards with notch */
+  }
+
+  /* Role Strong Card Variant */
+  .card-role-strong-with-notch {
+    /* Specific styles for role strong cards with notch */
+  }
+
+  /* Card Variants - Branding System */
+  [data-variant="plain"] {
+    background-color: rgb(var(--card-bg-rgb));
+    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
+    box-shadow: var(--card-shadow);
+  }
+
+  [data-variant="tinted"] {
+    background-color: rgb(var(--card-bg-rgb));
+    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
+    box-shadow: var(--card-shadow);
+  }
+
+  [data-variant="roleStrong"] {
+    background-color: rgb(var(--card-bg-rgb));
+    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
+    box-shadow: var(--card-shadow);
+  }
+
+  /* Focus States */
+  [data-variant="plain"]:focus-visible,
+  [data-variant="tinted"]:focus-visible,
+  [data-variant="roleStrong"]:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+
+  /* Hover States (Desktop only) */
+  @media (hover: hover) {
+    [data-variant="plain"]:hover,
+    [data-variant="tinted"]:hover,
+    [data-variant="roleStrong"]:hover {
+      border-color: rgba(var(--card-border-rgb), calc(var(--card-border-alpha) + 0.05));
+    }
+  }
+
+  /* Pressed States */
+  [data-variant="plain"]:active,
+  [data-variant="tinted"]:active,
+  [data-variant="roleStrong"]:active {
+    box-shadow: var(--card-shadow-pressed);
+    transform: translateY(1px);
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    [data-variant="plain"]:active,
+    [data-variant="tinted"]:active,
+    [data-variant="roleStrong"]:active {
+      transform: none;
+    }
   }
 
   /* ========================================================================
