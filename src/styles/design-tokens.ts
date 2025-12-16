@@ -9,6 +9,7 @@ import {
   generateCategoryTonalTokens,
 } from "./tokens/category-tonal-scales";
 import { colorTokens, type ThemeMode } from "./tokens/color";
+import { frameTokens, generateFrameCssVariables } from "./tokens/frame";
 import { motionCssVars, motionTokens } from "./tokens/motion";
 import { radiusCssVars, radiusTokens } from "./tokens/radius";
 import { shadowTokens } from "./tokens/shadow";
@@ -64,6 +65,10 @@ export function getDesignTokenVariables(mode: ThemeMode): CssVariableMap {
   };
   Object.assign(baseTokens, categoryTonalTokens);
 
+  // Add frame/notch tokens (Disa AI signature visual element)
+  const frameCssVariables = generateFrameCssVariables();
+  Object.assign(baseTokens, frameCssVariables);
+
   return baseTokens;
 }
 
@@ -74,6 +79,7 @@ export const designTokens = {
   shadow: shadowTokens,
   motion: motionTokens,
   typography: typographyTokens,
+  frame: frameTokens,
 } as const;
 
 export type DesignTokens = typeof designTokens;

@@ -30,6 +30,24 @@
 
   /* Viewport Height Fix */
   --vh: 1vh;
+
+  /* Frame/Notch System - Disa AI Signature Visual */
+  --frame-radius: 16px;
+  --frame-border-width: 1px;
+  --frame-border-color: rgba(255, 255, 255, 0.12);
+  --frame-border-color-hover: rgba(255, 255, 255, 0.18);
+  --frame-border-color-focus: rgba(139, 92, 246, 0.4);
+  --frame-border-color-active: rgba(139, 92, 246, 0.5);
+  --frame-bg: rgba(15, 15, 20, 0.6);
+  --frame-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --frame-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --frame-shadow-focus: 0 4px 16px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --notch-size-sm: 10px;
+  --notch-size-md: 14px;
+  --notch-edge-highlight: transparent;
+  --notch-edge-highlight-active: rgba(139, 92, 246, 0.6);
+  --frame-transition-duration: 200ms;
+  --frame-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
@@ -234,5 +252,130 @@
 
   .animate-fade-in-scale {
     animation: fade-in-scale 0.6s ease-out;
+  }
+
+  /* Wordmark intro animation - plays once on load */
+  @keyframes wordmark-intro {
+    0% {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-wordmark-intro {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Staggered wordmark intro for child elements */
+  .animate-wordmark-intro-delay-1 {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+    opacity: 0;
+  }
+
+  .animate-wordmark-intro-delay-2 {
+    animation: wordmark-intro 450ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+    opacity: 0;
+  }
+
+  /* Reduced motion - disable all intro animations */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-wordmark-intro,
+    .animate-wordmark-intro-delay-1,
+    .animate-wordmark-intro-delay-2,
+    .animate-pulse-slow,
+    .animate-gradient-shift,
+    .animate-pulse-subtle,
+    .animate-bounce-subtle,
+    .animate-text-shimmer {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+/* NotchFrame component styles */
+@layer components {
+  .notch-frame {
+    --notch-size: var(--notch-size-sm);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: var(--frame-border-width) solid var(--frame-border-color);
+    background: var(--frame-bg);
+    backdrop-filter: blur(24px);
+    box-shadow: var(--frame-shadow);
+    border-radius: var(--frame-radius);
+    transition:
+      border-color var(--frame-transition-duration) var(--frame-transition-easing),
+      box-shadow var(--frame-transition-duration) var(--frame-transition-easing);
+  }
+
+  /* Notch pseudo-element (top-right corner) */
+  .notch-frame::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--notch-size);
+    height: var(--notch-size);
+    background: var(--bg-app);
+    z-index: 10;
+    border-bottom-left-radius: var(--frame-radius);
+    transition: all var(--frame-transition-duration) var(--frame-transition-easing);
+  }
+
+  /* Edge highlight pseudo-element */
+  .notch-frame::after {
+    content: "";
+    position: absolute;
+    top: var(--notch-size);
+    right: 0;
+    width: 1px;
+    height: calc(100% - var(--notch-size));
+    background: var(--notch-edge-highlight);
+    transition: background var(--frame-transition-duration) var(--frame-transition-easing);
+  }
+
+  /* Notch size variants */
+  .notch-frame--sm {
+    --notch-size: var(--notch-size-sm);
+  }
+
+  .notch-frame--md {
+    --notch-size: var(--notch-size-md);
+  }
+
+  /* Interactive states */
+  .notch-frame--card:hover {
+    border-color: var(--frame-border-color-hover);
+    box-shadow: var(--frame-shadow-hover);
+  }
+
+  .notch-frame--card:active {
+    transform: scale(0.98);
+  }
+
+  .notch-frame--input:focus-within {
+    border-color: var(--frame-border-color-focus);
+    box-shadow: var(--frame-shadow-focus);
+  }
+
+  .notch-frame--input:focus-within::after {
+    background: var(--notch-edge-highlight-active);
+  }
+
+  /* Active chip variant */
+  .notch-frame--active {
+    border-color: var(--frame-border-color-focus);
+    box-shadow: var(--frame-shadow-focus);
+  }
+
+  .notch-frame--active::after {
+    background: var(--notch-edge-highlight-active);
   }
 }

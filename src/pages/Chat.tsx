@@ -4,8 +4,8 @@ import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
+import { NotchFrame } from "@/ui/NotchFrame";
 
-import { BrandIcon } from "../components/branding/BrandIcon";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -122,57 +122,62 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Disa AI Branding mit Icon */}
-                    <div className="w-full max-w-md text-center space-y-8 animate-fade-in-scale">
-                      {/* Brand Icon */}
-                      <div className="flex justify-center mb-4">
-                        <BrandIcon animated />
-                      </div>
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
+                    {/* Hero Section with NotchFrame */}
+                    <NotchFrame
+                      variant="hero"
+                      size="md"
+                      className="w-full max-w-md p-8 text-center"
+                    >
+                      {/* Wordmark as Hero - Intro animation */}
+                      <div className="space-y-6 animate-wordmark-intro">
+                        {/* Main Title - Disa AI is now the hero */}
+                        <div className="space-y-2">
+                          <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
+                            Disa{" "}
+                            <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+                              AI
+                            </span>
+                          </h1>
+                          <p className="text-xs text-ink-tertiary font-semibold tracking-[0.2em] uppercase animate-wordmark-intro-delay-1">
+                            Dein KI-Assistent
+                          </p>
+                        </div>
 
-                      {/* Main Title mit Shimmer */}
-                      <div className="space-y-2">
-                        <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
-                          Disa <span className="animate-text-shimmer">AI</span>
-                        </h1>
-                        <p className="text-sm text-ink-tertiary font-medium tracking-wide uppercase opacity-60">
-                          Dein KI-Assistent
-                        </p>
-                      </div>
+                        {/* Decorative Separator */}
+                        <div className="w-24 h-px mx-auto bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wordmark-intro-delay-1" />
 
-                      {/* Decorative Separator mit Animation */}
-                      <div className="w-full max-w-sm mx-auto relative">
-                        <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-                        <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent animate-pulse-slow" />
+                        {/* Welcome Text */}
+                        <div className="space-y-2 animate-wordmark-intro-delay-2">
+                          <h2 className="text-lg font-medium text-ink-primary">
+                            Was kann ich für dich tun?
+                          </h2>
+                          <p className="text-sm text-ink-secondary">
+                            Tippe unten eine Frage ein oder wähle einen Vorschlag.
+                          </p>
+                        </div>
                       </div>
+                    </NotchFrame>
 
-                      {/* Welcome Text */}
-                      <div className="space-y-3">
-                        <h2 className="text-xl font-semibold text-ink-primary">
-                          Was kann ich für dich tun?
-                        </h2>
-                        <p className="text-sm text-ink-secondary">
-                          Tippe unten eine Frage ein oder wähle einen der Vorschläge.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Starter Prompts - Refined Design */}
+                    {/* Starter Prompts - NotchFrame Cards */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
                       {STARTER_PROMPTS.slice(0, 3).map((prompt, index) => (
-                        <button
+                        <NotchFrame
                           key={prompt}
+                          as="button"
+                          variant="card"
+                          size="sm"
                           onClick={() => chatLogic.handleStarterClick(prompt)}
-                          style={{ animationDelay: `${index * 100}ms` }}
+                          style={{ animationDelay: `${(index + 1) * 100 + 300}ms` }}
                           className={cn(
-                            "flex items-center gap-4 p-4 text-left rounded-2xl transition-all group glass-card animate-slide-up opacity-0 fill-mode-forwards",
-                            "hover:border-brand-primary/30 hover:shadow-glow-sm",
+                            "flex items-center gap-4 p-4 text-left w-full",
+                            "animate-slide-up opacity-0 fill-mode-forwards",
                           )}
                         >
                           <div
                             className={cn(
                               "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-surface-3 text-ink-tertiary",
+                              "bg-surface-3/50 text-ink-tertiary",
                               "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
                             )}
                           >
@@ -181,7 +186,7 @@ export default function Chat() {
                           <span className="text-sm font-medium text-ink-primary flex-1">
                             {prompt}
                           </span>
-                        </button>
+                        </NotchFrame>
                       ))}
                     </div>
 
