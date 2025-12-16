@@ -5,6 +5,7 @@ import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
+import { BrandIcon } from "../components/branding/BrandIcon";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -122,23 +123,38 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Disa AI Branding */}
-                    <div className="w-full max-w-md text-center space-y-6">
-                      <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
-                        Disa AI
-                      </h1>
-
-                      {/* Separator Line */}
-                      <div className="w-full max-w-sm mx-auto">
-                        <div className="h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent" />
+                    {/* Disa AI Branding mit Icon */}
+                    <div className="w-full max-w-md text-center space-y-8 animate-fade-in-scale">
+                      {/* Brand Icon */}
+                      <div className="flex justify-center mb-4">
+                        <BrandIcon animated />
                       </div>
 
-                      <h2 className="text-xl font-semibold text-ink-primary mt-8">
-                        Was kann ich für dich tun?
-                      </h2>
-                      <p className="text-sm text-ink-secondary">
-                        Tippe unten eine Frage ein oder wähle einen der Vorschläge.
-                      </p>
+                      {/* Main Title mit Shimmer */}
+                      <div className="space-y-2">
+                        <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
+                          Disa <span className="animate-text-shimmer">AI</span>
+                        </h1>
+                        <p className="text-sm text-ink-tertiary font-medium tracking-wide uppercase opacity-60">
+                          Dein KI-Assistent
+                        </p>
+                      </div>
+
+                      {/* Decorative Separator mit Animation */}
+                      <div className="w-full max-w-sm mx-auto relative">
+                        <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
+                        <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent animate-pulse-slow" />
+                      </div>
+
+                      {/* Welcome Text */}
+                      <div className="space-y-3">
+                        <h2 className="text-xl font-semibold text-ink-primary">
+                          Was kann ich für dich tun?
+                        </h2>
+                        <p className="text-sm text-ink-secondary">
+                          Tippe unten eine Frage ein oder wähle einen der Vorschläge.
+                        </p>
+                      </div>
                     </div>
 
                     {/* Starter Prompts - Refined Design */}
