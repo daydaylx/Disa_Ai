@@ -4,8 +4,8 @@ import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
+import { NotchFrame } from "@/ui/NotchFrame";
 
-import { BrandIcon } from "../components/branding/BrandIcon";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
@@ -124,64 +124,73 @@ export default function Chat() {
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
                     {/* Disa AI Branding mit Icon */}
-                    <div className="w-full max-w-md text-center space-y-8 animate-fade-in-scale">
-                      {/* Brand Icon */}
-                      <div className="flex justify-center mb-4">
-                        <BrandIcon animated />
-                      </div>
+                    <div className="w-full max-w-md space-y-8 animate-fade-in-scale">
+                      {/* Hero Section Wrapped in NotchFrame */}
+                      <NotchFrame
+                        variant="glass"
+                        size="md"
+                        corner="top-right"
+                        className="p-8 text-center space-y-6"
+                      >
+                        {/* Main Title mit Shimmer */}
+                        <div className="space-y-2">
+                          <h1 className="text-6xl font-bold text-ink-primary tracking-tighter">
+                            Disa <span className="animate-text-shimmer">AI</span>
+                          </h1>
+                          <p className="text-sm text-ink-tertiary font-medium tracking-wide uppercase opacity-60">
+                            Dein KI-Assistent
+                          </p>
+                        </div>
 
-                      {/* Main Title mit Shimmer */}
-                      <div className="space-y-2">
-                        <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
-                          Disa <span className="animate-text-shimmer">AI</span>
-                        </h1>
-                        <p className="text-sm text-ink-tertiary font-medium tracking-wide uppercase opacity-60">
-                          Dein KI-Assistent
-                        </p>
-                      </div>
+                        {/* Decorative Separator mit Animation */}
+                        <div className="w-full max-w-xs mx-auto relative">
+                          <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
+                          <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent animate-pulse-slow" />
+                        </div>
 
-                      {/* Decorative Separator mit Animation */}
-                      <div className="w-full max-w-sm mx-auto relative">
-                        <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-                        <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent animate-pulse-slow" />
-                      </div>
-
-                      {/* Welcome Text */}
-                      <div className="space-y-3">
-                        <h2 className="text-xl font-semibold text-ink-primary">
-                          Was kann ich für dich tun?
-                        </h2>
-                        <p className="text-sm text-ink-secondary">
-                          Tippe unten eine Frage ein oder wähle einen der Vorschläge.
-                        </p>
-                      </div>
+                        {/* Welcome Text */}
+                        <div className="space-y-2">
+                          <h2 className="text-lg font-semibold text-ink-primary">
+                            Was kann ich für dich tun?
+                          </h2>
+                          <p className="text-sm text-ink-secondary max-w-sm mx-auto">
+                            Tippe unten eine Frage ein oder wähle einen der Vorschläge.
+                          </p>
+                        </div>
+                      </NotchFrame>
                     </div>
 
                     {/* Starter Prompts - Refined Design */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
                       {STARTER_PROMPTS.slice(0, 3).map((prompt, index) => (
-                        <button
+                        <NotchFrame
                           key={prompt}
+                          // Use button element as base or wrap button inside?
+                          // Since NotchFrame renders a div, we wrap the content.
+                          // But we want the whole card clickable.
+                          // Let's make the wrapper a clickable div via onClick, or wrap the inner content in a button that spans full size.
+                          // Easier: Just pass onClick to the NotchFrame div if it supports it, but accessibility is better with <button>.
+                          // For now, let's make the NotchFrame div interactive by passing props.
                           onClick={() => chatLogic.handleStarterClick(prompt)}
                           style={{ animationDelay: `${index * 100}ms` }}
-                          className={cn(
-                            "flex items-center gap-4 p-4 text-left rounded-2xl transition-all group glass-card animate-slide-up opacity-0 fill-mode-forwards",
-                            "hover:border-brand-primary/30 hover:shadow-glow-sm",
-                          )}
+                          className="group cursor-pointer animate-slide-up opacity-0 fill-mode-forwards hover:bg-surface-1/80 active:scale-[0.98]"
+                          active={false} // Only active on press? We can't easily track press state without extra logic. Let's keep it static notch.
                         >
-                          <div
-                            className={cn(
-                              "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-surface-3 text-ink-tertiary",
-                              "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
-                            )}
-                          >
-                            <MessageSquare className="h-5 w-5" />
+                          <div className="flex items-center gap-4 p-4 text-left">
+                            <div
+                              className={cn(
+                                "p-3 rounded-xl transition-colors flex-shrink-0",
+                                "bg-surface-3 text-ink-tertiary",
+                                "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
+                              )}
+                            >
+                              <MessageSquare className="h-5 w-5" />
+                            </div>
+                            <span className="text-sm font-medium text-ink-primary flex-1">
+                              {prompt}
+                            </span>
                           </div>
-                          <span className="text-sm font-medium text-ink-primary flex-1">
-                            {prompt}
-                          </span>
-                        </button>
+                        </NotchFrame>
                       ))}
                     </div>
 

@@ -28,6 +28,17 @@
   --accent-settings: theme(colors.accent-settings.DEFAULT);
   --accent-settings-dim: theme(colors.accent-settings.dim);
 
+  /* NotchFrame System Tokens */
+  --frame-radius: 1rem; /* rounded-2xl */
+  --frame-border-width: 1px;
+  --frame-border-color: rgba(255, 255, 255, 0.12);
+  --frame-bg: rgba(24, 24, 27, 0.6);
+  --frame-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --notch-size-sm: 10px;
+  --notch-size-md: 14px;
+  --notch-edge-highlight: rgba(255, 255, 255, 0.4);
+  --focus-ring: theme(colors.brand.primary);
+
   /* Viewport Height Fix */
   --vh: 1vh;
 }

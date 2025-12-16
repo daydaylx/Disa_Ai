@@ -362,6 +362,7 @@ export default {
       animation: {
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        "hero-reveal": "hero-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "pulse-glow": "pulseGlow 4s ease-in-out infinite",
         blob: "blob 7s infinite",
         "cube-a-idle": "cubeFloatAIdle 3.6s ease-in-out infinite",
@@ -401,6 +402,10 @@ export default {
         slideUp: {
           "0%": { transform: "translateY(20px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "hero-reveal": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         pulseGlow: {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },

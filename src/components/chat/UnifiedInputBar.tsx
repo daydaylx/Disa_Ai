@@ -7,6 +7,7 @@ import { Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
+import { NotchFrame } from "@/ui/NotchFrame";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
 export interface UnifiedInputBarProps {
@@ -99,8 +100,13 @@ export function UnifiedInputBar({
     <div className={cn("w-full space-y-3", className)}>
       {/* Model selection moved to settings - cleaner input area */}
 
-      {/* Main Input Container - Floating Glass */}
-      <div className="relative flex items-end gap-3 rounded-3xl border border-white/10 bg-surface-glass backdrop-blur-xl p-2 shadow-lg focus-within:border-brand-primary/50 focus-within:ring-1 focus-within:ring-brand-primary/30 focus-within:shadow-glow-md transition-all duration-300">
+      {/* Main Input Container - Wrapped in NotchFrame */}
+      <NotchFrame
+        variant="glass"
+        size="md"
+        corner="top-right"
+        className="flex items-end gap-3 p-2 shadow-lg focus-within:border-brand-primary/50 focus-within:ring-1 focus-within:ring-brand-primary/30 focus-within:shadow-glow-md transition-all duration-300"
+      >
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -135,7 +141,7 @@ export function UnifiedInputBar({
             <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
           )}
         </Button>
-      </div>
+      </NotchFrame>
 
       {/* Context Pills */}
       <div className="w-full px-1">
