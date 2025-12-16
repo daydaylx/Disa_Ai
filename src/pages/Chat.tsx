@@ -122,9 +122,43 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4">
-                    <div className="w-full max-w-md text-center space-y-2">
-                      <h2 className="text-xl font-semibold text-ink-primary">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4">
+                    {/* Animated Halo */}
+                    <div className="relative w-full flex items-center justify-center mb-4">
+                      <div className="relative">
+                        {/* Main glowing ring */}
+                        <div
+                          className="w-48 h-12 rounded-full bg-transparent border-2 border-brand-primary/60 shadow-[0_0_20px_rgba(59,130,246,0.5),0_0_40px_rgba(59,130,246,0.3),0_0_60px_rgba(59,130,246,0.1)]"
+                          style={{
+                            animation: "pulse-glow 3s ease-in-out infinite",
+                          }}
+                        />
+                        {/* Secondary pulse ring */}
+                        <div
+                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-14 rounded-full bg-transparent border border-brand-primary/30 opacity-50"
+                          style={{
+                            animation: "pulse-glow 3s ease-in-out infinite 0.5s",
+                          }}
+                        />
+                        {/* Inner glow */}
+                        <div
+                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-12 rounded-full bg-gradient-to-r from-brand-primary/20 via-brand-secondary/10 to-brand-primary/20 blur-xl animate-pulse-glow"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Disa AI Branding */}
+                    <div className="w-full max-w-md text-center space-y-6">
+                      <h1 className="text-5xl font-bold text-ink-primary tracking-tight">
+                        Disa AI
+                      </h1>
+
+                      {/* Separator Line */}
+                      <div className="w-full max-w-sm mx-auto">
+                        <div className="h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent" />
+                      </div>
+
+                      <h2 className="text-xl font-semibold text-ink-primary mt-8">
                         Was kann ich für dich tun?
                       </h2>
                       <p className="text-sm text-ink-secondary">
@@ -132,47 +166,43 @@ export default function Chat() {
                       </p>
                     </div>
 
-                    {/* Starter Prompts */}
-                    <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
-                      {STARTER_PROMPTS.map((prompt, index) => {
-                        const theme = getCycleColor(index);
-                        return (
-                          <button
-                            key={prompt}
-                            onClick={() => chatLogic.handleStarterClick(prompt)}
+                    {/* Starter Prompts - Refined Design */}
+                    <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
+                      {STARTER_PROMPTS.slice(0, 3).map((prompt, index) => (
+                        <button
+                          key={prompt}
+                          onClick={() => chatLogic.handleStarterClick(prompt)}
+                          className={cn(
+                            "flex items-center gap-4 p-4 text-left rounded-2xl transition-all group",
+                            "bg-surface-1/60 border border-white/10",
+                            "hover:bg-surface-1/80 hover:border-brand-primary/30",
+                            "hover:shadow-[0_0_20px_-8px_rgba(59,130,246,0.3)]",
+                          )}
+                        >
+                          <div
                             className={cn(
-                              "flex items-center gap-3 p-3 text-left rounded-2xl transition-all group",
-                              "bg-surface-2 border border-border-subtle",
-                              theme.hoverBg,
-                              theme.hoverBorder,
-                              theme.hoverGlow,
+                              "p-3 rounded-xl transition-colors flex-shrink-0",
+                              "bg-surface-3 text-ink-tertiary",
+                              "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
                             )}
                           >
-                            <div
-                              className={cn(
-                                "p-2 rounded-xl transition-colors",
-                                "bg-surface-3 text-ink-tertiary",
-                                theme.groupHoverIconBg,
-                                theme.groupHoverIconText,
-                              )}
-                            >
-                              <MessageSquare className="h-4 w-4" />
-                            </div>
-                            <span className="text-xs font-medium text-ink-secondary group-hover:text-ink-primary">
-                              {prompt}
-                            </span>
-                          </button>
-                        );
-                      })}
+                            <MessageSquare className="h-5 w-5" />
+                          </div>
+                          <span className="text-sm font-medium text-ink-primary flex-1">
+                            {prompt}
+                          </span>
+                        </button>
+                      ))}
                     </div>
 
                     {/* Quick Link to Settings - Subtle */}
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="text-xs font-medium text-ink-muted hover:text-ink-secondary transition-colors mt-2"
+                      className="text-sm text-ink-muted hover:text-ink-secondary transition-colors mt-2 flex items-center gap-2"
                     >
-                      Einstellungen anpassen →
+                      Einstellungen anpassen
+                      <span className="text-xs">→</span>
                     </button>
                   </div>
                 ) : (

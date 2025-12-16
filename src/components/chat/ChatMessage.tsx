@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Check, Copy, Edit2, RotateCcw } from "@/lib/icons";
 import { Button } from "@/ui/Button";
@@ -105,7 +105,11 @@ export function ChatMessage({
     }
   }, [isEditing]);
 
-  const parsedContent = parseMessageContent(message.content);
+  // Memoize parsing to avoid re-parsing on every render
+  const parsedContent = useMemo(
+    () => parseMessageContent(message.content),
+    [message.content],
+  );
 
   const handleCopy = () => {
     onCopy?.(message.content);
