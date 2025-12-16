@@ -190,14 +190,20 @@
   filter: blur(10px);
   will-change: opacity, transform;
   /* Default Idle State - Using brand primary #8B5CF6 (139, 92, 246) - Mobile optimized */
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.45) 0%, rgba(139, 92, 246, 0.25) 50%, transparent 80%);
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.45) 0%,
+    rgba(139, 92, 246, 0.25) 50%,
+    transparent 80%
+  );
   animation: presence-idle 10s ease-in-out infinite;
   /* Ensure it doesn't create a new stacking context that traps children, but is itself isolated */
   isolation: isolate;
 }
 
 @keyframes presence-idle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
     transform: translate(-50%, -50%) scale(0.95);
   }
@@ -208,7 +214,8 @@
 }
 
 @keyframes presence-typing {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.65;
     transform: translate(-50%, -50%) scale(0.98);
   }
@@ -251,17 +258,32 @@
 /* State Modifiers */
 .presence-mark[data-state="typing"] {
   animation: presence-typing 5s ease-in-out infinite;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0.35) 50%, transparent 80%);
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.6) 0%,
+    rgba(139, 92, 246, 0.35) 50%,
+    transparent 80%
+  );
 }
 
 .presence-mark[data-state="thinking"] {
   animation: presence-thinking 2.5s ease-in-out infinite;
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.7) 0%, rgba(139, 92, 246, 0.45) 50%, transparent 80%);
+  background: radial-gradient(
+    circle,
+    rgba(167, 139, 250, 0.7) 0%,
+    rgba(139, 92, 246, 0.45) 50%,
+    transparent 80%
+  );
 }
 
 .presence-mark[data-state="error"] {
   animation: presence-error 0.75s ease-out forwards;
-  background: radial-gradient(circle, rgba(239, 68, 68, 0.8) 0%, rgba(239, 68, 68, 0.4) 50%, transparent 80%);
+  background: radial-gradient(
+    circle,
+    rgba(239, 68, 68, 0.8) 0%,
+    rgba(239, 68, 68, 0.4) 50%,
+    transparent 80%
+  );
 }
 
 /* ============================================================================

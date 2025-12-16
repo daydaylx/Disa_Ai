@@ -106,10 +106,7 @@ export function ChatMessage({
   }, [isEditing]);
 
   // Memoize parsing to avoid re-parsing on every render
-  const parsedContent = useMemo(
-    () => parseMessageContent(message.content),
-    [message.content],
-  );
+  const parsedContent = useMemo(() => parseMessageContent(message.content), [message.content]);
 
   const handleCopy = () => {
     onCopy?.(message.content);

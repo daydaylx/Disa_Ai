@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
-import { getCycleColor } from "@/lib/categoryColors";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
@@ -141,9 +140,7 @@ export default function Chat() {
                           }}
                         />
                         {/* Inner glow */}
-                        <div
-                          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-12 rounded-full bg-gradient-to-r from-brand-primary/20 via-brand-secondary/10 to-brand-primary/20 blur-xl animate-pulse-glow"
-                        />
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-12 rounded-full bg-gradient-to-r from-brand-primary/20 via-brand-secondary/10 to-brand-primary/20 blur-xl animate-pulse-glow" />
                       </div>
                     </div>
 
