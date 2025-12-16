@@ -6,18 +6,18 @@ import { cn } from "@/lib/utils";
 const cardVariants = cva("relative rounded-2xl border transition-all duration-300", {
   variants: {
     variant: {
-      default: "bg-surface-1/60 backdrop-blur-md border-white/5 shadow-sm", // Glassy standard
-      flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none", // Subtle grouping
-      outline: "bg-transparent border-white/10", // Wireframe
+      default: "bg-surface-1/60 backdrop-blur-md border-white/[0.03] shadow-sm", // Glassy standard - ULTRA subtle border
+      flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none",
+      outline: "bg-transparent border-white/10",
       interactive:
-        "bg-surface-1/60 backdrop-blur-md border-white/5 hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]", // Interactive glass
-      elevated: "bg-surface-2 border-white/10 shadow-md", // Raised Opaque
-      inset: "bg-black/20 border-black/10 shadow-inner", // Deep inset
+        "bg-surface-1/60 backdrop-blur-md border-white/[0.03] hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]",
+      elevated: "bg-surface-2 border-white/10 shadow-md",
+      inset: "bg-black/20 border-black/10 shadow-inner",
       premium:
-        "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden", // Premium
+        "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden",
       // New branding variants
-      plain: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // No tint
-      tinted: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // Subtle tint
+      plain: "bg-surface-card border-white/[0.02] shadow-surface-subtle", // Almost invisible border
+      tinted: "bg-surface-card border-white/[0.02] shadow-surface-subtle", // Tinted will handle the color via overlay
       roleStrong: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // Strong role tint
     },
     padding: {
@@ -26,7 +26,6 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       default: "p-4 sm:p-5",
       lg: "p-6",
     },
-    // Page-specific accent variants for visual categorization
     accent: {
       none: "",
       chat: "border-l-2 border-l-accent-chat-border",
@@ -34,12 +33,10 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       roles: "border-l-2 border-l-accent-roles-border",
       settings: "border-l-2 border-l-accent-settings-border",
     },
-    // Notch variant for cutout effect
     notch: {
       none: "",
       cutout: "card-notch-cutout",
     },
-    // Notch size
     notchSize: {
       sm: "card-notch-sm",
       default: "card-notch-default",
@@ -47,7 +44,6 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
     },
   },
   compoundVariants: [
-    // When interactive + accent, enhance hover states
     {
       variant: "interactive",
       accent: "models",
@@ -63,17 +59,6 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       accent: "settings",
       className: "hover:border-accent-settings-border hover:shadow-glow-settings",
     },
-    // Tint variants with notch
-    {
-      variant: "tinted",
-      notch: "cutout",
-      className: "card-tinted-with-notch",
-    },
-    {
-      variant: "roleStrong",
-      notch: "cutout",
-      className: "card-role-strong-with-notch",
-    },
   ],
   defaultVariants: {
     variant: "default",
@@ -87,24 +72,9 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
-  /**
-   * Add accent strip at the top of the card (typically for premium/brand elements)
-   * Only visible when variant="premium"
-   */
   withAccent?: boolean;
-  /**
-   * Accent color for the strip
-   * @default "primary" (indigo)
-   */
   accentColor?: "primary" | "secondary" | "tertiary" | "models" | "roles";
-  /**
-   * Tint color for tinted and roleStrong variants
-   * Can be CSS variable name or hex color
-   */
   tintColor?: string;
-  /**
-   * Role color for roleStrong variant (RGB format)
-   */
   roleColor?: string;
 }
 
@@ -135,38 +105,39 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       roles: "bg-accent-roles",
     }[accentColor];
 
-    // Determine tint strength based on variant
+    // Determine tint strength
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tinted") return "var(--tint-alpha-soft)";
+      if (variant === "tinted") return "0.08"; // Fixed soft alpha
       if (variant === "roleStrong") return "var(--tint-alpha-strong)";
-      return "0"; // No tint for other variants
+      return "0";
     }, [variant]);
 
     // Generate tint style
     const tintStyle = React.useMemo(() => {
-      if (!tintColor || variant === "plain") return {};
+      if (!tintColor && !roleColor) return {};
+      if (variant === "plain") return {};
 
+      // For roleStrong: Strong solid/gradient
       if (variant === "roleStrong" && roleColor) {
-        // For roleStrong, use RGB format for better performance
         return {
           "--card-tint-color": `rgb(${roleColor})`,
           "--card-tint-alpha": tintAlpha,
         } as React.CSSProperties;
       }
 
-      // For tinted variant, use the provided tintColor
+      // For tinted: Gradient
       return {
         "--card-tint-color": tintColor,
         "--card-tint-alpha": tintAlpha,
       } as React.CSSProperties;
     }, [tintColor, roleColor, variant, tintAlpha]);
 
-    // Notch size classes
-    const notchSizeClasses = {
-      sm: "w-4 h-4",
-      default: "w-5 h-5",
-      lg: "w-6 h-6",
-    };
+    // Notch size pixel values
+    const notchSizePx = {
+      sm: 12,
+      default: 16,
+      lg: 20, // 18-22px range
+    }[notchSize ?? "default"];
 
     return (
       <div
@@ -179,12 +150,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
         )}
 
-        {/* Tint Overlay - uses CSS variables for performance */}
+        {/* Tint Overlay - Gradient for global, Solid/Strong for roles */}
         {(variant === "tinted" || variant === "roleStrong") && (
           <div
-            className="absolute inset-0 pointer-events-none rounded-[inherit]"
+            className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden"
             style={{
-              backgroundColor: `rgb(var(--card-tint-color) / var(--card-tint-alpha))`,
+              background:
+                variant === "tinted"
+                  ? `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, transparent 100%)`
+                  : `rgb(var(--card-tint-color) / var(--card-tint-alpha))`,
             }}
           />
         )}
@@ -192,15 +166,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {/* Notch Cutout Element */}
         {notch === "cutout" && (
           <div
-            className={cn(
-              "absolute top-0 right-0 pointer-events-none z-20",
-              notchSizeClasses[notchSize ?? "default"],
-              "card-notch-element",
-            )}
+            className="absolute top-0 right-0 pointer-events-none z-20"
             style={{
-              backgroundColor: `rgb(var(--card-page-bg-rgb))`,
-              borderLeft: "1px solid rgba(var(--card-border-rgb), var(--card-border-alpha))",
-              borderBottom: "1px solid rgba(var(--card-border-rgb), var(--card-border-alpha))",
+              width: notchSizePx,
+              height: notchSizePx,
+              backgroundColor: "var(--bg-app)", // Explicitly use app background
+              borderBottomLeftRadius: "6px", // Smooth corner inside
+              borderLeft: "1px solid rgba(255, 255, 255, 0.08)", // Match border.DEFAULT
+              borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+              boxShadow: "-1px 1px 2px rgba(0,0,0,0.2)", // Subtle inner depth
             }}
           />
         )}

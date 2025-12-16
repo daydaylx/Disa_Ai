@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -16,7 +16,7 @@ import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
-const STARTER_PROMPTS = [
+const RAW_STARTER_PROMPTS = [
   "Schreib ein kurzes Gedicht",
   "Erkläre mir Quantenphysik",
   "Was koche ich heute?",
@@ -31,6 +31,11 @@ export default function Chat() {
   // UI State
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  // Deduplicate prompts
+  const uniquePrompts = useMemo(() => {
+    return Array.from(new Set(RAW_STARTER_PROMPTS));
+  }, []);
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
@@ -162,7 +167,7 @@ export default function Chat() {
 
                     {/* Starter Prompts - Refined Design mit neuen Cards */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
-                      {STARTER_PROMPTS.slice(0, 3).map((prompt, index) => (
+                      {uniquePrompts.slice(0, 3).map((prompt, index) => (
                         <Card
                           key={prompt}
                           variant="tinted"
