@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useToasts } from "@/ui";
 
 import { STORAGE_KEYS } from "../config/storageKeys";
-import { safeError } from "../lib/utils/production-logger";
 import {
   deleteConversation as deleteFromDb,
   getAllConversations,
@@ -13,6 +12,7 @@ import {
   updateConversation,
 } from "../lib/conversation-manager-modern";
 import { debounceWithCancel } from "../lib/utils/debounce";
+import { safeError } from "../lib/utils/production-logger";
 import type { ChatMessageType, Conversation } from "../types";
 
 interface ConversationManagerProps {
