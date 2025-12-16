@@ -151,14 +151,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         return {
           "--card-tint-color": `rgb(${roleColor})`,
           "--card-tint-alpha": tintAlpha,
-        };
+        } as React.CSSProperties;
       }
 
       // For tinted variant, use the provided tintColor
       return {
         "--card-tint-color": tintColor,
         "--card-tint-alpha": tintAlpha,
-      };
+      } as React.CSSProperties;
     }, [tintColor, roleColor, variant, tintAlpha]);
 
     // Notch size classes
@@ -194,7 +194,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           <div
             className={cn(
               "absolute top-0 right-0 pointer-events-none z-20",
-              notchSizeClasses[notchSize],
+              notchSizeClasses[notchSize ?? "default"],
               "card-notch-element",
             )}
             style={{
