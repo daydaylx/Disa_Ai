@@ -30,6 +30,43 @@ class ResizeObserver {
 
 global.ResizeObserver = ResizeObserver as unknown as typeof globalThis.ResizeObserver;
 
+// IntersectionObserver polyfill for JSDOM
+// Required for useIntersectionObserver hook tests
+class IntersectionObserver {
+  callback: IntersectionObserverCallback;
+  options?: IntersectionObserverInit;
+
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+    this.callback = callback;
+    this.options = options;
+  }
+
+  observe(target: Element) {
+    // Trigger callback with intersection entry on next tick
+    setTimeout(() => {
+      const entry: IntersectionObserverEntry = {
+        boundingClientRect: target.getBoundingClientRect(),
+        intersectionRatio: 1,
+        intersectionRect: target.getBoundingClientRect(),
+        isIntersecting: true,
+        rootBounds: null,
+        target,
+        time: Date.now(),
+      };
+      this.callback([entry], this);
+    }, 0);
+  }
+
+  unobserve() {}
+  disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+}
+
+global.IntersectionObserver =
+  IntersectionObserver as unknown as typeof globalThis.IntersectionObserver;
+
 // Ensure sandboxed runners (no /tmp write access) can compile Tailwind/JITI caches.
 const repoTmp = path.join(process.cwd(), ".tmp");
 if (!fs.existsSync(repoTmp)) {

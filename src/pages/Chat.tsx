@@ -15,9 +15,19 @@ import { useChatQuickstart } from "../hooks/useChatQuickstart";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const VirtualizedMessageList = memo(
-  lazy(() => import("../components/chat/VirtualizedMessageList")),
+  lazy(() =>
+    import("../components/chat/VirtualizedMessageList").then((module) => ({
+      default: module.VirtualizedMessageList,
+    })),
+  ),
 );
-const UnifiedInputBar = memo(lazy(() => import("../components/chat/UnifiedInputBar")));
+const UnifiedInputBar = memo(
+  lazy(() =>
+    import("../components/chat/UnifiedInputBar").then((module) => ({
+      default: module.UnifiedInputBar,
+    })),
+  ),
+);
 
 const RAW_STARTER_PROMPTS = [
   "Schreib ein kurzes Gedicht",
@@ -27,7 +37,14 @@ const RAW_STARTER_PROMPTS = [
 ];
 
 // Define actions for the reducer
-const uiReducer = (state, action) => {
+interface UIState {
+  isMenuOpen: boolean;
+  isHistoryOpen: boolean;
+}
+
+type UIAction = { type: "OPEN_MENU" } | { type: "CLOSE_MENU" } | { type: "TOGGLE_HISTORY" };
+
+const uiReducer = (state: UIState, action: UIAction): UIState => {
   switch (action.type) {
     case "OPEN_MENU":
       return { ...state, isMenuOpen: true };
@@ -41,7 +58,7 @@ const uiReducer = (state, action) => {
 };
 
 // Initial state
-const initialState = {
+const initialState: UIState = {
   isMenuOpen: false,
   isHistoryOpen: false,
 };
@@ -53,7 +70,7 @@ export default function Chat() {
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
-  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+  const { openMenu, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
 
   // Deduplicate prompts with strict text normalization
@@ -266,7 +283,7 @@ export default function Chat() {
                     messages={chatLogic.messages}
                     conversationKey={chatLogic.activeConversationId ?? "new"}
                     isLoading={chatLogic.isLoading}
-                    onCopy={(content) => {
+                    onCopy={(content: string) => {
                       void navigator.clipboard.writeText(content);
                     }}
                     onEdit={chatLogic.handleEdit}
@@ -299,20 +316,19 @@ export default function Chat() {
       <AppMenuDrawer isOpen={uiState.isMenuOpen} onClose={closeMenu} />
 
       {/* History Side Panel */}
-      <HistorySidePanel
-        isOpen={uiState.isHistoryOpen}
-        onClose={toggleHistory}
-        conversations={chatLogic.conversations}
-        activeId={chatLogic.activeConversationId}
-        onSelect={handleSelectConversation}
-        onNewChat={handleStartNewChat}
-        role="dialog"
-        aria-labelledby="history-panel-title"
-      >
+      <div role="dialog" aria-labelledby="history-panel-title">
         <h2 id="history-panel-title" className="sr-only">
           Chat-Verlauf
         </h2>
-      </HistorySidePanel>
+        <HistorySidePanel
+          isOpen={uiState.isHistoryOpen}
+          onClose={toggleHistory}
+          conversations={chatLogic.conversations}
+          activeId={chatLogic.activeConversationId}
+          onSelect={handleSelectConversation}
+          onNewChat={handleStartNewChat}
+        />
+      </div>
     </>
   );
 }

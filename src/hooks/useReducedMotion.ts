@@ -30,6 +30,9 @@ export function useReducedMotion(): boolean {
         mediaQuery.removeListener(handleChange);
       };
     }
+
+    // Return undefined if no cleanup needed
+    return undefined;
   }, []);
 
   return prefersReducedMotion;

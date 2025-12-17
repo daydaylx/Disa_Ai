@@ -23,7 +23,10 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
     if (!element) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+
         const isIntersecting = entry.isIntersecting;
         setIsVisible(isIntersecting);
 
