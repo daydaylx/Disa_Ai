@@ -50,27 +50,25 @@
   --gpu-backface: hidden;
 }
 
-@layer utilities {
-  /* Tailwind-like duration shims used in components */
-  .duration-fast {
-    transition-duration: var(--disa-duration-fast);
-  }
+/* Tailwind-like duration shims used in components */
+.duration-fast {
+  transition-duration: var(--disa-duration-fast);
+}
 
-  .duration-medium {
-    transition-duration: var(--disa-duration-medium);
-  }
+.duration-medium {
+  transition-duration: var(--disa-duration-medium);
+}
 
-  .duration-slow {
-    transition-duration: var(--disa-duration-slow);
-  }
+.duration-slow {
+  transition-duration: var(--disa-duration-slow);
+}
 
-  .ease-standard {
-    transition-timing-function: var(--disa-ease-standard);
-  }
+.ease-standard {
+  transition-timing-function: var(--disa-ease-standard);
+}
 
-  .ease-emphasized {
-    transition-timing-function: var(--disa-ease-emphasized);
-  }
+.ease-emphasized {
+  transition-timing-function: var(--disa-ease-emphasized);
 }
 
 /* Performance optimization classes */

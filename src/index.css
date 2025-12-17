@@ -173,7 +173,9 @@
         transparent 1px
       );
     background-repeat: no-repeat;
-    background-size: 1px 100%, 100% 1px;
+    background-size:
+      1px 100%,
+      100% 1px;
     background-position:
       calc(100% - var(--notch-size)) top,
       right calc(100% - var(--notch-size));
@@ -507,7 +509,9 @@
         transparent 1px
       );
     background-repeat: no-repeat;
-    background-size: 1px 100%, 100% 1px;
+    background-size:
+      1px 100%,
+      100% 1px;
     background-position:
       calc(100% - var(--card-notch-size)) top,
       right calc(100% - var(--card-notch-size));
@@ -561,7 +565,9 @@
     .brand-card--interactive:hover,
     .brand-card--interactive:active {
       transform: none !important;
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
     }
   }
 }
