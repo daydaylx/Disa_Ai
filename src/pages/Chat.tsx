@@ -32,9 +32,16 @@ export default function Chat() {
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  // Deduplicate prompts
+  // Deduplicate prompts with text normalization
   const uniquePrompts = useMemo(() => {
-    return Array.from(new Set(RAW_STARTER_PROMPTS));
+    return Array.from(
+      new Set(RAW_STARTER_PROMPTS.map((prompt) => prompt.trim().toLowerCase())),
+    ).map((lowercasePrompt) => {
+      return (
+        RAW_STARTER_PROMPTS.find((prompt) => prompt.trim().toLowerCase() === lowercasePrompt) ||
+        lowercasePrompt
+      );
+    });
   }, []);
 
   // Preset handler will be defined after chatLogic
@@ -128,12 +135,12 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Hero Card mit Notch */}
+                    {/* Hero Card mit Notch - Updated for better branding */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
                         variant="tinted"
                         notch="cutout"
-                        notchSize="lg"
+                        notchSize="lg" // 22px for hero visibility
                         tintColor="rgb(var(--brand-rgb))"
                         className="text-center space-y-6 p-8"
                       >
@@ -175,7 +182,7 @@ export default function Chat() {
                           tintColor="rgb(var(--brand-rgb))"
                           className={cn(
                             "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                            "hover:border-brand-primary/30 hover:shadow-glow-sm",
+                            "hover:border-brand-primary/20 hover:shadow-glow-sm", // Reduced from 30 to 20 for subtlety
                           )}
                           style={{ animationDelay: `${index * 100}ms` }}
                           onClick={() => chatLogic.handleStarterClick(prompt)}

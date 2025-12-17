@@ -119,7 +119,7 @@
     transform-origin: center;
   }
 
-  /* Notch Size Variants */
+  /* Notch Size Variants - Updated for better visibility */
   .card-notch-sm {
     width: 16px;
     height: 16px;
@@ -131,8 +131,8 @@
   }
 
   .card-notch-lg {
-    width: 24px;
-    height: 24px;
+    width: 22px; /* Adjusted from 24px to 22px for hero cards */
+    height: 22px;
   }
 
   /* Tinted Card Variant */
@@ -148,28 +148,29 @@
   /* Card Variants - Branding System */
   [data-variant="plain"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
-    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(var(--card-border-rgb), 0.02); /* Subtle border */
+    box-shadow: var(--shadow-surface-subtle);
   }
 
   [data-variant="tinted"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
-    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(var(--card-border-rgb), 0.02); /* Subtle border */
+    box-shadow: var(--shadow-surface-subtle);
   }
 
   [data-variant="roleStrong"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), var(--card-border-alpha));
-    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(var(--card-border-rgb), 0.08); /* Slightly stronger for roles */
+    box-shadow: var(--shadow-surface-subtle);
   }
 
-  /* Focus States */
+  /* Focus States - Improved visibility */
   [data-variant="plain"]:focus-visible,
   [data-variant="tinted"]:focus-visible,
   [data-variant="roleStrong"]:focus-visible {
     outline: 2px solid var(--color-brand-primary);
     outline-offset: 2px;
+    border-color: rgba(var(--card-border-rgb), 0.12); /* Stronger border on focus */
   }
 
   /* Hover States (Desktop only) */

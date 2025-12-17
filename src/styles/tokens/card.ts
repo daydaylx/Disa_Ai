@@ -24,9 +24,9 @@ export const cardTokens: CardTokens = {
   radius: "18px",
   background: "rgba(12, 12, 18, 0.72)",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.08)",
-  borderColorHover: "rgba(255, 255, 255, 0.14)",
-  borderColorFocus: "rgba(139, 92, 246, 0.4)",
+  borderColor: "rgba(255, 255, 255, 0.02)", // Reduced from 0.08 for subtle outlines
+  borderColorHover: "rgba(255, 255, 255, 0.08)", // Reduced from 0.14
+  borderColorFocus: "rgba(139, 92, 246, 0.3)", // Slightly reduced from 0.4
   shadow: "0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowHover: "0 12px 48px rgba(0, 0, 0, 0.4)",
   shadowFocus: "0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35)",
@@ -34,8 +34,8 @@ export const cardTokens: CardTokens = {
 
   tintAngle: "115deg",
   tintFadeX: "72%",
-  tintAlphaSoft: "0.08",
-  tintAlphaStrong: "0.25",
+  tintAlphaSoft: "0.08", // Global cards: subtle tint (0.06-0.10 range)
+  tintAlphaStrong: "0.25", // Role/Themen cards: strong tint (unchanged)
   tintColorDefault: "139, 92, 246",
 
   roleTeal: "45, 212, 191",

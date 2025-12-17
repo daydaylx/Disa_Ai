@@ -107,8 +107,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     // Determine tint strength
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tinted") return "0.08"; // Fixed soft alpha
-      if (variant === "roleStrong") return "var(--tint-alpha-strong)";
+      if (variant === "tinted") return "0.08"; // Global cards: subtle tint (0.06-0.10 range)
+      if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: strong tint (0.25)
       return "0";
     }, [variant]);
 
@@ -132,11 +132,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       } as React.CSSProperties;
     }, [tintColor, roleColor, variant, tintAlpha]);
 
-    // Notch size pixel values
+    // Notch size pixel values - adjusted for better visibility
     const notchSizePx = {
-      sm: 12,
-      default: 16,
-      lg: 20, // 18-22px range
+      sm: 16, // Increased from 12
+      default: 20, // 18-22px range
+      lg: 22, // Increased from 20 for hero cards
     }[notchSize ?? "default"];
 
     return (
@@ -163,7 +163,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           />
         )}
 
-        {/* Notch Cutout Element */}
+        {/* Notch Cutout Element - Improved visibility */}
         {notch === "cutout" && (
           <div
             className="absolute top-0 right-0 pointer-events-none z-20"
@@ -172,9 +172,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               height: notchSizePx,
               backgroundColor: "var(--bg-app)", // Explicitly use app background
               borderBottomLeftRadius: "6px", // Smooth corner inside
-              borderLeft: "1px solid rgba(255, 255, 255, 0.08)", // Match border.DEFAULT
-              borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-              boxShadow: "-1px 1px 2px rgba(0,0,0,0.2)", // Subtle inner depth
+              borderLeft: "1px solid rgba(255, 255, 255, 0.12)", // Clearer left edge (increased from 0.08)
+              borderBottom: "1px solid rgba(255, 255, 255, 0.12)", // Clearer bottom edge (increased from 0.08)
+              boxShadow: "-1px 1px 3px rgba(0,0,0,0.3)", // More visible inner depth
             }}
           />
         )}
