@@ -1,7 +1,6 @@
 /* c8 ignore start */
 import "./index.css"; // Consolidated CSS: unified-tokens, base, components, Tailwind
 import "./styles/z-index-system.css"; // Z-Index hierarchy
-import "./styles/ui-state-animations.css"; // UI State Animations
 import "./lib/css-feature-detection";
 import "./lib/device-safe-area";
 import "./lib/accessibility";
