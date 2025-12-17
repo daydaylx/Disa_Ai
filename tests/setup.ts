@@ -35,10 +35,17 @@ global.ResizeObserver = ResizeObserver as unknown as typeof globalThis.ResizeObs
 class IntersectionObserver {
   callback: IntersectionObserverCallback;
   options?: IntersectionObserverInit;
+  root: Element | Document | null;
+  rootMargin: string;
+  thresholds: ReadonlyArray<number>;
 
   constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.callback = callback;
     this.options = options;
+    this.root = options?.root ?? null;
+    this.rootMargin = options?.rootMargin ?? "0px";
+    const thresholdOpt = options?.threshold ?? 0;
+    this.thresholds = Array.isArray(thresholdOpt) ? thresholdOpt : [thresholdOpt];
   }
 
   observe(target: Element) {
