@@ -362,10 +362,18 @@
         var(--card-edge-highlight) calc(var(--card-notch-size) - 1px),
         var(--card-edge-highlight)
       ),
-      linear-gradient(to left, var(--bg-app) var(--card-notch-size), transparent var(--card-notch-size));
+      linear-gradient(
+        to left,
+        var(--bg-app) var(--card-notch-size),
+        transparent var(--card-notch-size)
+      );
     background-repeat: no-repeat;
-    background-size: 1px 100%, var(--card-notch-size) var(--card-notch-size);
-    background-position: right top, right top;
+    background-size:
+      1px 100%,
+      var(--card-notch-size) var(--card-notch-size);
+    background-position:
+      right top,
+      right top;
   }
 
   .brand-card--plain {
@@ -416,7 +424,9 @@
     .brand-card--interactive:hover,
     .brand-card--interactive:active {
       transform: none !important;
-      transition: border-color 150ms ease, box-shadow 150ms ease;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
     }
   }
 }
