@@ -74,8 +74,8 @@ test.describe("Book Concept UI", () => {
     const bookmark = page.locator('button[aria-label="Verlauf öffnen"]');
     await bookmark.click();
 
-    // History Panel should be visible (it may be a complementary region or dialog)
-    const historyPanel = page.getByRole("complementary").or(page.getByRole("dialog")).first();
+    // Prefer the actual history panel dialog (avoid picking other complementary regions)
+    const historyPanel = page.getByRole("dialog").filter({ hasText: "Inhaltsverzeichnis" });
     await expect(historyPanel).toBeVisible();
     await expect(historyPanel.getByText("Lesezeichen")).toBeVisible();
     await expect(historyPanel.getByText("Archiv")).toBeVisible();

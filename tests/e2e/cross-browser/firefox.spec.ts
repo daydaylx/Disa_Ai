@@ -62,10 +62,11 @@ test.describe("Firefox Cross-Browser Tests", () => {
     }
 
     // Test CSS custom properties (variables)
-    const rootStyle = await page.evaluate(() => getComputedStyle(document.documentElement));
-
     // Check for CSS variables that should be supported in Firefox
-    const primaryColor = rootStyle.getPropertyValue("--primary");
+    // NOTE: CSSStyleDeclaration methods can't be serialized across page.evaluate().
+    const primaryColor = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue("--primary"),
+    );
     if (primaryColor) {
       expect(primaryColor).toBeTruthy();
     }
