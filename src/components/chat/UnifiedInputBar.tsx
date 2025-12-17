@@ -100,11 +100,15 @@ export function UnifiedInputBar({
     <div className={cn("w-full space-y-3", className)}>
       {/* Model selection moved to settings - cleaner input area */}
 
-      {/* Main Input Container */}
+      {/* Main Input Container - Material-based with clear focus */}
       <BrandCard
         variant="plain"
         padding="sm"
-        className="relative flex items-end gap-3 input-focus-animation"
+        className={cn(
+          "relative flex items-end gap-3 transition-all",
+          "focus-within:border-brand-primary/40 focus-within:ring-2 focus-within:ring-brand-primary/20 focus-within:ring-offset-0", // Clear focus ring, not thick outline
+          "bg-surface-card/80 backdrop-blur-sm", // Material-based with optional light tint
+        )}
         aria-label="Eingabebereich"
       >
         {/* Textarea */}
@@ -120,19 +124,19 @@ export function UnifiedInputBar({
           aria-label="Nachricht eingeben"
         />
 
-        {/* Send Button */}
+        {/* Send Button - Material Chip */}
         <Button
           onClick={onSend}
           disabled={!value.trim() || isLoading}
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-300 mb-0.5 mr-0.5",
+            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-0.5",
             !value.trim() &&
               !isLoading &&
-              "opacity-50 shadow-none bg-surface-3 text-ink-tertiary hover:bg-surface-3",
+              "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
             value.trim() &&
-              "shadow-glow-sm hover:shadow-glow-md hover:scale-105 animate-send-pulse",
+              "bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-100",
           )}
           aria-label="Senden"
         >

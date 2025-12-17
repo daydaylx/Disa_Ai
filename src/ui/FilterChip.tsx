@@ -8,13 +8,12 @@ interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 }
 
 /**
- * MaterialChip (formerly FilterChip)
+ * FilterChip - Disa Frame Branding System
  *
- * Neumorphism/Soft-Depth Chip Component
- * - NO borders
- * - Default: mini-raised (soft-raise shadow)
- * - Active: inset + accent ring
- * - Press: scale(0.98) + inset shadow
+ * Material Chip Component with Mini-Frame-Cut
+ * - Inactive: plain chip with subtle border
+ * - Active: Mini-Frame-Cut (corner mark top-right, no hole)
+ * - No glow, clear contrast logic
  */
 export function FilterChip({
   selected,
@@ -31,20 +30,20 @@ export function FilterChip({
     <button
       type="button"
       className={cn(
-        "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-sm",
+        "relative inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg",
         "px-4 text-sm font-medium",
-        "transition-all duration-fast",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
-        // Default raised state
+        "transition-all duration-200",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-1",
+        // Inactive: plain chip
         !isActiveState && [
-          "bg-surface-2 text-text-secondary shadow-raise",
-          "hover:text-text-primary hover:shadow-raiseLg",
-          "active:scale-[0.98] active:shadow-inset active:translate-y-px",
+          "bg-surface-2 text-ink-secondary border border-white/5",
+          "hover:text-ink-primary hover:border-white/10 hover:bg-surface-2/80",
+          "active:scale-[0.98] active:translate-y-px",
         ],
-        // Active inset state
+        // Active: Mini-Frame-Cut (corner mark top-right)
         isActiveState && [
-          "bg-surface-inset text-accent-primary shadow-[var(--shadow-inset),var(--shadow-accent-glow)]",
-          "ring-1 ring-accent-primary",
+          "bg-surface-card text-brand-primary border border-brand-primary/30",
+          "active:scale-[0.98] active:translate-y-px",
         ],
         className,
       )}
@@ -53,6 +52,20 @@ export function FilterChip({
       {leading}
       {children}
       {count !== undefined && <span className="ml-1 text-xs text-ink-tertiary">{count}</span>}
+
+      {/* Mini-Frame-Cut: Corner mark top-right (only when active) */}
+      {isActiveState && (
+        <div
+          className="absolute top-0 right-0 pointer-events-none"
+          style={{
+            width: "8px",
+            height: "8px",
+            borderTop: "1px solid rgba(139, 92, 246, 0.4)",
+            borderRight: "1px solid rgba(139, 92, 246, 0.4)",
+            borderTopRightRadius: "6px",
+          }}
+        />
+      )}
     </button>
   );
 }

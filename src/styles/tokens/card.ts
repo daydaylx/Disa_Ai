@@ -13,6 +13,7 @@ export interface CardTokens {
   tintAngle: string;
   tintFadeX: string;
   tintAlphaSoft: string;
+  tintAlphaHero: string;
   tintAlphaStrong: string;
   tintColorDefault: string;
 
@@ -24,18 +25,19 @@ export const cardTokens: CardTokens = {
   radius: "18px",
   background: "rgba(12, 12, 18, 0.72)",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.015)", // Ultra-subtle idle border (25% subtler than 0.02)
-  borderColorHover: "rgba(255, 255, 255, 0.05)", // Gentler hover transition (38% subtler than 0.08)
-  borderColorFocus: "rgba(139, 92, 246, 0.25)", // Softer brand focus glow (17% subtler than 0.3)
+  borderColor: "rgba(255, 255, 255, 0.08)", // Default: 8-14% opacity range (was 0.015)
+  borderColorHover: "rgba(255, 255, 255, 0.12)", // Hover: slightly more visible
+  borderColorFocus: "rgba(139, 92, 246, 0.40)", // Focus: clearly visible brand color
   shadow: "0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowHover: "0 12px 48px rgba(0, 0, 0, 0.4)",
   shadowFocus: "0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowPressed: "0 6px 24px rgba(0, 0, 0, 0.45)",
 
   tintAngle: "90deg", // Horizontal gradient (left → right)
-  tintFadeX: "80%", // Softer fade point (was 72%)
-  tintAlphaSoft: "0.10", // Global cards: visible but subtle branding (25% stronger than 0.08)
-  tintAlphaStrong: "0.25", // Role/Themen cards: strong tint (unchanged)
+  tintFadeX: "65%", // Tint geometry: fade until 65% (was 80%)
+  tintAlphaSoft: "0.08", // Global cards: soft tint (0.06-0.10 range)
+  tintAlphaHero: "0.12", // Hero cards: soft+ tint (0.10-0.14 range)
+  tintAlphaStrong: "0.28", // Role/Themen cards: strong tint (0.20-0.35 range)
   tintColorDefault: "139, 92, 246",
 
   roleTeal: "45, 212, 191",
@@ -57,6 +59,7 @@ export const cardCssVars = {
   tintAngle: "--tint-angle",
   tintFadeX: "--tint-fade-x",
   tintAlphaSoft: "--tint-alpha-soft",
+  tintAlphaHero: "--tint-alpha-hero",
   tintAlphaStrong: "--tint-alpha-strong",
   tintColorDefault: "--tint-color-rgb-default",
 
@@ -79,6 +82,7 @@ export function generateCardCssVariables(): Record<string, string> {
     [cardCssVars.tintAngle]: cardTokens.tintAngle,
     [cardCssVars.tintFadeX]: cardTokens.tintFadeX,
     [cardCssVars.tintAlphaSoft]: cardTokens.tintAlphaSoft,
+    [cardCssVars.tintAlphaHero]: cardTokens.tintAlphaHero,
     [cardCssVars.tintAlphaStrong]: cardTokens.tintAlphaStrong,
     [cardCssVars.tintColorDefault]: cardTokens.tintColorDefault,
     [cardCssVars.roleTeal]: cardTokens.roleTeal,

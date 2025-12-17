@@ -15,10 +15,11 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       inset: "bg-black/20 border-black/10 shadow-inner",
       premium:
         "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden",
-      // New branding variants
-      plain: "bg-surface-card border-white/[0.02] shadow-surface-subtle", // Almost invisible border
-      tinted: "bg-surface-card border-white/[0.02] shadow-surface-subtle", // Tinted will handle the color via overlay
-      roleStrong: "bg-surface-card border-surface-border-subtle shadow-surface-subtle", // Strong role tint
+      // Disa Frame Branding System variants
+      plain: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Minimal border (8-14% opacity)
+      tintedSoft: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Global cards with soft tint
+      roleStrong: "bg-surface-card border-white/[0.10] shadow-surface-subtle", // Role/Themen with strong tint
+      tinted: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Legacy alias for tintedSoft
     },
     padding: {
       none: "p-0",
@@ -105,14 +106,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       roles: "bg-accent-roles",
     }[accentColor];
 
-    // Determine tint strength
+    // Determine tint strength - Disa Frame Branding System
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tinted") return "0.10"; // Global cards: subtle but visible branding (increased from 0.08)
-      if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: strong tint (0.25)
+      if (variant === "tintedSoft" || variant === "tinted") return "var(--tint-alpha-soft)"; // Global cards: 0.06-0.10
+      if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: 0.20-0.35
       return "0";
     }, [variant]);
 
-    // Generate tint style
+    // Generate tint style - Tint geometry: 0-18% strongest, fade until 65%
     const tintStyle = React.useMemo(() => {
       if (!tintColor && !roleColor) return {};
       if (variant === "plain") return {};
@@ -125,18 +126,18 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         } as React.CSSProperties;
       }
 
-      // For tinted: Gradient
+      // For tintedSoft/tinted: Gradient with proper geometry (0-18% strongest, fade until 65%)
       return {
         "--card-tint-color": tintColor,
         "--card-tint-alpha": tintAlpha,
       } as React.CSSProperties;
     }, [tintColor, roleColor, variant, tintAlpha]);
 
-    // Notch size pixel values - adjusted for better visibility
+    // Notch size pixel values - Disa Frame Branding System
     const notchSizePx = {
-      sm: 16, // Increased from 12
-      default: 20, // 18-22px range
-      lg: 22, // Increased from 20 for hero cards
+      sm: 10, // Mobile default
+      default: 18, // Default notch size
+      lg: 22, // Hero cards and primary panels
     }[notchSize ?? "default"];
 
     return (
@@ -150,32 +151,45 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           <div className={cn("absolute top-0 left-0 right-0 h-1 opacity-80", accentColorClass)} />
         )}
 
-        {/* Tint Overlay - Gradient for global, Solid/Strong for roles */}
-        {(variant === "tinted" || variant === "roleStrong") && (
+        {/* Tint Overlay - Gradient with proper geometry (0-18% strongest, fade until 65%) */}
+        {(variant === "tintedSoft" || variant === "tinted" || variant === "roleStrong") && (
           <div
             className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden"
             style={{
               background:
-                variant === "tinted"
-                  ? `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, transparent 80%)` // Softer fade at 80%
-                  : `rgb(var(--card-tint-color) / var(--card-tint-alpha))`,
+                variant === "roleStrong" && roleColor
+                  ? `rgb(var(--card-tint-color) / var(--card-tint-alpha))`
+                  : `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, rgb(var(--card-tint-color) / calc(var(--card-tint-alpha) * 0.5)) 18%, transparent 65%)`,
             }}
           />
         )}
 
-        {/* Notch Cutout Element - Enhanced visibility for signature branding */}
+        {/* L-shaped Notch Cutout - Shows page background, 2 inner edges (left + bottom) */}
         {notch === "cutout" && (
-          <div
-            className="absolute top-0 right-0 pointer-events-none z-20 bg-[rgb(3,5,10)]"
-            style={{
-              width: notchSizePx,
-              height: notchSizePx,
-              borderBottomLeftRadius: "6px", // Smooth corner inside
-              borderLeft: "1px solid rgba(255, 255, 255, 0.18)", // 50% stronger borders (was 0.12)
-              borderBottom: "1px solid rgba(255, 255, 255, 0.18)", // 50% stronger borders (was 0.12)
-              boxShadow: "-1px 1px 3px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.5)", // External + internal depth
-            }}
-          />
+          <>
+            {/* L-shaped cutout - shows page background */}
+            <div
+              className="absolute top-0 right-0 pointer-events-none z-20"
+              style={{
+                width: notchSizePx,
+                height: notchSizePx,
+                background: `rgb(var(--page-bg-rgb, 19, 19, 20))`,
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)",
+                borderBottomLeftRadius: "6px",
+              }}
+            />
+            {/* Inner edge highlights - left and bottom edges, 1px, slightly lighter than border */}
+            <div
+              className="absolute top-0 right-0 pointer-events-none z-30"
+              style={{
+                width: notchSizePx,
+                height: notchSizePx,
+                borderLeft: "1px solid rgba(255, 255, 255, 0.20)",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.20)",
+                borderBottomLeftRadius: "6px",
+              }}
+            />
+          </>
         )}
 
         {children}

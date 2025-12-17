@@ -32,7 +32,8 @@ export interface FrameTokens {
 
   // Notch sizes
   notchSm: string;
-  notchMd: string;
+  notchDefault: string;
+  notchHero: string;
 
   // Notch edge highlight (accent, only on active/focus)
   edgeHighlight: string;
@@ -56,9 +57,10 @@ export const frameTokens: FrameTokens = {
   shadowHover: "0 4px 12px rgba(0, 0, 0, 0.4)",
   shadowFocus: "0 4px 16px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.35)",
 
-  // Notch sizes (fixed decisions from Phase 0)
-  notchSm: "10px", // Mobile default
-  notchMd: "14px", // Larger containers
+  // Notch sizes (Disa Frame Branding System)
+  notchSm: "10px", // Mobile default, smaller elements
+  notchDefault: "18px", // Default notch size for standard cards
+  notchHero: "22px", // Hero cards and primary panels
 
   // Edge highlight - subtle in idle, strong on active/focus
   edgeHighlight: "rgba(255, 255, 255, 0.06)", // Subtle idle edge (visible instead of transparent)
@@ -81,7 +83,8 @@ export const frameCssVars = {
   shadowHover: "--frame-shadow-hover",
   shadowFocus: "--frame-shadow-focus",
   notchSm: "--notch-size-sm",
-  notchMd: "--notch-size-md",
+  notchDefault: "--notch-size-default",
+  notchHero: "--notch-size-hero",
   edgeHighlight: "--notch-edge-highlight",
   edgeHighlightActive: "--notch-edge-highlight-active",
   transitionDuration: "--frame-transition-duration",
@@ -104,7 +107,8 @@ export function generateFrameCssVariables(): Record<string, string> {
     [frameCssVars.shadowHover]: frameTokens.shadowHover,
     [frameCssVars.shadowFocus]: frameTokens.shadowFocus,
     [frameCssVars.notchSm]: frameTokens.notchSm,
-    [frameCssVars.notchMd]: frameTokens.notchMd,
+    [frameCssVars.notchDefault]: frameTokens.notchDefault,
+    [frameCssVars.notchHero]: frameTokens.notchHero,
     [frameCssVars.edgeHighlight]: frameTokens.edgeHighlight,
     [frameCssVars.edgeHighlightActive]: frameTokens.edgeHighlightActive,
     [frameCssVars.transitionDuration]: frameTokens.transitionDuration,

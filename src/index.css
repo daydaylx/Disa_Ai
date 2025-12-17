@@ -31,22 +31,23 @@
   /* Viewport Height Fix */
   --vh: 1vh;
 
-  /* Card + Tint System */
+  /* Card + Tint System - Disa Frame Branding */
   --card-radius: 18px;
   --card-bg: rgba(12, 12, 18, 0.72);
   --card-border-width: 1px;
   --card-border-color: rgba(255, 255, 255, 0.08);
-  --card-border-color-hover: rgba(255, 255, 255, 0.14);
+  --card-border-color-hover: rgba(255, 255, 255, 0.12);
   --card-border-color-focus: rgba(139, 92, 246, 0.4);
   --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
   --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
   --card-shadow-focus: 0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35);
   --card-shadow-pressed: 0 6px 24px rgba(0, 0, 0, 0.45);
 
-  --tint-angle: 115deg;
-  --tint-fade-x: 72%;
+  --tint-angle: 90deg;
+  --tint-fade-x: 65%;
   --tint-alpha-soft: 0.08;
-  --tint-alpha-strong: 0.25;
+  --tint-alpha-hero: 0.12;
+  --tint-alpha-strong: 0.28;
   --tint-color-rgb-default: 139, 92, 246;
 
   --role-teal-rgb: 45, 212, 191;
@@ -55,8 +56,8 @@
   /* Frame/Notch System - Disa AI Signature Visual */
   --frame-radius: 16px;
   --frame-border-width: 1px;
-  --frame-border-color: rgba(255, 255, 255, 0.12);
-  --frame-border-color-hover: rgba(255, 255, 255, 0.18);
+  --frame-border-color: rgba(255, 255, 255, 0.18);
+  --frame-border-color-hover: rgba(255, 255, 255, 0.24);
   --frame-border-color-focus: rgba(139, 92, 246, 0.4);
   --frame-border-color-active: rgba(139, 92, 246, 0.5);
   --frame-bg: rgba(15, 15, 20, 0.6);
@@ -64,11 +65,15 @@
   --frame-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
   --frame-shadow-focus: 0 4px 16px rgba(139, 92, 246, 0.15), 0 2px 8px rgba(0, 0, 0, 0.35);
   --notch-size-sm: 10px;
-  --notch-size-md: 14px;
-  --notch-edge-highlight: transparent;
+  --notch-size-default: 18px;
+  --notch-size-hero: 22px;
+  --notch-edge-highlight: rgba(255, 255, 255, 0.06);
   --notch-edge-highlight-active: rgba(139, 92, 246, 0.6);
   --frame-transition-duration: 200ms;
   --frame-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Page background for notch cutout */
+  --page-bg-rgb: 19, 19, 20;
 }
 
 @layer base {
@@ -427,7 +432,8 @@
     .animate-gradient-shift,
     .animate-pulse-subtle,
     .animate-bounce-subtle,
-    .animate-text-shimmer {
+    .animate-text-shimmer,
+    .animate-fade-in-scale {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;

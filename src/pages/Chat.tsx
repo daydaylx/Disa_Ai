@@ -165,71 +165,86 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Hero Card mit Notch - Updated for better branding */}
+                    {/* Hero Card - Disa Frame Branding System */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
-                        variant="tinted"
+                        variant="tintedSoft"
                         notch="cutout"
                         notchSize="lg" // 22px for hero visibility
-                        tintColor="rgb(var(--brand-rgb))"
-                        className="text-center space-y-6 p-8 message-bubble-hover"
+                        tintColor="rgb(var(--tint-color-rgb-default))"
+                        className="text-center space-y-6 p-8"
+                        style={
+                          {
+                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.12)",
+                          } as React.CSSProperties
+                        }
                       >
-                        {/* Main Title mit Shimmer */}
-                        <div className="space-y-2">
-                          <h1 className="text-4xl font-bold text-ink-primary tracking-tight">
-                            Disa <span className="animate-text-shimmer">AI</span>
+                        {/* Main Title - Wordmark with intro animation (700-800 weight) */}
+                        <div className="space-y-3">
+                          <h1
+                            className="text-5xl sm:text-6xl text-ink-primary tracking-tight animate-wordmark-intro"
+                            style={{ fontWeight: 750 }}
+                          >
+                            Disa AI
                           </h1>
-                          <p className="text-sm text-ink-tertiary font-medium tracking-wide uppercase opacity-60">
-                            Dein KI-Assistent
-                          </p>
-                        </div>
-
-                        {/* Decorative Separator mit Animation */}
-                        <div className="w-full max-w-sm mx-auto relative">
-                          <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-                          <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent animate-pulse-slow" />
+                          <div className="space-y-2">
+                            {/* Accent line - subtle 1px under wordmark */}
+                            <div className="w-24 h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent mx-auto" />
+                            <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-70 animate-wordmark-intro-delay-1">
+                              DEIN KI-ASSISTENT
+                            </p>
+                          </div>
                         </div>
 
                         {/* Welcome Text */}
-                        <div className="space-y-3">
-                          <h2 className="text-lg font-semibold text-ink-primary">
+                        <div className="space-y-3 pt-2 animate-wordmark-intro-delay-2">
+                          <h2 className="text-lg font-medium text-ink-primary">
                             Was kann ich für dich tun?
                           </h2>
-                          <p className="text-sm text-ink-secondary">
+                          <p className="text-sm text-ink-secondary font-normal">
                             Tippe unten eine Frage ein oder wähle einen der Vorschläge.
                           </p>
                         </div>
                       </Card>
                     </div>
 
-                    {/* Starter Prompts - Refined Design mit neuen Cards */}
+                    {/* Starter Prompts - Suggestion Cards with tintedSoft variant */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => (
                         <Card
                           key={prompt}
-                          variant="tinted"
+                          variant="tintedSoft"
                           notch="none"
-                          tintColor="rgb(var(--brand-rgb))"
+                          tintColor="rgb(var(--tint-color-rgb-default))"
                           className={cn(
                             "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                            "hover:shadow-surface-prominent", // Shadow elevation instead of border change
-                            "active:scale-[0.98]", // Subtle press feedback
-                            "bg-[color:var(--card-bg)] text-[color:var(--card-text)]", // Use design tokens
-                            "card-hover", // Enhanced hover effect
+                            "hover:border-white/[0.14] hover:shadow-md", // Clear hover state
+                            "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2", // Clear focus ring
+                            "active:translate-y-[1px] active:shadow-sm", // Press: card sinks, shadow down
+                            "bg-surface-card text-ink-primary",
                           )}
                           style={{ animationDelay: `${index * 100}ms` }}
                           onClick={() => chatLogic.handleStarterClick(prompt)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              chatLogic.handleStarterClick(prompt);
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Starter-Prompt: ${prompt}`}
                         >
                           <div
                             className={cn(
                               "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-[color:var(--icon-bg)] text-[color:var(--icon-text)]", // Design tokens for icon
+                              "bg-surface-2 text-ink-secondary",
                               "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
                             )}
                           >
                             <MessageSquare className="h-5 w-5" />
                           </div>
-                          <span className="text-sm font-medium text-[color:var(--text-muted)] flex-1">
+                          <span className="text-sm font-medium text-ink-primary flex-1">
                             {prompt}
                           </span>
                         </Card>
