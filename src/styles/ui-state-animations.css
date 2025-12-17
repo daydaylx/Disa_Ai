@@ -535,3 +535,337 @@
   animation: accordion-expand 200ms var(--ease-standard) forwards;
   overflow: hidden;
 }
+
+/* ============================================================================
+   MESSAGE ANIMATIONS
+   ============================================================================ */
+
+/* Fade-in with slide-up for messages */
+@keyframes fade-in-slide-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-slide-up {
+  animation: fade-in-slide-up var(--disa-duration-medium) var(--disa-ease-standard) both;
+  will-change: transform, opacity;
+}
+
+/* Staggered animation utility */
+.animate-stagger {
+  animation: fade-in-slide-up var(--disa-duration-medium) var(--disa-ease-standard) both;
+  will-change: transform, opacity;
+}
+
+/* Code block fade-in */
+@keyframes code-block-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-code-block-fade-in {
+  animation: code-block-fade-in var(--disa-duration-medium) var(--disa-ease-standard) both;
+  will-change: opacity, transform;
+}
+
+/* ============================================================================
+   INPUT AREA ANIMATIONS
+   ============================================================================ */
+
+/* Focus scale animation for input */
+@keyframes input-focus-scale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+.input-focus-animation:focus-within {
+  animation: input-focus-scale var(--disa-duration-fast) var(--disa-ease-standard);
+}
+
+/* Send button pulse */
+@keyframes send-button-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-send-pulse {
+  animation: send-button-pulse 2s ease-in-out infinite;
+}
+
+/* Context pills slide-in */
+@keyframes pill-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-pill-slide-in {
+  animation: pill-slide-in var(--disa-duration-medium) var(--disa-ease-standard) both;
+  will-change: transform, opacity;
+}
+
+/* Role badge transition */
+.role-badge-transition {
+  transition: all var(--disa-duration-medium) var(--disa-ease-standard);
+}
+
+/* ============================================================================
+   EMPTY STATE ANIMATIONS
+   ============================================================================ */
+
+/* Hero card entrance with scale + fade */
+@keyframes hero-card-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-scale {
+  animation: hero-card-entrance var(--disa-duration-slow) var(--disa-ease-emphasized) both;
+  will-change: transform, opacity;
+}
+
+/* Text shimmer animation (refined) */
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-text-shimmer {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    currentColor 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+/* Decorative separator pulse */
+@keyframes separator-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-slow {
+  animation: separator-pulse 3s ease-in-out infinite;
+}
+
+/* ============================================================================
+   LOADING STATE ANIMATIONS
+   ============================================================================ */
+
+/* Smooth bounce for typing indicator dots */
+@keyframes smooth-bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.animate-smooth-bounce {
+  animation: smooth-bounce 1.2s ease-in-out infinite;
+}
+
+/* Thinking animation refinement */
+.thinking-animation {
+  animation: presence-thinking 2.5s ease-in-out infinite;
+}
+
+/* ============================================================================
+   MICRO-INTERACTIONS
+   ============================================================================ */
+
+/* Enhanced hover for action buttons */
+.action-button-hover {
+  transition: all var(--disa-duration-fast) var(--disa-ease-standard);
+}
+
+.action-button-hover:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-button-hover:active {
+  transform: scale(0.95);
+  transition-duration: 80ms;
+}
+
+/* Copy feedback animation */
+@keyframes copy-feedback {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-copy-feedback {
+  animation: copy-feedback var(--disa-duration-fast) var(--disa-ease-emphasized);
+}
+
+/* Edit mode transition */
+.edit-mode-transition {
+  transition: height var(--disa-duration-medium) var(--disa-ease-standard),
+    opacity var(--disa-duration-medium) var(--disa-ease-standard);
+}
+
+/* Follow-up suggestions hover */
+.follow-up-hover {
+  transition: all var(--disa-duration-fast) var(--disa-ease-standard);
+}
+
+.follow-up-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+/* Textarea auto-resize transition */
+.textarea-resize-transition {
+  transition: height var(--disa-duration-medium) var(--disa-ease-standard);
+}
+
+/* Menu button ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* ============================================================================
+   DESIGN POLISH ANIMATIONS
+   ============================================================================ */
+
+/* Message bubble shadow enhancement on hover */
+.message-bubble-hover {
+  transition: box-shadow var(--disa-duration-medium) var(--disa-ease-standard),
+    transform var(--disa-duration-fast) var(--disa-ease-standard);
+}
+
+.message-bubble-hover:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Title transition */
+.title-transition {
+  transition: opacity var(--disa-duration-medium) var(--disa-ease-standard),
+    transform var(--disa-duration-medium) var(--disa-ease-standard);
+}
+
+/* ============================================================================
+   REDUCED MOTION OVERRIDES
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-slide-up,
+  .animate-stagger,
+  .animate-code-block-fade-in,
+  .animate-fade-in-scale,
+  .animate-pill-slide-in,
+  .animate-send-pulse,
+  .animate-text-shimmer,
+  .animate-pulse-slow,
+  .animate-smooth-bounce,
+  .animate-copy-feedback {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .input-focus-animation:focus-within,
+  .role-badge-transition,
+  .edit-mode-transition,
+  .textarea-resize-transition,
+  .title-transition {
+    transition: none;
+  }
+
+  .action-button-hover:hover,
+  .follow-up-hover:hover,
+  .message-bubble-hover:hover {
+    transform: none;
+  }
+
+  .ripple-effect::after {
+    display: none;
+  }
+}

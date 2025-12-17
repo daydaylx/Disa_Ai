@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { lazy, memo, useCallback, useMemo, useReducer, useRef } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -7,14 +7,17 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
-import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
 import { useVisualViewport } from "../hooks/useVisualViewport";
+
+const VirtualizedMessageList = memo(
+  lazy(() => import("../components/chat/VirtualizedMessageList")),
+);
+const UnifiedInputBar = memo(lazy(() => import("../components/chat/UnifiedInputBar")));
 
 const RAW_STARTER_PROMPTS = [
   "Schreib ein kurzes Gedicht",
@@ -23,14 +26,35 @@ const RAW_STARTER_PROMPTS = [
   "Erzähl mir einen Witz",
 ];
 
+// Define actions for the reducer
+const uiReducer = (state, action) => {
+  switch (action.type) {
+    case "OPEN_MENU":
+      return { ...state, isMenuOpen: true };
+    case "CLOSE_MENU":
+      return { ...state, isMenuOpen: false };
+    case "TOGGLE_HISTORY":
+      return { ...state, isHistoryOpen: !state.isHistoryOpen };
+    default:
+      return state;
+  }
+};
+
+// Initial state
+const initialState = {
+  isMenuOpen: false,
+  isHistoryOpen: false,
+};
+
 export default function Chat() {
   const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // UI State
+  const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
 
   // Deduplicate prompts with strict text normalization
   const uniquePrompts = useMemo(() => {
@@ -86,14 +110,14 @@ export default function Chat() {
   const handleSelectConversation = useCallback(
     (id: string) => {
       void chatLogic.selectConversation(id);
-      setIsHistoryOpen(false);
+      dispatch({ type: "CLOSE_MENU" });
     },
     [chatLogic],
   );
 
   const handleStartNewChat = useCallback(() => {
     chatLogic.handleStartNewChat();
-    setIsHistoryOpen(false);
+    dispatch({ type: "CLOSE_MENU" });
   }, [chatLogic]);
 
   return (
@@ -106,8 +130,9 @@ export default function Chat() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => setIsHistoryOpen(true)}
+            onClick={toggleHistory}
             aria-label="Verlauf öffnen"
+            aria-expanded={uiState.isHistoryOpen}
             className="gap-2 px-3"
           >
             <Bookmark className="h-4 w-4 text-ink-secondary" />
@@ -147,7 +172,7 @@ export default function Chat() {
                         notch="cutout"
                         notchSize="lg" // 22px for hero visibility
                         tintColor="rgb(var(--brand-rgb))"
-                        className="text-center space-y-6 p-8"
+                        className="text-center space-y-6 p-8 message-bubble-hover"
                       >
                         {/* Main Title mit Shimmer */}
                         <div className="space-y-2">
@@ -189,6 +214,8 @@ export default function Chat() {
                             "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
                             "hover:shadow-surface-prominent", // Shadow elevation instead of border change
                             "active:scale-[0.98]", // Subtle press feedback
+                            "bg-[color:var(--card-bg)] text-[color:var(--card-text)]", // Use design tokens
+                            "card-hover", // Enhanced hover effect
                           )}
                           style={{ animationDelay: `${index * 100}ms` }}
                           onClick={() => chatLogic.handleStarterClick(prompt)}
@@ -196,13 +223,15 @@ export default function Chat() {
                           <div
                             className={cn(
                               "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-white/[0.04] text-white/60", // More subtle idle state
+                              "bg-[color:var(--icon-bg)] text-[color:var(--icon-text)]", // Design tokens for icon
                               "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
                             )}
                           >
                             <MessageSquare className="h-5 w-5" />
                           </div>
-                          <span className="text-sm font-medium text-white/80 flex-1">{prompt}</span>
+                          <span className="text-sm font-medium text-[color:var(--text-muted)] flex-1">
+                            {prompt}
+                          </span>
                         </Card>
                       ))}
                     </div>
@@ -252,17 +281,23 @@ export default function Chat() {
       </ChatLayout>
 
       {/* Global Menu */}
-      <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
+      <AppMenuDrawer isOpen={uiState.isMenuOpen} onClose={closeMenu} />
 
       {/* History Side Panel */}
       <HistorySidePanel
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
+        isOpen={uiState.isHistoryOpen}
+        onClose={toggleHistory}
         conversations={chatLogic.conversations}
         activeId={chatLogic.activeConversationId}
         onSelect={handleSelectConversation}
         onNewChat={handleStartNewChat}
-      />
+        role="dialog"
+        aria-labelledby="history-panel-title"
+      >
+        <h2 id="history-panel-title" className="sr-only">
+          Chat-Verlauf
+        </h2>
+      </HistorySidePanel>
     </>
   );
 }

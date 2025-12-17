@@ -35,7 +35,7 @@ export function ChatLayout({
               size="icon"
               onClick={onMenuClick}
               aria-label="Menü öffnen"
-              className="text-ink-primary hover:bg-surface-2"
+              className="text-ink-primary hover:bg-surface-2 ripple-effect"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -48,7 +48,7 @@ export function ChatLayout({
               <span className="sr-only">Disa AI</span>
             </div>
             {title && (
-              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg">
+              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg title-transition">
                 {title}
               </p>
             )}

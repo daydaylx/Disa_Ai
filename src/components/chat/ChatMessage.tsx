@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Copy, Edit2, RotateCcw } from "@/lib/icons";
 import { Button } from "@/ui/Button";
 
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
 
@@ -11,6 +12,7 @@ export type { ChatMessageType } from "../../types/chatMessage";
 interface ChatMessageProps {
   message: ChatMessageType;
   isLast?: boolean;
+  index?: number;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
   onEdit?: (messageId: string, newContent: string) => void;
@@ -19,6 +21,10 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   const [copied, setCopied] = useState(false);
+  const { elementRef, isVisible } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
 
   const handleCopy = () => {
     void navigator.clipboard?.writeText(children);
@@ -27,14 +33,23 @@ function CodeBlock({ children, language }: { children: string; language?: string
   };
 
   return (
-    <div className="relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5 shadow-inner">
+    <div
+      ref={elementRef}
+      className={cn(
+        "relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5 shadow-inner",
+        isVisible && "animate-code-block-fade-in",
+      )}
+    >
       <div className="flex items-center justify-between bg-surface-2/50 px-3 py-1.5 border-b border-white/5">
         <span className="text-[10px] font-medium uppercase tracking-wider text-ink-tertiary">
           {language || "Code"}
         </span>
         <button
           onClick={handleCopy}
-          className="p-1 text-ink-tertiary hover:text-ink-primary transition-colors"
+          className={cn(
+            "p-1 text-ink-tertiary hover:text-ink-primary transition-colors action-button-hover",
+            copied && "animate-copy-feedback",
+          )}
         >
           {copied ? (
             <Check className="h-3.5 w-3.5 text-status-success" />
@@ -86,6 +101,7 @@ function parseMessageContent(content: string) {
 export function ChatMessage({
   message,
   isLast,
+  index = 0,
   onRetry,
   onCopy,
   onEdit,
@@ -93,7 +109,12 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
+  const [copied, setCopied] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { elementRef, isVisible } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
 
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
@@ -111,6 +132,8 @@ export function ChatMessage({
   const handleCopy = () => {
     onCopy?.(message.content);
     void navigator.clipboard?.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleRetry = () => {
@@ -131,10 +154,15 @@ export function ChatMessage({
 
   return (
     <div
+      ref={elementRef}
       className={cn(
-        "group flex w-full gap-3 animate-fade-in",
+        "group flex w-full gap-3",
+        isVisible && "animate-fade-in-slide-up",
         isUser ? "justify-end" : "justify-start",
       )}
+      style={
+        isVisible && index > 0 ? { animationDelay: `${Math.min(index * 50, 300)}ms` } : undefined
+      }
       data-testid="message.item"
     >
       {/* Message Content Container */}
@@ -144,7 +172,7 @@ export function ChatMessage({
         {/* Bubble */}
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md",
+            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md message-bubble-hover",
             isUser
               ? "bg-brand-primary/10 text-ink-primary border border-brand-primary/20 rounded-tr-sm"
               : "bg-surface-1/60 text-ink-primary border border-white/5 rounded-tl-sm",
@@ -153,12 +181,12 @@ export function ChatMessage({
         >
           {/* Content Body */}
           {isEditing ? (
-            <div className="space-y-3">
+            <div className="space-y-3 edit-mode-transition">
               <textarea
                 ref={textareaRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-ink-primary resize-none text-sm"
+                className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-ink-primary resize-none text-sm textarea-resize-transition"
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
@@ -194,16 +222,23 @@ export function ChatMessage({
           >
             <button
               onClick={handleCopy}
-              className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
+              className={cn(
+                "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover",
+                copied && "animate-copy-feedback",
+              )}
               title="Kopieren"
             >
-              <Copy className="h-3.5 w-3.5" />
+              {copied ? (
+                <Check className="h-3.5 w-3.5 text-status-success" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
             </button>
 
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover"
                 title="Bearbeiten"
               >
                 <Edit2 className="h-3.5 w-3.5" />
@@ -213,7 +248,7 @@ export function ChatMessage({
             {isAssistant && isLast && (
               <button
                 onClick={handleRetry}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors"
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover"
                 title="Neu generieren"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -232,11 +267,12 @@ export function ChatMessage({
         {/* Follow-up Suggestions - Always visible for last assistant message */}
         {isAssistant && isLast && onFollowUp && (
           <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
-            {followUpSuggestions.map((suggestion) => (
+            {followUpSuggestions.map((suggestion, idx) => (
               <button
                 key={suggestion}
                 onClick={() => onFollowUp(suggestion)}
-                className="text-xs bg-accent-chat/10 text-accent-chat hover:bg-accent-chat/20 hover:text-accent-chat px-3 py-2 rounded-full border border-accent-chat/20 hover:border-accent-chat/40 transition-all shadow-sm backdrop-blur-sm font-medium"
+                className="text-xs bg-accent-chat/10 text-accent-chat hover:bg-accent-chat/20 hover:text-accent-chat px-3 py-2 rounded-full border border-accent-chat/20 hover:border-accent-chat/40 transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover"
+                style={{ animationDelay: `${idx * 50}ms` }}
               >
                 {suggestion}
               </button>

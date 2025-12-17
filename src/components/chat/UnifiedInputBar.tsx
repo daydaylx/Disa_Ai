@@ -104,7 +104,7 @@ export function UnifiedInputBar({
       <BrandCard
         variant="plain"
         padding="sm"
-        className="relative flex items-end gap-3"
+        className="relative flex items-end gap-3 input-focus-animation"
         aria-label="Eingabebereich"
       >
         {/* Textarea */}
@@ -114,7 +114,7 @@ export function UnifiedInputBar({
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Schreibe eine Nachricht..."
-          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed"
+          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition"
           rows={1}
           data-testid="composer-input"
           aria-label="Nachricht eingeben"
@@ -131,7 +131,8 @@ export function UnifiedInputBar({
             !value.trim() &&
               !isLoading &&
               "opacity-50 shadow-none bg-surface-3 text-ink-tertiary hover:bg-surface-3",
-            value.trim() && "shadow-glow-sm hover:shadow-glow-md hover:scale-105",
+            value.trim() &&
+              "shadow-glow-sm hover:shadow-glow-md hover:scale-105 animate-send-pulse",
           )}
           aria-label="Senden"
         >
@@ -161,7 +162,7 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none transition-all",
+                "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none role-badge-transition animate-pill-slide-in",
                 activeRole
                   ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
                   : "rounded-full border border-white/5 bg-surface-1/40 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-1/60",
@@ -187,7 +188,8 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Stil auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
+              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              style={{ animationDelay: "50ms" }}
             >
               <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
               <span className="whitespace-nowrap">{discussionPresetLabel}</span>
@@ -208,7 +210,8 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Kreativität auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary"
+              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              style={{ animationDelay: "100ms" }}
             >
               <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
               <span className="whitespace-nowrap">{creativityShortLabel}</span>

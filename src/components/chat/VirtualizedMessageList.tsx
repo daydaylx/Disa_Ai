@@ -18,7 +18,8 @@ const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
     prevProps.message.id === nextProps.message.id &&
     prevProps.message.content === nextProps.message.content &&
     prevProps.message.timestamp === nextProps.message.timestamp &&
-    prevProps.isLast === nextProps.isLast
+    prevProps.isLast === nextProps.isLast &&
+    prevProps.index === nextProps.index
   );
 });
 
@@ -149,6 +150,7 @@ export function VirtualizedMessageList({
                   <MemoizedChatMessage
                     message={message}
                     isLast={virtualRow.index === messages.length - 1 && !isLoading}
+                    index={virtualRow.index}
                     onRetry={handleRetry}
                     onCopy={handleCopy}
                     onEdit={onEdit}
@@ -165,6 +167,7 @@ export function VirtualizedMessageList({
                 <MemoizedChatMessage
                   message={message}
                   isLast={index === messages.length - 1 && !isLoading}
+                  index={index}
                   onRetry={handleRetry}
                   onCopy={handleCopy}
                   onEdit={onEdit}
@@ -202,16 +205,16 @@ export function VirtualizedMessageList({
                 <span className="text-xs font-medium text-ink-tertiary">Disa denkt nach</span>
                 <div className="flex gap-1 ml-1">
                   <div
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
+                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
                     style={{ animationDelay: "0s" }}
                   />
                   <div
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
-                    style={{ animationDelay: "0.1s" }}
+                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
+                    style={{ animationDelay: "0.2s" }}
                   />
                   <div
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-tertiary"
-                    style={{ animationDelay: "0.2s" }}
+                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
+                    style={{ animationDelay: "0.4s" }}
                   />
                 </div>
               </div>
