@@ -32,15 +32,20 @@ export default function Chat() {
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  // Deduplicate prompts with text normalization
+  // Deduplicate prompts with strict text normalization
   const uniquePrompts = useMemo(() => {
-    return Array.from(
-      new Set(RAW_STARTER_PROMPTS.map((prompt) => prompt.trim().toLowerCase())),
-    ).map((lowercasePrompt) => {
-      return (
-        RAW_STARTER_PROMPTS.find((prompt) => prompt.trim().toLowerCase() === lowercasePrompt) ||
-        lowercasePrompt
-      );
+    const seen = new Set<string>();
+    return RAW_STARTER_PROMPTS.filter((prompt) => {
+      // Stricter normalization: trim + lowercase + collapse whitespace
+      const normalized = prompt.trim().toLowerCase().replace(/\s+/g, " ");
+      if (seen.has(normalized)) {
+        if (import.meta.env.DEV) {
+          console.warn(`[Chat] Filtered duplicate prompt: "${prompt}"`);
+        }
+        return false;
+      }
+      seen.add(normalized);
+      return true;
     });
   }, []);
 
@@ -182,7 +187,8 @@ export default function Chat() {
                           tintColor="rgb(var(--brand-rgb))"
                           className={cn(
                             "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                            "hover:border-brand-primary/20 hover:shadow-glow-sm", // Reduced from 30 to 20 for subtlety
+                            "hover:shadow-surface-prominent", // Shadow elevation instead of border change
+                            "active:scale-[0.98]", // Subtle press feedback
                           )}
                           style={{ animationDelay: `${index * 100}ms` }}
                           onClick={() => chatLogic.handleStarterClick(prompt)}
@@ -190,15 +196,13 @@ export default function Chat() {
                           <div
                             className={cn(
                               "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-surface-3 text-ink-tertiary",
+                              "bg-white/[0.04] text-white/60", // More subtle idle state
                               "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
                             )}
                           >
                             <MessageSquare className="h-5 w-5" />
                           </div>
-                          <span className="text-sm font-medium text-ink-primary flex-1">
-                            {prompt}
-                          </span>
+                          <span className="text-sm font-medium text-white/80 flex-1">{prompt}</span>
                         </Card>
                       ))}
                     </div>

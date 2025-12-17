@@ -47,8 +47,8 @@ export const frameTokens: FrameTokens = {
   // Frame base - using existing design system values
   radius: "16px", // matches radius-md
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.12)", // 12% white - subtle
-  borderColorHover: "rgba(255, 255, 255, 0.18)", // 18% white - slightly more visible
+  borderColor: "rgba(255, 255, 255, 0.18)", // 18% white - visible notch borders (50% stronger)
+  borderColorHover: "rgba(255, 255, 255, 0.24)", // 24% white - more prominent on hover
   borderColorFocus: "rgba(139, 92, 246, 0.4)", // brand-primary at 40%
   borderColorActive: "rgba(139, 92, 246, 0.5)", // brand-primary at 50%
   background: "rgba(15, 15, 20, 0.6)", // dark glass background
@@ -60,8 +60,8 @@ export const frameTokens: FrameTokens = {
   notchSm: "10px", // Mobile default
   notchMd: "14px", // Larger containers
 
-  // Edge highlight - only visible on active/focus
-  edgeHighlight: "transparent",
+  // Edge highlight - subtle in idle, strong on active/focus
+  edgeHighlight: "rgba(255, 255, 255, 0.06)", // Subtle idle edge (visible instead of transparent)
   edgeHighlightActive: "rgba(139, 92, 246, 0.6)", // brand-primary glow
 
   // Animation timings

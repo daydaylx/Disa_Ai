@@ -355,6 +355,9 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
+    /* Dual gradient system for notch edges:
+       1. Vertical edge (left of notch) - visible in idle state
+       2. Horizontal edge (bottom of notch) - visible in idle state */
     background:
       linear-gradient(
         to bottom,
@@ -362,10 +365,17 @@
         var(--card-edge-highlight) calc(var(--card-notch-size) - 1px),
         var(--card-edge-highlight)
       ),
-      linear-gradient(to left, var(--bg-app) var(--card-notch-size), transparent var(--card-notch-size));
+      linear-gradient(
+        to left,
+        var(--card-edge-highlight) 0,
+        var(--card-edge-highlight) 1px,
+        transparent 1px
+      );
     background-repeat: no-repeat;
-    background-size: 1px 100%, var(--card-notch-size) var(--card-notch-size);
-    background-position: right top, right top;
+    background-size: 1px 100%, 100% 1px;
+    background-position:
+      calc(100% - var(--card-notch-size)) top,
+      right calc(100% - var(--card-notch-size));
   }
 
   .brand-card--plain {

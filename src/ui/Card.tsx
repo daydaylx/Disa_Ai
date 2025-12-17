@@ -107,7 +107,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     // Determine tint strength
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tinted") return "0.08"; // Global cards: subtle tint (0.06-0.10 range)
+      if (variant === "tinted") return "0.10"; // Global cards: subtle but visible branding (increased from 0.08)
       if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: strong tint (0.25)
       return "0";
     }, [variant]);
@@ -157,24 +157,23 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             style={{
               background:
                 variant === "tinted"
-                  ? `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, transparent 100%)`
+                  ? `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, transparent 80%)` // Softer fade at 80%
                   : `rgb(var(--card-tint-color) / var(--card-tint-alpha))`,
             }}
           />
         )}
 
-        {/* Notch Cutout Element - Improved visibility */}
+        {/* Notch Cutout Element - Enhanced visibility for signature branding */}
         {notch === "cutout" && (
           <div
-            className="absolute top-0 right-0 pointer-events-none z-20"
+            className="absolute top-0 right-0 pointer-events-none z-20 bg-[rgb(3,5,10)]"
             style={{
               width: notchSizePx,
               height: notchSizePx,
-              backgroundColor: "var(--bg-app)", // Explicitly use app background
               borderBottomLeftRadius: "6px", // Smooth corner inside
-              borderLeft: "1px solid rgba(255, 255, 255, 0.12)", // Clearer left edge (increased from 0.08)
-              borderBottom: "1px solid rgba(255, 255, 255, 0.12)", // Clearer bottom edge (increased from 0.08)
-              boxShadow: "-1px 1px 3px rgba(0,0,0,0.3)", // More visible inner depth
+              borderLeft: "1px solid rgba(255, 255, 255, 0.18)", // 50% stronger borders (was 0.12)
+              borderBottom: "1px solid rgba(255, 255, 255, 0.18)", // 50% stronger borders (was 0.12)
+              boxShadow: "-1px 1px 3px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.5)", // External + internal depth
             }}
           />
         )}

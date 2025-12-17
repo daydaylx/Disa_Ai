@@ -24,17 +24,17 @@ export const cardTokens: CardTokens = {
   radius: "18px",
   background: "rgba(12, 12, 18, 0.72)",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.02)", // Reduced from 0.08 for subtle outlines
-  borderColorHover: "rgba(255, 255, 255, 0.08)", // Reduced from 0.14
-  borderColorFocus: "rgba(139, 92, 246, 0.3)", // Slightly reduced from 0.4
+  borderColor: "rgba(255, 255, 255, 0.015)", // Ultra-subtle idle border (25% subtler than 0.02)
+  borderColorHover: "rgba(255, 255, 255, 0.05)", // Gentler hover transition (38% subtler than 0.08)
+  borderColorFocus: "rgba(139, 92, 246, 0.25)", // Softer brand focus glow (17% subtler than 0.3)
   shadow: "0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowHover: "0 12px 48px rgba(0, 0, 0, 0.4)",
   shadowFocus: "0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowPressed: "0 6px 24px rgba(0, 0, 0, 0.45)",
 
-  tintAngle: "115deg",
-  tintFadeX: "72%",
-  tintAlphaSoft: "0.08", // Global cards: subtle tint (0.06-0.10 range)
+  tintAngle: "90deg", // Horizontal gradient (left → right)
+  tintFadeX: "80%", // Softer fade point (was 72%)
+  tintAlphaSoft: "0.10", // Global cards: visible but subtle branding (25% stronger than 0.08)
   tintAlphaStrong: "0.25", // Role/Themen cards: strong tint (unchanged)
   tintColorDefault: "139, 92, 246",
 

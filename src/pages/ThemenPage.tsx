@@ -26,6 +26,7 @@ export default function ThemenPage() {
       <Card
         key={quickstart.id}
         variant="interactive"
+        notch="none"
         role="button"
         onClick={() => handleStartQuickstart(quickstart)}
         style={{ background: theme.roleGradient }}
