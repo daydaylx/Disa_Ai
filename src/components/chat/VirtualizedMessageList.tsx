@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
@@ -6,11 +7,10 @@ import type { ChatMessageType } from "../../types/chatMessage";
 import { ChatMessage } from "./ChatMessage";
 
 // Configuration constants
-const SCROLL_POSITION_RATIO = 0.2; // 20% from top after loading older messages
-const DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD = 0.8; // 80% scrolled to show "scroll to bottom" button
-const DEFAULT_INITIAL_RENDER_COUNT = 50; // Initial number of messages to render
-const DEFAULT_LOAD_MORE_COUNT = 30; // Number of additional messages to load
-const DEFAULT_VIRTUALIZATION_THRESHOLD = 20; // Minimum messages before virtualization kicks in
+const DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD_PX = 160; // Distance from bottom before "scroll to bottom" appears
+const DEFAULT_VIRTUALIZATION_THRESHOLD = 40; // Minimum messages before windowing kicks in
+const DEFAULT_OVERSCAN = 6; // Extra items rendered above/below viewport
+const DEFAULT_ESTIMATED_ROW_HEIGHT = 160; // px (measured dynamically after first render)
 
 // Memoized ChatMessage for performance optimization
 const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
@@ -24,74 +24,47 @@ const MemoizedChatMessage = React.memo(ChatMessage, (prevProps, nextProps) => {
 
 interface VirtualizedMessageListProps {
   messages: ChatMessageType[];
+  /**
+   * Optional key used to reset scroll-to-bottom behavior when the conversation changes.
+   * Pass `activeConversationId` from the parent when available.
+   */
+  conversationKey?: string;
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
   onEdit?: (messageId: string, newContent: string) => void;
   onFollowUp?: (prompt: string) => void;
   isLoading?: boolean;
   className?: string;
-  initialRenderCount?: number;
-  loadMoreCount?: number;
   virtualizationThreshold?: number;
+  overscan?: number;
+  estimateRowHeight?: number;
   scrollContainerRef?: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 export function VirtualizedMessageList({
   messages,
+  conversationKey,
   onRetry,
   onCopy,
   onEdit,
   onFollowUp,
   isLoading = false,
   className,
-  initialRenderCount = DEFAULT_INITIAL_RENDER_COUNT,
-  loadMoreCount = DEFAULT_LOAD_MORE_COUNT,
   virtualizationThreshold = DEFAULT_VIRTUALIZATION_THRESHOLD,
+  overscan = DEFAULT_OVERSCAN,
+  estimateRowHeight = DEFAULT_ESTIMATED_ROW_HEIGHT,
   scrollContainerRef,
 }: VirtualizedMessageListProps) {
-  const [visibleCount, setVisibleCount] = useState(initialRenderCount);
+  const didInitialScrollRef = useRef(false);
+  const lastConversationKeyRef = useRef<string | undefined>(conversationKey);
+
   const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
-    threshold: DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD,
+    threshold: DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD_PX,
     enabled: true,
     containerRef: scrollContainerRef,
   });
 
-  const { visibleMessages, shouldVirtualize, hiddenCount } = useMemo(() => {
-    const shouldVirtualize = messages.length > virtualizationThreshold;
-
-    if (!shouldVirtualize) {
-      return {
-        visibleMessages: messages,
-        shouldVirtualize: false,
-        hiddenCount: 0,
-      };
-    }
-
-    const start = Math.max(0, messages.length - visibleCount);
-    const visible = messages.slice(start);
-    const hidden = messages.length - visible.length;
-
-    return {
-      visibleMessages: visible,
-      shouldVirtualize: true,
-      hiddenCount: hidden,
-    };
-  }, [messages, visibleCount, virtualizationThreshold]);
-
-  const loadOlderMessages = useCallback(() => {
-    setVisibleCount((prev) => Math.min(messages.length, prev + loadMoreCount));
-
-    requestAnimationFrame(() => {
-      const container = scrollRef.current;
-      if (container && container.scrollHeight > 0) {
-        try {
-          container.scrollTop = container.scrollHeight * SCROLL_POSITION_RATIO;
-        } catch {
-          // Ignore scroll errors (can happen during DOM mutations)
-        }
-      }
-    });
-  }, [messages.length, loadMoreCount, scrollRef]);
+  const shouldVirtualize = messages.length > virtualizationThreshold;
 
   const handleCopy = useCallback(
     (content: string) => {
@@ -107,6 +80,42 @@ export function VirtualizedMessageList({
     [onRetry],
   );
 
+  const getScrollElement = useCallback(
+    () => scrollContainerRef?.current ?? scrollRef.current,
+    [scrollContainerRef, scrollRef],
+  );
+
+  const rowVirtualizer = useVirtualizer({
+    count: messages.length,
+    getScrollElement,
+    estimateSize: () => estimateRowHeight,
+    overscan,
+  });
+
+  // Ensure we start at the bottom when mounting or when the conversation changes.
+  useEffect(() => {
+    if (messages.length === 0) return;
+
+    const conversationChanged =
+      typeof conversationKey === "string" && conversationKey !== lastConversationKeyRef.current;
+
+    if (conversationChanged) {
+      lastConversationKeyRef.current = conversationKey;
+      didInitialScrollRef.current = false;
+    }
+
+    if (didInitialScrollRef.current) return;
+    didInitialScrollRef.current = true;
+
+    requestAnimationFrame(() => {
+      try {
+        rowVirtualizer.scrollToIndex(messages.length - 1, { align: "end" });
+      } catch {
+        scrollToBottom("instant");
+      }
+    });
+  }, [conversationKey, messages.length, rowVirtualizer, scrollToBottom]);
+
   const attachInternalRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!scrollContainerRef) {
@@ -119,32 +128,52 @@ export function VirtualizedMessageList({
   return (
     <div data-testid="message-list" className={cn("flex flex-col gap-6", className)}>
       <div ref={scrollContainerRef ? undefined : attachInternalRef} className="flex flex-col">
-        {shouldVirtualize && hiddenCount > 0 && (
-          <div className="flex justify-center py-4">
-            <button
-              onClick={loadOlderMessages}
-              className="text-xs text-ink-tertiary hover:text-ink-primary transition-colors px-3 py-1 rounded-full bg-surface-2 hover:bg-surface-3"
-              data-testid="load-older-messages"
-            >
-              ↑ {hiddenCount} ältere Nachrichten laden
-            </button>
+        {shouldVirtualize ? (
+          <div className="relative w-full" style={{ height: rowVirtualizer.getTotalSize() }}>
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const message = messages[virtualRow.index];
+              if (!message) return null;
+
+              return (
+                <div
+                  key={message.id}
+                  data-testid="message-bubble"
+                  data-index={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                  className={cn(
+                    "absolute left-0 top-0 w-full",
+                    virtualRow.index === messages.length - 1 ? "pb-0" : "pb-6",
+                  )}
+                  style={{ transform: `translateY(${virtualRow.start}px)` }}
+                >
+                  <MemoizedChatMessage
+                    message={message}
+                    isLast={virtualRow.index === messages.length - 1 && !isLoading}
+                    onRetry={handleRetry}
+                    onCopy={handleCopy}
+                    onEdit={onEdit}
+                    onFollowUp={onFollowUp}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {messages.map((message, index) => (
+              <div key={message.id} data-testid="message-bubble">
+                <MemoizedChatMessage
+                  message={message}
+                  isLast={index === messages.length - 1 && !isLoading}
+                  onRetry={handleRetry}
+                  onCopy={handleCopy}
+                  onEdit={onEdit}
+                  onFollowUp={onFollowUp}
+                />
+              </div>
+            ))}
           </div>
         )}
-
-        <div className="flex flex-col gap-6">
-          {visibleMessages.map((message, index) => (
-            <div key={message.id} data-testid="message-bubble">
-              <MemoizedChatMessage
-                message={message}
-                isLast={index === visibleMessages.length - 1 && !isLoading}
-                onRetry={handleRetry}
-                onCopy={handleCopy}
-                onEdit={onEdit}
-                onFollowUp={onFollowUp}
-              />
-            </div>
-          ))}
-        </div>
 
         {isLoading && (
           <div className="flex items-start gap-4 py-4 animate-fade-in">

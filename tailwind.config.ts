@@ -146,7 +146,7 @@ export default {
         brand: {
           primary: "#8b5cf6", // Violet 500 - Main Brand Color
           secondary: "#6366f1", // Indigo 500 - Secondary Accent
-          tertiary: "#ec4899", // Pink 500 - Highlights
+          tertiary: "#f472b6", // Pink 400 - Highlights (palette-reduced)
         },
         ink: {
           primary: "#FAFAFA", // Zinc 50 (Brighter White)
@@ -185,11 +185,11 @@ export default {
           surface: "rgba(244, 114, 182, 0.06)",
         },
         "accent-settings": {
-          DEFAULT: "#a78bfa", // Light Violet - Calm, utility
-          dim: "rgba(167, 139, 250, 0.10)",
-          glow: "rgba(167, 139, 250, 0.20)",
-          border: "rgba(167, 139, 250, 0.30)",
-          surface: "rgba(167, 139, 250, 0.05)",
+          DEFAULT: "#6366f1", // Indigo 500 - Calm, utility (palette-reduced)
+          dim: "rgba(99, 102, 241, 0.10)",
+          glow: "rgba(99, 102, 241, 0.20)",
+          border: "rgba(99, 102, 241, 0.30)",
+          surface: "rgba(99, 102, 241, 0.05)",
         },
         // === CATEGORY-SPECIFIC ACCENTS ===
         // Theme/Discussion categories
@@ -201,18 +201,18 @@ export default {
           surface: "rgba(16, 185, 129, 0.06)",
         },
         "accent-realpolitik": {
-          DEFAULT: "#0ea5e9", // Sky 500 - Trustworthy, serious, stable
-          dim: "rgba(14, 165, 233, 0.12)",
-          glow: "rgba(14, 165, 233, 0.25)",
-          border: "rgba(14, 165, 233, 0.35)",
-          surface: "rgba(14, 165, 233, 0.06)",
+          DEFAULT: "#6366f1", // Indigo 500 - Trustworthy, serious, stable (palette-reduced)
+          dim: "rgba(99, 102, 241, 0.12)",
+          glow: "rgba(99, 102, 241, 0.25)",
+          border: "rgba(99, 102, 241, 0.35)",
+          surface: "rgba(99, 102, 241, 0.06)",
         },
         "accent-hypothetisch": {
-          DEFAULT: "#a855f7", // Purple 500 - Speculative, imaginative
-          dim: "rgba(168, 85, 247, 0.12)",
-          glow: "rgba(168, 85, 247, 0.25)",
-          border: "rgba(168, 85, 247, 0.35)",
-          surface: "rgba(168, 85, 247, 0.06)",
+          DEFAULT: "#8b5cf6", // Violet 500 - Speculative, imaginative (palette-reduced)
+          dim: "rgba(139, 92, 246, 0.12)",
+          glow: "rgba(139, 92, 246, 0.25)",
+          border: "rgba(139, 92, 246, 0.35)",
+          surface: "rgba(139, 92, 246, 0.06)",
         },
         "accent-kultur": {
           DEFAULT: "#f59e0b", // Amber 500 - Warm, cultural, vibrant
@@ -230,18 +230,18 @@ export default {
         },
         // Role categories
         "accent-technical": {
-          DEFAULT: "#14b8a6", // Teal 500 - Technical, precise
-          dim: "rgba(20, 184, 166, 0.12)",
-          glow: "rgba(20, 184, 166, 0.25)",
-          border: "rgba(20, 184, 166, 0.35)",
-          surface: "rgba(20, 184, 166, 0.06)",
+          DEFAULT: "#06b6d4", // Cyan 500 - Technical, precise (palette-reduced)
+          dim: "rgba(6, 182, 212, 0.12)",
+          glow: "rgba(6, 182, 212, 0.25)",
+          border: "rgba(6, 182, 212, 0.35)",
+          surface: "rgba(6, 182, 212, 0.06)",
         },
         "accent-business": {
-          DEFAULT: "#059669", // Emerald 600 - Professional, growth
-          dim: "rgba(5, 150, 105, 0.12)",
-          glow: "rgba(5, 150, 105, 0.25)",
-          border: "rgba(5, 150, 105, 0.35)",
-          surface: "rgba(5, 150, 105, 0.06)",
+          DEFAULT: "#6366f1", // Indigo 500 - Professional, growth (palette-reduced)
+          dim: "rgba(99, 102, 241, 0.12)",
+          glow: "rgba(99, 102, 241, 0.25)",
+          border: "rgba(99, 102, 241, 0.35)",
+          surface: "rgba(99, 102, 241, 0.06)",
         },
         "accent-creative": {
           DEFAULT: "#fb7185", // Rose 400 - Creative, expressive
@@ -251,32 +251,32 @@ export default {
           surface: "rgba(251, 113, 133, 0.06)",
         },
         "accent-assistance": {
-          DEFAULT: "#818cf8", // Indigo 400 - Helpful, supportive
-          dim: "rgba(129, 140, 248, 0.12)",
-          glow: "rgba(129, 140, 248, 0.25)",
-          border: "rgba(129, 140, 248, 0.35)",
-          surface: "rgba(129, 140, 248, 0.06)",
+          DEFAULT: "#6366f1", // Indigo 500 - Helpful, supportive (palette-reduced)
+          dim: "rgba(99, 102, 241, 0.12)",
+          glow: "rgba(99, 102, 241, 0.25)",
+          border: "rgba(99, 102, 241, 0.35)",
+          surface: "rgba(99, 102, 241, 0.06)",
         },
         "accent-analysis": {
-          DEFAULT: "#22d3ee", // Cyan 400 - Analytical, clear
-          dim: "rgba(34, 211, 238, 0.12)",
-          glow: "rgba(34, 211, 238, 0.25)",
-          border: "rgba(34, 211, 238, 0.35)",
-          surface: "rgba(34, 211, 238, 0.06)",
+          DEFAULT: "#06b6d4", // Cyan 500 - Analytical, clear (palette-reduced)
+          dim: "rgba(6, 182, 212, 0.12)",
+          glow: "rgba(6, 182, 212, 0.25)",
+          border: "rgba(6, 182, 212, 0.35)",
+          surface: "rgba(6, 182, 212, 0.06)",
         },
         "accent-research": {
-          DEFAULT: "#34d399", // Emerald 400 - Exploratory, discovery
-          dim: "rgba(52, 211, 153, 0.12)",
-          glow: "rgba(52, 211, 153, 0.25)",
-          border: "rgba(52, 211, 153, 0.35)",
-          surface: "rgba(52, 211, 153, 0.06)",
+          DEFAULT: "#10b981", // Emerald 500 - Exploratory, discovery (palette-reduced)
+          dim: "rgba(16, 185, 129, 0.12)",
+          glow: "rgba(16, 185, 129, 0.25)",
+          border: "rgba(16, 185, 129, 0.35)",
+          surface: "rgba(16, 185, 129, 0.06)",
         },
         "accent-education": {
-          DEFAULT: "#fbbf24", // Amber 400 - Learning, enlightening
-          dim: "rgba(251, 191, 36, 0.12)",
-          glow: "rgba(251, 191, 36, 0.25)",
-          border: "rgba(251, 191, 36, 0.35)",
-          surface: "rgba(251, 191, 36, 0.06)",
+          DEFAULT: "#f59e0b", // Amber 500 - Learning, enlightening (palette-reduced)
+          dim: "rgba(245, 158, 11, 0.12)",
+          glow: "rgba(245, 158, 11, 0.25)",
+          border: "rgba(245, 158, 11, 0.35)",
+          surface: "rgba(245, 158, 11, 0.06)",
         },
         "accent-entertainment": {
           DEFAULT: "#f472b6", // Pink 400 - Fun, engaging (same as roles)
@@ -296,12 +296,12 @@ export default {
           error: "#ef4444", // Red 500
           success: "#10b981", // Emerald 500 (More vibrant than Green)
           warning: "#f59e0b", // Amber 500
-          info: "#0ea5e9", // Sky 500
+          info: "#06b6d4", // Cyan 500 (palette-reduced)
         },
       },
       fontFamily: {
         sans: [
-          '"Inter"',
+          '"Syne"',
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
@@ -340,20 +340,20 @@ export default {
         "glow-models-lg": "0 0 24px rgba(6, 182, 212, 0.35)",
         "glow-roles": "0 0 12px rgba(244, 114, 182, 0.25)",
         "glow-roles-lg": "0 0 24px rgba(244, 114, 182, 0.35)",
-        "glow-settings": "0 0 10px rgba(167, 139, 250, 0.20)",
+        "glow-settings": "0 0 10px rgba(99, 102, 241, 0.20)",
         "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
         // Category-specific glow effects
         "glow-wissenschaft": "0 0 12px rgba(16, 185, 129, 0.25)",
-        "glow-realpolitik": "0 0 12px rgba(14, 165, 233, 0.25)",
-        "glow-hypothetisch": "0 0 12px rgba(168, 85, 247, 0.25)",
+        "glow-realpolitik": "0 0 12px rgba(99, 102, 241, 0.25)",
+        "glow-hypothetisch": "0 0 12px rgba(139, 92, 246, 0.25)",
         "glow-kultur": "0 0 12px rgba(245, 158, 11, 0.25)",
-        "glow-technical": "0 0 12px rgba(20, 184, 166, 0.25)",
-        "glow-business": "0 0 12px rgba(5, 150, 105, 0.25)",
+        "glow-technical": "0 0 12px rgba(6, 182, 212, 0.25)",
+        "glow-business": "0 0 12px rgba(99, 102, 241, 0.25)",
         "glow-creative": "0 0 12px rgba(251, 113, 133, 0.25)",
-        "glow-assistance": "0 0 12px rgba(129, 140, 248, 0.25)",
-        "glow-analysis": "0 0 12px rgba(34, 211, 238, 0.25)",
-        "glow-research": "0 0 12px rgba(52, 211, 153, 0.25)",
-        "glow-education": "0 0 12px rgba(251, 191, 36, 0.25)",
+        "glow-assistance": "0 0 12px rgba(99, 102, 241, 0.25)",
+        "glow-analysis": "0 0 12px rgba(6, 182, 212, 0.25)",
+        "glow-research": "0 0 12px rgba(16, 185, 129, 0.25)",
+        "glow-education": "0 0 12px rgba(245, 158, 11, 0.25)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

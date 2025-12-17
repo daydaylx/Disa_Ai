@@ -1,6 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { AlertTriangle, Check, NotchSquare, X } from "@/lib/icons";
+
 type ToastKind = "success" | "error" | "warning" | "info";
 
 interface Toast {
@@ -91,20 +93,20 @@ function ToastViewport({
 
   const kindClasses = useMemo(
     () => ({
-      success: "ring-1 ring-accent-secondary/30 shadow-[0_0_16px_rgba(16,185,129,0.3)]",
-      error: "ring-1 ring-accent-danger/30 shadow-[0_0_16px_rgba(239,68,68,0.3)]",
-      warning: "ring-1 ring-yellow/30 shadow-[0_0_16px_rgba(250,204,21,0.3)]",
-      info: "ring-1 ring-brand/30 shadow-brandGlow",
+      success: "ring-1 ring-status-success/30 shadow-[0_0_16px_rgba(16,185,129,0.3)]",
+      error: "ring-1 ring-status-error/30 shadow-[0_0_16px_rgba(239,68,68,0.3)]",
+      warning: "ring-1 ring-status-warning/30 shadow-[0_0_16px_rgba(245,158,11,0.3)]",
+      info: "ring-1 ring-status-info/30 shadow-[0_0_16px_rgba(6,182,212,0.3)]",
     }),
     [],
   );
 
   const iconClasses = useMemo(
     () => ({
-      success: "text-accent-secondary",
-      error: "text-accent-danger",
-      warning: "text-yellow",
-      info: "text-brand",
+      success: "text-status-success",
+      error: "text-status-error",
+      warning: "text-status-warning",
+      info: "text-status-info",
     }),
     [],
   );
@@ -122,15 +124,15 @@ function ToastViewport({
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto rounded-md bg-surface-2 px-4 py-3 text-sm shadow-raiseLg transition-all duration-fast animate-in slide-in-from-right ${kindClasses[toast.kind]}`}
+          className={`pointer-events-auto disa-toast-in disa-notch disa-notch--md disa-notch--interactive rounded-md bg-surface-2 px-4 py-3 text-sm shadow-raiseLg transition-all duration-fast ${kindClasses[toast.kind]}`}
         >
           <div className="flex items-start gap-3">
             {/* Status Icon */}
             <div className={`mt-0.5 ${iconClasses[toast.kind]}`}>
-              {toast.kind === "success" && "✓"}
-              {toast.kind === "error" && "✕"}
-              {toast.kind === "warning" && "⚠"}
-              {toast.kind === "info" && "ⓘ"}
+              {toast.kind === "success" && <Check className="h-4 w-4" />}
+              {toast.kind === "error" && <X className="h-4 w-4" />}
+              {toast.kind === "warning" && <AlertTriangle className="h-4 w-4" />}
+              {toast.kind === "info" && <NotchSquare className="h-4 w-4" />}
             </div>
             <div className="flex-1">
               {toast.title && (
@@ -143,7 +145,7 @@ function ToastViewport({
             <button
               type="button"
               aria-label="Benachrichtigung schließen"
-              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               onClick={() => onDismiss(toast.id)}
             >
               ×

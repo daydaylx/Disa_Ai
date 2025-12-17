@@ -10,6 +10,8 @@
 
 export type { LucideIcon } from "lucide-react";
 
+export { NotchSquare } from "./disa";
+
 export {
   Activity, // Added if needed, checking if it was missed
   AlertCircle,

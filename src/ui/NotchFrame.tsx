@@ -26,21 +26,11 @@ import { cn } from "@/lib/utils";
 const notchFrameVariants = cva(
   // Base styles - all NotchFrames share these
   [
-    "relative isolate overflow-hidden",
+    "disa-notch disa-notch--interactive",
     "border border-[var(--frame-border-color)]",
     "bg-[var(--frame-bg)] backdrop-blur-xl",
     "shadow-[var(--frame-shadow)]",
     "transition-all duration-[var(--frame-transition-duration)] ease-[var(--frame-transition-easing)]",
-    // Notch pseudo-element (top-right corner)
-    "before:absolute before:top-0 before:right-0",
-    "before:w-[var(--notch-size)] before:h-[var(--notch-size)]",
-    "before:bg-bg-app before:z-10",
-    "before:transition-all before:duration-[var(--frame-transition-duration)]",
-    // Edge highlight pseudo-element (only visible on focus/active)
-    "after:absolute after:top-[var(--notch-size)] after:right-0",
-    "after:w-[1px] after:h-[calc(100%-var(--notch-size))]",
-    "after:bg-[var(--notch-edge-highlight)]",
-    "after:transition-all after:duration-[var(--frame-transition-duration)]",
   ],
   {
     variants: {
@@ -53,10 +43,9 @@ const notchFrameVariants = cva(
        * - chip: Small chip/segment style
        */
       variant: {
-        default: ["rounded-[var(--frame-radius)]", "before:rounded-bl-[var(--frame-radius)]"],
+        default: ["rounded-[var(--frame-radius)]"],
         card: [
           "rounded-[var(--frame-radius)]",
-          "before:rounded-bl-[var(--frame-radius)]",
           "cursor-pointer",
           "hover:border-[var(--frame-border-color-hover)]",
           "hover:shadow-[var(--frame-shadow-hover)]",
@@ -65,27 +54,19 @@ const notchFrameVariants = cva(
         ],
         input: [
           "rounded-3xl",
-          "before:rounded-bl-2xl",
           "focus-within:border-[var(--frame-border-color-focus)]",
           "focus-within:shadow-[var(--frame-shadow-focus)]",
-          "focus-within:after:bg-[var(--notch-edge-highlight-active)]",
         ],
-        hero: [
-          "rounded-[20px]",
-          "before:rounded-bl-[16px]",
-          "border-[var(--frame-border-color-hover)]",
-        ],
+        hero: ["rounded-[20px]", "border-[var(--frame-border-color-hover)]"],
         chip: [
           "rounded-full",
-          "before:hidden", // No notch on pills
-          "after:hidden",
+          "disa-notch--cutout-none disa-notch--edge-none", // No notch on pills
         ],
         chipActive: [
           "rounded-2xl",
-          "before:rounded-bl-xl",
           "border-[var(--frame-border-color-focus)]",
           "shadow-[var(--frame-shadow-focus)]",
-          "after:bg-[var(--notch-edge-highlight-active)]",
+          "[--notch-edge-color:var(--notch-edge-highlight-active)]",
         ],
       },
       /**
@@ -173,18 +154,14 @@ NotchFrame.displayName = "NotchFrame";
  * Use these when you need to apply the notch effect to existing elements.
  */
 export const notchFrameClasses = {
-  base: "relative isolate overflow-hidden border border-[var(--frame-border-color)] bg-[var(--frame-bg)] backdrop-blur-xl shadow-[var(--frame-shadow)] transition-all duration-[var(--frame-transition-duration)] ease-[var(--frame-transition-easing)]",
+  base: "disa-notch disa-notch--interactive border border-[var(--frame-border-color)] bg-[var(--frame-bg)] backdrop-blur-xl shadow-[var(--frame-shadow)] transition-all duration-[var(--frame-transition-duration)] ease-[var(--frame-transition-easing)]",
   notchSm: "[--notch-size:var(--notch-size-sm)]",
-  notchMd: "[--notch-size:var(--notch-size-md)]",
-  notchPseudo:
-    "before:absolute before:top-0 before:right-0 before:w-[var(--notch-size)] before:h-[var(--notch-size)] before:bg-bg-app before:z-10 before:transition-all",
-  edgePseudo:
-    "after:absolute after:top-[var(--notch-size)] after:right-0 after:w-[1px] after:h-[calc(100%-var(--notch-size))] after:bg-[var(--notch-edge-highlight)] after:transition-all",
+  notchMd: "disa-notch--md",
   hoverStates:
     "hover:border-[var(--frame-border-color-hover)] hover:shadow-[var(--frame-shadow-hover)]",
   focusStates:
-    "focus-within:border-[var(--frame-border-color-focus)] focus-within:shadow-[var(--frame-shadow-focus)] focus-within:after:bg-[var(--notch-edge-highlight-active)]",
-  activeEdge: "after:bg-[var(--notch-edge-highlight-active)]",
+    "focus-within:border-[var(--frame-border-color-focus)] focus-within:shadow-[var(--frame-shadow-focus)]",
+  activeEdge: "[--notch-edge-color:var(--notch-edge-highlight-active)]",
 };
 
 export { notchFrameVariants };

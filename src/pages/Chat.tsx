@@ -220,6 +220,7 @@ export default function Chat() {
                 ) : (
                   <VirtualizedMessageList
                     messages={chatLogic.messages}
+                    conversationKey={chatLogic.activeConversationId ?? "new"}
                     isLoading={chatLogic.isLoading}
                     onCopy={(content) => {
                       void navigator.clipboard.writeText(content);

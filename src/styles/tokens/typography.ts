@@ -50,9 +50,9 @@ export type TypographyTokens = {
 
 export const typographyTokens: TypographyTokens = {
   fontStacks: {
-    sans: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif',
+    sans: '"Syne", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif',
     mono: '"JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace',
-    numeric: '"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif',
+    numeric: '"Syne", "Segoe UI", system-ui, sans-serif',
   },
   textStyles: {
     display: {

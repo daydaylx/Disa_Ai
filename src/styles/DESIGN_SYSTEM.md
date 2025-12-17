@@ -241,7 +241,7 @@ Unified card system (defined in `Card.tsx`):
 
 Font families:
 
-- **Sans-serif**: Inter (primary), system fallbacks
+- **Sans-serif**: Syne (primary), system fallbacks
 - **Monospace**: JetBrains Mono, Fira Code
 
 ### Hierarchy

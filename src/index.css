@@ -84,13 +84,17 @@
     position: fixed;
     top: -20%;
     left: -10%;
-    width: 50vw;
-    height: 50vw;
+    width: clamp(260px, 48vw, 520px);
+    height: clamp(260px, 48vw, 520px);
     background: radial-gradient(circle, var(--accent-chat-glow) 0%, rgba(0, 0, 0, 0) 70%);
-    filter: blur(80px);
+    filter: blur(56px);
     z-index: -2;
-    animation: blob 20s infinite alternate;
-    opacity: 0.8;
+    opacity: 0.55;
+    pointer-events: none;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    contain: paint;
+    animation: disa-ambient-blob-a 18s var(--disa-ease-standard, ease-in-out) infinite alternate;
   }
 
   body::after {
@@ -98,13 +102,17 @@
     position: fixed;
     bottom: -20%;
     right: -10%;
-    width: 60vw;
-    height: 60vw;
+    width: clamp(300px, 58vw, 640px);
+    height: clamp(300px, 58vw, 640px);
     background: radial-gradient(circle, var(--accent-models-glow) 0%, rgba(0, 0, 0, 0) 70%);
-    filter: blur(100px);
+    filter: blur(72px);
     z-index: -2;
-    animation: blob 25s infinite alternate-reverse;
-    opacity: 0.8;
+    opacity: 0.5;
+    pointer-events: none;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    contain: paint;
+    animation: disa-ambient-blob-b 22s var(--disa-ease-standard, ease-in-out) infinite alternate;
   }
 
   h1,
@@ -118,6 +126,84 @@
 }
 
 @layer components {
+  /* ============================================================================
+     DISA Notch - Signature Visual Primitive
+     - Top-right notch (fixed)
+     - Cutout uses --notch-cutout-bg (defaults to app background)
+     - Edge highlight uses --notch-edge-color (defaults to --notch-edge-highlight)
+     ========================================================================== */
+
+  .disa-notch {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    --notch-size: var(--notch-size-sm);
+    --notch-cutout-bg: var(--bg-app);
+    --notch-edge-color: var(--notch-edge-highlight);
+  }
+
+  .disa-notch::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--notch-size);
+    height: var(--notch-size);
+    background: var(--notch-cutout-bg);
+    border-bottom-left-radius: var(--frame-radius);
+    pointer-events: none;
+  }
+
+  .disa-notch::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent calc(var(--notch-size) - 1px),
+        var(--notch-edge-color) calc(var(--notch-size) - 1px),
+        var(--notch-edge-color)
+      ),
+      linear-gradient(
+        to left,
+        var(--notch-edge-color) 0,
+        var(--notch-edge-color) 1px,
+        transparent 1px
+      );
+    background-repeat: no-repeat;
+    background-size: 1px 100%, 100% 1px;
+    background-position:
+      calc(100% - var(--notch-size)) top,
+      right calc(100% - var(--notch-size));
+  }
+
+  .disa-notch--md {
+    --notch-size: var(--notch-size-md);
+  }
+
+  .disa-notch--cutout-none::before {
+    display: none;
+  }
+
+  .disa-notch--edge-none::after {
+    display: none;
+  }
+
+  .disa-notch--interactive:hover {
+    --notch-edge-color: var(--frame-border-color-hover);
+  }
+
+  .disa-notch--interactive:active {
+    --notch-edge-color: var(--notch-edge-highlight-active);
+  }
+
+  .disa-notch--interactive:focus-visible,
+  .disa-notch--interactive:focus-within {
+    --notch-edge-color: var(--notch-edge-highlight-active);
+  }
+
   .glass {
     @apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg;
   }
@@ -168,6 +254,25 @@
 
 /* Branding Animations */
 @layer utilities {
+  /* Ambient blobs: GPU-friendly transform-only motion */
+  @keyframes disa-ambient-blob-a {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+      transform: translate3d(6%, 4%, 0) scale(1.08);
+    }
+  }
+
+  @keyframes disa-ambient-blob-b {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+      transform: translate3d(-5%, -6%, 0) scale(1.1);
+    }
+  }
+
   /* Slow pulse for ambient glow */
   @keyframes pulse-slow {
     0%,
@@ -304,6 +409,15 @@
 
   /* Reduced motion - disable all intro animations */
   @media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+      animation: none !important;
+      filter: blur(36px);
+      opacity: 0.35;
+      transform: none !important;
+      will-change: auto;
+    }
+
     .animate-wordmark-intro,
     .animate-wordmark-intro-delay-1,
     .animate-wordmark-intro-delay-2,
@@ -316,6 +430,27 @@
       opacity: 1 !important;
       transform: none !important;
     }
+  }
+
+  /* Low-power / low-data: keep ambience but avoid continuous motion */
+  @media (prefers-reduced-data: reduce) {
+    body::before,
+    body::after {
+      animation: none !important;
+      filter: blur(40px);
+      opacity: 0.32;
+      transform: none !important;
+      will-change: auto;
+    }
+  }
+
+  html[data-effects="reduced"] body::before,
+  html[data-effects="reduced"] body::after {
+    animation: none !important;
+    filter: blur(40px);
+    opacity: 0.32;
+    transform: none !important;
+    will-change: auto;
   }
 }
 

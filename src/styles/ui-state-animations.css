@@ -16,6 +16,31 @@
   --will-change-transform: transform;
   --will-change-opacity: opacity;
 
+  /* ============================================================================
+     DISA Motion Language (Signature)
+     - Keep it small + consistent: 3 durations, 2 easings
+     - Provide Tailwind-like utility shims (duration-fast, etc.)
+     ========================================================================== */
+
+  /* Durations */
+  --disa-duration-fast: 120ms;
+  --disa-duration-medium: 180ms;
+  --disa-duration-slow: 240ms;
+
+  /* Easings */
+  --disa-ease-standard: cubic-bezier(0.23, 1, 0.32, 1);
+  --disa-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Back-compat aliases used across the codebase */
+  --ease-standard: var(--disa-ease-standard);
+  --ease-quick: var(--disa-ease-standard);
+  --ease-emphasized: var(--disa-ease-emphasized);
+
+  /* Animation token shims used in this file */
+  --motion-duration-1: var(--disa-duration-fast);
+  --motion-duration-2: var(--disa-duration-medium);
+  --motion-ease-1: var(--disa-ease-standard);
+
   /* Performance-optimized durations based on device */
   --duration-performance-optimized: clamp(120ms, 0.5vw, 200ms);
   --duration-reduced-motion: 120ms;
@@ -23,6 +48,29 @@
   /* Hardware acceleration helpers */
   --gpu-layer: translateZ(0);
   --gpu-backface: hidden;
+}
+
+@layer utilities {
+  /* Tailwind-like duration shims used in components */
+  .duration-fast {
+    transition-duration: var(--disa-duration-fast);
+  }
+
+  .duration-medium {
+    transition-duration: var(--disa-duration-medium);
+  }
+
+  .duration-slow {
+    transition-duration: var(--disa-duration-slow);
+  }
+
+  .ease-standard {
+    transition-timing-function: var(--disa-ease-standard);
+  }
+
+  .ease-emphasized {
+    transition-timing-function: var(--disa-ease-emphasized);
+  }
 }
 
 /* Performance optimization classes */
@@ -130,6 +178,10 @@
   animation: fade-in var(--motion-duration-1) var(--motion-ease-1);
 }
 
+.animate-fade-in {
+  animation: fade-in var(--motion-duration-1) var(--motion-ease-1);
+}
+
 @keyframes bubble-in {
   0% {
     opacity: 0;
@@ -143,6 +195,50 @@
 
 .bubble-in {
   animation: bubble-in var(--motion-duration-2) var(--motion-ease-1);
+  will-change: transform, opacity;
+}
+
+.animate-bubble-in {
+  animation: bubble-in var(--motion-duration-2) var(--motion-ease-1);
+  will-change: transform, opacity;
+}
+
+/* DISA Signature: quick card enter */
+@keyframes disa-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-enter {
+  animation: disa-card-enter var(--disa-duration-medium) var(--disa-ease-emphasized) both;
+  will-change: transform, opacity;
+}
+
+/* Used in staggered intros to keep final state */
+.fill-mode-forwards {
+  animation-fill-mode: forwards;
+}
+
+/* DISA Signature: gentle slide up */
+@keyframes disa-slide-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-slide-up {
+  animation: disa-slide-up var(--disa-duration-medium) var(--disa-ease-standard) both;
   will-change: transform, opacity;
 }
 
@@ -406,6 +502,23 @@
 
 .toast-appear {
   animation: toast-slide-up 200ms var(--ease-standard) forwards;
+}
+
+/* DISA Signature Toast: subtle slide + scale (no bounce) */
+@keyframes disa-toast-in {
+  from {
+    opacity: 0;
+    transform: translate3d(12px, 0, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.disa-toast-in {
+  animation: disa-toast-in var(--disa-duration-medium) var(--disa-ease-emphasized) both;
+  will-change: transform, opacity;
 }
 
 /* Tab/Accordion animations */
