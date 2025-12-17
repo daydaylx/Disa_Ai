@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import modelsMetadata from "../../public/models_metadata.json";
 import { FALLBACK_MODEL_ID, isAllowedModelId } from "../config/modelDefaults";
+import modelsMetadata from "../config/models_metadata.json";
 
 describe("modelDefaults", () => {
   it("should validate allowed model IDs", () => {

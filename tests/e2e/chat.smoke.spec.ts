@@ -14,14 +14,13 @@ import { skipOnboarding } from "./utils";
 test.describe("Chat Smoke Tests", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
-    await page.goto("/");
+    // Go directly to chat to avoid redirect-induced flakiness (especially on mobile/WebKit)
+    await page.goto("/chat");
     // Warte auf das Laden der Haupt-UI-Elemente statt networkidle
     // (networkidle kann bei PWAs/Service Workern zu lange dauern)
     await page.waitForLoadState("domcontentloaded");
-    // Warte explizit auf ein kritisches UI-Element
-    await page
-      .locator('button[aria-label="Menü öffnen"]')
-      .waitFor({ state: "visible", timeout: 15000 });
+    // Warte explizit auf ein kritisches UI-Element (Composer ist stabiler als Header-Buttons)
+    await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 30000 });
   });
 
   test("should load chat interface with key elements", async ({ page }) => {

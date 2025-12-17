@@ -600,7 +600,8 @@
 
 /* Send button pulse */
 @keyframes send-button-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -681,7 +682,8 @@
 
 /* Decorative separator pulse */
 @keyframes separator-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
   }
   50% {
@@ -699,7 +701,8 @@
 
 /* Smooth bounce for typing indicator dots */
 @keyframes smooth-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
     opacity: 0.6;
   }
@@ -756,7 +759,8 @@
 
 /* Edit mode transition */
 .edit-mode-transition {
-  transition: height var(--disa-duration-medium) var(--disa-ease-standard),
+  transition:
+    height var(--disa-duration-medium) var(--disa-ease-standard),
     opacity var(--disa-duration-medium) var(--disa-ease-standard);
 }
 
@@ -802,7 +806,9 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition:
+    width 0.6s,
+    height 0.6s;
 }
 
 .ripple-effect:active::after {
@@ -816,7 +822,8 @@
 
 /* Message bubble shadow enhancement on hover */
 .message-bubble-hover {
-  transition: box-shadow var(--disa-duration-medium) var(--disa-ease-standard),
+  transition:
+    box-shadow var(--disa-duration-medium) var(--disa-ease-standard),
     transform var(--disa-duration-fast) var(--disa-ease-standard);
 }
 
@@ -827,7 +834,8 @@
 
 /* Title transition */
 .title-transition {
-  transition: opacity var(--disa-duration-medium) var(--disa-ease-standard),
+  transition:
+    opacity var(--disa-duration-medium) var(--disa-ease-standard),
     transform var(--disa-duration-medium) var(--disa-ease-standard);
 }
 

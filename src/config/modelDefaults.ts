@@ -1,4 +1,4 @@
-import modelsMetadata from "../../public/models_metadata.json";
+import modelsMetadata from "./models_metadata.json";
 
 const curatedModelIds = new Set(Object.keys(modelsMetadata));
 

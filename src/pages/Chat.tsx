@@ -38,18 +38,13 @@ const RAW_STARTER_PROMPTS = [
 
 // Define actions for the reducer
 interface UIState {
-  isMenuOpen: boolean;
   isHistoryOpen: boolean;
 }
 
-type UIAction = { type: "OPEN_MENU" } | { type: "CLOSE_MENU" } | { type: "TOGGLE_HISTORY" };
+type UIAction = { type: "TOGGLE_HISTORY" };
 
 const uiReducer = (state: UIState, action: UIAction): UIState => {
   switch (action.type) {
-    case "OPEN_MENU":
-      return { ...state, isMenuOpen: true };
-    case "CLOSE_MENU":
-      return { ...state, isMenuOpen: false };
     case "TOGGLE_HISTORY":
       return { ...state, isHistoryOpen: !state.isHistoryOpen };
     default:
@@ -59,7 +54,6 @@ const uiReducer = (state: UIState, action: UIAction): UIState => {
 
 // Initial state
 const initialState: UIState = {
-  isMenuOpen: false,
   isHistoryOpen: false,
 };
 
@@ -70,7 +64,7 @@ export default function Chat() {
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
-  const { openMenu, closeMenu } = useMenuDrawer();
+  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
 
   // Deduplicate prompts with strict text normalization
@@ -127,15 +121,15 @@ export default function Chat() {
   const handleSelectConversation = useCallback(
     (id: string) => {
       void chatLogic.selectConversation(id);
-      dispatch({ type: "CLOSE_MENU" });
+      closeMenu();
     },
-    [chatLogic],
+    [chatLogic, closeMenu],
   );
 
   const handleStartNewChat = useCallback(() => {
     chatLogic.handleStartNewChat();
-    dispatch({ type: "CLOSE_MENU" });
-  }, [chatLogic]);
+    closeMenu();
+  }, [chatLogic, closeMenu]);
 
   return (
     <>
@@ -313,22 +307,17 @@ export default function Chat() {
       </ChatLayout>
 
       {/* Global Menu */}
-      <AppMenuDrawer isOpen={uiState.isMenuOpen} onClose={closeMenu} />
+      <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
 
       {/* History Side Panel */}
-      <div role="dialog" aria-labelledby="history-panel-title">
-        <h2 id="history-panel-title" className="sr-only">
-          Chat-Verlauf
-        </h2>
-        <HistorySidePanel
-          isOpen={uiState.isHistoryOpen}
-          onClose={toggleHistory}
-          conversations={chatLogic.conversations}
-          activeId={chatLogic.activeConversationId}
-          onSelect={handleSelectConversation}
-          onNewChat={handleStartNewChat}
-        />
-      </div>
+      <HistorySidePanel
+        isOpen={uiState.isHistoryOpen}
+        onClose={toggleHistory}
+        conversations={chatLogic.conversations}
+        activeId={chatLogic.activeConversationId}
+        onSelect={handleSelectConversation}
+        onNewChat={handleStartNewChat}
+      />
     </>
   );
 }
