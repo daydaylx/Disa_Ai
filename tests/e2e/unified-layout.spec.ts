@@ -21,7 +21,8 @@ test.describe("Unified Layout Tests", () => {
       await page.waitForLoadState("networkidle");
 
       // Check for consistent header elements
-      await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
+      // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
+      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
       await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
       // Brand/logo should be present
@@ -110,7 +111,7 @@ test.describe("Unified Layout Tests", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
 
     // Navigate to different pages and check they load
     const navigationTests = [
@@ -147,7 +148,7 @@ test.describe("Unified Layout Tests", () => {
       await page.waitForLoadState("networkidle");
 
       // Check that key elements are visible and properly positioned
-      await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
+      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
       await expect(page.getByTestId("composer-input")).toBeVisible();
 
       // Check that content is accessible without overlapping
