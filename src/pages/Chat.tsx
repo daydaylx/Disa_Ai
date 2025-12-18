@@ -144,10 +144,28 @@ export default function Chat() {
             onClick={toggleHistory}
             aria-label="Verlauf öffnen"
             aria-expanded={uiState.isHistoryOpen}
-            className="gap-2 px-3"
+            className={cn(
+              "gap-2 px-3 relative overflow-visible",
+              "border-accent-chat/20 hover:border-accent-chat/40",
+              "hover:bg-accent-chat/5 transition-all duration-200",
+              uiState.isHistoryOpen && "bg-accent-chat/10 border-accent-chat/40",
+            )}
           >
-            <Bookmark className="h-4 w-4 text-ink-secondary" />
-            <span className="hidden sm:inline">Verlauf</span>
+            <Bookmark
+              className={cn(
+                "h-4 w-4 transition-colors",
+                uiState.isHistoryOpen
+                  ? "text-accent-chat fill-accent-chat/30"
+                  : "text-accent-chat/70",
+              )}
+            />
+            <span className="hidden sm:inline text-ink-primary">Verlauf</span>
+            {chatLogic.conversations && chatLogic.conversations.length > 0 && (
+              <span
+                className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent-chat shadow-[0_0_8px_rgba(var(--accent-chat-glow),0.6)]"
+                aria-label={`${chatLogic.conversations.length} Unterhaltungen`}
+              />
+            )}
           </Button>
         }
       >
@@ -176,33 +194,45 @@ export default function Chat() {
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Hero Card - Disa Frame Branding System */}
+                    {/* Hero Card - Disa Frame Branding System with Enhanced Colors */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
                         variant="tintedSoft"
                         notch="cutout"
                         notchSize="lg" // 24px for hero visibility (increased from 22px)
                         tintColor="rgb(var(--tint-color-rgb-default))"
-                        className="text-center space-y-6 p-8"
+                        className="text-center space-y-6 p-8 relative overflow-hidden"
                         style={
                           {
-                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.14)",
-                            "--notch-edge-opacity": "0.30",
+                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.18)",
+                            "--notch-edge-opacity": "0.35",
                           } as React.CSSProperties
                         }
                       >
-                        {/* Main Title - Wordmark with intro animation (700-800 weight) */}
-                        <div className="space-y-3">
+                        {/* Decorative gradient orbs for visual interest */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-accent-chat/20 to-transparent blur-2xl pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-28 h-28 bg-gradient-radial from-accent-models/15 to-transparent blur-2xl pointer-events-none" />
+
+                        {/* Main Title - Wordmark with intro animation and gradient */}
+                        <div className="space-y-3 relative z-10">
                           <h1
-                            className="text-5xl sm:text-6xl text-ink-primary tracking-tight animate-wordmark-intro"
+                            className="text-5xl sm:text-6xl tracking-tight animate-wordmark-intro"
                             style={{ fontWeight: 750 }}
                           >
-                            Disa AI
+                            <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent">
+                              Disa
+                            </span>{" "}
+                            <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent">
+                              AI
+                            </span>
                           </h1>
                           <div className="space-y-2">
-                            {/* Accent line - subtle 1px under wordmark */}
-                            <div className="w-24 h-px bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent mx-auto" />
-                            <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-70 animate-wordmark-intro-delay-1">
+                            {/* Enhanced accent line with gradient glow */}
+                            <div className="relative w-32 h-px mx-auto">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/60 to-transparent" />
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-chat/40 to-transparent blur-sm" />
+                            </div>
+                            <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-80 animate-wordmark-intro-delay-1">
                               DEIN KI-ASSISTENT
                             </p>
                           </div>
@@ -220,47 +250,77 @@ export default function Chat() {
                       </Card>
                     </div>
 
-                    {/* Starter Prompts - Suggestion Cards with tintedSoft variant */}
+                    {/* Starter Prompts - Suggestion Cards with Enhanced Color Accents */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
-                      {uniquePrompts.slice(0, 3).map((prompt, index) => (
-                        <Card
-                          key={prompt}
-                          variant="tintedSoft"
-                          notch="none"
-                          tintColor="rgb(var(--tint-color-rgb-default))"
-                          className={cn(
-                            "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                            "hover:border-white/[0.18] hover:shadow-md", // Clear hover state (increased from 0.14)
-                            "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2", // Clear focus ring
-                            "active:translate-y-[1px] active:shadow-sm", // Press: card sinks, shadow down
-                            "bg-surface-card text-ink-primary",
-                          )}
-                          style={{ animationDelay: `${index * 100}ms` }}
-                          onClick={() => chatLogic.handleStarterClick(prompt)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              chatLogic.handleStarterClick(prompt);
-                            }
-                          }}
-                          tabIndex={0}
-                          role="button"
-                          aria-label={`Starter-Prompt: ${prompt}`}
-                        >
-                          <div
+                      {uniquePrompts.slice(0, 3).map((prompt, index) => {
+                        // Cycle through accent colors for visual variety
+                        const accentColors = [
+                          {
+                            bg: "bg-accent-chat/10",
+                            text: "text-accent-chat",
+                            border: "border-accent-chat/20",
+                            glow: "group-hover:shadow-[0_0_20px_rgba(var(--accent-chat-glow),0.15)]",
+                          },
+                          {
+                            bg: "bg-accent-models/10",
+                            text: "text-accent-models",
+                            border: "border-accent-models/20",
+                            glow: "group-hover:shadow-[0_0_20px_rgba(var(--accent-models-glow),0.15)]",
+                          },
+                          {
+                            bg: "bg-brand-primary/10",
+                            text: "text-brand-primary",
+                            border: "border-brand-primary/20",
+                            glow: "group-hover:shadow-[0_0_20px_rgba(139,92,246,0.15)]",
+                          },
+                        ] as const;
+                        const accent = accentColors[index % accentColors.length]!;
+
+                        return (
+                          <Card
+                            key={prompt}
+                            variant="tintedSoft"
+                            notch="none"
+                            tintColor="rgb(var(--tint-color-rgb-default))"
                             className={cn(
-                              "p-3 rounded-xl transition-colors flex-shrink-0",
-                              "bg-surface-2 text-ink-secondary",
-                              "group-hover:bg-brand-primary/10 group-hover:text-brand-primary",
+                              "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
+                              "hover:border-white/[0.22] hover:shadow-lg", // Enhanced hover state
+                              accent.glow, // Color-specific glow on hover
+                              "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
+                              "active:translate-y-[1px] active:shadow-sm",
+                              "bg-surface-card text-ink-primary",
+                              "border",
+                              accent.border, // Add colored border
                             )}
+                            style={{ animationDelay: `${index * 100}ms` }}
+                            onClick={() => chatLogic.handleStarterClick(prompt)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                chatLogic.handleStarterClick(prompt);
+                              }
+                            }}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={`Starter-Prompt: ${prompt}`}
                           >
-                            <MessageSquare className="h-5 w-5" />
-                          </div>
-                          <span className="text-sm font-medium text-ink-primary flex-1">
-                            {prompt}
-                          </span>
-                        </Card>
-                      ))}
+                            <div
+                              className={cn(
+                                "p-3 rounded-xl transition-all flex-shrink-0",
+                                "bg-surface-2",
+                                accent.bg,
+                                accent.text,
+                                "group-hover:scale-105", // Slight scale on hover
+                              )}
+                            >
+                              <MessageSquare className="h-5 w-5" />
+                            </div>
+                            <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
+                              {prompt}
+                            </span>
+                          </Card>
+                        );
+                      })}
                     </div>
 
                     {/* Quick Link to Settings - Subtle */}
