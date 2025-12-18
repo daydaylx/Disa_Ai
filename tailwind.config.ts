@@ -619,10 +619,18 @@ export default {
         },
         // Glass Utilities
         ".glass-panel": {
-          "@apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg": {},
+          backgroundColor: "var(--glass-bg-1)",
+          border: "1px solid var(--glass-border-1)",
+          boxShadow: "var(--glass-shadow-1)",
+          // Backdrop blur is ignored when unsupported; safe fallback is just bg/border/shadow
+          backdropFilter: "blur(var(--glass-blur-1))",
+          WebkitBackdropFilter: "blur(var(--glass-blur-1))",
         },
         ".glass-header": {
-          "@apply bg-bg-app/80 backdrop-blur-xl border-b border-white/5": {},
+          backgroundColor: "var(--glass-bg-2)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+          backdropFilter: "blur(var(--glass-blur-2))",
+          WebkitBackdropFilter: "blur(var(--glass-blur-2))",
         },
         ".text-balance": {
           "text-wrap": "balance",

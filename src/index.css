@@ -31,6 +31,41 @@
   /* Viewport Height Fix */
   --vh: 1vh;
 
+  /* ============================================================================
+     PREMIUM DARK GLASS SYSTEM (Layered, token-based)
+     - glass-1: Cards/Panels
+     - glass-2: Sticky Header / Floating Composer
+     - glass-3: Dialogs / Overlays
+     ========================================================================== */
+  --glass-bg-1: rgba(18, 18, 24, 0.78);
+  --glass-bg-1-hover: rgba(18, 18, 24, 0.84);
+  --glass-bg-2: rgba(10, 10, 14, 0.86);
+  --glass-bg-2-hover: rgba(10, 10, 14, 0.9);
+  --glass-bg-3: rgba(8, 8, 10, 0.92);
+  --glass-bg-3-hover: rgba(8, 8, 10, 0.94);
+
+  --glass-blur-1: 14px;
+  --glass-blur-2: 22px;
+  --glass-blur-3: 30px;
+
+  --glass-border-1: rgba(255, 255, 255, 0.1);
+  --glass-border-1-hover: rgba(255, 255, 255, 0.14);
+  --glass-border-2: rgba(255, 255, 255, 0.12);
+  --glass-border-2-hover: rgba(255, 255, 255, 0.16);
+  --glass-border-3: rgba(255, 255, 255, 0.16);
+  --glass-border-3-hover: rgba(255, 255, 255, 0.2);
+
+  --glass-shadow-1: 0 10px 35px rgba(0, 0, 0, 0.38);
+  --glass-shadow-1-hover: 0 14px 46px rgba(0, 0, 0, 0.46);
+  --glass-shadow-2: 0 14px 46px rgba(0, 0, 0, 0.5);
+  --glass-shadow-2-hover: 0 18px 58px rgba(0, 0, 0, 0.58);
+  --glass-shadow-3: 0 22px 70px rgba(0, 0, 0, 0.6);
+  --glass-shadow-3-hover: 0 28px 90px rgba(0, 0, 0, 0.68);
+
+  --glass-edge-highlight: rgba(255, 255, 255, 0.06);
+  --glass-edge-highlight-strong: rgba(255, 255, 255, 0.09);
+  --glass-focus-ring: rgba(139, 92, 246, 0.38);
+
   /* Card + Tint System - Disa Frame Branding */
   --card-radius: 18px;
   --card-bg: rgba(12, 12, 18, 0.72);
@@ -211,12 +246,146 @@
     --notch-edge-color: var(--notch-edge-highlight-active);
   }
 
+  /* ============================================================================
+     PREMIUM DARK GLASS (Implementation)
+     - Base class uses internal vars: --_glass-*
+     - Layer classes set those vars
+     - Legacy aliases remain (glass, glass-card) to avoid churn
+     ========================================================================== */
+
+  .glass-surface,
+  .glass,
+  .glass-card,
+  .glass-1,
+  .glass-2,
+  .glass-3 {
+    position: relative;
+    isolation: isolate;
+    background: var(--_glass-bg, var(--glass-bg-1));
+    border: 1px solid var(--_glass-border, var(--glass-border-1));
+    box-shadow: var(--_glass-shadow, var(--glass-shadow-1));
+  }
+
+  /* Premium edge highlight (top-left) */
+  .glass-surface::before,
+  .glass::before,
+  .glass-card::before,
+  .glass-1::before,
+  .glass-2::before,
+  .glass-3::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--_glass-edge, var(--glass-edge-highlight)) 0%,
+      transparent 38%
+    );
+    opacity: 1;
+  }
+
+  /* Backdrop blur only when supported (premium glass performance + fallback) */
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass-surface,
+    .glass,
+    .glass-card,
+    .glass-1,
+    .glass-2,
+    .glass-3 {
+      backdrop-filter: blur(var(--_glass-blur, var(--glass-blur-1)));
+      /* stylelint-disable-next-line property-no-vendor-prefix */
+      -webkit-backdrop-filter: blur(var(--_glass-blur, var(--glass-blur-1)));
+    }
+  }
+
+  /* Layer definitions */
+  .glass-1 {
+    --_glass-bg: var(--glass-bg-1);
+    --_glass-bg-hover: var(--glass-bg-1-hover);
+    --_glass-border: var(--glass-border-1);
+    --_glass-border-hover: var(--glass-border-1-hover);
+    --_glass-shadow: var(--glass-shadow-1);
+    --_glass-shadow-hover: var(--glass-shadow-1-hover);
+    --_glass-blur: var(--glass-blur-1);
+    --_glass-edge: var(--glass-edge-highlight);
+  }
+
+  .glass-2 {
+    --_glass-bg: var(--glass-bg-2);
+    --_glass-bg-hover: var(--glass-bg-2-hover);
+    --_glass-border: var(--glass-border-2);
+    --_glass-border-hover: var(--glass-border-2-hover);
+    --_glass-shadow: var(--glass-shadow-2);
+    --_glass-shadow-hover: var(--glass-shadow-2-hover);
+    --_glass-blur: var(--glass-blur-2);
+    --_glass-edge: var(--glass-edge-highlight-strong);
+  }
+
+  .glass-3 {
+    --_glass-bg: var(--glass-bg-3);
+    --_glass-bg-hover: var(--glass-bg-3-hover);
+    --_glass-border: var(--glass-border-3);
+    --_glass-border-hover: var(--glass-border-3-hover);
+    --_glass-shadow: var(--glass-shadow-3);
+    --_glass-shadow-hover: var(--glass-shadow-3-hover);
+    --_glass-blur: var(--glass-blur-3);
+    --_glass-edge: var(--glass-edge-highlight-strong);
+  }
+
+  /* Interactive premium behavior (reusable) */
+  .glass-interactive {
+    transition:
+      background-color 180ms var(--disa-ease-standard, ease),
+      border-color 180ms var(--disa-ease-standard, ease),
+      box-shadow 180ms var(--disa-ease-standard, ease),
+      transform 180ms var(--disa-ease-standard, ease);
+    will-change: transform;
+  }
+
+  .glass-interactive:hover {
+    background: var(--_glass-bg-hover, var(--_glass-bg, var(--glass-bg-1)));
+    border-color: var(--_glass-border-hover, var(--_glass-border, var(--glass-border-1)));
+    box-shadow: var(--_glass-shadow-hover, var(--_glass-shadow, var(--glass-shadow-1)));
+    transform: translateY(-1px);
+  }
+
+  .glass-interactive:active {
+    transform: translateY(0);
+  }
+
+  .glass-interactive:focus-visible,
+  .glass-interactive:focus-within {
+    outline: none;
+    border-color: var(--glass-focus-ring);
+    box-shadow:
+      0 0 0 1px var(--glass-focus-ring),
+      var(--_glass-shadow, var(--glass-shadow-1));
+  }
+
+  /* Legacy aliases (keep existing class names working) */
   .glass {
-    @apply bg-surface-glass backdrop-blur-xl border border-white/10 shadow-lg;
+    --_glass-bg: var(--glass-bg-2);
+    --_glass-bg-hover: var(--glass-bg-2-hover);
+    --_glass-border: var(--glass-border-2);
+    --_glass-border-hover: var(--glass-border-2-hover);
+    --_glass-shadow: var(--glass-shadow-2);
+    --_glass-shadow-hover: var(--glass-shadow-2-hover);
+    --_glass-blur: var(--glass-blur-2);
+    --_glass-edge: var(--glass-edge-highlight-strong);
   }
 
   .glass-card {
-    @apply bg-surface-1/60 backdrop-blur-md border border-white/5 rounded-2xl shadow-sm hover:bg-surface-1/80 transition-all duration-300;
+    --_glass-bg: var(--glass-bg-1);
+    --_glass-bg-hover: var(--glass-bg-1-hover);
+    --_glass-border: var(--glass-border-1);
+    --_glass-border-hover: var(--glass-border-1-hover);
+    --_glass-shadow: var(--glass-shadow-1);
+    --_glass-shadow-hover: var(--glass-shadow-1-hover);
+    --_glass-blur: var(--glass-blur-1);
+    --_glass-edge: var(--glass-edge-highlight);
+    border-radius: 1rem; /* rounded-2xl */
   }
 
   .card-base {

@@ -134,33 +134,48 @@ shadow-inset: Inset shadow for deep zones
 
 ---
 
-## Glass Effects
+## Glass Effects (Premium Dark Glass)
 
-Use glass effects **sparingly** and only for functional purposes.
+The app uses a **dark & premium glassmorphism** style: high-opacity tinted glass, subtle edge highlights,
+and controlled blur. The goal is **calm readability** with premium depth—not “see-through UI”.
 
-### Utility Classes
+### Layer System (Standard)
+
+Use **one** of these layers depending on semantics:
+
+- **Glass-1 (Cards/Panels)**: standard surfaces (settings cards, side panels, banners)
+- **Glass-2 (Sticky/Floating)**: headers & floating composer chrome
+- **Glass-3 (Dialogs/Overlays)**: modals, drawers, sheets (strongest separation)
+
+### Utility Classes (Implementation)
 
 ```css
-.glass-header  - For sticky headers (bg-surface-2/90 + backdrop-blur-md)
-.glass-overlay - For overlays/drawers (bg-surface-1/80 + backdrop-blur-sm)
-.glass-subtle  - For subtle transparency (bg-surface-1/60)
+glass-1            - Premium card/panel glass (tokens: --glass-bg-1 / --glass-blur-1)
+glass-2            - Premium sticky glass (tokens: --glass-bg-2 / --glass-blur-2)
+glass-3            - Premium overlay glass (tokens: --glass-bg-3 / --glass-blur-3)
+glass-interactive  - Reusable hover/active/focus behavior (border/shadow/focus ring)
+
+glass-header       - Sticky header helper (mapped to Glass-2)
+glass-panel        - Panel helper (mapped to Glass-1)
+
+glass             - Legacy alias → Glass-2 (kept for compatibility)
+glass-card        - Legacy alias → Glass-1 (kept for compatibility)
 ```
 
-### When to Use Glass
+### Rules (Premium)
 
-✅ **DO use glass for:**
+✅ **DO**
 
-- Sticky headers that overlay content
-- Modal backgrounds/overlays
-- Drawers and side panels
-- Context menus
+- Use **Glass-2** for sticky headers and floating elements that overlay content.
+- Use **Glass-3** for drawers/modals to get clear separation.
+- Use **borders + edge highlight** as the “premium” signal, not heavy glows.
+- Keep blur **limited** to a small number of large surfaces (performance).
 
-❌ **DON'T use glass for:**
+❌ **DON'T**
 
-- Static cards or panels
-- Message bubbles
-- Regular buttons
-- Input fields (unless floating over content)
+- Don’t apply backdrop blur to long lists of items (e.g. each chat message bubble).
+- Don’t mix `bg-*` background utilities on the same element as `glass-1/2/3` (avoid conflicts).
+- Don’t use bright neon glows as default state—reserve for focus/primary only.
 
 ---
 
@@ -169,10 +184,11 @@ Use glass effects **sparingly** and only for functional purposes.
 Standardized background opacity values:
 
 ```
-100% (solid)      - Default for most UI elements
-90% (glass-heavy) - Sticky headers with partial transparency
-80% (glass-light) - Overlays, drawers, sheets
-60% (subtle)      - Disabled states, very subtle backgrounds
+100% (solid)        - Default for most UI elements
+Glass-1 (premium)   - Cards/panels (high opacity, moderate blur)
+Glass-2 (premium)   - Sticky/floating chrome (higher opacity, stronger blur)
+Glass-3 (premium)   - Overlays/modals (highest opacity, strongest blur)
+60% (subtle)        - Disabled states, very subtle backgrounds
 ```
 
 ---
