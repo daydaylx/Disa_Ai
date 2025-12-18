@@ -275,20 +275,20 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 180%;
-  height: 180%;
+  width: 135%;
+  height: 135%;
   border-radius: 9999px;
   pointer-events: none;
   opacity: 0;
   z-index: 0;
-  filter: blur(12px);
+  filter: blur(9px);
   will-change: opacity, transform;
-  /* Enhanced Idle State - Using vibrant gradient */
+  /* Subtle Idle State - 25% reduced intensity */
   background: radial-gradient(
     circle,
-    rgba(139, 92, 246, 0.55) 0%,
-    rgba(167, 139, 250, 0.35) 40%,
-    rgba(139, 92, 246, 0.15) 70%,
+    rgba(139, 92, 246, 0.41) 0%,
+    rgba(167, 139, 250, 0.26) 40%,
+    rgba(139, 92, 246, 0.11) 70%,
     transparent 90%
   );
   animation: presence-idle 10s ease-in-out infinite;
@@ -298,39 +298,39 @@
 @keyframes presence-idle {
   0%,
   100% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.93);
   }
   50% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.68;
+    transform: translate(-50%, -50%) scale(1.08);
   }
 }
 
 @keyframes presence-typing {
   0%,
   100% {
-    opacity: 0.7;
-    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.53;
+    transform: translate(-50%, -50%) scale(0.96);
   }
   50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.11);
   }
 }
 
 @keyframes presence-thinking {
   0% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.96);
   }
   50% {
-    opacity: 1.1;
-    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.83;
+    transform: translate(-50%, -50%) scale(1.15);
   }
   100% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.96);
   }
 }
 
@@ -349,14 +349,14 @@
   }
 }
 
-/* Enhanced State Modifiers with Vibrant Colors */
+/* Subtle State Modifiers - 25% reduced intensity */
 .presence-mark[data-state="typing"] {
   animation: presence-typing 4s ease-in-out infinite;
   background: radial-gradient(
     circle,
-    rgba(139, 92, 246, 0.75) 0%,
-    rgba(167, 139, 250, 0.5) 40%,
-    rgba(139, 92, 246, 0.25) 70%,
+    rgba(139, 92, 246, 0.56) 0%,
+    rgba(167, 139, 250, 0.38) 40%,
+    rgba(139, 92, 246, 0.19) 70%,
     transparent 90%
   );
 }
@@ -366,9 +366,9 @@
   animation: presence-thinking 2.5s ease-in-out infinite;
   background: radial-gradient(
     circle,
-    rgba(167, 139, 250, 0.85) 0%,
-    rgba(139, 92, 246, 0.6) 40%,
-    rgba(167, 139, 250, 0.3) 70%,
+    rgba(167, 139, 250, 0.64) 0%,
+    rgba(139, 92, 246, 0.45) 40%,
+    rgba(167, 139, 250, 0.23) 70%,
     transparent 90%
   );
 }
@@ -377,9 +377,9 @@
   animation: presence-error 0.75s ease-out forwards;
   background: radial-gradient(
     circle,
-    rgba(239, 68, 68, 0.9) 0%,
-    rgba(239, 68, 68, 0.55) 40%,
-    rgba(239, 68, 68, 0.25) 70%,
+    rgba(239, 68, 68, 0.68) 0%,
+    rgba(239, 68, 68, 0.41) 40%,
+    rgba(239, 68, 68, 0.19) 70%,
     transparent 90%
   );
 }
@@ -388,9 +388,9 @@
   animation: presence-idle 8s ease-in-out infinite;
   background: radial-gradient(
     circle,
-    rgba(16, 185, 129, 0.75) 0%,
-    rgba(16, 185, 129, 0.45) 40%,
-    rgba(16, 185, 129, 0.2) 70%,
+    rgba(16, 185, 129, 0.56) 0%,
+    rgba(16, 185, 129, 0.34) 40%,
+    rgba(16, 185, 129, 0.15) 70%,
     transparent 90%
   );
 }

@@ -146,23 +146,24 @@ export default function Chat() {
             aria-expanded={uiState.isHistoryOpen}
             className={cn(
               "gap-2 px-3 relative overflow-visible",
-              "border-accent-chat/20 hover:border-accent-chat/40",
-              "hover:bg-accent-chat/5 transition-all duration-200",
-              uiState.isHistoryOpen && "bg-accent-chat/10 border-accent-chat/40",
+              "border-accent-chat/15 hover:border-accent-chat/30",
+              "hover:bg-accent-chat/4 transition-all duration-200",
+              uiState.isHistoryOpen && "bg-accent-chat/8 border-accent-chat/30",
+              "min-h-[44px] sm:min-h-0", // Mobile touch target optimization
             )}
           >
             <Bookmark
               className={cn(
                 "h-4 w-4 transition-colors",
                 uiState.isHistoryOpen
-                  ? "text-accent-chat fill-accent-chat/30"
-                  : "text-accent-chat/70",
+                  ? "text-accent-chat fill-accent-chat/23"
+                  : "text-accent-chat/53",
               )}
             />
             <span className="hidden sm:inline text-ink-primary">Verlauf</span>
             {chatLogic.conversations && chatLogic.conversations.length > 0 && (
               <span
-                className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent-chat shadow-[0_0_8px_rgba(var(--accent-chat-glow),0.6)]"
+                className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent-chat shadow-[0_0_6px_rgba(var(--accent-chat-glow),0.45)]"
                 aria-label={`${chatLogic.conversations.length} Unterhaltungen`}
               />
             )}
@@ -209,9 +210,9 @@ export default function Chat() {
                           } as React.CSSProperties
                         }
                       >
-                        {/* Decorative gradient orbs for visual interest */}
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-accent-chat/20 to-transparent blur-2xl pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-28 h-28 bg-gradient-radial from-accent-models/15 to-transparent blur-2xl pointer-events-none" />
+                        {/* Decorative gradient orbs for visual interest - 25% reduced */}
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-radial from-accent-chat/15 to-transparent blur-xl pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-radial from-accent-models/11 to-transparent blur-xl pointer-events-none" />
 
                         {/* Main Title - Wordmark with intro animation and gradient */}
                         <div className="space-y-3 relative z-10">
@@ -227,10 +228,10 @@ export default function Chat() {
                             </span>
                           </h1>
                           <div className="space-y-2">
-                            {/* Enhanced accent line with gradient glow */}
+                            {/* Subtle accent line with gradient glow - 25% reduced */}
                             <div className="relative w-32 h-px mx-auto">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/60 to-transparent" />
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-chat/40 to-transparent blur-sm" />
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/45 to-transparent" />
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-chat/30 to-transparent blur-sm" />
                             </div>
                             <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-80 animate-wordmark-intro-delay-1">
                               DEIN KI-ASSISTENT
@@ -253,25 +254,25 @@ export default function Chat() {
                     {/* Starter Prompts - Suggestion Cards with Enhanced Color Accents */}
                     <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => {
-                        // Cycle through accent colors for visual variety
+                        // Cycle through accent colors - 25% reduced intensity
                         const accentColors = [
                           {
-                            bg: "bg-accent-chat/10",
+                            bg: "bg-accent-chat/8",
                             text: "text-accent-chat",
-                            border: "border-accent-chat/20",
-                            glow: "group-hover:shadow-[0_0_20px_rgba(var(--accent-chat-glow),0.15)]",
+                            border: "border-accent-chat/15",
+                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-chat-glow),0.11)]",
                           },
                           {
-                            bg: "bg-accent-models/10",
+                            bg: "bg-accent-models/8",
                             text: "text-accent-models",
-                            border: "border-accent-models/20",
-                            glow: "group-hover:shadow-[0_0_20px_rgba(var(--accent-models-glow),0.15)]",
+                            border: "border-accent-models/15",
+                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-models-glow),0.11)]",
                           },
                           {
-                            bg: "bg-brand-primary/10",
+                            bg: "bg-brand-primary/8",
                             text: "text-brand-primary",
-                            border: "border-brand-primary/20",
-                            glow: "group-hover:shadow-[0_0_20px_rgba(139,92,246,0.15)]",
+                            border: "border-brand-primary/15",
+                            glow: "group-hover:shadow-[0_0_15px_rgba(139,92,246,0.11)]",
                           },
                         ] as const;
                         const accent = accentColors[index % accentColors.length]!;
@@ -283,7 +284,8 @@ export default function Chat() {
                             notch="none"
                             tintColor="rgb(var(--tint-color-rgb-default))"
                             className={cn(
-                              "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
+                              "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
+                              "min-h-[56px]", // Mobile touch target (44px + padding)
                               "hover:border-white/[0.22] hover:shadow-lg", // Enhanced hover state
                               accent.glow, // Color-specific glow on hover
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
@@ -306,14 +308,14 @@ export default function Chat() {
                           >
                             <div
                               className={cn(
-                                "p-3 rounded-xl transition-all flex-shrink-0",
+                                "p-2.5 sm:p-3 rounded-xl transition-all flex-shrink-0",
                                 "bg-surface-2",
                                 accent.bg,
                                 accent.text,
-                                "group-hover:scale-105", // Slight scale on hover
+                                "group-hover:scale-[1.04]", // Subtle scale on hover - 25% reduced
                               )}
                             >
-                              <MessageSquare className="h-5 w-5" />
+                              <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5" />
                             </div>
                             <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
                               {prompt}
