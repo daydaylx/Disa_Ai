@@ -226,7 +226,7 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
     "--color-overlay-toast-accent": "#8B5CF6",
     "--color-overlay-dialog-bg": "#141b2f",
     "--color-overlay-dialog-border": "rgba(255, 255, 255, 0.08)",
-    "--card-page-bg-rgb": "15 24 32",
+    "--card-page-bg-rgb": "19 19 20",
     "--card-bg-rgb": "21 29 49",
     "--card-border-rgb": "255 255 255",
     "--card-border-alpha": "0.12",
@@ -273,5 +273,5 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
 } as const;
 
 // Performance: Pre-calculated tokens eliminate ~4ms runtime calculation per theme switch
-// Generated: 2025-12-17T17:13:56.771Z
+// Generated: 2025-12-18T11:17:54.609Z
 // Tokens: 130 variables per theme

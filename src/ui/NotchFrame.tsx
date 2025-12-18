@@ -83,8 +83,9 @@ const notchFrameVariants = cva(
        */
       glass: {
         none: "bg-surface-1 backdrop-blur-none",
-        subtle: "bg-surface-glass/40 backdrop-blur-md",
-        strong: "bg-surface-glass backdrop-blur-xl",
+        // Premium Dark Glass mapping
+        subtle: "bg-[var(--glass-bg-1)] backdrop-blur-[var(--glass-blur-1)]",
+        strong: "bg-[var(--glass-bg-2)] backdrop-blur-[var(--glass-blur-2)]",
       },
     },
     defaultVariants: {

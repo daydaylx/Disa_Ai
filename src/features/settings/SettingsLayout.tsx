@@ -9,6 +9,7 @@ import {
   Cat,
   Database,
   MessageSquare,
+  Palette,
   Shield,
   SlidersHorizontal,
 } from "../../lib/icons";
@@ -29,9 +30,15 @@ const NAV_ITEMS = [
   },
   {
     id: "behavior",
-    label: "KI Verhalten",
+    label: "KI‑Verhalten",
     icon: SlidersHorizontal,
     to: "/settings/behavior",
+  },
+  {
+    id: "appearance",
+    label: "Darstellung",
+    icon: Palette,
+    to: "/settings/appearance",
   },
   {
     id: "youth",

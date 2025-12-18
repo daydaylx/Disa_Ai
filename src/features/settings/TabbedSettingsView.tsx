@@ -26,7 +26,7 @@ const SECTIONS = [
   },
   {
     id: "behavior",
-    label: "KI Verhalten",
+    label: "KI‑Verhalten",
     description: "Kreativität & Stil",
     icon: SlidersHorizontal,
     to: "/settings/behavior",

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { STORAGE_KEYS } from "@/config/storageKeys";
+
 import { MemoryStore } from "../lib/memory/memoryService";
 
 interface GlobalMemory {
@@ -12,9 +14,13 @@ interface GlobalMemory {
 export function useMemory() {
   const [isEnabled, setIsEnabled] = useState<boolean>(() => {
     try {
-      return localStorage.getItem("disa-ai-memory-enabled") === "true";
+      const stored = localStorage.getItem(STORAGE_KEYS.MEMORY_ENABLED);
+      // Fresh install default: ON (only when no explicit preference exists)
+      if (stored == null) return true;
+      return stored === "true";
     } catch {
-      return false;
+      // If storage is unavailable, default to ON to match fresh-install behavior.
+      return true;
     }
   });
 
@@ -36,11 +42,8 @@ export function useMemory() {
     setIsEnabled((prev) => {
       const newEnabled = !prev;
       try {
-        if (newEnabled) {
-          localStorage.setItem("disa-ai-memory-enabled", "true");
-        } else {
-          localStorage.removeItem("disa-ai-memory-enabled");
-        }
+        // Persist explicit preference either way, so "OFF" stays OFF across reloads.
+        localStorage.setItem(STORAGE_KEYS.MEMORY_ENABLED, newEnabled ? "true" : "false");
       } catch (error) {
         console.error("Failed to save memory preference:", error);
       }

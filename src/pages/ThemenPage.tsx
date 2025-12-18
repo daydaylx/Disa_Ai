@@ -25,14 +25,14 @@ export default function ThemenPage() {
     return (
       <Card
         key={quickstart.id}
-        variant="interactive"
+        variant="roleStrong"
         notch="none"
         role="button"
         onClick={() => handleStartQuickstart(quickstart)}
         style={{ background: theme.roleGradient }}
         className={cn(
-          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm overflow-hidden",
-          "border-white/5 hover:brightness-110",
+          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm overflow-hidden cursor-pointer",
+          "hover:brightness-110",
           theme.hoverBorder,
         )}
       >

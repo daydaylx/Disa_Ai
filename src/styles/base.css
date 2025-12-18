@@ -502,6 +502,71 @@ a {
 }
 
 /* ============================================================================
+   CARD NOTCH VISUAL SYSTEM - Unified CSS-based Notch
+   Replaces inline div approach with performant ::before/::after pseudo-elements
+   ============================================================================ */
+
+.card-notch-visual {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Notch Cutout - Shows page background with noise texture */
+.card-notch-visual::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--notch-size, 20px);
+  height: var(--notch-size, 20px);
+  background: rgb(var(--page-bg-rgb, 19, 19, 20));
+  background-image: var(--chalk-noise); /* Match page texture */
+  border-bottom-left-radius: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Notch Edge Highlights - L-shaped inner edges */
+.card-notch-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(var(--notch-size, 20px) - 1.5px),
+      rgba(255, 255, 255, var(--notch-edge-opacity, 0.24)) calc(var(--notch-size, 20px) - 1.5px),
+      rgba(255, 255, 255, var(--notch-edge-opacity, 0.24))
+    ),
+    linear-gradient(
+      to left,
+      rgba(255, 255, 255, var(--notch-edge-opacity, 0.24)) 0,
+      rgba(255, 255, 255, var(--notch-edge-opacity, 0.24)) 1.5px,
+      transparent 1.5px
+    );
+  background-repeat: no-repeat;
+  background-size: 1.5px 100%, 100% 1.5px;
+  background-position:
+    calc(100% - var(--notch-size, 20px)) top,
+    right calc(100% - var(--notch-size, 20px));
+  z-index: 11;
+}
+
+/* Notch Size Variants */
+.card-notch-visual[data-notch-size="sm"] {
+  --notch-size: var(--notch-size-sm, 10px);
+}
+
+.card-notch-visual[data-notch-size="default"] {
+  --notch-size: var(--notch-size-default, 20px);
+}
+
+.card-notch-visual[data-notch-size="lg"] {
+  --notch-size: var(--notch-size-hero, 24px);
+}
+
+/* ============================================================================
    MOBILE LANDSCAPE ORIENTATION FIX
    ============================================================================ */
 

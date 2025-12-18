@@ -14,7 +14,7 @@ test.describe("Book Concept UI", () => {
     // Check for Hamburger Menu
     await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
 
-    // Check for Bookmark (History trigger)
+    // Check for History trigger
     await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
     // Check for Unified Input Bar
@@ -70,14 +70,14 @@ test.describe("Book Concept UI", () => {
     await creativeLevel.click();
   });
 
-  test("should open History Panel via Bookmark", async ({ page }) => {
-    const bookmark = page.locator('button[aria-label="Verlauf öffnen"]');
-    await bookmark.click();
+  test("should open History Panel via history trigger", async ({ page }) => {
+    const historyTrigger = page.locator('button[aria-label="Verlauf öffnen"]');
+    await historyTrigger.click();
 
     // Prefer the actual history panel dialog (avoid picking other complementary regions)
     const historyPanel = page.getByRole("dialog").filter({ hasText: "Inhaltsverzeichnis" });
     await expect(historyPanel).toBeVisible();
-    await expect(historyPanel.getByText("Lesezeichen")).toBeVisible();
+    await expect(historyPanel.getByText("Chat‑Verlauf")).toBeVisible();
     await expect(historyPanel.getByText("Archiv")).toBeVisible();
 
     // Close it by clicking outside

@@ -191,7 +191,14 @@ export class AccessibilityUtils {
       /* Enhance contrast for users who prefer high contrast */
       .bg-surface-base,
       .bg-surface-card,
-      .bg-surface-glass {
+      .bg-surface-glass,
+      .glass,
+      .glass-card,
+      .glass-1,
+      .glass-2,
+      .glass-3,
+      .glass-header,
+      .glass-panel {
         background-color: ButtonFace !important;
         color:ButtonText !important;
       }

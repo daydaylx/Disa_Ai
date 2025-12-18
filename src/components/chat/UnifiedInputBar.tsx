@@ -25,41 +25,6 @@ export function UnifiedInputBar({
   isLoading = false,
   className,
 }: UnifiedInputBarProps) {
-  // #region agent log
-  fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      location: "src/components/chat/UnifiedInputBar.tsx:1",
-      message: "UnifiedInputBar module loaded",
-      data: {
-        reactVersion: (React as any)?.version,
-        hasUseRef: typeof (React as any)?.useRef === "function",
-      },
-      timestamp: Date.now(),
-      sessionId: "debug-session",
-      runId: "pre-fix",
-      hypothesisId: "A",
-    }),
-  }).catch(() => {});
-  // #endregion agent log
-
-  // #region agent log
-  fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      location: "src/components/chat/UnifiedInputBar.tsx:28",
-      message: "UnifiedInputBar render entry",
-      data: { valueLen: value?.length, isLoading },
-      timestamp: Date.now(),
-      sessionId: "debug-session",
-      runId: "pre-fix",
-      hypothesisId: "B",
-    }),
-  }).catch(() => {});
-  // #endregion agent log
-
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
@@ -137,12 +102,10 @@ export function UnifiedInputBar({
 
       {/* Main Input Container - Material-based with clear focus */}
       <BrandCard
-        variant="plain"
+        variant="tinted"
         padding="sm"
         className={cn(
-          "relative flex items-end gap-3 transition-all",
-          "focus-within:border-brand-primary/40 focus-within:ring-2 focus-within:ring-brand-primary/20 focus-within:ring-offset-0", // Clear focus ring, not thick outline
-          "bg-surface-card/80 backdrop-blur-sm", // Material-based with optional light tint
+          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
         )}
         aria-label="Eingabebereich"
       >
@@ -166,12 +129,13 @@ export function UnifiedInputBar({
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-0.5",
+            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
             !value.trim() &&
               !isLoading &&
               "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
             value.trim() &&
-              "bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-100",
+              !isLoading &&
+              "bg-accent-chat text-white shadow-glow-sm hover:shadow-glow-md hover:scale-105 active:scale-100 animate-send-pulse",
           )}
           aria-label="Senden"
         >

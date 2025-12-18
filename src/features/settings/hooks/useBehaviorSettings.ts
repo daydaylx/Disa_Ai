@@ -16,14 +16,9 @@ export function useBehaviorSettings() {
     setDiscussionStrict,
     setDiscussionMaxSentences,
     setPreferredModel,
-    setTheme,
-    setFontSize,
-    setReduceMotion,
-    setHapticFeedback,
   } = useSettings();
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [showAppearance, setShowAppearance] = useState(false);
   const [preferredModelInput, setPreferredModelInput] = useState(settings.preferredModelId);
   const [creativity, setCreativityState] = useState(() => settings.creativity ?? 45);
 
@@ -90,8 +85,6 @@ export function useBehaviorSettings() {
     settings,
     showAdvanced,
     setShowAdvanced,
-    showAppearance,
-    setShowAppearance,
     preferredModelInput,
     setPreferredModelInput,
     creativity,
@@ -102,9 +95,5 @@ export function useBehaviorSettings() {
     handleStrictModeToggle,
     handleMaxSentencesChange,
     handlePreferredModelSave,
-    setTheme,
-    setFontSize,
-    setReduceMotion,
-    setHapticFeedback,
   };
 }

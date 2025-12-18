@@ -48,7 +48,7 @@ export const frameTokens: FrameTokens = {
   // Frame base - using existing design system values
   radius: "16px", // matches radius-md
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.18)", // 18% white - visible notch borders (50% stronger)
+  borderColor: "rgba(255, 255, 255, 0.20)", // 20% white - clearly visible notch borders
   borderColorHover: "rgba(255, 255, 255, 0.24)", // 24% white - more prominent on hover
   borderColorFocus: "rgba(139, 92, 246, 0.4)", // brand-primary at 40%
   borderColorActive: "rgba(139, 92, 246, 0.5)", // brand-primary at 50%
@@ -59,11 +59,11 @@ export const frameTokens: FrameTokens = {
 
   // Notch sizes (Disa Frame Branding System)
   notchSm: "10px", // Mobile default, smaller elements
-  notchDefault: "18px", // Default notch size for standard cards
-  notchHero: "22px", // Hero cards and primary panels
+  notchDefault: "20px", // Default notch size for standard cards (increased for visibility)
+  notchHero: "24px", // Hero cards and primary panels (increased for visibility)
 
-  // Edge highlight - subtle in idle, strong on active/focus
-  edgeHighlight: "rgba(255, 255, 255, 0.06)", // Subtle idle edge (visible instead of transparent)
+  // Edge highlight - now visible in idle state for clear "broken corner" effect
+  edgeHighlight: "rgba(255, 255, 255, 0.24)", // Visible idle edge (4x stronger than before)
   edgeHighlightActive: "rgba(139, 92, 246, 0.6)", // brand-primary glow
 
   // Animation timings

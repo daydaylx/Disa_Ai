@@ -27,7 +27,7 @@ function CodeBlock({ children, language }: { children: string; language?: string
   });
 
   const handleCopy = () => {
-    void navigator.clipboard?.writeText(children);
+    void navigator.clipboard?.writeText(children).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -131,7 +131,7 @@ export function ChatMessage({
 
   const handleCopy = () => {
     onCopy?.(message.content);
-    void navigator.clipboard?.writeText(message.content);
+    void navigator.clipboard?.writeText(message.content).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -172,10 +172,10 @@ export function ChatMessage({
         {/* Bubble */}
         <div
           className={cn(
-            "rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md message-bubble-hover",
+            "relative rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
             isUser
-              ? "bg-brand-primary/10 text-ink-primary border border-brand-primary/20 rounded-tr-sm"
-              : "bg-surface-1/60 text-ink-primary border border-white/5 rounded-tl-sm",
+              ? "bg-gradient-to-br from-accent-chat-surface via-brand-primary/10 to-surface-1/30 text-ink-primary border border-accent-chat-border rounded-tr-sm hover:shadow-glow-sm"
+              : "bg-gradient-to-br from-surface-1/80 to-surface-2/40 text-ink-primary border border-white/5 rounded-tl-sm",
           )}
           data-testid="message-bubble"
         >
@@ -223,7 +223,7 @@ export function ChatMessage({
             <button
               onClick={handleCopy}
               className={cn(
-                "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover",
+                "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40",
                 copied && "animate-copy-feedback",
               )}
               title="Kopieren"
@@ -238,7 +238,7 @@ export function ChatMessage({
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover"
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
                 title="Bearbeiten"
               >
                 <Edit2 className="h-3.5 w-3.5" />
@@ -248,7 +248,7 @@ export function ChatMessage({
             {isAssistant && isLast && (
               <button
                 onClick={handleRetry}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover"
+                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
                 title="Neu generieren"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -271,7 +271,7 @@ export function ChatMessage({
               <button
                 key={suggestion}
                 onClick={() => onFollowUp(suggestion)}
-                className="text-xs bg-accent-chat/10 text-accent-chat hover:bg-accent-chat/20 hover:text-accent-chat px-3 py-2 rounded-full border border-accent-chat/20 hover:border-accent-chat/40 transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover"
+                className="text-xs bg-accent-chat-surface text-accent-chat hover:bg-accent-chat-dim px-3 py-2 rounded-full border border-accent-chat-border transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
                 {suggestion}

@@ -28,7 +28,7 @@ export function NetworkBanner() {
   return (
     <div
       data-testid="offline-banner"
-      className="fixed top-4 left-1/2 z-[var(--z-toast)] -translate-x-1/2 bg-surface-2 rounded-3xl px-6 py-3 text-sm font-medium shadow-raiseLg shadow-[var(--shadow-glow-lila)] animate-pulse-glow hover:shadow-[var(--shadow-glow-primary)] hover:scale-[1.02] transition-all"
+      className="fixed top-4 left-1/2 z-[var(--z-toast)] -translate-x-1/2 rounded-3xl px-6 py-3 text-sm font-medium glass-2 glass-interactive ring-1 ring-accent-chat/20 hover:scale-[1.02]"
       style={{
         transitionDuration: "300ms",
         transitionTimingFunction: "var(--motion-ease-elastic)",
