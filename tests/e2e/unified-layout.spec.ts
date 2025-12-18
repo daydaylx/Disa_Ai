@@ -20,10 +20,20 @@ test.describe("Unified Layout Tests", () => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 
-      // Check for consistent header elements
-      // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
-      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
-      await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
+      const viewport = page.viewportSize();
+      const isDesktop = Boolean(viewport && viewport.width >= 1024);
+
+      if (isDesktop) {
+        // Desktop layout uses a persistent sidebar; hamburger/history buttons may not exist.
+        await expect(page.locator("aside").first()).toBeVisible();
+      } else {
+        // Mobile layout uses the header buttons.
+        // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
+        await expect(
+          page.locator('button[aria-label="Menü öffnen"]:visible').first(),
+        ).toBeVisible();
+        await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
+      }
 
       // Brand/logo should be present
       await expect(page.getByTestId("brand-logo")).toBeVisible();
@@ -111,6 +121,8 @@ test.describe("Unified Layout Tests", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
+    const viewport = page.viewportSize();
+    const isDesktop = Boolean(viewport && viewport.width >= 1024);
     const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
 
     // Navigate to different pages and check they load
@@ -121,14 +133,24 @@ test.describe("Unified Layout Tests", () => {
     ];
 
     for (const { linkText, expectedPath } of navigationTests) {
-      await menuButton.click();
+      if (isDesktop) {
+        // Desktop: click link from persistent sidebar navigation.
+        const sidebarLink = page
+          .getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") })
+          .first();
+        await expect(sidebarLink).toBeVisible();
+        await sidebarLink.click();
+      } else {
+        // Mobile: open drawer then click link.
+        await menuButton.click();
 
-      const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-      await expect(menuDrawer).toBeVisible();
+        const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+        await expect(menuDrawer).toBeVisible();
 
-      const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
-      await expect(link).toBeVisible();
-      await link.click();
+        const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
+        await expect(link).toBeVisible();
+        await link.click();
+      }
 
       await expect(page).toHaveURL(expectedPath);
       await page.waitForLoadState("networkidle");
@@ -148,7 +170,14 @@ test.describe("Unified Layout Tests", () => {
       await page.waitForLoadState("networkidle");
 
       // Check that key elements are visible and properly positioned
-      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
+      const isDesktop = viewport.width >= 1024;
+      if (isDesktop) {
+        await expect(page.locator("aside").first()).toBeVisible();
+      } else {
+        await expect(
+          page.locator('button[aria-label="Menü öffnen"]:visible').first(),
+        ).toBeVisible();
+      }
       await expect(page.getByTestId("composer-input")).toBeVisible();
 
       // Check that content is accessible without overlapping
