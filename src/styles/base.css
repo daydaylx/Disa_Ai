@@ -52,8 +52,6 @@ body {
   padding-bottom: calc(var(--mobile-gutter) + var(--mobile-safe-bottom));
   padding-left: calc(var(--mobile-gutter) + var(--mobile-safe-left));
   padding-right: calc(var(--mobile-gutter) + var(--mobile-safe-right));
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 
 @media (min-width: 768px) {
