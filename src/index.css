@@ -66,6 +66,12 @@
   --glass-edge-highlight-strong: rgba(255, 255, 255, 0.09);
   --glass-focus-ring: rgba(139, 92, 246, 0.38);
 
+  /* Status glows (centralized; avoid inline rgba shadows in components) */
+  --shadow-status-success: 0 0 16px rgba(16, 185, 129, 0.28);
+  --shadow-status-error: 0 0 16px rgba(239, 68, 68, 0.28);
+  --shadow-status-warning: 0 0 16px rgba(245, 158, 11, 0.28);
+  --shadow-status-info: 0 0 16px rgba(6, 182, 212, 0.28);
+
   /* Card + Tint System - Disa Frame Branding */
   --card-radius: 18px;
   --card-bg: rgba(12, 12, 18, 0.72);

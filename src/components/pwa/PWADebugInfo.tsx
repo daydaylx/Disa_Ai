@@ -62,7 +62,7 @@ export function PWADebugInfo() {
         aria-label="PWA Debug-Informationen anzeigen"
         title="PWA Debug-Informationen anzeigen"
       >
-        <Info className="h-4 w-4 shadow-[var(--shadow-glow-soft)]" aria-hidden="true" />
+        <Info className="h-4 w-4" aria-hidden="true" />
       </Button>
     );
   }

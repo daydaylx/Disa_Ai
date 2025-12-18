@@ -93,10 +93,10 @@ function ToastViewport({
 
   const kindClasses = useMemo(
     () => ({
-      success: "ring-1 ring-status-success/30 shadow-[0_0_16px_rgba(16,185,129,0.3)]",
-      error: "ring-1 ring-status-error/30 shadow-[0_0_16px_rgba(239,68,68,0.3)]",
-      warning: "ring-1 ring-status-warning/30 shadow-[0_0_16px_rgba(245,158,11,0.3)]",
-      info: "ring-1 ring-status-info/30 shadow-[0_0_16px_rgba(6,182,212,0.3)]",
+      success: "ring-1 ring-status-success/30 shadow-[var(--shadow-status-success)]",
+      error: "ring-1 ring-status-error/30 shadow-[var(--shadow-status-error)]",
+      warning: "ring-1 ring-status-warning/30 shadow-[var(--shadow-status-warning)]",
+      info: "ring-1 ring-status-info/30 shadow-[var(--shadow-status-info)]",
     }),
     [],
   );
@@ -145,7 +145,7 @@ function ToastViewport({
             <button
               type="button"
               aria-label="Benachrichtigung schließen"
-              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
               onClick={() => onDismiss(toast.id)}
             >
               ×

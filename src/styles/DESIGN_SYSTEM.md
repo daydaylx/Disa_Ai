@@ -115,7 +115,9 @@ rounded-full: 9999px           - Pills, circular buttons
 
 ## Shadow System
 
-**IMPORTANT:** Use Tailwind's built-in shadow utilities ONLY. No custom shadow values.
+**IMPORTANT:** Prefer Tailwind `shadow-*` utilities for general elevation.  
+Custom shadows are allowed **only** when they are **tokenized** (CSS variables) for the premium glass system
+and status glows. Do **not** hardcode raw RGBA shadow values in component class strings.
 
 ```
 shadow-none: No shadow (flat design)
@@ -130,7 +132,9 @@ shadow-inset: Inset shadow for deep zones
 - **Default cards**: `shadow-sm`
 - **Interactive cards** (hover): `shadow-md`
 - **Modals/overlays**: `shadow-lg`
-- **Maximum 1 shadow per element** - never layer multiple shadows
+- **Premium glass surfaces**: use `glass-1/2/3` (they include tokenized shadow + border + optional blur)
+- **Status emphasis** (toasts/banners): use tokenized status glows (e.g. `shadow-[var(--shadow-status-error)]`)
+- **Maximum 1 shadow per element** - avoid stacking multiple shadows
 
 ---
 

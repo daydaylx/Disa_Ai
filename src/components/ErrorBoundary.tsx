@@ -125,7 +125,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="bg-[var(--surface-base)] flex min-h-dvh items-center justify-center p-4">
           <PremiumCard className="w-full max-w-2xl">
             <div className="mb-8 text-center">
-              <div className="bg-surface-2 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl shadow-[var(--shadow-glow-red)] animate-pulse">
+              <div className="bg-surface-2 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl ring-1 ring-status-error/30 shadow-[var(--shadow-status-error)]">
                 <svg
                   className="text-destructive h-10 w-10 drop-shadow-glow-destructive"
                   fill="none"

@@ -195,7 +195,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         {model.label ?? model.id}
                       </span>
                       {isActive && (
-                        <Check className="h-4 w-4 text-accent-models flex-shrink-0 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" />
+                        <Check className="h-4 w-4 text-accent-models flex-shrink-0 drop-shadow-md" />
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium pointer-events-none">

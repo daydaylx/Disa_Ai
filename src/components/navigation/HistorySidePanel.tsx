@@ -130,7 +130,7 @@ export function HistorySidePanel({
                   "w-full text-left px-4 py-3 rounded-xl transition-all group border border-white/8 bg-surface-2/70",
                   "hover:border-accent-primary/50 hover:bg-surface-1/80",
                   activeId === chat.id
-                    ? "border-accent-primary bg-accent-primary/10 shadow-[0_12px_30px_rgba(0,0,0,0.25)]"
+                    ? "border-accent-primary bg-accent-primary/10 ring-1 ring-accent-primary/20 shadow-md"
                     : "",
                 )}
               >
