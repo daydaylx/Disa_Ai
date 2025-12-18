@@ -58,9 +58,14 @@ export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLo
       {/* Presence Mark: Animated via CSS based on parent's data-state */}
       <span className="presence-mark" aria-hidden="true" data-state={state} />
 
-      {/* Wordmark Text */}
+      {/* Wordmark Text with gradient accents */}
       <span className="relative z-10">
-        Disa <span className="text-ink-secondary">AI</span>
+        <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent font-bold">
+          Disa
+        </span>{" "}
+        <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent font-bold">
+          AI
+        </span>
       </span>
     </span>
   );
