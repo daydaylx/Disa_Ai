@@ -471,7 +471,12 @@
     isolation: isolate;
     overflow: hidden;
     --card-notch-size: var(--notch-size-md);
-    --card-edge-highlight: rgba(255, 255, 255, 0.24); /* Increased from var(--notch-edge-highlight) for visibility */
+    --card-edge-highlight: rgba(
+      255,
+      255,
+      255,
+      0.24
+    ); /* Increased from var(--notch-edge-highlight) for visibility */
     border-radius: var(--card-radius);
     border: var(--card-border-width) solid var(--card-border-color);
     background: var(--card-bg);
