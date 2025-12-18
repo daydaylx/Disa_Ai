@@ -92,10 +92,10 @@ test.describe("Chat Smoke Tests", () => {
     await expect(historyPanel).toBeVisible({ timeout: 10000 });
 
     // Prüfe Tabs im History-Panel - warte explizit auf die Buttons
-    const bookmarksTab = historyPanel.locator("button", { hasText: "Lesezeichen" });
+    const historyTab = historyPanel.locator("button", { hasText: "Chat‑Verlauf" });
     const archiveTab = historyPanel.locator("button", { hasText: "Archiv" });
 
-    await expect(bookmarksTab).toBeVisible({ timeout: 5000 });
+    await expect(historyTab).toBeVisible({ timeout: 5000 });
     await expect(archiveTab).toBeVisible({ timeout: 5000 });
 
     // Panel schließen durch Klick außerhalb

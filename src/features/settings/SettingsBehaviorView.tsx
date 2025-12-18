@@ -1,17 +1,14 @@
-import { useEffect } from "react";
-
 import { BEHAVIOR_PRESETS } from "@/config/behavior-presets";
-import { SlidersHorizontal, Smartphone } from "@/lib/icons";
+import { SlidersHorizontal } from "@/lib/icons";
 
 import { AdvancedTuningPanel } from "./components/AdvancedTuningPanel";
-import { AppearanceSettingsPanel } from "./components/AppearanceSettingsPanel";
 import { MetaPresetCard } from "./components/MetaPresetCard";
 import { SettingsAccordion } from "./components/SettingsAccordion";
 import { useBehaviorSettings } from "./hooks/useBehaviorSettings";
 import { SettingsLayout } from "./SettingsLayout";
 
 interface SettingsBehaviorViewProps {
-  activeTab?: "behavior" | "appearance";
+  activeTab?: "behavior";
 }
 
 export function SettingsBehaviorView({ activeTab = "behavior" }: SettingsBehaviorViewProps) {
@@ -19,8 +16,6 @@ export function SettingsBehaviorView({ activeTab = "behavior" }: SettingsBehavio
     settings,
     showAdvanced,
     setShowAdvanced,
-    showAppearance,
-    setShowAppearance,
     preferredModelInput,
     setPreferredModelInput,
     creativity,
@@ -31,27 +26,13 @@ export function SettingsBehaviorView({ activeTab = "behavior" }: SettingsBehavio
     handleStrictModeToggle,
     handleMaxSentencesChange,
     handlePreferredModelSave,
-    setTheme,
-    setFontSize,
-    setReduceMotion,
-    setHapticFeedback,
   } = useBehaviorSettings();
-
-  useEffect(() => {
-    if (activeTab === "appearance") {
-      setShowAppearance(true);
-    }
-  }, [activeTab, setShowAppearance]);
 
   return (
     <SettingsLayout
       activeTab={activeTab}
-      title={activeTab === "appearance" ? "Darstellung" : "KI-Verhalten"}
-      description={
-        activeTab === "appearance"
-          ? "Passe das Design und die Schriftgröße an."
-          : "Wähle ein Profil oder passe die KI detailliert an deine Bedürfnisse an."
-      }
+      title="KI-Verhalten"
+      description="Wähle ein Profil oder passe die KI detailliert an deine Bedürfnisse an."
     >
       <div className="space-y-6">
         {/* Meta Presets Grid */}
@@ -86,26 +67,6 @@ export function SettingsBehaviorView({ activeTab = "behavior" }: SettingsBehavio
             onMaxSentencesChange={handleMaxSentencesChange}
             onPreferredModelChange={setPreferredModelInput}
             onPreferredModelSave={handlePreferredModelSave}
-          />
-        </SettingsAccordion>
-
-        {/* Appearance Accordion */}
-        <SettingsAccordion
-          icon={Smartphone}
-          title="Darstellung & Bedienung"
-          description="Design, Schriftgröße und Animationen"
-          isOpen={showAppearance}
-          onToggle={() => setShowAppearance(!showAppearance)}
-        >
-          <AppearanceSettingsPanel
-            theme={settings.theme}
-            fontSize={settings.fontSize}
-            reduceMotion={settings.reduceMotion}
-            hapticFeedback={settings.hapticFeedback}
-            onThemeChange={setTheme}
-            onFontSizeChange={setFontSize}
-            onReduceMotionToggle={() => setReduceMotion(!settings.reduceMotion)}
-            onHapticFeedbackToggle={() => setHapticFeedback(!settings.hapticFeedback)}
           />
         </SettingsAccordion>
       </div>

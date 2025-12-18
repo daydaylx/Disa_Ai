@@ -2,7 +2,22 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getCategoryStyle } from "@/lib/categoryColors";
-import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
+import type { LucideIcon } from "@/lib/icons";
+import {
+  Book,
+  BookOpenCheck,
+  Bot,
+  Brain,
+  ChevronDown,
+  Code2,
+  DollarSign,
+  RotateCcw,
+  Smile,
+  Sparkles,
+  Star,
+  User,
+  Users,
+} from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
@@ -15,6 +30,32 @@ import { CATEGORY_ORDER, roleFilterFn, roleSortFn } from "./roles-filter";
 
 interface EnhancedRolesInterfaceProps {
   className?: string;
+}
+
+function getRoleIcon(role: EnhancedRole): LucideIcon {
+  // Category-first mapping keeps the UI consistent and guarantees diversity across the roles list.
+  switch (role.category) {
+    case "Creative":
+      return Sparkles;
+    case "Technical":
+      return Code2;
+    case "Analysis":
+      return Brain;
+    case "Research":
+      return Book;
+    case "Education":
+      return BookOpenCheck;
+    case "Business":
+      return DollarSign;
+    case "Entertainment":
+      return Smile;
+    case "Assistance":
+      return User;
+    case "Spezial":
+      return Bot;
+    default:
+      return Users;
+  }
 }
 
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
@@ -285,6 +326,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const isExpanded = expandedRoles.has(role.id);
               const isFavorite = isRoleFavorite(role.id);
               const theme = getCategoryStyle(role.category);
+              const RoleIcon = getRoleIcon(role);
 
               return (
                 <Card
@@ -372,7 +414,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           : cn(theme.iconBg, theme.iconText, theme.groupHoverIconBg),
                       )}
                     >
-                      <Users className="h-6 w-6" />
+                      <RoleIcon className="h-6 w-6" />
                     </div>
 
                     {/* Info */}

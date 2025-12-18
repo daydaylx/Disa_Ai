@@ -28,12 +28,12 @@ export function HistorySidePanel({
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   );
 
-  // "Active Pages" logic: Let's say the last 5 edited are "Active Pages" (Bookmarks)
+  // "Active Pages" logic: Let's say the last 5 edited are "Active Pages" (History)
   // and the rest is "Archive"
   const activePages = sortedConversations.slice(0, 5);
   const archivedPages = sortedConversations.slice(5);
 
-  const [activeTab, setActiveTab] = useState<"bookmarks" | "archive">("bookmarks");
+  const [activeTab, setActiveTab] = useState<"history" | "archive">("history");
 
   // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -63,7 +63,7 @@ export function HistorySidePanel({
             <h2 className="text-base font-semibold text-ink-primary tracking-tight">
               Inhaltsverzeichnis
             </h2>
-            <p className="text-xs text-ink-tertiary mt-0.5">Letzte Gespräche & Favoriten</p>
+            <p className="text-xs text-ink-tertiary mt-0.5">Letzte Gespräche</p>
           </div>
           <Button
             variant="ghost"
@@ -78,16 +78,16 @@ export function HistorySidePanel({
         {/* Tabs */}
         <div className="flex border-b border-white/10">
           <button
-            onClick={() => setActiveTab("bookmarks")}
+            onClick={() => setActiveTab("history")}
             className={cn(
               "flex-1 py-3 text-sm font-medium transition-colors border-b-2",
-              activeTab === "bookmarks"
+              activeTab === "history"
                 ? "border-accent-primary text-ink-primary bg-surface-2/60"
                 : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-surface-2/40",
             )}
           >
             <Book className="h-4 w-4 inline-block mr-2 mb-0.5" />
-            Lesezeichen
+            Chat‑Verlauf
           </button>
           <button
             onClick={() => setActiveTab("archive")}
@@ -105,24 +105,24 @@ export function HistorySidePanel({
 
         {/* Content List */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
-          {(activeTab === "bookmarks" ? activePages : archivedPages).length === 0 ? (
+          {(activeTab === "history" ? activePages : archivedPages).length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/10 bg-surface-2/40 p-6 text-center text-ink-secondary">
-              {activeTab === "bookmarks" ? (
+              {activeTab === "history" ? (
                 <Book className="h-6 w-6 text-ink-tertiary" />
               ) : (
                 <Database className="h-6 w-6 text-ink-tertiary" />
               )}
               <p className="text-sm">
-                Keine Einträge im {activeTab === "bookmarks" ? "Verlauf" : "Archiv"}.
+                Keine Einträge im {activeTab === "history" ? "Chat‑Verlauf" : "Archiv"}.
               </p>
-              {activeTab === "bookmarks" && (
+              {activeTab === "history" && (
                 <Button variant="secondary" size="sm" onClick={onNewChat} className="gap-2">
                   Neue Unterhaltung starten
                 </Button>
               )}
             </div>
           ) : (
-            (activeTab === "bookmarks" ? activePages : archivedPages).map((chat) => (
+            (activeTab === "history" ? activePages : archivedPages).map((chat) => (
               <button
                 key={chat.id}
                 onClick={() => onSelect(chat.id)}
@@ -167,7 +167,7 @@ export function HistorySidePanel({
               onClose();
             }}
           >
-            Neue Seite aufschlagen
+            Neue Unterhaltung starten
           </Button>
         </div>
       </div>
