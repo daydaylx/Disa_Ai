@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getCategoryStyle } from "@/lib/categoryColors";
 import { ChevronDown, RotateCcw, Star, Users } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
@@ -287,15 +287,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               const theme = getCategoryStyle(role.category);
 
               return (
-                <div
+                <Card
                   key={role.id}
                   data-testid="role-card"
                   aria-label={role.name}
+                  variant="roleStrong"
+                  notch="none"
+                  padding="none"
                   className={cn(
-                    "relative transition-all duration-300 group overflow-hidden rounded-2xl border p-0",
+                    "relative transition-all duration-300 group overflow-hidden",
                     isActive
                       ? cn("ring-1", theme.border, theme.glow)
-                      : cn("border-white/5 hover:brightness-110", theme.hoverBorder),
+                      : cn("hover:brightness-110", theme.hoverBorder),
                   )}
                   style={{ background: theme.roleGradient }}
                 >
@@ -444,7 +447,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       </div>
                     </div>
                   )}
-                </div>
+                </Card>
               );
             })}
           </div>

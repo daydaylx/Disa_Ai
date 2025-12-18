@@ -106,35 +106,6 @@
      CARD BRANDING SYSTEM - New Design Tokens
      ======================================================================== */
 
-  /* Base Card Styles - L-shaped Notch Cutout */
-  .card-notch-cutout {
-    position: relative;
-    overflow: visible !important; /* Important to show notch outside */
-  }
-
-  /* Notch Size Variants - Disa Frame Branding System */
-  .card-notch-sm {
-    --notch-size: var(--notch-size-sm, 10px);
-  }
-
-  .card-notch-default {
-    --notch-size: var(--notch-size-default, 18px);
-  }
-
-  .card-notch-lg {
-    --notch-size: var(--notch-size-hero, 22px);
-  }
-
-  /* Tinted Card Variant */
-  .card-tinted-with-notch {
-    /* Specific styles for tinted cards with notch */
-  }
-
-  /* Role Strong Card Variant */
-  .card-role-strong-with-notch {
-    /* Specific styles for role strong cards with notch */
-  }
-
   /* Card Variants - Branding System */
   [data-variant="plain"] {
     background-color: rgb(var(--card-bg-rgb));

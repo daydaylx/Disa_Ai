@@ -181,12 +181,13 @@ export default function Chat() {
                       <Card
                         variant="tintedSoft"
                         notch="cutout"
-                        notchSize="lg" // 22px for hero visibility
+                        notchSize="lg" // 24px for hero visibility (increased from 22px)
                         tintColor="rgb(var(--tint-color-rgb-default))"
                         className="text-center space-y-6 p-8"
                         style={
                           {
-                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.12)",
+                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.14)",
+                            "--notch-edge-opacity": "0.30",
                           } as React.CSSProperties
                         }
                       >
@@ -229,7 +230,7 @@ export default function Chat() {
                           tintColor="rgb(var(--tint-color-rgb-default))"
                           className={cn(
                             "flex items-center gap-4 p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                            "hover:border-white/[0.14] hover:shadow-md", // Clear hover state
+                            "hover:border-white/[0.18] hover:shadow-md", // Clear hover state (increased from 0.14)
                             "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2", // Clear focus ring
                             "active:translate-y-[1px] active:shadow-sm", // Press: card sinks, shadow down
                             "bg-surface-card text-ink-primary",

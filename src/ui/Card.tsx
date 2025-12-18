@@ -6,20 +6,20 @@ import { cn } from "@/lib/utils";
 const cardVariants = cva("relative rounded-2xl border transition-all duration-300", {
   variants: {
     variant: {
-      default: "bg-surface-1/60 backdrop-blur-md border-white/[0.03] shadow-sm", // Glassy standard - ULTRA subtle border
+      default: "bg-surface-1/60 backdrop-blur-md border-white/[0.12] shadow-sm", // Glassy standard - visible border
       flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none",
       outline: "bg-transparent border-white/10",
       interactive:
-        "bg-surface-1/60 backdrop-blur-md border-white/[0.03] hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]",
+        "bg-surface-1/60 backdrop-blur-md border-white/[0.12] hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]",
       elevated: "bg-surface-2 border-white/10 shadow-md",
       inset: "bg-black/20 border-black/10 shadow-inner",
       premium:
         "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden",
       // Disa Frame Branding System variants
-      plain: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Minimal border (8-14% opacity)
-      tintedSoft: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Global cards with soft tint
-      roleStrong: "bg-surface-card border-white/[0.10] shadow-surface-subtle", // Role/Themen with strong tint
-      tinted: "bg-surface-card border-white/[0.08] shadow-surface-subtle", // Legacy alias for tintedSoft
+      plain: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Minimal border (12% opacity - visible)
+      tintedSoft: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Global cards with soft tint
+      roleStrong: "bg-surface-card border-white/[0.14] shadow-surface-subtle", // Role/Themen with strong tint
+      tinted: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Legacy alias for tintedSoft
     },
     padding: {
       none: "p-0",
@@ -36,12 +36,12 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
     },
     notch: {
       none: "",
-      cutout: "card-notch-cutout",
+      cutout: "card-notch-visual overflow-visible",
     },
     notchSize: {
-      sm: "card-notch-sm",
-      default: "card-notch-default",
-      lg: "card-notch-lg",
+      sm: "",
+      default: "",
+      lg: "",
     },
   },
   compoundVariants: [
@@ -133,18 +133,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       } as React.CSSProperties;
     }, [tintColor, roleColor, variant, tintAlpha]);
 
-    // Notch size pixel values - Disa Frame Branding System
-    const notchSizePx = {
-      sm: 10, // Mobile default
-      default: 18, // Default notch size
-      lg: 22, // Hero cards and primary panels
-    }[notchSize ?? "default"];
+    // Notch size attribute for CSS-based notch system
+    const notchSizeAttr = notchSize ?? "default";
 
     return (
       <div
         ref={ref}
         className={cn(cardVariants({ variant, padding, accent, notch, notchSize, className }))}
         style={tintStyle}
+        data-notch-size={notch === "cutout" ? notchSizeAttr : undefined}
         {...props}
       >
         {showAccent && (
@@ -162,34 +159,6 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                   : `linear-gradient(90deg, rgb(var(--card-tint-color) / var(--card-tint-alpha)) 0%, rgb(var(--card-tint-color) / calc(var(--card-tint-alpha) * 0.5)) 18%, transparent 65%)`,
             }}
           />
-        )}
-
-        {/* L-shaped Notch Cutout - Shows page background, 2 inner edges (left + bottom) */}
-        {notch === "cutout" && (
-          <>
-            {/* L-shaped cutout - shows page background */}
-            <div
-              className="absolute top-0 right-0 pointer-events-none z-20"
-              style={{
-                width: notchSizePx,
-                height: notchSizePx,
-                background: `rgb(var(--page-bg-rgb, 19, 19, 20))`,
-                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)",
-                borderBottomLeftRadius: "6px",
-              }}
-            />
-            {/* Inner edge highlights - left and bottom edges, 1px, slightly lighter than border */}
-            <div
-              className="absolute top-0 right-0 pointer-events-none z-30"
-              style={{
-                width: notchSizePx,
-                height: notchSizePx,
-                borderLeft: "1px solid rgba(255, 255, 255, 0.20)",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.20)",
-                borderBottomLeftRadius: "6px",
-              }}
-            />
-          </>
         )}
 
         {children}

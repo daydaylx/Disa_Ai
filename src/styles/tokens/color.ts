@@ -431,7 +431,7 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       dialogBorder: "rgba(255, 255, 255, 0.08)",
     },
     cardBranding: {
-      pageBgRgb: "15 24 32", // RGB values for dark mode page background
+      pageBgRgb: "19 19 20", // RGB values for dark mode page background (matches actual bg-app)
       cardBgRgb: "21 29 49", // RGB for card background
       cardBorderRgb: "255 255 255", // RGB for card border
       cardBorderAlpha: "0.12", // Default border alpha

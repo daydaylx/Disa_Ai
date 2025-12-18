@@ -25,8 +25,8 @@ export const cardTokens: CardTokens = {
   radius: "18px",
   background: "rgba(12, 12, 18, 0.72)",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.08)", // Default: 8-14% opacity range (was 0.015)
-  borderColorHover: "rgba(255, 255, 255, 0.12)", // Hover: slightly more visible
+  borderColor: "rgba(255, 255, 255, 0.12)", // Default: 12% opacity (increased from 8% for visibility)
+  borderColorHover: "rgba(255, 255, 255, 0.18)", // Hover: clearly visible (increased from 12%)
   borderColorFocus: "rgba(139, 92, 246, 0.40)", // Focus: clearly visible brand color
   shadow: "0 10px 40px rgba(0, 0, 0, 0.35)",
   shadowHover: "0 12px 48px rgba(0, 0, 0, 0.4)",
@@ -36,7 +36,7 @@ export const cardTokens: CardTokens = {
   tintAngle: "90deg", // Horizontal gradient (left → right)
   tintFadeX: "65%", // Tint geometry: fade until 65% (was 80%)
   tintAlphaSoft: "0.08", // Global cards: soft tint (0.06-0.10 range)
-  tintAlphaHero: "0.12", // Hero cards: soft+ tint (0.10-0.14 range)
+  tintAlphaHero: "0.14", // Hero cards: soft+ tint (increased from 0.12 for visibility)
   tintAlphaStrong: "0.28", // Role/Themen cards: strong tint (0.20-0.35 range)
   tintColorDefault: "139, 92, 246",
 
