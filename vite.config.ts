@@ -285,6 +285,9 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
+      // Prevent duplicate React instances (common cause of "hooks dispatcher is null")
+      // especially when Vite pre-bundling + linked deps are involved.
+      dedupe: ["react", "react-dom"],
     },
     build: {
       target: "es2020",

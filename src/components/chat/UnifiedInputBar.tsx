@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import * as React from "react";
 
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
@@ -25,13 +25,48 @@ export function UnifiedInputBar({
   isLoading = false,
   className,
 }: UnifiedInputBarProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location: "src/components/chat/UnifiedInputBar.tsx:1",
+      message: "UnifiedInputBar module loaded",
+      data: {
+        reactVersion: (React as any)?.version,
+        hasUseRef: typeof (React as any)?.useRef === "function",
+      },
+      timestamp: Date.now(),
+      sessionId: "debug-session",
+      runId: "pre-fix",
+      hypothesisId: "A",
+    }),
+  }).catch(() => {});
+  // #endregion agent log
+
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location: "src/components/chat/UnifiedInputBar.tsx:28",
+      message: "UnifiedInputBar render entry",
+      data: { valueLen: value?.length, isLoading },
+      timestamp: Date.now(),
+      sessionId: "debug-session",
+      runId: "pre-fix",
+      hypothesisId: "B",
+    }),
+  }).catch(() => {});
+  // #endregion agent log
+
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
   const { settings, setCreativity, setDiscussionPreset } = useSettings();
 
   // Auto-resize logic
-  useEffect(() => {
+  React.useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = "auto";
@@ -41,7 +76,7 @@ export function UnifiedInputBar({
   }, [value]);
 
   // Ensure input visibility when keyboard opens
-  useEffect(() => {
+  React.useEffect(() => {
     if (viewport.isKeyboardOpen && textareaRef.current) {
       const timer = setTimeout(() => {
         textareaRef.current?.scrollIntoView({
