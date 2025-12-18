@@ -129,7 +129,7 @@ export function UnifiedInputBar({
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
+            "flex-shrink-0 min-h-[44px] min-w-[44px] rounded-xl transition-all duration-200 mb-0.5 mr-1 touch-manipulation",
             !value.trim() &&
               !isLoading &&
               "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",

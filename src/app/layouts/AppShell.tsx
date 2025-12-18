@@ -132,7 +132,12 @@ function AppShellLayout({
           </div>
         </aside>
 
-        <div className="flex min-h-screen-mobile flex-1 flex-col safe-area-bottom">
+        <div
+          className={cn(
+            "flex min-h-screen-mobile flex-1 flex-col",
+            !isChatMode && "safe-area-bottom",
+          )}
+        >
           {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
           {!isChatMode ? (
             <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header shadow-sm">

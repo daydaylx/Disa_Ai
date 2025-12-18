@@ -24,7 +24,7 @@ export function ChatLayout({
   logoState = "idle",
 }: ChatLayoutProps) {
   return (
-    <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
+    <div className="fixed inset-0 lg:relative lg:inset-auto lg:h-[calc(var(--vh,1vh)*100)] w-full flex flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30 z-0">
       {/* Enhanced Header with Color Accents */}
       <header className="sticky top-0 z-header glass-header shadow-sm border-b border-white/[0.06] relative overflow-hidden">
         {/* Subtle gradient overlay - 25% reduced intensity */}
