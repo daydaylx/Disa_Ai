@@ -60,7 +60,7 @@ export function ChatLayout({
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2">{headerActions}</div>
+          <div className="flex items-center gap-2 pr-safe-right">{headerActions}</div>
         </div>
       </header>
 
