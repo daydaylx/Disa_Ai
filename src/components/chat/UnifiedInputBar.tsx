@@ -105,7 +105,7 @@ export function UnifiedInputBar({
         variant="tinted"
         padding="sm"
         className={cn(
-          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation",
+          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
         )}
         aria-label="Eingabebereich"
       >
@@ -129,7 +129,7 @@ export function UnifiedInputBar({
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-0.5",
+            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
             !value.trim() &&
               !isLoading &&
               "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",

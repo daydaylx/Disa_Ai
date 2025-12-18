@@ -58,7 +58,7 @@ export function HistorySidePanel({
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-10">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-10 pt-safe-top pr-safe-right">
           <div>
             <h2 className="text-base font-semibold text-ink-primary tracking-tight">
               Inhaltsverzeichnis
@@ -69,7 +69,7 @@ export function HistorySidePanel({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-ink-secondary hover:text-ink-primary hover:bg-surface-2"
+            className="text-ink-secondary hover:text-ink-primary hover:bg-surface-2 ml-2"
           >
             <X className="h-5 w-5" />
           </Button>
