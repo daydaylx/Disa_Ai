@@ -278,9 +278,6 @@ export default function Chat() {
                     messages={chatLogic.messages}
                     conversationKey={chatLogic.activeConversationId ?? "new"}
                     isLoading={chatLogic.isLoading}
-                    onCopy={(content: string) => {
-                      void navigator.clipboard.writeText(content);
-                    }}
                     onEdit={chatLogic.handleEdit}
                     onFollowUp={chatLogic.handleFollowUp}
                     onRetry={chatLogic.handleRetry}
