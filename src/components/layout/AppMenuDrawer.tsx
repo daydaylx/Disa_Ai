@@ -163,7 +163,7 @@ export function AppMenuDrawer({
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.04)] transition-colors border border-transparent hover:border-[var(--border-chalk)] shrink-0"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 shrink-0"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -185,8 +185,8 @@ export function AppMenuDrawer({
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors min-h-[48px] border border-transparent",
                         isActive
-                          ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)] text-text-primary"
-                          : "text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
+                          ? "border-white/20 bg-white/5 text-text-primary"
+                          : "text-ink-primary hover:border-white/10 hover:bg-white/5",
                       )}
                     >
                       <Icon
@@ -228,8 +228,8 @@ export function AppMenuDrawer({
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
                             isActive
-                              ? "text-text-primary border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)]"
-                              : "text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
+                              ? "text-text-primary border-white/20 bg-white/5"
+                              : "text-ink-secondary hover:text-ink-primary hover:border-white/10 hover:bg-white/5",
                           )}
                         >
                           {Icon && (

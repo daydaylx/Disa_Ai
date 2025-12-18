@@ -31,7 +31,7 @@ export function BookLayout({
             size="icon"
             onClick={onMenuClick}
             aria-label="Menü öffnen"
-            className="text-ink-primary hover:bg-[rgba(255,255,255,0.06)] chalk-focus"
+            className="text-ink-primary hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -49,7 +49,7 @@ export function BookLayout({
       {/* Main Page Content Area */}
       <div
         className={cn(
-          "flex-1 relative flex flex-col max-w-5xl mx-auto w-full shadow-[0_0_0_1px_var(--border-chalk)] sm:my-4 sm:border sm:border-[var(--border-chalk)] sm:rounded-2xl",
+          "flex-1 relative flex flex-col max-w-5xl mx-auto w-full shadow-sm sm:my-4 sm:border sm:border-white/10 sm:rounded-2xl",
           className,
         )}
         style={{
