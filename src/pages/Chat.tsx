@@ -12,7 +12,6 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
-import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const VirtualizedMessageList = memo(
   lazy(() =>
@@ -58,7 +57,6 @@ const initialState: UIState = {
 };
 
 export default function Chat() {
-  const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
@@ -151,14 +149,7 @@ export default function Chat() {
           </Button>
         }
       >
-        <div
-          className="flex flex-col relative w-full"
-          style={{
-            // Subtract header height (64px) from viewport height to prevent clipping
-            height: viewport.height ? `${viewport.height - 64}px` : "100%",
-            minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
-          }}
-        >
+        <div className="relative flex w-full flex-1 flex-col min-h-0">
           <ChatStatusBanner
             status={chatLogic.apiStatus}
             error={chatLogic.error}
@@ -172,10 +163,10 @@ export default function Chat() {
             role="log"
             aria-label="Chat messages"
           >
-            <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 flex flex-col gap-6 py-4">
+            <div className="max-w-3xl mx-auto w-full min-h-full flex flex-col">
+              <div className="flex-1 flex flex-col gap-6 py-4 pb-[calc(12rem+env(safe-area-inset-bottom))]">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-8 px-2 animate-fade-in">
                     {/* Hero Card - Disa Frame Branding System */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
@@ -292,7 +283,7 @@ export default function Chat() {
 
           {/* Input Area - Floating Glass Bottom */}
           <div className="flex-none w-full pointer-events-none z-20">
-            <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto pb-[calc(env(safe-area-inset-bottom)+var(--keyboard-offset,0px))] pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
