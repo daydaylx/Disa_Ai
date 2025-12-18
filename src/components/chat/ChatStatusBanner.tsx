@@ -99,22 +99,22 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
     { bg: string; border: string; iconWrap: string; icon: string }
   > = {
     warning: {
-      bg: "bg-gradient-to-r from-amber-500/12 via-surface-1/90 to-surface-1/90",
-      border: "border-amber-400/30",
-      iconWrap: "bg-amber-500/20 text-amber-100",
-      icon: "text-amber-200",
+      bg: "bg-gradient-to-r from-status-warning/12 via-surface-1/90 to-surface-1/90",
+      border: "border-status-warning/30",
+      iconWrap: "bg-status-warning/20 text-status-warning",
+      icon: "text-status-warning",
     },
     error: {
-      bg: "bg-gradient-to-r from-red-500/10 via-surface-1/90 to-surface-1/90",
-      border: "border-red-400/35",
-      iconWrap: "bg-red-500/20 text-red-100",
-      icon: "text-red-200",
+      bg: "bg-gradient-to-r from-status-error/10 via-surface-1/90 to-surface-1/90",
+      border: "border-status-error/35",
+      iconWrap: "bg-status-error/18 text-status-error",
+      icon: "text-status-error",
     },
     info: {
-      bg: "bg-gradient-to-r from-accent-primary/15 via-surface-1/90 to-surface-1/90",
-      border: "border-accent-primary/30",
-      iconWrap: "bg-accent-primary/20 text-accent-primary",
-      icon: "text-accent-primary",
+      bg: "bg-gradient-to-r from-accent-chat/15 via-surface-1/90 to-surface-1/90",
+      border: "border-accent-chat-border",
+      iconWrap: "bg-accent-chat-surface text-accent-chat",
+      icon: "text-accent-chat",
     },
   };
 

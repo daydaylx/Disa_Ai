@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 
-import { MaterialCard } from "@/ui/MaterialCard";
-
 import { BrandWordmark } from "../../app/components/BrandWordmark";
 import type { AppNavItem } from "../../config/navigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
@@ -139,16 +137,14 @@ export function AppMenuDrawer({
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <MaterialCard
-          variant="hero"
+        <div
           className={cn(
-            "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative bg-[rgba(19,19,20,0.96)] border border-[var(--border-chalk)] shadow-[0_0_0_1px_var(--border-chalk),0_18px_40px_rgba(0,0,0,0.45)]",
+            "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative",
+            "glass-3",
             "transition-transform duration-200",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)",
-          }}
+          style={{ transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)" }}
           ref={drawerRef}
           role="dialog"
           aria-modal="true"
@@ -162,12 +158,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 bg-[rgba(19,19,20,0.96)] z-header py-3 px-5 border-b border-[var(--border-chalk)] gap-3">
+          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/10 gap-3 glass-header">
             <BrandWordmark className="text-base" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-[rgba(255,255,255,0.04)] transition-colors border border-transparent hover:border-[var(--border-chalk)] shrink-0"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 shrink-0"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -189,8 +185,8 @@ export function AppMenuDrawer({
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors min-h-[48px] border border-transparent",
                         isActive
-                          ? "border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)] text-text-primary"
-                          : "text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
+                          ? "border-white/20 bg-white/5 text-text-primary"
+                          : "text-ink-primary hover:border-white/10 hover:bg-white/5",
                       )}
                     >
                       <Icon
@@ -216,7 +212,7 @@ export function AppMenuDrawer({
             {secondaryPages.length > 0 && (
               <>
                 {/* Divider */}
-                <hr className="my-4 border-[color:hsla(0,0%,92%,0.35)]" />
+                <hr className="my-4 border-white/10" />
 
                 {/* Secondary Links */}
                 <ul className="space-y-1" role="list">
@@ -232,8 +228,8 @@ export function AppMenuDrawer({
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
                             isActive
-                              ? "text-text-primary border-[var(--border-chalk-strong)] bg-[rgba(255,255,255,0.04)]"
-                              : "text-ink-secondary hover:text-ink-primary hover:border-[var(--border-chalk)] hover:bg-[rgba(255,255,255,0.03)]",
+                              ? "text-text-primary border-white/20 bg-white/5"
+                              : "text-ink-secondary hover:text-ink-primary hover:border-white/10 hover:bg-white/5",
                           )}
                         >
                           {Icon && (
@@ -270,7 +266,7 @@ export function AppMenuDrawer({
             aria-hidden="true"
             className="sr-only"
           />
-        </MaterialCard>
+        </div>
       </div>
     </div>
   );

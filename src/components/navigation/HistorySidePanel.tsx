@@ -53,12 +53,12 @@ export function HistorySidePanel({
       {/* Panel - Slide in from right with Chalk Texture */}
       <div
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm bg-surface-1/95 border-l border-white/10 shadow-[0_18px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-transform duration-300 ease-out transform flex flex-col",
+          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-l border-white/10 transition-transform duration-300 ease-out transform flex flex-col glass-3",
           isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-surface-1/95 z-10">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-10">
           <div>
             <h2 className="text-base font-semibold text-ink-primary tracking-tight">
               Inhaltsverzeichnis
@@ -130,7 +130,7 @@ export function HistorySidePanel({
                   "w-full text-left px-4 py-3 rounded-xl transition-all group border border-white/8 bg-surface-2/70",
                   "hover:border-accent-primary/50 hover:bg-surface-1/80",
                   activeId === chat.id
-                    ? "border-accent-primary bg-accent-primary/10 shadow-[0_12px_30px_rgba(0,0,0,0.25)]"
+                    ? "border-accent-primary bg-accent-primary/10 ring-1 ring-accent-primary/20 shadow-md"
                     : "",
                 )}
               >
@@ -158,7 +158,7 @@ export function HistorySidePanel({
         </div>
 
         {/* Footer Action */}
-        <div className="p-4 border-t border-white/10 bg-surface-1/95 backdrop-blur-sm mt-auto">
+        <div className="p-4 border-t border-white/10 mt-auto">
           <Button
             variant="primary"
             className="w-full shadow-md"

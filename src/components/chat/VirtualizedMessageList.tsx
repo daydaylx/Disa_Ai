@@ -138,7 +138,7 @@ export function VirtualizedMessageList({
               return (
                 <div
                   key={message.id}
-                  data-testid="message-bubble"
+                  data-testid="message-row"
                   data-index={virtualRow.index}
                   ref={rowVirtualizer.measureElement}
                   className={cn(
@@ -163,7 +163,7 @@ export function VirtualizedMessageList({
         ) : (
           <div className="flex flex-col gap-6">
             {messages.map((message, index) => (
-              <div key={message.id} data-testid="message-bubble">
+              <div key={message.id} data-testid="message-row">
                 <MemoizedChatMessage
                   message={message}
                   isLast={index === messages.length - 1 && !isLoading}
@@ -224,10 +224,10 @@ export function VirtualizedMessageList({
 
         {/* Scroll to Bottom FAB */}
         {!isSticking && (
-          <div className="pointer-events-none fixed bottom-32 left-1/2 z-fab -translate-x-1/2 animate-fade-in">
+          <div className="pointer-events-none fixed bottom-[calc(7.5rem+env(safe-area-inset-bottom))] left-1/2 z-fab -translate-x-1/2 animate-fade-in">
             <button
               onClick={() => scrollToBottom()}
-              className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-surface-3/80 px-4 text-sm font-medium text-ink-primary backdrop-blur hover:bg-surface-3 shadow-lg"
+              className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-surface-2/80 px-4 text-sm font-medium text-ink-primary backdrop-blur border border-white/10 shadow-lg hover:bg-surface-3 hover:border-accent-chat-border hover:shadow-glow-sm"
               aria-label="Zu neuen Nachrichten scrollen"
             >
               ↓ Neueste

@@ -18,26 +18,6 @@ import { reloadApp, resetApp } from "./lib/recovery/resetApp";
 import { safeError, safeWarn } from "./lib/utils/production-logger";
 import { themeController } from "./styles/theme";
 
-// #region agent log
-fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    location: "src/main.tsx:1",
-    message: "Main module loaded",
-    data: {
-      reactVersion: (React as any)?.version,
-      hasCreateRoot: typeof (ReactDOM as any)?.createRoot === "function",
-      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
-    },
-    timestamp: Date.now(),
-    sessionId: "debug-session",
-    runId: "pre-fix",
-    hypothesisId: "A",
-  }),
-}).catch(() => {});
-// #endregion agent log
-
 // Global type declarations
 declare global {
   interface Window {
@@ -120,21 +100,6 @@ function safeInitialize(): void {
   removeInitialLoader();
   // Always initialize React first (critical for app to load)
   try {
-    // #region agent log
-    fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        location: "src/main.tsx:103",
-        message: "About to initializeApp()",
-        data: { rootEl: !!document.getElementById("root") },
-        timestamp: Date.now(),
-        sessionId: "debug-session",
-        runId: "pre-fix",
-        hypothesisId: "A",
-      }),
-    }).catch(() => {});
-    // #endregion agent log
     initializeApp();
     safeWarn("[INIT] React app mounted successfully");
   } catch (error: unknown) {
