@@ -223,35 +223,38 @@ export function ChatMessage({
             <button
               onClick={handleCopy}
               className={cn(
-                "p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40",
+                "min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat",
                 copied && "animate-copy-feedback",
               )}
               title="Kopieren"
+              aria-label="Nachricht kopieren"
             >
               {copied ? (
-                <Check className="h-3.5 w-3.5 text-status-success" />
+                <Check className="h-4 w-4 text-status-success" />
               ) : (
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-4 w-4" />
               )}
             </button>
 
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
+                className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                 title="Bearbeiten"
+                aria-label="Nachricht bearbeiten"
               >
-                <Edit2 className="h-3.5 w-3.5" />
+                <Edit2 className="h-4 w-4" />
               </button>
             )}
 
             {isAssistant && isLast && (
               <button
                 onClick={handleRetry}
-                className="p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-md transition-colors action-button-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
+                className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                 title="Neu generieren"
+                aria-label="Antwort neu generieren"
               >
-                <RotateCcw className="h-3.5 w-3.5" />
+                <RotateCcw className="h-4 w-4" />
               </button>
             )}
 
@@ -271,7 +274,7 @@ export function ChatMessage({
               <button
                 key={suggestion}
                 onClick={() => onFollowUp(suggestion)}
-                className="text-xs bg-accent-chat-surface text-accent-chat hover:bg-accent-chat-dim px-3 py-2 rounded-full border border-accent-chat-border transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-chat/40"
+                className="min-h-[2.75rem] text-sm bg-accent-chat-surface text-accent-chat hover:bg-accent-chat-dim px-4 py-2.5 rounded-full border border-accent-chat-border transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
                 {suggestion}

@@ -109,19 +109,19 @@
   /* Card Variants - Branding System */
   [data-variant="plain"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), 0.02); /* Subtle border */
+    border: 1px solid rgba(var(--card-border-rgb), 0.08); /* Konsistente Border */
     box-shadow: var(--shadow-surface-subtle);
   }
 
   [data-variant="tinted"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), 0.02); /* Subtle border */
+    border: 1px solid rgba(var(--card-border-rgb), 0.08); /* Konsistente Border */
     box-shadow: var(--shadow-surface-subtle);
   }
 
   [data-variant="roleStrong"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), 0.08); /* Slightly stronger for roles */
+    border: 1px solid rgba(var(--card-border-rgb), 0.12); /* Stärker für Roles */
     box-shadow: var(--shadow-surface-subtle);
   }
 
@@ -131,7 +131,7 @@
   [data-variant="roleStrong"]:focus-visible {
     outline: 2px solid var(--color-brand-primary);
     outline-offset: 2px;
-    border-color: rgba(var(--card-border-rgb), 0.12); /* Stronger border on focus */
+    border-color: rgba(var(--card-border-rgb), 0.2); /* Stärkere Border on focus */
   }
 
   /* Hover States (Desktop only) */
