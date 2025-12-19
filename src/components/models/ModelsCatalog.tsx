@@ -4,13 +4,120 @@ import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, RefreshCw, Star } from "@/lib/icons";
+import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Search as SearchIcon, Users, Zap, Waves, Code2, type LucideIcon } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { getCategoryStyle } from "@/lib/categoryColors";
 
 interface ModelsCatalogProps {
   className?: string;
+}
+
+/**
+ * Maps model providers to their corresponding icons
+ * Similar to role icon mapping for visual consistency
+ */
+function getProviderIcon(provider?: string): LucideIcon {
+  if (!provider) return Cpu;
+
+  const providerLower = provider.toLowerCase();
+
+  // Provider-specific icon mapping
+  const providerIconMap: Record<string, LucideIcon> = {
+    // Major AI providers
+    openai: Sparkles,
+    anthropic: Brain,
+    google: SearchIcon,
+    meta: Users,
+    "meta-llama": Users,
+    mistral: Waves,
+    cohere: Code2,
+
+    // Other providers
+    deepseek: Brain,
+    qwen: Bot,
+    "01-ai": Zap,
+    nvidia: Cpu,
+    microsoft: Code2,
+    amazon: Cpu,
+    ai21: Brain,
+    perplexity: SearchIcon,
+
+    // Open source / community
+    huggingfaceh4: Users,
+    teknium: Bot,
+    nousresearch: Brain,
+    gryphe: Brain,
+  };
+
+  // Try exact match first
+  if (providerIconMap[providerLower]) {
+    return providerIconMap[providerLower]!;
+  }
+
+  // Try partial match
+  for (const [key, icon] of Object.entries(providerIconMap)) {
+    if (providerLower.includes(key)) {
+      return icon;
+    }
+  }
+
+  // Default fallback
+  return Cpu;
+}
+
+/**
+ * Maps model providers to color themes
+ * Similar to role category colors for visual variety
+ */
+function getProviderColorTheme(provider?: string): string {
+  if (!provider) return "slate";
+
+  const providerLower = provider.toLowerCase();
+
+  // Provider-specific color mapping
+  const providerColorMap: Record<string, string> = {
+    // Major AI providers - distinct colors matching their brand identity
+    openai: "emerald",      // Green for OpenAI
+    anthropic: "amber",     // Warm amber for Anthropic
+    google: "indigo",       // Blue for Google
+    meta: "cyan",           // Cyan for Meta
+    "meta-llama": "cyan",
+    mistral: "violet",      // Purple for Mistral
+    cohere: "rose",         // Rose for Cohere
+
+    // Other providers
+    deepseek: "indigo",
+    qwen: "violet",
+    "01-ai": "pink",
+    nvidia: "emerald",
+    microsoft: "indigo",
+    amazon: "amber",
+    ai21: "cyan",
+    perplexity: "rose",
+
+    // Open source / community - varied colors
+    huggingfaceh4: "amber",
+    teknium: "violet",
+    nousresearch: "emerald",
+    gryphe: "cyan",
+  };
+
+  // Try exact match first
+  if (providerColorMap[providerLower]) {
+    return providerColorMap[providerLower]!;
+  }
+
+  // Try partial match
+  for (const [key, color] of Object.entries(providerColorMap)) {
+    if (providerLower.includes(key)) {
+      return color;
+    }
+  }
+
+  // Default fallback
+  return "slate";
 }
 
 function getContextTokens(entry?: ModelEntry) {
@@ -64,13 +171,22 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const activeModelId = settings.preferredModelId;
   const isLoading = loading || isRefreshing;
 
+  // Get the active model's provider for header theming
+  const activeModel = catalog?.find((m) => m.id === activeModelId);
+  const headerTheme = activeModel
+    ? getCategoryStyle(getProviderColorTheme(activeModel.provider))
+    : getCategoryStyle("cyan"); // Default to cyan (models accent color)
+
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Models accent (Cyan/Teal) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-models/10 via-transparent to-transparent pointer-events-none" />
+          {/* Ambient Header Glow - Based on active model's provider */}
+          <div
+            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            style={{ background: headerTheme.roleGradient }}
+          />
 
           <div className="relative space-y-3 px-4 py-4">
             <div className="flex items-start justify-between">
@@ -96,7 +212,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               value={search}
               onChange={setSearch}
               placeholder="Modell suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-models/50 focus:ring-accent-models/20"
+              className={cn(
+                "w-full bg-surface-2/50 border-white/10 transition-colors",
+                `focus:ring-opacity-20 ${headerTheme.text.replace("text-", "focus:border-")} ${headerTheme.text.replace("text-", "focus:ring-")}`,
+              )}
             />
           </div>
         </div>
@@ -139,17 +258,20 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);
+              const providerTheme = getCategoryStyle(getProviderColorTheme(model.provider));
+              const ProviderIcon = getProviderIcon(model.provider);
 
               return (
                 <div
                   key={model.id}
                   data-testid="model-card"
                   className={cn(
-                    "relative w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300 rounded-2xl border p-4",
+                    "relative w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300 rounded-2xl border p-4 group overflow-hidden",
                     isActive
-                      ? "bg-accent-models-surface border-accent-models-border ring-1 ring-accent-models/20 shadow-glow-models"
-                      : "bg-surface-1/60 border-white/5 hover:bg-surface-1/80 hover:border-accent-models-border/50 shadow-sm",
+                      ? cn("ring-1", providerTheme.border, providerTheme.glow)
+                      : cn("hover:brightness-110", providerTheme.hoverBorder),
                   )}
+                  style={{ background: providerTheme.roleGradient }}
                 >
                   {/* Clickable Area */}
                   <div
@@ -172,14 +294,14 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     className={cn(
                       "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors pointer-events-none",
                       isActive
-                        ? "bg-accent-models-dim text-accent-models shadow-inner"
-                        : "bg-surface-2/80 text-ink-tertiary",
+                        ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
+                        : cn(providerTheme.iconBg, providerTheme.iconText, providerTheme.groupHoverIconBg),
                     )}
                   >
                     {isFavorite ? (
                       <Star className="h-6 w-6 fill-current text-status-warning drop-shadow-sm" />
                     ) : (
-                      <Cpu className="h-6 w-6" />
+                      <ProviderIcon className="h-6 w-6" />
                     )}
                   </div>
 
@@ -189,13 +311,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       <span
                         className={cn(
                           "font-semibold text-sm truncate",
-                          isActive ? "text-accent-models" : "text-ink-primary",
+                          isActive ? providerTheme.text : "text-ink-primary group-hover:text-ink-primary",
                         )}
                       >
                         {model.label ?? model.id}
                       </span>
                       {isActive && (
-                        <Check className="h-4 w-4 text-accent-models flex-shrink-0 drop-shadow-md" />
+                        <Check className={cn("h-4 w-4 flex-shrink-0 drop-shadow-md", providerTheme.text)} />
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium pointer-events-none">
