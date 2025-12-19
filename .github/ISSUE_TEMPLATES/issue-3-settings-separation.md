@@ -10,6 +10,7 @@ In den Einstellungen liegen „KI-Verhalten" und „Darstellung" zusammen. Das i
 ## Ziel
 
 Einstellungen logisch trennen, z. B. in eigene Sections/Tabs/Routes:
+
 - **KI-Verhalten** (Model/Prompt/Memory/Regeln)
 - **Darstellung** (Theme, Layout, UI-Optionen)
 

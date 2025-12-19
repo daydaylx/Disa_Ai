@@ -10,23 +10,23 @@
      SPACING SCALE - 8px Rhythm (reduced by 15%)
      ======================================================================== */
   --space-0: 0;
-  --space-1: 0.2125rem;   /* 3.4px (reduced by 15%) */
-  --space-2: 0.425rem;    /* 6.8px (reduced by 15%) */
-  --space-3: 0.6375rem;   /* 10.2px (reduced by 15%) */
-  --space-4: 0.85rem;      /* 13.6px (reduced by 15%) */
-  --space-5: 1.0625rem;   /* 17px (reduced by 15%) */
-  --space-6: 1.275rem;    /* 20.4px (reduced by 15%) */
-  --space-8: 1.7rem;      /* 27.2px (reduced by 15%) */
-  --space-10: 2.125rem;   /* 34px (reduced by 15%) */
-  --space-12: 2.55rem;    /* 40.8px (reduced by 15%) */
-  --space-16: 3.4rem;     /* 54.4px (reduced by 15%) */
+  --space-1: 0.2125rem; /* 3.4px (reduced by 15%) */
+  --space-2: 0.425rem; /* 6.8px (reduced by 15%) */
+  --space-3: 0.6375rem; /* 10.2px (reduced by 15%) */
+  --space-4: 0.85rem; /* 13.6px (reduced by 15%) */
+  --space-5: 1.0625rem; /* 17px (reduced by 15%) */
+  --space-6: 1.275rem; /* 20.4px (reduced by 15%) */
+  --space-8: 1.7rem; /* 27.2px (reduced by 15%) */
+  --space-10: 2.125rem; /* 34px (reduced by 15%) */
+  --space-12: 2.55rem; /* 40.8px (reduced by 15%) */
+  --space-16: 3.4rem; /* 54.4px (reduced by 15%) */
 
   /* ========================================================================
      BORDER RADIUS - 3-Stufen Hierarchie (reduced by 15%)
      ======================================================================== */
-  --radius-sm: 0.425rem;    /* 6.8px - Chips, Small buttons (reduced by 15%) */
-  --radius-md: 0.6375rem;   /* 10.2px - Cards, Inputs, Standard buttons (reduced by 15%) */
-  --radius-lg: 0.85rem;      /* 13.6px - Panels, Modals (reduced by 15%) */
+  --radius-sm: 0.425rem; /* 6.8px - Chips, Small buttons (reduced by 15%) */
+  --radius-md: 0.6375rem; /* 10.2px - Cards, Inputs, Standard buttons (reduced by 15%) */
+  --radius-lg: 0.85rem; /* 13.6px - Panels, Modals (reduced by 15%) */
 
   /* ========================================================================
      SHADOWS - 2-Level Elevation (Glassmorphism 2.0) (reduced by 15%)
@@ -43,9 +43,9 @@
   /* ========================================================================
      TOUCH TARGETS - WCAG AA Compliant (reduced by 15%)
      ======================================================================== */
-  --touch-sm: 2.3375rem;   /* 37.4px - Minimum für Mobile (reduced by 15%) */
-  --touch-md: 2.55rem;      /* 40.8px - Comfortable (reduced by 15%) */
-  --touch-lg: 2.975rem;    /* 47.6px - Spacious (reduced by 15%) */
+  --touch-sm: 2.3375rem; /* 37.4px - Minimum für Mobile (reduced by 15%) */
+  --touch-md: 2.55rem; /* 40.8px - Comfortable (reduced by 15%) */
+  --touch-lg: 2.975rem; /* 47.6px - Spacious (reduced by 15%) */
 
   /* ========================================================================
      TRANSITIONS - Performance-optimiert
