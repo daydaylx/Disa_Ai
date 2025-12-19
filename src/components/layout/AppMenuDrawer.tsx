@@ -1,4 +1,4 @@
-import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
+import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
@@ -122,9 +122,19 @@ export function AppMenuDrawer({
 
   if (!isOpen) return null;
 
+  const drawerGlassStyle = {
+    transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)",
+    "--_glass-bg": "rgba(12, 14, 20, 0.72)",
+    "--_glass-bg-hover": "rgba(12, 14, 20, 0.78)",
+    "--_glass-border": "rgba(255, 255, 255, 0.18)",
+    "--_glass-border-hover": "rgba(255, 255, 255, 0.28)",
+    "--_glass-shadow": "0 20px 55px rgba(0, 0, 0, 0.55)",
+    "--_glass-blur": "18px",
+  } as CSSProperties;
+
   const drawer = (
     <div
-      className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-xl"
+      className="fixed inset-0 z-drawer bg-black/65 backdrop-blur-lg"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
@@ -139,14 +149,14 @@ export function AppMenuDrawer({
       >
         <div
           className={cn(
-            "h-[100dvh] w-[80vw] max-w-[360px] sm:max-w-[380px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative",
+            "h-[100dvh] w-[80vw] max-w-[420px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative safe-area-top safe-area-bottom",
             "glass-3",
             /* Innerer Glow-Ring für bessere Glasdefinition */
-            "ring-1 ring-white/10",
+            "ring-1 ring-white/12",
             "transition-transform duration-200",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
-          style={{ transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)" }}
+          style={drawerGlassStyle}
           ref={drawerRef}
           role="dialog"
           aria-modal="true"
@@ -160,12 +170,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/15 gap-3 bg-surface-1/25 backdrop-blur-2xl">
-            <BrandWordmark className="text-base text-white font-semibold" />
+          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/20 gap-3 bg-black/45 backdrop-blur-xl">
+            <BrandWordmark className="text-base text-white font-semibold tracking-wide" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:text-white hover:bg-white/15 transition-all border border-white/15 hover:border-white/30 shrink-0 hover:shadow-glow-sm backdrop-blur-md"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:text-white hover:bg-white/16 transition-all border border-white/20 hover:border-white/35 shrink-0 hover:shadow-glow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 backdrop-blur-md"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -185,27 +195,25 @@ export function AppMenuDrawer({
                       to={item.path}
                       onClick={onClose}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border backdrop-blur-md",
+                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35",
                         isActive
-                          ? "border-white/30 bg-white/18 text-white shadow-md"
-                          : "border-transparent text-white/90 hover:border-white/20 hover:bg-white/12 hover:text-white",
+                          ? "border-white/40 bg-white/20 text-white shadow-lg"
+                          : "border-transparent text-white/90 hover:border-white/25 hover:bg-white/14 hover:text-white",
                       )}
                     >
                       <Icon
                         className={cn(
                           "h-5 w-5 flex-shrink-0",
-                          isActive ? "text-white" : "text-white/70",
+                          isActive ? "text-white" : "text-white/75",
                         )}
                       />
                       <div className="flex-1 min-w-0">
-                        <span className="font-medium text-sm">
-                          {item.label}
-                        </span>
+                        <span className="font-semibold text-sm">{item.label}</span>
                         {item.description && (
                           <p
                             className={cn(
                               "text-xs mt-0.5 truncate",
-                              isActive ? "text-white/70" : "text-white/60",
+                              isActive ? "text-white/80" : "text-white/70",
                             )}
                           >
                             {item.description}
@@ -221,7 +229,7 @@ export function AppMenuDrawer({
             {secondaryPages.length > 0 && (
               <>
                 {/* Divider */}
-                <hr className="my-4 border-white/15" />
+                <hr className="my-4 border-white/20" />
 
                 {/* Secondary Links */}
                 <ul className="space-y-1" role="list">
@@ -235,23 +243,23 @@ export function AppMenuDrawer({
                           to={page.path}
                           onClick={onClose}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border backdrop-blur-md",
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35",
                             isActive
-                              ? "text-white border-white/30 bg-white/18 shadow-md"
-                              : "text-white/80 border-transparent hover:text-white hover:border-white/20 hover:bg-white/12",
+                              ? "text-white border-white/40 bg-white/20 shadow-lg"
+                              : "text-white/85 border-transparent hover:text-white hover:border-white/25 hover:bg-white/14",
                           )}
                         >
                           {Icon && (
                             <Icon
                               className={cn(
                                 "h-4 w-4 flex-shrink-0",
-                                isActive ? "text-white" : "text-white/60",
+                                isActive ? "text-white" : "text-white/70",
                               )}
                             />
                           )}
-                          <span>{page.label}</span>
+                          <span className="font-medium">{page.label}</span>
                           {page.description && (
-                            <span className="text-xs text-white/60 ml-auto truncate max-w-[120px]">
+                            <span className="text-xs text-white/70 ml-auto truncate max-w-[120px]">
                               {page.description}
                             </span>
                           )}
@@ -265,8 +273,8 @@ export function AppMenuDrawer({
           </nav>
 
           {/* Footer */}
-          <div className="px-4 pb-6 pt-2 mt-auto border-t border-white/10">
-            <p className="text-xs text-white/50 text-center pt-3">© 2025 Disa AI</p>
+          <div className="px-4 pb-6 pt-2 mt-auto border-t border-white/15">
+            <p className="text-xs text-white/60 text-center pt-3">© 2025 Disa AI</p>
           </div>
           <span
             ref={lastTrapRef}
