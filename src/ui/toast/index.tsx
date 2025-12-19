@@ -62,6 +62,10 @@ export function useToasts() {
   return context;
 }
 
+export function useToastsOptional() {
+  return useContext(ToastsContext);
+}
+
 function ToastViewport({
   toasts,
   onDismiss,
