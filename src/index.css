@@ -591,6 +591,59 @@
     opacity: 0;
   }
 
+  /* Brand animations - subtle, premium feel */
+
+  /* Breathing effect - very subtle scale + float */
+  @keyframes brand-breathe {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-1.5px) scale(1.008);
+    }
+  }
+
+  .animate-brand-breathe {
+    animation: brand-breathe 8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    will-change: transform;
+  }
+
+  /* Shimmer effect - turquoise sweep across text */
+  @keyframes brand-shimmer {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-brand-shimmer {
+    animation: brand-shimmer 12s linear infinite;
+  }
+
+  /* Shimmer delayed - for second word */
+  .animate-brand-shimmer-delayed {
+    animation: brand-shimmer 12s linear infinite;
+    animation-delay: 2s;
+  }
+
+  /* Subtle glow pulse */
+  @keyframes brand-glow {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  .animate-brand-glow {
+    animation: brand-glow 10s ease-in-out infinite;
+  }
+
   /* Reduced motion - disable all intro animations */
   @media (prefers-reduced-motion: reduce) {
     body::before,
@@ -610,7 +663,11 @@
     .animate-pulse-subtle,
     .animate-bounce-subtle,
     .animate-text-shimmer,
-    .animate-fade-in-scale {
+    .animate-fade-in-scale,
+    .animate-brand-breathe,
+    .animate-brand-shimmer,
+    .animate-brand-shimmer-delayed,
+    .animate-brand-glow {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
