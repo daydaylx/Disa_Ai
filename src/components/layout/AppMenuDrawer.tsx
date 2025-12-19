@@ -124,7 +124,7 @@ export function AppMenuDrawer({
 
   const drawer = (
     <div
-      className="fixed inset-0 z-drawer bg-black/70 backdrop-blur-md"
+      className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-xl"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
@@ -160,12 +160,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/15 gap-3 bg-surface-1/40 backdrop-blur-xl">
-            <BrandWordmark className="text-base text-ink-primary" />
+          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/15 gap-3 bg-surface-1/25 backdrop-blur-2xl">
+            <BrandWordmark className="text-base text-white font-semibold" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-primary hover:text-white hover:bg-white/10 transition-all border border-white/10 hover:border-white/20 shrink-0 hover:shadow-glow-sm"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:text-white hover:bg-white/15 transition-all border border-white/15 hover:border-white/30 shrink-0 hover:shadow-glow-sm backdrop-blur-md"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -185,27 +185,27 @@ export function AppMenuDrawer({
                       to={item.path}
                       onClick={onClose}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border",
+                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border backdrop-blur-md",
                         isActive
-                          ? "border-white/25 bg-white/12 text-white shadow-sm backdrop-blur-sm"
-                          : "border-transparent text-ink-primary hover:border-white/15 hover:bg-white/8 hover:text-white",
+                          ? "border-white/30 bg-white/18 text-white shadow-md"
+                          : "border-transparent text-white/90 hover:border-white/20 hover:bg-white/12 hover:text-white",
                       )}
                     >
                       <Icon
                         className={cn(
                           "h-5 w-5 flex-shrink-0",
-                          isActive ? "text-white" : "text-ink-secondary",
+                          isActive ? "text-white" : "text-white/70",
                         )}
                       />
                       <div className="flex-1 min-w-0">
-                        <span className={cn("font-medium text-sm", isActive && "text-white")}>
+                        <span className="font-medium text-sm">
                           {item.label}
                         </span>
                         {item.description && (
                           <p
                             className={cn(
                               "text-xs mt-0.5 truncate",
-                              isActive ? "text-ink-secondary" : "text-ink-tertiary",
+                              isActive ? "text-white/70" : "text-white/60",
                             )}
                           >
                             {item.description}
@@ -235,23 +235,23 @@ export function AppMenuDrawer({
                           to={page.path}
                           onClick={onClose}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border",
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border backdrop-blur-md",
                             isActive
-                              ? "text-white border-white/25 bg-white/12 shadow-sm"
-                              : "text-ink-secondary border-transparent hover:text-ink-primary hover:border-white/15 hover:bg-white/8",
+                              ? "text-white border-white/30 bg-white/18 shadow-md"
+                              : "text-white/80 border-transparent hover:text-white hover:border-white/20 hover:bg-white/12",
                           )}
                         >
                           {Icon && (
                             <Icon
                               className={cn(
                                 "h-4 w-4 flex-shrink-0",
-                                isActive ? "text-white" : "text-ink-tertiary",
+                                isActive ? "text-white" : "text-white/60",
                               )}
                             />
                           )}
                           <span>{page.label}</span>
                           {page.description && (
-                            <span className="text-xs text-ink-tertiary ml-auto truncate max-w-[120px]">
+                            <span className="text-xs text-white/60 ml-auto truncate max-w-[120px]">
                               {page.description}
                             </span>
                           )}
@@ -266,7 +266,7 @@ export function AppMenuDrawer({
 
           {/* Footer */}
           <div className="px-4 pb-6 pt-2 mt-auto border-t border-white/10">
-            <p className="text-xs text-ink-tertiary text-center pt-3">© 2025 Disa AI</p>
+            <p className="text-xs text-white/50 text-center pt-3">© 2025 Disa AI</p>
           </div>
           <span
             ref={lastTrapRef}
