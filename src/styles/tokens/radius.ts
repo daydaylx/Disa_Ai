@@ -30,26 +30,26 @@ export type RadiusTokens = {
 
 export const radiusTokens: RadiusTokens = {
   none: "0px",
-  xs: "12px", // Deprecated: Use sm instead
-  sm: "12px", // Small elements: buttons, chips, badges
-  md: "16px", // Medium elements: cards, inputs, dialogs
-  lg: "20px", // Large elements: panels, large cards
-  xl: "16px", // Deprecated: Use md instead
+  xs: "10.2px", // Deprecated: Use sm instead (reduced by 15%)
+  sm: "10.2px", // Small elements: buttons, chips, badges (reduced by 15%)
+  md: "13.6px", // Medium elements: cards, inputs, dialogs (reduced by 15%)
+  lg: "17px", // Large elements: panels, large cards (reduced by 15%)
+  xl: "13.6px", // Deprecated: Use md instead (reduced by 15%)
   pill: "9999px", // Fully rounded (pills, avatars)
   full: "50%",
 
   /* Additional radii for specific components */
-  scrollbar: "16px",
-  focus: "12px",
-  toast: "12px",
-  installPrompt: "16px",
-  button: "12px",
-  badge: "12px",
+  scrollbar: "13.6px", // (reduced by 15%)
+  focus: "10.2px", // (reduced by 15%)
+  toast: "10.2px", // (reduced by 15%)
+  installPrompt: "13.6px", // (reduced by 15%)
+  button: "10.2px", // (reduced by 15%)
+  badge: "10.2px", // (reduced by 15%)
 
   /* Glassmorphism Card System - 3 consistent radii */
-  card: "16px", // Standard cards
-  cardInner: "12px", // Inner elements
-  cardSmall: "12px", // Small elements
+  card: "13.6px", // Standard cards (reduced by 15%)
+  cardInner: "10.2px", // Inner elements (reduced by 15%)
+  cardSmall: "10.2px", // Small elements (reduced by 15%)
   avatar: "50%",
 };
 

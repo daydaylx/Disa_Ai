@@ -56,71 +56,71 @@ export const typographyTokens: TypographyTokens = {
   },
   textStyles: {
     display: {
-      fontSize: "2rem",
-      lineHeight: "2.5rem",
+      fontSize: "1.7rem", // reduced by 15%
+      lineHeight: "2.125rem", // reduced by 15%
       fontWeight: 700,
       letterSpacing: "-0.01em",
       textTransform: "none",
     },
     headline: {
-      fontSize: "1.75rem",
-      lineHeight: "2.1875rem",
+      fontSize: "1.4875rem", // reduced by 15%
+      lineHeight: "1.859375rem", // reduced by 15%
       fontWeight: 700,
       letterSpacing: "-0.008em",
       textTransform: "none",
     },
     title: {
-      fontSize: "1.5rem",
-      lineHeight: "1.875rem",
+      fontSize: "1.275rem", // reduced by 15%
+      lineHeight: "1.59375rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.006em",
       textTransform: "none",
     },
     subtitle: {
-      fontSize: "1.25rem",
-      lineHeight: "1.5rem",
+      fontSize: "1.0625rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.002em",
       textTransform: "none",
     },
     body: {
-      fontSize: "1rem",
-      lineHeight: "1.5rem",
+      fontSize: "0.85rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     bodyStrong: {
-      fontSize: "1rem",
-      lineHeight: "1.5rem",
+      fontSize: "0.85rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "0em",
       textTransform: "none",
     },
     bodySmall: {
-      fontSize: "0.875rem",
-      lineHeight: "1.3125rem",
+      fontSize: "0.74375rem", // reduced by 15%
+      lineHeight: "1.115625rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     caption: {
-      fontSize: "0.75rem",
-      lineHeight: "1.125rem",
+      fontSize: "0.6375rem", // reduced by 15%
+      lineHeight: "0.95625rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "0.02em",
       textTransform: "none",
     },
     label: {
-      fontSize: "0.875rem",
-      lineHeight: "1.25rem",
+      fontSize: "0.74375rem", // reduced by 15%
+      lineHeight: "1.0625rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "0.04em",
       textTransform: "uppercase",
     },
     mono: {
-      fontSize: "0.875rem",
-      lineHeight: "1.3rem",
+      fontSize: "0.74375rem", // reduced by 15%
+      lineHeight: "1.105rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
@@ -128,72 +128,72 @@ export const typographyTokens: TypographyTokens = {
   },
   cardTextStyles: {
     titleHero: {
-      fontSize: "1.5rem",
-      lineHeight: "1.875rem",
+      fontSize: "1.275rem", // reduced by 15%
+      lineHeight: "1.59375rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.008em",
       textTransform: "none",
     },
     titleLg: {
-      fontSize: "1.25rem",
-      lineHeight: "1.5rem",
+      fontSize: "1.0625rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.006em",
       textTransform: "none",
     },
     titleBase: {
-      fontSize: "1.125rem",
-      lineHeight: "1.5rem",
+      fontSize: "0.95625rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.004em",
       textTransform: "none",
     },
     titleSm: {
-      fontSize: "1rem",
-      lineHeight: "1.375rem",
+      fontSize: "0.85rem", // reduced by 15%
+      lineHeight: "1.16875rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "-0.002em",
       textTransform: "none",
     },
     descriptionLg: {
-      fontSize: "1rem",
-      lineHeight: "1.5rem",
+      fontSize: "0.85rem", // reduced by 15%
+      lineHeight: "1.275rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     descriptionBase: {
-      fontSize: "0.875rem",
-      lineHeight: "1.35rem",
+      fontSize: "0.74375rem", // reduced by 15%
+      lineHeight: "1.1475rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0em",
       textTransform: "none",
     },
     descriptionSm: {
-      fontSize: "0.75rem",
-      lineHeight: "1.125rem",
+      fontSize: "0.6375rem", // reduced by 15%
+      lineHeight: "0.95625rem", // reduced by 15%
       fontWeight: 400,
       letterSpacing: "0.02em",
       textTransform: "none",
     },
     metadata: {
-      fontSize: "0.75rem",
-      lineHeight: "1.125rem",
+      fontSize: "0.6375rem", // reduced by 15%
+      lineHeight: "0.95625rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "0.08em",
       textTransform: "uppercase",
     },
     label: {
-      fontSize: "0.75rem",
-      lineHeight: "1.125rem",
+      fontSize: "0.6375rem", // reduced by 15%
+      lineHeight: "0.95625rem", // reduced by 15%
       fontWeight: 600,
       letterSpacing: "0.08em",
       textTransform: "uppercase",
     },
   },
   fixedSizes: {
-    badge: "0.75rem",
-    input: "1rem",
+    badge: "0.6375rem", // reduced by 15%
+    input: "0.85rem", // reduced by 15%
   },
 };
 
