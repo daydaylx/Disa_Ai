@@ -7,45 +7,45 @@
 
 :root {
   /* ========================================================================
-     SPACING SCALE - 8px Rhythm
+     SPACING SCALE - 8px Rhythm (reduced by 15%)
      ======================================================================== */
   --space-0: 0;
-  --space-1: 0.25rem;   /* 4px */
-  --space-2: 0.5rem;    /* 8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
-  --space-10: 2.5rem;   /* 40px */
-  --space-12: 3rem;     /* 48px */
-  --space-16: 4rem;     /* 64px */
+  --space-1: 0.2125rem;   /* 3.4px (reduced by 15%) */
+  --space-2: 0.425rem;    /* 6.8px (reduced by 15%) */
+  --space-3: 0.6375rem;   /* 10.2px (reduced by 15%) */
+  --space-4: 0.85rem;      /* 13.6px (reduced by 15%) */
+  --space-5: 1.0625rem;   /* 17px (reduced by 15%) */
+  --space-6: 1.275rem;    /* 20.4px (reduced by 15%) */
+  --space-8: 1.7rem;      /* 27.2px (reduced by 15%) */
+  --space-10: 2.125rem;   /* 34px (reduced by 15%) */
+  --space-12: 2.55rem;    /* 40.8px (reduced by 15%) */
+  --space-16: 3.4rem;     /* 54.4px (reduced by 15%) */
 
   /* ========================================================================
-     BORDER RADIUS - 3-Stufen Hierarchie
+     BORDER RADIUS - 3-Stufen Hierarchie (reduced by 15%)
      ======================================================================== */
-  --radius-sm: 0.5rem;    /* 8px - Chips, Small buttons */
-  --radius-md: 0.75rem;   /* 12px - Cards, Inputs, Standard buttons */
-  --radius-lg: 1rem;      /* 16px - Panels, Modals */
+  --radius-sm: 0.425rem;    /* 6.8px - Chips, Small buttons (reduced by 15%) */
+  --radius-md: 0.6375rem;   /* 10.2px - Cards, Inputs, Standard buttons (reduced by 15%) */
+  --radius-lg: 0.85rem;      /* 13.6px - Panels, Modals (reduced by 15%) */
 
   /* ========================================================================
-     SHADOWS - 2-Level Elevation (Glassmorphism 2.0)
+     SHADOWS - 2-Level Elevation (Glassmorphism 2.0) (reduced by 15%)
      ======================================================================== */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 0.85px 2.55px rgba(0, 0, 0, 0.12); /* reduced by 15% */
+  --shadow-md: 0 1.7px 6.8px rgba(0, 0, 0, 0.15); /* reduced by 15% */
+  --shadow-lg: 0 6.8px 20.4px rgba(0, 0, 0, 0.2); /* reduced by 15% */
 
-  /* Focus & Glow */
-  --shadow-focus: 0 0 0 2px var(--color-brand-primary);
-  --shadow-glow-sm: 0 0 12px rgba(139, 92, 246, 0.25);
-  --shadow-glow-md: 0 0 20px rgba(139, 92, 246, 0.35);
+  /* Focus & Glow (reduced by 15%) */
+  --shadow-focus: 0 0 0 1.7px var(--color-brand-primary); /* reduced by 15% */
+  --shadow-glow-sm: 0 0 10.2px rgba(139, 92, 246, 0.25); /* reduced by 15% */
+  --shadow-glow-md: 0 0 17px rgba(139, 92, 246, 0.35); /* reduced by 15% */
 
   /* ========================================================================
-     TOUCH TARGETS - WCAG AA Compliant
+     TOUCH TARGETS - WCAG AA Compliant (reduced by 15%)
      ======================================================================== */
-  --touch-sm: 2.75rem;   /* 44px - Minimum für Mobile */
-  --touch-md: 3rem;      /* 48px - Comfortable */
-  --touch-lg: 3.5rem;    /* 56px - Spacious */
+  --touch-sm: 2.3375rem;   /* 37.4px - Minimum für Mobile (reduced by 15%) */
+  --touch-md: 2.55rem;      /* 40.8px - Comfortable (reduced by 15%) */
+  --touch-lg: 2.975rem;    /* 47.6px - Spacious (reduced by 15%) */
 
   /* ========================================================================
      TRANSITIONS - Performance-optimiert

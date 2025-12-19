@@ -317,43 +317,43 @@ export default {
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-top": "env(safe-area-inset-top)",
-        header: "4rem", // Standard header height
+        header: "3.4rem", // Standard header height (reduced by 15%)
       },
       borderRadius: {
-        "3xl": "1.5rem",
-        "2xl": "1rem",
-        xl: "0.75rem",
-        lg: "0.5rem",
-        md: "0.375rem",
-        sm: "0.25rem",
+        "3xl": "1.275rem", // (reduced by 15%)
+        "2xl": "0.85rem", // (reduced by 15%)
+        xl: "0.6375rem", // (reduced by 15%)
+        lg: "0.425rem", // (reduced by 15%)
+        md: "0.31875rem", // (reduced by 15%)
+        sm: "0.2125rem", // (reduced by 15%)
       },
       boxShadow: {
-        sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        md: "0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)",
-        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)",
-        // Glow effects - Primary (Violet)
-        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.3)",
-        "glow-md": "0 0 20px rgba(139, 92, 246, 0.4)",
-        "glow-lg": "0 0 30px rgba(139, 92, 246, 0.5)",
-        // Page-specific glow effects
-        "glow-models": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-models-lg": "0 0 24px rgba(6, 182, 212, 0.35)",
-        "glow-roles": "0 0 12px rgba(244, 114, 182, 0.25)",
-        "glow-roles-lg": "0 0 24px rgba(244, 114, 182, 0.35)",
-        "glow-settings": "0 0 10px rgba(99, 102, 241, 0.20)",
-        "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
-        // Category-specific glow effects
-        "glow-wissenschaft": "0 0 12px rgba(16, 185, 129, 0.25)",
-        "glow-realpolitik": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-hypothetisch": "0 0 12px rgba(139, 92, 246, 0.25)",
-        "glow-kultur": "0 0 12px rgba(245, 158, 11, 0.25)",
-        "glow-technical": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-business": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-creative": "0 0 12px rgba(251, 113, 133, 0.25)",
-        "glow-assistance": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-analysis": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-research": "0 0 12px rgba(16, 185, 129, 0.25)",
-        "glow-education": "0 0 12px rgba(245, 158, 11, 0.25)",
+        sm: "0 0.85px 1.7px 0 rgba(0, 0, 0, 0.05)", // (reduced by 15%)
+        md: "0 3.4px 5.1px -0.85px rgba(0, 0, 0, 0.2), 0 1.7px 3.4px -0.85px rgba(0, 0, 0, 0.1)", // (reduced by 15%)
+        lg: "0 8.5px 12.75px -2.55px rgba(0, 0, 0, 0.3), 0 3.4px 5.1px -1.7px rgba(0, 0, 0, 0.15)", // (reduced by 15%)
+        // Glow effects - Primary (Violet) (reduced by 15%)
+        "glow-sm": "0 0 8.5px rgba(139, 92, 246, 0.3)",
+        "glow-md": "0 0 17px rgba(139, 92, 246, 0.4)",
+        "glow-lg": "0 0 25.5px rgba(139, 92, 246, 0.5)",
+        // Page-specific glow effects (reduced by 15%)
+        "glow-models": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-models-lg": "0 0 20.4px rgba(6, 182, 212, 0.35)",
+        "glow-roles": "0 0 10.2px rgba(244, 114, 182, 0.25)",
+        "glow-roles-lg": "0 0 20.4px rgba(244, 114, 182, 0.35)",
+        "glow-settings": "0 0 8.5px rgba(99, 102, 241, 0.20)",
+        "glow-text": "0 0 8.5px rgba(139, 92, 246, 0.5)",
+        // Category-specific glow effects (reduced by 15%)
+        "glow-wissenschaft": "0 0 10.2px rgba(16, 185, 129, 0.25)",
+        "glow-realpolitik": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-hypothetisch": "0 0 10.2px rgba(139, 92, 246, 0.25)",
+        "glow-kultur": "0 0 10.2px rgba(245, 158, 11, 0.25)",
+        "glow-technical": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-business": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-creative": "0 0 10.2px rgba(251, 113, 133, 0.25)",
+        "glow-assistance": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-analysis": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-research": "0 0 10.2px rgba(16, 185, 129, 0.25)",
+        "glow-education": "0 0 10.2px rgba(245, 158, 11, 0.25)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -376,31 +376,31 @@ export default {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "0%": { transform: "translateY(17px)", opacity: "0" }, // 20px -> 17px (reduced by 15%)
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         pulseGlow: {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
-          "50%": { opacity: "1", transform: "scale(1.05)" },
+          "50%": { opacity: "1", transform: "scale(1.0425)" }, // 1.05 -> 1.0425 (reduced by 15%)
         },
         blob: {
           "0%": { transform: "translate(0px, 0px) scale(1)" },
-          "33%": { transform: "translate(30px, -50px) scale(1.1)" },
-          "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+          "33%": { transform: "translate(25.5px, -42.5px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
+          "66%": { transform: "translate(-17px, 17px) scale(0.915)", opacity: "0.6" }, // reduced by 15%
           "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
         "blob-float-1": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "33%": { transform: "translate(30px, -30px) scale(1.1)", opacity: "0.7" },
-          "66%": { transform: "translate(-20px, 20px) scale(0.9)", opacity: "0.6" },
+          "33%": { transform: "translate(25.5px, -25.5px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
+          "66%": { transform: "translate(-17px, 17px) scale(0.915)", opacity: "0.6" }, // reduced by 15%
         },
         "blob-float-2": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "50%": { transform: "translate(-30px, 40px) scale(1.1)", opacity: "0.7" },
+          "50%": { transform: "translate(-25.5px, 34px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
         },
         "blob-float-3": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "50%": { transform: "translate(20px, -20px) scale(1.05)", opacity: "0.7" },
+          "50%": { transform: "translate(17px, -17px) scale(1.0425)", opacity: "0.7" }, // reduced by 15%
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "0.4" },
@@ -408,7 +408,7 @@ export default {
         },
         pingSlow: {
           "75%, 100%": {
-            transform: "scale(2)",
+            transform: "scale(1.7)", // 2 -> 1.7 (reduced by 15%)
             opacity: "0",
           },
         },
