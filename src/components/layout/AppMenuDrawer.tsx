@@ -124,7 +124,7 @@ export function AppMenuDrawer({
 
   const drawer = (
     <div
-      className="fixed inset-0 z-drawer bg-black/50 backdrop-blur-lg"
+      className="fixed inset-0 z-drawer bg-black/40"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
