@@ -4,19 +4,39 @@ import { useNavigate } from "react-router-dom";
 import { getCategoryStyle } from "@/lib/categoryColors";
 import type { LucideIcon } from "@/lib/icons";
 import {
+  Activity,
   Book,
   BookOpenCheck,
   Bot,
   Brain,
+  Briefcase,
   ChevronDown,
   Code2,
   DollarSign,
+  Feather,
+  Film,
+  GraduationCap,
+  Heart,
+  HeartHandshake,
+  Home,
+  Lock,
+  MessageSquare,
+  Music,
+  Palette,
   RotateCcw,
+  Scale,
+  Shield,
   Smile,
   Sparkles,
   Star,
+  Tag,
+  Theater,
+  TrendingUp,
+  Unlock,
   User,
   Users,
+  Utensils,
+  Zap,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
@@ -33,7 +53,77 @@ interface EnhancedRolesInterfaceProps {
 }
 
 function getRoleIcon(role: EnhancedRole): LucideIcon {
-  // Category-first mapping keeps the UI consistent and guarantees diversity across the roles list.
+  // Role-specific mapping for unique visual identity
+  // Each role gets its own icon based on its purpose and characteristics
+  const roleIconMap: Record<string, LucideIcon> = {
+    // Standard & General
+    neutral: Users,
+
+    // Communication & Business
+    email_professional: MessageSquare,
+
+    // Personality & Humor
+    sarcastic_direct: Smile,
+
+    // Therapy & Health
+    therapist_expert: Heart,
+    fitness_nutrition_coach: Activity,
+    sexuality_educator: Heart,
+
+    // Legal & Professional
+    legal_generalist: Scale,
+
+    // Productivity & Career
+    productivity_helper: TrendingUp,
+    career_advisor: Briefcase,
+    education_guide: GraduationCap,
+    personality_trainer: Zap,
+
+    // Sales & Commerce
+    ebay_coach: Tag,
+
+    // Education
+    language_teacher: BookOpenCheck,
+
+    // Expert & Uncensored
+    uncensored_expert: Unlock,
+
+    // Creative & Writing
+    nsfw_roleplay: Theater,
+    erotic_creative_author: Feather,
+    poet_lyricist: Feather,
+    songwriter: Music,
+    erotic_author: Feather,
+    adult_roleplay_open: Theater,
+
+    // Coaching & Support
+    coach_life: Zap,
+    coach_crisis: Shield,
+
+    // Family & Community
+    senior_advisor: Heart,
+    parent_advisor: Users,
+    neighbor_helper: Home,
+
+    // Food & Lifestyle
+    chef_foodie: Utensils,
+
+    // Arts & Entertainment
+    movie_tv_expert: Film,
+    art_coach: Palette,
+
+    // Relationships & Intimacy
+    relationship_advisor_open: HeartHandshake,
+    fetish_kink_guide: Lock,
+  };
+
+  // Try role-specific icon first
+  const specificIcon = roleIconMap[role.id];
+  if (specificIcon) {
+    return specificIcon;
+  }
+
+  // Fallback to category-based mapping for unknown roles
   switch (role.category) {
     case "Creative":
       return Sparkles;
@@ -54,7 +144,7 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
     case "Spezial":
       return Bot;
     default:
-      return Users;
+      return Users; // Universal fallback
   }
 }
 
