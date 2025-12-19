@@ -45,6 +45,7 @@ Das Skript erstellt alle 6 Issues automatisch.
 ### GitHub CLI installieren (falls noch nicht vorhanden)
 
 **Linux (Debian/Ubuntu):**
+
 ```bash
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
 sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -54,22 +55,24 @@ sudo apt install gh -y
 ```
 
 **macOS:**
+
 ```bash
 brew install gh
 ```
 
 **Authentifizierung:**
+
 ```bash
 gh auth login
 ```
 
 ## Zusammenfassung der Issues
 
-| # | Titel | Priorität | Labels |
-|---|-------|-----------|--------|
-| 1 | Chat-Historie umbenennen: „Lesezeichen/Bookmark" veraltet | Normal | ui, ux, cleanup, good first issue |
-| 2 | OpenRouter: Nur 6 statt alle Free-Modelle geladen | Hoch | bug, api, enhancement, high priority |
-| 3 | Settings: „KI-Verhalten" und „Darstellung" trennen | Normal | ui, ux, refactor |
-| 4 | Gedächtnisfunktion standardmäßig aktivieren | Normal | enhancement, behavior, settings |
-| 5 | Rollen-Icons: Jede Rolle eigenes Icon | Normal | ui, ux, enhancement |
-| 6 | Bonus: Rollen-Icons farblich wie Chat-Icons | Niedrig | ui, ux, polish, nice to have |
+| #   | Titel                                                     | Priorität | Labels                               |
+| --- | --------------------------------------------------------- | --------- | ------------------------------------ |
+| 1   | Chat-Historie umbenennen: „Lesezeichen/Bookmark" veraltet | Normal    | ui, ux, cleanup, good first issue    |
+| 2   | OpenRouter: Nur 6 statt alle Free-Modelle geladen         | Hoch      | bug, api, enhancement, high priority |
+| 3   | Settings: „KI-Verhalten" und „Darstellung" trennen        | Normal    | ui, ux, refactor                     |
+| 4   | Gedächtnisfunktion standardmäßig aktivieren               | Normal    | enhancement, behavior, settings      |
+| 5   | Rollen-Icons: Jede Rolle eigenes Icon                     | Normal    | ui, ux, enhancement                  |
+| 6   | Bonus: Rollen-Icons farblich wie Chat-Icons               | Niedrig   | ui, ux, polish, nice to have         |
