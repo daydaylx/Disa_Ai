@@ -139,7 +139,7 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[var(--z-drawer)] flex bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[var(--z-drawer)] flex bg-black/70 backdrop-blur-md">
       <button
         aria-label="Overlay schließen"
         className="absolute inset-0 h-full w-full cursor-pointer"
@@ -152,18 +152,19 @@ export function DrawerSheet({ title, isOpen, onClose, children, footer }: Drawer
         aria-label={title}
         className={cn(
           "relative ml-auto flex h-full w-full max-w-[min(22rem,calc(100vw-2.75rem))] flex-col rounded-l-[28px]",
-          "border-l border-white/10 text-ink-primary",
+          "border-l border-white/15 text-ink-primary",
           "glass-3",
+          "ring-1 ring-white/10",
           "pb-[max(env(safe-area-inset-bottom),1rem)] pt-[max(env(safe-area-inset-top),1rem)]",
           "animate-in slide-in-from-right duration-200",
         )}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-5 pb-3">
+        <div className="flex items-center justify-between border-b border-white/15 px-5 pb-3 bg-surface-1/30 backdrop-blur-xl">
           <h2 className="text-base font-semibold text-ink-primary">{title}</h2>
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-ink-primary transition-all hover:border-white/20 hover:text-white hover:bg-white/10 hover:shadow-glow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
             onClick={onClose}
           >
             <X className="h-5 w-5" aria-hidden="true" />

@@ -43,26 +43,31 @@
   --glass-bg-1-hover: rgba(18, 18, 24, 0.84);
   --glass-bg-2: rgba(10, 10, 14, 0.86);
   --glass-bg-2-hover: rgba(10, 10, 14, 0.9);
-  --glass-bg-3: rgba(8, 8, 10, 0.92);
-  --glass-bg-3-hover: rgba(8, 8, 10, 0.94);
+  /* Glass-3: Optimiert für Glassmorphism - mehr Transparenz, moderater Blur, klare Lesbarkeit */
+  /* Mit subtiler Grundtönung für Mindestkontrast auf allen Hintergründen */
+  --glass-bg-3: rgba(18, 18, 21, 0.20);
+  --glass-bg-3-hover: rgba(18, 18, 21, 0.28);
 
   --glass-blur-1: 14px;
   --glass-blur-2: 22px;
-  --glass-blur-3: 30px;
+  /* Reduzierter Blur für bessere Lesbarkeit ohne "Matsch-Effekt" */
+  --glass-blur-3: 14px;
 
   --glass-border-1: rgba(255, 255, 255, 0.1);
   --glass-border-1-hover: rgba(255, 255, 255, 0.14);
   --glass-border-2: rgba(255, 255, 255, 0.12);
   --glass-border-2-hover: rgba(255, 255, 255, 0.16);
-  --glass-border-3: rgba(255, 255, 255, 0.16);
-  --glass-border-3-hover: rgba(255, 255, 255, 0.2);
+  /* Klare Border für Glassmorphism-Definition */
+  --glass-border-3: rgba(255, 255, 255, 0.15);
+  --glass-border-3-hover: rgba(255, 255, 255, 0.22);
 
   --glass-shadow-1: 0 10px 35px rgba(0, 0, 0, 0.38);
   --glass-shadow-1-hover: 0 14px 46px rgba(0, 0, 0, 0.46);
   --glass-shadow-2: 0 14px 46px rgba(0, 0, 0, 0.5);
   --glass-shadow-2-hover: 0 18px 58px rgba(0, 0, 0, 0.58);
-  --glass-shadow-3: 0 22px 70px rgba(0, 0, 0, 0.6);
-  --glass-shadow-3-hover: 0 28px 90px rgba(0, 0, 0, 0.68);
+  /* Weicher aber sichtbarer Shadow für glasmorphe Panels */
+  --glass-shadow-3: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --glass-shadow-3-hover: 0 16px 50px rgba(0, 0, 0, 0.6);
 
   --glass-edge-highlight: rgba(255, 255, 255, 0.06);
   --glass-edge-highlight-strong: rgba(255, 255, 255, 0.09);

@@ -124,7 +124,7 @@ export function AppMenuDrawer({
 
   const drawer = (
     <div
-      className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-drawer bg-black/70 backdrop-blur-md"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
@@ -139,8 +139,10 @@ export function AppMenuDrawer({
       >
         <div
           className={cn(
-            "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative",
+            "h-[100dvh] w-[80vw] max-w-[360px] sm:max-w-[380px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative",
             "glass-3",
+            /* Innerer Glow-Ring für bessere Glasdefinition */
+            "ring-1 ring-white/10",
             "transition-transform duration-200",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
@@ -158,12 +160,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/10 gap-3 glass-header">
-            <BrandWordmark className="text-base" />
+          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/15 gap-3 bg-surface-1/40 backdrop-blur-xl">
+            <BrandWordmark className="text-base text-ink-primary" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 shrink-0"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-primary hover:text-white hover:bg-white/10 transition-all border border-white/10 hover:border-white/20 shrink-0 hover:shadow-glow-sm"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -183,22 +185,29 @@ export function AppMenuDrawer({
                       to={item.path}
                       onClick={onClose}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors min-h-[48px] border border-transparent",
+                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border",
                         isActive
-                          ? "border-white/20 bg-white/5 text-text-primary"
-                          : "text-ink-primary hover:border-white/10 hover:bg-white/5",
+                          ? "border-white/25 bg-white/12 text-white shadow-sm backdrop-blur-sm"
+                          : "border-transparent text-ink-primary hover:border-white/15 hover:bg-white/8 hover:text-white",
                       )}
                     >
                       <Icon
                         className={cn(
                           "h-5 w-5 flex-shrink-0",
-                          isActive ? "text-text-primary" : "text-ink-secondary",
+                          isActive ? "text-white" : "text-ink-secondary",
                         )}
                       />
                       <div className="flex-1 min-w-0">
-                        <span className="font-medium text-sm">{item.label}</span>
+                        <span className={cn("font-medium text-sm", isActive && "text-white")}>
+                          {item.label}
+                        </span>
                         {item.description && (
-                          <p className="text-xs text-ink-tertiary mt-0.5 truncate">
+                          <p
+                            className={cn(
+                              "text-xs mt-0.5 truncate",
+                              isActive ? "text-ink-secondary" : "text-ink-tertiary",
+                            )}
+                          >
                             {item.description}
                           </p>
                         )}
@@ -212,7 +221,7 @@ export function AppMenuDrawer({
             {secondaryPages.length > 0 && (
               <>
                 {/* Divider */}
-                <hr className="my-4 border-white/10" />
+                <hr className="my-4 border-white/15" />
 
                 {/* Secondary Links */}
                 <ul className="space-y-1" role="list">
@@ -226,17 +235,17 @@ export function AppMenuDrawer({
                           to={page.path}
                           onClick={onClose}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border",
                             isActive
-                              ? "text-text-primary border-white/20 bg-white/5"
-                              : "text-ink-secondary hover:text-ink-primary hover:border-white/10 hover:bg-white/5",
+                              ? "text-white border-white/25 bg-white/12 shadow-sm"
+                              : "text-ink-secondary border-transparent hover:text-ink-primary hover:border-white/15 hover:bg-white/8",
                           )}
                         >
                           {Icon && (
                             <Icon
                               className={cn(
                                 "h-4 w-4 flex-shrink-0",
-                                isActive ? "text-text-primary" : "text-ink-tertiary",
+                                isActive ? "text-white" : "text-ink-tertiary",
                               )}
                             />
                           )}
@@ -256,8 +265,8 @@ export function AppMenuDrawer({
           </nav>
 
           {/* Footer */}
-          <div className="px-4 pb-6 pt-2 mt-auto">
-            <p className="text-xs text-ink-tertiary text-center">© 2025 Disa AI</p>
+          <div className="px-4 pb-6 pt-2 mt-auto border-t border-white/10">
+            <p className="text-xs text-ink-tertiary text-center pt-3">© 2025 Disa AI</p>
           </div>
           <span
             ref={lastTrapRef}
