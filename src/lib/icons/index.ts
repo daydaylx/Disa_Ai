@@ -24,6 +24,7 @@ export {
   BookOpenCheck,
   Bot,
   Brain,
+  Briefcase, // Added for role icons
   Bug, // Added for FeedbackPage
   Cat, // Added
   Check,
@@ -46,10 +47,14 @@ export {
   EyeOff,
   Feather, // Added
   FileText,
+  Film, // Added for role icons
   Filter,
+  GraduationCap, // Added for role icons
   GitCompare,
   HardDrive,
   Hash,
+  Heart, // Added for role icons
+  HeartHandshake, // Added for role icons
   History,
   Home,
   Image,
@@ -64,6 +69,7 @@ export {
   Mic,
   Moon,
   MoreHorizontal,
+  Music, // Added for role icons
   Palette,
   Paperclip,
   PenSquare,
@@ -72,6 +78,7 @@ export {
   Plus,
   RefreshCw,
   RotateCcw,
+  Scale, // Added for role icons
   Search,
   Send,
   Settings,
@@ -84,13 +91,16 @@ export {
   Star,
   SunMedium,
   Tag,
+  Theater, // Added for role icons
   ThumbsDown,
   ThumbsUp,
   Trash2,
   TrendingUp,
+  Unlock, // Added for role icons
   Upload,
   User,
   Users,
+  Utensils, // Added for role icons
   Waves,
   X,
   XCircle,
