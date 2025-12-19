@@ -89,7 +89,7 @@
 .ds-button {
   display: inline-flex;
   align-items: center;
-  justify-center: center;
+  justify-content: center;
   min-height: var(--touch-sm);
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-md);
