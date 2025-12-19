@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.1-3f59c26",
-  "buildTime": "2025-12-19T09:48:33.299Z",
-  "gitSha": "3f59c261db52b0a4922e9df3cc072fd5e92aef1e",
-  "gitBranch": "claude/reduce-scaling-15-percent-WEKqP",
+  "buildId": "v1.0.1-f079717",
+  "buildTime": "2025-12-19T03:40:38.331Z",
+  "gitSha": "f07971765b1aae0e677abc3c5f30a3ef423197cc",
+  "gitBranch": "claude/fix-context-menu-layout-UvcG8",
   "version": "1.0.1"
 }
