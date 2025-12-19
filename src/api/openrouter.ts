@@ -24,6 +24,10 @@ const { chatEndpoint: ENDPOINT, modelsEndpoint: MODELS_ENDPOINT } = (() => {
     modelsEndpoint: buildOpenRouterUrl(base, OPENROUTER_MODELS_PATH),
   } as const;
 })();
+const DEFAULT_MODELS_ENDPOINT = buildOpenRouterUrl(
+  DEFAULT_OPENROUTER_BASE_URL,
+  OPENROUTER_MODELS_PATH,
+);
 
 function isTestEnv(): boolean {
   const viaImportMeta = (() => {
@@ -411,6 +415,8 @@ interface ToastsArray {
 const LS_MODELS = "disa:or:models:v1";
 const LS_MODELS_TS = "disa:or:models:ts";
 const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
+const MIN_EXPECTED_MODELS = 10;
+const MAX_MODELS_PAGES = 20;
 
 // Static fallback list of known free models (used when API is unavailable)
 // Updated 2025-12-19 with latest free models from OpenRouter
@@ -524,6 +530,68 @@ function buildModelsHeaders(explicitKey?: string) {
   return h;
 }
 
+type ModelsPageResponse = {
+  data?: ORModel[];
+  next?: string;
+  next_cursor?: string;
+  cursor?: string;
+  pagination?: {
+    next?: string;
+    cursor?: string;
+  };
+};
+
+function resolveNextModelsUrl(currentUrl: string, nextValue?: string | null): string | null {
+  if (!nextValue) return null;
+  if (nextValue.startsWith("http://") || nextValue.startsWith("https://")) {
+    return nextValue;
+  }
+
+  try {
+    const url = new URL(currentUrl);
+    url.searchParams.set("cursor", nextValue);
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+async function fetchModelsWithPagination(
+  endpoint: string,
+  headers: Record<string, string>,
+): Promise<ORModel[]> {
+  let currentUrl = endpoint;
+  const collected: ORModel[] = [];
+  const seen = new Set<string>();
+
+  for (let page = 0; page < MAX_MODELS_PAGES; page += 1) {
+    const response = (await fetchJson(currentUrl, {
+      headers,
+      timeoutMs: 15000,
+      retries: 2,
+    })) as ModelsPageResponse;
+    const list = Array.isArray(response?.data) ? response.data : [];
+
+    for (const model of list) {
+      if (!model?.id || seen.has(model.id)) continue;
+      seen.add(model.id);
+      collected.push(model);
+    }
+
+    const nextCursor =
+      response?.next ??
+      response?.next_cursor ??
+      response?.cursor ??
+      response?.pagination?.next ??
+      response?.pagination?.cursor;
+    const nextUrl = resolveNextModelsUrl(currentUrl, nextCursor ?? null);
+    if (!nextUrl) break;
+    currentUrl = nextUrl;
+  }
+
+  return collected;
+}
+
 export async function getRawModels(
   explicitKey?: string,
   ttlMs = DEFAULT_TTL_MS,
@@ -551,7 +619,7 @@ export async function getRawModels(
       const ts = tsRaw ? Number(tsRaw) : 0;
       if (ts && Date.now() - ts < ttlMs) {
         const cached = getCachedData();
-        if (cached) return cached;
+        if (cached && (isTestEnv() || cached.length >= MIN_EXPECTED_MODELS)) return cached;
       }
     } catch {
       // Ignore cache read errors
@@ -562,12 +630,14 @@ export async function getRawModels(
   // NOTE: OpenRouter's /models endpoint is public and doesn't require authentication
   // We still pass the API key if available for potential rate limit benefits
   try {
-    const data = await fetchJson(MODELS_ENDPOINT, {
-      headers: buildModelsHeaders(explicitKey),
-      timeoutMs: 15000,
-      retries: 2,
-    });
-    const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+    const headers = buildModelsHeaders(explicitKey);
+    let list = await fetchModelsWithPagination(MODELS_ENDPOINT, headers);
+    if (list.length < MIN_EXPECTED_MODELS && MODELS_ENDPOINT !== DEFAULT_MODELS_ENDPOINT) {
+      const fallbackList = await fetchModelsWithPagination(DEFAULT_MODELS_ENDPOINT, headers);
+      if (fallbackList.length > list.length) {
+        list = fallbackList;
+      }
+    }
 
     // Save to cache
     try {

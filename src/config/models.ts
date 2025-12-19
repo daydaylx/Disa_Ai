@@ -55,6 +55,7 @@ export type ModelEntry = {
 export type CatalogOptions = {
   preferOnline?: boolean;
   forceRefresh?: boolean;
+  toasts?: ToastsArray;
 };
 
 type ModelMetadata = {
@@ -63,6 +64,17 @@ type ModelMetadata = {
   label?: string;
   description?: string;
   tags?: string[];
+};
+
+type ToastItem = {
+  kind: "error" | "success" | "warning" | "info";
+  title: string;
+  message?: string;
+  actions?: Array<{ label: string; onClick: () => void }>;
+};
+
+type ToastsArray = {
+  push: (toast: ToastItem) => void;
 };
 
 /* ---- interne Helfer ---- */
@@ -76,10 +88,22 @@ function deriveProvider(id: string): string | undefined {
 function isFreeModel(model: ORModel): boolean {
   if (model.id.endsWith(":free")) return true;
 
-  const promptPrice = parseFloat(String(model.pricing?.prompt ?? "0"));
-  const completionPrice = parseFloat(String(model.pricing?.completion ?? "0"));
+  const parsePrice = (value: unknown): number | null => {
+    if (value === null || value === undefined || value === "") return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
 
-  return promptPrice === 0 && completionPrice === 0;
+  const promptPrice = parsePrice(model.pricing?.prompt);
+  const completionPrice = parsePrice(model.pricing?.completion);
+  const requestPrice = parsePrice((model.pricing as { request?: unknown } | undefined)?.request);
+  const imagePrice = parsePrice((model.pricing as { image?: unknown } | undefined)?.image);
+
+  const prices = [promptPrice, completionPrice, requestPrice, imagePrice].filter(
+    (value): value is number => value !== null,
+  );
+
+  return prices.length > 0 && prices.every((price) => price === 0);
 }
 
 function deriveContextTokens(model: ORModel): number | undefined {
@@ -109,9 +133,10 @@ function sortKnownFirst(
 
 export async function loadModelCatalog(opts?: CatalogOptions | boolean): Promise<ModelEntry[]> {
   const forceRefresh = typeof opts === "object" ? opts?.forceRefresh : false;
+  const toasts = typeof opts === "object" ? opts?.toasts : undefined;
   try {
     const [apiModels, metadataResponse] = await Promise.all([
-      getRawModels(undefined, undefined, undefined, forceRefresh), // Live-Daten (lokal gecached im Service)
+      getRawModels(undefined, undefined, toasts, forceRefresh), // Live-Daten (lokal gecached im Service)
       fetch(resolvePublicAssetUrl("models_metadata.json"), { cache: "no-store" }).catch(() => null),
     ]);
 
