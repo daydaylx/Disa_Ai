@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 const buttonVariants = cva(
   [
     "disa-notch disa-notch--interactive",
-    "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium",
+    "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium",
     "transition-all duration-200",
-    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary",
+    "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary",
     "disabled:pointer-events-none disabled:opacity-50",
     "active:scale-[0.97]",
   ],
@@ -16,24 +16,24 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-brand-primary text-white shadow-sm hover:bg-brand-primary/90 hover:shadow-glow-sm",
+          "bg-brand-primary text-white shadow-sm hover:bg-brand-primary/90 hover:shadow-glow-sm hover:-translate-y-px",
         secondary:
-          "bg-surface-2 text-ink-primary border border-white/5 hover:bg-surface-3 hover:border-white/10",
+          "bg-surface-2 text-ink-primary border border-white/8 hover:bg-surface-3 hover:border-white/12 hover:-translate-y-px",
         destructive:
-          "bg-surface-1 text-status-error border border-border-ink hover:bg-surface-2 hover:border-status-error/30",
+          "bg-surface-1 text-status-error border border-white/8 hover:bg-surface-2 hover:border-status-error/30 hover:-translate-y-px",
         outline:
-          "border border-white/10 bg-transparent hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary hover:border-white/20",
+          "border border-white/12 bg-transparent hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary hover:border-white/20 hover:-translate-y-px",
         ghost: "hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary",
         link: "disa-notch--cutout-none disa-notch--edge-none text-brand-primary underline-offset-4 hover:underline",
         glass:
-          "bg-surface-1/40 backdrop-blur-md border border-white/10 text-ink-primary hover:bg-surface-1/60 hover:border-white/20 shadow-sm",
+          "bg-surface-1/40 backdrop-blur-md border border-white/12 text-ink-primary hover:bg-surface-1/60 hover:border-white/20 shadow-sm hover:-translate-y-px",
       },
       size: {
-        default: "h-10 px-4",
-        sm: "h-8 rounded-lg px-3 text-xs",
-        lg: "disa-notch--md h-12 rounded-xl px-6 text-base",
-        icon: "h-10 w-10",
-        "icon-sm": "h-8 w-8",
+        default: "h-11 px-4 rounded-xl min-w-[2.75rem]",
+        sm: "h-10 rounded-lg px-3 text-xs min-w-[2.5rem]",
+        lg: "disa-notch--md h-14 rounded-xl px-6 text-base min-w-[3.5rem]",
+        icon: "h-11 w-11 rounded-xl",
+        "icon-sm": "h-10 w-10 rounded-lg",
       },
     },
     defaultVariants: {
