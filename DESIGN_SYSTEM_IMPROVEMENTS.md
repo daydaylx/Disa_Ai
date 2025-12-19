@@ -150,10 +150,17 @@ npm run test:e2e -- --project=chromium --headed
 
 ## Phase 2 - Geplante Verbesserungen (optional)
 
-**Nicht-Breaking Changes**:
+**✅ Umgesetzt (Commit a4f3f90)**:
 
-1. Shadow-System vereinfachen (Tailwind config bereinigen)
-2. Ungenutzte Animationen entfernen (Cube, Orb, Neko - falls ungenutzt)
+1. ✅ **Ungenutzte Animationen entfernt** (Cube/Orb - 195 Zeilen)
+   - Entfernt: 18 Cube + 10 Orb Animationen aus Tailwind Config
+   - Behalten: Neko (aktiv genutzt), Blob (Background), Core (fadeIn, slideUp, etc.)
+   - Reduktion: 642 → 450 Zeilen (-30%)
+   - Tests: ✅ 27 Neko-Tests bestanden
+
+**Noch offen (Nicht-Breaking Changes)**:
+
+2. Shadow-System vereinfachen (Tailwind config bereinigen)
 3. Color-Token konsolidieren (`accent-*` Aliase reduzieren)
 4. High Contrast Mode CSS hinzufügen
 
