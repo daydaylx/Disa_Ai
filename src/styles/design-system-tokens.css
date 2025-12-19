@@ -1,0 +1,184 @@
+/**
+ * DESIGN SYSTEM TOKENS - Konsolidiert & Vereinfacht
+ *
+ * Dieses File ersetzt die fragmentierte Token-Struktur durch ein klares, konsistentes System.
+ * Basiert auf Fluent 2 / Material 3 Prinzipien mit Mobile-First Fokus.
+ */
+
+:root {
+  /* ========================================================================
+     SPACING SCALE - 8px Rhythm
+     ======================================================================== */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ========================================================================
+     BORDER RADIUS - 3-Stufen Hierarchie
+     ======================================================================== */
+  --radius-sm: 0.5rem;    /* 8px - Chips, Small buttons */
+  --radius-md: 0.75rem;   /* 12px - Cards, Inputs, Standard buttons */
+  --radius-lg: 1rem;      /* 16px - Panels, Modals */
+
+  /* ========================================================================
+     SHADOWS - 2-Level Elevation (Glassmorphism 2.0)
+     ======================================================================== */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  /* Focus & Glow */
+  --shadow-focus: 0 0 0 2px var(--color-brand-primary);
+  --shadow-glow-sm: 0 0 12px rgba(139, 92, 246, 0.25);
+  --shadow-glow-md: 0 0 20px rgba(139, 92, 246, 0.35);
+
+  /* ========================================================================
+     TOUCH TARGETS - WCAG AA Compliant
+     ======================================================================== */
+  --touch-sm: 2.75rem;   /* 44px - Minimum für Mobile */
+  --touch-md: 3rem;      /* 48px - Comfortable */
+  --touch-lg: 3.5rem;    /* 56px - Spacious */
+
+  /* ========================================================================
+     TRANSITIONS - Performance-optimiert
+     ======================================================================== */
+  --transition-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-slow: 300ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* ========================================================================
+     BORDERS - Konsistente Opacities
+     ======================================================================== */
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================================================
+   UTILITY CLASSES - Basis-Komponenten
+   ======================================================================== */
+
+/* Card Base - Standardisiert */
+.ds-card {
+  background: var(--color-surface-card, #151d31);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.ds-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.ds-card:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Button Base - Standardisiert */
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-center: center;
+  min-height: var(--touch-sm);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ds-button:hover {
+  transform: translateY(-1px);
+}
+
+.ds-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.ds-button:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+/* Input Base - Standardisiert */
+.ds-input {
+  width: 100%;
+  min-height: var(--touch-sm);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-control-field-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.ds-input:hover {
+  border-color: var(--border-strong);
+}
+
+.ds-input:focus {
+  outline: none;
+  border-color: var(--color-brand-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Touch Target Helper */
+.ds-touch-target {
+  min-height: var(--touch-sm);
+  min-width: var(--touch-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================================================
+   RESPONSIVE & ACCESSIBILITY
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border-hairline: rgba(255, 255, 255, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.3);
+    --border-strong: rgba(255, 255, 255, 0.5);
+  }
+
+  .ds-card,
+  .ds-button,
+  .ds-input {
+    border-width: 2px;
+  }
+}
+
+/* Mobile Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .ds-button:hover {
+    transform: none;
+  }
+
+  .ds-button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}

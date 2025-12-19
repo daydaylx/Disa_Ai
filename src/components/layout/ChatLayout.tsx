@@ -26,7 +26,7 @@ export function ChatLayout({
   return (
     <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
       {/* Enhanced Header with Color Accents */}
-      <header className="sticky top-0 z-header glass-header shadow-sm border-b border-white/[0.06] relative overflow-hidden">
+      <header className="sticky top-0 z-header glass-header shadow-sm relative overflow-hidden">
         {/* Subtle gradient overlay - 25% reduced intensity */}
         <div className="absolute inset-0 bg-gradient-to-r from-accent-chat/[0.02] via-transparent to-accent-models/[0.02] pointer-events-none" />
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6 relative z-10">
