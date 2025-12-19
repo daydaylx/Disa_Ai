@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   [
-    "disa-notch disa-notch--interactive",
     "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium",
     "transition-all duration-200",
     "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary",
@@ -24,14 +23,14 @@ const buttonVariants = cva(
         outline:
           "border border-white/12 bg-transparent hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary hover:border-white/20 hover:-translate-y-px",
         ghost: "hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary",
-        link: "disa-notch--cutout-none disa-notch--edge-none text-brand-primary underline-offset-4 hover:underline",
+        link: "text-brand-primary underline-offset-4 hover:underline",
         glass:
           "bg-surface-1/40 backdrop-blur-md border border-white/12 text-ink-primary hover:bg-surface-1/60 hover:border-white/20 shadow-sm hover:-translate-y-px",
       },
       size: {
         default: "h-11 px-4 rounded-xl min-w-[2.75rem]",
         sm: "h-10 rounded-lg px-3 text-xs min-w-[2.5rem]",
-        lg: "disa-notch--md h-14 rounded-xl px-6 text-base min-w-[3.5rem]",
+        lg: "h-14 rounded-xl px-6 text-base min-w-[3.5rem]",
         icon: "h-11 w-11 rounded-xl",
         "icon-sm": "h-10 w-10 rounded-lg",
       },
