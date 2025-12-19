@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
@@ -122,19 +122,9 @@ export function AppMenuDrawer({
 
   if (!isOpen) return null;
 
-  const drawerGlassStyle = {
-    transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)",
-    "--_glass-bg": "rgba(12, 14, 20, 0.72)",
-    "--_glass-bg-hover": "rgba(12, 14, 20, 0.78)",
-    "--_glass-border": "rgba(255, 255, 255, 0.18)",
-    "--_glass-border-hover": "rgba(255, 255, 255, 0.28)",
-    "--_glass-shadow": "0 20px 55px rgba(0, 0, 0, 0.55)",
-    "--_glass-blur": "18px",
-  } as CSSProperties;
-
   const drawer = (
     <div
-      className="fixed inset-0 z-drawer bg-black/65 backdrop-blur-lg"
+      className="fixed inset-0 z-drawer bg-black/50 backdrop-blur-lg"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
@@ -152,11 +142,10 @@ export function AppMenuDrawer({
             "h-[100dvh] w-[80vw] max-w-[420px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative safe-area-top safe-area-bottom",
             "glass-3",
             /* Innerer Glow-Ring für bessere Glasdefinition */
-            "ring-1 ring-white/12",
+            "ring-1 ring-white/10",
             "transition-transform duration-200",
             "motion-safe:animate-[slideInLeft_180ms_ease-out]",
           )}
-          style={drawerGlassStyle}
           ref={drawerRef}
           role="dialog"
           aria-modal="true"
@@ -170,12 +159,12 @@ export function AppMenuDrawer({
             className="sr-only"
           />
           {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/20 gap-3 bg-black/45 backdrop-blur-xl">
+          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/15 gap-3 bg-black/35 backdrop-blur-xl">
             <BrandWordmark className="text-base text-white font-semibold tracking-wide" />
             <button
               onClick={onClose}
               ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:text-white hover:bg-white/16 transition-all border border-white/20 hover:border-white/35 shrink-0 hover:shadow-glow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 backdrop-blur-md"
+              className="h-10 w-10 flex items-center justify-center rounded-xl text-white hover:text-white hover:bg-white/12 transition-all border border-white/18 hover:border-white/30 shrink-0 hover:shadow-glow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 backdrop-blur-md"
               aria-label="Menü schließen"
             >
               <X className="h-5 w-5" />
@@ -197,8 +186,8 @@ export function AppMenuDrawer({
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-lg transition-all min-h-[48px] border backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35",
                         isActive
-                          ? "border-white/40 bg-white/20 text-white shadow-lg"
-                          : "border-transparent text-white/90 hover:border-white/25 hover:bg-white/14 hover:text-white",
+                          ? "border-white/35 bg-white/18 text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]"
+                          : "border-transparent text-white/90 hover:border-white/20 hover:bg-white/10 hover:text-white",
                       )}
                     >
                       <Icon
@@ -245,8 +234,8 @@ export function AppMenuDrawer({
                           className={cn(
                             "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm min-h-[44px] border backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35",
                             isActive
-                              ? "text-white border-white/40 bg-white/20 shadow-lg"
-                              : "text-white/85 border-transparent hover:text-white hover:border-white/25 hover:bg-white/14",
+                              ? "text-white border-white/35 bg-white/18 shadow-[0_0_12px_rgba(139,92,246,0.3)]"
+                              : "text-white/85 border-transparent hover:text-white hover:border-white/20 hover:bg-white/10",
                           )}
                         >
                           {Icon && (

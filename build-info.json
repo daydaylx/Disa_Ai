@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.1-2367659",
-  "buildTime": "2025-12-19T10:26:15.038Z",
-  "gitSha": "23676598c75e14a7f61c517180e7d9cd51d5fe6c",
-  "gitBranch": "claude/fix-openrouter-free-models-F0FbN",
+  "buildId": "v1.0.1-5d65200",
+  "buildTime": "2025-12-19T14:57:19.110Z",
+  "gitSha": "5d65200b3dbfb01c0703adcf80b90e09738c4b93",
+  "gitBranch": "claude/redesign-mobile-menu-X7oxk",
   "version": "1.0.1"
 }
