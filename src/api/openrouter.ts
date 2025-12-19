@@ -413,6 +413,7 @@ const LS_MODELS_TS = "disa:or:models:ts";
 const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
 
 // Static fallback list of known free models (used when API is unavailable)
+// Updated 2025-12-19 with latest free models from OpenRouter
 const FALLBACK_FREE_MODELS: ORModel[] = [
   {
     id: "meta-llama/llama-3.2-3b-instruct:free",
@@ -465,6 +466,55 @@ const FALLBACK_FREE_MODELS: ORModel[] = [
     pricing: { prompt: 0, completion: 0 },
     tags: ["free"],
   },
+  {
+    id: "allenai/olmo-3.1-32b-think:free",
+    name: "AllenAI: Olmo 3.1 32B Think (free)",
+    description:
+      "Olmo 3.1 32B Think is a large language model from AllenAI with advanced reasoning.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "xiaomi/mimo-v2-flash:free",
+    name: "Xiaomi: MiMo-V2-Flash (free)",
+    description: "MiMo-V2-Flash is Xiaomi's efficient flash model for quick responses.",
+    context_length: 8192,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free", "fast"],
+  },
+  {
+    id: "nvidia/nemotron-3-nano-30b-a3b:free",
+    name: "NVIDIA: Nemotron 3 Nano 30B A3B (free)",
+    description: "NVIDIA Nemotron 3 Nano 30B is a powerful free model from NVIDIA.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "mistralai/devstral-2512:free",
+    name: "Mistral: Devstral 2512 (free)",
+    description: "Devstral 2512 is Mistral's free model optimized for development tasks.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free", "coding"],
+  },
+  {
+    id: "arcee-ai/trinity-mini:free",
+    name: "Arcee AI: Trinity Mini (free)",
+    description: "Trinity Mini is Arcee AI's compact free model.",
+    context_length: 16384,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "allenai/olmo-3-32b-think:free",
+    name: "AllenAI: Olmo 3 32B Think (free)",
+    description: "Olmo 3 32B Think is the latest version from AllenAI.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
 ];
 
 function buildModelsHeaders(explicitKey?: string) {
@@ -480,9 +530,6 @@ export async function getRawModels(
   toasts?: ToastsArray,
   forceRefresh = false,
 ): Promise<ORModel[]> {
-  const resolvedKey = explicitKey ?? readApiKey() ?? "";
-  const hasAuthKey = Boolean(resolvedKey);
-
   // Helper to get cached data regardless of age
   const getCachedData = (): ORModel[] | null => {
     try {
@@ -496,14 +543,6 @@ export async function getRawModels(
     }
     return null;
   };
-
-  // If there is no API key, avoid long retries/timeouts and use cached/static fallback immediately.
-  // The OpenRouter models endpoint frequently requires auth; waiting blocks UI and E2E stability.
-  if (!hasAuthKey) {
-    const cached = getCachedData();
-    if (cached && cached.length > 0) return cached;
-    return FALLBACK_FREE_MODELS;
-  }
 
   // Try to return fresh cache first (if not forcing refresh)
   if (!forceRefresh) {
@@ -520,6 +559,8 @@ export async function getRawModels(
   }
 
   // Try to fetch from API
+  // NOTE: OpenRouter's /models endpoint is public and doesn't require authentication
+  // We still pass the API key if available for potential rate limit benefits
   try {
     const data = await fetchJson(MODELS_ENDPOINT, {
       headers: buildModelsHeaders(explicitKey),
