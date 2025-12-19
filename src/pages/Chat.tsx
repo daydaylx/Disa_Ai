@@ -3,6 +3,7 @@ import { lazy, memo, useCallback, useMemo, useReducer, useRef } from "react";
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
@@ -214,19 +215,9 @@ export default function Chat() {
                         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-radial from-accent-chat/15 to-transparent blur-xl pointer-events-none" />
                         <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-radial from-accent-models/11 to-transparent blur-xl pointer-events-none" />
 
-                        {/* Main Title - Wordmark with intro animation and gradient */}
+                        {/* Main Title - Animated Brandmark with shimmer and breathing */}
                         <div className="space-y-3 relative z-10">
-                          <h1
-                            className="text-5xl sm:text-6xl tracking-tight animate-wordmark-intro"
-                            style={{ fontWeight: 750 }}
-                          >
-                            <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent">
-                              Disa
-                            </span>{" "}
-                            <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent">
-                              AI
-                            </span>
-                          </h1>
+                          <AnimatedBrandmark />
                           <div className="space-y-2">
                             {/* Subtle accent line with gradient glow - 25% reduced */}
                             <div className="relative w-32 h-px mx-auto">
