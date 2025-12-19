@@ -43,15 +43,15 @@
   --glass-bg-1-hover: rgba(18, 18, 24, 0.84);
   --glass-bg-2: rgba(10, 10, 14, 0.86);
   --glass-bg-2-hover: rgba(10, 10, 14, 0.9);
-  /* Glass-3: Maximale Glassmorphism - hohe Transparenz + starker Blur für echten Glaseffekt */
-  /* Mit subtiler Grundtönung für Mindestkontrast auf allen Hintergründen */
-  --glass-bg-3: rgba(18, 18, 21, 0.12);
-  --glass-bg-3-hover: rgba(18, 18, 21, 0.18);
+  /* Glass-3: Premium Glassmorphism für Drawers/Overlays - transparent aber lesbar */
+  /* Ausbalanciert: Genug Opacity für Text-Lesbarkeit + echter Glaseffekt */
+  --glass-bg-3: rgba(18, 18, 21, 0.68);
+  --glass-bg-3-hover: rgba(18, 18, 21, 0.75);
 
   --glass-blur-1: 14px;
   --glass-blur-2: 22px;
-  /* Starker Blur für intensiven Glasmorphism-Effekt */
-  --glass-blur-3: 24px;
+  /* Moderater Blur für Glasmorphism - Balance zwischen Effekt und Performance */
+  --glass-blur-3: 20px;
 
   --glass-border-1: rgba(255, 255, 255, 0.1);
   --glass-border-1-hover: rgba(255, 255, 255, 0.14);

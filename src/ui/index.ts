@@ -7,7 +7,6 @@ export * from "./Card";
 export * from "./Chip";
 export * from "./CopyButton";
 export * from "./Dialog";
-export * from "./DrawerSheet";
 export * from "./FilterChip";
 export * from "./IconButton";
 export * from "./Input";

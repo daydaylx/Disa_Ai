@@ -46,7 +46,7 @@ export function HistorySidePanel({
     <div className="fixed inset-0 z-drawer" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-black/50 backdrop-blur-lg transition-opacity duration-300"
         onClick={handleBackdropClick}
       />
 
