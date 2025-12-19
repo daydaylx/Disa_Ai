@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.1-083f923",
-  "buildTime": "2025-12-19T01:33:37.039Z",
-  "gitSha": "083f9237af93fab0355c533d09e79e57e9a0d475",
-  "gitBranch": "claude/fix-button-cutout-avCJL",
+  "buildId": "v1.0.1-f079717",
+  "buildTime": "2025-12-19T03:40:38.331Z",
+  "gitSha": "f07971765b1aae0e677abc3c5f30a3ef423197cc",
+  "gitBranch": "claude/fix-context-menu-layout-UvcG8",
   "version": "1.0.1"
 }
