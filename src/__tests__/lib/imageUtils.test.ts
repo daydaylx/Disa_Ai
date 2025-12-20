@@ -207,7 +207,7 @@ describe("imageUtils", () => {
           queueMicrotask(() => {
             this.result = "data:image/png;base64,mockdata";
             if (this.onload) {
-              this.onload({ target: this } as ProgressEvent<FileReader>);
+              this.onload({ target: this } as unknown as ProgressEvent<FileReader>);
             }
           });
         }
