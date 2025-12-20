@@ -310,7 +310,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       try {
         setIsLoadingModels(true);
         setModelLoadError(null);
-        const modelEntries = await loadModelCatalog();
+        const modelEntries = await loadModelCatalog({ toasts: { push } });
         const converted = modelEntries.map(modelEntryToEnhanced);
         setEnhancedModels(converted);
       } catch (error) {

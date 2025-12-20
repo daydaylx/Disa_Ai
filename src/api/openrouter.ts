@@ -24,6 +24,10 @@ const { chatEndpoint: ENDPOINT, modelsEndpoint: MODELS_ENDPOINT } = (() => {
     modelsEndpoint: buildOpenRouterUrl(base, OPENROUTER_MODELS_PATH),
   } as const;
 })();
+const DEFAULT_MODELS_ENDPOINT = buildOpenRouterUrl(
+  DEFAULT_OPENROUTER_BASE_URL,
+  OPENROUTER_MODELS_PATH,
+);
 
 function isTestEnv(): boolean {
   const viaImportMeta = (() => {
@@ -411,8 +415,11 @@ interface ToastsArray {
 const LS_MODELS = "disa:or:models:v1";
 const LS_MODELS_TS = "disa:or:models:ts";
 const DEFAULT_TTL_MS = 20 * 60 * 1000; // 20 Minuten
+const MIN_EXPECTED_MODELS = 10;
+const MAX_MODELS_PAGES = 20;
 
 // Static fallback list of known free models (used when API is unavailable)
+// Updated 2025-12-19 with latest free models from OpenRouter
 const FALLBACK_FREE_MODELS: ORModel[] = [
   {
     id: "meta-llama/llama-3.2-3b-instruct:free",
@@ -465,6 +472,55 @@ const FALLBACK_FREE_MODELS: ORModel[] = [
     pricing: { prompt: 0, completion: 0 },
     tags: ["free"],
   },
+  {
+    id: "allenai/olmo-3.1-32b-think:free",
+    name: "AllenAI: Olmo 3.1 32B Think (free)",
+    description:
+      "Olmo 3.1 32B Think is a large language model from AllenAI with advanced reasoning.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "xiaomi/mimo-v2-flash:free",
+    name: "Xiaomi: MiMo-V2-Flash (free)",
+    description: "MiMo-V2-Flash is Xiaomi's efficient flash model for quick responses.",
+    context_length: 8192,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free", "fast"],
+  },
+  {
+    id: "nvidia/nemotron-3-nano-30b-a3b:free",
+    name: "NVIDIA: Nemotron 3 Nano 30B A3B (free)",
+    description: "NVIDIA Nemotron 3 Nano 30B is a powerful free model from NVIDIA.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "mistralai/devstral-2512:free",
+    name: "Mistral: Devstral 2512 (free)",
+    description: "Devstral 2512 is Mistral's free model optimized for development tasks.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free", "coding"],
+  },
+  {
+    id: "arcee-ai/trinity-mini:free",
+    name: "Arcee AI: Trinity Mini (free)",
+    description: "Trinity Mini is Arcee AI's compact free model.",
+    context_length: 16384,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
+  {
+    id: "allenai/olmo-3-32b-think:free",
+    name: "AllenAI: Olmo 3 32B Think (free)",
+    description: "Olmo 3 32B Think is the latest version from AllenAI.",
+    context_length: 32768,
+    pricing: { prompt: 0, completion: 0 },
+    tags: ["free"],
+  },
 ];
 
 function buildModelsHeaders(explicitKey?: string) {
@@ -474,15 +530,74 @@ function buildModelsHeaders(explicitKey?: string) {
   return h;
 }
 
+type ModelsPageResponse = {
+  data?: ORModel[];
+  next?: string;
+  next_cursor?: string;
+  cursor?: string;
+  pagination?: {
+    next?: string;
+    cursor?: string;
+  };
+};
+
+function resolveNextModelsUrl(currentUrl: string, nextValue?: string | null): string | null {
+  if (!nextValue) return null;
+  if (nextValue.startsWith("http://") || nextValue.startsWith("https://")) {
+    return nextValue;
+  }
+
+  try {
+    const url = new URL(currentUrl);
+    url.searchParams.set("cursor", nextValue);
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+async function fetchModelsWithPagination(
+  endpoint: string,
+  headers: Record<string, string>,
+): Promise<ORModel[]> {
+  let currentUrl = endpoint;
+  const collected: ORModel[] = [];
+  const seen = new Set<string>();
+
+  for (let page = 0; page < MAX_MODELS_PAGES; page += 1) {
+    const response = (await fetchJson(currentUrl, {
+      headers,
+      timeoutMs: 15000,
+      retries: 2,
+    })) as ModelsPageResponse;
+    const list = Array.isArray(response?.data) ? response.data : [];
+
+    for (const model of list) {
+      if (!model?.id || seen.has(model.id)) continue;
+      seen.add(model.id);
+      collected.push(model);
+    }
+
+    const nextCursor =
+      response?.next ??
+      response?.next_cursor ??
+      response?.cursor ??
+      response?.pagination?.next ??
+      response?.pagination?.cursor;
+    const nextUrl = resolveNextModelsUrl(currentUrl, nextCursor ?? null);
+    if (!nextUrl) break;
+    currentUrl = nextUrl;
+  }
+
+  return collected;
+}
+
 export async function getRawModels(
   explicitKey?: string,
   ttlMs = DEFAULT_TTL_MS,
   toasts?: ToastsArray,
   forceRefresh = false,
 ): Promise<ORModel[]> {
-  const resolvedKey = explicitKey ?? readApiKey() ?? "";
-  const hasAuthKey = Boolean(resolvedKey);
-
   // Helper to get cached data regardless of age
   const getCachedData = (): ORModel[] | null => {
     try {
@@ -497,14 +612,6 @@ export async function getRawModels(
     return null;
   };
 
-  // If there is no API key, avoid long retries/timeouts and use cached/static fallback immediately.
-  // The OpenRouter models endpoint frequently requires auth; waiting blocks UI and E2E stability.
-  if (!hasAuthKey) {
-    const cached = getCachedData();
-    if (cached && cached.length > 0) return cached;
-    return FALLBACK_FREE_MODELS;
-  }
-
   // Try to return fresh cache first (if not forcing refresh)
   if (!forceRefresh) {
     try {
@@ -512,7 +619,7 @@ export async function getRawModels(
       const ts = tsRaw ? Number(tsRaw) : 0;
       if (ts && Date.now() - ts < ttlMs) {
         const cached = getCachedData();
-        if (cached) return cached;
+        if (cached && (isTestEnv() || cached.length >= MIN_EXPECTED_MODELS)) return cached;
       }
     } catch {
       // Ignore cache read errors
@@ -520,13 +627,17 @@ export async function getRawModels(
   }
 
   // Try to fetch from API
+  // NOTE: OpenRouter's /models endpoint is public and doesn't require authentication
+  // We still pass the API key if available for potential rate limit benefits
   try {
-    const data = await fetchJson(MODELS_ENDPOINT, {
-      headers: buildModelsHeaders(explicitKey),
-      timeoutMs: 15000,
-      retries: 2,
-    });
-    const list = Array.isArray((data as any)?.data) ? ((data as any).data as ORModel[]) : [];
+    const headers = buildModelsHeaders(explicitKey);
+    let list = await fetchModelsWithPagination(MODELS_ENDPOINT, headers);
+    if (list.length < MIN_EXPECTED_MODELS && MODELS_ENDPOINT !== DEFAULT_MODELS_ENDPOINT) {
+      const fallbackList = await fetchModelsWithPagination(DEFAULT_MODELS_ENDPOINT, headers);
+      if (fallbackList.length > list.length) {
+        list = fallbackList;
+      }
+    }
 
     // Save to cache
     try {

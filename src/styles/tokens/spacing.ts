@@ -54,16 +54,16 @@ export type SpacingTokens = {
 
 const spacingScale: SpacingScale = {
   none: "0px",
-  "3xs": "0.5rem", // 8px
-  "2xs": "0.75rem", // 12px
-  xs: "1rem", // 16px
-  sm: "1.25rem", // 20px
-  md: "1.5rem", // 24px
-  lg: "2rem", // 32px
-  xl: "2.5rem", // 40px
-  "2xl": "3rem", // 48px
-  "3xl": "3.5rem", // 56px
-  "4xl": "4rem", // 64px
+  "3xs": "0.425rem", // 6.8px (reduced by 15%)
+  "2xs": "0.6375rem", // 10.2px (reduced by 15%)
+  xs: "0.85rem", // 13.6px (reduced by 15%)
+  sm: "1.0625rem", // 17px (reduced by 15%)
+  md: "1.275rem", // 20.4px (reduced by 15%)
+  lg: "1.7rem", // 27.2px (reduced by 15%)
+  xl: "2.125rem", // 34px (reduced by 15%)
+  "2xl": "2.55rem", // 40.8px (reduced by 15%)
+  "3xl": "2.975rem", // 47.6px (reduced by 15%)
+  "4xl": "3.4rem", // 54.4px (reduced by 15%)
 };
 
 const semanticSpacing: SemanticSpacing = {
@@ -83,17 +83,17 @@ export const spacingTokens: SpacingTokens = {
   scale: spacingScale,
   semantic: semanticSpacing,
   touch: {
-    compact: "2.75rem",
-    comfortable: "3rem",
-    relaxed: "3.25rem",
-    spacious: "3.5rem",
+    compact: "2.3375rem", // 37.4px (reduced by 15%)
+    comfortable: "2.55rem", // 40.8px (reduced by 15%)
+    relaxed: "2.7625rem", // 44.2px (reduced by 15%)
+    spacious: "2.975rem", // 47.6px (reduced by 15%)
   },
   fixed: {
-    scrollbar: "8px",
-    rippleMax: "200px",
-    bottomsheetHandle: "5px",
-    bottomsheetHandleWidth: "40px",
-    bottomsheetBorder: "2px",
+    scrollbar: "6.8px", // (reduced by 15%)
+    rippleMax: "170px", // (reduced by 15%)
+    bottomsheetHandle: "4.25px", // (reduced by 15%)
+    bottomsheetHandleWidth: "34px", // (reduced by 15%)
+    bottomsheetBorder: "1.7px", // (reduced by 15%)
   },
 };
 

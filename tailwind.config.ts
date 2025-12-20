@@ -317,81 +317,58 @@ export default {
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-top": "env(safe-area-inset-top)",
-        header: "4rem", // Standard header height
+        header: "3.4rem", // Standard header height (reduced by 15%)
       },
       borderRadius: {
-        "3xl": "1.5rem",
-        "2xl": "1rem",
-        xl: "0.75rem",
-        lg: "0.5rem",
-        md: "0.375rem",
-        sm: "0.25rem",
+        "3xl": "1.275rem", // (reduced by 15%)
+        "2xl": "0.85rem", // (reduced by 15%)
+        xl: "0.6375rem", // (reduced by 15%)
+        lg: "0.425rem", // (reduced by 15%)
+        md: "0.31875rem", // (reduced by 15%)
+        sm: "0.2125rem", // (reduced by 15%)
       },
       boxShadow: {
-        sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        md: "0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)",
-        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)",
-        // Glow effects - Primary (Violet)
-        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.3)",
-        "glow-md": "0 0 20px rgba(139, 92, 246, 0.4)",
-        "glow-lg": "0 0 30px rgba(139, 92, 246, 0.5)",
-        // Page-specific glow effects
-        "glow-models": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-models-lg": "0 0 24px rgba(6, 182, 212, 0.35)",
-        "glow-roles": "0 0 12px rgba(244, 114, 182, 0.25)",
-        "glow-roles-lg": "0 0 24px rgba(244, 114, 182, 0.35)",
-        "glow-settings": "0 0 10px rgba(99, 102, 241, 0.20)",
-        "glow-text": "0 0 10px rgba(139, 92, 246, 0.5)",
-        // Category-specific glow effects
-        "glow-wissenschaft": "0 0 12px rgba(16, 185, 129, 0.25)",
-        "glow-realpolitik": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-hypothetisch": "0 0 12px rgba(139, 92, 246, 0.25)",
-        "glow-kultur": "0 0 12px rgba(245, 158, 11, 0.25)",
-        "glow-technical": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-business": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-creative": "0 0 12px rgba(251, 113, 133, 0.25)",
-        "glow-assistance": "0 0 12px rgba(99, 102, 241, 0.25)",
-        "glow-analysis": "0 0 12px rgba(6, 182, 212, 0.25)",
-        "glow-research": "0 0 12px rgba(16, 185, 129, 0.25)",
-        "glow-education": "0 0 12px rgba(245, 158, 11, 0.25)",
+        sm: "0 0.85px 1.7px 0 rgba(0, 0, 0, 0.05)", // (reduced by 15%)
+        md: "0 3.4px 5.1px -0.85px rgba(0, 0, 0, 0.2), 0 1.7px 3.4px -0.85px rgba(0, 0, 0, 0.1)", // (reduced by 15%)
+        lg: "0 8.5px 12.75px -2.55px rgba(0, 0, 0, 0.3), 0 3.4px 5.1px -1.7px rgba(0, 0, 0, 0.15)", // (reduced by 15%)
+        // Glow effects - Primary (Violet) (reduced by 15%)
+        "glow-sm": "0 0 8.5px rgba(139, 92, 246, 0.3)",
+        "glow-md": "0 0 17px rgba(139, 92, 246, 0.4)",
+        "glow-lg": "0 0 25.5px rgba(139, 92, 246, 0.5)",
+        // Page-specific glow effects (reduced by 15%)
+        "glow-models": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-models-lg": "0 0 20.4px rgba(6, 182, 212, 0.35)",
+        "glow-roles": "0 0 10.2px rgba(244, 114, 182, 0.25)",
+        "glow-roles-lg": "0 0 20.4px rgba(244, 114, 182, 0.35)",
+        "glow-settings": "0 0 8.5px rgba(99, 102, 241, 0.20)",
+        "glow-text": "0 0 8.5px rgba(139, 92, 246, 0.5)",
+        // Category-specific glow effects (reduced by 15%)
+        "glow-wissenschaft": "0 0 10.2px rgba(16, 185, 129, 0.25)",
+        "glow-realpolitik": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-hypothetisch": "0 0 10.2px rgba(139, 92, 246, 0.25)",
+        "glow-kultur": "0 0 10.2px rgba(245, 158, 11, 0.25)",
+        "glow-technical": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-business": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-creative": "0 0 10.2px rgba(251, 113, 133, 0.25)",
+        "glow-assistance": "0 0 10.2px rgba(99, 102, 241, 0.25)",
+        "glow-analysis": "0 0 10.2px rgba(6, 182, 212, 0.25)",
+        "glow-research": "0 0 10.2px rgba(16, 185, 129, 0.25)",
+        "glow-education": "0 0 10.2px rgba(245, 158, 11, 0.25)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "hero-glow": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       animation: {
+        // Core animations
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         "pulse-glow": "pulseGlow 4s ease-in-out infinite",
         blob: "blob 7s infinite",
-        "cube-a-idle": "cubeFloatAIdle 3.6s ease-in-out infinite",
-        "cube-b-idle": "cubeFloatBIdle 3.6s ease-in-out infinite",
-        "cube-a-thinking": "cubeFloatAThinking 3s ease-in-out infinite",
-        "cube-b-thinking": "cubeFloatBThinking 3s ease-in-out infinite",
-        "cube-a-streaming": "cubeFloatAStreaming 2.4s ease-in-out infinite",
-        "cube-b-streaming": "cubeFloatBStreaming 2.4s ease-in-out infinite",
-        "cube-glitch": "cubeGlitch 0.7s ease-in-out",
-        "cube-orbit": "cubeOrbit 12s linear infinite",
-        "cube-wave": "cubeWave 2.4s ease-out infinite",
-        // Orb specific animations
-        "orb-breathe": "orbScale 4s ease-in-out infinite",
-        "orb-rotate-slow": "orbRotate 40s linear infinite",
-        "orb-rotate-medium": "orbRotate 15s linear infinite",
-        "orb-rotate-fast": "orbRotate 3s linear infinite", // For streaming modulation if needed
-        "orb-pupil-idle": "orbPupilPulse 5s ease-in-out infinite",
-        "orb-pupil-thinking": "orbPupilPulse 1.5s ease-in-out infinite",
-        "orb-pupil-streaming": "orbPupilPulse 0.5s ease-in-out infinite",
-        "orb-wave": "orbWave 2s ease-out infinite",
-        "orb-shake": "orbShake 0.4s ease-in-out",
-        "orb-bits": "orbBits 3s linear infinite",
-        "orb-bits-fast": "orbBits 1.6s linear infinite",
-        "orb-bits-subtle": "orbBits 4.2s linear infinite",
-        "orb-twinkle": "orbTwinkle 2.6s ease-in-out infinite",
-        "orb-scanline": "orbScanline 8s linear infinite",
-        "orb-scanline-slow": "orbScanline 14s linear infinite",
-        "orb-glare": "orbGlare 10s ease-in-out infinite",
-        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite", // Slower pulse for breathing effect
+        // Utility animations
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
         "ping-slow": "pingSlow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
+        // Note: Neko animations defined in components.css (actively used)
       },
       keyframes: {
         fadeIn: {
@@ -399,199 +376,31 @@ export default {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "0%": { transform: "translateY(17px)", opacity: "0" }, // 20px -> 17px (reduced by 15%)
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         pulseGlow: {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
-          "50%": { opacity: "1", transform: "scale(1.05)" },
+          "50%": { opacity: "1", transform: "scale(1.0425)" }, // 1.05 -> 1.0425 (reduced by 15%)
         },
         blob: {
           "0%": { transform: "translate(0px, 0px) scale(1)" },
-          "33%": { transform: "translate(30px, -50px) scale(1.1)" },
-          "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+          "33%": { transform: "translate(25.5px, -42.5px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
+          "66%": { transform: "translate(-17px, 17px) scale(0.915)", opacity: "0.6" }, // reduced by 15%
           "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
         "blob-float-1": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "33%": { transform: "translate(30px, -30px) scale(1.1)", opacity: "0.7" },
-          "66%": { transform: "translate(-20px, 20px) scale(0.9)", opacity: "0.6" },
+          "33%": { transform: "translate(25.5px, -25.5px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
+          "66%": { transform: "translate(-17px, 17px) scale(0.915)", opacity: "0.6" }, // reduced by 15%
         },
         "blob-float-2": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "50%": { transform: "translate(-30px, 40px) scale(1.1)", opacity: "0.7" },
+          "50%": { transform: "translate(-25.5px, 34px) scale(1.085)", opacity: "0.7" }, // reduced by 15%
         },
         "blob-float-3": {
           "0%, 100%": { transform: "translate(0, 0) scale(1)", opacity: "0.5" },
-          "50%": { transform: "translate(20px, -20px) scale(1.05)", opacity: "0.7" },
-        },
-        cubeFloatAIdle: {
-          "0%": {
-            transform:
-              "translate3d(-4px, 3px, 0) rotateX(2deg) rotateY(-4deg) rotateZ(-3deg) scale(0.98)",
-            opacity: "0.9",
-          },
-          "50%": {
-            transform:
-              "translate3d(5px, -5px, 0) rotateX(-2deg) rotateY(6deg) rotateZ(4deg) scale(1.02)",
-            opacity: "1",
-          },
-          "100%": {
-            transform:
-              "translate3d(-4px, 3px, 0) rotateX(2deg) rotateY(-4deg) rotateZ(-3deg) scale(0.98)",
-            opacity: "0.9",
-          },
-        },
-        cubeFloatBIdle: {
-          "0%": {
-            transform:
-              "translate3d(4px, -2px, 0) rotateX(-2deg) rotateY(3deg) rotateZ(2deg) scale(0.99)",
-            opacity: "0.9",
-          },
-          "50%": {
-            transform:
-              "translate3d(-6px, 4px, 0) rotateX(3deg) rotateY(-6deg) rotateZ(-3deg) scale(1.02)",
-            opacity: "1",
-          },
-          "100%": {
-            transform:
-              "translate3d(4px, -2px, 0) rotateX(-2deg) rotateY(3deg) rotateZ(2deg) scale(0.99)",
-            opacity: "0.9",
-          },
-        },
-        cubeFloatAThinking: {
-          "0%": {
-            transform:
-              "translate3d(-6px, 4px, 0) rotateX(4deg) rotateY(-7deg) rotateZ(-5deg) scale(0.97)",
-          },
-          "50%": {
-            transform:
-              "translate3d(7px, -7px, 0) rotateX(-4deg) rotateY(9deg) rotateZ(6deg) scale(1.05)",
-          },
-          "100%": {
-            transform:
-              "translate3d(-6px, 4px, 0) rotateX(4deg) rotateY(-7deg) rotateZ(-5deg) scale(0.97)",
-          },
-        },
-        cubeFloatBThinking: {
-          "0%": {
-            transform:
-              "translate3d(6px, -4px, 0) rotateX(-4deg) rotateY(6deg) rotateZ(5deg) scale(1)",
-          },
-          "50%": {
-            transform:
-              "translate3d(-8px, 7px, 0) rotateX(5deg) rotateY(-9deg) rotateZ(-6deg) scale(1.06)",
-          },
-          "100%": {
-            transform:
-              "translate3d(6px, -4px, 0) rotateX(-4deg) rotateY(6deg) rotateZ(5deg) scale(1)",
-          },
-        },
-        cubeFloatAStreaming: {
-          "0%": {
-            transform:
-              "translate3d(-6px, 4px, 0) rotateX(6deg) rotateY(-9deg) rotateZ(-6deg) scale(0.97)",
-          },
-          "50%": {
-            transform:
-              "translate3d(9px, -9px, 0) rotateX(-6deg) rotateY(11deg) rotateZ(7deg) scale(1.07)",
-          },
-          "100%": {
-            transform:
-              "translate3d(-6px, 4px, 0) rotateX(6deg) rotateY(-9deg) rotateZ(-6deg) scale(0.97)",
-          },
-        },
-        cubeFloatBStreaming: {
-          "0%": {
-            transform:
-              "translate3d(7px, -5px, 0) rotateX(-6deg) rotateY(8deg) rotateZ(6deg) scale(1)",
-          },
-          "50%": {
-            transform:
-              "translate3d(-10px, 8px, 0) rotateX(7deg) rotateY(-11deg) rotateZ(-7deg) scale(1.08)",
-          },
-          "100%": {
-            transform:
-              "translate3d(7px, -5px, 0) rotateX(-6deg) rotateY(8deg) rotateZ(6deg) scale(1)",
-          },
-        },
-        cubeGlitch: {
-          "0%": { transform: "translate3d(0, 0, 0) rotateZ(0deg) scale(1)", opacity: "1" },
-          "20%": {
-            transform: "translate3d(-3px, 2px, 0) rotateZ(-3deg) scale(0.99)",
-            opacity: "0.9",
-          },
-          "40%": {
-            transform: "translate3d(4px, -2px, 0) rotateZ(2deg) scale(1.01)",
-            opacity: "0.85",
-          },
-          "60%": {
-            transform: "translate3d(-2px, -3px, 0) rotateZ(1deg) scale(1.02)",
-            opacity: "0.9",
-          },
-          "80%": {
-            transform: "translate3d(3px, 3px, 0) rotateZ(-2deg) scale(0.98)",
-            opacity: "0.95",
-          },
-          "100%": { transform: "translate3d(0, 0, 0) rotateZ(0deg) scale(1)", opacity: "1" },
-        },
-        cubeOrbit: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
-        cubeWave: {
-          "0%": { transform: "scale(1)", opacity: "0.5" },
-          "100%": { transform: "scale(1.25)", opacity: "0" },
-        },
-        // Orb Animations
-        orbScale: {
-          "0%, 100%": { transform: "scale(0.98)" },
-          "50%": { transform: "scale(1.02)" },
-        },
-        orbRotate: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
-        orbPupilPulse: {
-          "0%, 100%": { transform: "scale(0.95)" },
-          "50%": { transform: "scale(1.05)" },
-        },
-        orbWave: {
-          "0%": { transform: "scale(0.9)", opacity: "0" },
-          "20%": { opacity: "0.4" },
-          "100%": { transform: "scale(1.5)", opacity: "0" },
-        },
-        orbShake: {
-          "0%, 100%": { transform: "translate(0, 0)" },
-          "10%": { transform: "translate(-2px, 2px)" },
-          "20%": { transform: "translate(2px, -2px)" },
-          "30%": { transform: "translate(-3px, 0)" },
-          "40%": { transform: "translate(3px, 2px)" },
-          "50%": { transform: "translate(-1px, -1px)" },
-          "60%": { transform: "translate(1px, 2px)" },
-          "70%": { transform: "translate(-3px, 1px)" },
-          "80%": { transform: "translate(2px, -1px)" },
-          "90%": { transform: "translate(-1px, 2px)" },
-        },
-        orbBits: {
-          "0%": { opacity: "0.6", transform: "scale(1)" },
-          "30%": { opacity: "0.9" },
-          "60%": { opacity: "0.55", transform: "scale(1.05)" },
-          "100%": { opacity: "0.6", transform: "scale(1)" },
-        },
-        orbTwinkle: {
-          "0%": { opacity: "0.4", transform: "scale(0.9)" },
-          "50%": { opacity: "1", transform: "scale(1.25)" },
-          "100%": { opacity: "0.45", transform: "scale(0.9)" },
-        },
-        orbScanline: {
-          "0%": { transform: "translateY(120%)" },
-          "100%": { transform: "translateY(-120%)" },
-        },
-        orbGlare: {
-          "0%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
-          "50%": { transform: "translate3d(4%, 6%, 0) rotate(4deg)", opacity: "0.58" },
-          "100%": { transform: "translate3d(-6%, -4%, 0) rotate(-6deg)", opacity: "0.32" },
+          "50%": { transform: "translate(17px, -17px) scale(1.0425)", opacity: "0.7" }, // reduced by 15%
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "0.4" },
@@ -599,7 +408,7 @@ export default {
         },
         pingSlow: {
           "75%, 100%": {
-            transform: "scale(2)",
+            transform: "scale(1.7)", // 2 -> 1.7 (reduced by 15%)
             opacity: "0",
           },
         },

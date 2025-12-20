@@ -1,3 +1,5 @@
+@import "./styles/design-system-tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,26 +43,31 @@
   --glass-bg-1-hover: rgba(18, 18, 24, 0.84);
   --glass-bg-2: rgba(10, 10, 14, 0.86);
   --glass-bg-2-hover: rgba(10, 10, 14, 0.9);
-  --glass-bg-3: rgba(8, 8, 10, 0.92);
-  --glass-bg-3-hover: rgba(8, 8, 10, 0.94);
+  /* Glass-3: Premium Glassmorphism für Drawers/Overlays - transparent aber lesbar */
+  /* Ausbalanciert: Genug Opacity für Text-Lesbarkeit + echter Glaseffekt */
+  --glass-bg-3: rgba(18, 18, 21, 0.75);
+  --glass-bg-3-hover: rgba(18, 18, 21, 0.82);
 
   --glass-blur-1: 14px;
   --glass-blur-2: 22px;
-  --glass-blur-3: 30px;
+  /* Moderater Blur für Glasmorphism - Balance zwischen Effekt und Performance */
+  --glass-blur-3: 24px;
 
   --glass-border-1: rgba(255, 255, 255, 0.1);
   --glass-border-1-hover: rgba(255, 255, 255, 0.14);
   --glass-border-2: rgba(255, 255, 255, 0.12);
   --glass-border-2-hover: rgba(255, 255, 255, 0.16);
-  --glass-border-3: rgba(255, 255, 255, 0.16);
-  --glass-border-3-hover: rgba(255, 255, 255, 0.2);
+  /* Klare Border für Glassmorphism-Definition */
+  --glass-border-3: rgba(255, 255, 255, 0.15);
+  --glass-border-3-hover: rgba(255, 255, 255, 0.22);
 
   --glass-shadow-1: 0 10px 35px rgba(0, 0, 0, 0.38);
   --glass-shadow-1-hover: 0 14px 46px rgba(0, 0, 0, 0.46);
   --glass-shadow-2: 0 14px 46px rgba(0, 0, 0, 0.5);
   --glass-shadow-2-hover: 0 18px 58px rgba(0, 0, 0, 0.58);
-  --glass-shadow-3: 0 22px 70px rgba(0, 0, 0, 0.6);
-  --glass-shadow-3-hover: 0 28px 90px rgba(0, 0, 0, 0.68);
+  /* Weicher aber sichtbarer Shadow für glasmorphe Panels */
+  --glass-shadow-3: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --glass-shadow-3-hover: 0 16px 50px rgba(0, 0, 0, 0.6);
 
   --glass-edge-highlight: rgba(255, 255, 255, 0.06);
   --glass-edge-highlight-strong: rgba(255, 255, 255, 0.09);
@@ -589,6 +596,59 @@
     opacity: 0;
   }
 
+  /* Brand animations - subtle, premium feel */
+
+  /* Breathing effect - very subtle scale + float */
+  @keyframes brand-breathe {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-1.5px) scale(1.008);
+    }
+  }
+
+  .animate-brand-breathe {
+    animation: brand-breathe 8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    will-change: transform;
+  }
+
+  /* Shimmer effect - turquoise sweep across text */
+  @keyframes brand-shimmer {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-brand-shimmer {
+    animation: brand-shimmer 12s linear infinite;
+  }
+
+  /* Shimmer delayed - for second word */
+  .animate-brand-shimmer-delayed {
+    animation: brand-shimmer 12s linear infinite;
+    animation-delay: 2s;
+  }
+
+  /* Subtle glow pulse */
+  @keyframes brand-glow {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  .animate-brand-glow {
+    animation: brand-glow 10s ease-in-out infinite;
+  }
+
   /* Reduced motion - disable all intro animations */
   @media (prefers-reduced-motion: reduce) {
     body::before,
@@ -608,7 +668,11 @@
     .animate-pulse-subtle,
     .animate-bounce-subtle,
     .animate-text-shimmer,
-    .animate-fade-in-scale {
+    .animate-fade-in-scale,
+    .animate-brand-breathe,
+    .animate-brand-shimmer,
+    .animate-brand-shimmer-delayed,
+    .animate-brand-glow {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;

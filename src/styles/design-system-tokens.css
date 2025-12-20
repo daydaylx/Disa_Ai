@@ -1,0 +1,184 @@
+/**
+ * DESIGN SYSTEM TOKENS - Konsolidiert & Vereinfacht
+ *
+ * Dieses File ersetzt die fragmentierte Token-Struktur durch ein klares, konsistentes System.
+ * Basiert auf Fluent 2 / Material 3 Prinzipien mit Mobile-First Fokus.
+ */
+
+:root {
+  /* ========================================================================
+     SPACING SCALE - 8px Rhythm (reduced by 15%)
+     ======================================================================== */
+  --space-0: 0;
+  --space-1: 0.2125rem; /* 3.4px (reduced by 15%) */
+  --space-2: 0.425rem; /* 6.8px (reduced by 15%) */
+  --space-3: 0.6375rem; /* 10.2px (reduced by 15%) */
+  --space-4: 0.85rem; /* 13.6px (reduced by 15%) */
+  --space-5: 1.0625rem; /* 17px (reduced by 15%) */
+  --space-6: 1.275rem; /* 20.4px (reduced by 15%) */
+  --space-8: 1.7rem; /* 27.2px (reduced by 15%) */
+  --space-10: 2.125rem; /* 34px (reduced by 15%) */
+  --space-12: 2.55rem; /* 40.8px (reduced by 15%) */
+  --space-16: 3.4rem; /* 54.4px (reduced by 15%) */
+
+  /* ========================================================================
+     BORDER RADIUS - 3-Stufen Hierarchie (reduced by 15%)
+     ======================================================================== */
+  --radius-sm: 0.425rem; /* 6.8px - Chips, Small buttons (reduced by 15%) */
+  --radius-md: 0.6375rem; /* 10.2px - Cards, Inputs, Standard buttons (reduced by 15%) */
+  --radius-lg: 0.85rem; /* 13.6px - Panels, Modals (reduced by 15%) */
+
+  /* ========================================================================
+     SHADOWS - 2-Level Elevation (Glassmorphism 2.0) (reduced by 15%)
+     ======================================================================== */
+  --shadow-sm: 0 0.85px 2.55px rgba(0, 0, 0, 0.12); /* reduced by 15% */
+  --shadow-md: 0 1.7px 6.8px rgba(0, 0, 0, 0.15); /* reduced by 15% */
+  --shadow-lg: 0 6.8px 20.4px rgba(0, 0, 0, 0.2); /* reduced by 15% */
+
+  /* Focus & Glow (reduced by 15%) */
+  --shadow-focus: 0 0 0 1.7px var(--color-brand-primary); /* reduced by 15% */
+  --shadow-glow-sm: 0 0 10.2px rgba(139, 92, 246, 0.25); /* reduced by 15% */
+  --shadow-glow-md: 0 0 17px rgba(139, 92, 246, 0.35); /* reduced by 15% */
+
+  /* ========================================================================
+     TOUCH TARGETS - WCAG AA Compliant (reduced by 15%)
+     ======================================================================== */
+  --touch-sm: 2.3375rem; /* 37.4px - Minimum für Mobile (reduced by 15%) */
+  --touch-md: 2.55rem; /* 40.8px - Comfortable (reduced by 15%) */
+  --touch-lg: 2.975rem; /* 47.6px - Spacious (reduced by 15%) */
+
+  /* ========================================================================
+     TRANSITIONS - Performance-optimiert
+     ======================================================================== */
+  --transition-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-base: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-slow: 300ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* ========================================================================
+     BORDERS - Konsistente Opacities
+     ======================================================================== */
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================================================
+   UTILITY CLASSES - Basis-Komponenten
+   ======================================================================== */
+
+/* Card Base - Standardisiert */
+.ds-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.ds-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.ds-card:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Button Base - Standardisiert */
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-sm);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ds-button:hover {
+  transform: translateY(-1px);
+}
+
+.ds-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.ds-button:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+/* Input Base - Standardisiert */
+.ds-input {
+  width: 100%;
+  min-height: var(--touch-sm);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-control-field-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.ds-input:hover {
+  border-color: var(--border-strong);
+}
+
+.ds-input:focus {
+  outline: none;
+  border-color: var(--color-brand-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Touch Target Helper */
+.ds-touch-target {
+  min-height: var(--touch-sm);
+  min-width: var(--touch-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================================================
+   RESPONSIVE & ACCESSIBILITY
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border-hairline: rgba(255, 255, 255, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.3);
+    --border-strong: rgba(255, 255, 255, 0.5);
+  }
+
+  .ds-card,
+  .ds-button,
+  .ds-input {
+    border-width: 2px;
+  }
+}
+
+/* Mobile Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .ds-button:hover {
+    transform: none;
+  }
+
+  .ds-button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
