@@ -214,8 +214,8 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               onChange={setSearch}
               placeholder="Modell suchen..."
               className={cn(
-                "w-full bg-surface-2/50 border-white/10 transition-colors",
-                `focus:ring-opacity-20 ${headerTheme.text.replace("text-", "focus:border-")} ${headerTheme.text.replace("text-", "focus:ring-")}`,
+                "w-full bg-surface-2/50 border-white/10 transition-colors focus:ring-opacity-20 focus:border-emerald-400 focus:ring-emerald-400",
+                headerTheme.text,
               )}
             />
           </div>
