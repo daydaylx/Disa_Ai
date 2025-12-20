@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.1-5d65200",
-  "buildTime": "2025-12-19T14:57:19.110Z",
-  "gitSha": "5d65200b3dbfb01c0703adcf80b90e09738c4b93",
-  "gitBranch": "claude/redesign-mobile-menu-X7oxk",
-  "version": "1.0.1"
+  "buildId": "v1.0.2-42aa9b6",
+  "buildTime": "2025-12-19T23:51:25.512Z",
+  "gitSha": "42aa9b6251e9f94fbbd04b990921a90a25011f06",
+  "gitBranch": "claude/align-model-icons-R0fvh",
+  "version": "1.0.2"
 }
