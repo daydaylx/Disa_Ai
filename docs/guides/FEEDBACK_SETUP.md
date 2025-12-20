@@ -82,8 +82,75 @@ Für eine eigene Absender-Domain (z.B. `feedback@disaai.de`):
 
 Falls du keinen externen Dienst nutzen möchtest, kannst du die Funktion auch anpassen, um einen eigenen SMTP-Server zu verwenden. Dafür wäre aber ein externes npm-Paket wie `nodemailer` erforderlich, das in Cloudflare Workers nicht direkt unterstützt wird.
 
+## Screenshot-Anhänge
+
+**Neu in Version 1.1.0:** Nutzer können jetzt Screenshots an Feedback anhängen!
+
+### Was wird unterstützt?
+
+✅ **Bis zu 5 Bilder** pro Feedback
+✅ **Formate:** PNG, JPEG, WebP
+✅ **Max. Größe:** 5 MB pro Bild, 15 MB gesamt
+✅ **Automatische Kompression** (60-80% Größenreduktion)
+✅ **EXIF-Stripping** (Metadaten wie GPS werden entfernt)
+
+### Wie funktioniert es?
+
+1. **Clientseitig:**
+   - Nutzer wählt Bilder aus (Kamera/Galerie auf Mobile)
+   - Bilder werden auf max. 1280px verkleinert
+   - Canvas-API komprimiert zu WebP/JPEG
+   - Preview-Thumbnails werden angezeigt
+
+2. **Serverseitig:**
+   - `multipart/form-data` statt JSON
+   - MIME-Type + Magic Bytes Validierung (Sicherheit)
+   - Konvertierung zu Base64
+   - An Resend API als `attachments[]` gesendet
+
+3. **E-Mail:**
+   - Screenshots werden als Anhänge mitgesendet
+   - Im Resend Free-Tier: Max. 40 MB pro E-Mail (aktuell max. 15 MB)
+
+### Test mit Screenshots
+
+```bash
+# Mit Wrangler (multipart/form-data):
+curl -X POST http://localhost:8788/api/feedback \
+  -F "message=Bug gefunden!" \
+  -F "type=bug" \
+  -F "attachments=@screenshot.png"
+```
+
+### Fehlerbehebung
+
+**"Anhänge zu groß" (HTTP 413)**
+→ Nutzer hat zu viele oder zu große Bilder hochgeladen
+→ Lösung: Weniger Bilder oder kleinere Auflösung
+
+**"Invalid image file: fake.png" (HTTP 400)**
+→ Magic Bytes stimmen nicht (File-Type-Spoofing)
+→ Lösung: Datei ist korrupt oder kein echtes Bild
+
+**Resend-Limit überschritten**
+→ Attachments > 40 MB (Free-Tier)
+→ Lösung: Upgrade auf Resend Pro (150 MB Limit)
+
+### Detaillierte Dokumentation
+
+Siehe: [`FEEDBACK_SCREENSHOTS.md`](./FEEDBACK_SCREENSHOTS.md) für:
+- Technische Spezifikation
+- Sicherheits-Details
+- Testing-Guide
+- Performance-Optimierungen
+- FAQ
+
+---
+
 ## Referenzen
 
 - [Resend Dokumentation](https://resend.com/docs)
+- [Resend Attachments API](https://resend.com/docs/api-reference/emails/send-email#body-parameters)
 - [Cloudflare Workers + Resend Tutorial](https://developers.cloudflare.com/workers/tutorials/send-emails-with-resend/)
 - [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/)
+- **NEU:** [Screenshot-Anhänge Dokumentation](./FEEDBACK_SCREENSHOTS.md)
