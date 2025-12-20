@@ -4,7 +4,7 @@ import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Search as SearchIcon, Users, Zap, Waves, Code2, type LucideIcon } from "@/lib/icons";
+import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Search as SearchIcon, Users, Zap, Waves, Code2, Hexagon, Wind, Layers, Grid3x3, type LucideIcon } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
@@ -16,39 +16,40 @@ interface ModelsCatalogProps {
 
 /**
  * Maps model providers to their corresponding icons
- * Similar to role icon mapping for visual consistency
+ * Based on official provider logos and brand identity
+ * Sources: openai.com/brand, anthropic.com, mistral.ai/brand, cohere.com, etc.
  */
 function getProviderIcon(provider?: string): LucideIcon {
   if (!provider) return Cpu;
 
   const providerLower = provider.toLowerCase();
 
-  // Provider-specific icon mapping
+  // Provider-specific icon mapping (based on logo research)
   const providerIconMap: Record<string, LucideIcon> = {
-    // Major AI providers
-    openai: Sparkles,
-    anthropic: Brain,
-    google: SearchIcon,
-    meta: Users,
-    "meta-llama": Users,
-    mistral: Waves,
-    cohere: Code2,
+    // Major AI providers - matching official logo designs
+    openai: Hexagon,        // OpenAI "Blossom" - geometric hexagonal pattern
+    anthropic: Sparkles,    // Anthropic Claude - starburst/radiating pattern
+    google: Sparkles,       // Google Gemini - star "spark" symbol
+    meta: Users,            // Meta - community/social focus
+    "meta-llama": Users,    // Meta Llama - same as Meta
+    mistral: Wind,          // Mistral AI - "mistral" means wind
+    cohere: Layers,         // Cohere - three biological cells forming "C"
 
-    // Other providers
-    deepseek: Brain,
-    qwen: Bot,
-    "01-ai": Zap,
-    nvidia: Cpu,
-    microsoft: Code2,
-    amazon: Cpu,
-    ai21: Brain,
-    perplexity: SearchIcon,
+    // Other providers - matching brand themes
+    deepseek: Waves,        // DeepSeek - blue whale symbol (ocean/depth)
+    qwen: Bot,              // Qwen - AI assistant
+    "01-ai": Zap,           // 01.AI - speed/innovation
+    nvidia: Cpu,            // NVIDIA - hardware/chip focus
+    microsoft: Code2,       // Microsoft - developer tools
+    amazon: Cpu,            // Amazon - cloud infrastructure
+    ai21: Brain,            // AI21 Labs - intelligence
+    perplexity: Grid3x3,    // Perplexity - 9-dot grid/asterisk pattern
 
     // Open source / community
-    huggingfaceh4: Users,
-    teknium: Bot,
-    nousresearch: Brain,
-    gryphe: Brain,
+    huggingfaceh4: Users,   // HuggingFace - community
+    teknium: Bot,           // Teknium - AI models
+    nousresearch: Brain,    // Nous Research - research/intelligence
+    gryphe: Brain,          // Gryphe - intelligence
   };
 
   // Try exact match first

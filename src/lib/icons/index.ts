@@ -6,7 +6,7 @@
 
 // Nur die tatsächlich verwendeten Icons werden hier exportiert
 // Vollständige Lucide-React-Sammlung: 1,500+ Icons
-// Disa AI nutzt: 55 Icons → 96% Reduktion!
+// Disa AI nutzt: 59 Icons → 96% Reduktion!
 
 export type { LucideIcon } from "lucide-react";
 
@@ -51,15 +51,18 @@ export {
   Filter,
   GraduationCap, // Added for role icons
   GitCompare,
+  Grid3x3, // Added for model provider icons (Perplexity)
   HardDrive,
   Hash,
   Heart, // Added for role icons
   HeartHandshake, // Added for role icons
+  Hexagon, // Added for model provider icons (OpenAI)
   History,
   Home,
   Image,
   Info,
   KeyRound,
+  Layers, // Added for model provider icons (Cohere)
   Link2,
   Loader2,
   Lock,
@@ -102,6 +105,7 @@ export {
   Users,
   Utensils, // Added for role icons
   Waves,
+  Wind, // Added for model provider icons (Mistral)
   X,
   XCircle,
   Zap,
