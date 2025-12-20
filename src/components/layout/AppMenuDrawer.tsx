@@ -54,9 +54,9 @@ export function AppMenuDrawer({
     if (!container) return;
 
     const focusableElements = container.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
-    
+
     if (focusableElements.length === 0) return;
 
     const firstElement = focusableElements[0];
@@ -78,14 +78,14 @@ export function AppMenuDrawer({
   // Lock background scroll
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const scrollY = window.scrollY;
     // Capture original styles to restore later
     const originalStyles = {
       overflow: document.body.style.overflow,
       position: document.body.style.position,
       top: document.body.style.top,
-      width: document.body.style.width
+      width: document.body.style.width,
     };
 
     // Lock body
@@ -137,7 +137,7 @@ export function AppMenuDrawer({
           "glass-3 border-r border-white/5",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
-          className
+          className,
         )}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
@@ -155,7 +155,7 @@ export function AppMenuDrawer({
             className={cn(
               "p-2 -mr-2 rounded-lg text-white/60 transition-colors",
               "hover:text-white hover:bg-white/10",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
             )}
             aria-label="Menü schließen"
           >
@@ -170,7 +170,7 @@ export function AppMenuDrawer({
             {navigationItems.map((item) => {
               const isActive = isNavItemActive(item, location.pathname);
               const Icon = item.Icon;
-              
+
               return (
                 <li key={item.id}>
                   <Link
@@ -180,22 +180,28 @@ export function AppMenuDrawer({
                       "group flex items-center gap-3.5 px-3.5 py-3 rounded-xl transition-all duration-200",
                       isActive
                         ? "bg-brand-primary/15 text-white shadow-[inset_0_0_0_1px_rgba(139,92,246,0.2)]"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
+                        : "text-white/60 hover:text-white hover:bg-white/5",
                     )}
                   >
-                    <Icon className={cn(
-                      "w-5 h-5 shrink-0 transition-colors",
-                      isActive ? "text-brand-primary drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]" : "text-white/50 group-hover:text-white/80"
-                    )} />
+                    <Icon
+                      className={cn(
+                        "w-5 h-5 shrink-0 transition-colors",
+                        isActive
+                          ? "text-brand-primary drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]"
+                          : "text-white/50 group-hover:text-white/80",
+                      )}
+                    />
                     <div className="flex flex-col min-w-0">
-                      <span className="font-medium text-sm tracking-wide">
-                        {item.label}
-                      </span>
+                      <span className="font-medium text-sm tracking-wide">{item.label}</span>
                       {item.description && (
-                        <span className={cn(
-                          "text-[11px] truncate mt-0.5",
-                          isActive ? "text-brand-primary/80" : "text-white/30 group-hover:text-white/50"
-                        )}>
+                        <span
+                          className={cn(
+                            "text-[11px] truncate mt-0.5",
+                            isActive
+                              ? "text-brand-primary/80"
+                              : "text-white/30 group-hover:text-white/50",
+                          )}
+                        >
                           {item.description}
                         </span>
                       )}
@@ -216,7 +222,7 @@ export function AppMenuDrawer({
                 {secondaryPages.map((page) => {
                   const isActive = isNavItemActive(page, location.pathname);
                   const Icon = page.Icon;
-                  
+
                   return (
                     <li key={page.id}>
                       <Link
@@ -226,7 +232,7 @@ export function AppMenuDrawer({
                           "flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-colors text-sm",
                           isActive
                             ? "text-white bg-white/10 font-medium"
-                            : "text-white/50 hover:text-white hover:bg-white/5"
+                            : "text-white/50 hover:text-white hover:bg-white/5",
                         )}
                       >
                         {Icon && <Icon className="w-4 h-4 opacity-70" />}
@@ -269,7 +275,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
         "group relative flex items-center justify-center w-10 h-10 rounded-lg",
         "text-text-primary hover:bg-surface-2 transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
-        className
+        className,
       )}
       aria-label="Menü öffnen"
     >

@@ -4,11 +4,25 @@ import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Search as SearchIcon, Users, Zap, Waves, Code2, type LucideIcon } from "@/lib/icons";
+import { getCategoryStyle } from "@/lib/categoryColors";
+import {
+  Bot,
+  Brain,
+  Check,
+  Code2,
+  Cpu,
+  type LucideIcon,
+  RefreshCw,
+  Search as SearchIcon,
+  Sparkles,
+  Star,
+  Users,
+  Waves,
+  Zap,
+} from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
-import { getCategoryStyle } from "@/lib/categoryColors";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -79,13 +93,13 @@ function getProviderColorTheme(provider?: string): string {
   // Provider-specific color mapping
   const providerColorMap: Record<string, string> = {
     // Major AI providers - distinct colors matching their brand identity
-    openai: "emerald",      // Green for OpenAI
-    anthropic: "amber",     // Warm amber for Anthropic
-    google: "indigo",       // Blue for Google
-    meta: "cyan",           // Cyan for Meta
+    openai: "emerald", // Green for OpenAI
+    anthropic: "amber", // Warm amber for Anthropic
+    google: "indigo", // Blue for Google
+    meta: "cyan", // Cyan for Meta
     "meta-llama": "cyan",
-    mistral: "violet",      // Purple for Mistral
-    cohere: "rose",         // Rose for Cohere
+    mistral: "violet", // Purple for Mistral
+    cohere: "rose", // Rose for Cohere
 
     // Other providers
     deepseek: "indigo",
@@ -295,7 +309,11 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors pointer-events-none",
                       isActive
                         ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
-                        : cn(providerTheme.iconBg, providerTheme.iconText, providerTheme.groupHoverIconBg),
+                        : cn(
+                            providerTheme.iconBg,
+                            providerTheme.iconText,
+                            providerTheme.groupHoverIconBg,
+                          ),
                     )}
                   >
                     {isFavorite ? (
@@ -311,13 +329,17 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       <span
                         className={cn(
                           "font-semibold text-sm truncate",
-                          isActive ? providerTheme.text : "text-ink-primary group-hover:text-ink-primary",
+                          isActive
+                            ? providerTheme.text
+                            : "text-ink-primary group-hover:text-ink-primary",
                         )}
                       >
                         {model.label ?? model.id}
                       </span>
                       {isActive && (
-                        <Check className={cn("h-4 w-4 flex-shrink-0 drop-shadow-md", providerTheme.text)} />
+                        <Check
+                          className={cn("h-4 w-4 flex-shrink-0 drop-shadow-md", providerTheme.text)}
+                        />
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium pointer-events-none">
