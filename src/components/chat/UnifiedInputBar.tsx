@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { useRoles } from "@/contexts/RolesContext";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
+import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
@@ -234,10 +234,7 @@ export function UnifiedInputBar({
           </Select>
 
           {/* Model Dropdown */}
-          <Select
-            value={settings.preferredModelId}
-            onValueChange={(id) => setPreferredModel(id)}
-          >
+          <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
               className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
