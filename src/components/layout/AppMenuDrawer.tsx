@@ -1,4 +1,4 @@
-import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
@@ -27,10 +27,8 @@ export function AppMenuDrawer({
   const location = useLocation();
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-  const firstTrapRef = useRef<HTMLSpanElement | null>(null);
-  const lastTrapRef = useRef<HTMLSpanElement | null>(null);
 
-  // Escape to close + focus trap
+  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -39,44 +37,77 @@ export function AppMenuDrawer({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
+  // Initial focus
   useEffect(() => {
-    if (!isOpen) return;
-    // Initial focus on close button
-    closeButtonRef.current?.focus({ preventScroll: true });
+    if (isOpen) {
+      // Small delay to ensure rendering and transition start
+      requestAnimationFrame(() => {
+        closeButtonRef.current?.focus({ preventScroll: true });
+      });
+    }
   }, [isOpen]);
 
+  // Focus Trap
   const handleKeyDown = (event: ReactKeyboardEvent) => {
     if (event.key !== "Tab") return;
     const container = drawerRef.current;
     if (!container) return;
-    const focusable = container.querySelectorAll<HTMLElement>(
+
+    const focusableElements = container.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
+
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (!firstElement || !lastElement) return;
+
     if (event.shiftKey) {
-      if (document.activeElement === first) {
+      if (document.activeElement === firstElement) {
         event.preventDefault();
-        last?.focus();
+        lastElement.focus();
       }
-    } else if (document.activeElement === last) {
-      event.preventDefault();
-      first?.focus();
+    } else {
+      if (document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     }
   };
 
-  const focusFirst = () => closeButtonRef.current?.focus({ preventScroll: true });
+  // Lock background scroll
+  useEffect(() => {
+    if (!isOpen) return;
 
-  const handleBackdropClick = (e: MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+    const scrollY = window.scrollY;
+    // Capture original styles to restore later
+    const originalStyles = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+    };
 
-  // Sekundäre Seiten mit Feedback aus SECONDARY_NAV_ITEMS
+    // Lock body
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
+    return () => {
+      // Restore styles
+      document.body.style.overflow = originalStyles.overflow;
+      document.body.style.position = originalStyles.position;
+      document.body.style.top = originalStyles.top;
+      document.body.style.width = originalStyles.width;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
+
+  // Prepare Navigation Items
   const feedbackItem = SECONDARY_NAV_ITEMS.find((item) => item.id === "feedback");
-
   const secondaryPages: AppNavItem[] = secondaryItems ?? [
     ...(feedbackItem ? [feedbackItem] : []),
     { id: "impressum", label: "Impressum", path: "/impressum", Icon: X },
@@ -95,184 +126,141 @@ export function AppMenuDrawer({
 
   const navigationItems = navItems ?? [...PRIMARY_NAV_ITEMS, quickstartItem];
 
-  // Lock background scroll while the drawer is open
-  useEffect(() => {
-    if (!isOpen) return undefined;
-    if (typeof document === "undefined") return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    const previousPosition = document.body.style.position;
-    const previousTop = document.body.style.top;
-    const previousWidth = document.body.style.width;
-    const scrollY = window.scrollY;
-
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.body.style.position = previousPosition;
-      document.body.style.top = previousTop;
-      document.body.style.width = previousWidth;
-      window.scrollTo(0, scrollY);
-    };
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
-  const drawer = (
+  const drawerContent = (
     <div
-      className="fixed inset-0 z-drawer bg-black/60 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-      onKeyDown={handleKeyDown}
+      className="fixed inset-0 z-drawer bg-black/30 backdrop-blur-xl animate-in fade-in duration-200"
+      onClick={onClose}
     >
-      {/* Vollflächiges Overlay */}
       <div
         className={cn(
-          "fixed inset-0 flex justify-start p-0 sm:p-[var(--spacing-6)]",
-          "transition-all duration-200 ease-out",
+          "absolute top-0 bottom-0 left-0 w-[85vw] max-w-[360px]",
+          "glass-3 border-r border-white/5 backdrop-blur-2xl",
+          "flex flex-col shadow-2xl",
+          "animate-in slide-in-from-left duration-300 ease-out",
+          "bg-[rgba(8,8,10,0.75)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleKeyDown}
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigationsmenü"
       >
-        <div
-          className={cn(
-            "h-[100dvh] w-[80vw] max-w-[320px] sm:rounded-2xl rounded-none overflow-y-auto overscroll-contain relative",
-            "glass-3",
-            "transition-transform duration-200",
-            "motion-safe:animate-[slideInLeft_180ms_ease-out]",
-          )}
-          style={{ transitionTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)" }}
-          ref={drawerRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigationsmenü"
-        >
-          <span
-            ref={firstTrapRef}
-            tabIndex={0}
-            onFocus={focusFirst}
-            aria-hidden="true"
-            className="sr-only"
-          />
-          {/* Header with Close Button */}
-          <div className="flex items-center justify-between sticky top-0 z-header py-3 px-5 border-b border-white/10 gap-3 glass-header">
-            <BrandWordmark className="text-base" />
-            <button
-              onClick={onClose}
-              ref={closeButtonRef}
-              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-ink-secondary hover:text-ink-primary hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 shrink-0"
-              aria-label="Menü schließen"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 bg-white/[0.02]">
+          <BrandWordmark className="text-base text-white/90" />
+          <button
+            onClick={onClose}
+            ref={closeButtonRef}
+            className={cn(
+              "p-2 -mr-2 rounded-lg text-white/60 transition-colors",
+              "hover:text-white hover:bg-white/10",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
+            )}
+            aria-label="Menü schließen"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-          {/* Navigation Section */}
-          <nav className="px-4 py-4">
-            <ul className="space-y-1" role="list">
-              {navigationItems.map((item) => {
-                const isActive = isNavItemActive(item, location.pathname);
-                const Icon = item.Icon;
+        {/* Scrollable Content */}
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8">
+          {/* Main Navigation */}
+          <ul className="space-y-1">
+            {navigationItems.map((item) => {
+              const isActive = isNavItemActive(item, location.pathname);
+              const Icon = item.Icon;
 
-                return (
-                  <li key={item.id}>
-                    <Link
-                      to={item.path}
-                      onClick={onClose}
+              return (
+                <li key={item.id}>
+                  <Link
+                    to={item.path}
+                    onClick={onClose}
+                    className={cn(
+                      "group flex items-center gap-3.5 px-3.5 py-3 rounded-xl transition-all duration-200",
+                      isActive
+                        ? "bg-brand-primary/15 text-white shadow-[inset_0_0_0_1px_rgba(139,92,246,0.2)]"
+                        : "text-white/60 hover:text-white hover:bg-white/5",
+                    )}
+                  >
+                    <Icon
                       className={cn(
-                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors min-h-[48px] border border-transparent",
+                        "w-5 h-5 shrink-0 transition-colors",
                         isActive
-                          ? "border-white/20 bg-white/5 text-text-primary"
-                          : "text-ink-primary hover:border-white/10 hover:bg-white/5",
+                          ? "text-brand-primary drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]"
+                          : "text-white/50 group-hover:text-white/80",
                       )}
-                    >
-                      <Icon
-                        className={cn(
-                          "h-5 w-5 flex-shrink-0",
-                          isActive ? "text-text-primary" : "text-ink-secondary",
-                        )}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-medium text-sm">{item.label}</span>
-                        {item.description && (
-                          <p className="text-xs text-ink-tertiary mt-0.5 truncate">
-                            {item.description}
-                          </p>
-                        )}
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {secondaryPages.length > 0 && (
-              <>
-                {/* Divider */}
-                <hr className="my-4 border-white/10" />
-
-                {/* Secondary Links */}
-                <ul className="space-y-1" role="list">
-                  {secondaryPages.map((page) => {
-                    const isActive = isNavItemActive(page, location.pathname);
-                    const Icon = page.Icon;
-
-                    return (
-                      <li key={page.id}>
-                        <Link
-                          to={page.path}
-                          onClick={onClose}
+                    />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-medium text-sm tracking-wide">{item.label}</span>
+                      {item.description && (
+                        <span
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm min-h-[44px] border border-transparent",
+                            "text-[11px] truncate mt-0.5",
                             isActive
-                              ? "text-text-primary border-white/20 bg-white/5"
-                              : "text-ink-secondary hover:text-ink-primary hover:border-white/10 hover:bg-white/5",
+                              ? "text-brand-primary/80"
+                              : "text-white/30 group-hover:text-white/50",
                           )}
                         >
-                          {Icon && (
-                            <Icon
-                              className={cn(
-                                "h-4 w-4 flex-shrink-0",
-                                isActive ? "text-text-primary" : "text-ink-tertiary",
-                              )}
-                            />
-                          )}
-                          <span>{page.label}</span>
-                          {page.description && (
-                            <span className="text-xs text-ink-tertiary ml-auto truncate max-w-[120px]">
-                              {page.description}
-                            </span>
-                          )}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </>
-            )}
-          </nav>
+                          {item.description}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
 
-          {/* Footer */}
-          <div className="px-4 pb-6 pt-2 mt-auto">
-            <p className="text-xs text-ink-tertiary text-center">© 2025 Disa AI</p>
-          </div>
-          <span
-            ref={lastTrapRef}
-            tabIndex={0}
-            onFocus={focusFirst}
-            aria-hidden="true"
-            className="sr-only"
-          />
+          {/* Secondary Navigation */}
+          {secondaryPages.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <div className="px-3.5 text-xs font-medium text-white/30 uppercase tracking-wider">
+                Weitere Links
+              </div>
+              <ul className="space-y-0.5">
+                {secondaryPages.map((page) => {
+                  const isActive = isNavItemActive(page, location.pathname);
+                  const Icon = page.Icon;
+
+                  return (
+                    <li key={page.id}>
+                      <Link
+                        to={page.path}
+                        onClick={onClose}
+                        className={cn(
+                          "flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-colors text-sm",
+                          isActive
+                            ? "text-white bg-white/10 font-medium"
+                            : "text-white/50 hover:text-white hover:bg-white/5",
+                        )}
+                      >
+                        {Icon && <Icon className="w-4 h-4 opacity-70" />}
+                        <span>{page.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </nav>
+
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-white/5 bg-white/[0.02]">
+          <p className="text-[10px] text-white/30 text-center uppercase tracking-widest">
+            © 2025 Disa AI
+          </p>
         </div>
       </div>
     </div>
   );
 
-  if (typeof document === "undefined") return drawer;
-  return createPortal(drawer, document.body);
+  if (typeof document === "undefined") return drawerContent;
+  return createPortal(drawerContent, document.body);
 }
 
 // Header Icon Component
@@ -287,31 +275,30 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
     <button
       onClick={onClick}
       className={cn(
-        "relative flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg",
-        "text-ink-primary hover:bg-surface-2 transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary",
+        "group relative flex items-center justify-center w-10 h-10 rounded-lg",
+        "text-text-primary hover:bg-surface-2 transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
         className,
       )}
       aria-label="Menü öffnen"
     >
-      {/* Hamburger Icon */}
-      <div className="flex flex-col justify-center gap-1 w-5">
-        <div className="w-full h-0.5 bg-current rounded-full" />
-        <div className="w-full h-0.5 bg-current rounded-full" />
-        <div className="w-full h-0.5 bg-current rounded-full" />
+      <div className="flex flex-col gap-[5px] w-5 items-end">
+        <span className="w-full h-0.5 bg-current rounded-full" />
+        <span className="w-3/4 h-0.5 bg-current rounded-full group-hover:w-full transition-all duration-300" />
+        <span className="w-full h-0.5 bg-current rounded-full" />
       </div>
 
-      {/* Badge */}
       {badge && (
-        <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-accent-primary text-white text-[10px] font-medium flex items-center justify-center">
-          {badge}
+        <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary"></span>
         </span>
       )}
     </button>
   );
 }
 
-// Hook für Menu State Management
+// Hook for Menu State Management
 export function useMenuDrawer() {
   const [isOpen, setIsOpen] = useState(false);
 

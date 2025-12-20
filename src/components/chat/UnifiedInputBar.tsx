@@ -1,9 +1,10 @@
 import * as React from "react";
 
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { BrandCard } from "@/ui/BrandCard";
@@ -28,7 +29,8 @@ export function UnifiedInputBar({
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
-  const { settings, setCreativity, setDiscussionPreset } = useSettings();
+  const { models } = useModelCatalog();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -96,6 +98,10 @@ export function UnifiedInputBar({
   );
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
 
+  const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
+  const modelLabel =
+    selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
+
   return (
     <div className={cn("w-full space-y-3", className)}>
       {/* Model selection moved to settings - cleaner input area */}
@@ -149,7 +155,7 @@ export function UnifiedInputBar({
 
       {/* Context Pills */}
       <div className="w-full px-1">
-        <div className="flex w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
+        <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
           {/* Role Dropdown */}
           <Select
             value={activeRole?.id || "standard"}
@@ -165,10 +171,10 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none role-badge-transition animate-pill-slide-in",
+                "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in",
                 activeRole
                   ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
-                  : "rounded-full border border-white/5 bg-surface-1/40 text-ink-secondary hover:border-white/10 hover:text-ink-primary hover:bg-surface-1/60",
+                  : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
               )}
             >
               <User className="h-4 w-4 flex-shrink-0" />
@@ -191,7 +197,7 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Stil auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
               style={{ animationDelay: "50ms" }}
             >
               <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
@@ -213,7 +219,7 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Kreativität auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/5 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/10 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
               style={{ animationDelay: "100ms" }}
             >
               <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
@@ -223,6 +229,25 @@ export function UnifiedInputBar({
               {creativityOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Model Dropdown */}
+          <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
+            <SelectTrigger
+              aria-label="Modell auswählen"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              style={{ animationDelay: "150ms" }}
+            >
+              <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
+              <span className="whitespace-nowrap">{modelLabel}</span>
+            </SelectTrigger>
+            <SelectContent className="max-h-[280px] w-64">
+              {models?.map((model) => (
+                <SelectItem key={model.id} value={model.id}>
+                  {model.label || model.id}
                 </SelectItem>
               ))}
             </SelectContent>
