@@ -1,9 +1,10 @@
 import * as React from "react";
 
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { BrandCard } from "@/ui/BrandCard";
@@ -28,7 +29,8 @@ export function UnifiedInputBar({
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
-  const { settings, setCreativity, setDiscussionPreset } = useSettings();
+  const { models } = useModelCatalog();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -95,6 +97,9 @@ export function UnifiedInputBar({
     (option) => option.value === String(settings.creativity),
   );
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
+
+  const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
+  const modelLabel = selectedModel?.name?.split("/").pop() || "Modell";
 
   return (
     <div className={cn("w-full space-y-3", className)}>
@@ -223,6 +228,25 @@ export function UnifiedInputBar({
               {creativityOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Model Dropdown */}
+          <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
+            <SelectTrigger
+              aria-label="Modell auswählen"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              style={{ animationDelay: "150ms" }}
+            >
+              <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
+              <span className="whitespace-nowrap">{modelLabel}</span>
+            </SelectTrigger>
+            <SelectContent className="max-h-[280px] w-64">
+              {models?.map((model) => (
+                <SelectItem key={model.id} value={model.id}>
+                  {model.name}
                 </SelectItem>
               ))}
             </SelectContent>
