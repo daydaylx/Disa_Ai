@@ -68,7 +68,7 @@
 
 /* Card Base - Standardisiert */
 .ds-card {
-  background: var(--color-surface-card, #151d31);
+  background: var(--color-surface-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
