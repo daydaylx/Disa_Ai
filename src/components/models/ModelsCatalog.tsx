@@ -270,7 +270,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     "relative w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300 rounded-2xl border p-4 group overflow-hidden",
                     isActive
                       ? cn("ring-1", providerTheme.border, providerTheme.glow)
-                      : cn("hover:brightness-110", providerTheme.hoverBorder),
+                      : cn(providerTheme.hoverBorder),
                   )}
                   style={{ background: providerTheme.roleGradient }}
                 >
