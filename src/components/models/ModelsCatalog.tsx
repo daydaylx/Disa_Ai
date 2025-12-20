@@ -4,7 +4,7 @@ import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Search as SearchIcon, Users, Zap, Waves, Code2, Hexagon, Wind, Layers, Grid3x3, type LucideIcon } from "@/lib/icons";
+import { Check, Cpu, RefreshCw, Star, Brain, Sparkles, Bot, Users, Zap, Waves, Code2, Hexagon, Wind, Layers, Grid3x3, type LucideIcon } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
