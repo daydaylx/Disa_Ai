@@ -11,6 +11,12 @@ import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
+// Shared pill styles to reduce duplication
+const PILL_BASE_CLASSES =
+  "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none transition-colors animate-pill-slide-in backdrop-blur-md";
+const PILL_DEFAULT_CLASSES =
+  "rounded-full border border-white/6 bg-white/[0.03] text-ink-secondary/90 hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary";
+
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -171,10 +177,11 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in backdrop-blur-md",
+                PILL_BASE_CLASSES,
+                "role-badge-transition",
                 activeRole
-                  ? "rounded-2xl border border-brand-primary/30 bg-brand-primary/8 text-brand-primary shadow-[0_0_12px_rgba(139,92,246,0.15)]"
-                  : "rounded-full border border-white/6 bg-white/[0.03] text-ink-secondary/90 hover:border-white/10 hover:text-ink-primary hover:bg-white/[0.06]",
+                  ? "rounded-2xl border border-brand-primary/30 bg-brand-primary/8 text-brand-primary shadow-glow-brand-primary"
+                  : PILL_DEFAULT_CLASSES,
               )}
             >
               <User className="h-4 w-4 flex-shrink-0" />
@@ -197,7 +204,7 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Stil auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
+              className={cn(PILL_BASE_CLASSES, PILL_DEFAULT_CLASSES)}
               style={{ animationDelay: "50ms" }}
             >
               <Palette className="h-4 w-4 flex-shrink-0 opacity-70" />
@@ -219,7 +226,7 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Kreativität auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
+              className={cn(PILL_BASE_CLASSES, PILL_DEFAULT_CLASSES)}
               style={{ animationDelay: "100ms" }}
             >
               <Sparkles className="h-4 w-4 flex-shrink-0 opacity-70" />
@@ -238,7 +245,7 @@ export function UnifiedInputBar({
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
+              className={cn(PILL_BASE_CLASSES, PILL_DEFAULT_CLASSES)}
               style={{ animationDelay: "150ms" }}
             >
               <Cpu className="h-4 w-4 flex-shrink-0 opacity-70" />

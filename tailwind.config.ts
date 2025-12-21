@@ -335,6 +335,7 @@ export default {
         "glow-sm": "0 0 8.5px rgba(139, 92, 246, 0.3)",
         "glow-md": "0 0 17px rgba(139, 92, 246, 0.4)",
         "glow-lg": "0 0 25.5px rgba(139, 92, 246, 0.5)",
+        "glow-brand-primary": "var(--shadow-glow-brand-primary)",
         // Page-specific glow effects (reduced by 15%)
         "glow-models": "0 0 10.2px rgba(6, 182, 212, 0.25)",
         "glow-models-lg": "0 0 20.4px rgba(6, 182, 212, 0.35)",
