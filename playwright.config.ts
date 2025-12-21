@@ -59,6 +59,8 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
+    // Disable animations for stable tests
+    reducedMotion: "reduce",
     // Performance metrics collection
     actionTimeout: 30000,
     navigationTimeout: 60000,

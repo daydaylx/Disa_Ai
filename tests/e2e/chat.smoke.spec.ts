@@ -58,7 +58,8 @@ test.describe("Chat Smoke Tests", () => {
 
     const sendButton = page.locator('button[aria-label="Senden"]');
     await expect(sendButton).toBeEnabled();
-    await sendButton.click();
+    // Force click to bypass animation stability checks
+    await sendButton.click({ force: true });
 
     // Eingabefeld sollte nach dem Senden geleert sein
     await expect(input).toHaveValue("");
