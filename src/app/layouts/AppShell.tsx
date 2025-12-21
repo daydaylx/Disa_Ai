@@ -114,7 +114,7 @@ function AppShellLayout({
 
         <aside className="hidden w-64 flex-shrink-0 border-r border-border-ink/20 bg-surface-2 lg:flex">
           <div className="flex h-full w-full flex-col gap-6 px-4 py-5">
-            <BrandWordmark className="text-base" />
+            <BrandWordmark className="text-base" data-testid="brand-logo" />
             <PrimaryNavigation orientation="side" />
             <div className="mt-auto space-y-2 text-xs text-text-tertiary">
               <div className="flex flex-col gap-1">

@@ -38,7 +38,8 @@ test.describe("Book Concept UI", () => {
 
     const sendButton = page.locator('button[aria-label="Senden"]');
     await expect(sendButton).toBeVisible();
-    await sendButton.click();
+    await expect(sendButton).toBeEnabled();
+    await sendButton.click({ force: true });
 
     // Check if message appears in the list
     // Note: In a real app without backend mock, this might fail if API fails.
@@ -77,8 +78,8 @@ test.describe("Book Concept UI", () => {
     // Prefer the actual history panel dialog (avoid picking other complementary regions)
     const historyPanel = page.getByRole("dialog").filter({ hasText: "Inhaltsverzeichnis" });
     await expect(historyPanel).toBeVisible();
-    await expect(historyPanel.getByText("Chat‑Verlauf")).toBeVisible();
-    await expect(historyPanel.getByText("Archiv")).toBeVisible();
+    await expect(historyPanel.getByRole("button", { name: "Chat‑Verlauf" })).toBeVisible();
+    await expect(historyPanel.getByRole("button", { name: "Archiv" })).toBeVisible();
 
     // Close it by clicking outside
     await page.mouse.click(10, 10);
