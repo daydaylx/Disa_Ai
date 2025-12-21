@@ -171,10 +171,10 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in",
+                "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in backdrop-blur-md",
                 activeRole
-                  ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
-                  : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
+                  ? "rounded-2xl border border-brand-primary/30 bg-brand-primary/8 text-brand-primary shadow-[0_0_12px_rgba(139,92,246,0.15)]"
+                  : "rounded-full border border-white/6 bg-white/[0.03] text-ink-secondary/90 hover:border-white/10 hover:text-ink-primary hover:bg-white/[0.06]",
               )}
             >
               <User className="h-4 w-4 flex-shrink-0" />
@@ -197,10 +197,10 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Stil auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
               style={{ animationDelay: "50ms" }}
             >
-              <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
+              <Palette className="h-4 w-4 flex-shrink-0 opacity-70" />
               <span className="whitespace-nowrap">{discussionPresetLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
@@ -219,10 +219,10 @@ export function UnifiedInputBar({
           >
             <SelectTrigger
               aria-label="Kreativität auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
               style={{ animationDelay: "100ms" }}
             >
-              <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
+              <Sparkles className="h-4 w-4 flex-shrink-0 opacity-70" />
               <span className="whitespace-nowrap">{creativityShortLabel}</span>
             </SelectTrigger>
             <SelectContent className="w-64">
@@ -238,10 +238,10 @@ export function UnifiedInputBar({
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/6 bg-white/[0.03] px-3 text-sm font-medium leading-none text-ink-secondary/90 transition-colors hover:border-white/10 hover:bg-white/[0.06] hover:text-ink-primary animate-pill-slide-in backdrop-blur-md"
               style={{ animationDelay: "150ms" }}
             >
-              <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
+              <Cpu className="h-4 w-4 flex-shrink-0 opacity-70" />
               <span className="whitespace-nowrap">{modelLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
