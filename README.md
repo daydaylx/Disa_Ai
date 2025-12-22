@@ -304,7 +304,7 @@ Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 ### Design & Styling
 
 | Dokument                                                       | Inhalt                        |
-| -------------------------------------------------------------- | ----------------------------- |
+| ------------------------------------------------------------------- | ----------------------------- |
 | [`src/styles/DESIGN_SYSTEM.md`](src/styles/DESIGN_SYSTEM.md)  | Design-System Dokumentation   |
 | [`docs/CATEGORY_ACCENT_SYSTEM.md`](docs/CATEGORY_ACCENT_SYSTEM.md) | Kategorie-Farben System  |
 
