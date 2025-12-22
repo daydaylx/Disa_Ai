@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-7d6b433",
-  "buildTime": "2025-12-20T20:17:47.489Z",
-  "gitSha": "7d6b433e4705d899493fd2929afd02f125651e6e",
-  "gitBranch": "claude/glassmorphism-context-pills-32eKQ",
+  "buildId": "v1.0.2-253f4ca",
+  "buildTime": "2025-12-22T19:06:38.075Z",
+  "gitSha": "253f4cafbf222f0ae71118cd9d67dbd34c58d376",
+  "gitBranch": "cursor/lens-page-details-redirect-bd27",
   "version": "1.0.2"
 }
