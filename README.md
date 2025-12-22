@@ -283,7 +283,7 @@ Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 ### Entwickler-Guides
 
 | Dokument                                                                               | Inhalt                                   |
-| -------------------------------------------------------------------------------------- | ---------------------------------------- |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md)         | Alle Umgebungsvariablen                  |
 | [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)                       | Feedback-Funktion einrichten             |
 | [`docs/guides/FEEDBACK_SCREENSHOTS.md`](docs/guides/FEEDBACK_SCREENSHOTS.md)           | Screenshot-Anhänge Dokumentation         |
