@@ -434,7 +434,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   )}
                   style={{ background: theme.roleGradient }}
                 >
-                  <div className="absolute right-3 top-3 flex items-center gap-2">
+                  <div className="absolute right-3 top-3 flex items-center gap-2 z-20">
                     {isActive && (
                       <Badge
                         className={cn(
@@ -464,7 +464,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                       }
                       className={cn(
-                        "relative z-10 flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors cursor-pointer pointer-events-auto",
+                        "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors cursor-pointer pointer-events-auto",
                         isFavorite
                           ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
                           : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
@@ -482,7 +482,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   >
                     {/* Invisible clickable overlay */}
                     <div
-                      className="absolute inset-0 cursor-pointer pointer-events-auto"
+                      className="absolute inset-0 cursor-pointer pointer-events-auto z-0"
                       onClick={() => handleActivateRole(role)}
                       role="button"
                       tabIndex={0}
@@ -523,7 +523,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-col items-end gap-2 pr-10 relative z-10 pointer-events-auto">
+                    <div className="flex flex-col items-end gap-2 pr-10 relative z-20 pointer-events-auto">
                       <button
                         type="button"
                         onClick={(e) => {
