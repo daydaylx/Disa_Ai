@@ -2,7 +2,7 @@
 
 [![Build & Test CI](https://img.shields.io/github/actions/workflow/status/daydaylx/Disa_Ai/ci.yml?branch=main&label=Build%20%26%20Test&style=for-the-badge)](https://github.com/daydaylx/Disa_Ai/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-1.0.2-blue?style=for-the-badge)](package.json)
-[![License](https://img.shields.io/badge/license-Private-blue?style=for-the-badge)](#lizenz)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![Node Version](https://img.shields.io/badge/node-20.19.0+-green?style=for-the-badge)](.nvmrc)
 
 ---
@@ -325,7 +325,7 @@ npm run build
 1. **Prebuild**: `scripts/build-info.js` generiert Build-Metadaten
 2. **Token-Generierung**: `npm run generate-tokens` verarbeitet Design-Tokens
 3. **Vite Build**: Erstellt `dist/` mit optimierten Assets
-4. **Postbuild**: 
+4. **Postbuild**:
    - Kopiert `_headers` für Cloudflare
    - Generiert Routen-Manifest
    - Verifiziert Build-Integrität
@@ -403,7 +403,9 @@ Dies erstellt eine Changeset-Datei für die nächste Release-Version.
 
 ## Lizenz
 
-Dieses Projekt ist **privat und urheberrechtlich geschützt**. Eine Weitergabe, Vervielfältigung oder Modifikation des Quellcodes ist ohne ausdrückliche schriftliche Zustimmung des Autors nicht gestattet.
+Dieses Projekt ist unter der [MIT-Lizenz](LICENSE) lizenziert.
+
+Copyright (c) 2025 daydaylx
 
 ---
 

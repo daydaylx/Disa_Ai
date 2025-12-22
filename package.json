@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "dev:functions": "wrangler pages dev dist --live-reload",
