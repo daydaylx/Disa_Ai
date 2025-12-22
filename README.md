@@ -15,7 +15,7 @@
 
 **Live-Demo:** [disaai.de](https://disaai.de)
 
-> 💡 **Hinweis:** Die App befindet sich in aktiver Entwicklung. Die Dokumentation wird kontinuierlich aktualisiert (Stand: Dezember 2024).
+> 💡 **Hinweis:** Die App befindet sich in aktiver Entwicklung. Die Dokumentation wird kontinuierlich aktualisiert (Stand: Dezember 2025).
 
 ---
 
