@@ -193,6 +193,33 @@ export function initEnvironment(): EnvValidationResult {
 
   _validationResult = validateEnvironment();
 
+  // #region agent log
+  try {
+    fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: "debug-session",
+        runId: "pre-fix",
+        hypothesisId: "H1",
+        location: "src/config/env.ts:initEnvironment",
+        message: "Env validation result",
+        data: {
+          success: _validationResult.success,
+          errorCount: _validationResult.errors?.length ?? 0,
+          warningCount: _validationResult.warnings?.length ?? 0,
+          baseUrl: _validationResult.config?.VITE_BASE_URL,
+          debugEnabled: _validationResult.config?.VITE_ENABLE_DEBUG,
+          pwaEnabled: _validationResult.config?.VITE_ENABLE_PWA,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+  } catch (error) {
+    console.warn("Agent log failed in initEnvironment", error);
+  }
+  // #endregion
+
   if (_validationResult.success && _validationResult.config) {
     _envConfig = _validationResult.config;
 

@@ -45,6 +45,32 @@ if (process.env.CI || process.env.PLAYWRIGHT_FIREFOX) {
   );
 }
 
+// #region agent log
+try {
+  fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sessionId: "debug-session",
+      runId: "pre-fix",
+      hypothesisId: "H2",
+      location: "playwright.config.ts:config",
+      message: "Playwright base URL and mode",
+      data: {
+        baseUrl: BASE_URL,
+        isLive: IS_LIVE,
+        ciEnv: process.env.CI === "true",
+        port: PORT,
+        hasLiveBaseEnv: Boolean(process.env.LIVE_BASE_URL),
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+} catch (error) {
+  console.warn("Agent log failed in playwright.config.ts", error);
+}
+// #endregion
+
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: IS_LIVE ? 90_000 : 45_000,

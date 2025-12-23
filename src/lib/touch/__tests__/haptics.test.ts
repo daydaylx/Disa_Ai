@@ -112,7 +112,7 @@ describe("HapticFeedbackManager", () => {
 
   beforeEach(() => {
     manager = new MockHapticFeedbackManager();
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterEach(() => {

@@ -5,13 +5,23 @@ vi.mock("nanoid", () => ({
   nanoid: () => "user-id",
 }));
 
-let chatStreamMock: ReturnType<typeof vi.fn>;
+type ChatMessage = { role: string; content: string };
+type ChatStream = (
+  messages: ChatMessage[],
+  onDelta?: (
+    delta: string,
+    meta?: { id?: string; role?: string; timestamp?: number; model?: string },
+  ) => void,
+  opts?: { onDone?: (full: string) => void },
+) => Promise<ChatMessage[]>;
+
+let chatStreamMock: ReturnType<typeof vi.fn<ChatStream>>;
 let useChat: typeof import("../useChat").useChat;
 
-function extractMessages(callIndex: number): Array<{ role: string; content: string }> {
+function extractMessages(callIndex: number): ChatMessage[] {
   const raw = chatStreamMock.mock.calls[callIndex]?.[0];
   if (Array.isArray(raw)) {
-    return raw as Array<{ role: string; content: string }>;
+    return raw as ChatMessage[];
   }
   return [];
 }
@@ -21,9 +31,9 @@ type HookProps = {
 };
 
 vi.mock("../../api/openrouter", () => {
-  chatStreamMock = vi.fn();
+  chatStreamMock = vi.fn<ChatStream>();
   return {
-    chatStream: (...args: unknown[]) => chatStreamMock(...args),
+    chatStream: (...args: Parameters<ChatStream>) => chatStreamMock(...args),
   };
 });
 
@@ -39,7 +49,7 @@ describe("useChat system prompt handling", () => {
     chatStreamMock.mockReset();
     chatStreamMock.mockImplementation(
       async (
-        messages: Array<{ role: string; content: string }>,
+        messages,
         onDelta?: (
           delta: string,
           meta?: { id?: string; role?: string; timestamp?: number; model?: string },

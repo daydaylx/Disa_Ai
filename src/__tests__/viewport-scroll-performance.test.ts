@@ -2,20 +2,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Test the throttling logic in isolation without React components
 describe("Viewport Scroll Performance Optimization", () => {
-  let mockSetProperty: ReturnType<typeof vi.fn>;
-  let mockRequestAnimationFrame: ReturnType<typeof vi.fn>;
-  let mockClearTimeout: ReturnType<typeof vi.fn>;
+  let mockSetProperty: ReturnType<typeof vi.fn<(name: string, value: string) => void>>;
+  let mockRequestAnimationFrame: ReturnType<typeof vi.fn<(cb: FrameRequestCallback) => number>>;
+  let mockClearTimeout: ReturnType<typeof vi.fn<(timeoutId: number) => void>>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSetProperty = vi.fn();
-    mockRequestAnimationFrame = vi.fn((cb) => {
+    mockSetProperty = vi.fn<(name: string, value: string) => void>();
+    mockRequestAnimationFrame = vi.fn<(cb: FrameRequestCallback) => number>((cb) => {
       // Execute callback immediately in tests and return RAF ID
       const rafId = Math.floor(Math.random() * 1000) + 1;
-      cb();
+      cb(0);
       return rafId;
     });
-    mockClearTimeout = vi.fn();
+    mockClearTimeout = vi.fn<(timeoutId: number) => void>();
 
     // Setup DOM mocks with complete document structure
     Object.defineProperty(global, "document", {
@@ -138,7 +138,7 @@ describe("Viewport Scroll Performance Optimization", () => {
       let callCount = 0;
 
       // Create a more realistic RAF mock that doesn't execute immediately
-      const rafCallbacks: (() => void)[] = [];
+      const rafCallbacks: FrameRequestCallback[] = [];
       mockRequestAnimationFrame.mockImplementation((cb) => {
         rafCallbacks.push(cb);
         return rafCallbacks.length; // Return unique ID
@@ -163,7 +163,7 @@ describe("Viewport Scroll Performance Optimization", () => {
       expect(rafId).not.toBe(null); // RAF pending
 
       // Execute the RAF callback
-      rafCallbacks[0]!();
+      rafCallbacks[0]!(0);
 
       expect(callCount).toBe(1);
       expect(rafId).toBe(null); // Should be reset after execution
@@ -173,7 +173,7 @@ describe("Viewport Scroll Performance Optimization", () => {
       expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(2);
 
       // Execute second RAF
-      rafCallbacks[1]!();
+      rafCallbacks[1]!(0);
       expect(callCount).toBe(2);
     });
   });

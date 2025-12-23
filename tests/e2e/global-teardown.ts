@@ -18,6 +18,26 @@ export default async function globalTeardown(config: FullConfig) {
       },
     };
 
+    // #region agent log
+    try {
+      fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "debug-session",
+          runId: "pre-fix",
+          hypothesisId: "H3",
+          location: "tests/e2e/global-teardown.ts:globalTeardown",
+          message: "E2E global teardown summary",
+          data: summaryData,
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    } catch (error) {
+      console.warn("Agent log failed in global-teardown", error);
+    }
+    // #endregion
+
     const summaryPath = path.join("report/e2e", `teardown-summary-${Date.now()}.json`);
     fs.writeFileSync(summaryPath, JSON.stringify(summaryData, null, 2));
 

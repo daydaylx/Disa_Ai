@@ -19,6 +19,34 @@ export default async function globalSetup(config: FullConfig) {
     console.log("🚀 Running in CI environment");
   }
 
+  // #region agent log
+  try {
+    fetch("http://127.0.0.1:7242/ingest/0ae7fc31-3847-4426-952c-f3c7a5827cea", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: "debug-session",
+        runId: "pre-fix",
+        hypothesisId: "H2",
+        location: "tests/e2e/global-setup.ts:globalSetup",
+        message: "E2E global setup start",
+        data: {
+          ci: Boolean(config.metadata?.CI),
+          port: process.env.PLAYWRIGHT_PORT ?? "5173",
+          baseUrl:
+            process.env.PLAYWRIGHT_BASE_URL ??
+            `http://localhost:${process.env.PLAYWRIGHT_PORT ?? "5173"}`,
+          liveBaseUrl: process.env.LIVE_BASE_URL ?? null,
+          reportDirs,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+  } catch (error) {
+    console.warn("Agent log failed in global-setup", error);
+  }
+  // #endregion
+
   // Clean up old reports (keep last 10 runs)
   const cleanupOldReports = () => {
     try {
