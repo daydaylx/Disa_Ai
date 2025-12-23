@@ -41,18 +41,18 @@
 
 ## Features
 
-| Feature                 | Beschreibung                                                                                 |
-| ----------------------- | -------------------------------------------------------------------------------------------- |
-| **Chat**                | Streaming-Antworten, Markdown-Rendering, Code-Highlighting, LaTeX-Support                    |
-| **Modellwahl**          | Wechsel zwischen verschiedenen KI-Modellen (GPT-4, Claude, Mistral, etc.) pro Chat           |
-| **Rollen/Personas**     | Vordefinierte Rollen für verschiedene Gesprächstypen (Berater, Recherche, kreativ)           |
-| **Jugendschutz**        | Konfigurierbarer Filter für Modelle und Inhalte                                              |
-| **PWA**                 | Installierbar, offline-fähige Shell, App-ähnliches Erlebnis                                  |
-| **Mobile-First**        | Touch-optimiert, Safe-Area-Support, dynamische Viewport-Höhe                                 |
-| **Chat-Verlauf**        | Lokale Speicherung aller Gespräche im Browser (IndexedDB mit Dexie)                          |
-| **Feedback mit Bildern** | In-App Feedback mit Screenshot-Anhängen (bis zu 5 Bilder, max. 15 MB gesamt)                |
-| **Virtualisierung**     | Optimierte Performance für lange Listen (Modelle, Chat-Verlauf)                              |
-| **Error Monitoring**    | Sentry-Integration für Produktions-Builds (optional)                                         |
+| Feature                  | Beschreibung                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| **Chat**                 | Streaming-Antworten, Markdown-Rendering, Code-Highlighting, LaTeX-Support          |
+| **Modellwahl**           | Wechsel zwischen verschiedenen KI-Modellen (GPT-4, Claude, Mistral, etc.) pro Chat |
+| **Rollen/Personas**      | Vordefinierte Rollen für verschiedene Gesprächstypen (Berater, Recherche, kreativ) |
+| **Jugendschutz**         | Konfigurierbarer Filter für Modelle und Inhalte                                    |
+| **PWA**                  | Installierbar, offline-fähige Shell, App-ähnliches Erlebnis                        |
+| **Mobile-First**         | Touch-optimiert, Safe-Area-Support, dynamische Viewport-Höhe                       |
+| **Chat-Verlauf**         | Lokale Speicherung aller Gespräche im Browser (IndexedDB mit Dexie)                |
+| **Feedback mit Bildern** | In-App Feedback mit Screenshot-Anhängen (bis zu 5 Bilder, max. 15 MB gesamt)       |
+| **Virtualisierung**      | Optimierte Performance für lange Listen (Modelle, Chat-Verlauf)                    |
+| **Error Monitoring**     | Sentry-Integration für Produktions-Builds (optional)                               |
 
 ---
 
@@ -109,26 +109,26 @@ Die App ist dann unter `http://localhost:5173` erreichbar.
 
 ### Wichtige Commands
 
-| Command                  | Beschreibung                                             |
-| ------------------------ | -------------------------------------------------------- |
-| `npm run dev`            | Startet Vite Dev-Server mit Hot-Reload                   |
-| `npm run build`          | Erstellt Production-Build in `dist/`                     |
-| `npm run preview`        | Lokale Vorschau des Production-Builds                    |
-| `npm run verify`         | Führt Typecheck + Lint + Unit-Tests aus (CI-Gate)        |
-| `npm run typecheck`      | TypeScript-Prüfung (parallel für Build & Tests)          |
-| `npm run lint`           | ESLint-Prüfung                                           |
-| `npm run lint:fix`       | ESLint mit Auto-Fix                                      |
-| `npm run lint:css`       | Stylelint + Hex-Color-Validierung                        |
-| `npm run format:fix`     | Prettier Auto-Formatierung                               |
-| `npm run test:unit`      | Vitest Unit-Tests                                        |
-| `npm run test:watch`     | Unit-Tests im Watch-Modus                                |
-| `npm run e2e`            | Playwright E2E-Tests                                     |
-| `npm run e2e:smoke`      | Schnelle E2E Smoke-Tests                                 |
-| `npm run e2e:live`       | E2E-Tests gegen Live-Site (disaai.de)                    |
-| `npm run analyze`        | Bundle-Analyse öffnen                                    |
-| `npm run clean`          | Entfernt Build-Artefakte und Cache                       |
-| `npm run verify:dist`    | Verifiziert Build-Output                                 |
-| `npm run changeset:add`  | Neuen Changeset hinzufügen                               |
+| Command                 | Beschreibung                                      |
+| ----------------------- | ------------------------------------------------- |
+| `npm run dev`           | Startet Vite Dev-Server mit Hot-Reload            |
+| `npm run build`         | Erstellt Production-Build in `dist/`              |
+| `npm run preview`       | Lokale Vorschau des Production-Builds             |
+| `npm run verify`        | Führt Typecheck + Lint + Unit-Tests aus (CI-Gate) |
+| `npm run typecheck`     | TypeScript-Prüfung (parallel für Build & Tests)   |
+| `npm run lint`          | ESLint-Prüfung                                    |
+| `npm run lint:fix`      | ESLint mit Auto-Fix                               |
+| `npm run lint:css`      | Stylelint + Hex-Color-Validierung                 |
+| `npm run format:fix`    | Prettier Auto-Formatierung                        |
+| `npm run test:unit`     | Vitest Unit-Tests                                 |
+| `npm run test:watch`    | Unit-Tests im Watch-Modus                         |
+| `npm run e2e`           | Playwright E2E-Tests                              |
+| `npm run e2e:smoke`     | Schnelle E2E Smoke-Tests                          |
+| `npm run e2e:live`      | E2E-Tests gegen Live-Site (disaai.de)             |
+| `npm run analyze`       | Bundle-Analyse öffnen                             |
+| `npm run clean`         | Entfernt Build-Artefakte und Cache                |
+| `npm run verify:dist`   | Verifiziert Build-Output                          |
+| `npm run changeset:add` | Neuen Changeset hinzufügen                        |
 
 ### Qualitäts-Gate
 
@@ -273,40 +273,40 @@ Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 
 ### Allgemein
 
-| Dokument                                                 | Inhalt                          |
-| -------------------------------------------------------- | ------------------------------- |
-| [`docs/OVERVIEW.md`](docs/OVERVIEW.md)                   | App-Nutzung und UI-Erklärung    |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)           | Technische Architektur          |
-| [`docs/CONFIG.md`](docs/CONFIG.md)                       | Konfiguration und Feature-Flags |
-| [`CHANGELOG.md`](CHANGELOG.md)                           | Versionshistorie                |
+| Dokument                                       | Inhalt                          |
+| ---------------------------------------------- | ------------------------------- |
+| [`docs/OVERVIEW.md`](docs/OVERVIEW.md)         | App-Nutzung und UI-Erklärung    |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Technische Architektur          |
+| [`docs/CONFIG.md`](docs/CONFIG.md)             | Konfiguration und Feature-Flags |
+| [`CHANGELOG.md`](CHANGELOG.md)                 | Versionshistorie                |
 
 ### Entwickler-Guides
 
-| Dokument                                                                               | Inhalt                                   |
-| ------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md)         | Alle Umgebungsvariablen                  |
-| [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)                       | Feedback-Funktion einrichten             |
-| [`docs/guides/FEEDBACK_SCREENSHOTS.md`](docs/guides/FEEDBACK_SCREENSHOTS.md)           | Screenshot-Anhänge Dokumentation         |
-| [`docs/guides/RELEASE_PLAYBOOK.md`](docs/guides/RELEASE_PLAYBOOK.md)                   | Release-Prozess                          |
-| [`docs/guides/STORAGE_MIGRATION_GUIDE.md`](docs/guides/STORAGE_MIGRATION_GUIDE.md)     | Storage-Migration                        |
-| [`docs/guides/CLOUDFLARE_FUNCTIONS_SETUP.md`](docs/guides/CLOUDFLARE_FUNCTIONS_SETUP.md) | Cloudflare Functions Setup            |
-| [`docs/guides/tests-setup.md`](docs/guides/tests-setup.md)                             | Test-Setup und -Ausführung               |
-| [`docs/guides/known-issues.md`](docs/guides/known-issues.md)                           | Bekannte Probleme und Workarounds        |
+| Dokument                                                                                 | Inhalt                            |
+| ---------------------------------------------------------------------------------------- | --------------------------------- |
+| [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md)           | Alle Umgebungsvariablen           |
+| [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)                         | Feedback-Funktion einrichten      |
+| [`docs/guides/FEEDBACK_SCREENSHOTS.md`](docs/guides/FEEDBACK_SCREENSHOTS.md)             | Screenshot-Anhänge Dokumentation  |
+| [`docs/guides/RELEASE_PLAYBOOK.md`](docs/guides/RELEASE_PLAYBOOK.md)                     | Release-Prozess                   |
+| [`docs/guides/STORAGE_MIGRATION_GUIDE.md`](docs/guides/STORAGE_MIGRATION_GUIDE.md)       | Storage-Migration                 |
+| [`docs/guides/CLOUDFLARE_FUNCTIONS_SETUP.md`](docs/guides/CLOUDFLARE_FUNCTIONS_SETUP.md) | Cloudflare Functions Setup        |
+| [`docs/guides/tests-setup.md`](docs/guides/tests-setup.md)                               | Test-Setup und -Ausführung        |
+| [`docs/guides/known-issues.md`](docs/guides/known-issues.md)                             | Bekannte Probleme und Workarounds |
 
 ### AI-Agenten
 
-| Dokument                     | Inhalt                       |
-| ---------------------------- | ---------------------------- |
-| [`CLAUDE.md`](CLAUDE.md)     | Claude Code Referenz         |
-| [`AGENTS.md`](AGENTS.md)     | Richtlinien für AI-Agenten   |
-| [`GEMINI.md`](GEMINI.md)     | Gemini-spezifische Infos     |
+| Dokument                 | Inhalt                     |
+| ------------------------ | -------------------------- |
+| [`CLAUDE.md`](CLAUDE.md) | Claude Code Referenz       |
+| [`AGENTS.md`](AGENTS.md) | Richtlinien für AI-Agenten |
+| [`GEMINI.md`](GEMINI.md) | Gemini-spezifische Infos   |
 
 ### Design & Styling
 
-| Dokument                                                       | Inhalt                        |
-| ------------------------------------------------------------------- | ----------------------------- |
-| [`src/styles/DESIGN_SYSTEM.md`](src/styles/DESIGN_SYSTEM.md)  | Design-System Dokumentation   |
-| [`docs/CATEGORY_ACCENT_SYSTEM.md`](docs/CATEGORY_ACCENT_SYSTEM.md) | Kategorie-Farben System  |
+| Dokument                                                           | Inhalt                      |
+| ------------------------------------------------------------------ | --------------------------- |
+| [`src/styles/DESIGN_SYSTEM.md`](src/styles/DESIGN_SYSTEM.md)       | Design-System Dokumentation |
+| [`docs/CATEGORY_ACCENT_SYSTEM.md`](docs/CATEGORY_ACCENT_SYSTEM.md) | Kategorie-Farben System     |
 
 ---
 
@@ -369,6 +369,7 @@ chore(scope): kurze Beschreibung
 ```
 
 **Beispiele:**
+
 - `feat(chat): add streaming response support`
 - `fix(ui): resolve button alignment issue`
 - `docs(readme): update installation steps`
