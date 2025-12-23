@@ -1,4 +1,4 @@
-import { lazy, memo, useCallback, useMemo, useReducer, useRef } from "react";
+import { lazy, memo, Suspense, useCallback, useMemo, useReducer, useRef } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -8,6 +8,7 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
@@ -19,13 +20,6 @@ const VirtualizedMessageList = memo(
   lazy(() =>
     import("../components/chat/VirtualizedMessageList").then((module) => ({
       default: module.VirtualizedMessageList,
-    })),
-  ),
-);
-const UnifiedInputBar = memo(
-  lazy(() =>
-    import("../components/chat/UnifiedInputBar").then((module) => ({
-      default: module.UnifiedInputBar,
     })),
   ),
 );
@@ -327,16 +321,18 @@ export default function Chat() {
                     </button>
                   </div>
                 ) : (
-                  <VirtualizedMessageList
-                    messages={chatLogic.messages}
-                    conversationKey={chatLogic.activeConversationId ?? "new"}
-                    isLoading={chatLogic.isLoading}
-                    onEdit={chatLogic.handleEdit}
-                    onFollowUp={chatLogic.handleFollowUp}
-                    onRetry={chatLogic.handleRetry}
-                    className="w-full pb-4"
-                    scrollContainerRef={chatScrollRef}
-                  />
+                  <Suspense fallback={<div className="w-full pb-4" aria-hidden="true" />}>
+                    <VirtualizedMessageList
+                      messages={chatLogic.messages}
+                      conversationKey={chatLogic.activeConversationId ?? "new"}
+                      isLoading={chatLogic.isLoading}
+                      onEdit={chatLogic.handleEdit}
+                      onFollowUp={chatLogic.handleFollowUp}
+                      onRetry={chatLogic.handleRetry}
+                      className="w-full pb-4"
+                      scrollContainerRef={chatScrollRef}
+                    />
+                  </Suspense>
                 )}
                 <div ref={messagesEndRef} className="h-3" />
               </div>

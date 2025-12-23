@@ -4,10 +4,10 @@ import { createBrowserRouter, Navigate, RouterProvider, useNavigate } from "reac
 import { Button } from "@/ui";
 
 import { ArrowLeft } from "../lib/icons";
+import ChatPage from "../pages/Chat";
 import { RouteWrapper } from "./components/RouteWrapper";
 
 // Lazy-loaded Routes für bessere Performance
-const ChatPage = lazy(() => import("../pages/Chat"));
 const ChatHistoryPage = lazy(() => import("../pages/ChatHistoryPage"));
 const ModelsPage = lazy(() => import("../pages/ModelsPage"));
 const RolesPage = lazy(() => import("../pages/RolesPage"));
@@ -47,7 +47,11 @@ export const appRouter = createBrowserRouter(
   [
     {
       path: "/",
-      element: <Navigate to="/chat" replace />,
+      element: (
+        <RouteWrapper>
+          <ChatPage />
+        </RouteWrapper>
+      ),
     },
     {
       path: "/chat",
