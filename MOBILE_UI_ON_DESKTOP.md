@@ -165,7 +165,7 @@ theme: {
 ### Konsequenzen für zukünftige Entwicklung
 
 - **Neue Komponenten:** Können weiterhin `md:`/`lg:` verwenden (werden ignoriert)
-- **Responsive Anpassungen:** Sollten nur via `sm:` erfolgen, wenn überhaupt
+- **Responsive Anpassungen:** Anpassungen via Tailwind Breakpoints (`sm:`, `md:`, etc.) sind mit dieser Konfiguration nicht mehr möglich.
 - **Tablet-Optimierungen:** Nicht mehr möglich (gewollt: Mobile-only)
 
 ## Testing
