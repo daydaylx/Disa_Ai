@@ -574,3 +574,37 @@ a {
     min-height: 100vh;
   }
 }
+
+/* ============================================================================
+   PHONE FRAME - Mobile UI on Desktop
+   Forces mobile viewport on all screen sizes (390-430px centered)
+   ============================================================================ */
+
+.phone-frame-wrapper {
+  /* Background for "outside" the phone frame on desktop */
+  background: var(--bg-app);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100dvh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  overflow-x: hidden;
+}
+
+.phone-frame-content {
+  /* Centered mobile viewport container */
+  width: 100%;
+  max-width: 430px; /* iPhone 14 Pro Max width */
+  min-height: 100dvh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  background: var(--bg-app);
+  background-image: var(--chalk-noise);
+  position: relative;
+  /* Subtle shadow on desktop to enhance "phone" feeling */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+  /* Ensure content scrolls within frame, not outside */
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* iOS smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+}

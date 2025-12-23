@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-253f4ca",
-  "buildTime": "2025-12-22T19:06:38.075Z",
-  "gitSha": "253f4cafbf222f0ae71118cd9d67dbd34c58d376",
-  "gitBranch": "cursor/lens-page-details-redirect-bd27",
+  "buildId": "v1.0.2-b2469cb",
+  "buildTime": "2025-12-23T09:34:16.119Z",
+  "gitSha": "b2469cb9d02c76cfb5dd11547f86b25a1db5e6b2",
+  "gitBranch": "cursor/mobile-ui-on-desktop-55bc",
   "version": "1.0.2"
 }
