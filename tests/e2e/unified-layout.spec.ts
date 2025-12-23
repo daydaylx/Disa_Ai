@@ -25,8 +25,13 @@ test.describe("Unified Layout Tests", () => {
       await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
       await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
-      // Brand/logo should be present
-      await expect(page.getByTestId("brand-logo")).toBeVisible();
+      // Brand/logo should be present in the visible header
+      const headerWithLogo = page
+        .locator("header, [role='banner']")
+        .filter({ has: page.getByTestId("brand-logo") })
+        .first();
+      await expect(headerWithLogo).toBeVisible();
+      await expect(headerWithLogo.getByTestId("brand-logo")).toBeVisible();
     }
   });
 
