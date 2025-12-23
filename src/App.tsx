@@ -76,67 +76,69 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="bg-app min-h-screen-mobile w-full">
-      <SentryErrorBoundary
-        fallback={({ error, resetError }) => (
-          <div className="flex min-h-screen-mobile flex-col items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl bg-surface-2 p-8 shadow-raiseLg">
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-text-primary">Unerwarteter Fehler</h1>
-                <p className="mt-2 text-text-secondary">
-                  Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
-                  automatisch gemeldet.
-                </p>
-                <p className="mt-3 text-sm text-text-secondary">
-                  <a
-                    className="text-accent hover:underline"
-                    href="#"
-                    onClick={() => window.location.reload()}
+    <div className="bg-app min-h-screen-mobile w-full phone-frame-wrapper">
+      <div className="phone-frame-content">
+        <SentryErrorBoundary
+          fallback={({ error, resetError }) => (
+            <div className="flex min-h-screen-mobile flex-col items-center justify-center p-4">
+              <div className="w-full max-w-md rounded-2xl bg-surface-2 p-8 shadow-raiseLg">
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold text-text-primary">Unerwarteter Fehler</h1>
+                  <p className="mt-2 text-text-secondary">
+                    Entschuldigung, es ist ein unerwarteter Fehler aufgetreten. Das Problem wurde
+                    automatisch gemeldet.
+                  </p>
+                  <p className="mt-3 text-sm text-text-secondary">
+                    <a
+                      className="text-accent hover:underline"
+                      href="#"
+                      onClick={() => window.location.reload()}
+                    >
+                      Neu laden
+                    </a>{" "}
+                    oder wende dich an unseren Support unter{" "}
+                    <a className="text-accent hover:underline" href="mailto:support@disa.ai">
+                      support@disa.ai
+                    </a>
+                    , falls das Problem bestehen bleibt.
+                  </p>
+                </div>
+                <div className="mt-6 flex flex-col gap-3">
+                  <Button onClick={resetError} variant="primary" className="w-full">
+                    Erneut versuchen
+                  </Button>
+                  <Button
+                    onClick={() => (window.location.href = "/")}
+                    variant="secondary"
+                    className="w-full"
                   >
-                    Neu laden
-                  </a>{" "}
-                  oder wende dich an unseren Support unter{" "}
-                  <a className="text-accent hover:underline" href="mailto:support@disa.ai">
-                    support@disa.ai
-                  </a>
-                  , falls das Problem bestehen bleibt.
-                </p>
+                    Zur Startseite
+                  </Button>
+                </div>
+                {import.meta.env.DEV && (
+                  <details className="mt-6 text-left">
+                    <summary className="cursor-pointer text-sm text-text-tertiary">
+                      Fehlerdetails (nur in Entwicklung)
+                    </summary>
+                    <pre className="mt-2 overflow-auto rounded-md bg-surface-muted p-3 text-xs text-text-subtle">
+                      {error instanceof Error ? error.stack : String(error)}
+                    </pre>
+                  </details>
+                )}
               </div>
-              <div className="mt-6 flex flex-col gap-3">
-                <Button onClick={resetError} variant="primary" className="w-full">
-                  Erneut versuchen
-                </Button>
-                <Button
-                  onClick={() => (window.location.href = "/")}
-                  variant="secondary"
-                  className="w-full"
-                >
-                  Zur Startseite
-                </Button>
-              </div>
-              {import.meta.env.DEV && (
-                <details className="mt-6 text-left">
-                  <summary className="cursor-pointer text-sm text-text-tertiary">
-                    Fehlerdetails (nur in Entwicklung)
-                  </summary>
-                  <pre className="mt-2 overflow-auto rounded-md bg-surface-muted p-3 text-xs text-text-subtle">
-                    {error instanceof Error ? error.stack : String(error)}
-                  </pre>
-                </details>
-              )}
             </div>
-          </div>
-        )}
-        showDialog={false}
-      >
-        <Suspense fallback={<FullPageLoader message="Inhalt wird geladen" />}>
-          <Router />
+          )}
+          showDialog={false}
+        >
+          <Suspense fallback={<FullPageLoader message="Inhalt wird geladen" />}>
+            <Router />
+          </Suspense>
+          <NekoLayer />
+        </SentryErrorBoundary>
+        <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
+          <FeatureFlagPanel />
         </Suspense>
-        <NekoLayer />
-      </SentryErrorBoundary>
-      <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
-        <FeatureFlagPanel />
-      </Suspense>
+      </div>
     </div>
   );
 }

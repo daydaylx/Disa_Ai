@@ -20,20 +20,10 @@ test.describe("Unified Layout Tests", () => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");
 
-      const viewport = page.viewportSize();
-      const isDesktop = Boolean(viewport && viewport.width >= 1024);
-
-      if (isDesktop) {
-        // Desktop layout uses a persistent sidebar; hamburger/history buttons may not exist.
-        await expect(page.locator("aside").first()).toBeVisible();
-      } else {
-        // Mobile layout uses the header buttons.
-        // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
-        await expect(
-          page.locator('button[aria-label="Menü öffnen"]:visible').first(),
-        ).toBeVisible();
-        await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
-      }
+      // Mobile-only UI is enforced on all screen sizes (no desktop sidebar)
+      // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
+      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
+      await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
       // Brand/logo should be present
       await expect(page.getByTestId("brand-logo")).toBeVisible();
@@ -121,8 +111,6 @@ test.describe("Unified Layout Tests", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    const viewport = page.viewportSize();
-    const isDesktop = Boolean(viewport && viewport.width >= 1024);
     const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
 
     // Navigate to different pages and check they load
@@ -133,31 +121,22 @@ test.describe("Unified Layout Tests", () => {
     ];
 
     for (const { linkText, expectedPath } of navigationTests) {
-      if (isDesktop) {
-        // Desktop: click link from persistent sidebar navigation.
-        const sidebarLink = page
-          .getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") })
-          .first();
-        await expect(sidebarLink).toBeVisible();
-        await sidebarLink.click();
-      } else {
-        // Mobile: open drawer then click link.
-        await menuButton.click();
+      // Mobile-only UI: always use drawer navigation
+      await menuButton.click();
 
-        const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-        await expect(menuDrawer).toBeVisible();
+      const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+      await expect(menuDrawer).toBeVisible();
 
-        const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
-        await expect(link).toBeVisible();
-        await link.click();
-      }
+      const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
+      await expect(link).toBeVisible();
+      await link.click();
 
       await expect(page).toHaveURL(expectedPath);
       await page.waitForLoadState("networkidle");
     }
   });
 
-  test("should maintain responsive layout on different screen sizes", async ({ page }) => {
+  test("should maintain mobile-only layout on all screen sizes", async ({ page }) => {
     const viewports = [
       { width: 375, height: 812, name: "Mobile" },
       { width: 768, height: 1024, name: "Tablet" },
@@ -169,21 +148,28 @@ test.describe("Unified Layout Tests", () => {
       await page.goto("/");
       await page.waitForLoadState("networkidle");
 
-      // Check that key elements are visible and properly positioned
-      const isDesktop = viewport.width >= 1024;
-      if (isDesktop) {
-        await expect(page.locator("aside").first()).toBeVisible();
-      } else {
-        await expect(
-          page.locator('button[aria-label="Menü öffnen"]:visible').first(),
-        ).toBeVisible();
-      }
+      // Mobile-only UI enforced: always show mobile menu button (never desktop sidebar)
+      await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
+
+      // Desktop sidebar should never be visible (mobile-only layout)
+      await expect(page.locator("aside").first()).not.toBeVisible();
+
       await expect(page.getByTestId("composer-input")).toBeVisible();
 
       // Check that content is accessible without overlapping
       const input = page.getByTestId("composer-input");
       await expect(input).toBeVisible();
       await expect(input).toBeEnabled();
+
+      // Verify phone frame constraint on desktop
+      if (viewport.width >= 1024) {
+        const main = page.locator("main").or(page.getByRole("main"));
+        const mainBox = await main.boundingBox();
+        if (mainBox) {
+          // Content should be constrained to mobile width (max 430px)
+          expect(mainBox.width).toBeLessThanOrEqual(450); // 430px + some tolerance
+        }
+      }
     }
   });
 

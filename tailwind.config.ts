@@ -129,6 +129,15 @@ export default {
   ],
   darkMode: ["class", "[data-theme='dark']"],
   theme: {
+    // Force mobile-only layout: disable all responsive breakpoints by setting them to unreachable values
+    // This ensures the app always renders in "mobile mode" even on desktop (390-430px centered frame)
+    screens: {
+      sm: "99999px",
+      md: "99999px",
+      lg: "99999px",
+      xl: "99999px",
+      "2xl": "99999px",
+    },
     extend: {
       colors: {
         // Vibrant Glass Theme - Deep Dark Base with Electric Accents
