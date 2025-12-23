@@ -33,8 +33,7 @@ test.describe("Phone Frame - Mobile UI on Desktop", () => {
     const contentBox = await phoneFrameContent.boundingBox();
     if (contentBox) {
       // Width should be at most 430px (iPhone 14 Pro Max)
-      expect(contentBox.width).toBeLessThanOrEqual(430);
-      expect(contentBox.width).toBeGreaterThanOrEqual(390); // Minimum mobile width
+      expect(contentBox.width).toBe(430);
     }
   });
 
