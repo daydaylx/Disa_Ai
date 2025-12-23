@@ -162,8 +162,7 @@ test.describe("Phone Frame - Mobile UI on Desktop", () => {
 
     if (contentBox) {
       // On mobile, should use full viewport width (within 10px tolerance)
-      expect(contentBox.width).toBeGreaterThanOrEqual(380);
-      expect(contentBox.width).toBeLessThanOrEqual(400);
+      expect(contentBox.width).toBe(390);
     }
 
     // Touch elements should be accessible
