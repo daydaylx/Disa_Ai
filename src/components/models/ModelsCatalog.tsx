@@ -22,7 +22,7 @@ import {
 } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Button, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Button, EmptyState, PageHeader, SearchInput, useToasts } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -150,6 +150,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { settings, setPreferredModel } = useSettings();
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
   const { models: catalog, loading, error, refresh } = useModelCatalog();
+  const toasts = useToasts();
   const [search, setSearch] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -157,9 +158,32 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
     setIsRefreshing(true);
     try {
       await refresh(true);
+      toasts.push({
+        kind: "success",
+        title: "Modelle aktualisiert",
+        message: `${catalog?.length ?? 0} Modelle geladen.`,
+      });
     } finally {
       setIsRefreshing(false);
     }
+  };
+
+  const handleModelSelect = (modelId: string, modelLabel?: string) => {
+    setPreferredModel(modelId);
+    toasts.push({
+      kind: "success",
+      title: "Modell ausgewählt",
+      message: `${modelLabel ?? modelId} ist jetzt aktiv.`,
+    });
+  };
+
+  const handleFavoriteToggle = (modelId: string, modelLabel?: string, isFavorite: boolean) => {
+    toggleModelFavorite(modelId);
+    toasts.push({
+      kind: "info",
+      title: isFavorite ? "Favorit entfernt" : "Favorit hinzugefügt",
+      message: modelLabel ?? modelId,
+    });
   };
 
   const filtered = useMemo(() => {
@@ -292,11 +316,11 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     className="absolute inset-0 cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => setPreferredModel(model.id)}
+                    onClick={() => handleModelSelect(model.id, model.label)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        setPreferredModel(model.id);
+                        handleModelSelect(model.id, model.label);
                       }
                     }}
                     aria-label={`Modell ${model.label ?? model.id} auswählen`}
@@ -365,13 +389,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleModelFavorite(model.id);
+                      handleFavoriteToggle(model.id, model.label, isFavorite);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         e.stopPropagation();
-                        toggleModelFavorite(model.id);
+                        handleFavoriteToggle(model.id, model.label, isFavorite);
                       }
                     }}
                     aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
