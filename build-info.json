@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-253f4ca",
-  "buildTime": "2025-12-23T09:45:04.834Z",
-  "gitSha": "253f4cafbf222f0ae71118cd9d67dbd34c58d376",
-  "gitBranch": "main",
+  "buildId": "v1.0.2-abab53d",
+  "buildTime": "2025-12-24T16:47:59.782Z",
+  "gitSha": "abab53dc6d48fb0d49cc4dfc43fed39e4f28a60c",
+  "gitBranch": "claude/fix-role-selection-flow-xFXED",
   "version": "1.0.2"
 }

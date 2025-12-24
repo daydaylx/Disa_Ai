@@ -4,6 +4,7 @@ import { isAllowedModelId } from "../config/modelDefaults";
 import { DEFAULT_MODEL_ID } from "../config/modelPresets";
 import { STORAGE_KEYS } from "../config/storageKeys";
 import type { DiscussionPresetKey } from "../prompts/discussion/presets";
+import { themeController, type ThemePreference } from "../styles/theme";
 
 interface Settings {
   showNSFWContent: boolean;
@@ -42,6 +43,11 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
+
+function toThemePreference(theme: Settings["theme"]): ThemePreference {
+  // Settings UI uses "auto"; themeController uses "system"
+  return theme === "auto" ? "system" : theme;
+}
 
 function normalizePreferredModelId(modelId: string | undefined): string {
   const candidate = modelId ?? DEFAULT_MODEL_ID ?? "";
@@ -232,6 +238,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const setTheme = useCallback(
     (theme: Settings["theme"]) => {
       saveSettings({ theme });
+      // Sync with themeController to apply CSS classes (dark/light)
+      themeController.setPreference(toThemePreference(theme));
     },
     [saveSettings],
   );
@@ -318,7 +326,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Side effects
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.documentElement.dataset.theme = settings.theme;
+    // Sync themeController on settings change
+    themeController.setPreference(toThemePreference(settings.theme));
   }, [settings.theme]);
 
   useEffect(() => {

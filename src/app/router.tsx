@@ -206,6 +206,10 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
+      path: "/quickstarts",
+      element: <Navigate to="/themen" replace />,
+    },
+    {
       path: "*",
       element: <Navigate to="/" replace />,
     },

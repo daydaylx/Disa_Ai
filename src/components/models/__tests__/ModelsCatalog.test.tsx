@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadModelCatalog } from "@/config/models";
+import { ToastsProvider } from "@/ui";
 
 import { ModelCatalogProvider } from "../../../contexts/ModelCatalogContext";
 import { useModelCatalog } from "../../../contexts/ModelCatalogContext";
@@ -81,9 +82,11 @@ describe("ModelsCatalog", () => {
   const renderWithProviders = (component: React.ReactElement) => {
     return render(
       <MemoryRouter>
-        <SettingsProvider>
-          <ModelCatalogProvider>{component}</ModelCatalogProvider>
-        </SettingsProvider>
+        <ToastsProvider>
+          <SettingsProvider>
+            <ModelCatalogProvider>{component}</ModelCatalogProvider>
+          </SettingsProvider>
+        </ToastsProvider>
       </MemoryRouter>,
     );
   };
