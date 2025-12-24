@@ -177,7 +177,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
     });
   };
 
-  const handleFavoriteToggle = (modelId: string, modelLabel?: string, isFavorite: boolean) => {
+  const handleFavoriteToggle = (modelId: string, isFavorite: boolean, modelLabel?: string) => {
     toggleModelFavorite(modelId);
     toasts.push({
       kind: "info",
@@ -389,13 +389,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     )}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleFavoriteToggle(model.id, model.label, isFavorite);
+                      handleFavoriteToggle(model.id, isFavorite, model.label);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         e.stopPropagation();
-                        handleFavoriteToggle(model.id, model.label, isFavorite);
+                        handleFavoriteToggle(model.id, isFavorite, model.label);
                       }
                     }}
                     aria-label={isFavorite ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}
