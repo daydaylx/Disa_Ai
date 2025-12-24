@@ -207,7 +207,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortFnCallback,
   );
 
-  const handleActivateRole = useCallback(
+  const handleSelectRole = useCallback(
     (role: EnhancedRole) => {
       const legacyRole = {
         id: role.id,
@@ -221,10 +221,19 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       };
       setActiveRole(legacyRole);
       trackRoleUsage(role.id);
-      void navigate("/chat");
+      // Automatically expand details when role is selected
+      setExpandedRoles((prev) => {
+        const next = new Set(prev);
+        next.add(role.id);
+        return next;
+      });
     },
-    [setActiveRole, trackRoleUsage, navigate],
+    [setActiveRole, trackRoleUsage],
   );
+
+  const handleStartChat = useCallback(() => {
+    void navigate("/chat");
+  }, [navigate]);
 
   const toggleRoleExpansion = useCallback((roleId: string) => {
     setExpandedRoles((prev) => {
@@ -483,13 +492,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     {/* Invisible clickable overlay */}
                     <div
                       className="absolute inset-0 cursor-pointer pointer-events-auto z-0"
-                      onClick={() => handleActivateRole(role)}
+                      onClick={() => handleSelectRole(role)}
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
-                          handleActivateRole(role);
+                          handleSelectRole(role);
                         }
                       }}
                       aria-label={`Rolle ${role.name} auswählen`}
@@ -575,6 +584,26 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             {role.systemPrompt.slice(0, 200)}
                             {role.systemPrompt.length > 200 && "..."}
                           </div>
+                        )}
+
+                        {/* Start Chat Button - Only visible for active role */}
+                        {isActive && (
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartChat();
+                            }}
+                            className={cn(
+                              "w-full mt-2 font-semibold shadow-md transition-all",
+                              theme.text,
+                              theme.bg,
+                              theme.border,
+                              "hover:brightness-110 hover:scale-[1.02]",
+                            )}
+                            size="lg"
+                          >
+                            Chat starten
+                          </Button>
                         )}
                       </div>
                     </div>
