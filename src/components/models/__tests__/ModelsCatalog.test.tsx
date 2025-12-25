@@ -110,9 +110,11 @@ describe("ModelsCatalog", () => {
     expect(screen.getByText("OpenAI")).toBeInTheDocument();
     expect(screen.getByText("Anthropic")).toBeInTheDocument();
 
-    // Check for context length
-    expect(screen.getByText("128k")).toBeInTheDocument();
-    expect(screen.getByText("200k")).toBeInTheDocument();
+    // Check for context length (rendered as "128k" and "200k" in the provider · context · pricing line)
+    await waitFor(() => {
+      expect(screen.getByText(/128k/i)).toBeInTheDocument();
+    });
+    expect(screen.getByText(/200k/i)).toBeInTheDocument();
   });
 
   it("should filter models when searching", async () => {
