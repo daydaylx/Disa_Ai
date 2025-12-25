@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-abab53d",
-  "buildTime": "2025-12-24T16:47:59.782Z",
-  "gitSha": "abab53dc6d48fb0d49cc4dfc43fed39e4f28a60c",
-  "gitBranch": "claude/fix-role-selection-flow-xFXED",
+  "buildId": "v1.0.2-a3ccb4b",
+  "buildTime": "2025-12-25T15:17:07.008Z",
+  "gitSha": "a3ccb4bb872d0b0c9afb9340c07f66979ec75e41",
+  "gitBranch": "claude/upgrade-models-page-design-6Ham9",
   "version": "1.0.2"
 }
