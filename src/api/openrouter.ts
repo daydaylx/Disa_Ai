@@ -198,7 +198,9 @@ async function chatStreamDirect(
       }
 
       const reader = res.body?.getReader();
-      if (!reader) return;
+      if (!reader) {
+        throw new Error("Response stream not available - body is null or cannot be read");
+      }
 
       const decoder = new TextDecoder();
       let buffer = "";
