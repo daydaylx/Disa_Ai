@@ -286,7 +286,12 @@ export class StorageMigration {
 
     // Ensure required fields have default values
     if (!sanitized.id) {
-      sanitized.id = Math.random().toString(36).substring(2, 15);
+      // Use crypto.randomUUID() for cryptographically secure ID generation
+      // Falls back to less secure method if crypto API is not available
+      sanitized.id =
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 15)}`;
     }
 
     if (!sanitized.title) {

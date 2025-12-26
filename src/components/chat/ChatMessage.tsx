@@ -21,15 +21,29 @@ interface ChatMessageProps {
 
 function CodeBlock({ children, language }: { children: string; language?: string }) {
   const [copied, setCopied] = useState(false);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { elementRef, isVisible } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
     triggerOnce: true,
   });
 
+  // Cleanup timeout on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleCopy = () => {
     void navigator.clipboard?.writeText(children).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    // Clear any existing timeout before setting a new one
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -111,6 +125,7 @@ export function ChatMessage({
   const [editContent, setEditContent] = useState(message.content);
   const [copied, setCopied] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { elementRef, isVisible } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
     triggerOnce: true,
@@ -126,6 +141,15 @@ export function ChatMessage({
     }
   }, [isEditing]);
 
+  // Cleanup copy timeout on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Memoize parsing to avoid re-parsing on every render
   const parsedContent = useMemo(() => parseMessageContent(message.content), [message.content]);
 
@@ -133,7 +157,11 @@ export function ChatMessage({
     onCopy?.(message.content);
     void navigator.clipboard?.writeText(message.content).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    // Clear any existing timeout before setting a new one
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   };
 
   const handleRetry = () => {

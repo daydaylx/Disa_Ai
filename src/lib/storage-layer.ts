@@ -242,18 +242,20 @@ export class ModernStorageLayer {
       const totalConversations = conversations.length;
 
       let totalMessages = 0;
-      const modelsUsed: string[] = [];
+      // Use Set for O(1) lookup instead of O(n) array.includes()
+      const modelsUsedSet = new Set<string>();
 
       for (const conversation of conversations) {
         if (conversation.messages) {
           totalMessages += conversation.messages.length;
         }
 
-        if (!modelsUsed.includes(conversation.model)) {
-          modelsUsed.push(conversation.model);
+        if (conversation.model) {
+          modelsUsedSet.add(conversation.model);
         }
       }
 
+      const modelsUsed = Array.from(modelsUsedSet);
       const averageMessagesPerConversation =
         totalConversations > 0 ? totalMessages / totalConversations : 0;
 
