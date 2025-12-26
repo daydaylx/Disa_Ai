@@ -29,6 +29,7 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
+  const hasHydrated = React.useRef(false);
 
   // Load roles immediately from persona.json
   // IMPORTANT: immediate: true ensures roles are loaded on app start
@@ -49,8 +50,10 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const roles = loadedRoles || getRoles();
 
   // Hydrate active role from localStorage once roles are available
+  // IMPORTANT: Only hydrate once to prevent resetting state on navigation
   React.useEffect(() => {
-    if (!roles.length) return;
+    if (!roles.length || hasHydrated) return;
+
     const stored = (() => {
       try {
         return localStorage.getItem(LS_ACTIVE_ROLE_KEY);
@@ -70,7 +73,9 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else {
       setActiveRoleState(STANDARD_ROLE);
     }
-  }, [roles]);
+
+    setHasHydrated(true);
+  }, [roles, hasHydrated]);
 
   const setActiveRole = useCallback(
     (role: UIRole | null) => {

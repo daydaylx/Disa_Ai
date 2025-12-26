@@ -221,14 +221,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       };
       setActiveRole(legacyRole);
       trackRoleUsage(role.id);
-      // Automatically expand details when role is selected
-      setExpandedRoles((prev) => {
-        const next = new Set(prev);
-        next.add(role.id);
-        return next;
-      });
+      // Navigate to chat after selecting role
+      void navigate("/chat");
     },
-    [setActiveRole, trackRoleUsage],
+    [setActiveRole, trackRoleUsage, navigate],
   );
 
   const handleStartChat = useCallback(() => {
