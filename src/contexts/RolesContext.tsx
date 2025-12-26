@@ -29,7 +29,7 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [typographyScale, setTypographyScale] = useState(1);
   const [borderRadius, setBorderRadius] = useState(0.5);
   const [accentColor, setAccentColor] = useState("hsl(var(--primary))");
-  const [hasHydrated, setHasHydrated] = useState(false);
+  const hasHydrated = React.useRef(false);
 
   // Load roles immediately from persona.json
   // IMPORTANT: immediate: true ensures roles are loaded on app start
