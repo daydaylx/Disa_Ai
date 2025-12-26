@@ -111,7 +111,9 @@ export function VirtualizedMessageList({
     requestAnimationFrame(() => {
       try {
         rowVirtualizer.scrollToIndex(messages.length - 1, { align: "end" });
-      } catch {
+      } catch (error) {
+        // Log the error for debugging before falling back
+        console.warn("[VirtualizedMessageList] scrollToIndex failed, using fallback:", error);
         scrollToBottom("instant");
       }
     });
