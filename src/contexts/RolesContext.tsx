@@ -52,7 +52,7 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Hydrate active role from localStorage once roles are available
   // IMPORTANT: Only hydrate once to prevent resetting state on navigation
   React.useEffect(() => {
-    if (!roles.length || hasHydrated) return;
+    if (!roles.length || hasHydrated.current) return;
 
     const stored = (() => {
       try {
@@ -74,8 +74,8 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setActiveRoleState(STANDARD_ROLE);
     }
 
-    setHasHydrated(true);
-  }, [roles, hasHydrated]);
+    hasHydrated.current = true;
+  }, [roles]);
 
   const setActiveRole = useCallback(
     (role: UIRole | null) => {
