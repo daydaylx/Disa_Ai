@@ -298,7 +298,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
+      <div className="flex-none sticky top-[4rem] z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Roles accent (Pink) or Selected Category */}
           <div

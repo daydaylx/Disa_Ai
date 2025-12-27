@@ -6,7 +6,7 @@ import { Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
-import { useMenuDrawer } from "./AppMenuDrawer";
+import { AppMenuDrawer, useMenuDrawer, useMenuDrawerContext } from "./AppMenuDrawer";
 
 export interface PageLayoutProps {
   children: ReactNode;
@@ -63,8 +63,11 @@ export function PageLayout({
   showMenu = true,
   onMenuClick: customOnMenuClick,
 }: PageLayoutProps) {
-  const { openMenu } = useMenuDrawer();
-  const handleMenuClick = customOnMenuClick ?? openMenu;
+  const menuDrawerContext = useMenuDrawerContext();
+  const fallbackMenuDrawer = useMenuDrawer();
+  const handleMenuClick =
+    customOnMenuClick ?? menuDrawerContext?.openMenu ?? fallbackMenuDrawer.openMenu;
+  const shouldRenderFallbackDrawer = !customOnMenuClick && !menuDrawerContext && showMenu;
 
   // Map accent colors to gradient classes
   const accentGradient = {
@@ -129,6 +132,9 @@ export function PageLayout({
       >
         {children}
       </div>
+      {shouldRenderFallbackDrawer ? (
+        <AppMenuDrawer isOpen={fallbackMenuDrawer.isOpen} onClose={fallbackMenuDrawer.closeMenu} />
+      ) : null}
     </div>
   );
 }

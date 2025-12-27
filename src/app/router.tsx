@@ -48,7 +48,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/",
       element: (
-        <RouteWrapper>
+        <RouteWrapper layout="page">
           <ChatPage />
         </RouteWrapper>
       ),
@@ -56,7 +56,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/chat",
       element: (
-        <RouteWrapper>
+        <RouteWrapper layout="page">
           <ChatPage />
         </RouteWrapper>
       ),
@@ -68,7 +68,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/roles",
       element: (
-        <RouteWrapper pageHeaderTitle="Rollen & Personas">
+        <RouteWrapper layout="page">
           <RolesPage />
         </RouteWrapper>
       ),
@@ -76,10 +76,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/chat/history",
       element: (
-        <RouteWrapper
-          pageHeaderTitle="Verlauf"
-          pageHeaderActions={<HeaderBackAction fallbackTo="/chat" />}
-        >
+        <RouteWrapper layout="page">
           <ChatHistoryPage />
         </RouteWrapper>
       ),
@@ -87,7 +84,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/themen",
       element: (
-        <RouteWrapper>
+        <RouteWrapper layout="page">
           <ThemenPage />
         </RouteWrapper>
       ),
@@ -95,7 +92,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/models",
       element: (
-        <RouteWrapper pageHeaderTitle="Modelle">
+        <RouteWrapper layout="page">
           <ModelsPage />
         </RouteWrapper>
       ),

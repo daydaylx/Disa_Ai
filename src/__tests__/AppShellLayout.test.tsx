@@ -18,6 +18,7 @@ vi.mock("react-router-dom", async () => {
 
 vi.mock("../components/layout/AppMenuDrawer", () => ({
   AppMenuDrawer: () => <div data-testid="menu-drawer" />,
+  MenuDrawerProvider: ({ children }: { children: any }) => <div>{children}</div>,
   MenuIcon: () => <button>Menu</button>,
   useMenuDrawer: () => ({ isOpen: false, openMenu: vi.fn(), closeMenu: vi.fn() }),
 }));

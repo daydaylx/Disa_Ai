@@ -1,5 +1,5 @@
-import type { KeyboardEvent as ReactKeyboardEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 
@@ -15,6 +15,29 @@ interface AppMenuDrawerProps {
   className?: string;
   navItems?: AppNavItem[];
   secondaryItems?: AppNavItem[];
+}
+
+type MenuDrawerControls = {
+  isOpen: boolean;
+  openMenu: () => void;
+  closeMenu: () => void;
+  toggleMenu: () => void;
+};
+
+const MenuDrawerContext = createContext<MenuDrawerControls | null>(null);
+
+export function MenuDrawerProvider({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: MenuDrawerControls;
+}) {
+  return <MenuDrawerContext.Provider value={value}>{children}</MenuDrawerContext.Provider>;
+}
+
+export function useMenuDrawerContext() {
+  return useContext(MenuDrawerContext);
 }
 
 export function AppMenuDrawer({
@@ -299,7 +322,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
 }
 
 // Hook for Menu State Management
-export function useMenuDrawer() {
+export function useMenuDrawer(): MenuDrawerControls {
   const [isOpen, setIsOpen] = useState(false);
 
   const openMenu = () => setIsOpen(true);

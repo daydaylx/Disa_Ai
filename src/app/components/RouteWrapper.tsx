@@ -8,11 +8,21 @@ interface RouteWrapperProps {
   children: ReactNode;
   pageHeaderTitle?: string;
   pageHeaderActions?: ReactNode;
+  layout?: "shell" | "page";
 }
 
-export function RouteWrapper({ children, pageHeaderTitle, pageHeaderActions }: RouteWrapperProps) {
+export function RouteWrapper({
+  children,
+  pageHeaderTitle,
+  pageHeaderActions,
+  layout,
+}: RouteWrapperProps) {
   return (
-    <AppShell pageHeaderTitle={pageHeaderTitle} pageHeaderActions={pageHeaderActions}>
+    <AppShell
+      pageHeaderTitle={pageHeaderTitle}
+      pageHeaderActions={pageHeaderActions}
+      layout={layout}
+    >
       <ErrorBoundary>
         <Suspense fallback={<FullPageLoader message="Seite wird geladen" />}>{children}</Suspense>
       </ErrorBoundary>
