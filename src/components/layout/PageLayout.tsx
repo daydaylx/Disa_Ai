@@ -1,8 +1,9 @@
 import { type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { BrandWordmark } from "@/app/components/BrandWordmark";
-import { Menu } from "@/lib/icons";
+import { Bookmark, Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -41,6 +42,11 @@ export interface PageLayoutProps {
    * Custom menu click handler (if not provided, uses AppMenuDrawer hook)
    */
   onMenuClick?: () => void;
+  /**
+   * Whether to show the history button when no custom header actions are provided.
+   * @default true
+   */
+  showHistoryButton?: boolean;
 }
 
 /**
@@ -62,12 +68,27 @@ export function PageLayout({
   accentColor = "chat",
   showMenu = true,
   onMenuClick: customOnMenuClick,
+  showHistoryButton = true,
 }: PageLayoutProps) {
   const menuDrawerContext = useMenuDrawerContext();
   const fallbackMenuDrawer = useMenuDrawer();
+  const navigate = useNavigate();
   const handleMenuClick =
     customOnMenuClick ?? menuDrawerContext?.openMenu ?? fallbackMenuDrawer.openMenu;
   const shouldRenderFallbackDrawer = !customOnMenuClick && !menuDrawerContext && showMenu;
+  const resolvedHeaderActions =
+    headerActions ??
+    (showHistoryButton ? (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => void navigate("/chat/history")}
+        aria-label="Verlauf öffnen"
+        className="text-ink-primary hover:bg-surface-2 transition-colors"
+      >
+        <Bookmark className="h-5 w-5" />
+      </Button>
+    ) : null);
 
   // Map accent colors to gradient classes
   const accentGradient = {
@@ -119,7 +140,7 @@ export function PageLayout({
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-2 pr-safe-right">{headerActions}</div>
+          <div className="flex items-center gap-2 pr-safe-right">{resolvedHeaderActions}</div>
         </div>
       </header>
 
