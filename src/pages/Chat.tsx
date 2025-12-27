@@ -59,7 +59,7 @@ export default function Chat() {
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
-  const { isOpen: isMenuOpen, closeMenu } = useMenuDrawer();
+  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
 
   // Deduplicate prompts with strict text normalization
@@ -132,6 +132,7 @@ export default function Chat() {
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         logoState={getLogoState()}
         accentColor="chat"
+        onMenuClick={openMenu}
         headerActions={
           <Button
             variant="secondary"
