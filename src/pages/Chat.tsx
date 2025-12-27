@@ -10,7 +10,7 @@ import { Card } from "@/ui/Card";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
-import { ChatLayout } from "../components/layout/ChatLayout";
+import { PageLayout } from "../components/layout/PageLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
@@ -59,7 +59,7 @@ export default function Chat() {
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
-  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+  const { isOpen: isMenuOpen, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
 
   // Deduplicate prompts with strict text normalization
@@ -128,10 +128,10 @@ export default function Chat() {
 
   return (
     <>
-      <ChatLayout
+      <PageLayout
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
-        onMenuClick={openMenu}
         logoState={getLogoState()}
+        accentColor="chat"
         headerActions={
           <Button
             variant="secondary"
@@ -165,6 +165,7 @@ export default function Chat() {
           </Button>
         }
       >
+        <h1 className="sr-only">Disa AI – Chat</h1>
         <div
           className="flex flex-col relative w-full"
           style={{
@@ -193,7 +194,7 @@ export default function Chat() {
                     {/* Hero Card - Disa Frame Branding System with Enhanced Colors */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
-                        variant="tintedSoft"
+                        variant="hero"
                         notch="cutout"
                         notchSize="lg" // 24px for hero visibility (increased from 22px)
                         tintColor="rgb(var(--tint-color-rgb-default))"
@@ -351,7 +352,7 @@ export default function Chat() {
             </div>
           </div>
         </div>
-      </ChatLayout>
+      </PageLayout>
 
       {/* Global Menu */}
       <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />

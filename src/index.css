@@ -409,6 +409,33 @@
     @apply bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all shadow-inner;
   }
 
+  /* Brand Color Utilities - Consistent brand color usage */
+  .text-brand {
+    @apply text-brand-primary;
+  }
+
+  .bg-brand {
+    @apply bg-brand-primary;
+  }
+
+  .border-brand {
+    @apply border-brand-primary;
+  }
+
+  .ring-brand {
+    @apply ring-brand-primary;
+  }
+
+  /* Focus utilities with brand colors */
+  .focus-brand {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-2;
+  }
+
+  /* Hover utilities with brand colors */
+  .hover-brand {
+    @apply hover:text-brand-primary hover:border-brand-primary/30;
+  }
+
   .mask-linear-fade {
     mask-image: linear-gradient(
       to right,

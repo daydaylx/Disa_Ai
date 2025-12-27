@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 const cardVariants = cva("relative rounded-2xl border transition-all duration-300", {
   variants: {
     variant: {
+      // Standard variants
       default: "bg-surface-1/60 backdrop-blur-md border-white/[0.12] shadow-sm", // Glassy standard - visible border
       flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none",
       outline: "bg-transparent border-white/10",
@@ -15,6 +16,8 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       inset: "bg-black/20 border-black/10 shadow-inner",
       premium:
         "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden",
+      // Hero variant for empty states and landing pages
+      hero: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Hero cards with notch support
       // Disa Frame Branding System variants
       plain: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Minimal border (12% opacity - visible)
       tintedSoft: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Global cards with soft tint
@@ -108,7 +111,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     // Determine tint strength - Disa Frame Branding System
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tintedSoft" || variant === "tinted") return "var(--tint-alpha-soft)"; // Global cards: 0.06-0.10
+      if (variant === "tintedSoft" || variant === "tinted" || variant === "hero")
+        return "var(--tint-alpha-soft)"; // Global cards: 0.06-0.10
       if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: 0.20-0.35
       return "0";
     }, [variant]);
@@ -149,7 +153,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
 
         {/* Tint Overlay - Gradient with proper geometry (0-18% strongest, fade until 65%) */}
-        {(variant === "tintedSoft" || variant === "tinted" || variant === "roleStrong") && (
+        {(variant === "tintedSoft" ||
+          variant === "tinted" ||
+          variant === "roleStrong" ||
+          variant === "hero") && (
           <div
             className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden"
             style={{

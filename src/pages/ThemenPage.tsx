@@ -7,12 +7,13 @@ import { AlertTriangle, ArrowRight, Brain } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge, Button, Card, PageHeader } from "@/ui";
 
+import { PageLayout } from "../components/layout/PageLayout";
+
 const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
 const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwörungstheorien");
 
 export default function ThemenPage() {
   const navigate = useNavigate();
-  const headerTheme = getCategoryStyle("Spezial");
 
   const handleStartQuickstart = (quickstart: Quickstart) => {
     void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
@@ -93,70 +94,59 @@ export default function ThemenPage() {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4 px-4 sm:px-6">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Chat accent for discussion topics */}
-          <div
-            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
-            style={{ background: headerTheme.roleGradient }}
-          />
+    <PageLayout accentColor="chat">
+      <div className="flex flex-col h-full">
+        {/* Page Header */}
+        <PageHeader
+          title="Themen & Diskussionen"
+          description="Wähle ein Thema, um eine Diskussion mit Disa zu starten."
+        />
 
-          <div className="relative p-4 sm:p-5">
-            <PageHeader
-              title="Themen & Diskussionen"
-              description="Wähle ein Thema, um eine Diskussion mit Disa zu starten."
-              className="mb-0"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-8">
-        {/* Regular Discussions */}
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
-            Diskussionen
-          </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {regularDiscussions.map(renderCard)}
-          </div>
-        </section>
-
-        {/* Conspiracy Theories Section */}
-        {conspiracyDiscussions.length > 0 && (
+        {/* Content Zone - Scrollable List */}
+        <div className="flex-1 overflow-y-auto space-y-8">
+          {/* Regular Discussions */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2 px-1">
-              <AlertTriangle className="h-4 w-4 text-status-warning" />
-              <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">
-                Verschwörungstheorien
-              </h2>
-              <Badge
-                variant="outline"
-                className="ml-auto border-status-warning/30 text-status-warning text-[10px] h-5"
-              >
-                Kontrovers
-              </Badge>
-            </div>
+            <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
+              Diskussionen
+            </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {conspiracyDiscussions.map(renderCard)}
+              {regularDiscussions.map(renderCard)}
             </div>
           </section>
-        )}
 
-        {/* Back to Chat Action */}
-        <div className="pt-8 pb-4 flex justify-center">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/")}
-            className="text-ink-secondary hover:text-ink-primary"
-          >
-            ← Zurück zum Chat
-          </Button>
+          {/* Conspiracy Theories Section */}
+          {conspiracyDiscussions.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <AlertTriangle className="h-4 w-4 text-status-warning" />
+                <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">
+                  Verschwörungstheorien
+                </h2>
+                <Badge
+                  variant="outline"
+                  className="ml-auto border-status-warning/30 text-status-warning text-[10px] h-5"
+                >
+                  Kontrovers
+                </Badge>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {conspiracyDiscussions.map(renderCard)}
+              </div>
+            </section>
+          )}
+
+          {/* Back to Chat Action */}
+          <div className="pt-8 pb-4 flex justify-center">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/")}
+              className="text-ink-secondary hover:text-ink-primary"
+            >
+              ← Zurück zum Chat
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
