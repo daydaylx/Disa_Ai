@@ -41,6 +41,10 @@
   - EXIF-Metadaten werden entfernt
   - Rate-Limiting bleibt bestehen (3 Min. Cooldown)
 
+### Patch Changes
+
+- Optimize mobile menu glassmorphism: increased transparency and adjusted blur for better aesthetics.
+
 ## 1.0.2
 
 ### Patch Changes

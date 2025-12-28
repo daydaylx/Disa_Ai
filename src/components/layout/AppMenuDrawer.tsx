@@ -159,9 +159,10 @@ export function AppMenuDrawer({
       <div
         className={cn(
           "absolute top-0 bottom-0 left-0 w-[85vw] max-w-[360px]",
-          "glass-3 border-r border-white/10 backdrop-blur-3xl",
+          "glass-3 border-r border-white/5 backdrop-blur-md",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
+          "bg-[rgba(8,8,10,0.6)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
