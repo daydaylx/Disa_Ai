@@ -153,16 +153,15 @@ export function AppMenuDrawer({
 
   const drawerContent = (
     <div
-      className="fixed inset-0 z-drawer bg-black/30 backdrop-blur-xl animate-in fade-in duration-200"
+      className="fixed inset-0 z-drawer bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
         className={cn(
           "absolute top-0 bottom-0 left-0 w-[85vw] max-w-[360px]",
-          "glass-3 border-r border-white/5 backdrop-blur-2xl",
+          "glass-3 border-r border-white/10 backdrop-blur-3xl",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
-          "bg-[rgba(8,8,10,0.75)]",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
@@ -173,8 +172,8 @@ export function AppMenuDrawer({
         aria-label="Navigationsmenü"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 bg-white/[0.02]">
-          <BrandWordmark className="text-base text-white/90" />
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/20">
+          <BrandWordmark className="text-base text-white" />
           <button
             onClick={onClose}
             ref={closeButtonRef}
@@ -273,8 +272,8 @@ export function AppMenuDrawer({
         </nav>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-white/5 bg-white/[0.02]">
-          <p className="text-[10px] text-white/30 text-center uppercase tracking-widest">
+        <div className="px-5 py-4 border-t border-white/10 bg-black/20">
+          <p className="text-[10px] text-white/40 text-center uppercase tracking-widest">
             © 2025 Disa AI
           </p>
         </div>
