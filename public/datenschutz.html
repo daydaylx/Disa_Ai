@@ -12,6 +12,7 @@
         --text-primary: #f8fafc;
         --text-secondary: #cbd5e1;
         --border: #334155;
+        --accent: #60a5fa;
       }
 
       body {
@@ -46,12 +47,14 @@
 
       h2 {
         font-size: 1.5rem;
-        margin: 1.5rem 0 1rem 0;
+        margin: 2rem 0 1rem 0;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
       }
 
       h3 {
         font-size: 1.25rem;
-        margin: 1.25rem 0 0.75rem 0;
+        margin: 1.5rem 0 0.75rem 0;
       }
 
       p {
@@ -68,7 +71,7 @@
       }
 
       a {
-        color: #60a5fa;
+        color: var(--accent);
         text-decoration: none;
       }
 
@@ -79,6 +82,51 @@
       .back-link {
         display: inline-block;
         margin-bottom: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        border: 1px solid var(--border);
+        padding: 0.5rem;
+        text-align: left;
+      }
+
+      th {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .highlight-box {
+        background-color: rgba(96, 165, 250, 0.1);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      .warning-box {
+        background-color: rgba(251, 191, 36, 0.1);
+        border: 1px solid #fbbf24;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+
+      strong {
+        color: var(--text-primary);
+      }
+
+      footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        text-align: center;
+        color: var(--text-secondary);
       }
     </style>
   </head>
@@ -98,12 +146,16 @@
           Datenschutzgesetze ist:
         </p>
         <p>
-          David Grunert<br />
+          <strong>David Grunert</strong><br />
           Graßdorfer Straße 9<br />
           04425 Taucha<br />
           Deutschland
         </p>
-        <p>E-Mail: grunert94@hotmail.com</p>
+        <p>E-Mail: <a href="mailto:grunert94@hotmail.com">grunert94@hotmail.com</a></p>
+        <p>
+          Ein Datenschutzbeauftragter ist nicht bestellt, da die Voraussetzungen des Art. 37 DSGVO
+          nicht erfüllt sind.
+        </p>
 
         <h2>2. Allgemeines zur Datenverarbeitung</h2>
         <p>
@@ -116,276 +168,440 @@
           identifizierbare Person beziehen (z. B. IP-Adresse, E-Mail-Adresse, Inhalte von
           Nachrichten).
         </p>
-        <p>Rechtsgrundlagen der Verarbeitung sind insbesondere:</p>
+        <h3>Rechtsgrundlagen der Verarbeitung</h3>
         <ul>
-          <li>Art. 6 Abs. 1 lit. b DSGVO (Vertrag / Nutzung der angebotenen Funktionen)</li>
           <li>
-            Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse, z. B. sichere und stabile
-            Bereitstellung der Website)
+            <strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Erfüllung eines Vertrags bzw.
+            Bereitstellung der angeforderten Funktionen
           </li>
-          <li>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), sofern du diese ausdrücklich erteilst</li>
+          <li>
+            <strong>Art. 6 Abs. 1 lit. f DSGVO:</strong> Wahrung berechtigter Interessen (z. B.
+            sichere und stabile Bereitstellung der Website, Schutz vor Missbrauch)
+          </li>
+          <li>
+            <strong>Art. 6 Abs. 1 lit. a DSGVO:</strong> Einwilligung, sofern du diese ausdrücklich
+            erteilst
+          </li>
         </ul>
 
         <h2>3. Bereitstellung der Website und Server-Logfiles</h2>
         <p>
-          Beim Aufruf von disaai.de werden automatisch technische Daten durch den von mir genutzten
-          Hosting- bzw. CDN-Anbieter verarbeitet. Dazu gehören insbesondere:
+          Beim Aufruf von disaai.de werden automatisch technische Daten durch den Hosting- bzw.
+          CDN-Anbieter verarbeitet:
         </p>
         <ul>
           <li>IP-Adresse des anfragenden Endgeräts</li>
           <li>Datum und Uhrzeit des Zugriffs</li>
-          <li>aufgerufene URL / angefragte Ressourcen</li>
-          <li>übertragene Datenmenge</li>
-          <li>verwendeter Browser und Betriebssystem (User-Agent)</li>
+          <li>Aufgerufene URL / angefragte Ressourcen</li>
+          <li>Übertragene Datenmenge</li>
+          <li>Verwendeter Browser und Betriebssystem (User-Agent)</li>
           <li>Referrer-URL (die zuvor besuchte Seite, sofern übertragen)</li>
         </ul>
-        <p>Diese Daten werden in Server-Logfiles verarbeitet, um:</p>
-        <ul>
-          <li>die Website technisch bereitzustellen</li>
-          <li>Stabilität und Sicherheit zu gewährleisten</li>
-          <li>Missbrauch / Angriffe zu erkennen und abzuwehren</li>
-        </ul>
         <p>
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt in einer
-          sicheren und funktionsfähigen Bereitstellung der Website.
+          <strong>Zweck:</strong> Technische Bereitstellung der Website, Gewährleistung von
+          Stabilität und Sicherheit, Erkennung und Abwehr von Missbrauch/Angriffen.
         </p>
         <p>
-          Die Logdaten werden vom Hoster bzw. CDN-Anbieter in der Regel für einen begrenzten
-          Zeitraum gespeichert und danach automatisch gelöscht. Die konkrete Speicherdauer bestimmt
-          der jeweilige Anbieter.
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse
+          liegt in der sicheren und funktionsfähigen Bereitstellung der Website.
+        </p>
+        <p>
+          <strong>Speicherdauer:</strong> Server-Logfiles werden für maximal 7 Tage gespeichert und
+          danach automatisch gelöscht.
         </p>
 
-        <h3>Einsatz von Content Delivery Network / Hosting-Anbieter</h3>
+        <h3>Content Delivery Network: Cloudflare</h3>
         <p>
-          Für die Auslieferung der Website kann ein Content Delivery Network (z. B. Cloudflare)
-          genutzt werden. Dabei werden technische Verbindungsdaten (insbesondere IP-Adresse,
-          Protokoll- und Performance-Daten) über die Infrastruktur des Anbieters verarbeitet, um die
-          Seite schnell und sicher auszuliefern.
+          Für die Auslieferung der Website nutze ich <strong>Cloudflare, Inc.</strong> (101 Townsend
+          St, San Francisco, CA 94107, USA). Cloudflare ist ein Content Delivery Network, das die
+          Website schnell und sicher ausliefert und vor Angriffen schützt.
+        </p>
+        <p><strong>Verarbeitete Daten:</strong> IP-Adresse, Protokoll- und Performance-Daten, technische Cookies zur Sicherheit.</p>
+        <p><strong>Cookies durch Cloudflare:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Cookie</th>
+              <th>Zweck</th>
+              <th>Speicherdauer</th>
+              <th>Kategorie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>__cf_bm</code></td>
+              <td>Bot-Erkennung und Schutz</td>
+              <td>30 Minuten</td>
+              <td>Technisch notwendig</td>
+            </tr>
+            <tr>
+              <td><code>cf_clearance</code></td>
+              <td>CAPTCHA-Validierung (nur bei Verdacht)</td>
+              <td>max. 24 Stunden</td>
+              <td>Technisch notwendig</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
+          sicherer Website-Bereitstellung). Für die technisch notwendigen Cookies gilt § 25 Abs. 2
+          Nr. 2 TTDSG (keine Einwilligung erforderlich).
         </p>
         <p>
-          Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
-          Interesse an einer sicheren und effizienten Bereitstellung der Website). Soweit dabei
-          Daten in Drittländer (z. B. USA) übertragen werden, erfolgt dies auf Basis der vom
-          Anbieter eingesetzten Schutzmechanismen (z. B. Standardvertragsklauseln).
+          <strong>Datenübermittlung in die USA:</strong> Cloudflare, Inc. ist unter dem
+          <strong>EU-U.S. Data Privacy Framework</strong> zertifiziert. Dadurch besteht ein
+          Angemessenheitsbeschluss der EU-Kommission für Datenübermittlungen an zertifizierte
+          US-Unternehmen.
+        </p>
+        <p>
+          Weitere Informationen:
+          <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer"
+            >Cloudflare Datenschutzerklärung</a
+          >
         </p>
 
         <h2>4. Nutzung der KI-Funktion („Disa AI")</h2>
 
-        <h3>4.1 Verarbeitung der Eingaben (Prompts) und Antworten</h3>
-        <p>
-          Wenn du die KI-Funktion der App nutzt, verarbeitest du aktiv Inhalte, indem du Texte
-          eingibst („Prompts"). Diese Inhalte werden:
-        </p>
+        <h3>4.1 Verarbeitung der Eingaben und Antworten</h3>
+        <p>Wenn du die KI-Funktion nutzt, werden folgende Daten verarbeitet:</p>
         <ul>
-          <li>in deinem Browser verarbeitet (Anzeige im Interface), und</li>
+          <li>Von dir eingegebene Texte (Prompts, Verlaufsnachrichten)</li>
           <li>
-            an die Schnittstelle des Dienstleisters OpenRouter, Inc. übermittelt, um eine KI-Antwort
-            zu erzeugen.
+            Technisch erforderliche Metadaten (IP-Adresse, Zeitstempel, Modellkennung, Tokenanzahl)
           </li>
+          <li>Die vom KI-Modell generierte Antwort</li>
         </ul>
-        <p>Dabei werden insbesondere folgende Daten verarbeitet:</p>
-        <ul>
-          <li>von dir eingegebene Texte (Prompts, Verlaufsnachrichten)</li>
-          <li>
-            technisch erforderliche Metadaten (z. B. IP-Adresse, Zeitstempel, Modellkennung,
-            Tokenanzahl)
-          </li>
-          <li>die vom KI-Modell generierte Antwort</li>
-        </ul>
+        <p><strong>Zweck:</strong> Bereitstellung der Kernfunktion (KI-Chat).</p>
         <p>
-          Die Verarbeitung ist erforderlich, um dir die Kernfunktion der Website (KI-Chat) zur
-          Verfügung zu stellen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung eines
-          Nutzungsverhältnisses / bereitgestellte Funktion).
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der
+          angeforderten Funktion).
         </p>
 
         <h3>4.2 Einsatz von OpenRouter</h3>
         <p>
-          Zur Anbindung verschiedener KI-Modelle nutze ich den Dienst OpenRouter (OpenRouter, Inc.).
-          Bei Nutzung der KI-Funktion werden deine Anfragen per API an OpenRouter übermittelt.
-          OpenRouter verarbeitet hierfür Request-Metadaten und leitet deine Inhalte an die von dir
-          bzw. von mir konfigurierte(n) Modellanbieter weiter.
+          Zur Anbindung verschiedener KI-Modelle nutze ich den Dienst <strong>OpenRouter</strong>
+          (OpenRouter, Inc., USA). Bei Nutzung der KI-Funktion werden deine Anfragen per API an
+          OpenRouter übermittelt.
         </p>
-        <p>Nach aktuellen Angaben von OpenRouter werden:</p>
+        <p><strong>Datenverarbeitung durch OpenRouter:</strong></p>
         <ul>
-          <li>Prompts und Completions standardmäßig nicht dauerhaft geloggt,</li>
+          <li>Prompts und Completions werden laut OpenRouter standardmäßig nicht dauerhaft geloggt</li>
           <li>
-            es werden jedoch Metadaten (z. B. Timestamp, verwendetes Modell, Tokenanzahl) zu
-            Abrechnungs- und Statistikzwecken gespeichert.
+            Metadaten (Timestamp, verwendetes Modell, Tokenanzahl) werden zu Abrechnungs- und
+            Statistikzwecken gespeichert
+          </li>
+          <li>
+            OpenRouter leitet Anfragen an die konfigurierten Modellanbieter weiter, die eigene
+            Datenschutzrichtlinien haben
+          </li>
+        </ul>
+        <p><strong>Datenübermittlung in die USA:</strong> Die Datenübermittlung an OpenRouter erfolgt auf Grundlage von:</p>
+        <ul>
+          <li><strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Nutzung der KI-Funktion auf deinen Wunsch)</li>
+          <li>
+            <strong>Standardvertragsklauseln (SCCs)</strong> gemäß Art. 46 Abs. 2 lit. c DSGVO
           </li>
         </ul>
         <p>
-          Jeder über OpenRouter angebundene Modellanbieter hat eigene Datenschutz- und
-          Logging-Regeln. OpenRouter stellt Informationen zu den jeweiligen Datenrichtlinien bereit
-          und ermöglicht eine Steuerung, welche Anbieter genutzt werden.
-        </p>
-        <p>
-          Die Verarbeitung kann in Drittländern (insbesondere USA und anderen Staaten außerhalb der
-          EU/EWR) stattfinden. Dort besteht ggf. kein mit der EU vergleichbares Datenschutzniveau.
-          Rechtsgrundlage für diese Übermittlung ist:
-        </p>
-        <ul>
-          <li>Art. 6 Abs. 1 lit. b DSGVO (Nutzung der KI-Funktion auf deinen Wunsch),</li>
-          <li>
-            ggf. Art. 49 Abs. 1 lit. a DSGVO, sofern du im Einzelfall ausdrückliche Einwilligungen
-            erteilst.
-          </li>
-        </ul>
-        <p>
-          Weitere Informationen findest du in der Datenschutzerklärung von OpenRouter:<br />
+          Weitere Informationen:
           <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener noreferrer"
-            >https://openrouter.ai/privacy</a
+            >OpenRouter Privacy Policy</a
           >
         </p>
 
-        <h3>4.3 Sensible und vertrauliche Inhalte</h3>
-        <p>
-          Bitte gib in der KI-Funktion keine besonders sensiblen personenbezogenen Daten ein (z. B.
-          Gesundheitsdaten, sehr intime Informationen, Daten Dritter, vollständige Klarnamenslisten
-          oder Zahlungsinformationen). Trotz technischer Schutzmaßnahmen können Eingaben über
-          externe Dienstleister verarbeitet werden und sind nie vollständig risikofrei.
-        </p>
+        <h3>4.3 Automatisierte Entscheidungsfindung und Profiling</h3>
+        <div class="highlight-box">
+          <p><strong>Hinweis gemäß Art. 13 Abs. 2 lit. f DSGVO:</strong></p>
+          <p>
+            Die KI-Funktion nutzt maschinelles Lernen zur Generierung von Textantworten. Es findet
+            <strong>keine automatisierte Entscheidungsfindung</strong> im Sinne von Art. 22 DSGVO
+            statt, die rechtliche Wirkung entfaltet oder dich in ähnlicher Weise erheblich
+            beeinträchtigt.
+          </p>
+          <p>Die KI-generierten Antworten:</p>
+          <ul>
+            <li>Sind informativ und haben keine rechtsverbindliche Wirkung</li>
+            <li>Führen zu keinen automatisierten Entscheidungen über dich als Person</li>
+            <li>Werden nicht für Profiling oder personenbezogene Bewertungen verwendet</li>
+          </ul>
+        </div>
 
-        <h2>5. Lokale Speicherung im Browser (LocalStorage / IndexedDB / PWA)</h2>
+        <h3>4.4 Sensible und vertrauliche Inhalte</h3>
+        <div class="warning-box">
+          <p><strong>Wichtiger Hinweis:</strong></p>
+          <p>
+            Gib in der KI-Funktion keine besonders sensiblen personenbezogenen Daten ein,
+            insbesondere:
+          </p>
+          <ul>
+            <li>Gesundheitsdaten</li>
+            <li>Sehr intime Informationen</li>
+            <li>Daten Dritter ohne deren Einwilligung</li>
+            <li>Vollständige Klarnamenslisten</li>
+            <li>Zahlungs- oder Bankdaten</li>
+          </ul>
+          <p>
+            Trotz technischer Schutzmaßnahmen werden Eingaben über externe Dienstleister verarbeitet
+            und sind nicht vollständig risikofrei.
+          </p>
+        </div>
+
+        <h2>5. Lokale Speicherung im Browser</h2>
+        <p>Die App speichert Informationen lokal auf deinem Endgerät:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Speicher</th>
+              <th>Daten</th>
+              <th>Zweck</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LocalStorage</td>
+              <td>Persönliche Einstellungen (Theme, Sprache)</td>
+              <td>Komfortable Nutzung</td>
+            </tr>
+            <tr>
+              <td>IndexedDB</td>
+              <td>Chatverläufe, Sitzungsdaten</td>
+              <td>Funktionsbereitstellung</td>
+            </tr>
+            <tr>
+              <td>SessionStorage</td>
+              <td>API-Schlüssel (optional)</td>
+              <td>Sichere temporäre Speicherung</td>
+            </tr>
+          </tbody>
+        </table>
         <p>
-          Die App speichert bestimmte Informationen lokal auf deinem Endgerät, um die Nutzung
-          komfortabler zu machen und Funktionen bereitzustellen, z. B.:
+          <strong>Wichtig:</strong> Diese Daten werden <strong>nicht</strong> an mich als Betreiber
+          übermittelt. Sie verbleiben in deinem Browser, bis du sie löschst.
         </p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der
+          gewünschten Funktionen). Für die lokale Speicherung gilt § 25 Abs. 2 Nr. 2 TTDSG
+          (technisch erforderlich, keine Einwilligung nötig).
+        </p>
+        <p><strong>Löschung:</strong> Du kannst lokale Daten jederzeit löschen über:</p>
         <ul>
-          <li>persönliche Einstellungen (z. B. Theme, Sprache, UI-Optionen)</li>
-          <li>ggf. Chatverläufe / Sitzungsdaten</li>
-          <li>
-            optional: dein eigener API-Schlüssel für OpenRouter (falls du diese Funktion nutzt)
-          </li>
-        </ul>
-        <p>
-          Diese Daten werden nicht an mich als Betreiber übermittelt, sondern verbleiben in deinem
-          Browser, solange du sie nicht selbst löschst (z. B. über „Website-Daten löschen", „Cache
-          leeren" oder ähnliche Funktionen deines Browsers).
-        </p>
-        <p>
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der gewünschten Funktionen)
-          sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer nutzerfreundlichen
-          Anwendung).
-        </p>
-        <p>Du kannst die lokale Speicherung einschränken, indem du:</p>
-        <ul>
-          <li>die PWA-Funktion nicht installierst bzw. wieder entfernst,</li>
-          <li>deinen Browser so konfigurierst, dass lokale Daten regelmäßig gelöscht werden,</li>
-          <li>
-            in den App-Einstellungen (soweit vorhanden) Verlaufs- oder Konfigurationsdaten
-            zurücksetzt.
-          </li>
+          <li>Browser-Einstellungen → Website-Daten löschen</li>
+          <li>App-Einstellungen (soweit vorhanden)</li>
+          <li>Deinstallation der PWA</li>
         </ul>
 
         <h2>6. Cookies und Tracking</h2>
-        <p>Aktuell werden auf disaai.de:</p>
+        <h3>Übersicht der verwendeten Cookies und Technologien</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cookie/Technologie</th>
+              <th>Anbieter</th>
+              <th>Zweck</th>
+              <th>Kategorie</th>
+              <th>Einwilligung?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>__cf_bm</code></td>
+              <td>Cloudflare</td>
+              <td>Bot-Schutz</td>
+              <td>Technisch notwendig</td>
+              <td>Nein</td>
+            </tr>
+            <tr>
+              <td><code>cf_clearance</code></td>
+              <td>Cloudflare</td>
+              <td>CAPTCHA-Validierung</td>
+              <td>Technisch notwendig</td>
+              <td>Nein</td>
+            </tr>
+            <tr>
+              <td>LocalStorage</td>
+              <td>Browser</td>
+              <td>App-Einstellungen</td>
+              <td>Technisch notwendig</td>
+              <td>Nein</td>
+            </tr>
+            <tr>
+              <td>IndexedDB</td>
+              <td>Browser</td>
+              <td>Chatverläufe</td>
+              <td>Technisch notwendig</td>
+              <td>Nein</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Keine Tracking- oder Marketing-Cookies</h3>
+        <p>Auf disaai.de werden:</p>
         <ul>
-          <li>keine Tracking- oder Marketing-Cookies gesetzt,</li>
-          <li>keine externen Analyse-Tools (wie Google Analytics o. Ä.) verwendet.</li>
+          <li><strong>Keine</strong> Tracking- oder Marketing-Cookies gesetzt</li>
+          <li><strong>Keine</strong> externen Analyse-Tools (wie Google Analytics) verwendet</li>
+          <li><strong>Keine</strong> Social-Media-Plugins mit Tracking-Funktion eingebunden</li>
         </ul>
         <p>
-          Technisch notwendige Cookies oder vergleichbare Technologien können durch den
-          Hosting-/CDN-Anbieter eingesetzt werden, um Sicherheits- und Performancefunktionen
-          bereitzustellen (z. B. Lastverteilung, Schutz vor Angriffen).
-        </p>
-        <p>
-          Rechtsgrundlage für die Nutzung solcher technisch erforderlichen Technologien ist Art. 6
-          Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und effizienten Bereitstellung
-          der Website).
+          <strong>Rechtsgrundlage für technisch notwendige Technologien:</strong> § 25 Abs. 2 Nr. 2
+          TTDSG – diese sind für die Bereitstellung des vom Nutzer ausdrücklich gewünschten Dienstes
+          unbedingt erforderlich.
         </p>
 
         <h2>7. Kontaktaufnahme per E-Mail</h2>
+        <p>Bei Kontaktaufnahme per E-Mail werden folgende Daten verarbeitet:</p>
+        <ul>
+          <li>Deine E-Mail-Adresse</li>
+          <li>Inhalt deiner Nachricht</li>
+          <li>Ggf. dein Name (falls mitgeteilt)</li>
+        </ul>
+        <p><strong>Zweck:</strong> Bearbeitung deiner Anfrage.</p>
         <p>
-          Wenn du mich per E-Mail kontaktierst, werden die von dir mitgeteilten Daten (z. B. Name,
-          E-Mail-Adresse, Inhalte deiner Nachricht) gespeichert, um die Anfrage zu bearbeiten.
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
+          der Kommunikation) bzw. Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen).
         </p>
         <p>
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Anbahnung oder Durchführung eines
-          Nutzungsverhältnisses) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der
-          Beantwortung von Anfragen).
-        </p>
-        <p>
-          Die Daten werden gelöscht, sobald sie für die Kommunikation nicht mehr erforderlich sind,
+          <strong>Speicherdauer:</strong> Die Daten werden gelöscht, sobald sie für die
+          Kommunikation nicht mehr erforderlich sind, spätestens nach 2 Jahren ab letztem Kontakt,
           es sei denn, gesetzliche Aufbewahrungspflichten stehen dem entgegen.
         </p>
 
         <h2>8. Speicherdauer</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Datenkategorie</th>
+              <th>Speicherdauer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Server-Logfiles</td>
+              <td>Maximal 7 Tage</td>
+            </tr>
+            <tr>
+              <td>E-Mail-Korrespondenz</td>
+              <td>Bis Abschluss der Anfrage, max. 2 Jahre</td>
+            </tr>
+            <tr>
+              <td>Lokale Browser-Daten</td>
+              <td>Bis zur manuellen Löschung durch dich</td>
+            </tr>
+            <tr>
+              <td>Metadaten bei OpenRouter</td>
+              <td>Gemäß OpenRouter-Richtlinien (Abrechnung)</td>
+            </tr>
+            <tr>
+              <td>Cloudflare-Cookies</td>
+              <td>30 Minuten bis 24 Stunden</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>9. Datenübermittlung in Drittländer</h2>
         <p>
-          Soweit in dieser Datenschutzerklärung keine abweichenden Speicherdauern angegeben sind,
-          gilt:
+          Eine Übermittlung personenbezogener Daten in Drittländer (Länder außerhalb EU/EWR) findet
+          in folgenden Fällen statt:
         </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Empfänger</th>
+              <th>Land</th>
+              <th>Rechtsgrundlage</th>
+              <th>Schutzmechanismus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cloudflare, Inc.</td>
+              <td>USA</td>
+              <td>Art. 45 DSGVO</td>
+              <td>EU-U.S. Data Privacy Framework</td>
+            </tr>
+            <tr>
+              <td>OpenRouter, Inc.</td>
+              <td>USA</td>
+              <td>Art. 46 Abs. 2 lit. c DSGVO</td>
+              <td>Standardvertragsklauseln (SCCs)</td>
+            </tr>
+            <tr>
+              <td>Modellanbieter (via OpenRouter)</td>
+              <td>Diverse</td>
+              <td>Art. 46 DSGVO</td>
+              <td>Je nach Anbieter SCCs oder DPF</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>10. Pflicht zur Bereitstellung von Daten</h2>
+        <p>
+          Die Bereitstellung personenbezogener Daten ist weder gesetzlich noch vertraglich
+          vorgeschrieben. Du bist nicht verpflichtet, personenbezogene Daten bereitzustellen.
+        </p>
+        <p><strong>Folgen der Nichtbereitstellung:</strong></p>
         <ul>
           <li>
-            Server-Logfiles werden vom Hoster / CDN-Anbieter nur für einen begrenzten Zeitraum
-            gespeichert und anschließend gelöscht.
+            Ohne IP-Adresse kann die Website technisch nicht ausgeliefert werden (automatische
+            Übermittlung bei jedem Webseitenaufruf)
           </li>
-          <li>
-            Lokale Daten in deinem Browser bleiben dort gespeichert, bis du sie selbst entfernst.
-          </li>
-          <li>
-            E-Mail-Korrespondenz wird nur so lange gespeichert, wie dies für die Bearbeitung und
-            ggf. zur Einhaltung gesetzlicher Aufbewahrungspflichten erforderlich ist.
-          </li>
-          <li>
-            Metadaten bei OpenRouter und den Modellanbietern werden entsprechend deren jeweiligen
-            Richtlinien gespeichert.
-          </li>
+          <li>Ohne Eingabe von Prompts kann die KI-Funktion nicht genutzt werden</li>
+          <li>Ohne E-Mail-Adresse kann keine E-Mail-Kommunikation stattfinden</li>
         </ul>
 
-        <h2>9. Rechtsgrundlagen im Überblick</h2>
-        <p>
-          Soweit nicht im Einzelfall anders angegeben, stütze ich die Verarbeitung personenbezogener
-          Daten auf folgende Rechtsgrundlagen:
-        </p>
+        <h2>11. Deine Rechte als betroffene Person</h2>
+        <p>Dir stehen folgende Rechte zu (Art. 15-22 DSGVO):</p>
         <ul>
           <li>
-            <strong>Art. 6 Abs. 1 lit. b DSGVO:</strong> Erfüllung eines Vertrags / Bereitstellung
-            der von dir genutzten Funktionen (z. B. KI-Chat)
+            <strong>Auskunftsrecht (Art. 15 DSGVO):</strong> Du kannst Auskunft über die zu deiner
+            Person gespeicherten Daten verlangen.
           </li>
           <li>
-            <strong>Art. 6 Abs. 1 lit. f DSGVO:</strong> Wahrung berechtigter Interessen (z. B.
-            sichere, stabile und effiziente Bereitstellung der Website)
+            <strong>Berichtigungsrecht (Art. 16 DSGVO):</strong> Du kannst die Berichtigung
+            unrichtiger Daten verlangen.
           </li>
           <li>
-            <strong>Art. 6 Abs. 1 lit. a DSGVO:</strong> Einwilligung (wenn du diese ausdrücklich
-            erteilst)
+            <strong>Löschungsrecht (Art. 17 DSGVO):</strong> Du kannst die Löschung deiner Daten
+            verlangen, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+          </li>
+          <li>
+            <strong>Einschränkung der Verarbeitung (Art. 18 DSGVO):</strong> Du kannst unter
+            bestimmten Voraussetzungen die Einschränkung der Verarbeitung verlangen.
+          </li>
+          <li>
+            <strong>Datenübertragbarkeit (Art. 20 DSGVO):</strong> Du kannst die Herausgabe deiner
+            Daten in einem strukturierten, gängigen Format verlangen.
+          </li>
+          <li>
+            <strong>Widerspruchsrecht (Art. 21 DSGVO):</strong> Du kannst der Verarbeitung
+            widersprechen, wenn diese auf Art. 6 Abs. 1 lit. f DSGVO beruht.
+          </li>
+          <li>
+            <strong>Widerruf der Einwilligung (Art. 7 Abs. 3 DSGVO):</strong> Erteilte Einwilligungen
+            kannst du jederzeit mit Wirkung für die Zukunft widerrufen.
           </li>
         </ul>
-
-        <h2>10. Deine Rechte als betroffene Person</h2>
         <p>
-          Dir stehen hinsichtlich der dich betreffenden personenbezogenen Daten folgende Rechte zu
-          (Art. 15 ff. DSGVO):
-        </p>
-        <ul>
-          <li>Recht auf Auskunft über die verarbeiteten Daten</li>
-          <li>Recht auf Berichtigung unrichtiger oder unvollständiger Daten</li>
-          <li>
-            Recht auf Löschung („Recht auf Vergessenwerden"), soweit keine gesetzlichen Pflichten
-            entgegenstehen
-          </li>
-          <li>Recht auf Einschränkung der Verarbeitung</li>
-          <li>Recht auf Datenübertragbarkeit, sofern die Voraussetzungen erfüllt sind</li>
-          <li>
-            Recht auf Widerspruch gegen die Verarbeitung, soweit diese auf Art. 6 Abs. 1 lit. e oder
-            f DSGVO beruht
-          </li>
-          <li>Recht auf Widerruf erteilter Einwilligungen mit Wirkung für die Zukunft</li>
-        </ul>
-        <p>
-          Zur Ausübung deiner Rechte kannst du dich jederzeit an die unter Ziffer 1 genannten
-          Kontaktdaten wenden.
+          Zur Ausübung deiner Rechte wende dich an:
+          <a href="mailto:grunert94@hotmail.com">grunert94@hotmail.com</a>
         </p>
 
-        <h2>11. Beschwerderecht bei einer Aufsichtsbehörde</h2>
+        <h2>12. Beschwerderecht bei einer Aufsichtsbehörde</h2>
         <p>
           Wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten gegen die
           DSGVO verstößt, hast du das Recht, Beschwerde bei einer Datenschutzaufsichtsbehörde
-          einzulegen, insbesondere in dem Mitgliedstaat deines Aufenthaltsorts, deines
-          Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.
+          einzulegen.
+        </p>
+        <p>Zuständige Aufsichtsbehörde für den Verantwortlichen:</p>
+        <p>
+          <strong>Sächsischer Datenschutzbeauftragter</strong><br />
+          Devrientstraße 5<br />
+          01067 Dresden<br />
+          Telefon: +49 351 85471-101<br />
+          E-Mail: <a href="mailto:saechsdsb@slt.sachsen.de">saechsdsb@slt.sachsen.de</a><br />
+          Website: <a href="https://www.saechsdsb.de" target="_blank" rel="noopener noreferrer">www.saechsdsb.de</a>
         </p>
 
-        <h2>12. Änderungen dieser Datenschutzerklärung</h2>
+        <h2>13. Änderungen dieser Datenschutzerklärung</h2>
         <p>
           Ich behalte mir vor, diese Datenschutzerklärung bei Änderungen der technischen Umsetzung,
           der genutzten Dienstleister oder der Rechtslage anzupassen. Es gilt jeweils die auf dieser
@@ -393,15 +609,7 @@
         </p>
       </div>
 
-      <footer
-        style="
-          margin-top: 3rem;
-          padding-top: 1rem;
-          border-top: 1px solid var(--border);
-          text-align: center;
-          color: var(--text-secondary);
-        "
-      >
+      <footer>
         <p>© 2025 Disa AI. Alle Rechte vorbehalten.</p>
       </footer>
     </div>
