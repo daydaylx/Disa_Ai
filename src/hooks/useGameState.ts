@@ -143,6 +143,16 @@ export const TradeStateSchema = z.object({
 
 export type TradeState = z.infer<typeof TradeStateSchema>;
 
+// Survival System
+export const SurvivalStateSchema = z.object({
+  hunger: z.number().int().min(0).max(100).default(100),
+  thirst: z.number().int().min(0).max(100).default(100),
+  radiation: z.number().int().min(0).max(100).default(0),
+  fatigue: z.number().int().min(0).max(100).default(0),
+});
+
+export type SurvivalState = z.infer<typeof SurvivalStateSchema>;
+
 export const GameStateSchema = z.object({
   hp: z.number().int().min(0),
   maxHp: z.number().int().positive(),
@@ -170,6 +180,12 @@ export const GameStateSchema = z.object({
     activeOffers: [],
     history: [],
     reputation: 50,
+  }),
+  survival: SurvivalStateSchema.default({
+    hunger: 100,
+    thirst: 100,
+    radiation: 0,
+    fatigue: 0,
   }),
   suggested_actions: z.array(z.string()).default([]),
 });
@@ -210,6 +226,12 @@ const DEFAULT_GAME_STATE: GameState = {
     activeOffers: [],
     history: [],
     reputation: 50,
+  },
+  survival: {
+    hunger: 100,
+    thirst: 100,
+    radiation: 0,
+    fatigue: 0,
   },
   suggested_actions: [],
 };
@@ -459,6 +481,15 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
       );
     } catch {
       console.warn("[useGameState] Invalid trade format");
+    }
+  }
+
+  // Survival State
+  if (record.survival && typeof record.survival === "object") {
+    try {
+      update.survival = SurvivalStateSchema.parse(record.survival);
+    } catch {
+      console.warn("[useGameState] Invalid survival format");
     }
   }
 

@@ -17,6 +17,7 @@ import { CombatTracker } from "./CombatTracker";
 import { InventoryModal } from "./InventoryModal";
 import { QuestTracker } from "./QuestTracker";
 import { SkillTreeModal } from "./SkillTreeModal";
+import { SurvivalBars } from "./SurvivalBars";
 import { TradeModal } from "./TradeModal";
 
 interface GameHUDProps {
@@ -80,6 +81,9 @@ export function GameHUD({ state, onUseItem, onCombatAction }: GameHUDProps) {
                 />
               </div>
             </div>
+
+            {/* Survival Bars */}
+            <SurvivalBars survival={state.survival} />
 
             {/* Stats Row */}
             <div className="flex flex-wrap items-center gap-2 text-sm">

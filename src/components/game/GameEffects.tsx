@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { GameState } from "../../hooks/useGameState";
+import type { GameState } from "../../hooks/useGameState";
 
 interface GameEffectsProps {
   state: GameState;
@@ -47,7 +47,10 @@ const getBackgroundStyle = (location: string): string => {
 export function GameEffects({ state }: GameEffectsProps) {
   const [shake, setShake] = useState(false);
   const [flashRed, setFlashRed] = useState(false);
+  const [flashYellow, setFlashYellow] = useState(false);
+  const [flashGreen, setFlashGreen] = useState(false);
   const prevHp = useRef(state.hp);
+  const prevSurvival = useRef(state.survival);
 
   useEffect(() => {
     let timeoutId: number | null = null;
@@ -70,7 +73,48 @@ export function GameEffects({ state }: GameEffectsProps) {
     };
   }, [state.hp]);
 
+  // Survival Effects
+  useEffect(() => {
+    let timeoutId: number | null = null;
+
+    // Hunger/Thirst critical warning (yellow flash)
+    if (
+      (state.survival.hunger < 15 && state.survival.hunger < prevSurvival.current.hunger) ||
+      (state.survival.thirst < 15 && state.survival.thirst < prevSurvival.current.thirst)
+    ) {
+      setFlashYellow(true);
+      timeoutId = window.setTimeout(() => {
+        setFlashYellow(false);
+      }, 400);
+    }
+
+    // Radiation warning (green flash)
+    if (
+      state.survival.radiation > 75 &&
+      state.survival.radiation > prevSurvival.current.radiation
+    ) {
+      setFlashGreen(true);
+      timeoutId = window.setTimeout(() => {
+        setFlashGreen(false);
+      }, 400);
+    }
+
+    prevSurvival.current = state.survival;
+
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [state.survival]);
+
   const bgStyle = getBackgroundStyle(state.location);
+
+  // Calculate survival-based visual effects
+  const isCriticalHunger = state.survival.hunger < 15;
+  const isCriticalThirst = state.survival.thirst < 15;
+  const isHighRadiation = state.survival.radiation > 75;
+  const isHighFatigue = state.survival.fatigue > 75;
 
   return (
     <>
@@ -89,6 +133,49 @@ export function GameEffects({ state }: GameEffectsProps) {
       <div
         className={`fixed inset-0 pointer-events-none z-50 bg-red-500/20 transition-opacity duration-300 ${flashRed ? "opacity-100" : "opacity-0"}`}
       />
+
+      {/* Hunger/Thirst Warning Flash */}
+      <div
+        className={`fixed inset-0 pointer-events-none z-50 bg-amber-500/15 transition-opacity duration-300 ${flashYellow ? "opacity-100" : "opacity-0"}`}
+      />
+
+      {/* Radiation Warning Flash */}
+      <div
+        className={`fixed inset-0 pointer-events-none z-50 bg-lime-500/15 transition-opacity duration-300 ${flashGreen ? "opacity-100" : "opacity-0"}`}
+      />
+
+      {/* Critical Hunger/Thirst Vignette */}
+      {(isCriticalHunger || isCriticalThirst) && (
+        <div
+          className="fixed inset-0 pointer-events-none z-40"
+          style={{
+            background:
+              "radial-gradient(circle at center, transparent 0%, rgba(217, 119, 6, 0.15) 100%)",
+          }}
+        />
+      )}
+
+      {/* High Radiation Vignette */}
+      {isHighRadiation && (
+        <div
+          className="fixed inset-0 pointer-events-none z-40"
+          style={{
+            background:
+              "radial-gradient(circle at center, transparent 0%, rgba(132, 204, 22, 0.12) 100%)",
+          }}
+        />
+      )}
+
+      {/* High Fatigue Darkening */}
+      {isHighFatigue && (
+        <div
+          className="fixed inset-0 pointer-events-none z-40"
+          style={{
+            background:
+              "radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.3) 100%)",
+          }}
+        />
+      )}
 
       {/* Global Shake Style Injection */}
       {shake && (
