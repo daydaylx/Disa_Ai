@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 import type { ChatMessageType } from "../types/chatMessage";
@@ -543,9 +543,11 @@ export function useGameState(
     const loaded = loadGameState();
     return loaded ?? DEFAULT_GAME_STATE;
   });
+  const lastClientSurvivalUpdateRef = useRef<number>(0);
 
   // Client-side state updates (instant, no AI dependency)
   const updateSurvival = useCallback((changes: Partial<SurvivalState>) => {
+    lastClientSurvivalUpdateRef.current = Date.now(); // Mark client update time
     setGameState((prev) => ({
       ...prev,
       survival: {
@@ -635,28 +637,37 @@ export function useGameState(
         // Smart merge: Protect client-side managed fields from AI overwrites
         const merged = { ...prev, ...latestUpdate };
 
-        // CRITICAL: Don't let AI overwrite survival values if they changed recently
+        // CRITICAL: Don't let AI overwrite survival if client updated recently (within 3 seconds)
         // This prevents race conditions where AI uses stale state
-        if (latestUpdate.survival) {
-          // Only accept AI survival updates if they make sense (higher values = restoration)
-          // Reject if AI tries to increase survival values (client handles that)
-          const aiHungerIncrease =
-            latestUpdate.survival.hunger && latestUpdate.survival.hunger > prev.survival.hunger;
-          const aiThirstIncrease =
-            latestUpdate.survival.thirst && latestUpdate.survival.thirst > prev.survival.thirst;
+        const timeSinceClientUpdate = Date.now() - lastClientSurvivalUpdateRef.current;
+        const CLIENT_UPDATE_PROTECTION_WINDOW = 3000; // 3 seconds
 
-          // If AI tries to increase hunger/thirst, ignore it (client-side consumables handle that)
-          if (aiHungerIncrease || aiThirstIncrease) {
-            merged.survival = {
-              ...latestUpdate.survival,
-              hunger: aiHungerIncrease
-                ? prev.survival.hunger
-                : (latestUpdate.survival.hunger ?? prev.survival.hunger),
-              thirst: aiThirstIncrease
-                ? prev.survival.thirst
-                : (latestUpdate.survival.thirst ?? prev.survival.thirst),
-            };
-          }
+        if (latestUpdate.survival && timeSinceClientUpdate < CLIENT_UPDATE_PROTECTION_WINDOW) {
+          // Client update is recent - ignore ALL AI survival changes to prevent conflicts
+          console.warn(
+            `[useGameState] AI survival update ignored (client updated ${timeSinceClientUpdate}ms ago)`,
+          );
+          merged.survival = prev.survival; // Keep client values
+        } else if (latestUpdate.survival) {
+          // Client update is old enough - validate AI survival values
+          merged.survival = {
+            hunger: Math.max(
+              0,
+              Math.min(100, latestUpdate.survival.hunger ?? prev.survival.hunger),
+            ),
+            thirst: Math.max(
+              0,
+              Math.min(100, latestUpdate.survival.thirst ?? prev.survival.thirst),
+            ),
+            radiation: Math.max(
+              0,
+              Math.min(100, latestUpdate.survival.radiation ?? prev.survival.radiation),
+            ),
+            fatigue: Math.max(
+              0,
+              Math.min(100, latestUpdate.survival.fatigue ?? prev.survival.fatigue),
+            ),
+          };
         }
 
         return merged;

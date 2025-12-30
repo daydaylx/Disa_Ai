@@ -34,6 +34,7 @@ export default function GamePage() {
   const previousRoleRef = useRef<UIRole | null>(null);
   const navigate = useNavigate();
   const [saveNotification, setSaveNotification] = useState<string | null>(null);
+  const notificationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
 
   const chatLogic = useChatPageLogic({
@@ -79,21 +80,41 @@ export default function GamePage() {
 
     if (criticalCheck.hpDamage > 0) {
       updateHP(-criticalCheck.hpDamage);
-      setSaveNotification(criticalCheck.warnings.join(" | "));
-      setTimeout(() => setSaveNotification(null), 3000);
+      showNotification(criticalCheck.warnings.join(" | "), 3000);
 
       if (criticalCheck.isDead) {
-        setSaveNotification("💀 GAME OVER - Du bist gestorben");
+        showNotification("💀 GAME OVER - Du bist gestorben");
         chatLogic.sendPrompt(
           "[SYSTEM: SPIELER GESTORBEN. HP erreichte 0 durch kritische Überlebenswerte. Erzähle dramatische Game Over Szene.]",
           { updateInput: false },
         );
       }
     }
-  }, [gameState.survival, gameState.hp, gameEngine, updateHP, chatLogic]);
+  }, [gameState.survival, gameState.hp, gameEngine, updateHP, chatLogic, showNotification]);
 
   const gameRole = useMemo(() => roles.find((role) => role.id === GAME_ROLE_ID), [roles]);
   const isGameRoleActive = activeRole?.id === GAME_ROLE_ID;
+
+  // Safe notification helper with automatic cleanup
+  const showNotification = useCallback((message: string, duration = 2000) => {
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+    setSaveNotification(message);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setSaveNotification(null);
+      notificationTimeoutRef.current = null;
+    }, duration);
+  }, []);
+
+  // Cleanup notification timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (notificationTimeoutRef.current) {
+        clearTimeout(notificationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!gameRole) return;
@@ -134,22 +155,20 @@ export default function GamePage() {
 
   const handleSave = useCallback(() => {
     manualSave();
-    setSaveNotification("Spielstand gesichert");
-    setTimeout(() => setSaveNotification(null), 2000);
-  }, [manualSave]);
+    showNotification("Spielstand gesichert");
+  }, [manualSave, showNotification]);
 
   const handleLoad = useCallback(() => {
     const loadedState = loadSave();
     if (loadedState) {
       setGameStarted(true); // Start decay timer after loading
-      setSaveNotification("Spielstand geladen - Synchronisiere...");
+      showNotification("Spielstand geladen - Synchronisiere...");
       const syncMessage = `[SYSTEM: SPIELSTAND GELADEN. HIER IST DER AKTUELLE STATUS: ${JSON.stringify(loadedState)}. BITTE BESTÄTIGE UND FAHRE MIT DER HANDLUNG FORT.]`;
       chatLogic.sendPrompt(syncMessage, { updateInput: true });
     } else {
-      setSaveNotification("Kein Spielstand gefunden");
+      showNotification("Kein Spielstand gefunden");
     }
-    setTimeout(() => setSaveNotification(null), 2000);
-  }, [loadSave, chatLogic]);
+  }, [loadSave, chatLogic, showNotification]);
 
   const handleExport = useCallback(() => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState));
@@ -162,9 +181,8 @@ export default function GamePage() {
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
-    setSaveNotification("Datei exportiert");
-    setTimeout(() => setSaveNotification(null), 2000);
-  }, [gameState]);
+    showNotification("Datei exportiert");
+  }, [gameState, showNotification]);
 
   const handleImportClick = useCallback(() => {
     fileInputRef.current?.click();
@@ -179,21 +197,20 @@ export default function GamePage() {
       reader.onload = (e) => {
         const content = e.target?.result as string;
         if (importSave(content)) {
-          setSaveNotification("Datei importiert - Synchronisiere...");
+          showNotification("Datei importiert - Synchronisiere...");
           // Force Sync after import
           const loadedState = JSON.parse(content); // We know it's valid if importSave returned true
           const syncMessage = `[SYSTEM: SPIELSTAND IMPORTIERT. STATUS: ${JSON.stringify(loadedState)}. FORTFAHREN.]`;
           chatLogic.sendPrompt(syncMessage, { updateInput: true });
         } else {
-          setSaveNotification("Fehler beim Import");
+          showNotification("Fehler beim Import");
         }
-        setTimeout(() => setSaveNotification(null), 2000);
       };
       reader.readAsText(file);
       // Reset input
       event.target.value = "";
     },
-    [importSave, chatLogic],
+    [importSave, chatLogic, showNotification],
   );
 
   const handleReset = useCallback(() => {
@@ -201,9 +218,8 @@ export default function GamePage() {
       return;
     }
     resetGame();
-    setSaveNotification("System zurückgesetzt");
-    setTimeout(() => setSaveNotification(null), 2000);
-  }, [resetGame]);
+    showNotification("System zurückgesetzt");
+  }, [resetGame, showNotification]);
 
   // Action Handlers
   const handleAction = useCallback(
@@ -219,8 +235,7 @@ export default function GamePage() {
       try {
         // Validate item exists
         if (!item || !item.name) {
-          setSaveNotification("❌ Ungültiges Item");
-          setTimeout(() => setSaveNotification(null), 2000);
+          showNotification("❌ Ungültiges Item");
           return;
         }
 
@@ -253,11 +268,18 @@ export default function GamePage() {
         }
       } catch (error) {
         console.error("[GamePage] handleUseItem error:", error);
-        setSaveNotification("❌ Fehler beim Benutzen des Items");
-        setTimeout(() => setSaveNotification(null), 2000);
+        showNotification("❌ Fehler beim Benutzen des Items");
       }
     },
-    [gameEngine, updateSurvival, updateInventory, gameState.inventory, chatLogic, handleAction],
+    [
+      gameEngine,
+      updateSurvival,
+      updateInventory,
+      gameState.inventory,
+      chatLogic,
+      handleAction,
+      showNotification,
+    ],
   );
 
   const handleCombatAction = useCallback(
@@ -291,8 +313,7 @@ export default function GamePage() {
 
         // Show instant feedback
         if (combatResult.killedEnemy) {
-          setSaveNotification(`💀 ${combatResult.killedEnemy.name} besiegt!`);
-          setTimeout(() => setSaveNotification(null), 2000);
+          showNotification(`💀 ${combatResult.killedEnemy.name} besiegt!`);
 
           // Combat ended?
           if (combatResult.combatEnded) {
@@ -303,8 +324,7 @@ export default function GamePage() {
             chatLogic.sendPrompt(killMessage, { updateInput: false });
           }
         } else {
-          setSaveNotification(`⚔️ ${damage} Schaden an ${targetEnemy.name}`);
-          setTimeout(() => setSaveNotification(null), 1500);
+          showNotification(`⚔️ ${damage} Schaden an ${targetEnemy.name}`, 1500);
 
           const combatMessage = `[COMBAT: ${damage} Schaden an ${targetEnemy.name}. ${targetEnemy.name} HP: ${combatResult.updatedEnemies[0]?.hp}/${targetEnemy.maxHp}. Erzähle Kampfgeschehen.]`;
           chatLogic.sendPrompt(combatMessage, { updateInput: false });
@@ -313,7 +333,15 @@ export default function GamePage() {
         handleAction(action);
       }
     },
-    [handleAction, gameEngine, gameState.level, gameState.combat, chatLogic, updateCombat],
+    [
+      handleAction,
+      gameEngine,
+      gameState.level,
+      gameState.combat,
+      chatLogic,
+      updateCombat,
+      showNotification,
+    ],
   );
 
   const handleQuickAction = useCallback(
@@ -346,15 +374,14 @@ export default function GamePage() {
         // Short rest
         const restChanges = gameEngine.rest("short");
         updateSurvival(restChanges);
-        setSaveNotification("💤 Kurze Rast abgeschlossen");
-        setTimeout(() => setSaveNotification(null), 2000);
+        showNotification("💤 Kurze Rast abgeschlossen");
 
         // Notify AI
         const restMessage = `[SYSTEM ACTION: Spieler rastete 30 Minuten. Müdigkeit -30%, Hunger -5%, Durst -8%. State bereits aktualisiert. Erzähle kurz die Pause.]`;
         chatLogic.sendPrompt(restMessage, { updateInput: false });
       }
     },
-    [gameState.inventory, handleUseItem, gameEngine, updateSurvival, chatLogic],
+    [gameState.inventory, handleUseItem, gameEngine, updateSurvival, chatLogic, showNotification],
   );
 
   return (

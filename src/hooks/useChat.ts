@@ -246,7 +246,7 @@ export function useChat({
               temperature: requestOptions?.temperature,
               top_p: requestOptions?.top_p,
               presence_penalty: requestOptions?.presence_penalty,
-              max_tokens: requestOptions?.max_tokens,
+              max_tokens: requestOptions?.max_tokens ?? 700, // Default: compact responses for better UX
             },
             onStart: () => {
               if (controller.signal.aborted) return;

@@ -75,7 +75,7 @@ export function GameEffects({ state }: GameEffectsProps) {
 
   // Survival Effects
   useEffect(() => {
-    let timeoutId: number | null = null;
+    const timeoutIds: number[] = [];
 
     // Hunger/Thirst critical warning (yellow flash)
     if (
@@ -83,9 +83,10 @@ export function GameEffects({ state }: GameEffectsProps) {
       (state.survival.thirst < 15 && state.survival.thirst < prevSurvival.current.thirst)
     ) {
       setFlashYellow(true);
-      timeoutId = window.setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         setFlashYellow(false);
       }, 400);
+      timeoutIds.push(timeoutId);
     }
 
     // Radiation warning (green flash)
@@ -94,9 +95,10 @@ export function GameEffects({ state }: GameEffectsProps) {
       state.survival.radiation > prevSurvival.current.radiation
     ) {
       setFlashGreen(true);
-      timeoutId = window.setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         setFlashGreen(false);
       }, 400);
+      timeoutIds.push(timeoutId);
     }
 
     prevSurvival.current = {
@@ -107,9 +109,7 @@ export function GameEffects({ state }: GameEffectsProps) {
     };
 
     return () => {
-      if (timeoutId !== null) {
-        window.clearTimeout(timeoutId);
-      }
+      timeoutIds.forEach((id) => window.clearTimeout(id));
     };
   }, [
     state.survival.hunger,
