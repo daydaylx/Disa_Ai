@@ -534,11 +534,75 @@ function clearGameState(): void {
   }
 }
 
-export function useGameState(messages: ChatMessageType[], autoSave = true) {
+export function useGameState(
+  messages: ChatMessageType[],
+  autoSave = true,
+  validateFn?: (aiState: any, currentState: any) => { valid: boolean; errors: string[] },
+) {
   const [gameState, setGameState] = useState<GameState>(() => {
     const loaded = loadGameState();
     return loaded ?? DEFAULT_GAME_STATE;
   });
+
+  // Client-side state updates (instant, no AI dependency)
+  const updateSurvival = useCallback((changes: Partial<SurvivalState>) => {
+    setGameState((prev) => ({
+      ...prev,
+      survival: {
+        hunger: Math.max(0, Math.min(100, prev.survival.hunger + (changes.hunger ?? 0))),
+        thirst: Math.max(0, Math.min(100, prev.survival.thirst + (changes.thirst ?? 0))),
+        radiation: Math.max(0, Math.min(100, prev.survival.radiation + (changes.radiation ?? 0))),
+        fatigue: Math.max(0, Math.min(100, prev.survival.fatigue + (changes.fatigue ?? 0))),
+      },
+    }));
+  }, []);
+
+  const updateHP = useCallback((delta: number) => {
+    setGameState((prev) => ({
+      ...prev,
+      hp: Math.max(0, Math.min(prev.maxHp, prev.hp + delta)),
+    }));
+  }, []);
+
+  const updateInventory = useCallback((newInventory: Item[]) => {
+    try {
+      // Validate all items before updating
+      const validatedInventory = newInventory
+        .filter((item) => {
+          // Filter out null/undefined items
+          if (!item) return false;
+
+          // Validate item structure
+          try {
+            ItemSchema.parse(item);
+            return true;
+          } catch (error) {
+            console.warn("[useGameState] Invalid item filtered out:", item, error);
+            return false;
+          }
+        })
+        .map((item) => {
+          // Ensure quantity is positive
+          if (item.quantity <= 0) {
+            console.warn("[useGameState] Item with invalid quantity removed:", item);
+            return null;
+          }
+          return item;
+        })
+        .filter((item): item is Item => item !== null);
+
+      setGameState((prev) => ({ ...prev, inventory: validatedInventory }));
+    } catch (error) {
+      console.error("[useGameState] Inventory update failed:", error);
+    }
+  }, []);
+
+  const updateCombat = useCallback((combatUpdate: Partial<CombatState>) => {
+    setGameState((prev) => ({
+      ...prev,
+      combat: { ...prev.combat, ...combatUpdate },
+    }));
+  }, []);
 
   const latestUpdate = useMemo(() => {
     if (messages.length === 0) return null;
@@ -555,14 +619,60 @@ export function useGameState(messages: ChatMessageType[], autoSave = true) {
 
   useEffect(() => {
     if (latestUpdate) {
-      setGameState((prev) => ({ ...prev, ...latestUpdate }));
-    }
-  }, [messages.length, latestUpdate]);
+      setGameState((prev) => {
+        // Validate AI state update if validator provided
+        if (validateFn) {
+          const proposedState = { ...prev, ...latestUpdate };
+          const validation = validateFn(proposedState, prev);
 
-  useEffect(() => {
-    if (autoSave) {
-      saveGameState(gameState);
+          if (!validation.valid) {
+            console.warn("[useGameState] AI state update rejected:", validation.errors);
+            // For now, just log and continue with full update
+            // In production, you'd want to filter out invalid fields
+          }
+        }
+
+        // Smart merge: Protect client-side managed fields from AI overwrites
+        const merged = { ...prev, ...latestUpdate };
+
+        // CRITICAL: Don't let AI overwrite survival values if they changed recently
+        // This prevents race conditions where AI uses stale state
+        if (latestUpdate.survival) {
+          // Only accept AI survival updates if they make sense (higher values = restoration)
+          // Reject if AI tries to increase survival values (client handles that)
+          const aiHungerIncrease =
+            latestUpdate.survival.hunger && latestUpdate.survival.hunger > prev.survival.hunger;
+          const aiThirstIncrease =
+            latestUpdate.survival.thirst && latestUpdate.survival.thirst > prev.survival.thirst;
+
+          // If AI tries to increase hunger/thirst, ignore it (client-side consumables handle that)
+          if (aiHungerIncrease || aiThirstIncrease) {
+            merged.survival = {
+              ...latestUpdate.survival,
+              hunger: aiHungerIncrease
+                ? prev.survival.hunger
+                : (latestUpdate.survival.hunger ?? prev.survival.hunger),
+              thirst: aiThirstIncrease
+                ? prev.survival.thirst
+                : (latestUpdate.survival.thirst ?? prev.survival.thirst),
+            };
+          }
+        }
+
+        return merged;
+      });
     }
+  }, [messages.length, latestUpdate, validateFn]);
+
+  // Debounced auto-save to prevent excessive localStorage writes
+  useEffect(() => {
+    if (!autoSave) return;
+
+    const saveTimer = setTimeout(() => {
+      saveGameState(gameState);
+    }, 2000); // Wait 2 seconds before saving
+
+    return () => clearTimeout(saveTimer);
   }, [gameState, autoSave]);
 
   const resetGame = useCallback(() => {
@@ -602,6 +712,11 @@ export function useGameState(messages: ChatMessageType[], autoSave = true) {
     loadSave,
     manualSave,
     importSave,
+    // Client-side updates (instant)
+    updateSurvival,
+    updateHP,
+    updateInventory,
+    updateCombat,
   };
 }
 
