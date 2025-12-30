@@ -16,7 +16,14 @@ import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
 
 const HAMBURGER_NAV_ITEMS = [
-  { id: "chat", label: "Chat", path: "/chat", Icon: Home, activePattern: /^\/(chat|$)(?!history)/ },
+  {
+    id: "chat",
+    label: "Chat",
+    path: "/chat",
+    Icon: Home,
+    activePattern: /^\/(chat|$)(?!history)/,
+    description: "Unterhaltungen & KI-Assistenz",
+  },
   { id: "models", label: "Modelle", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
   { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
   {
