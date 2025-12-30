@@ -50,16 +50,24 @@ export function GameEffects({ state }: GameEffectsProps) {
   const prevHp = useRef(state.hp);
 
   useEffect(() => {
+    let timeoutId: number | null = null;
+
     // Detect Damage
     if (state.hp < prevHp.current) {
       setShake(true);
       setFlashRed(true);
-      setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         setShake(false);
         setFlashRed(false);
       }, 500);
     }
     prevHp.current = state.hp;
+
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
   }, [state.hp]);
 
   const bgStyle = getBackgroundStyle(state.location);

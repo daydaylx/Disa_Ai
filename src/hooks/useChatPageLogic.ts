@@ -112,44 +112,55 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
       restoreEnabled: settings.restoreLastConversation && memoryEnabled,
     });
 
-  // Handle send
-  const handleSend = useCallback(() => {
-    if (isLoading) {
-      toasts.push({
-        kind: "warning",
-        title: "Verarbeitung läuft",
-        message: "Bitte warte einen Moment, bis die aktuelle Antwort fertig ist.",
-      });
-      return;
-    }
-
-    const validation = validatePrompt(input);
-
-    if (!validation.valid) {
-      if (validation.reason === "too_long") {
-        toasts.push({
-          kind: "error",
-          title: "Nachricht zu lang",
-          message: `Die Eingabe darf maximal ${MAX_PROMPT_LENGTH.toLocaleString("de-DE")} Zeichen enthalten. Wir haben sie entsprechend gekürzt.`,
-        });
-        setInput(validation.sanitized);
-      } else {
+  const sendPrompt = useCallback(
+    (prompt: string, options?: { updateInput?: boolean }) => {
+      if (isLoading) {
         toasts.push({
           kind: "warning",
-          title: "Leere Nachricht",
-          message: "Bitte gib eine Nachricht ein, bevor du sendest.",
+          title: "Verarbeitung läuft",
+          message: "Bitte warte einen Moment, bis die aktuelle Antwort fertig ist.",
         });
+        return;
       }
-      return;
-    }
 
-    void append({ role: "user", content: validation.sanitized }).catch((error: unknown) => {
-      // Use humanErrorToToast for consistent error handling
-      const mappedError = error instanceof Error ? error : new Error(String(error));
-      toasts.push(humanErrorToToast(mappedError));
-    });
-    setInput("");
-  }, [append, input, isLoading, setInput, toasts]);
+      const validation = validatePrompt(prompt);
+
+      if (!validation.valid) {
+        if (validation.reason === "too_long") {
+          toasts.push({
+            kind: "error",
+            title: "Nachricht zu lang",
+            message: `Die Eingabe darf maximal ${MAX_PROMPT_LENGTH.toLocaleString("de-DE")} Zeichen enthalten. Wir haben sie entsprechend gekürzt.`,
+          });
+          if (options?.updateInput) {
+            setInput(validation.sanitized);
+          }
+        } else {
+          toasts.push({
+            kind: "warning",
+            title: "Leere Nachricht",
+            message: "Bitte gib eine Nachricht ein, bevor du sendest.",
+          });
+        }
+        return;
+      }
+
+      void append({ role: "user", content: validation.sanitized }).catch((error: unknown) => {
+        const mappedError = error instanceof Error ? error : new Error(String(error));
+        toasts.push(humanErrorToToast(mappedError));
+      });
+
+      if (options?.updateInput) {
+        setInput("");
+      }
+    },
+    [append, isLoading, setInput, toasts],
+  );
+
+  // Handle send
+  const handleSend = useCallback(() => {
+    sendPrompt(input, { updateInput: true });
+  }, [input, sendPrompt]);
 
   // Handle edit
   const handleEdit = useCallback(
@@ -166,24 +177,9 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   // Handle follow-up
   const handleFollowUp = useCallback(
     (prompt: string) => {
-      if (isLoading) {
-        toasts.push({
-          kind: "warning",
-          title: "Antwort läuft",
-          message: "Warte kurz, bis die aktuelle Antwort fertig ist.",
-        });
-        return;
-      }
-      setInput(prompt);
-      setTimeout(() => {
-        const validation = validatePrompt(prompt);
-        if (validation.valid) {
-          void append({ role: "user", content: validation.sanitized });
-          setInput("");
-        }
-      }, 100);
+      sendPrompt(prompt, { updateInput: true });
     },
-    [setInput, append, isLoading, toasts],
+    [sendPrompt],
   );
 
   // Handle retry
@@ -221,13 +217,9 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   // Handle starter click (auto-send)
   const handleStarterClick = useCallback(
     (prompt: string) => {
-      setInput(prompt);
-      // Auto-send after brief delay to allow input to update
-      setTimeout(() => {
-        handleSend();
-      }, 100);
+      sendPrompt(prompt, { updateInput: true });
     },
-    [setInput, handleSend],
+    [sendPrompt],
   );
 
   // Get active conversation info
@@ -258,6 +250,7 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     handleRetry,
     handleStartNewChat,
     handleStarterClick,
+    sendPrompt,
     selectConversation,
     navigate,
 

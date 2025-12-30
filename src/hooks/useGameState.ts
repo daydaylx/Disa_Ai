@@ -171,6 +171,7 @@ export const GameStateSchema = z.object({
     history: [],
     reputation: 50,
   }),
+  suggested_actions: z.array(z.string()).default([]),
 });
 
 export type GameState = z.infer<typeof GameStateSchema>;
@@ -215,6 +216,126 @@ const DEFAULT_GAME_STATE: GameState = {
 
 const STORAGE_KEY = "eternia_game_state";
 
+const ITEM_TYPE_ALIASES: Record<string, Item["type"]> = {
+  weapon: "weapon",
+  waffe: "weapon",
+  armor: "armor",
+  rustung: "armor",
+  ruestung: "armor",
+  consumable: "consumable",
+  verbrauchsgegenstand: "consumable",
+  quest: "quest",
+  misc: "misc",
+  sonstiges: "misc",
+  gegenstand: "misc",
+};
+
+const COMBAT_ACTION_ALIASES: Record<string, CombatAction["action"]> = {
+  attack: "attack",
+  angriff: "attack",
+  defend: "defend",
+  verteidigen: "defend",
+  verteidigung: "defend",
+  spell: "spell",
+  zauber: "spell",
+  magie: "spell",
+  item: "item",
+  gegenstand: "item",
+  flee: "flee",
+  flucht: "flee",
+  fliehen: "flee",
+  fluchtversuch: "flee",
+};
+
+function normalizeToken(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\u00df/g, "ss")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function resolveItemType(value: string): Item["type"] | null {
+  const normalized = normalizeToken(value);
+  return ITEM_TYPE_ALIASES[normalized] ?? null;
+}
+
+function resolveCombatAction(value: string): CombatAction["action"] | null {
+  const normalized = normalizeToken(value);
+  return COMBAT_ACTION_ALIASES[normalized] ?? null;
+}
+
+function normalizeItemRecord(item: unknown): unknown {
+  if (!item || typeof item !== "object") return item;
+  const record = item as Record<string, unknown>;
+  if (typeof record.type !== "string") return item;
+  const resolved = resolveItemType(record.type);
+  if (!resolved || resolved === record.type) return item;
+  return { ...record, type: resolved };
+}
+
+function normalizeTradeOffer(offer: unknown): unknown {
+  if (!offer || typeof offer !== "object") return offer;
+  const record = offer as Record<string, unknown>;
+  const normalized: Record<string, unknown> = { ...record };
+
+  if (Array.isArray(record.offeredItems)) {
+    normalized.offeredItems = record.offeredItems.map((item) => normalizeItemRecord(item));
+  }
+  if (Array.isArray(record.requestedItems)) {
+    normalized.requestedItems = record.requestedItems.map((item) => normalizeItemRecord(item));
+  }
+
+  return normalized;
+}
+
+function normalizeTradeHistory(history: unknown): unknown {
+  if (!history || typeof history !== "object") return history;
+  const record = history as Record<string, unknown>;
+  const normalized: Record<string, unknown> = { ...record };
+
+  if (Array.isArray(record.itemsGained)) {
+    normalized.itemsGained = record.itemsGained.map((item) => normalizeItemRecord(item));
+  }
+  if (Array.isArray(record.itemsLost)) {
+    normalized.itemsLost = record.itemsLost.map((item) => normalizeItemRecord(item));
+  }
+
+  return normalized;
+}
+
+function normalizeTradeState(trade: Record<string, unknown>): Record<string, unknown> {
+  const normalized: Record<string, unknown> = { ...trade };
+
+  if (Array.isArray(trade.activeOffers)) {
+    normalized.activeOffers = trade.activeOffers.map((offer) => normalizeTradeOffer(offer));
+  }
+  if (Array.isArray(trade.history)) {
+    normalized.history = trade.history.map((entry) => normalizeTradeHistory(entry));
+  }
+
+  return normalized;
+}
+
+function normalizeCombatActionRecord(action: unknown): unknown {
+  if (!action || typeof action !== "object") return action;
+  const record = action as Record<string, unknown>;
+  if (typeof record.action !== "string") return action;
+  const resolved = resolveCombatAction(record.action);
+  if (!resolved || resolved === record.action) return action;
+  return { ...record, action: resolved };
+}
+
+function normalizeCombatState(combat: Record<string, unknown>): Record<string, unknown> {
+  const normalized: Record<string, unknown> = { ...combat };
+  if (Array.isArray(combat.actions)) {
+    normalized.actions = combat.actions.map((action) => normalizeCombatActionRecord(action));
+  }
+  return normalized;
+}
+
 function parseGameStateUpdate(content: string): Partial<GameState> | null {
   if (!content.includes("<game_state>")) return null;
 
@@ -254,15 +375,17 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
     try {
       const validatedItems = record.inventory
         .map((item) => {
-          if (typeof item === "string" && item.trim().length > 0) {
+          if (typeof item === "string") {
+            const trimmed = item.trim();
+            if (!trimmed) return null;
             return {
               id: `legacy_${Date.now()}_${Math.random()}`,
-              name: item.trim(),
+              name: trimmed,
               type: "misc" as const,
               quantity: 1,
             };
           }
-          return ItemSchema.parse(item);
+          return ItemSchema.parse(normalizeItemRecord(item));
         })
         .filter((item): item is Item => item !== null);
       update.inventory = validatedItems;
@@ -305,15 +428,15 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
     const validAchievements = record.achievements.filter(
       (a): a is string => typeof a === "string" && a.trim().length > 0,
     );
-    if (validAchievements.length > 0) {
-      update.achievements = validAchievements;
-    }
+    update.achievements = validAchievements;
   }
 
   // Combat State
   if (record.combat && typeof record.combat === "object") {
     try {
-      update.combat = CombatStateSchema.parse(record.combat);
+      update.combat = CombatStateSchema.parse(
+        normalizeCombatState(record.combat as Record<string, unknown>),
+      );
     } catch {
       console.warn("[useGameState] Invalid combat format");
     }
@@ -331,7 +454,9 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
   // Trade State
   if (record.trade && typeof record.trade === "object") {
     try {
-      update.trade = TradeStateSchema.parse(record.trade);
+      update.trade = TradeStateSchema.parse(
+        normalizeTradeState(record.trade as Record<string, unknown>),
+      );
     } catch {
       console.warn("[useGameState] Invalid trade format");
     }
@@ -398,11 +523,6 @@ export function useGameState(messages: ChatMessageType[], autoSave = true) {
   }, [messages]);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      setGameState(DEFAULT_GAME_STATE);
-      return;
-    }
-
     if (latestUpdate) {
       setGameState((prev) => ({ ...prev, ...latestUpdate }));
     }

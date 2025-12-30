@@ -59,6 +59,7 @@ describe("useGameState", () => {
         history: [],
         reputation: 50,
       },
+      suggested_actions: [],
     });
   });
 
@@ -76,7 +77,8 @@ describe("useGameState", () => {
           "level":2,
           "xp":150,
           "xpToNextLevel":200,
-          "stats":{"strength":12,"dexterity":10,"constitution":11,"intelligence":10,"wisdom":10,"charisma":10}
+          "stats":{"strength":12,"dexterity":10,"constitution":11,"intelligence":10,"wisdom":10,"charisma":10},
+          "suggested_actions":["Untersuche Wrack","Scan Umgebung"]
         }\n</game_state>`,
       }),
     ];
@@ -92,6 +94,10 @@ describe("useGameState", () => {
       expect(result.current.gameState.xp).toBe(150);
       expect(result.current.gameState.inventory).toHaveLength(1);
       expect(result.current.gameState.inventory[0]?.name).toBe("Torch");
+      expect(result.current.gameState.suggested_actions).toEqual([
+        "Untersuche Wrack",
+        "Scan Umgebung",
+      ]);
     });
   });
 
@@ -162,6 +168,37 @@ describe("useGameState", () => {
     });
   });
 
+  it("clears achievements when an empty array is provided", async () => {
+    const initialMessages: ChatMessageType[] = [
+      baseMessage({
+        role: "assistant",
+        content: `<game_state>{"achievements":["First Steps"]}</game_state>`,
+      }),
+    ];
+
+    const { result, rerender } = renderHook(({ messages }) => useGameState(messages, false), {
+      initialProps: { messages: initialMessages },
+    });
+
+    await waitFor(() => {
+      expect(result.current.gameState.achievements).toEqual(["First Steps"]);
+    });
+
+    const nextMessages: ChatMessageType[] = [
+      ...initialMessages,
+      baseMessage({
+        role: "assistant",
+        content: `<game_state>{"achievements":[]}</game_state>`,
+      }),
+    ];
+
+    rerender({ messages: nextMessages });
+
+    await waitFor(() => {
+      expect(result.current.gameState.achievements).toEqual([]);
+    });
+  });
+
   it("parses combat state", async () => {
     const messages: ChatMessageType[] = [
       baseMessage({
@@ -172,7 +209,7 @@ describe("useGameState", () => {
             "turn":2,
             "roundNumber":3,
             "enemies":[{"id":"e1","name":"Goblin","hp":30,"maxHp":50,"level":3,"isBoss":false}],
-            "actions":[{"id":"a1","timestamp":${Date.now()},"actor":"Player","action":"attack","target":"Goblin","damage":15,"success":true}]
+            "actions":[{"id":"a1","timestamp":${Date.now()},"actor":"Player","action":"Angriff","target":"Goblin","damage":15,"success":true}]
           }
         }</game_state>`,
       }),
@@ -186,6 +223,7 @@ describe("useGameState", () => {
       expect(result.current.gameState.combat.enemies).toHaveLength(1);
       expect(result.current.gameState.combat.enemies[0]?.name).toBe("Goblin");
       expect(result.current.gameState.combat.actions).toHaveLength(1);
+      expect(result.current.gameState.combat.actions[0]?.action).toBe("attack");
     });
   });
 
@@ -234,7 +272,7 @@ describe("useGameState", () => {
               "id":"t1",
               "npcName":"Merchant Bob",
               "npcDialogue":"Looking to trade?",
-              "offeredItems":[{"id":"i1","name":"Health Potion","type":"consumable","quantity":3}],
+              "offeredItems":[{"id":"i1","name":"Health Potion","type":"Ruestung","quantity":3}],
               "requestedItems":[],
               "goldOffered":0,
               "goldRequested":30,
@@ -252,6 +290,7 @@ describe("useGameState", () => {
       expect(result.current.gameState.trade.reputation).toBe(75);
       expect(result.current.gameState.trade.activeOffers).toHaveLength(1);
       expect(result.current.gameState.trade.activeOffers[0]?.npcName).toBe("Merchant Bob");
+      expect(result.current.gameState.trade.activeOffers[0]?.offeredItems[0]?.type).toBe("armor");
     });
   });
 

@@ -21,7 +21,7 @@ import { PageLayout } from "../components/layout/PageLayout";
 import { useRoles } from "../contexts/RolesContext";
 import type { UIRole } from "../data/roles";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
-import { cleanGameContent, useGameState } from "../hooks/useGameState";
+import { cleanGameContent, type Item, useGameState } from "../hooks/useGameState";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const GAME_ROLE_ID = "eternia-dm";
@@ -76,9 +76,10 @@ export default function GamePage() {
   );
 
   const handleStartGame = useCallback(() => {
-    if (chatLogic.isLoading || !isGameRoleActive) return;
-    chatLogic.setInput("System: Initialisiere Sequenz. Starte Simulation 'Projekt Neubeginn'.");
-    setTimeout(() => chatLogic.handleSend(), 100);
+    if (!isGameRoleActive) return;
+    chatLogic.sendPrompt("System: Initialisiere Sequenz. Starte Simulation 'Projekt Neubeginn'.", {
+      updateInput: true,
+    });
   }, [chatLogic, isGameRoleActive]);
 
   const handleSave = useCallback(() => {
@@ -92,10 +93,7 @@ export default function GamePage() {
     if (loadedState) {
       setSaveNotification("Spielstand geladen - Synchronisiere...");
       const syncMessage = `[SYSTEM: SPIELSTAND GELADEN. HIER IST DER AKTUELLE STATUS: ${JSON.stringify(loadedState)}. BITTE BESTÄTIGE UND FAHRE MIT DER HANDLUNG FORT.]`;
-      chatLogic.setInput(syncMessage);
-      setTimeout(() => {
-        chatLogic.handleSend();
-      }, 500);
+      chatLogic.sendPrompt(syncMessage, { updateInput: true });
     } else {
       setSaveNotification("Kein Spielstand gefunden");
     }
@@ -134,8 +132,7 @@ export default function GamePage() {
           // Force Sync after import
           const loadedState = JSON.parse(content); // We know it's valid if importSave returned true
           const syncMessage = `[SYSTEM: SPIELSTAND IMPORTIERT. STATUS: ${JSON.stringify(loadedState)}. FORTFAHREN.]`;
-          chatLogic.setInput(syncMessage);
-          setTimeout(() => chatLogic.handleSend(), 500);
+          chatLogic.sendPrompt(syncMessage, { updateInput: true });
         } else {
           setSaveNotification("Fehler beim Import");
         }
@@ -160,28 +157,24 @@ export default function GamePage() {
   // Action Handlers
   const handleAction = useCallback(
     (action: string) => {
-      if (chatLogic.isLoading) return;
-      chatLogic.setInput(action);
-      setTimeout(() => chatLogic.handleSend(), 50);
+      if (!action.trim()) return;
+      chatLogic.sendPrompt(action, { updateInput: true });
     },
     [chatLogic],
   );
 
   const handleUseItem = useCallback(
-    (item: any) => {
-      if (chatLogic.isLoading) return;
-      const command = `Benutze ${item.name}`;
-      handleAction(command);
+    (item: Item) => {
+      handleAction(`Benutze ${item.name}`);
     },
-    [chatLogic, handleAction],
+    [handleAction],
   );
 
   const handleCombatAction = useCallback(
     (action: string) => {
-      if (chatLogic.isLoading) return;
       handleAction(action);
     },
-    [chatLogic, handleAction],
+    [handleAction],
   );
 
   return (

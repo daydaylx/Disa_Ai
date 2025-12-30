@@ -11,7 +11,7 @@ import {
   Zap,
 } from "@/lib/icons";
 
-import type { GameState } from "../../hooks/useGameState";
+import type { GameState, Item } from "../../hooks/useGameState";
 import { CharacterSheet } from "./CharacterSheet";
 import { CombatTracker } from "./CombatTracker";
 import { InventoryModal } from "./InventoryModal";
@@ -21,7 +21,7 @@ import { TradeModal } from "./TradeModal";
 
 interface GameHUDProps {
   state: GameState;
-  onUseItem?: (item: any) => void;
+  onUseItem?: (item: Item) => void;
   onCombatAction?: (action: string) => void;
 }
 
