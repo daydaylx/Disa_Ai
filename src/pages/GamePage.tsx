@@ -72,6 +72,18 @@ export default function GamePage() {
   // Store engine ref for validator
   gameEngineRef.current = gameEngine;
 
+  // Safe notification helper with automatic cleanup (defined BEFORE usage)
+  const showNotification = useCallback((message: string, duration = 2000) => {
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+    setSaveNotification(message);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setSaveNotification(null);
+      notificationTimeoutRef.current = null;
+    }, duration);
+  }, []);
+
   // Monitor critical survival state and apply HP damage
   useEffect(() => {
     if (chatLogic.messages.length === 0) return; // Don't check before game starts
@@ -94,18 +106,6 @@ export default function GamePage() {
 
   const gameRole = useMemo(() => roles.find((role) => role.id === GAME_ROLE_ID), [roles]);
   const isGameRoleActive = activeRole?.id === GAME_ROLE_ID;
-
-  // Safe notification helper with automatic cleanup
-  const showNotification = useCallback((message: string, duration = 2000) => {
-    if (notificationTimeoutRef.current) {
-      clearTimeout(notificationTimeoutRef.current);
-    }
-    setSaveNotification(message);
-    notificationTimeoutRef.current = setTimeout(() => {
-      setSaveNotification(null);
-      notificationTimeoutRef.current = null;
-    }, duration);
-  }, []);
 
   // Cleanup notification timeout on unmount
   useEffect(() => {
