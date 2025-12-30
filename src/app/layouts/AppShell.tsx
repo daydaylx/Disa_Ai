@@ -11,11 +11,12 @@ import {
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
-import { Bookmark, Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
+import { Bookmark, Brain, Cpu, Home, Info, MessageSquare, Settings, Users } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
 
 const HAMBURGER_NAV_ITEMS = [
+  { id: "chat", label: "Chat", path: "/chat", Icon: Home, activePattern: /^\/(chat|$)(?!history)/ },
   { id: "models", label: "Modelle", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
   { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
   {
