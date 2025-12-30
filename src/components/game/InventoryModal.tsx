@@ -15,6 +15,7 @@ import type { GameState, Item } from "../../hooks/useGameState";
 interface InventoryModalProps {
   state: GameState;
   trigger?: React.ReactNode;
+  onUseItem?: (item: Item) => void;
 }
 
 const itemTypeIcons = {
@@ -41,11 +42,11 @@ const itemTypeColors = {
   misc: "text-gray-400",
 };
 
-function ItemCard({ item }: { item: Item }) {
+function ItemCard({ item, onUse }: { item: Item; onUse?: (item: Item) => void }) {
   const Icon = itemTypeIcons[item.type];
 
   return (
-    <div className="rounded-lg border border-white/10 bg-surface-2/40 p-4 space-y-2 hover:bg-surface-2/60 transition-colors">
+    <div className="rounded-lg border border-white/10 bg-surface-2/40 p-4 space-y-3 hover:bg-surface-2/60 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <Icon className={`h-5 w-5 flex-shrink-0 ${itemTypeColors[item.type]}`} />
@@ -62,16 +63,22 @@ function ItemCard({ item }: { item: Item }) {
           </Badge>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <Badge variant="outline" className="text-xs">
           {itemTypeLabels[item.type]}
         </Badge>
+        {onUse &&
+          (item.type === "consumable" || item.type === "weapon" || item.type === "armor") && (
+            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => onUse(item)}>
+              Benutzen
+            </Button>
+          )}
       </div>
     </div>
   );
 }
 
-export function InventoryModal({ state, trigger }: InventoryModalProps) {
+export function InventoryModal({ state, trigger, onUseItem }: InventoryModalProps) {
   const groupedItems = state.inventory.reduce(
     (acc, item) => {
       if (!acc[item.type]) {
@@ -126,7 +133,7 @@ export function InventoryModal({ state, trigger }: InventoryModalProps) {
                   </h3>
                   <div className="space-y-2">
                     {items.map((item) => (
-                      <ItemCard key={item.id} item={item} />
+                      <ItemCard key={item.id} item={item} onUse={onUseItem} />
                     ))}
                   </div>
                 </div>

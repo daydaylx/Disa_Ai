@@ -21,9 +21,11 @@ import { TradeModal } from "./TradeModal";
 
 interface GameHUDProps {
   state: GameState;
+  onUseItem?: (item: any) => void;
+  onCombatAction?: (action: string) => void;
 }
 
-export function GameHUD({ state }: GameHUDProps) {
+export function GameHUD({ state, onUseItem, onCombatAction }: GameHUDProps) {
   const hpPercent =
     state.maxHp > 0 ? Math.min(100, Math.max(0, (state.hp / state.maxHp) * 100)) : 0;
 
@@ -46,7 +48,7 @@ export function GameHUD({ state }: GameHUDProps) {
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-ink-tertiary">
                 <span className="flex items-center gap-1 text-ink-secondary">
                   <Heart className="h-3 w-3 text-status-error" />
-                  Vitalität
+                  Bio-Status
                 </span>
                 <span className="text-ink-secondary">
                   {state.hp} / {state.maxHp}
@@ -65,7 +67,7 @@ export function GameHUD({ state }: GameHUDProps) {
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-ink-tertiary">
                 <span className="flex items-center gap-1 text-ink-secondary">
                   <Star className="h-3 w-3 text-amber-400" />
-                  Level {state.level}
+                  Rang {state.level}
                 </span>
                 <span className="text-ink-secondary">
                   {state.xp} / {state.xpToNextLevel} XP
@@ -96,6 +98,7 @@ export function GameHUD({ state }: GameHUDProps) {
               {/* Interactive Buttons */}
               <InventoryModal
                 state={state}
+                onUseItem={onUseItem}
                 trigger={
                   <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
                     <Backpack className="h-4 w-4 text-emerald-300" />
@@ -119,6 +122,7 @@ export function GameHUD({ state }: GameHUDProps) {
               {state.combat.active && (
                 <CombatTracker
                   state={state}
+                  onAction={onCombatAction}
                   trigger={
                     <button className="flex items-center gap-2 rounded-full border border-status-error/30 bg-status-error/10 px-3 py-1.5 hover:bg-status-error/20 transition-colors animate-pulse">
                       <Swords className="h-4 w-4 text-status-error" />

@@ -210,6 +210,7 @@ const DEFAULT_GAME_STATE: GameState = {
     history: [],
     reputation: 50,
   },
+  suggested_actions: [],
 };
 
 const STORAGE_KEY = "eternia_game_state";
@@ -336,6 +337,15 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
     }
   }
 
+  // Suggested Actions
+  if (Array.isArray(record.suggested_actions)) {
+    const validActions = record.suggested_actions.filter(
+      (a): a is string => typeof a === "string" && a.trim().length > 0,
+    );
+    // Always update if array exists, even if empty (to clear old suggestions)
+    update.suggested_actions = validActions;
+  }
+
   return Object.keys(update).length > 0 ? update : null;
 }
 
@@ -413,20 +423,34 @@ export function useGameState(messages: ChatMessageType[], autoSave = true) {
     const loaded = loadGameState();
     if (loaded) {
       setGameState(loaded);
-      return true;
+      return loaded;
     }
-    return false;
+    return null;
   }, []);
 
   const manualSave = useCallback(() => {
     saveGameState(gameState);
   }, [gameState]);
 
+  const importSave = useCallback((jsonString: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      const validated = GameStateSchema.parse(parsed);
+      setGameState(validated);
+      saveGameState(validated);
+      return true;
+    } catch (error) {
+      console.error("[useGameState] Import failed:", error);
+      return false;
+    }
+  }, []);
+
   return {
     gameState,
     resetGame,
     loadSave,
     manualSave,
+    importSave,
   };
 }
 

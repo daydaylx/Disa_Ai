@@ -16,6 +16,7 @@ import type { CombatAction, Enemy, GameState } from "../../hooks/useGameState";
 interface CombatTrackerProps {
   state: GameState;
   trigger?: React.ReactNode;
+  onAction?: (action: string) => void;
 }
 
 const actionIcons = {
@@ -117,7 +118,7 @@ function CombatActionLog({ action }: { action: CombatAction }) {
   );
 }
 
-export function CombatTracker({ state, trigger }: CombatTrackerProps) {
+export function CombatTracker({ state, trigger, onAction }: CombatTrackerProps) {
   const { combat } = state;
   const recentActions = combat.actions.slice(-10).reverse();
 
@@ -147,6 +148,28 @@ export function CombatTracker({ state, trigger }: CombatTrackerProps) {
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Actions */}
+          {onAction && (
+            <div className="flex flex-wrap gap-2 justify-center pb-4 border-b border-white/10">
+              <Button variant="destructive" className="gap-2" onClick={() => onAction("Angriff")}>
+                <Swords className="h-4 w-4" />
+                Angriff
+              </Button>
+              <Button
+                variant="secondary"
+                className="gap-2"
+                onClick={() => onAction("Verteidigung")}
+              >
+                <Shield className="h-4 w-4" />
+                Verteidigen
+              </Button>
+              <Button variant="outline" className="gap-2" onClick={() => onAction("Flucht")}>
+                <ArrowRight className="h-4 w-4" />
+                Fluchtversuch
+              </Button>
+            </div>
+          )}
+
           {/* Enemies */}
           {combat.enemies.length > 0 && (
             <div className="space-y-3">
