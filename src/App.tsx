@@ -62,12 +62,12 @@ function AppContent() {
     void syncMetadataFromConversations()
       .then((result) => {
         if (result.synced > 0) {
-          console.warn(
+          console.debug(
             `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
           );
         }
         if (result.errors.length > 0) {
-          console.warn("[Storage] Sync errors:", result.errors);
+          console.debug("[Storage] Sync errors:", result.errors);
         }
       })
       .catch((error) => {

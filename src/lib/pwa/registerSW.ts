@@ -38,6 +38,7 @@ let cachedResult: RegisterResult | null = null;
 let registrationPromise: Promise<ServiceWorkerRegistration | null> | null = null;
 let lastRegistration: ServiceWorkerRegistration | null = null;
 let latestWaiting: ServiceWorker | null = null;
+let updateNotificationShown = false;
 
 function emitState() {
   const snapshot = { ...serviceWorkerState };
@@ -132,6 +133,8 @@ export function registerSW(): RegisterResult {
         }
 
         registration.addEventListener("updatefound", () => {
+          if (updateNotificationShown) return;
+
           const newWorker = registration.installing;
           if (!newWorker) return;
 
@@ -141,6 +144,7 @@ export function registerSW(): RegisterResult {
             }
 
             latestWaiting = registration.waiting ?? newWorker;
+            updateNotificationShown = true;
 
             if (navigator.serviceWorker.controller) {
               serviceWorkerState.needRefresh = true;

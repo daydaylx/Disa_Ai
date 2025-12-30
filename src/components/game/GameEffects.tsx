@@ -99,14 +99,24 @@ export function GameEffects({ state }: GameEffectsProps) {
       }, 400);
     }
 
-    prevSurvival.current = state.survival;
+    prevSurvival.current = {
+      hunger: state.survival.hunger,
+      thirst: state.survival.thirst,
+      radiation: state.survival.radiation,
+      fatigue: state.survival.fatigue,
+    };
 
     return () => {
       if (timeoutId !== null) {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [state.survival]);
+  }, [
+    state.survival.hunger,
+    state.survival.thirst,
+    state.survival.radiation,
+    state.survival.fatigue,
+  ]);
 
   const bgStyle = getBackgroundStyle(state.location);
 

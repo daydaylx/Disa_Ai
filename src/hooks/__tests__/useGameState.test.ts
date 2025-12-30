@@ -59,6 +59,12 @@ describe("useGameState", () => {
         history: [],
         reputation: 50,
       },
+      survival: {
+        hunger: 100,
+        thirst: 100,
+        radiation: 0,
+        fatigue: 0,
+      },
       suggested_actions: [],
     });
   });

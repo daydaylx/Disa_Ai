@@ -13,6 +13,9 @@ const MS_IN_SECOND = 1000;
 const DEFAULT_RATE_LIMIT_RETRY_AFTER_SECONDS = 8;
 const MIN_RATE_LIMIT_COOLDOWN_SECONDS = 3;
 
+// Request ID counter for deduplication
+let requestIdCounter = 0;
+
 function calculateExponentialBackoff(attempt: number): number {
   const baseDelay = 1000; // 1s base delay
   const jitter = Math.random() * 500; // add jitter to avoid thundering herd
@@ -116,6 +119,9 @@ export function useChat({
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
       }
+
+      // Track this request to prevent race conditions
+      const currentRequestId = ++requestIdCounter;
 
       // Handle rate limiting with exponential backoff
       const now = Date.now();
@@ -342,15 +348,20 @@ export function useChat({
           }
         }
       } finally {
-        if (abortControllerRef.current === controller) {
-          dispatch({ type: "SET_LOADING", isLoading: false });
-          dispatch({ type: "SET_ABORT_CONTROLLER", controller: null });
-          abortControllerRef.current = null;
-        }
+        // Only update state if this is still the most recent request
+        if (requestIdCounter === currentRequestId) {
+          if (abortControllerRef.current === controller) {
+            dispatch({ type: "SET_LOADING", isLoading: false });
+            dispatch({ type: "SET_ABORT_CONTROLLER", controller: null });
+            abortControllerRef.current = null;
+          }
 
-        if (!rateLimitedThisCall && !controller.signal.aborted) {
-          retryAttemptsRef.current = 0;
-          setRateLimitInfo((info) => (info.isLimited ? { isLimited: false, retryAfter: 0 } : info));
+          if (!rateLimitedThisCall && !controller.signal.aborted) {
+            retryAttemptsRef.current = 0;
+            setRateLimitInfo((info) =>
+              info.isLimited ? { isLimited: false, retryAfter: 0 } : info,
+            );
+          }
         }
       }
     },

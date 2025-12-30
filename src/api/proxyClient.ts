@@ -50,18 +50,20 @@ export async function chatStreamViaProxy(
     });
 
     if (!response.ok) {
+      // Clone response to avoid "body already consumed" errors
+      const clonedResponse = response.clone();
       // Try to parse detailed error from JSON, fallback to text, then status
       let errorMessage = `Proxy-Fehler: ${response.status} ${response.statusText}`;
       try {
-        const contentType = response.headers.get("content-type");
+        const contentType = clonedResponse.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
+          const errorData = await clonedResponse.json();
           if (errorData?.error) {
             errorMessage =
               typeof errorData.error === "string" ? errorData.error : errorData.error.message;
           }
         } else {
-          const text = await response.text();
+          const text = await clonedResponse.text();
           if (text) errorMessage = text;
         }
       } catch (e) {
@@ -180,17 +182,19 @@ export async function chatOnceViaProxy(
     });
 
     if (!response.ok) {
+      // Clone response to avoid "body already consumed" errors
+      const clonedResponse = response.clone();
       let errorMessage = `Proxy-Fehler: ${response.status} ${response.statusText}`;
       try {
-        const contentType = response.headers.get("content-type");
+        const contentType = clonedResponse.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
+          const errorData = await clonedResponse.json();
           if (errorData?.error) {
             errorMessage =
               typeof errorData.error === "string" ? errorData.error : errorData.error.message;
           }
         } else {
-          const text = await response.text();
+          const text = await clonedResponse.text();
           if (text) errorMessage = text;
         }
       } catch {

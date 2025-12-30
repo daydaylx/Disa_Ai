@@ -212,7 +212,15 @@ async function chatStreamDirect(
           // CRITICAL FIX: Race reader against a timeout to prevent mobile hangs
           const readPromise = reader.read();
           const timeoutPromise = new Promise<ReadableStreamReadResult<Uint8Array>>((_, reject) => {
-            setTimeout(() => reject(new Error("STREAM_INACTIVITY_TIMEOUT")), 60000);
+            setTimeout(
+              () =>
+                reject(
+                  new Error(
+                    "Die Verbindung zum Server wurde unterbrochen. Bitte versuche es erneut.",
+                  ),
+                ),
+              120000,
+            );
           });
 
           const { value, done } = await Promise.race([readPromise, timeoutPromise]);
