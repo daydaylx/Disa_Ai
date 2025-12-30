@@ -11,36 +11,9 @@ import {
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
-import { Bookmark, Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
+import { Bookmark } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
-
-const HAMBURGER_NAV_ITEMS = [
-  { id: "models", label: "Modelle", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
-  { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
-  {
-    id: "settings",
-    label: "Einstellungen",
-    path: "/settings",
-    Icon: Settings,
-    activePattern: /^\/settings/,
-  },
-  {
-    id: "quickstarts",
-    label: "Quickstarts",
-    path: "/themen",
-    Icon: Brain,
-    activePattern: /^\/themen/,
-  },
-  {
-    id: "feedback",
-    label: "Feedback",
-    path: "/feedback",
-    Icon: MessageSquare,
-    activePattern: /^\/feedback/,
-  },
-  { id: "about", label: "Über", path: "/impressum", Icon: Info, activePattern: /^\/impressum/ },
-] satisfies typeof PRIMARY_NAV_ITEMS;
 
 type AppShellLayoutMode = "shell" | "page";
 
@@ -230,12 +203,7 @@ function AppShellLayout({
               </div>
             </div>
 
-            <AppMenuDrawer
-              isOpen={menuDrawer.isOpen}
-              onClose={menuDrawer.closeMenu}
-              navItems={HAMBURGER_NAV_ITEMS}
-              secondaryItems={[]}
-            />
+            <AppMenuDrawer isOpen={menuDrawer.isOpen} onClose={menuDrawer.closeMenu} />
           </div>
         </div>
       </div>
