@@ -65,6 +65,7 @@ export const GameHUD = ({ state }: { state: GameState }) => {
 const hpPercent = Math.min(100, Math.max(0, (state.hp / state.maxHp) \* 100));
 
 return (
+
 <div className="bg-surface-800 text-white p-4 shadow-lg border-b border-white/10 sticky top-0 z-20">
 <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
 
@@ -173,6 +174,7 @@ content: msg.role === 'assistant' ? cleanGameContent(msg.content) : msg.content
 }));
 
 return (
+
 <div className="flex flex-col h-screen bg-surface-900 text-text-primary">
 {/_ Header mit Zurück-Button _/}
 <div className="flex items-center px-4 py-2 bg-surface-800 border-b border-surface-700">
