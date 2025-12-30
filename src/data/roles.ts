@@ -105,7 +105,10 @@ function categorizeRole(role: { name: string; tags?: string[] }): string {
     tags.includes("songwriting") ||
     tags.includes("design") ||
     tags.includes("photography") ||
-    tags.includes("humor")
+    tags.includes("humor") ||
+    tags.includes("games") ||
+    tags.includes("gaming") ||
+    tags.includes("rpg")
   ) {
     return "Kreativ & Unterhaltung";
   }

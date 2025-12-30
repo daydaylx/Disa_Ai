@@ -5,6 +5,7 @@ import { Button } from "@/ui";
 
 import { ArrowLeft } from "../lib/icons";
 import ChatPage from "../pages/Chat";
+import GamePage from "../pages/GamePage";
 import { RouteWrapper } from "./components/RouteWrapper";
 
 // Lazy-loaded Routes für bessere Performance
@@ -60,6 +61,10 @@ export const appRouter = createBrowserRouter(
           <ChatPage />
         </RouteWrapper>
       ),
+    },
+    {
+      path: "/game",
+      element: <GamePage />,
     },
     {
       path: "/studio",
