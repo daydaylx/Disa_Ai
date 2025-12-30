@@ -1,5 +1,5 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Brain, Cpu, Home, MessageSquare, Settings, Users } from "@/lib/icons";
+import { Brain, Cpu, Home, MessageSquare, Settings, Swords, Users } from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;
@@ -18,6 +18,14 @@ export const PRIMARY_NAV_ITEMS: AppNavItem[] = [
     Icon: Home,
     activePattern: /^\/(chat|$)(?!history)/,
     description: "Unterhaltungen & KI-Assistenz",
+  },
+  {
+    id: "game",
+    label: "Ground Zero",
+    path: "/game",
+    Icon: Swords,
+    activePattern: /^\/game/,
+    description: "Postapokalyptisches Survival-RPG",
   },
   {
     id: "models",
