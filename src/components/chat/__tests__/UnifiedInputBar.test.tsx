@@ -80,6 +80,13 @@ describe("UnifiedInputBar", () => {
       expect(input).toHaveAttribute("aria-label", "Nachricht eingeben");
     });
 
+    it("nutzt ein benutzerdefiniertes Placeholder-Label", () => {
+      render(<UnifiedInputBar {...defaultProps} placeholder="Custom Placeholder" />);
+
+      const input = screen.getByTestId("composer-input");
+      expect(input).toHaveAttribute("placeholder", "Custom Placeholder");
+    });
+
     it("rendert den Senden-Button mit korrektem aria-label", () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
@@ -98,6 +105,16 @@ describe("UnifiedInputBar", () => {
 
       // Kreativitäts-Auswahl
       expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
+    });
+
+    it("blendet Kontext-Selektoren aus, wenn showContextPills false ist", () => {
+      render(<UnifiedInputBar {...defaultProps} showContextPills={false} />);
+
+      expect(screen.queryByRole("combobox", { name: "Rolle auswählen" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("combobox", { name: "Stil auswählen" })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("combobox", { name: "Kreativität auswählen" }),
+      ).not.toBeInTheDocument();
     });
   });
 

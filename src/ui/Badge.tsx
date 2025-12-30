@@ -4,22 +4,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "bg-accent-primary-dim text-accent-primary border border-accent-primary/20", // Subtle accent
-        secondary: "bg-surface-2 text-ink-secondary border border-border-ink", // Neutral
-        outline: "text-ink-secondary border border-border-ink bg-transparent",
-        destructive: "bg-status-error/10 text-status-error border border-status-error/20",
-        success: "bg-status-success/10 text-status-success border border-status-success/20",
-        warning: "bg-status-warning/10 text-status-warning border border-status-warning/20",
-        // Page-specific accent variants
-        models: "bg-accent-models-dim text-accent-models border border-accent-models-border",
-        roles: "bg-accent-roles-dim text-accent-roles border border-accent-roles-border",
-        settings:
-          "bg-accent-settings-dim text-accent-settings border border-accent-settings-border",
-        chat: "bg-accent-chat-dim text-accent-chat border border-accent-chat-border",
+        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary: "border-transparent bg-surface-2 text-ink-secondary hover:bg-surface-2/80",
+        destructive: "border-transparent bg-status-error text-white hover:bg-status-error/80",
+        outline: "text-ink-secondary border-white/20",
+        success: "border-transparent bg-status-success text-white hover:bg-status-success/80",
+        warning: "border-transparent bg-status-warning text-white hover:bg-status-warning/80",
       },
     },
     defaultVariants: {

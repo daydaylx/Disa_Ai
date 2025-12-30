@@ -16,6 +16,8 @@ export interface UnifiedInputBarProps {
   onChange: (value: string) => void;
   onSend: () => void;
   isLoading?: boolean;
+  placeholder?: string;
+  showContextPills?: boolean;
   className?: string;
 }
 
@@ -24,6 +26,8 @@ export function UnifiedInputBar({
   onChange,
   onSend,
   isLoading = false,
+  placeholder = "Schreibe eine Nachricht...",
+  showContextPills = true,
   className,
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -121,7 +125,7 @@ export function UnifiedInputBar({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Schreibe eine Nachricht..."
+          placeholder={placeholder}
           className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition"
           rows={1}
           data-testid="composer-input"
@@ -154,106 +158,108 @@ export function UnifiedInputBar({
       </BrandCard>
 
       {/* Context Pills */}
-      <div className="w-full px-1">
-        <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
-          {/* Role Dropdown */}
-          <Select
-            value={activeRole?.id || "standard"}
-            onValueChange={(id) => {
-              if (id === "standard") {
-                setActiveRole(null);
-                return;
-              }
-              const role = roles.find((r) => r.id === id);
-              if (role) setActiveRole(role);
-            }}
-          >
-            <SelectTrigger
-              aria-label="Rolle auswählen"
-              className={cn(
-                "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in",
-                activeRole
-                  ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
-                  : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
-              )}
+      {showContextPills && (
+        <div className="w-full px-1">
+          <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
+            {/* Role Dropdown */}
+            <Select
+              value={activeRole?.id || "standard"}
+              onValueChange={(id) => {
+                if (id === "standard") {
+                  setActiveRole(null);
+                  return;
+                }
+                const role = roles.find((r) => r.id === id);
+                if (role) setActiveRole(role);
+              }}
             >
-              <User className="h-4 w-4 flex-shrink-0" />
-              <span className="whitespace-nowrap">{roleLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="max-h-[280px] w-64">
-              <SelectItem value="standard">Standard</SelectItem>
-              {roles.map((role) => (
-                <SelectItem key={role.id} value={role.id}>
-                  {role.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                aria-label="Rolle auswählen"
+                className={cn(
+                  "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in",
+                  activeRole
+                    ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
+                    : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
+                )}
+              >
+                <User className="h-4 w-4 flex-shrink-0" />
+                <span className="whitespace-nowrap">{roleLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="max-h-[280px] w-64">
+                <SelectItem value="standard">Standard</SelectItem>
+                {roles.map((role) => (
+                  <SelectItem key={role.id} value={role.id}>
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          {/* Style Dropdown */}
-          <Select
-            value={settings.discussionPreset}
-            onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
-          >
-            <SelectTrigger
-              aria-label="Stil auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "50ms" }}
+            {/* Style Dropdown */}
+            <Select
+              value={settings.discussionPreset}
+              onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
             >
-              <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{discussionPresetLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="w-64">
-              {discussionPresetOptions.map((preset) => (
-                <SelectItem key={preset.key} value={preset.key}>
-                  {preset.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                aria-label="Stil auswählen"
+                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+                style={{ animationDelay: "50ms" }}
+              >
+                <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
+                <span className="whitespace-nowrap">{discussionPresetLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="w-64">
+                {discussionPresetOptions.map((preset) => (
+                  <SelectItem key={preset.key} value={preset.key}>
+                    {preset.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          {/* Creativity Dropdown */}
-          <Select
-            value={String(settings.creativity)}
-            onValueChange={(value) => setCreativity(Number(value))}
-          >
-            <SelectTrigger
-              aria-label="Kreativität auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "100ms" }}
+            {/* Creativity Dropdown */}
+            <Select
+              value={String(settings.creativity)}
+              onValueChange={(value) => setCreativity(Number(value))}
             >
-              <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{creativityShortLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="w-64">
-              {creativityOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                aria-label="Kreativität auswählen"
+                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+                style={{ animationDelay: "100ms" }}
+              >
+                <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
+                <span className="whitespace-nowrap">{creativityShortLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="w-64">
+                {creativityOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          {/* Model Dropdown */}
-          <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
-            <SelectTrigger
-              aria-label="Modell auswählen"
-              className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "150ms" }}
-            >
-              <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{modelLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="max-h-[280px] w-64">
-              {models?.map((model) => (
-                <SelectItem key={model.id} value={model.id}>
-                  {model.label || model.id}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {/* Model Dropdown */}
+            <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
+              <SelectTrigger
+                aria-label="Modell auswählen"
+                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+                style={{ animationDelay: "150ms" }}
+              >
+                <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
+                <span className="whitespace-nowrap">{modelLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="max-h-[280px] w-64">
+                {models?.map((model) => (
+                  <SelectItem key={model.id} value={model.id}>
+                    {model.label || model.id}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

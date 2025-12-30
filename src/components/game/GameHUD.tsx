@@ -1,53 +1,173 @@
-import React from "react";
-
-import { Backpack, Coins, Heart, MapPin } from "@/lib/icons";
+import {
+  Backpack,
+  Coins,
+  Heart,
+  MapPin,
+  Scroll,
+  Star,
+  Store,
+  Swords,
+  User,
+  Zap,
+} from "@/lib/icons";
 
 import type { GameState } from "../../hooks/useGameState";
+import { CharacterSheet } from "./CharacterSheet";
+import { CombatTracker } from "./CombatTracker";
+import { InventoryModal } from "./InventoryModal";
+import { QuestTracker } from "./QuestTracker";
+import { SkillTreeModal } from "./SkillTreeModal";
+import { TradeModal } from "./TradeModal";
 
-export function GameHUD({ state }: { state: GameState }) {
-  const hpPercent = Math.min(100, Math.max(0, (state.hp / state.maxHp) * 100));
+interface GameHUDProps {
+  state: GameState;
+}
+
+export function GameHUD({ state }: GameHUDProps) {
+  const hpPercent =
+    state.maxHp > 0 ? Math.min(100, Math.max(0, (state.hp / state.maxHp) * 100)) : 0;
+
+  const xpPercent =
+    state.xpToNextLevel > 0
+      ? Math.min(100, Math.max(0, (state.xp / state.xpToNextLevel) * 100))
+      : 0;
+
+  const totalItems = state.inventory.reduce((sum, item) => sum + item.quantity, 0);
+  const activeQuests = state.quests.filter((q) => !q.completed).length;
+  const activeOffers = state.trade.activeOffers.filter((o) => !o.completed).length;
 
   return (
-    <div className="bg-surface-800 text-white p-4 shadow-lg border-b border-white/10 sticky top-0 z-20">
-      <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
-        <div className="flex-1 min-w-[180px]">
-          <div className="flex justify-between text-xs text-gray-400 mb-1 uppercase tracking-wider font-bold">
-            <span className="flex items-center gap-1">
-              <Heart size={12} className="text-red-500" />
-              Vitalität
-            </span>
-            <span>
-              {state.hp} / {state.maxHp}
-            </span>
-          </div>
-          <div className="h-3 bg-gray-700 rounded-full overflow-hidden border border-white/5 relative">
-            <div className="absolute inset-0 bg-red-900/50" />
-            <div
-              className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(239,68,68,0.5)]"
-              style={{ width: `${hpPercent}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3 text-sm font-medium flex-wrap justify-end">
-          <div className="flex items-center gap-2 text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-            <Coins size={16} />
-            <span>{state.gold} G</span>
-          </div>
-          <div className="flex items-center gap-2 text-blue-300 bg-blue-400/10 px-3 py-1 rounded-full border border-blue-400/20">
-            <MapPin size={16} />
-            <span className="truncate max-w-[200px]" title={state.location}>
-              {state.location}
-            </span>
-          </div>
-          {state.inventory.length > 0 && (
-            <div className="flex items-center gap-2 text-emerald-300 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-400/20">
-              <Backpack size={16} />
-              <span className="truncate max-w-[200px]" title={state.inventory.join(", ")}>
-                {state.inventory.join(", ")}
-              </span>
+    <div className="w-full pt-3 pb-2">
+      <div className="mx-auto w-full max-w-3xl px-4">
+        <div className="rounded-2xl border border-white/10 bg-surface-1/70 px-4 py-3 shadow-sm backdrop-blur-md">
+          <div className="flex flex-col gap-3">
+            {/* HP Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-ink-tertiary">
+                <span className="flex items-center gap-1 text-ink-secondary">
+                  <Heart className="h-3 w-3 text-status-error" />
+                  Vitalität
+                </span>
+                <span className="text-ink-secondary">
+                  {state.hp} / {state.maxHp}
+                </span>
+              </div>
+              <div className="h-2 rounded-full bg-surface-2/80 border border-white/10 overflow-hidden">
+                <div
+                  className="h-full bg-status-error transition-[width] duration-500 ease-out"
+                  style={{ width: `${hpPercent}%` }}
+                />
+              </div>
             </div>
-          )}
+
+            {/* XP Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-ink-tertiary">
+                <span className="flex items-center gap-1 text-ink-secondary">
+                  <Star className="h-3 w-3 text-amber-400" />
+                  Level {state.level}
+                </span>
+                <span className="text-ink-secondary">
+                  {state.xp} / {state.xpToNextLevel} XP
+                </span>
+              </div>
+              <div className="h-2 rounded-full bg-surface-2/80 border border-white/10 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-[width] duration-500 ease-out"
+                  style={{ width: `${xpPercent}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Stats Row */}
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5">
+                <Coins className="h-4 w-4 text-amber-300" />
+                <span className="text-ink-primary">{state.gold} G</span>
+              </div>
+              <div
+                className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5"
+                title={state.location}
+              >
+                <MapPin className="h-4 w-4 text-sky-300" />
+                <span className="max-w-[120px] truncate text-ink-secondary">{state.location}</span>
+              </div>
+
+              {/* Interactive Buttons */}
+              <InventoryModal
+                state={state}
+                trigger={
+                  <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
+                    <Backpack className="h-4 w-4 text-emerald-300" />
+                    <span className="text-ink-secondary">{totalItems}</span>
+                  </button>
+                }
+              />
+
+              {activeQuests > 0 && (
+                <QuestTracker
+                  state={state}
+                  trigger={
+                    <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
+                      <Scroll className="h-4 w-4 text-purple-300" />
+                      <span className="text-ink-secondary">{activeQuests}</span>
+                    </button>
+                  }
+                />
+              )}
+
+              {state.combat.active && (
+                <CombatTracker
+                  state={state}
+                  trigger={
+                    <button className="flex items-center gap-2 rounded-full border border-status-error/30 bg-status-error/10 px-3 py-1.5 hover:bg-status-error/20 transition-colors animate-pulse">
+                      <Swords className="h-4 w-4 text-status-error" />
+                      <span className="text-status-error font-semibold">
+                        R{state.combat.roundNumber}
+                      </span>
+                    </button>
+                  }
+                />
+              )}
+
+              {state.skillTree.skills.length > 0 && (
+                <SkillTreeModal
+                  state={state}
+                  trigger={
+                    <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
+                      <Zap className="h-4 w-4 text-amber-400" />
+                      {state.skillTree.availablePoints > 0 && (
+                        <span className="text-amber-400 font-semibold">
+                          {state.skillTree.availablePoints}
+                        </span>
+                      )}
+                    </button>
+                  }
+                />
+              )}
+
+              {activeOffers > 0 && (
+                <TradeModal
+                  state={state}
+                  trigger={
+                    <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
+                      <Store className="h-4 w-4 text-emerald-300" />
+                      <span className="text-ink-secondary">{activeOffers}</span>
+                    </button>
+                  }
+                />
+              )}
+
+              <CharacterSheet
+                state={state}
+                trigger={
+                  <button className="flex items-center gap-1.5 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
+                    <User className="h-4 w-4 text-cyan-300" />
+                  </button>
+                }
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
