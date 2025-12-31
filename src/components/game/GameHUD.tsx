@@ -1,24 +1,9 @@
-import {
-  Backpack,
-  Coins,
-  Heart,
-  MapPin,
-  Scroll,
-  Star,
-  Store,
-  Swords,
-  User,
-  Zap,
-} from "@/lib/icons";
+import { Backpack, Coins, Heart, MapPin, Scroll, Star, Swords } from "@/lib/icons";
 
 import type { GameState, Item } from "../../hooks/useGameState";
-import { CharacterSheet } from "./CharacterSheet";
 import { CombatTracker } from "./CombatTracker";
 import { InventoryModal } from "./InventoryModal";
 import { QuestTracker } from "./QuestTracker";
-import { SkillTreeModal } from "./SkillTreeModal";
-import { SurvivalBars } from "./SurvivalBars";
-import { TradeModal } from "./TradeModal";
 
 interface GameHUDProps {
   state: GameState;
@@ -37,7 +22,6 @@ export function GameHUD({ state, onUseItem, onCombatAction }: GameHUDProps) {
 
   const totalItems = state.inventory.reduce((sum, item) => sum + item.quantity, 0);
   const activeQuests = state.quests.filter((q) => !q.completed).length;
-  const activeOffers = state.trade.activeOffers.filter((o) => !o.completed).length;
 
   return (
     <div className="w-full pt-3 pb-2">
@@ -82,8 +66,8 @@ export function GameHUD({ state, onUseItem, onCombatAction }: GameHUDProps) {
               </div>
             </div>
 
-            {/* Survival Bars */}
-            <SurvivalBars survival={state.survival} />
+            {/* Survival Bars - DISABLED (simplified to HP-only system) */}
+            {/* <SurvivalBars survival={state.survival} /> */}
 
             {/* Stats Row */}
             <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -137,43 +121,6 @@ export function GameHUD({ state, onUseItem, onCombatAction }: GameHUDProps) {
                   }
                 />
               )}
-
-              {state.skillTree.skills.length > 0 && (
-                <SkillTreeModal
-                  state={state}
-                  trigger={
-                    <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
-                      <Zap className="h-4 w-4 text-amber-400" />
-                      {state.skillTree.availablePoints > 0 && (
-                        <span className="text-amber-400 font-semibold">
-                          {state.skillTree.availablePoints}
-                        </span>
-                      )}
-                    </button>
-                  }
-                />
-              )}
-
-              {activeOffers > 0 && (
-                <TradeModal
-                  state={state}
-                  trigger={
-                    <button className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
-                      <Store className="h-4 w-4 text-emerald-300" />
-                      <span className="text-ink-secondary">{activeOffers}</span>
-                    </button>
-                  }
-                />
-              )}
-
-              <CharacterSheet
-                state={state}
-                trigger={
-                  <button className="flex items-center gap-1.5 rounded-full border border-white/10 bg-surface-2/70 px-3 py-1.5 hover:bg-surface-2/90 transition-colors">
-                    <User className="h-4 w-4 text-cyan-300" />
-                  </button>
-                }
-              />
             </div>
           </div>
         </div>
