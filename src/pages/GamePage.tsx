@@ -148,9 +148,12 @@ export default function GamePage() {
   const handleStartGame = useCallback(() => {
     if (!isGameRoleActive) return;
     setGameStarted(true);
-    chatLogic.sendPrompt("System: Initialisiere Sequenz. Starte Simulation 'Projekt Neubeginn'.", {
-      updateInput: true,
-    });
+    chatLogic.sendPrompt(
+      "System: Initialisiere Sequenz. Spieler erwacht ohne Erinnerung in einer apokalyptischen Welt. Starte Simulation 'Projekt Neubeginn'.",
+      {
+        updateInput: true,
+      },
+    );
   }, [chatLogic, isGameRoleActive]);
 
   const handleSave = useCallback(() => {
