@@ -223,10 +223,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       };
       setActiveRole(legacyRole);
       trackRoleUsage(role.id);
-      // Navigate to chat after selecting role
-      void navigate("/chat");
     },
-    [setActiveRole, trackRoleUsage, navigate],
+    [setActiveRole, trackRoleUsage],
   );
 
   const handleStartChat = useCallback(() => {
