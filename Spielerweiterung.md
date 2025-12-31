@@ -79,7 +79,7 @@ return (
              <div className="absolute inset-0 bg-red-900/50"></div>
             <div
               className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(239,68,68,0.5)]"
-              style={{ width: `${hpPercent}%` }}
+              style={ { width: `${hpPercent}%` } }
             />
           </div>
         </div>
