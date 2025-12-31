@@ -36,7 +36,7 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   const requestOptions = useMemo(() => {
     const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog ?? null);
     const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
-    const maxTokens = activeRole?.id === "eternia-dm" ? 450 : undefined;
+    const maxTokens = activeRole?.id === "eternia-dm" ? 300 : undefined;
     return {
       model: settings.preferredModelId,
       temperature: capabilities.temperature ? params.temperature : undefined,

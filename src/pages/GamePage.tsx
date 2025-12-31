@@ -17,13 +17,13 @@ import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { GameEffects } from "../components/game/GameEffects";
 import { GameHUD } from "../components/game/GameHUD";
-import { SurvivalQuickActions } from "../components/game/SurvivalQuickActions";
 import { PageLayout } from "../components/layout/PageLayout";
 import { useRoles } from "../contexts/RolesContext";
 import type { UIRole } from "../data/roles";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useGameEngine } from "../hooks/useGameEngine";
 import { cleanGameContent, type Item, useGameState } from "../hooks/useGameState";
+import { useSettings } from "../hooks/useSettings";
 import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const GAME_ROLE_ID = "eternia-dm";
@@ -42,6 +42,7 @@ export default function GamePage() {
   });
 
   const { roles, activeRole, setActiveRole } = useRoles();
+  const { setPreferredModel } = useSettings();
 
   // Initialize Game Engine first (needed for validation)
   const gameEngineRef = useRef<ReturnType<typeof useGameEngine> | null>(null);
@@ -53,7 +54,6 @@ export default function GamePage() {
     manualSave,
     importSave,
     updateSurvival,
-    updateHP,
     updateInventory,
     updateCombat,
   } = useGameState(
@@ -84,25 +84,18 @@ export default function GamePage() {
     }, duration);
   }, []);
 
-  // Monitor critical survival state and apply HP damage
+  // Monitor critical HP state (simplified - no survival bars)
   useEffect(() => {
     if (chatLogic.messages.length === 0) return; // Don't check before game starts
 
-    const criticalCheck = gameEngine.checkCriticalState(gameState.survival, gameState.hp);
-
-    if (criticalCheck.hpDamage > 0) {
-      updateHP(-criticalCheck.hpDamage);
-      showNotification(criticalCheck.warnings.join(" | "), 3000);
-
-      if (criticalCheck.isDead) {
-        showNotification("💀 GAME OVER - Du bist gestorben");
-        chatLogic.sendPrompt(
-          "[SYSTEM: SPIELER GESTORBEN. HP erreichte 0 durch kritische Überlebenswerte. Erzähle dramatische Game Over Szene.]",
-          { updateInput: false },
-        );
-      }
+    if (gameState.hp <= 0) {
+      showNotification("💀 GAME OVER - Du bist gestorben");
+      chatLogic.sendPrompt(
+        "[SYSTEM: SPIELER GESTORBEN. HP erreichte 0. Erzähle dramatische Game Over Szene.]",
+        { updateInput: false },
+      );
     }
-  }, [gameState.survival, gameState.hp, gameEngine, updateHP, chatLogic, showNotification]);
+  }, [gameState.hp, chatLogic, showNotification]);
 
   const gameRole = useMemo(() => roles.find((role) => role.id === GAME_ROLE_ID), [roles]);
   const isGameRoleActive = activeRole?.id === GAME_ROLE_ID;
@@ -127,6 +120,13 @@ export default function GamePage() {
     setActiveRole(gameRole);
   }, [activeRole, gameRole, setActiveRole]);
 
+  // Set optimal model when game page is loaded with existing messages
+  useEffect(() => {
+    if (chatLogic.messages.length > 0) {
+      setPreferredModel("qwen/qwen-2.5-72b-instruct:free");
+    }
+  }, [chatLogic.messages.length, setPreferredModel]);
+
   useEffect(() => {
     return () => {
       const previousRole = previousRoleRef.current;
@@ -147,6 +147,10 @@ export default function GamePage() {
 
   const handleStartGame = useCallback(() => {
     if (!isGameRoleActive) return;
+
+    // Set optimal model for Ground Zero (best free model for storytelling)
+    setPreferredModel("qwen/qwen-2.5-72b-instruct:free");
+
     setGameStarted(true);
     chatLogic.sendPrompt(
       "System: Initialisiere Sequenz. Vorhut der Orbitalkolonie Aegis landet in einer apokalyptischen Welt; Spieler ist Teil der Vorhut. Starte Simulation 'Projekt Neubeginn'.",
@@ -154,7 +158,7 @@ export default function GamePage() {
         updateInput: true,
       },
     );
-  }, [chatLogic, isGameRoleActive]);
+  }, [chatLogic, isGameRoleActive, setPreferredModel]);
 
   const handleSave = useCallback(() => {
     manualSave();
@@ -164,6 +168,9 @@ export default function GamePage() {
   const handleLoad = useCallback(() => {
     const loadedState = loadSave();
     if (loadedState) {
+      // Set optimal model for Ground Zero
+      setPreferredModel("qwen/qwen-2.5-72b-instruct:free");
+
       setGameStarted(true); // Start decay timer after loading
       showNotification("Spielstand geladen - Synchronisiere...");
       const syncMessage = `[SYSTEM: SPIELSTAND GELADEN. HIER IST DER AKTUELLE STATUS: ${JSON.stringify(loadedState)}. BITTE BESTÄTIGE UND FAHRE MIT DER HANDLUNG FORT.]`;
@@ -171,7 +178,7 @@ export default function GamePage() {
     } else {
       showNotification("Kein Spielstand gefunden");
     }
-  }, [loadSave, chatLogic, showNotification]);
+  }, [loadSave, chatLogic, showNotification, setPreferredModel]);
 
   const handleExport = useCallback(() => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState));
@@ -200,6 +207,9 @@ export default function GamePage() {
       reader.onload = (e) => {
         const content = e.target?.result as string;
         if (importSave(content)) {
+          // Set optimal model for Ground Zero
+          setPreferredModel("qwen/qwen-2.5-72b-instruct:free");
+
           showNotification("Datei importiert - Synchronisiere...");
           // Force Sync after import
           const loadedState = JSON.parse(content); // We know it's valid if importSave returned true
@@ -213,7 +223,7 @@ export default function GamePage() {
       // Reset input
       event.target.value = "";
     },
-    [importSave, chatLogic, showNotification],
+    [importSave, chatLogic, showNotification, setPreferredModel],
   );
 
   const handleReset = useCallback(() => {
@@ -347,45 +357,13 @@ export default function GamePage() {
     ],
   );
 
-  const handleQuickAction = useCallback(
-    (action: "eat" | "drink" | "rest") => {
-      if (action === "eat") {
-        // Find first food item and use it
-        const foodItem = gameState.inventory.find(
-          (item) =>
-            item.type === "consumable" &&
-            (item.name.toLowerCase().includes("ration") ||
-              item.name.toLowerCase().includes("nahrung") ||
-              item.name.toLowerCase().includes("konserve")),
-        );
-        if (foodItem) {
-          handleUseItem(foodItem);
-        }
-      } else if (action === "drink") {
-        // Find first water item and use it
-        const waterItem = gameState.inventory.find(
-          (item) =>
-            item.type === "consumable" &&
-            (item.name.toLowerCase().includes("wasser") ||
-              item.name.toLowerCase().includes("water") ||
-              item.name.toLowerCase().includes("getränk")),
-        );
-        if (waterItem) {
-          handleUseItem(waterItem);
-        }
-      } else if (action === "rest") {
-        // Short rest
-        const restChanges = gameEngine.rest("short");
-        updateSurvival(restChanges);
-        showNotification("💤 Kurze Rast abgeschlossen");
-
-        // Notify AI
-        const restMessage = `[SYSTEM ACTION: Spieler rastete 30 Minuten. Müdigkeit -30%, Hunger -5%, Durst -8%. State bereits aktualisiert. Erzähle kurz die Pause.]`;
-        chatLogic.sendPrompt(restMessage, { updateInput: false });
-      }
-    },
-    [gameState.inventory, handleUseItem, gameEngine, updateSurvival, chatLogic, showNotification],
-  );
+  // DISABLED: Quick actions no longer needed with HP-only system
+  // const handleQuickAction = useCallback(
+  //   (action: "eat" | "drink" | "rest") => {
+  //     // Simplified system - removed
+  //   },
+  //   [],
+  // );
 
   return (
     <PageLayout
@@ -520,14 +498,14 @@ export default function GamePage() {
 
         <div className="flex-none w-full pointer-events-none z-20">
           <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto space-y-2">
-            {/* Survival Quick Actions */}
-            {chatLogic.messages.length > 0 && (
+            {/* Survival Quick Actions - DISABLED (simplified to HP-only system) */}
+            {/* {chatLogic.messages.length > 0 && (
               <SurvivalQuickActions
                 state={gameState}
                 onQuickAction={handleQuickAction}
                 isLoading={chatLogic.isLoading}
               />
-            )}
+            )} */}
 
             {/* Suggested Actions */}
             {gameState.suggested_actions &&

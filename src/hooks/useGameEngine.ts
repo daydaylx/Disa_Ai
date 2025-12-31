@@ -11,7 +11,7 @@ export interface GameEngineConfig {
 }
 
 const DEFAULT_CONFIG: GameEngineConfig = {
-  autoDecayEnabled: true,
+  autoDecayEnabled: false, // DISABLED: Simplified to HP-only system
   decayInterval: 60000, // 1 minute
   hungerDecayRate: 2,
   thirstDecayRate: 3,
