@@ -36,13 +36,15 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   const requestOptions = useMemo(() => {
     const capabilities = getSamplingCapabilities(settings.preferredModelId, modelCatalog ?? null);
     const params = mapCreativityToParams(settings.creativity ?? 45, settings.preferredModelId);
+    const maxTokens = activeRole?.id === "eternia-dm" ? 450 : undefined;
     return {
       model: settings.preferredModelId,
       temperature: capabilities.temperature ? params.temperature : undefined,
       top_p: capabilities.top_p ? params.top_p : undefined,
       presence_penalty: capabilities.presence_penalty ? params.presence_penalty : undefined,
+      max_tokens: maxTokens,
     };
-  }, [modelCatalog, settings.creativity, settings.preferredModelId]);
+  }, [activeRole?.id, modelCatalog, settings.creativity, settings.preferredModelId]);
 
   // Error handler
   const handleError = useCallback(
