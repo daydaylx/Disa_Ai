@@ -149,7 +149,7 @@ export default function GamePage() {
     if (!isGameRoleActive) return;
     setGameStarted(true);
     chatLogic.sendPrompt(
-      "System: Initialisiere Sequenz. Spieler erwacht ohne Erinnerung in einer apokalyptischen Welt. Starte Simulation 'Projekt Neubeginn'.",
+      "System: Initialisiere Sequenz. Vorhut der Orbitalkolonie Aegis landet in einer apokalyptischen Welt; Spieler ist Teil der Vorhut. Starte Simulation 'Projekt Neubeginn'.",
       {
         updateInput: true,
       },
