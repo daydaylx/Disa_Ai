@@ -1,0 +1,362 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { ArrowLeft, Download, RotateCcw, Save } from "@/lib/icons";
+import { Button } from "@/ui/Button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/ui/Card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/ui/DropdownMenu";
+
+import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
+import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
+import { GameEffects } from "../components/game/GameEffects";
+import { GameHUD } from "../components/game/GameHUD";
+import { PageLayout } from "../components/layout/PageLayout";
+import { useGame } from "../contexts/GameContext";
+import { useRoles } from "../contexts/RolesContext";
+import type { UIRole } from "../data/roles";
+import { getScenario, SCENARIOS } from "../features/registry";
+import type { useChatPageLogic } from "../hooks/useChatPageLogic";
+import { useVisualViewport } from "../hooks/useVisualViewport";
+
+interface GamePageContentProps {
+  chatLogic: ReturnType<typeof useChatPageLogic>;
+}
+
+export function GamePageContent({ chatLogic }: GamePageContentProps) {
+  const { scenarioId } = useParams<{ scenarioId: string }>();
+  const activeScenario = useMemo(() => {
+    const fallback: any = {
+      id: "ground-zero",
+      title: "Ground Zero",
+      roleId: "eternia-dm",
+      systemPrompt: "",
+      initialMessage: "System: Start.",
+      description: "",
+    };
+    return getScenario(scenarioId || "ground-zero") || SCENARIOS["ground-zero"] || fallback;
+  }, [scenarioId]);
+
+  const viewport = useVisualViewport();
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  const previousRoleRef = useRef<UIRole | null>(null);
+  const navigate = useNavigate();
+  const [saveNotification, setSaveNotification] = useState<string | null>(null);
+  const notificationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { roles, activeRole, setActiveRole } = useRoles();
+
+  // Access the centralized Game Context
+  const {
+    gameState,
+    startGame,
+    resetGame,
+    saveGame,
+    loadGame,
+    performItemAction,
+    combatAction,
+    cleanContent,
+  } = useGame();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Safe notification helper
+  const showNotification = useCallback((message: string, duration = 2000) => {
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+    setSaveNotification(message);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setSaveNotification(null);
+      notificationTimeoutRef.current = null;
+    }, duration);
+  }, []);
+
+  // Monitor critical HP state
+  useEffect(() => {
+    if (chatLogic.messages.length === 0) return;
+
+    if (gameState.hp <= 0) {
+      showNotification("💀 GAME OVER - Du bist gestorben");
+      chatLogic.sendPrompt(
+        "[SYSTEM: SPIELER GESTORBEN. HP erreichte 0. Erzähle dramatische Game Over Szene.]",
+        { updateInput: false },
+      );
+    }
+  }, [gameState.hp, chatLogic, showNotification]);
+
+  // Role Management - Dynamic based on Scenario
+  const gameRole = useMemo(() => {
+    const baseRole = roles.find((role) => role.id === activeScenario.roleId);
+    if (!baseRole) return null;
+
+    // Override system prompt if scenario defines one
+    if (activeScenario.systemPrompt) {
+      return { ...baseRole, systemPrompt: activeScenario.systemPrompt };
+    }
+    return baseRole;
+  }, [roles, activeScenario]);
+
+  const isGameRoleActive = activeRole?.id === activeScenario.roleId;
+
+  useEffect(() => {
+    if (!gameRole) return;
+
+    // Check if we need to switch role
+    // We check id AND if systemPrompt matches (for scenarios sharing the same role ID but different prompts)
+    const currentPromptStart = activeRole?.systemPrompt?.substring(0, 50);
+    const targetPromptStart = gameRole.systemPrompt.substring(0, 50);
+
+    if (activeRole?.id === gameRole.id && currentPromptStart === targetPromptStart) return;
+
+    if (!previousRoleRef.current) {
+      previousRoleRef.current = activeRole ?? null;
+    }
+
+    setActiveRole(gameRole);
+  }, [activeRole, gameRole, setActiveRole]);
+
+  useEffect(() => {
+    return () => {
+      const previousRole = previousRoleRef.current;
+      // Don't switch back if we are just navigating between scenarios
+      // simplified: just switch back if leaving game page
+      if (!previousRole) return;
+      setActiveRole(previousRole);
+    };
+  }, [setActiveRole]);
+
+  // Message Cleaning
+  const displayMessages = useMemo(
+    () =>
+      chatLogic.messages.map((message) =>
+        message.role === "assistant"
+          ? { ...message, content: cleanContent(message.content) }
+          : message,
+      ),
+    [chatLogic.messages, cleanContent],
+  );
+
+  const handleStartGame = useCallback(() => {
+    // We allow starting if the role ID matches
+    if (activeRole?.id !== activeScenario.roleId) return;
+
+    startGame();
+    chatLogic.sendPrompt(activeScenario.initialMessage, { updateInput: true });
+  }, [chatLogic, activeRole, activeScenario, startGame]);
+
+  const handleSave = useCallback(() => {
+    saveGame();
+    showNotification("Spielstand gesichert");
+  }, [saveGame, showNotification]);
+
+  const handleLoad = useCallback(() => {
+    if (loadGame()) {
+      showNotification("Spielstand geladen - Synchronisiere...");
+      // Sync message is handled by context if we wanted, but here we trigger a refresh
+      // For now, simpler to just force a narrative beat:
+      chatLogic.sendPrompt("[SYSTEM: SPIELSTAND GELADEN. FAHRE FORT.]", { updateInput: true });
+    } else {
+      showNotification("Kein Spielstand gefunden");
+    }
+  }, [loadGame, chatLogic, showNotification]);
+
+  const handleReset = useCallback(() => {
+    if (!confirm("Warnung: System-Reset löscht alle Daten. Fortfahren?")) {
+      return;
+    }
+    resetGame();
+    showNotification("System zurückgesetzt");
+  }, [resetGame, showNotification]);
+
+  // Action Handlers
+  const handleAction = useCallback(
+    (action: string) => {
+      if (!action.trim()) return;
+      chatLogic.sendPrompt(action, { updateInput: true });
+    },
+    [chatLogic],
+  );
+
+  const handleUseItemWrapper = useCallback(
+    (item: any) => {
+      const result = performItemAction(item);
+      if (!result.success) {
+        // Notification handled by context or not needed?
+        // showNotification("Kann Item nicht nutzen");
+      }
+    },
+    [performItemAction],
+  );
+
+  const handleCombatActionWrapper = useCallback(
+    (action: string) => {
+      const result = combatAction(action);
+      if (result.success && result.message) {
+        // showNotification(result.message);
+      }
+    },
+    [combatAction],
+  );
+
+  return (
+    <PageLayout
+      title="Ground Zero"
+      accentColor="roles"
+      showMenu={false}
+      headerActions={
+        <div className="flex items-center gap-2">
+          {saveNotification && (
+            <div className="text-xs text-status-success font-medium px-2 py-1 rounded-lg bg-status-success/10 border border-status-success/20 animate-in fade-in slide-in-from-top-2 duration-200">
+              {saveNotification}
+            </div>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="gap-2">
+                <Save className="h-4 w-4" />
+                System
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleSave}>
+                <Save className="h-4 w-4" />
+                Speichern
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLoad}>
+                <Download className="h-4 w-4" />
+                Laden
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleReset} className="text-status-error">
+                <RotateCcw className="h-4 w-4" />
+                Neustart
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => void navigate("/chat")}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Exit
+          </Button>
+        </div>
+      }
+    >
+      <input
+        type="file"
+        ref={fileInputRef}
+        // onChange... (Import logic needs to be moved to context or kept local)
+        accept=".json"
+        className="hidden"
+      />
+      <h1 className="sr-only">Ground Zero</h1>
+      <GameEffects state={gameState} />
+      <div
+        className="flex flex-col relative w-full game-page-content"
+        style={{
+          height: viewport.height ? `${viewport.height - 64}px` : "100%",
+          minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
+        }}
+      >
+        <GameHUD
+          state={gameState}
+          onUseItem={handleUseItemWrapper}
+          onCombatAction={handleCombatActionWrapper}
+        />
+        <ChatStatusBanner
+          status={chatLogic.apiStatus}
+          error={chatLogic.error}
+          rateLimitInfo={chatLogic.rateLimitInfo}
+        />
+
+        <div
+          ref={chatScrollRef}
+          className="flex-1 overflow-y-auto min-h-0 pt-2"
+          role="log"
+          aria-label="Spielverlauf"
+        >
+          <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
+            <div className="flex-1 flex flex-col gap-6 py-4">
+              {chatLogic.isEmpty ? (
+                <div className="flex-1 flex items-center justify-center pb-12">
+                  <Card
+                    variant="hero"
+                    className="w-full max-w-md text-center space-y-4 p-6 border-emerald-500/20 bg-surface-2/50 backdrop-blur"
+                  >
+                    <CardHeader className="space-y-2">
+                      <CardTitle className="text-emerald-400 font-mono tracking-wider">
+                        {activeScenario.title}
+                      </CardTitle>
+                      <CardDescription className="font-mono text-xs">
+                        Verbindung zum Habitat hergestellt...
+                        <br />
+                        Warte auf Input.
+                      </CardDescription>
+                    </CardHeader>
+                    <Button
+                      variant="primary"
+                      onClick={handleStartGame}
+                      disabled={!isGameRoleActive || chatLogic.isLoading}
+                      className="w-full font-mono"
+                    >
+                      {isGameRoleActive ? "/// INITIALISIEREN" : "LADE PROTOKOLLE..."}
+                    </Button>
+                  </Card>
+                </div>
+              ) : (
+                <VirtualizedMessageList
+                  messages={displayMessages}
+                  conversationKey={chatLogic.activeConversationId ?? "new"}
+                  isLoading={chatLogic.isLoading}
+                  onEdit={chatLogic.handleEdit}
+                  onRetry={chatLogic.handleRetry}
+                  className="w-full pb-4"
+                  scrollContainerRef={chatScrollRef}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-none w-full pointer-events-none z-20">
+          <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto space-y-2">
+            {gameState.suggested_actions &&
+              gameState.suggested_actions.length > 0 &&
+              !chatLogic.isLoading && (
+                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                  {gameState.suggested_actions.map((action, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleAction(action)}
+                      className="flex-shrink-0 text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 active:scale-95 transition-all cursor-pointer font-mono"
+                    >
+                      › {action}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+            <UnifiedInputBar
+              value={chatLogic.input}
+              onChange={chatLogic.setInput}
+              onSend={chatLogic.handleSend}
+              isLoading={chatLogic.isLoading}
+              placeholder='Kommando eingeben... (z.B. "Inventar prüfen")'
+              showContextPills={false}
+            />
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+}

@@ -192,7 +192,7 @@ export const GameStateSchema = z.object({
 
 export type GameState = z.infer<typeof GameStateSchema>;
 
-const DEFAULT_GAME_STATE: GameState = {
+export const DEFAULT_GAME_STATE: GameState = {
   hp: 100,
   maxHp: 100,
   gold: 0,
@@ -362,17 +362,40 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
   if (!content.includes("<game_state>")) return null;
 
   const matches = Array.from(content.matchAll(/<game_state>([\s\S]*?)<\/game_state>/g));
-  if (matches.length === 0) return null;
 
-  const raw = matches[matches.length - 1]?.[1]?.trim();
+  // Fallback: Try to find unclosed tag if no closed tag exists (streaming support)
+  let raw = "";
+  if (matches.length > 0) {
+    raw = matches[matches.length - 1]?.[1]?.trim() || "";
+  } else {
+    const openMatch = content.match(/<game_state>([\s\S]*)$/);
+    if (openMatch && openMatch[1]) {
+      raw = openMatch[1].trim();
+    }
+  }
+
   if (!raw) return null;
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
   } catch (error) {
-    console.warn("[useGameState] Invalid JSON in <game_state> block.", error);
-    return null;
+    // Attempt simple repair for truncated JSON (common in streaming)
+    try {
+      if (raw.trim().endsWith("}")) {
+        // If it looks closed but failed, maybe quotes?
+        console.warn("[useGameState] JSON parse failed, ignoring.");
+        return null;
+      }
+      // Extremely basic repair: try adding closing brace
+      // This is risky, so we only do it for specific cases if needed,
+      // but for now, we'll just log and skip to avoid corruption.
+      // Better strategy: Don't update state until fully received.
+      // console.warn("[useGameState] Incomplete JSON detected, skipping update.");
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   if (!parsed || typeof parsed !== "object") return null;

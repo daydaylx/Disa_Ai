@@ -71,6 +71,14 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
+      path: "/game/:scenarioId",
+      element: (
+        <RouteWrapper layout="page">
+          <GamePage />
+        </RouteWrapper>
+      ),
+    },
+    {
       path: "/studio",
       element: <Navigate to="/chat" replace />,
     },
