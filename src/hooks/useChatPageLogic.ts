@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { nanoid } from "nanoid";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { VisionApiError } from "../api/zaiVision";
+import type { AttachedImage } from "../components/chat/ImageAttachment";
 import { useModelCatalog } from "../contexts/ModelCatalogContext";
 import { useRoles } from "../contexts/RolesContext";
 import { buildSystemPrompt } from "../lib/chat/prompt-builder";
@@ -15,6 +18,7 @@ import { useConversationHistory } from "./useConversationHistory";
 import { useConversationManager } from "./useConversationManager";
 import { useMemory } from "./useMemory";
 import { useSettings } from "./useSettings";
+import { useVisionAnalysis } from "./useVisionAnalysis";
 
 interface ChatPageLogicOptions {
   onStartWithPreset: (system: string, user?: string) => void;
@@ -31,6 +35,13 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { models: modelCatalog } = useModelCatalog();
+
+  // Image attachment state
+  const [attachedImage, setAttachedImage] = useState<AttachedImage | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  // Vision analysis hook
+  const { isAnalyzing, analyze: analyzeVision } = useVisionAnalysis();
 
   // Request options based on current settings
   const requestOptions = useMemo(() => {
@@ -70,6 +81,12 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   } = useChat({
     onError: handleError,
   });
+
+  // Keep a ref to current messages for use in async callbacks
+  const messagesRef = useRef(messages);
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // Update system prompt when role or settings change
   useEffect(() => {
@@ -159,10 +176,110 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     [append, isLoading, setInput, toasts],
   );
 
-  // Handle send
+  // Image attachment handlers
+  const handleImageAttach = useCallback((image: AttachedImage) => {
+    setAttachedImage(image);
+    setImageError(null);
+  }, []);
+
+  const handleImageRemove = useCallback(() => {
+    setAttachedImage(null);
+    setImageError(null);
+  }, []);
+
+  const handleImageError = useCallback(
+    (message: string) => {
+      setImageError(message);
+      toasts.push({
+        kind: "error",
+        title: "Bildfehler",
+        message,
+      });
+      // Auto-clear after 5 seconds
+      setTimeout(() => setImageError(null), 5000);
+    },
+    [toasts],
+  );
+
+  // Handle send - with vision analysis support
   const handleSend = useCallback(() => {
-    sendPrompt(input, { updateInput: true });
-  }, [input, sendPrompt]);
+    // If there's an attached image, use vision analysis
+    if (attachedImage) {
+      // Prevent duplicate submissions
+      if (isLoading || isAnalyzing) {
+        toasts.push({
+          kind: "warning",
+          title: "Verarbeitung läuft",
+          message: "Bitte warte einen Moment, bis die aktuelle Analyse fertig ist.",
+        });
+        return;
+      }
+
+      // Use a default prompt if none provided
+      const prompt = input.trim() || "Was ist auf diesem Bild zu sehen? Beschreibe es detailliert.";
+
+      // Add user message with image reference
+      const userMessage: ChatMessageType = {
+        id: nanoid(),
+        role: "user",
+        content: `[Bild: ${attachedImage.name}]\n\n${prompt}`,
+        timestamp: Date.now(),
+      };
+
+      // Add user message to chat
+      setMessages([...messages, userMessage]);
+
+      // Clear input and image
+      setInput("");
+      const imageDataUrl = attachedImage.dataUrl;
+      setAttachedImage(null);
+
+      // Start vision analysis
+      void analyzeVision(imageDataUrl, prompt, {
+        onSuccess: (text) => {
+          // Add assistant response using ref for current messages
+          const assistantMessage: ChatMessageType = {
+            id: nanoid(),
+            role: "assistant",
+            content: text,
+            timestamp: Date.now(),
+            model: "glm-4.6v",
+          };
+          setMessages([...messagesRef.current, assistantMessage]);
+        },
+        onError: (visionError: VisionApiError) => {
+          // Add error message as assistant response using ref for current messages
+          const errorMessage: ChatMessageType = {
+            id: nanoid(),
+            role: "assistant",
+            content: `❌ **Bildanalyse fehlgeschlagen**\n\n${visionError.getUserMessage()}`,
+            timestamp: Date.now(),
+            model: "glm-4.6v",
+          };
+          setMessages([...messagesRef.current, errorMessage]);
+          toasts.push({
+            kind: "error",
+            title: "Bildanalyse fehlgeschlagen",
+            message: visionError.getUserMessage(),
+          });
+        },
+      });
+    } else {
+      // Normal text-only send
+      sendPrompt(input, { updateInput: true });
+    }
+  }, [
+    input,
+    sendPrompt,
+    attachedImage,
+    isLoading,
+    isAnalyzing,
+    messages,
+    setMessages,
+    setInput,
+    analyzeVision,
+    toasts,
+  ]);
 
   // Handle edit
   const handleEdit = useCallback(
@@ -234,7 +351,7 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   return {
     // State
     messages,
-    isLoading,
+    isLoading: isLoading || isAnalyzing,
     input,
     setInput,
     apiStatus,
@@ -244,6 +361,11 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     activeConversation,
     activeConversationId,
     conversations,
+
+    // Image state
+    attachedImage,
+    imageError,
+    isAnalyzing,
 
     // Handlers
     handleSend,
@@ -255,6 +377,11 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     sendPrompt,
     selectConversation,
     navigate,
+
+    // Image handlers
+    handleImageAttach,
+    handleImageRemove,
+    handleImageError,
 
     // Preset handler
     startWithPreset: onStartWithPreset,

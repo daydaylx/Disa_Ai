@@ -13,3 +13,4 @@ pages_build_output_dir = "dist"
 # Note: Environment variables for production are set in Cloudflare Dashboard.
 # For local development, create a .dev.vars file with your secrets:
 #   OPENROUTER_API_KEY=sk-or-v1-your-key-here
+#   ZAI_API_KEY=your-zai-api-key-here
