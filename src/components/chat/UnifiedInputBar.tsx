@@ -11,6 +11,8 @@ import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
+import { type AttachedImage, ImageAttachment } from "./ImageAttachment";
+
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -19,6 +21,14 @@ export interface UnifiedInputBarProps {
   placeholder?: string;
   showContextPills?: boolean;
   className?: string;
+  /** Attached image for vision analysis */
+  attachedImage?: AttachedImage | null;
+  /** Called when user attaches an image */
+  onImageAttach?: (image: AttachedImage) => void;
+  /** Called when user removes the attached image */
+  onImageRemove?: () => void;
+  /** Called when there's an image error */
+  onImageError?: (message: string) => void;
 }
 
 export function UnifiedInputBar({
@@ -29,6 +39,10 @@ export function UnifiedInputBar({
   placeholder = "Schreibe eine Nachricht...",
   showContextPills = true,
   className,
+  attachedImage,
+  onImageAttach,
+  onImageRemove,
+  onImageError,
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
@@ -106,26 +120,57 @@ export function UnifiedInputBar({
   const modelLabel =
     selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
 
+  // Check if image attachment is enabled (has handlers)
+  const imageEnabled = Boolean(onImageAttach && onImageRemove && onImageError);
+
+  // Can send if text is present, or if image is attached (with optional text)
+  const canSend = value.trim() || attachedImage;
+
   return (
     <div className={cn("w-full space-y-3", className)}>
-      {/* Model selection moved to settings - cleaner input area */}
+      {/* Image Preview - shown above input when image is attached */}
+      {attachedImage && imageEnabled && (
+        <div className="px-1">
+          <ImageAttachment
+            image={attachedImage}
+            onAttach={onImageAttach!}
+            onRemove={onImageRemove!}
+            onError={onImageError!}
+            disabled={isLoading}
+          />
+        </div>
+      )}
 
       {/* Main Input Container - Material-based with clear focus */}
       <BrandCard
         variant="tinted"
         padding="sm"
         className={cn(
-          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
+          "relative flex items-end gap-2 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
         )}
         aria-label="Eingabebereich"
       >
+        {/* Image Attachment Button - only if enabled and no image attached */}
+        {imageEnabled && !attachedImage && (
+          <ImageAttachment
+            image={null}
+            onAttach={onImageAttach!}
+            onRemove={onImageRemove!}
+            onError={onImageError!}
+            disabled={isLoading}
+            className="flex-shrink-0 ml-1 mb-0.5"
+          />
+        )}
+
         {/* Textarea */}
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={
+            attachedImage ? "Beschreibe, was du über das Bild wissen möchtest..." : placeholder
+          }
           className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition"
           rows={1}
           data-testid="composer-input"
@@ -135,15 +180,15 @@ export function UnifiedInputBar({
         {/* Send Button - Material Chip */}
         <Button
           onClick={onSend}
-          disabled={!value.trim() || isLoading}
+          disabled={!canSend || isLoading}
           variant="primary"
           size="icon"
           className={cn(
             "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
-            !value.trim() &&
+            !canSend &&
               !isLoading &&
               "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
-            value.trim() &&
+            canSend &&
               !isLoading &&
               "bg-accent-chat text-white shadow-glow-sm hover:shadow-glow-md hover:scale-105 active:scale-100 animate-send-pulse",
           )}
@@ -152,7 +197,7 @@ export function UnifiedInputBar({
           {isLoading ? (
             <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
+            <Send className={cn("h-5 w-5", canSend && "ml-0.5")} />
           )}
         </Button>
       </BrandCard>

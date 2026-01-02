@@ -349,6 +349,10 @@ export default function Chat() {
                 onChange={chatLogic.setInput}
                 onSend={chatLogic.handleSend}
                 isLoading={chatLogic.isLoading}
+                attachedImage={chatLogic.attachedImage}
+                onImageAttach={chatLogic.handleImageAttach}
+                onImageRemove={chatLogic.handleImageRemove}
+                onImageError={chatLogic.handleImageError}
               />
             </div>
           </div>
