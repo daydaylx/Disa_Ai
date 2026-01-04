@@ -28,7 +28,8 @@ const primaryButtonVariants = cva(
 );
 
 export interface PrimaryButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof primaryButtonVariants> {}
 
 const PrimaryButton = React.forwardRef<HTMLButtonElement, PrimaryButtonProps>(
