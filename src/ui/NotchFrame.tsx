@@ -97,8 +97,7 @@ const notchFrameVariants = cva(
 );
 
 export interface NotchFrameProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof notchFrameVariants> {
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof notchFrameVariants> {
   /** Whether to render as a different element (button, etc.) */
   as?: "div" | "button" | "article" | "section";
 }
