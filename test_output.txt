@@ -1,0 +1,309 @@
+
+> disa-ai@1.0.2 test:unit
+> vitest run
+
+
+ RUN  v4.0.16 /home/d/Schreibtisch/Disa_Ai
+      Coverage enabled with v8
+
+ ✓ src/api/__tests__/visionClient.test.ts (20 tests) 130ms
+ ✓ src/components/chat/__tests__/ChatMessage.test.tsx (22 tests) 3073ms
+       ✓ rendert eine User-Nachricht korrekt  337ms
+       ✓ kopiert den Nachrichteninhalt beim Klick auf Kopieren  657ms
+       ✓ erlaubt das Abbrechen der Bearbeitung  321ms
+       ✓ ruft onEdit beim Speichern auf  609ms
+ ✓ src/components/roles/__tests__/EnhancedRolesInterface.test.tsx (11 tests) 5286ms
+     ✓ should render the roles interface header  1356ms
+     ✓ should display role cards  589ms
+     ✓ should filter roles by category  787ms
+     ✓ should indicate active role state  611ms
+     ✓ should display role tags  478ms
+     ✓ should show all roles when 'Alle' category is selected  870ms
+ ✓ src/components/chat/__tests__/UnifiedInputBar.test.tsx (20 tests) 6474ms
+       ✓ rendert das Eingabefeld mit korrektem aria-label  484ms
+       ✓ rendert den Senden-Button mit korrektem aria-label  659ms
+       ✓ rendert die Kontext-Selektoren (Rolle, Stil, Kreativität)  687ms
+       ✓ ruft onChange bei Texteingabe auf  444ms
+       ✓ zeigt den übergebenen Wert im Eingabefeld an  316ms
+       ✓ deaktiviert Senden-Button bei leerem Input  411ms
+       ✓ aktiviert Senden-Button bei vorhandenem Text  333ms
+       ✓ deaktiviert Senden-Button während des Ladens  316ms
+       ✓ ruft onSend beim Klick auf Senden-Button auf  393ms
+       ✓ hat korrekte aria-labels auf den Selektoren  411ms
+ ✓ src/__tests__/openrouter.test.ts (2 tests) 1091ms
+     ✓ mapped HTTP Fehler klar  1034ms
+ ✓ src/components/models/__tests__/ModelsCatalog.test.tsx (9 tests) 3106ms
+     ✓ should render the models catalog header  1034ms
+     ✓ should handle model selection  699ms
+     ✓ should have accessible model cards  568ms
+ ✓ tests/smoke/entrypoints.smoke.test.tsx (2 tests) 2982ms
+     ✓ rendert den Chat-Einstieg inklusive Composer  2288ms
+     ✓ zeigt die Einstellungsübersicht  683ms
+ ✓ src/hooks/__tests__/useConversationManager.test.ts (26 tests) 1080ms
+       ✓ erstellt neue Konversation bei erstem Save  515ms
+ ✓ src/ui/__tests__/Button.test.tsx (3 tests) 1073ms
+     ✓ renders correctly with default props  797ms
+ ✓ tests/unit/lib/storage-integration.test.ts (7 tests) 846ms
+     ✓ should be able to import StorageMigration component  479ms
+ ✓ src/components/neko/__tests__/NekoSprite.test.tsx (19 tests) 682ms
+       ✓ should have pixelated image rendering  389ms
+ ✓ tests/unit/copyButton.test.tsx (2 tests) 1158ms
+     ✓ uses the Clipboard API when available  915ms
+ ✓ src/components/neko/__tests__/NekoLayer.test.tsx (8 tests) 795ms
+       ✓ should apply correct transform based on x position  454ms
+ ✓ tests/unit/lib/storage-performance-simple.test.ts (7 tests) 639ms
+       ✓ should handle memory efficiently with repeated operations  409ms
+ ✓ tests/unit/ErrorBoundary.test.tsx (5 tests) 620ms
+ ✓ src/__tests__/AppShellLayout.test.tsx (4 tests) 453ms
+ ✓ src/hooks/__tests__/useNeko.test.ts (10 tests | 2 skipped) 273ms
+ ✓ tests/unit/useChat.test.tsx (4 tests) 252ms
+ ✓ src/__tests__/branding.test.tsx (1 test) 233ms
+ ✓ tests/smoke/app.test.tsx (1 test) 267ms
+ ✓ src/hooks/__tests__/useGameState.test.ts (11 tests) 212ms
+stdout | tests/unit/lib/export-validation.test.ts > Export Validation > should check what is actually exported from storage-layer
+Available exports: [
+  'ModernStorageLayer',
+  'setModernStorageInstance',
+  'getModernStorageInstance',
+  'modernStorage'
+]
+
+stdout | tests/unit/lib/export-validation.test.ts > Export Validation > should check what is actually exported from storage-migration
+Migration exports: [ 'StorageMigration', 'storageMigration' ]
+
+ ✓ tests/unit/lib/export-validation.test.ts (2 tests) 207ms
+ ✓ tests/unit/lib/storage-performance.test.ts (6 tests) 203ms
+ ✓ src/hooks/__tests__/useConversationHistory.test.ts (18 tests) 237ms
+ ✓ src/__tests__/useChat.race-condition.test.ts (3 tests) 127ms
+ ✓ src/__tests__/lib/imageUtils.test.ts (15 tests) 209ms
+ ✓ src/hooks/__tests__/useBookNavigation.test.ts (7 tests) 167ms
+ ✓ src/__tests__/message-id-synchronization.test.ts (7 tests) 172ms
+ ✓ src/__tests__/useSettings.test.ts (3 tests) 163ms
+ ✓ src/__tests__/networkBanner.test.tsx (2 tests) 136ms
+ ✓ src/hooks/__tests__/useChat.systemPrompt.test.ts (1 test) 129ms
+ ✓ tests/unit/lib/storage-migration.test.ts (23 tests) 129ms
+ ✓ tests/unit/lib/storage-layer-simple.test.ts (18 tests) 128ms
+ ✓ src/config/quickstarts.test.ts (20 tests) 105ms
+ ✓ tests/build/config.test.ts (5 tests) 120ms
+ ✓ tests/unit/lib/storage-layer-business.test.ts (18 tests) 137ms
+ ✓ tests/unit/lib/conversation-manager-modern.test.ts (24 tests) 90ms
+ ✓ src/lib/touch/__tests__/haptics.test.ts (27 tests) 115ms
+ ✓ tests/unit/lib/storage-layer.test.ts (18 tests) 118ms
+ ✓ src/lib/touch/__tests__/gestures.test.ts (13 tests) 86ms
+ ✓ src/lib/analytics.test.ts (12 tests) 81ms
+ ✓ src/__tests__/openrouter.ndjson.test.ts (1 test) 45ms
+ ✓ src/lib/safeStorage.test.ts (12 tests) 56ms
+ ✓ src/__tests__/pages/Chat.dedupe.test.ts (17 tests) 67ms
+ ✓ src/lib/memory/memoryService.test.ts (13 tests) 75ms
+ ✓ src/lib/__tests__/imageProcessor.test.ts (24 tests) 103ms
+ ✓ src/features/discussion/__tests__/shape.test.ts (3 tests) 21ms
+ ✓ src/__tests__/roleStore.test.ts (2 tests) 65ms
+ ✓ src/__tests__/humanError.test.ts (5 tests) 31ms
+ ✓ src/lib/errors/__tests__/mapper.test.ts (11 tests) 43ms
+ ✓ src/__tests__/proxyFallback.test.ts (4 tests) 55ms
+ ✓ src/__tests__/models-fallback.test.ts (3 tests) 55ms
+ ✓ src/__tests__/viewport-scroll-performance.test.ts (6 tests) 45ms
+ ✓ src/lib/openrouter/__tests__/key.test.ts (4 tests) 52ms
+ ✓ src/styles/__tests__/animations.test.ts (13 tests) 48ms
+ ✓ tests/unit/lib/storage-migration-integration.test.ts (4 tests) 83ms
+ ✓ src/lib/openrouter/__tests__/keyLifecycle.test.ts (14 tests) 40ms
+ ✓ src/components/models/__tests__/resolveInitialModelId.test.ts (5 tests) 26ms
+ ✓ src/__tests__/openrouter.abort.test.ts (1 test) 45ms
+ ✓ src/__tests__/sw-cache-management.test.ts (10 tests) 33ms
+ ✓ src/__tests__/designTokens.test.ts (3 tests) 31ms
+ ✓ src/lib/__tests__/deepClone.test.ts (6 tests) 38ms
+ ✓ tests/unit/rateLimit.test.ts (2 tests) 32ms
+ ✓ src/lib/__tests__/creativity.test.ts (5 tests) 38ms
+ ✓ src/__tests__/apiKeyShim.test.ts (5 tests) 43ms
+ ✓ tests/unit/composeSystemPrompt.test.ts (2 tests) 27ms
+ ✓ src/lib/chat/__tests__/validation.test.ts (5 tests) 24ms
+ ✓ src/__tests__/modelDefaults.test.ts (4 tests) 27ms
+ ✓ src/__tests__/models.cache.test.ts (1 test) 18ms
+ ✓ src/__tests__/memory.test.ts (1 test) 14ms
+ ✓ src/components/models/__tests__/categorizeModelFromTags.test.ts (7 tests) 20ms
+
+ Test Files  71 passed (71)
+      Tests  627 passed | 2 skipped (629)
+   Start at  12:09:21
+   Duration  99.95s (transform 7.11s, setup 62.44s, import 20.46s, tests 34.89s, environment 124.09s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   56.17 |    44.25 |   52.34 |   57.78 |                   
+ shared            |      90 |       50 |     100 |     100 |                   
+  openrouter.ts    |      90 |       50 |     100 |     100 | 10-15             
+ src               |   77.77 |    45.83 |   61.11 |      82 |                   
+  App.tsx          |   77.77 |    45.83 |   61.11 |      82 | ...-74,83-111,160 
+  index.css        |       0 |        0 |       0 |       0 |                   
+ src/api           |   48.47 |    41.83 |   61.53 |   49.85 |                   
+  memory.ts        |   46.66 |    31.25 |   33.33 |   46.66 | 10-36             
+  openrouter.ts    |   58.33 |    48.14 |   70.37 |   60.09 | ...02,622,645-699 
+  proxyClient.ts   |       0 |        0 |       0 |       0 | 27-212            
+  vision.ts        |     100 |    97.22 |     100 |     100 | 162               
+ src/components    |   33.56 |    13.97 |   33.33 |   35.03 |                   
+  ...rBoundary.tsx |   71.73 |     62.5 |   66.66 |   71.73 | ...,83-97,121,177 
+  ...ageLoader.tsx |     100 |      100 |     100 |     100 |                   
+  ...orkBanner.tsx |   76.47 |       50 |      60 |   86.66 | 15,25             
+  ...Migration.tsx |    1.26 |        0 |       0 |    1.33 | 30-490            
+ ...omponents/chat |   74.83 |    70.58 |    65.3 |   76.76 |                   
+  ChatMessage.tsx  |    87.5 |    81.33 |   78.26 |    89.7 | 34,40-46,162      
+  ...tusBanner.tsx |   42.85 |       25 |   33.33 |      40 | 29,35-82,95-152   
+  ...dInputBar.tsx |   70.68 |    71.73 |      60 |   74.07 | ...82,310,332,352 
+ ...components/dev |    6.25 |        0 |       0 |    6.25 |                   
+  ...FlagPanel.tsx |    6.25 |        0 |       0 |    6.25 | 19-168            
+ ...ponents/layout |   42.22 |    31.42 |   41.66 |      44 |                   
+  ...enuDrawer.tsx |   37.03 |       20 |    40.9 |   37.87 | ...55-252,286-297 
+  PageLayout.tsx   |   88.88 |       60 |      50 |   88.88 | 85                
+ ...ponents/models |    32.3 |    24.85 |   29.47 |   32.45 |                   
+  ...Interface.tsx |   10.66 |     4.49 |   18.42 |   11.11 | 66-115,244-849    
+  ...isonTable.tsx |       0 |        0 |       0 |       0 | 11-80             
+  ...lsCatalog.tsx |   55.47 |    47.97 |   46.34 |   58.33 | ...22-529,558-607 
+  ...ialModelId.ts |     100 |      100 |     100 |     100 |                   
+ ...nts/navigation |   54.54 |    28.26 |      30 |      55 |                   
+  ...SidePanel.tsx |   41.17 |     3.57 |    12.5 |      40 | 28,40,45-167      
+  ...avigation.tsx |     100 |    66.66 |     100 |     100 | 17-34,47-55       
+ ...omponents/neko |   70.96 |    52.77 |   71.42 |   84.61 |                   
+  NekoLayer.tsx    |   74.07 |       50 |      80 |    90.9 | 25-26             
+  NekoSprite.tsx   |      50 |    55.55 |      50 |      50 | 15-16             
+ ...mponents/roles |   57.14 |     47.4 |   58.33 |   59.37 |                   
+  ...Interface.tsx |    62.5 |    53.48 |   59.37 |   63.63 | ...58-497,589-590 
+  roles-filter.ts  |   45.45 |     39.7 |      50 |      50 | ...,78-87,103-110 
+ src/config        |   62.81 |    54.62 |   66.66 |   65.97 |                   
+  env.ts           |   42.69 |    57.57 |   66.66 |   43.37 | ...43-244,266-275 
+  flags.ts         |   58.97 |       50 |   46.15 |   65.71 | ...16,119,137-146 
+  modelDefaults.ts |    87.5 |       75 |     100 |     100 | 11                
+  modelPolicy.ts   |     100 |      100 |     100 |     100 |                   
+  modelPresets.ts  |   26.31 |     4.54 |      20 |   26.66 | 64-89             
+  models.ts        |   85.36 |    67.34 |   83.33 |   88.88 | 122-125           
+  ...metadata.json |       0 |        0 |       0 |       0 |                   
+  navigation.tsx   |   83.33 |       50 |     100 |   83.33 | 79                
+  ...tTemplates.ts |       0 |        0 |       0 |       0 |                   
+  quickstarts.ts   |   94.59 |    89.47 |     100 |   94.28 | 327,344           
+  roleStore.ts     |   63.15 |    47.05 |   64.28 |   69.11 | ...15-119,128-132 
+  storageKeys.ts   |     100 |      100 |     100 |     100 |                   
+ src/contexts      |   59.38 |    56.25 |   43.75 |   63.75 |                   
+  ...esContext.tsx |    18.6 |     12.5 |    12.5 |   19.51 | ...2,64-72,90-226 
+  ...ogContext.tsx |   78.26 |     61.9 |     100 |   85.71 | 49-51,67-68,90    
+  RolesContext.tsx |   44.18 |    28.57 |      50 |    43.9 | 57-77,82-93,123   
+  ...gsContext.tsx |   71.31 |    77.77 |   47.22 |   78.44 | ...11,315-322,370 
+ src/data          |       6 |        0 |    8.33 |    6.52 |                   
+  roles.ts         |       6 |        0 |    8.33 |    6.52 | ...67-184,203-215 
+ ...res/conspiracy |     100 |      100 |     100 |     100 |                   
+  prompts.ts       |     100 |      100 |     100 |     100 |                   
+ ...res/discussion |   90.16 |    63.33 |     100 |   91.52 |                   
+  prompts.ts       |     100 |      100 |     100 |     100 |                   
+  shape.ts         |      90 |    63.33 |     100 |   91.37 | 34,79,89-92,105   
+ ...eatures/prompt |   93.33 |    69.23 |     100 |     100 |                   
+  ...stemPrompt.ts |   93.33 |    69.23 |     100 |     100 | 45-50             
+ ...tures/settings |    82.6 |    52.17 |      75 |   85.71 |                   
+  ...ngsLayout.tsx |      75 |    54.54 |      75 |      80 | 74-75             
+  ...tingsView.tsx |    90.9 |       50 |      75 |    90.9 | 102               
+ src/hooks         |   52.26 |    45.38 |   49.16 |   53.81 |                   
+  use-storage.ts   |       0 |        0 |       0 |       0 | 36-423            
+  ...Navigation.ts |   78.66 |    61.53 |   83.33 |   83.82 | 37-59,121-128     
+  useChat.ts       |   69.31 |    59.48 |   72.72 |   71.08 | ...34,438-439,443 
+  ...tPageLogic.ts |   35.29 |    33.33 |   31.57 |    37.5 | ...99,307-308,314 
+  ...Quickstart.ts |   46.66 |       25 |   66.66 |      50 | 24-31             
+  ...ionHistory.ts |     100 |    84.61 |     100 |     100 | 33                
+  ...ionManager.ts |    90.5 |    79.72 |      96 |   93.15 | ...78,265-267,288 
+  ...erredFetch.ts |   31.88 |       27 |      25 |    33.6 | ...99-293,318-351 
+  ...tesManager.ts |   22.89 |     1.39 |   14.89 |   23.22 | ...71-491,513-545 
+  ...lteredList.ts |     100 |      100 |     100 |     100 |                   
+  useGameState.ts  |   61.83 |    64.32 |      50 |   66.23 | ...23,727,731-739 
+  ...Attachment.ts |   30.76 |     7.69 |   14.28 |   32.43 | ...,91-97,106-107 
+  ...onObserver.ts |    90.9 |    88.23 |     100 |      95 | 38                
+  useNeko.ts       |    86.5 |    76.19 |   87.09 |   90.74 | ...60,212-213,231 
+  useSettings.ts   |     100 |      100 |     100 |     100 |                   
+  ...alViewport.ts |   31.81 |    57.14 |      60 |   31.81 | 27-30,44-74       
+ src/lib           |   63.75 |    60.99 |   71.17 |   64.24 |                   
+  analytics.ts     |   62.19 |    67.74 |   59.37 |   61.72 | ...75-279,350,355 
+  ...goryColors.ts |   77.27 |    71.42 |   66.66 |   81.25 | 269-271           
+  ...ger-modern.ts |   97.22 |       90 |     100 |   97.22 | 165,177           
+  creativity.ts    |   96.87 |     90.9 |     100 |     100 | 49,64             
+  http.ts          |   83.72 |       75 |      60 |   87.17 | 27,39-40,68-69    
+  ...eProcessor.ts |   89.09 |    72.22 |     100 |   88.88 | 70-78,132,152     
+  ...pabilities.ts |   77.77 |       20 |   66.66 |   85.71 | 13                
+  pricing.ts       |      56 |    34.78 |      75 |   58.33 | ...21,24-27,45,52 
+  publicAssets.ts  |   77.77 |       50 |     100 |     100 | 4-18              
+  safeStorage.ts   |    87.5 |    77.77 |      90 |    91.3 | 24,48             
+  storage-layer.ts |   37.89 |    37.65 |   51.92 |    38.5 | ...75,881-925,937 
+  ...-migration.ts |   84.39 |    80.53 |     100 |    84.3 | ...82,411,420,449 
+  utils.ts         |      80 |    88.88 |      50 |      75 | 16-44,74          
+ src/lib/chat      |      96 |    68.75 |     100 |     100 |                   
+  ...pt-builder.ts |     100 |       60 |     100 |     100 | 12-29             
+  validation.ts    |   92.85 |    83.33 |     100 |     100 | 12                
+ src/lib/errors    |   71.76 |    61.53 |     100 |   72.83 |                   
+  humanError.ts    |   57.14 |    41.02 |     100 |   57.14 | ...5,64,82,99-135 
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  mapper.ts        |      92 |    93.54 |     100 |      92 | 47,90             
+  types.ts         |   68.75 |    52.38 |     100 |   71.42 | 117-128           
+ src/lib/feedback  |   83.33 |    83.33 |   86.66 |   83.95 |                   
+  imageUtils.ts    |   83.33 |    83.33 |   86.66 |   83.95 | ...42,158,193-194 
+ src/lib/icons     |   66.66 |        0 |       0 |   66.66 |                   
+  disa.tsx         |   66.66 |        0 |       0 |   66.66 | 10                
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ src/lib/memory    |     100 |      100 |     100 |     100 |                   
+  memoryService.ts |     100 |      100 |     100 |     100 |                   
+ ...lib/monitoring |    4.83 |     1.92 |    8.33 |    4.83 |                   
+  sentry.tsx       |    4.83 |     1.92 |    8.33 |    4.83 | 26-155,177-250    
+ src/lib/net       |   51.18 |     37.5 |   54.54 |   51.72 |                   
+  concurrency.ts   |   51.85 |    28.57 |   44.44 |   53.84 | 49-51,60-90       
+  fetchTimeout.ts  |   41.77 |    32.75 |   44.44 |   42.25 | ...0-76,84,92-150 
+  rateLimit.ts     |   85.71 |    85.71 |     100 |   84.21 | 25-27             
+ ...lib/openrouter |   88.67 |       85 |     100 |   88.23 |                   
+  key.ts           |   88.67 |       85 |     100 |   88.23 | 22,33,41-47       
+ src/lib/touch     |   45.51 |    36.36 |   37.14 |   45.09 |                   
+  gestures.ts      |      75 |    61.53 |   68.42 |   75.28 | ...64-165,195-228 
+  haptics.ts       |    3.12 |        0 |       0 |    3.12 | 25-123,135-219    
+ src/lib/utils     |   53.57 |    27.58 |    40.9 |   54.54 |                   
+  debounce.ts      |   57.14 |       50 |   57.14 |   57.14 | 15-27,53          
+  ...ion-logger.ts |   51.42 |    21.73 |   33.33 |   52.94 | ...,66-93,103,107 
+ ...lib/validators |   68.75 |    56.41 |     100 |   76.74 |                   
+  roles.ts         |   68.75 |    56.41 |     100 |   76.74 | 33,49,52,68,80-86 
+ ...pts/discussion |     100 |      100 |     100 |     100 |                   
+  presets.ts       |     100 |      100 |     100 |     100 |                   
+ src/state         |   72.72 |     64.7 |     100 |   71.42 |                   
+  chatReducer.ts   |   72.72 |     64.7 |     100 |   71.42 | 36,43,63-78       
+ src/types         |    6.25 |      1.2 |    12.5 |    8.69 |                   
+  ...interfaces.ts |    6.25 |      1.2 |    12.5 |    8.69 | 337-445           
+ src/ui            |   69.25 |     37.1 |   29.87 |   69.53 |                   
+  ActionCard.tsx   |       0 |        0 |       0 |       0 | 26-39             
+  ...Brandmark.tsx |     100 |      100 |     100 |     100 |                   
+  Avatar.tsx       |   63.63 |      100 |       0 |      70 | 12,24,36          
+  Badge.tsx        |     100 |      100 |     100 |     100 |                   
+  BrandCard.tsx    |      75 |    55.55 |     100 |      75 | 59,73,81          
+  Button.tsx       |     100 |      100 |     100 |     100 |                   
+  Card.tsx         |   77.77 |    78.37 |    37.5 |   78.78 | ...87,203,208,214 
+  Chip.tsx         |       0 |        0 |       0 |       0 | 19-31             
+  CopyButton.tsx   |   83.72 |    81.25 |     100 |   83.72 | ...,63,78,100-103 
+  Dialog.tsx       |   72.72 |        0 |       0 |   72.72 | 20,35,60,65,76,88 
+  FilterChip.tsx   |       0 |        0 |       0 |       0 | 27-29             
+  IconButton.tsx   |      60 |        0 |       0 |      60 | 28-34             
+  Input.tsx        |      75 |      100 |       0 |      75 | 32                
+  Label.tsx        |      75 |      100 |       0 |      75 | 17                
+  ListItem.tsx     |       0 |        0 |       0 |       0 | 29-79             
+  MaterialCard.tsx |       0 |        0 |       0 |       0 | 34-42             
+  ...rialPanel.tsx |   66.66 |      100 |       0 |   66.66 | 18                
+  MetricRow.tsx    |       0 |        0 |       0 |       0 | 22-32             
+  ModelCard.tsx    |   33.33 |        0 |       0 |   33.33 | 44-110            
+  ...omponents.tsx |   81.81 |     64.7 |   66.66 |   81.81 | 189-196           
+  PremiumCard.tsx  |     100 |    64.28 |     100 |     100 | 40-65,82          
+  ...aryButton.tsx |      75 |      100 |       0 |      75 | 36                
+  ...StartCard.tsx |       0 |        0 |       0 |       0 | 26                
+  RoleCard.tsx     |      60 |        0 |       0 |      60 | 26-28             
+  SearchInput.tsx  |      60 |      100 |   66.66 |      60 | 30-31             
+  ...ionHeader.tsx |       0 |        0 |       0 |       0 | 8-19              
+  Select.tsx       |   85.71 |      100 |   55.55 |   85.71 | 14,22,120,155     
+  SettingsRow.tsx  |       0 |        0 |       0 |       0 | 21-77             
+  Skeleton.tsx     |       0 |      100 |       0 |       0 | 9                 
+  Switch.tsx       |   66.66 |      100 |       0 |   66.66 | 10                
+  Table.tsx        |   66.66 |      100 |       0 |   66.66 | ...34,44,60,75,87 
+  Textarea.tsx     |   66.66 |      100 |       0 |   66.66 | 9                 
+  Tooltip.tsx      |   83.33 |        0 |       0 |   83.33 | 18                
+  Typography.tsx   |   57.14 |        0 |       0 |   57.14 | 80-92             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ src/ui/toast      |   80.85 |    71.87 |    64.7 |   86.04 |                   
+  index.tsx        |   80.85 |    71.87 |    64.7 |   86.04 | 29,42,60,153-164  
+-------------------|---------|----------|---------|---------|-------------------

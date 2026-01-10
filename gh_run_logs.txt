@@ -1,0 +1,200 @@
+test (22)	UNKNOWN STEP	﻿2026-01-10T10:47:19.7666267Z Current runner version: '2.330.0'
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7689412Z ##[group]Runner Image Provisioner
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7690478Z Hosted Compute Agent
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7691066Z Version: 20251211.462
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7691693Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7692350Z Build Date: 2025-12-11T16:28:49Z
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7693039Z Worker ID: {71245433-9dfb-4481-8f1a-52c2e70e107a}
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7693724Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7694239Z ##[group]Operating System
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7694830Z Ubuntu
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7695272Z 24.04.3
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7695711Z LTS
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7696103Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7696665Z ##[group]Runner Image
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7697150Z Image: ubuntu-24.04
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7697627Z Version: 20260105.202.1
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7698662Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260105.202/images/ubuntu/Ubuntu2404-Readme.md
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7700351Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260105.202
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7701416Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7704001Z ##[group]GITHUB_TOKEN Permissions
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7705980Z Actions: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7706634Z ArtifactMetadata: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7707140Z Attestations: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7707763Z Checks: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7708208Z Contents: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7708707Z Deployments: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7709261Z Discussions: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7709721Z Issues: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7710552Z Metadata: read
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7711118Z Models: read
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7711619Z Packages: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7712082Z Pages: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7712607Z PullRequests: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7713265Z RepositoryProjects: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7713797Z SecurityEvents: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7714390Z Statuses: write
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7714857Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7717075Z Secret source: Actions
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.7717724Z Prepare workflow directory
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.8106605Z Prepare all required actions
+test (22)	UNKNOWN STEP	2026-01-10T10:47:19.8144208Z Getting action download info
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.2137746Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.3290552Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.4250551Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.6496581Z Complete job name: test (22)
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7213724Z ##[group]Run actions/checkout@v4
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7214617Z with:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7215054Z   repository: daydaylx/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7215758Z   token: ***
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7216169Z   ssh-strict: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7216597Z   ssh-user: git
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7217017Z   persist-credentials: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7217500Z   clean: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7217936Z   sparse-checkout-cone-mode: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7218459Z   fetch-depth: 1
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7218875Z   fetch-tags: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7219316Z   show-progress: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7219757Z   lfs: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7220321Z   submodules: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7220776Z   set-safe-directory: true
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.7221489Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8463107Z Syncing repository: daydaylx/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8465799Z ##[group]Getting Git version info
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8467010Z Working directory is '/home/runner/work/Disa_Ai/Disa_Ai'
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8468807Z [command]/usr/bin/git version
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8509132Z git version 2.52.0
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8536610Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8557420Z Temporarily overriding HOME='/home/runner/work/_temp/ffecaedf-f02d-45fa-bb1b-199ea34a49f6' before making global git config changes
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8565987Z Adding repository directory to the temporary git global config as a safe directory
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8572586Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Disa_Ai/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8616446Z Deleting the contents of '/home/runner/work/Disa_Ai/Disa_Ai'
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8620709Z ##[group]Initializing the repository
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8626108Z [command]/usr/bin/git init /home/runner/work/Disa_Ai/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8732939Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8735022Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8736403Z hint: to use in all of your new repositories, which will suppress this warning,
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8737650Z hint: call:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8738063Z hint:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8738980Z hint: 	git config --global init.defaultBranch <name>
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8740425Z hint:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8741621Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8743481Z hint: 'development'. The just-created branch can be renamed via this command:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8745018Z hint:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8745754Z hint: 	git branch -m <name>
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8746624Z hint:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8747748Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8749755Z Initialized empty Git repository in /home/runner/work/Disa_Ai/Disa_Ai/.git/
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8753247Z [command]/usr/bin/git remote add origin https://github.com/daydaylx/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8786997Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8788362Z ##[group]Disabling automatic garbage collection
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8791326Z [command]/usr/bin/git config --local gc.auto 0
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8820637Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8822049Z ##[group]Setting up auth
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8828299Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.8859607Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9208073Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9240506Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9457887Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9486985Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9717822Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9752729Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9753626Z ##[group]Fetching the repository
+test (22)	UNKNOWN STEP	2026-01-10T10:47:20.9760888Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5d015522bdeb7b6c8bf3494eeae4193bafaf482f:refs/remotes/origin/main
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6239062Z From https://github.com/daydaylx/Disa_Ai
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6241277Z  * [new ref]         5d015522bdeb7b6c8bf3494eeae4193bafaf482f -> origin/main
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6272642Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6274463Z ##[group]Determining the checkout info
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6276452Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6280783Z [command]/usr/bin/git sparse-checkout disable
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6323358Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6350013Z ##[group]Checking out the ref
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6353014Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6745851Z Switched to a new branch 'main'
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6747665Z branch 'main' set up to track 'origin/main'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6757339Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6794780Z [command]/usr/bin/git log -1 --format=%H
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.6817497Z 5d015522bdeb7b6c8bf3494eeae4193bafaf482f
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7150657Z ##[group]Run actions/setup-node@v4
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7151799Z with:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7152612Z   node-version: 22
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7153486Z   cache: npm
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7154308Z   always-auth: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7155232Z   check-latest: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7156445Z   token: ***
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.7157264Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.9143116Z Found in cache @ /opt/hostedtoolcache/node/22.21.1/x64
+test (22)	UNKNOWN STEP	2026-01-10T10:47:21.9150167Z ##[group]Environment details
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2005299Z node: v22.21.1
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2005825Z npm: 10.9.4
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2006364Z yarn: 1.22.22
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2007320Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2029301Z [command]/opt/hostedtoolcache/node/22.21.1/x64/bin/npm config get cache
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.2779450Z npm warn config production Use `--omit=dev` instead.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.4407283Z /home/runner/.npm
+test (22)	UNKNOWN STEP	2026-01-10T10:47:24.6512306Z Cache hit for: node-cache-Linux-x64-npm-58a04b40b54f4f25ba8121f6def5908e4cb8c823f02dcfe76a0a9c8021131c39
+test (22)	UNKNOWN STEP	2026-01-10T10:47:25.8346991Z Received 62914560 of 152408512 (41.3%), 59.9 MBs/sec
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.5097190Z Received 152408512 of 152408512 (100.0%), 86.7 MBs/sec
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.5098677Z Cache Size: ~145 MB (152408512 B)
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.5135676Z [command]/usr/bin/tar -xf /home/runner/work/_temp/34e622e4-8390-469d-9ffa-f761c614fcc1/cache.tzst -P -C /home/runner/work/Disa_Ai/Disa_Ai --use-compress-program unzstd
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9199822Z Cache restored successfully
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9504939Z Cache restored from key: node-cache-Linux-x64-npm-58a04b40b54f4f25ba8121f6def5908e4cb8c823f02dcfe76a0a9c8021131c39
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9674581Z ##[group]Run npm ci
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9674906Z [36;1mnpm ci[0m
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9720202Z shell: /usr/bin/bash -e {0}
+test (22)	UNKNOWN STEP	2026-01-10T10:47:26.9720479Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:27.0502508Z npm warn config production Use `--omit=dev` instead.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:32.9225624Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:33.1595647Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+test (22)	UNKNOWN STEP	2026-01-10T10:47:33.3361024Z npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+test (22)	UNKNOWN STEP	2026-01-10T10:47:33.4525711Z npm warn deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+test (22)	UNKNOWN STEP	2026-01-10T10:47:33.8731540Z npm warn deprecated source-map@0.8.0-beta.0: The work that was done in this beta branch won't be included in future versions
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5040211Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5040781Z > disa-ai@1.0.2 prepare
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5042899Z > node -e "if (process.env.NODE_ENV !== 'production') process.exit(1)" || husky install
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5043595Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5719691Z husky - install command is DEPRECATED
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5960914Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.5962017Z added 1367 packages in 13s
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.7173337Z ##[group]Run npm run typecheck
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.7173674Z [36;1mnpm run typecheck[0m
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.7206266Z shell: /usr/bin/bash -e {0}
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.7206519Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.7953668Z npm warn config production Use `--omit=dev` instead.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.8193471Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.8193770Z > disa-ai@1.0.2 typecheck
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.8194280Z > npm run typecheck:build && npm run typecheck:test
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.8194580Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.8935285Z npm warn config production Use `--omit=dev` instead.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.9142416Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.9143153Z > disa-ai@1.0.2 typecheck:build
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.9143881Z > tsc -p tsconfig.build.json --noEmit
+test (22)	UNKNOWN STEP	2026-01-10T10:47:39.9144258Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:46.8588305Z npm warn config production Use `--omit=dev` instead.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:46.8800347Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:46.8800924Z > disa-ai@1.0.2 typecheck:test
+test (22)	UNKNOWN STEP	2026-01-10T10:47:46.8801326Z > tsc -p tsconfig.test.json --noEmit
+test (22)	UNKNOWN STEP	2026-01-10T10:47:46.8801707Z 
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4934097Z ##[error]tests/setup.ts(145,3): error TS2322: Type '(contextType: string) => RenderingContext | null' is not assignable to type '{ (contextId: "2d", options?: CanvasRenderingContext2DSettings | undefined): CanvasRenderingContext2D | null; (contextId: "bitmaprenderer", options?: ImageBitmapRenderingContextSettings | undefined): ImageBitmapRenderingContext | null; (contextId: "webgl", options?: WebGLContextAttributes | undefined): WebGLRenderin...'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4942690Z   Type 'RenderingContext | null' is not assignable to type 'CanvasRenderingContext2D | null'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4943825Z     Type 'ImageBitmapRenderingContext' is missing the following properties from type 'CanvasRenderingContext2D': globalAlpha, globalCompositeOperation, drawImage, beginPath, and 67 more.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4948163Z ##[error]tests/setup.ts(163,5): error TS2322: Type '(contextType: string) => CanvasRenderingContext2D | null' is not assignable to type '{ (contextId: "2d", options?: CanvasRenderingContext2DSettings | undefined): CanvasRenderingContext2D | null; (contextId: "bitmaprenderer", options?: ImageBitmapRenderingContextSettings | undefined): ImageBitmapRenderingContext | null; (contextId: "webgl", options?: WebGLContextAttributes | undefined): WebGLRenderin...'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4950912Z   Type 'CanvasRenderingContext2D | null' is not assignable to type 'ImageBitmapRenderingContext | null'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4951820Z     Property 'transferFromImageBitmap' is missing in type 'CanvasRenderingContext2D' but required in type 'ImageBitmapRenderingContext'.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.4952948Z ##[error]tests/setup.ts(171,54): error TS6133: 'quality' is declared but its value is never read.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5528924Z ##[error]Process completed with exit code 2.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5626815Z ##[group]Run actions/upload-artifact@v4
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5627137Z with:
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5627335Z   name: coverage-report-node-22
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5627586Z   path: coverage/
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5627788Z   retention-days: 7
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5627992Z   if-no-files-found: warn
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5628224Z   compression-level: 6
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5628437Z   overwrite: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5628644Z   include-hidden-files: false
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.5628878Z ##[endgroup]
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.7755255Z ##[warning]No files were found with the provided path: coverage/. No artifacts will be uploaded.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.7916225Z Post job cleanup.
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.8860566Z [command]/usr/bin/git version
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.8896382Z git version 2.52.0
+test (22)	UNKNOWN STEP	2026-01-10T10:47:54.8948830Z Temporarily overriding HOME='/home/runner/work/_temp/c2232073-9f9f-45b0-88a7-16e708ba2e77' before making global git config changes
