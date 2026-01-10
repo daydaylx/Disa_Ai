@@ -2,7 +2,7 @@
  * Unit Tests for Image Processor
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   ALLOWED_MIME_TYPES,
@@ -136,25 +136,36 @@ describe("processImage", () => {
   beforeEach(() => {
     // Mock HTMLImageElement
     global.Image = class {
-      src: string;
+      private _src: string = "";
       onload: (() => void) | null = null;
       onerror: (() => void) | null = null;
       naturalWidth = 100;
       naturalHeight = 100;
 
-      constructor() {
-        this.src = "";
+      get src() {
+        return this._src;
+      }
 
-        // Simulate async loading
+      set src(value: string) {
+        this._src = value;
+        // Simulate async loading when src is set
         setTimeout(() => {
-          if (this.onerror && this.src.includes("error")) {
+          if (this.onerror && value.includes("error")) {
             this.onerror();
           } else if (this.onload) {
             this.onload();
           }
         }, 0);
       }
+
+      constructor() {
+        this._src = "";
+      }
     } as any;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("should process valid image file", async () => {
@@ -189,20 +200,28 @@ describe("processImage", () => {
 describe("createVisionAttachment", () => {
   beforeEach(() => {
     global.Image = class {
-      src: string;
+      private _src: string = "";
       onload: (() => void) | null = null;
       onerror: (() => void) | null = null;
       naturalWidth = 100;
       naturalHeight = 100;
 
-      constructor() {
-        this.src = "";
+      get src() {
+        return this._src;
+      }
 
+      set src(value: string) {
+        this._src = value;
+        // Simulate async loading when src is set
         setTimeout(() => {
           if (this.onload) {
             this.onload();
           }
         }, 0);
+      }
+
+      constructor() {
+        this._src = "";
       }
     } as any;
   });

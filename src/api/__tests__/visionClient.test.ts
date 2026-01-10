@@ -259,27 +259,48 @@ describe("sendVisionRequest", () => {
     // Mock setTimeout to trigger immediately
     vi.useFakeTimers();
 
-    mockFetch.mockImplementationOnce(
-      () =>
-        new Promise((resolve) => {
+    try {
+      mockFetch.mockImplementationOnce((_url, options) => {
+        const signal = (options as RequestInit | undefined)?.signal as AbortSignal | undefined;
+
+        return new Promise((resolve, reject) => {
+          if (signal?.aborted) {
+            const error = new Error("Aborted");
+            error.name = "AbortError";
+            reject(error);
+            return;
+          }
+
+          const handleAbort = () => {
+            signal?.removeEventListener("abort", handleAbort);
+            const error = new Error("Aborted");
+            error.name = "AbortError";
+            reject(error);
+          };
+
+          signal?.addEventListener("abort", handleAbort);
+
           setTimeout(() => {
+            signal?.removeEventListener("abort", handleAbort);
             resolve({
               ok: true,
               status: 200,
               json: () => Promise.resolve({ text: "Antwort", model: "glm-4.6v" }),
             } as Response);
           }, 50000);
-        }),
-    );
+        });
+      });
 
-    const promise = sendVisionRequest("Was ist auf diesem Bild?", mockAttachment);
+      const promise = sendVisionRequest("Was ist auf diesem Bild?", mockAttachment);
+      const expectation = expect(promise).rejects.toThrow(VisionApiError);
 
-    // Fast-forward past timeout
-    vi.advanceTimersByTime(45000);
+      // Fast-forward past timeout
+      await vi.advanceTimersByTimeAsync(45000);
 
-    await expect(promise).rejects.toThrow(VisionApiError);
-
-    vi.useRealTimers();
+      await expectation;
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

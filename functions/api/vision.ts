@@ -84,12 +84,7 @@ function handleCORS(request: Request): Response {
 /**
  * Return JSON error response with CORS headers
  */
-function jsonError(
-  message: string,
-  status: number,
-  code: string,
-  request?: Request,
-): Response {
+function jsonError(message: string, status: number, code: string, request?: Request): Response {
   const origin = request ? getCORSOrigin(request) : "*";
   return new Response(JSON.stringify({ error: { code, message } }), {
     status,
@@ -159,15 +154,30 @@ export async function onRequest(context: {
 
     // Validate required fields
     if (!body.prompt || typeof body.prompt !== "string") {
-      return jsonError("Invalid request: 'prompt' string is required", 400, "MISSING_PROMPT", request);
+      return jsonError(
+        "Invalid request: 'prompt' string is required",
+        400,
+        "MISSING_PROMPT",
+        request,
+      );
     }
 
     if (!body.imageDataUrl || typeof body.imageDataUrl !== "string") {
-      return jsonError("Invalid request: 'imageDataUrl' string is required", 400, "MISSING_IMAGE", request);
+      return jsonError(
+        "Invalid request: 'imageDataUrl' string is required",
+        400,
+        "MISSING_IMAGE",
+        request,
+      );
     }
 
     if (!body.mimeType || typeof body.mimeType !== "string") {
-      return jsonError("Invalid request: 'mimeType' string is required", 400, "MISSING_MIME_TYPE", request);
+      return jsonError(
+        "Invalid request: 'mimeType' string is required",
+        400,
+        "MISSING_MIME_TYPE",
+        request,
+      );
     }
 
     // Validate MIME type
@@ -182,12 +192,7 @@ export async function onRequest(context: {
 
     // Validate data URL format
     if (!isValidDataUrl(body.imageDataUrl)) {
-      return jsonError(
-        "Invalid image data URL format",
-        400,
-        "INVALID_DATA_URL",
-        request,
-      );
+      return jsonError("Invalid image data URL format", 400, "INVALID_DATA_URL", request);
     }
 
     // Validate data URL size (server-side check)
@@ -229,7 +234,9 @@ export async function onRequest(context: {
     };
 
     // Log request for debugging (do NOT log imageDataUrl)
-    console.log(`📤 Proxying vision request to Z.AI: model=${ZAI_MODEL_ID}, mime=${body.mimeType}, size=${estimatedSize}`);
+    console.log(
+      `📤 Proxying vision request to Z.AI: model=${ZAI_MODEL_ID}, mime=${body.mimeType}, size=${estimatedSize}`,
+    );
 
     // Make request to Z.AI API with timeout
     const controller = new AbortController();
@@ -248,12 +255,7 @@ export async function onRequest(context: {
       });
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
-        return jsonError(
-          "Request to Z.AI API timed out",
-          504,
-          "GATEWAY_TIMEOUT",
-          request,
-        );
+        return jsonError("Request to Z.AI API timed out", 504, "GATEWAY_TIMEOUT", request);
       }
       throw error;
     } finally {
@@ -262,9 +264,7 @@ export async function onRequest(context: {
 
     // Check if Z.AI request was successful
     if (!zaiResponse.ok) {
-      console.error(
-        `❌ Z.AI API error: ${zaiResponse.status} ${zaiResponse.statusText}`,
-      );
+      console.error(`❌ Z.AI API error: ${zaiResponse.status} ${zaiResponse.statusText}`);
 
       // Try to get error details from Z.AI
       let errorMessage = `Z.AI API error: ${zaiResponse.status}`;
@@ -304,13 +304,11 @@ export async function onRequest(context: {
 
     // Validate Z.AI response structure
     if (!responseData?.choices?.[0]?.message?.content) {
-      console.error("❌ Invalid Z.AI response structure:", JSON.stringify(responseData).slice(0, 200));
-      return jsonError(
-        "Invalid response from Z.AI API",
-        502,
-        "INVALID_RESPONSE",
-        request,
+      console.error(
+        "❌ Invalid Z.AI response structure:",
+        JSON.stringify(responseData).slice(0, 200),
       );
+      return jsonError("Invalid response from Z.AI API", 502, "INVALID_RESPONSE", request);
     }
 
     // Build our response format
@@ -320,7 +318,9 @@ export async function onRequest(context: {
       usage: responseData.usage,
     };
 
-    console.log(`✅ Vision response from Z.AI: model=${visionResponse.model}, tokens=${visionResponse.usage?.total_tokens || 'N/A'}`);
+    console.log(
+      `✅ Vision response from Z.AI: model=${visionResponse.model}, tokens=${visionResponse.usage?.total_tokens || "N/A"}`,
+    );
 
     const corsOrigin = getCORSOrigin(request);
 

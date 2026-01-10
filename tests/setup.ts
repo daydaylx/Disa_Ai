@@ -74,6 +74,132 @@ class IntersectionObserver {
 global.IntersectionObserver =
   IntersectionObserver as unknown as typeof globalThis.IntersectionObserver;
 
+// Canvas API polyfill for JSDOM
+// Required for image processing tests that use Canvas for resizing/compression
+class CanvasRenderingContext2DMock {
+  canvas: HTMLCanvasElement;
+
+  constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+  }
+
+  drawImage() {
+    // Mock implementation - does nothing but prevents errors
+  }
+
+  // Add other 2D context methods as needed
+  fillRect() {}
+  clearRect() {}
+  strokeRect() {}
+  fillText() {}
+  strokeText() {}
+  measureText() {
+    return { width: 0 };
+  }
+  getImageData() {
+    return {
+      data: new Uint8ClampedArray(),
+      width: 0,
+      height: 0,
+    };
+  }
+  putImageData() {}
+  createImageData() {
+    return {
+      data: new Uint8ClampedArray(),
+      width: 0,
+      height: 0,
+    };
+  }
+  setTransform() {}
+  resetTransform() {}
+  scale() {}
+  rotate() {}
+  translate() {}
+  transform() {}
+  save() {}
+  restore() {}
+  beginPath() {}
+  closePath() {}
+  moveTo() {}
+  lineTo() {}
+  bezierCurveTo() {}
+  quadraticCurveTo() {}
+  arc() {}
+  arcTo() {}
+  ellipse() {}
+  rect() {}
+  fill() {}
+  stroke() {}
+  clip() {}
+  isPointInPath() {
+    return false;
+  }
+  isPointInStroke() {
+    return false;
+  }
+}
+
+if (typeof HTMLCanvasElement !== "undefined") {
+  const originalGetContext = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function (contextType: string) {
+    if (contextType === "2d") {
+      return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
+    }
+    if (originalGetContext) {
+      return originalGetContext.call(this, contextType);
+    }
+    return null;
+  };
+}
+
+// Mock HTMLCanvasElement
+const originalCreateElement = document.createElement.bind(document);
+document.createElement = function (tagName: string, options?: ElementCreationOptions) {
+  if (tagName.toLowerCase() === "canvas") {
+    const canvas = originalCreateElement("canvas", options) as HTMLCanvasElement;
+
+    // Mock getContext to return our mock 2D context
+    canvas.getContext = function (contextType: string) {
+      if (contextType === "2d") {
+        return new CanvasRenderingContext2DMock(canvas) as unknown as CanvasRenderingContext2D;
+      }
+      return null;
+    };
+
+    // Mock toDataURL to return a valid base64 data URL
+    canvas.toDataURL = function (type = "image/png", quality?: number) {
+      // Return a minimal valid JPEG data URL (1x1 red pixel)
+      const base64 =
+        "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q==";
+      return `data:${type};base64,${base64}`;
+    };
+
+    // Set default dimensions
+    Object.defineProperty(canvas, "width", {
+      value: 300,
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(canvas, "height", {
+      value: 150,
+      writable: true,
+      configurable: true,
+    });
+
+    return canvas;
+  }
+  return originalCreateElement(tagName, options);
+} as typeof document.createElement;
+
+// Mock URL.createObjectURL and URL.revokeObjectURL for image loading
+if (!globalThis.URL.createObjectURL) {
+  globalThis.URL.createObjectURL = () => "blob:mock-url";
+}
+if (!globalThis.URL.revokeObjectURL) {
+  globalThis.URL.revokeObjectURL = () => {};
+}
+
 // Ensure sandboxed runners (no /tmp write access) can compile Tailwind/JITI caches.
 const repoTmp = path.join(process.cwd(), ".tmp");
 if (!fs.existsSync(repoTmp)) {

@@ -49,7 +49,7 @@
 | Feature                  | Beschreibung                                                                       |
 | ------------------------ | ---------------------------------------------------------------------------------- |
 | **Chat**                 | Streaming-Antworten, Markdown-Rendering, Code-Highlighting, LaTeX-Support          |
-| **Vision-Chat**          | Bildanalyse mit Z.AI GLM-4.6V Modell (Bildanhänge, automatische Kompression)      |
+| **Vision-Chat**          | Bildanalyse mit Z.AI GLM-4.6V Modell (Bildanhänge, automatische Kompression)       |
 | **Modellwahl**           | Wechsel zwischen verschiedenen KI-Modellen (GPT-4, Claude, Mistral, etc.) pro Chat |
 | **Rollen/Personas**      | Vordefinierte Rollen für verschiedene Gesprächstypen (Berater, Recherche, kreativ) |
 | **Jugendschutz**         | Konfigurierbarer Filter für Modelle und Inhalte                                    |
@@ -178,12 +178,12 @@ VITE_ENABLE_DEBUG=true
 
 Für die Feedback-Funktion (Cloudflare Pages Functions):
 
-| Variable           | Beschreibung                                 |
-| ------------------ | -------------------------------------------- |
-| `OPENROUTER_API_KEY` | API-Key von [OpenRouter](https://openrouter.ai) |
+| Variable             | Beschreibung                                         |
+| -------------------- | ---------------------------------------------------- |
+| `OPENROUTER_API_KEY` | API-Key von [OpenRouter](https://openrouter.ai)      |
 | `ZAI_API_KEY`        | API-Key von [Z.AI](https://z.ai/) für Vision-Feature |
-| `RESEND_API_KEY`   | API-Key von [Resend.com](https://resend.com) |
-| `DISA_FEEDBACK_TO` | Empfänger-Adresse (optional)                 |
+| `RESEND_API_KEY`     | API-Key von [Resend.com](https://resend.com)         |
+| `DISA_FEEDBACK_TO`   | Empfänger-Adresse (optional)                         |
 
 ---
 
@@ -292,7 +292,7 @@ Die App verwendet ein **Dark-Mode-First Design** mit folgenden Prinzipien:
 
 | Dokument                                                                                 | Inhalt                            |
 | ---------------------------------------------------------------------------------------- | --------------------------------- |
-| [`docs/VISION_SETUP.md`](docs/VISION_SETUP.md)                                         | Vision-Feature Setup-Guide        |
+| [`docs/VISION_SETUP.md`](docs/VISION_SETUP.md)                                           | Vision-Feature Setup-Guide        |
 | [`docs/guides/ENVIRONMENT_VARIABLES.md`](docs/guides/ENVIRONMENT_VARIABLES.md)           | Alle Umgebungsvariablen           |
 | [`docs/guides/FEEDBACK_SETUP.md`](docs/guides/FEEDBACK_SETUP.md)                         | Feedback-Funktion einrichten      |
 | [`docs/guides/FEEDBACK_SCREENSHOTS.md`](docs/guides/FEEDBACK_SCREENSHOTS.md)             | Screenshot-Anhänge Dokumentation  |

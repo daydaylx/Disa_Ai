@@ -15,12 +15,7 @@ export const JPEG_QUALITY = 0.8; // JPEG compression quality (0.0 - 1.0)
 /**
  * Allowed MIME types for image upload
  */
-export const ALLOWED_MIME_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-] as const;
+export const ALLOWED_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"] as const;
 
 /**
  * Validation error types
@@ -52,18 +47,12 @@ export function validateImageFile(file: File): void {
   // Check file size
   if (file.size > MAX_FILE_SIZE_BYTES) {
     const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-    throw new ImageValidationError(
-      `Datei zu groß (${sizeMB} MB). Maximum: 4 MB`,
-      "TOO_LARGE",
-    );
+    throw new ImageValidationError(`Datei zu groß (${sizeMB} MB). Maximum: 4 MB`, "TOO_LARGE");
   }
 
   // Check minimum size (1 byte)
   if (file.size === 0) {
-    throw new ImageValidationError(
-      "Datei ist leer",
-      "INVALID_SIZE",
-    );
+    throw new ImageValidationError("Datei ist leer", "INVALID_SIZE");
   }
 }
 
@@ -160,10 +149,7 @@ export async function processImage(file: File): Promise<{ dataUrl: string; mimeT
     if (error instanceof ImageValidationError) {
       throw error;
     }
-    throw new ImageValidationError(
-      "Bildverarbeitung fehlgeschlagen",
-      "PROCESSING_FAILED",
-    );
+    throw new ImageValidationError("Bildverarbeitung fehlgeschlagen", "PROCESSING_FAILED");
   }
 }
 
