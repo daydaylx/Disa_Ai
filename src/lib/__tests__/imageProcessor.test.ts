@@ -2,16 +2,17 @@
  * Unit Tests for Image Processor
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
-  validateImageFile,
-  processImage,
+  ALLOWED_MIME_TYPES,
   createVisionAttachment,
   estimateDataUrlSize,
-  isValidDataUrl,
   ImageValidationError,
+  isValidDataUrl,
   MAX_FILE_SIZE_BYTES,
-  ALLOWED_MIME_TYPES,
+  processImage,
+  validateImageFile,
 } from "../imageProcessor";
 
 describe("validateImageFile", () => {
@@ -143,16 +144,16 @@ describe("processImage", () => {
 
       constructor() {
         this.src = "";
-      }
 
-      // Simulate async loading
-      setTimeout(() => {
-        if (this.onerror && this.src.includes("error")) {
-          this.onerror();
-        } else if (this.onload) {
-          this.onload();
-        }
-      }, 0);
+        // Simulate async loading
+        setTimeout(() => {
+          if (this.onerror && this.src.includes("error")) {
+            this.onerror();
+          } else if (this.onload) {
+            this.onload();
+          }
+        }, 0);
+      }
     } as any;
   });
 
@@ -178,7 +179,7 @@ describe("processImage", () => {
     // Create a file that would need resizing
     const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
     const result = await processImage(file);
-    
+
     // Result should be a data URL
     expect(result.dataUrl).toBeTruthy();
     expect(result.mimeType).toBe("image/jpeg");
@@ -196,13 +197,13 @@ describe("createVisionAttachment", () => {
 
       constructor() {
         this.src = "";
-      }
 
-      setTimeout(() => {
-        if (this.onload) {
-          this.onload();
-        }
-      }, 0);
+        setTimeout(() => {
+          if (this.onload) {
+            this.onload();
+          }
+        }, 0);
+      }
     } as any;
   });
 

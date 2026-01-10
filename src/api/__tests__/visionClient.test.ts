@@ -2,14 +2,16 @@
  * Unit Tests for Vision API Client
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { VisionAttachment } from "@/types/chat";
+
 import {
   sendVisionRequest,
   validateVisionRequest,
   VisionApiError,
   type VisionResponse,
 } from "../vision";
-import type { VisionAttachment } from "@/types/chat";
 
 // Mock fetch
 const mockFetch = vi.fn();
@@ -88,7 +90,7 @@ describe("sendVisionRequest", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => mockResponse,
+      json: () => Promise.resolve(mockResponse),
     });
 
     const result = await sendVisionRequest("Was ist auf diesem Bild?", mockAttachment);
@@ -108,89 +110,91 @@ describe("sendVisionRequest", () => {
   });
 
   it("should throw VisionApiError for empty prompt", async () => {
-    await expect(
-      sendVisionRequest("", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("", mockAttachment)).rejects.toThrow(VisionApiError);
   });
 
   it("should throw VisionApiError for missing attachment", async () => {
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", null as any),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", null as any)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle 400 error", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 400,
-      json: async () => ({
-        error: {
-          code: "BAD_REQUEST",
-          message: "Ungültiger Request",
-        },
-      }),
+      json: () =>
+        Promise.resolve({
+          error: {
+            code: "BAD_REQUEST",
+            message: "Ungültiger Request",
+          },
+        }),
     });
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle 413 payload too large", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 413,
-      json: async () => ({
-        error: {
-          code: "PAYLOAD_TOO_LARGE",
-          message: "Bild zu groß",
-        },
-      }),
+      json: () =>
+        Promise.resolve({
+          error: {
+            code: "PAYLOAD_TOO_LARGE",
+            message: "Bild zu groß",
+          },
+        }),
     });
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle 500 internal server error", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
-      json: async () => ({
-        error: {
-          code: "INTERNAL_ERROR",
-          message: "Interner Serverfehler",
-        },
-      }),
+      json: () =>
+        Promise.resolve({
+          error: {
+            code: "INTERNAL_ERROR",
+            message: "Interner Serverfehler",
+          },
+        }),
     });
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle invalid response structure", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => ({
-        // Missing 'text' field
-        model: "glm-4.6v",
-      }),
+      json: () =>
+        Promise.resolve({
+          // Missing 'text' field
+          model: "glm-4.6v",
+        }),
     });
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle network error", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should handle abort signal", async () => {
@@ -211,12 +215,12 @@ describe("sendVisionRequest", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => mockResponse,
+      json: () => Promise.resolve(mockResponse),
     });
 
     await sendVisionRequest("  Was ist auf diesem Bild?  ", mockAttachment);
 
-    const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    const requestBody = JSON.parse(mockFetch.mock.calls[0]![1].body);
     expect(requestBody.prompt).toBe("Was ist auf diesem Bild?");
   });
 
@@ -229,12 +233,12 @@ describe("sendVisionRequest", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => mockResponse,
+      json: () => Promise.resolve(mockResponse),
     });
 
     await sendVisionRequest("Was ist auf diesem Bild?", mockAttachment);
 
-    const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    const requestBody = JSON.parse(mockFetch.mock.calls[0]![1].body);
     expect(requestBody.filename).toBe("test.jpg");
   });
 
@@ -243,12 +247,12 @@ describe("sendVisionRequest", () => {
       ok: false,
       status: 500,
       statusText: "Internal Server Error",
-      json: async () => ({}), // No error object
+      json: () => Promise.resolve({}), // No error object
     });
 
-    await expect(
-      sendVisionRequest("Was ist auf diesem Bild?", mockAttachment),
-    ).rejects.toThrow(VisionApiError);
+    await expect(sendVisionRequest("Was ist auf diesem Bild?", mockAttachment)).rejects.toThrow(
+      VisionApiError,
+    );
   });
 
   it("should timeout after 45 seconds", async () => {
@@ -262,7 +266,7 @@ describe("sendVisionRequest", () => {
             resolve({
               ok: true,
               status: 200,
-              json: async () => ({ text: "Antwort", model: "glm-4.6v" }),
+              json: () => Promise.resolve({ text: "Antwort", model: "glm-4.6v" }),
             } as Response);
           }, 50000);
         }),
