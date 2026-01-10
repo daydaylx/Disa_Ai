@@ -142,15 +142,19 @@ class CanvasRenderingContext2DMock {
 
 if (typeof HTMLCanvasElement !== "undefined") {
   const originalGetContext = HTMLCanvasElement.prototype.getContext;
-  HTMLCanvasElement.prototype.getContext = function (contextType: string) {
+  HTMLCanvasElement.prototype.getContext = function (
+    this: HTMLCanvasElement,
+    contextType: string,
+    options?: any,
+  ): CanvasRenderingContext2D | ImageBitmapRenderingContext | WebGLRenderingContext | null {
     if (contextType === "2d") {
       return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
     }
     if (originalGetContext) {
-      return originalGetContext.call(this, contextType);
+      return originalGetContext.call(this, contextType, options) as any;
     }
     return null;
-  };
+  } as any;
 }
 
 // Mock HTMLCanvasElement
@@ -160,19 +164,23 @@ document.createElement = function (tagName: string, options?: ElementCreationOpt
     const canvas = originalCreateElement("canvas", options) as HTMLCanvasElement;
 
     // Mock getContext to return our mock 2D context
-    canvas.getContext = function (contextType: string) {
+    canvas.getContext = function (
+      this: HTMLCanvasElement,
+      contextType: string,
+      _options?: any,
+    ): CanvasRenderingContext2D | ImageBitmapRenderingContext | WebGLRenderingContext | null {
       if (contextType === "2d") {
-        return new CanvasRenderingContext2DMock(canvas) as unknown as CanvasRenderingContext2D;
+        return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
       }
       return null;
-    };
+    } as any;
 
     // Mock toDataURL to return a valid base64 data URL
-    canvas.toDataURL = function (type = "image/png", quality?: number) {
+    canvas.toDataURL = function (type?: string, _quality?: any): string {
       // Return a minimal valid JPEG data URL (1x1 red pixel)
       const base64 =
         "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q==";
-      return `data:${type};base64,${base64}`;
+      return `data:${type || "image/png"};base64,${base64}`;
     };
 
     // Set default dimensions
