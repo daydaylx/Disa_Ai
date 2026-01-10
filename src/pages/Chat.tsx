@@ -348,6 +348,7 @@ export default function Chat() {
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
                 onSend={chatLogic.handleSend}
+                onSendVision={chatLogic.handleVisionSend}
                 isLoading={chatLogic.isLoading}
               />
             </div>

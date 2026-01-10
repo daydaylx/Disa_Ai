@@ -2,24 +2,26 @@ import * as React from "react";
 
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
+import { useImageAttachment } from "@/hooks/useImageAttachment";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { ImagePlus, X } from "@/lib/icons";
 import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
+import type { ChatMessageType } from "@/types/chatMessage";
 import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
-import { useImageAttachment } from "@/hooks/useImageAttachment";
-import { sendVisionRequest } from "@/api/vision";
-import type { ChatMessageType } from "@/types/chat";
 
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
-  onSendVision?: (prompt: string, attachment: NonNullable<ReturnType<typeof useImageAttachment>["attachment"]>) => Promise<ChatMessageType | void>;
+  onSendVision?: (
+    prompt: string,
+    attachment: NonNullable<ReturnType<typeof useImageAttachment>["attachment"]>,
+  ) => Promise<ChatMessageType | void>;
   isLoading?: boolean;
   placeholder?: string;
   showContextPills?: boolean;
@@ -87,10 +89,10 @@ export function UnifiedInputBar({
     }
   };
 
-  const handleSend = async () => {
+  const handleSend = () => {
     // If we have an image attachment and vision handler, use vision path
     if (attachment && onSendVision && value.trim()) {
-      onSendVision(value, attachment);
+      void onSendVision(value, attachment);
       clearAttachment();
     } else if (value.trim()) {
       // Regular text chat
