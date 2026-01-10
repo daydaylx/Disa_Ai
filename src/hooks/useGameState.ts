@@ -379,7 +379,7 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
-  } catch (error) {
+  } catch {
     // Attempt simple repair for truncated JSON (common in streaming)
     try {
       if (raw.trim().endsWith("}")) {
