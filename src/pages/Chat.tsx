@@ -8,6 +8,7 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { ContextTray } from "../components/chat/ContextTray";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { PageLayout } from "../components/layout/PageLayout";
@@ -238,78 +239,40 @@ export default function Chat() {
                       </Card>
                     </div>
 
-                    {/* Starter Prompts - Suggestion Cards with Enhanced Color Accents */}
-                    <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
-                      {uniquePrompts.slice(0, 3).map((prompt, index) => {
-                        // Cycle through accent colors - 25% reduced intensity
-                        const accentColors = [
-                          {
-                            bg: "bg-accent-chat/8",
-                            text: "text-accent-chat",
-                            border: "border-accent-chat/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-chat-glow),0.11)]",
-                          },
-                          {
-                            bg: "bg-accent-models/8",
-                            text: "text-accent-models",
-                            border: "border-accent-models/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-models-glow),0.11)]",
-                          },
-                          {
-                            bg: "bg-brand-primary/8",
-                            text: "text-brand-primary",
-                            border: "border-brand-primary/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(139,92,246,0.11)]",
-                          },
-                        ] as const;
-                        const accent = accentColors[index % accentColors.length]!;
-
-                        return (
-                          <Card
-                            key={prompt}
-                            variant="tintedSoft"
-                            notch="none"
-                            tintColor="rgb(var(--tint-color-rgb-default))"
-                            className={cn(
-                              "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                              "min-h-[56px]", // Mobile touch target (44px + padding)
-                              "hover:border-white/[0.22] hover:shadow-lg", // Enhanced hover state
-                              accent.glow, // Color-specific glow on hover
-                              "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
-                              "active:translate-y-[1px] active:shadow-sm",
-                              "bg-surface-card text-ink-primary",
-                              "border",
-                              accent.border, // Add colored border
-                            )}
-                            style={{ animationDelay: `${index * 100}ms` }}
-                            onClick={() => chatLogic.handleStarterClick(prompt)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                chatLogic.handleStarterClick(prompt);
-                              }
-                            }}
-                            tabIndex={0}
-                            role="button"
-                            aria-label={`Starter-Prompt: ${prompt}`}
-                          >
-                            <div
-                              className={cn(
-                                "p-2.5 sm:p-3 rounded-xl transition-all flex-shrink-0",
-                                "bg-surface-2",
-                                accent.bg,
-                                accent.text,
-                                "group-hover:scale-[1.04]", // Subtle scale on hover - 25% reduced
-                              )}
-                            >
-                              <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5" />
-                            </div>
-                            <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
-                              {prompt}
-                            </span>
-                          </Card>
-                        );
-                      })}
+                    {/* Starter Prompts - Compact Row Suggestions */}
+                    <div className="w-full max-w-md space-y-2 px-2">
+                      {uniquePrompts.slice(0, 3).map((prompt, index) => (
+                        <button
+                          key={prompt}
+                          onClick={() => chatLogic.handleStarterClick(prompt)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              chatLogic.handleStarterClick(prompt);
+                            }
+                          }}
+                          className={cn(
+                            "w-full flex items-center gap-3 p-3 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards",
+                            "min-h-[48px]", // Mobile touch target
+                            "hover:bg-surface-2/50 hover:border-white/[0.22] hover:shadow-sm",
+                            "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
+                            "active:translate-y-[1px] active:shadow-sm",
+                            "bg-surface-1/40 border border-white/8 rounded-xl",
+                            "backdrop-blur-sm",
+                          )}
+                          style={{ animationDelay: `${index * 100}ms` }}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Starter-Prompt: ${prompt}`}
+                        >
+                          <div className="p-2 rounded-lg bg-surface-2 text-accent-chat group-hover:scale-105 transition-transform">
+                            <MessageSquare className="h-4 w-4" />
+                          </div>
+                          <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
+                            {prompt}
+                          </span>
+                        </button>
+                      ))}
                     </div>
 
                     {/* Quick Link to Settings - Subtle */}
@@ -355,6 +318,9 @@ export default function Chat() {
           </div>
         </div>
       </PageLayout>
+
+      {/* Context Tray - Swipe-up controls */}
+      <ContextTray />
 
       {/* Global Menu */}
       <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />

@@ -6,13 +6,11 @@ import { useImageAttachment } from "@/hooks/useImageAttachment";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { ImagePlus, X } from "@/lib/icons";
-import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
+import { type DiscussionPresetKey } from "@/prompts/discussion/presets";
 import type { ChatMessageType } from "@/types/chatMessage";
-import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
 
 export interface UnifiedInputBarProps {
   value: string;
@@ -35,14 +33,14 @@ export function UnifiedInputBar({
   onSendVision,
   isLoading = false,
   placeholder = "Schreibe eine Nachricht...",
-  showContextPills = true,
+  _showContextPills = true,
   className,
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { activeRole, setActiveRole, roles } = useRoles();
+  const { activeRole } = useRoles();
   const { models } = useModelCatalog();
-  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
+  const { settings, _setCreativity, _setDiscussionPreset, _setPreferredModel } = useSettings();
 
   // Image attachment state
   const {
@@ -100,8 +98,6 @@ export function UnifiedInputBar({
     }
   };
 
-  const roleLabel = activeRole?.name || "Standard";
-
   const creativityOptions = [
     { value: "10", label: "Präzise (10%)", short: "Präzise" },
     { value: "30", label: "Klar & fokussiert (30%)", short: "Klar" },
@@ -121,54 +117,39 @@ export function UnifiedInputBar({
     fachlich_tiefgehend: "Fachlich",
   };
 
-  const discussionPresetLabel =
-    settings.discussionPreset && shortDiscussionLabels[settings.discussionPreset]
-      ? shortDiscussionLabels[settings.discussionPreset]
-      : discussionPresetOptions.find((preset) => preset.key === settings.discussionPreset)?.label ||
-        "Standard";
-
   const creativityOption = creativityOptions.find(
     (option) => option.value === String(settings.creativity),
   );
-  const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
-
   const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
-  const modelLabel =
-    selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
-
   const hasVisionSupport = !!onSendVision;
 
   return (
     <div className={cn("w-full space-y-3", className)}>
-      {/* Image Preview */}
+      {/* Attachment Ribbon - Thumbnails above input */}
       {attachment && (
-        <div className="relative group">
-          <div className="flex items-center gap-3 p-3 bg-surface-1/60 rounded-2xl border border-white/8 backdrop-blur-sm animate-pill-slide-in">
-            <img
-              src={attachment.dataUrl}
-              alt="Angehängtes Bild"
-              className="h-16 w-16 rounded-lg object-cover flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-ink-primary truncate">
-                {attachment.filename || "Bild"}
-              </p>
-              {attachment.size && (
-                <p className="text-xs text-ink-tertiary">
-                  {(attachment.size / 1024).toFixed(1)} KB
-                </p>
-              )}
-            </div>
-            <Button
-              onClick={clearAttachment}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-lg flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Bild entfernen"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+        <div className="flex items-center gap-2 p-2 bg-surface-1/40 rounded-xl border border-white/8 backdrop-blur-sm animate-pill-slide-in">
+          <img
+            src={attachment.dataUrl}
+            alt="Angehängtes Bild"
+            className="h-12 w-12 rounded-lg object-cover flex-shrink-0 border border-white/10"
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-ink-primary truncate">
+              {attachment.filename || "Bild"}
+            </p>
+            {attachment.size && (
+              <p className="text-xs text-ink-tertiary">{(attachment.size / 1024).toFixed(1)} KB</p>
+            )}
           </div>
+          <Button
+            onClick={clearAttachment}
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-full flex-shrink-0"
+            aria-label="Bild entfernen"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
 
@@ -179,12 +160,12 @@ export function UnifiedInputBar({
         </div>
       )}
 
-      {/* Main Input Container - Material-based with clear focus */}
-      <BrandCard
-        variant="tinted"
-        padding="sm"
+      {/* Main Input Container - Single visual container, no double borders */}
+      <div
         className={cn(
-          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
+          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right bg-surface-1/60 border border-white/8 rounded-2xl p-3",
+          "focus-within:border-white/20 focus-within:shadow-glow-sm focus-within:bg-surface-1/80",
+          "transition-all duration-200",
         )}
         aria-label="Eingabebereich"
       >
@@ -264,111 +245,7 @@ export function UnifiedInputBar({
             <Send className={cn("h-5 w-5", (value.trim() || attachment) && "ml-0.5")} />
           )}
         </Button>
-      </BrandCard>
-
-      {/* Context Pills */}
-      {showContextPills && (
-        <div className="w-full px-1">
-          <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
-            {/* Role Dropdown */}
-            <Select
-              value={activeRole?.id || "standard"}
-              onValueChange={(id) => {
-                if (id === "standard") {
-                  setActiveRole(null);
-                  return;
-                }
-                const role = roles.find((r) => r.id === id);
-                if (role) setActiveRole(role);
-              }}
-            >
-              <SelectTrigger
-                aria-label="Rolle auswählen"
-                className={cn(
-                  "flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 px-3 text-sm font-medium leading-none role-badge-transition animate-pill-slide-in",
-                  activeRole
-                    ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-brand-secondary shadow-[var(--card-shadow-focus)]"
-                    : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
-                )}
-              >
-                <User className="h-4 w-4 flex-shrink-0" />
-                <span className="whitespace-nowrap">{roleLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="max-h-[280px] w-64">
-                <SelectItem value="standard">Standard</SelectItem>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.id}>
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Style Dropdown */}
-            <Select
-              value={settings.discussionPreset}
-              onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
-            >
-              <SelectTrigger
-                aria-label="Stil auswählen"
-                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-                style={{ animationDelay: "50ms" }}
-              >
-                <Palette className="h-4 w-4 flex-shrink-0 opacity-60" />
-                <span className="whitespace-nowrap">{discussionPresetLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="w-64">
-                {discussionPresetOptions.map((preset) => (
-                  <SelectItem key={preset.key} value={preset.key}>
-                    {preset.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Creativity Dropdown */}
-            <Select
-              value={String(settings.creativity)}
-              onValueChange={(value) => setCreativity(Number(value))}
-            >
-              <SelectTrigger
-                aria-label="Kreativität auswählen"
-                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-                style={{ animationDelay: "100ms" }}
-              >
-                <Sparkles className="h-4 w-4 flex-shrink-0 opacity-60" />
-                <span className="whitespace-nowrap">{creativityShortLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="w-64">
-                {creativityOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Model Dropdown */}
-            <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
-              <SelectTrigger
-                aria-label="Modell auswählen"
-                className="flex min-h-[2.5rem] min-w-fit items-center justify-center gap-1.5 rounded-full border border-white/8 bg-surface-1/40 px-3 text-sm font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-                style={{ animationDelay: "150ms" }}
-              >
-                <Cpu className="h-4 w-4 flex-shrink-0 opacity-60" />
-                <span className="whitespace-nowrap">{modelLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="max-h-[280px] w-64">
-                {models?.map((model) => (
-                  <SelectItem key={model.id} value={model.id}>
-                    {model.label || model.id}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
