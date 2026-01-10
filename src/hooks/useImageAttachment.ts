@@ -5,8 +5,9 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import type { VisionAttachment } from "@/types/chat";
+
 import { createVisionAttachment, ImageValidationError } from "@/lib/imageProcessor";
+import type { VisionAttachment } from "@/types/chat";
 
 export interface UseImageAttachmentOptions {
   maxFileSize?: number;
@@ -77,7 +78,7 @@ export function useImageAttachment(options: UseImageAttachmentOptions = {}) {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      handleFileSelect(file);
+      void handleFileSelect(file);
     },
     [handleFileSelect],
   );
@@ -93,7 +94,7 @@ export function useImageAttachment(options: UseImageAttachmentOptions = {}) {
       const file = event.dataTransfer.files?.[0];
       if (!file) return;
 
-      handleFileSelect(file);
+      void handleFileSelect(file);
     },
     [handleFileSelect],
   );

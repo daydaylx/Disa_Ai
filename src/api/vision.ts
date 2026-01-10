@@ -6,8 +6,8 @@
  * to keep the Z.AI API key secure on the server side.
  */
 
-import type { VisionAttachment } from "@/types/chat";
 import { mapError } from "@/lib/errors";
+import type { VisionAttachment } from "@/types/chat";
 
 /**
  * Vision API request payload
