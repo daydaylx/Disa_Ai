@@ -151,7 +151,7 @@ if (typeof HTMLCanvasElement !== "undefined") {
       return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
     }
     if (originalGetContext) {
-      return originalGetContext.call(this, contextType, options) as any;
+      return originalGetContext.call(this, contextType, options);
     }
     return null;
   } as any;
@@ -167,7 +167,6 @@ document.createElement = function (tagName: string, options?: ElementCreationOpt
     canvas.getContext = function (
       this: HTMLCanvasElement,
       contextType: string,
-      _options?: any,
     ): CanvasRenderingContext2D | ImageBitmapRenderingContext | WebGLRenderingContext | null {
       if (contextType === "2d") {
         return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
@@ -176,10 +175,10 @@ document.createElement = function (tagName: string, options?: ElementCreationOpt
     } as any;
 
     // Mock toDataURL to return a valid base64 data URL
-    canvas.toDataURL = function (type?: string, _quality?: any): string {
+    canvas.toDataURL = function (type?: string): string {
       // Return a minimal valid JPEG data URL (1x1 red pixel)
       const base64 =
-        "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q==";
+        "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q==";
       return `data:${type || "image/png"};base64,${base64}`;
     };
 
