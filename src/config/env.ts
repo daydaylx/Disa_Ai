@@ -198,7 +198,7 @@ export function initEnvironment(): EnvValidationResult {
 
     // Log configuration in development
     if (_envConfig.VITE_ENABLE_DEBUG) {
-      console.log("Environment Configuration", _envConfig);
+      console.warn("Environment Configuration", _envConfig);
     }
 
     // Log warnings

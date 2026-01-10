@@ -393,7 +393,7 @@ function parseGameStateUpdate(content: string): Partial<GameState> | null {
       // Better strategy: Don't update state until fully received.
       // console.warn("[useGameState] Incomplete JSON detected, skipping update.");
       return null;
-    } catch (e) {
+    } catch {
       return null;
     }
   }
