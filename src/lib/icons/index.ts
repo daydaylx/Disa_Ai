@@ -27,6 +27,7 @@ export {
   Bot,
   Box, // Added for game inventory
   Brain,
+  ImagePlus, // Added for vision chat
   Briefcase, // Added for role icons
   Bug, // Added for FeedbackPage
   Cat, // Added

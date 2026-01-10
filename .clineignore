@@ -1,0 +1,96 @@
+# Cline AI Agent Ignore File
+# Prevents noise and protects sensitive data from being exposed to AI agents
+
+# Dependencies
+node_modules/
+.vite/
+.pnpm-store/
+
+# Build artifacts
+dist/
+build/
+dev-dist/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.vercel/
+.eslintcache
+*.tsbuildinfo
+
+# Environment files (NEVER commit secrets)
+.env
+.env.*
+.env.local
+.env.*.local
+.env.build
+.dev.vars
+.wrangler/
+
+# Test/Report artifacts
+coverage/
+test-results/
+playwright-report/
+*.lcov
+*.xml
+*.trx
+*.junit.xml
+allure-results/
+allure-report/
+screenshots-actual/
+screenshots-expected/
+screenshots-diff/
+playwright-visual-report/
+visual-report/
+.lighthouseci/
+lighthouse-report/
+
+# Logs
+logs/
+*.log
+LOGS/
+build.log
+autopilot.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vim/
+.emacs.d/
+.sublime-*
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp/Backup
+*.bak
+*.bak.*
+*.tmp
+*.temp
+.temp/
+
+# AI Artifacts
+.claude/
+*.claude.zip
+.gemini/
+.aider*
+
+# Databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.backup
+
+# Audit artifacts
+.audit/
+
+# Git
+.git/
+.gitignore
