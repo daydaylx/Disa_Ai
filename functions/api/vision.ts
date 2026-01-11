@@ -133,9 +133,12 @@ export async function onRequest(context: {
   }
 
   try {
-    // Validate API key is configured
+    // Validate API key is configured (FAIL FAST)
     if (!env.ZAI_API_KEY) {
       console.error("❌ ZAI_API_KEY not configured in Cloudflare Secrets");
+      console.error(
+        "🔧 Fix: Run `npx wrangler pages secret put ZAI_API_KEY --project-name=disaai`",
+      );
       return jsonError(
         "Server configuration error: API key not configured. Please set ZAI_API_KEY in Cloudflare Dashboard.",
         500,
@@ -143,6 +146,9 @@ export async function onRequest(context: {
         request,
       );
     }
+
+    // Log successful key presence (NEVER log the actual value)
+    console.log("✅ ZAI_API_KEY is configured (length:", env.ZAI_API_KEY.length, "chars)");
 
     // Parse request body
     let body: VisionRequest;
