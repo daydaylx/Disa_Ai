@@ -6,7 +6,7 @@
  * - Senden-Button Zustand (enabled/disabled)
  * - Enter-Taste sendet die Nachricht
  * - Shift+Enter fügt neue Zeile ein
- * - Kontext-Selektoren (Rolle, Stil, Kreativität) sind sichtbar
+ * - Bildanhänge werden korrekt angezeigt
  */
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -94,27 +94,25 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität)", () => {
+    it("rendert keinen Bildanhänge-Button ohne Vision-Support", () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
-      // Rollen-Auswahl
-      expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
-
-      // Stil-Auswahl
-      expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
-
-      // Kreativitäts-Auswahl
-      expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
+      // Kein Bildanhänge-Button, wenn onSendVision nicht bereitgestellt wird
+      expect(screen.queryByRole("button", { name: /Bild anhängen/i })).not.toBeInTheDocument();
     });
 
-    it("blendet Kontext-Selektoren aus, wenn showContextPills false ist", () => {
-      render(<UnifiedInputBar {...defaultProps} showContextPills={false} />);
+    it("rendert Bildanhänge-Button mit Vision-Support", () => {
+      render(
+        <UnifiedInputBar
+          {...defaultProps}
+          onSendVision={() =>
+            Promise.resolve({ id: "1", role: "user", content: "", timestamp: Date.now() })
+          }
+        />,
+      );
 
-      expect(screen.queryByRole("combobox", { name: "Rolle auswählen" })).not.toBeInTheDocument();
-      expect(screen.queryByRole("combobox", { name: "Stil auswählen" })).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("combobox", { name: "Kreativität auswählen" }),
-      ).not.toBeInTheDocument();
+      // Bildanhänge-Button sollte vorhanden sein
+      expect(screen.getByRole("button", { name: /Bild anhängen/i })).toBeInTheDocument();
     });
   });
 
@@ -248,13 +246,11 @@ describe("UnifiedInputBar", () => {
       expect(button).toHaveAttribute("aria-label", "Senden");
     });
 
-    it("hat korrekte aria-labels auf den Selektoren", () => {
+    it("hat korrekte aria-labels auf allen Buttons", () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
-      expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
-      expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
-      expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
-      // Model selector has been moved to settings
+      expect(screen.getByRole("button", { name: "Senden" })).toBeInTheDocument();
+      expect(screen.getByRole("textbox", { name: "Nachricht eingeben" })).toBeInTheDocument();
     });
   });
 });

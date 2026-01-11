@@ -159,10 +159,10 @@ export function AppMenuDrawer({
       <div
         className={cn(
           "absolute top-0 bottom-0 left-0 w-[85vw] max-w-[360px]",
-          "glass-3 border-r border-white/5 backdrop-blur-md",
+          "border-r border-white/5",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
-          "bg-[rgba(8,8,10,0.6)]",
+          "bg-surface-1",
           className,
         )}
         onClick={(e) => e.stopPropagation()}
@@ -173,7 +173,7 @@ export function AppMenuDrawer({
         aria-label="Navigationsmenü"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/20">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-surface-2/50">
           <BrandWordmark className="text-base text-white" />
           <button
             onClick={onClose}
@@ -273,7 +273,7 @@ export function AppMenuDrawer({
         </nav>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-white/10 bg-black/20">
+        <div className="px-5 py-4 border-t border-white/10 bg-surface-2/50">
           <p className="text-[10px] text-white/40 text-center uppercase tracking-widest">
             © 2025 Disa AI
           </p>

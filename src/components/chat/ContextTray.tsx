@@ -4,7 +4,7 @@ import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Brain, Cpu, Palette, RotateCcw, Shield, Sparkles, User } from "@/lib/icons";
+import { Brain, Cpu, Palette, RotateCcw, Shield, Sparkles, User, X } from "@/lib/icons";
 import { TouchGestureHandler } from "@/lib/touch/gestures";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
@@ -34,8 +34,45 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
   const viewport = useVisualViewport();
 
   const [trayState, setTrayState] = useState<TrayState>("collapsed");
+  const [showFirstStartHint, setShowFirstStartHint] = useState(false);
   const trayRef = useRef<HTMLDivElement>(null);
   const gestureHandlerRef = useRef<TouchGestureHandler | null>(null);
+
+  // Check first-start hint
+  useEffect(() => {
+    const hasSeenHint = localStorage.getItem("contextTrayFirstStartHint");
+    if (!hasSeenHint && isOpen) {
+      // Show hint after a short delay
+      const timer = setTimeout(() => {
+        setShowFirstStartHint(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  // Dismiss first-start hint
+  const dismissFirstStartHint = () => {
+    setShowFirstStartHint(false);
+    localStorage.setItem("contextTrayFirstStartHint", "true");
+  };
+
+  // Handle swipe up to cycle through states
+  const handleSwipeUp = useCallback(() => {
+    const nextState: TrayState =
+      trayState === "collapsed" ? "peek" : trayState === "peek" ? "expanded" : "expanded";
+
+    setTrayState(nextState);
+    onStateChange?.(nextState);
+  }, [trayState, onStateChange]);
+
+  // Handle swipe down to cycle through states backwards
+  const handleSwipeDown = useCallback(() => {
+    const prevState: TrayState =
+      trayState === "expanded" ? "peek" : trayState === "peek" ? "collapsed" : "collapsed";
+
+    setTrayState(prevState);
+    onStateChange?.(prevState);
+  }, [trayState, onStateChange]);
 
   // Snap points heights
   const SNAP_POINTS = {
@@ -81,24 +118,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
       };
     }
   }, [trayState, onStateChange, handleSwipeUp, handleSwipeDown]);
-
-  // Handle swipe up to cycle through states
-  const handleSwipeUp = useCallback(() => {
-    const nextState: TrayState =
-      trayState === "collapsed" ? "peek" : trayState === "peek" ? "expanded" : "expanded";
-
-    setTrayState(nextState);
-    onStateChange?.(nextState);
-  }, [trayState, onStateChange]);
-
-  // Handle swipe down to cycle through states backwards
-  const handleSwipeDown = useCallback(() => {
-    const prevState: TrayState =
-      trayState === "expanded" ? "peek" : trayState === "peek" ? "collapsed" : "collapsed";
-
-    setTrayState(prevState);
-    onStateChange?.(prevState);
-  }, [trayState, onStateChange]);
 
   // Close tray when clicking outside
   const handleOutsideClick = useCallback(
@@ -513,54 +532,89 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
   if (!isOpen) return null;
 
   return (
-    <div
-      ref={trayRef}
-      className={cn(
-        "fixed bottom-0 left-0 right-0 z-bottom-sheet bg-surface-1/90 backdrop-blur-xl border-t border-white/10",
-        "transition-all duration-300 ease-out",
-        "backdrop-blur-[12px]",
-        className,
-      )}
-      style={{
-        height: typeof currentHeight === "number" ? `${currentHeight}px` : currentHeight,
-        paddingBottom: `max(env(safe-area-inset-bottom, 20px), 20px)`,
-        transform: trayState === "collapsed" ? "translateY(0)" : "translateY(0)",
-      }}
-    >
-      {/* Drag Handle */}
-      <div className="w-full py-2 flex justify-center touch-none">
-        <div className="h-[4px] w-12 bg-white/30 rounded-full touch-none" />
-      </div>
-
-      {/* Content based on state */}
-      <div className="px-4 pb-4 h-full">
-        {trayState === "collapsed" && (
-          <div
-            className="py-2 cursor-pointer"
-            onClick={() => {
-              setTrayState("peek");
-              onStateChange?.("peek");
-            }}
-          >
-            <p className="text-sm text-ink-secondary truncate">{getContextSummary()}</p>
-          </div>
-        )}
-
-        {trayState === "peek" && <QuickControls />}
-
-        {trayState === "expanded" && <ExpandedView />}
-      </div>
-
-      {/* Overlay when expanded */}
-      {trayState !== "collapsed" && (
+    <>
+      {/* First-Start Hint Banner */}
+      {showFirstStartHint && trayState === "collapsed" && (
         <div
-          className="fixed inset-0 bg-black/20 z-modal-backdrop backdrop-blur-sm"
-          onClick={() => {
-            setTrayState("collapsed");
-            onStateChange?.("collapsed");
-          }}
-        />
+          className={cn(
+            "fixed bottom-[calc(40px+max(env(safe-area-inset-bottom,20px),20px)+8px)]",
+            "left-4 right-4 z-bottom-sheet-plus-1",
+            "animate-slide-up",
+          )}
+        >
+          <div className="bg-surface-1/95 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 mt-0.5">
+                <div className="h-8 w-8 rounded-full bg-accent-chat/20 flex items-center justify-center">
+                  <Cpu className="h-4 w-4 text-accent-chat" />
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-medium text-ink-primary mb-1">Swipe-Up für Kontext</h3>
+                <p className="text-xs text-ink-secondary leading-relaxed">
+                  Tippe oder swipe nach oben, um Rolle, Stil und Kreativität anzupassen.
+                </p>
+              </div>
+              <button
+                onClick={dismissFirstStartHint}
+                className="flex-shrink-0 p-1 text-ink-tertiary hover:text-ink-primary transition-colors"
+                aria-label="Hinweis schließen"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-    </div>
+
+      <div
+        ref={trayRef}
+        className={cn(
+          "fixed bottom-0 left-0 right-0 z-bottom-sheet bg-surface-1 border-t border-white/10",
+          "transition-all duration-300 ease-out",
+          className,
+        )}
+        style={{
+          height: typeof currentHeight === "number" ? `${currentHeight}px` : currentHeight,
+          paddingBottom: `max(env(safe-area-inset-bottom, 20px), 20px)`,
+          transform: trayState === "collapsed" ? "translateY(0)" : "translateY(0)",
+        }}
+      >
+        {/* Drag Handle */}
+        <div className="w-full py-2 flex justify-center touch-none">
+          <div className="h-[4px] w-12 bg-white/30 rounded-full touch-none" />
+        </div>
+
+        {/* Content based on state */}
+        <div className="px-4 pb-4 h-full">
+          {trayState === "collapsed" && (
+            <div
+              className="py-2 cursor-pointer"
+              onClick={() => {
+                setTrayState("peek");
+                onStateChange?.("peek");
+              }}
+            >
+              <p className="text-sm text-ink-secondary truncate">{getContextSummary()}</p>
+            </div>
+          )}
+
+          {trayState === "peek" && <QuickControls />}
+
+          {trayState === "expanded" && <ExpandedView />}
+        </div>
+
+        {/* Overlay when expanded */}
+        {trayState !== "collapsed" && (
+          <div
+            className="fixed inset-0 bg-black/20 z-modal-backdrop backdrop-blur-sm"
+            onClick={() => {
+              setTrayState("collapsed");
+              onStateChange?.("collapsed");
+            }}
+          />
+        )}
+      </div>
+    </>
   );
 }

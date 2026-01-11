@@ -192,55 +192,45 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
-                    {/* Hero Card - Disa Frame Branding System with Enhanced Colors */}
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-20 px-4 animate-fade-in">
+                    {/* Simplified Hero Card */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
                         variant="hero"
                         notch="cutout"
-                        notchSize="lg" // 24px for hero visibility (increased from 22px)
+                        notchSize="md"
                         tintColor="rgb(var(--tint-color-rgb-default))"
-                        className="text-center space-y-6 p-8 relative overflow-hidden"
+                        className="text-center space-y-4 p-6 relative overflow-hidden"
                         style={
                           {
-                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.18)",
-                            "--notch-edge-opacity": "0.35",
+                            "--card-tint-alpha": "0.12",
+                            "--notch-edge-opacity": "0.3",
                           } as React.CSSProperties
                         }
                       >
-                        {/* Decorative gradient orbs for visual interest - 25% reduced */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-radial from-accent-chat/15 to-transparent blur-xl pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-radial from-accent-models/11 to-transparent blur-xl pointer-events-none" />
-
-                        {/* Main Title - Animated Brandmark with shimmer and breathing */}
-                        <div className="space-y-3 relative z-10">
+                        <div className="space-y-2 relative z-10">
                           <AnimatedBrandmark />
-                          <div className="space-y-2">
-                            {/* Subtle accent line with gradient glow - 25% reduced */}
-                            <div className="relative w-32 h-px mx-auto">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/45 to-transparent" />
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-chat/30 to-transparent blur-sm" />
+                          <div className="space-y-1">
+                            <div className="relative w-24 h-px mx-auto">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
                             </div>
-                            <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-80 animate-wordmark-intro-delay-1">
+                            <p className="text-xs text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-70">
                               DEIN KI-ASSISTENT
                             </p>
                           </div>
                         </div>
 
-                        {/* Welcome Text */}
-                        <div className="space-y-3 pt-2 animate-wordmark-intro-delay-2">
-                          <h2 className="text-lg font-medium text-ink-primary">
+                        <div className="space-y-1 pt-1">
+                          <h2 className="text-base font-medium text-ink-primary">
                             Was kann ich für dich tun?
                           </h2>
-                          <p className="text-sm text-ink-secondary font-normal">
-                            Tippe unten eine Frage ein oder wähle einen der Vorschläge.
-                          </p>
+                          <p className="text-sm text-ink-secondary">Tippe unten eine Frage ein.</p>
                         </div>
                       </Card>
                     </div>
 
-                    {/* Starter Prompts - Compact Row Suggestions */}
-                    <div className="w-full max-w-md space-y-2 px-2">
+                    {/* Compact Starter Prompts */}
+                    <div className="w-full max-w-md space-y-1">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => (
                         <button
                           key={prompt}
@@ -252,38 +242,23 @@ export default function Chat() {
                             }
                           }}
                           className={cn(
-                            "w-full flex items-center gap-3 p-3 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards",
-                            "min-h-[48px]", // Mobile touch target
-                            "hover:bg-surface-2/50 hover:border-white/[0.22] hover:shadow-sm",
+                            "w-full flex items-center gap-2 px-3 py-2 text-left transition-all animate-slide-up opacity-0 fill-mode-forwards",
+                            "min-h-[44px]",
+                            "hover:bg-surface-2/40 hover:border-white/10",
                             "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
-                            "active:translate-y-[1px] active:shadow-sm",
-                            "bg-surface-1/40 border border-white/8 rounded-xl",
-                            "backdrop-blur-sm",
+                            "active:translate-y-[0.5px]",
+                            "bg-surface-1/30 border border-white/5 rounded-lg",
                           )}
-                          style={{ animationDelay: `${index * 100}ms` }}
+                          style={{ animationDelay: `${index * 80}ms` }}
                           tabIndex={0}
                           role="button"
                           aria-label={`Starter-Prompt: ${prompt}`}
                         >
-                          <div className="p-2 rounded-lg bg-surface-2 text-accent-chat group-hover:scale-105 transition-transform">
-                            <MessageSquare className="h-4 w-4" />
-                          </div>
-                          <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
-                            {prompt}
-                          </span>
+                          <MessageSquare className="h-3.5 w-3.5 text-accent-chat/70 flex-shrink-0" />
+                          <span className="text-sm text-ink-primary/90">{prompt}</span>
                         </button>
                       ))}
                     </div>
-
-                    {/* Quick Link to Settings - Subtle */}
-                    <button
-                      type="button"
-                      onClick={() => chatLogic.navigate("/settings")}
-                      className="text-sm text-ink-muted hover:text-ink-secondary transition-colors mt-2 flex items-center gap-2"
-                    >
-                      Einstellungen anpassen
-                      <span className="text-xs">→</span>
-                    </button>
                   </div>
                 ) : (
                   <Suspense fallback={<div className="w-full pb-4" aria-hidden="true" />}>

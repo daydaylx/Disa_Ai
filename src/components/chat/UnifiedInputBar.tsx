@@ -22,7 +22,6 @@ export interface UnifiedInputBarProps {
   ) => Promise<ChatMessageType | void>;
   isLoading?: boolean;
   placeholder?: string;
-  showContextPills?: boolean;
   className?: string;
 }
 
@@ -33,12 +32,11 @@ export function UnifiedInputBar({
   onSendVision,
   isLoading = false,
   placeholder = "Schreibe eine Nachricht...",
-  _showContextPills = true,
   className,
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { activeRole } = useRoles();
+  const { activeRole: _activeRole } = useRoles();
   const { models } = useModelCatalog();
   const { settings, _setCreativity, _setDiscussionPreset, _setPreferredModel } = useSettings();
 
@@ -106,7 +104,7 @@ export function UnifiedInputBar({
     { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
   ];
 
-  const shortDiscussionLabels: Record<DiscussionPresetKey, string> = {
+  const _shortDiscussionLabels: Record<DiscussionPresetKey, string> = {
     locker_neugierig: "Locker",
     edgy_provokant: "Edgy",
     nuechtern_pragmatisch: "Nüchtern",
@@ -117,10 +115,10 @@ export function UnifiedInputBar({
     fachlich_tiefgehend: "Fachlich",
   };
 
-  const creativityOption = creativityOptions.find(
+  const _creativityOption = creativityOptions.find(
     (option) => option.value === String(settings.creativity),
   );
-  const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
+  const _selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const hasVisionSupport = !!onSendVision;
 
   return (
@@ -163,8 +161,8 @@ export function UnifiedInputBar({
       {/* Main Input Container - Single visual container, no double borders */}
       <div
         className={cn(
-          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right bg-surface-1/60 border border-white/8 rounded-2xl p-3",
-          "focus-within:border-white/20 focus-within:shadow-glow-sm focus-within:bg-surface-1/80",
+          "relative flex items-end gap-3 transition-all input-focus-animation pr-safe-right bg-surface-1/80 border border-white/8 rounded-2xl p-3",
+          "focus-within:border-white/15 focus-within:bg-surface-1",
           "transition-all duration-200",
         )}
         aria-label="Eingabebereich"
@@ -177,7 +175,7 @@ export function UnifiedInputBar({
             variant="ghost"
             size="icon"
             className={cn(
-              "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5",
+              "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5",
               !attachment &&
                 "bg-surface-2/50 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary",
               attachment &&
@@ -227,7 +225,7 @@ export function UnifiedInputBar({
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
+            "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5 mr-1",
             !value.trim() &&
               !isLoading &&
               !attachment &&
