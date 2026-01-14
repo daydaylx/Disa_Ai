@@ -35,8 +35,7 @@ const brandCardVariants = cva("brand-card", {
 });
 
 export interface BrandCardProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof brandCardVariants> {
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof brandCardVariants> {
   as?: "div" | "button" | "article" | "section";
   /**
    * Custom tint color in `r, g, b` format (e.g. "139, 92, 246").
