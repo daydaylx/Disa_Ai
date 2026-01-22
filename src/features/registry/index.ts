@@ -9,16 +9,6 @@ export interface GameScenario {
 }
 
 export const SCENARIOS: Record<string, GameScenario> = {
-  "ground-zero": {
-    id: "ground-zero",
-    title: "Ground Zero",
-    description: "Überlebe in einer postapokalyptischen Welt.",
-    roleId: "eternia-dm",
-    systemPrompt: "", // Uses role default
-    initialMessage:
-      "System: Initialisiere Sequenz. Vorhut der Orbitalkolonie Aegis landet in einer apokalyptischen Welt; Spieler ist Teil der Vorhut. Starte Simulation 'Projekt Neubeginn'.",
-    preferredModel: "qwen/qwen-2.5-72b-instruct:free",
-  },
   interview: {
     id: "interview",
     title: "Unified Interview",

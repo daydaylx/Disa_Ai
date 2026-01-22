@@ -29,7 +29,6 @@ import {
   Smile,
   Sparkles,
   Star,
-  Swords,
   Tag,
   Theater,
   TrendingUp,
@@ -94,7 +93,6 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
     erotic_creative_author: Feather,
     poet_lyricist: Feather,
     songwriter: Music,
-    "eternia-dm": Swords,
     erotic_author: Feather,
     adult_roleplay_open: Theater,
 
