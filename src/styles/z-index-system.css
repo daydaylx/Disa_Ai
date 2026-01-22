@@ -36,6 +36,7 @@
   --z-fab: 120; /* Floating action buttons */
   --z-drawer: 200; /* Side drawers */
   --z-bottom-sheet: 300; /* Bottom sheets */
+  --z-bottom-sheet-plus-1: 301; /* Bottom sheet hints */
 
   /* Layer 4: Modals - Full-screen overlays */
   --z-modal-backdrop: 400;
@@ -105,6 +106,9 @@
 }
 .z-bottom-sheet {
   z-index: var(--z-bottom-sheet);
+}
+.z-bottom-sheet-plus-1 {
+  z-index: var(--z-bottom-sheet-plus-1);
 }
 
 /* Modals */

@@ -571,7 +571,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
         ref={trayRef}
         className={cn(
           "fixed bottom-0 left-0 right-0 z-bottom-sheet bg-surface-1 border-t border-white/10",
-          "transition-all duration-300 ease-out",
+          "transition-all duration-300 ease-out relative",
           className,
         )}
         style={{
@@ -604,7 +604,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
           {trayState === "expanded" && <ExpandedView />}
         </div>
 
-        {/* Overlay when expanded */}
+        {/* Overlay when expanded - positioned relative to the tray */}
         {trayState !== "collapsed" && (
           <div
             className="fixed inset-0 bg-black/20 z-modal-backdrop backdrop-blur-sm"
@@ -612,6 +612,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
               setTrayState("collapsed");
               onStateChange?.("collapsed");
             }}
+            style={{ top: "-100vh" }}
           />
         )}
       </div>

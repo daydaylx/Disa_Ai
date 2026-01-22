@@ -280,7 +280,7 @@ export default function Chat() {
           </div>
 
           {/* Input Area - Floating Glass Bottom */}
-          <div className="flex-none w-full pointer-events-none z-20">
+          <div className="flex-none w-full pointer-events-none z-composer">
             <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
