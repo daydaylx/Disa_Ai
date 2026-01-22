@@ -167,28 +167,20 @@ export function UnifiedInputBar({
         )}
         aria-label="Eingabebereich"
       >
-        {/* Image Attachment Button (only if vision is supported) */}
+        {/* Image Attachment Button - Disabled due to cost reasons */}
         {hasVisionSupport && (
           <Button
-            onClick={selectImage}
-            disabled={isImageProcessing || isLoading}
+            disabled
             variant="ghost"
             size="icon"
             className={cn(
               "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5",
-              !attachment &&
-                "bg-surface-2/50 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary",
-              attachment &&
-                "bg-brand-secondary/10 text-brand-secondary border border-brand-secondary/30",
+              "bg-surface-2/50 text-ink-tertiary cursor-not-allowed",
             )}
             aria-label="Bild anhängen"
-            title="Bild anhängen (JPEG, PNG, WebP, max. 4MB)"
+            title="Bildanalyse ist derzeit aus Kostengründen deaktiviert"
           >
-            {isImageProcessing ? (
-              <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <ImagePlus className={cn("h-5 w-5", attachment && "fill-current")} />
-            )}
+            <ImagePlus className="h-5 w-5 opacity-50" />
           </Button>
         )}
 
