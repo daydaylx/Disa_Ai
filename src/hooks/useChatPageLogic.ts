@@ -1,17 +1,13 @@
-import { nanoid } from "nanoid";
 import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { sendVisionRequest } from "../api/vision";
 import { useModelCatalog } from "../contexts/ModelCatalogContext";
 import { useRoles } from "../contexts/RolesContext";
 import { buildSystemPrompt } from "../lib/chat/prompt-builder";
 import { MAX_PROMPT_LENGTH, validatePrompt } from "../lib/chat/validation";
 import { mapCreativityToParams } from "../lib/creativity";
-import { mapError } from "../lib/errors";
 import { humanErrorToToast } from "../lib/errors/humanError";
 import { getSamplingCapabilities } from "../lib/modelCapabilities";
-import type { VisionAttachment } from "../types/chat";
 import type { ChatMessageType } from "../types/chatMessage";
 import { useToasts } from "../ui";
 import { useChat } from "./useChat";
@@ -212,94 +208,6 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     [messages, setMessages, append],
   );
 
-  // Handle vision request (image analysis)
-  const handleVisionSend = useCallback(
-    async (prompt: string, attachment: VisionAttachment): Promise<void> => {
-      if (isLoading) {
-        toasts.push({
-          kind: "warning",
-          title: "Verarbeitung läuft",
-          message: "Bitte warte einen Moment, bis die aktuelle Antwort fertig ist.",
-        });
-        return;
-      }
-
-      // Validate prompt
-      const validation = validatePrompt(prompt);
-      if (!validation.valid) {
-        if (validation.reason === "too_long") {
-          toasts.push({
-            kind: "error",
-            title: "Nachricht zu lang",
-            message: `Die Eingabe darf maximal ${MAX_PROMPT_LENGTH.toLocaleString("de-DE")} Zeichen enthalten.`,
-          });
-        } else {
-          toasts.push({
-            kind: "warning",
-            title: "Leere Nachricht",
-            message: "Bitte gib eine Frage zum Bild ein.",
-          });
-        }
-        return;
-      }
-
-      // Create user message with image attachment
-      const userMessage: ChatMessageType = {
-        id: nanoid(),
-        role: "user",
-        content: validation.sanitized,
-        timestamp: Date.now(),
-        attachments: [
-          {
-            type: "image",
-            url: attachment.dataUrl,
-            filename: attachment.filename,
-            mimeType: attachment.mimeType,
-            size: attachment.size,
-          },
-        ],
-      };
-
-      // Add user message immediately for visual feedback
-      setMessages([...messages, userMessage]);
-
-      try {
-        // Call vision API
-        const response = await sendVisionRequest(validation.sanitized, attachment);
-
-        // Create assistant response message
-        const assistantMessage: ChatMessageType = {
-          id: nanoid(),
-          role: "assistant",
-          content: response.text,
-          timestamp: Date.now(),
-          model: response.model,
-          tokens: response.usage?.total_tokens,
-        };
-
-        // Add assistant response
-        setMessages([...messages, userMessage, assistantMessage]);
-      } catch (error) {
-        const mappedError = mapError(error);
-
-        // Show error toast
-        toasts.push(humanErrorToToast(mappedError));
-
-        // Add error message to chat for visibility
-        const errorMessage: ChatMessageType = {
-          id: nanoid(),
-          role: "assistant",
-          content: `❌ Bildanalyse fehlgeschlagen: ${mappedError.message}`,
-          timestamp: Date.now(),
-          isError: true,
-        };
-
-        setMessages([...messages, userMessage, errorMessage]);
-      }
-    },
-    [isLoading, messages, setMessages, toasts],
-  );
-
   // Handle new conversation
   const handleStartNewChat = useCallback(() => {
     newConversation();
@@ -337,7 +245,6 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
 
     // Handlers
     handleSend,
-    handleVisionSend,
     handleEdit,
     handleFollowUp,
     handleRetry,

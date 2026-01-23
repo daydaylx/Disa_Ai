@@ -93,27 +93,6 @@ describe("UnifiedInputBar", () => {
       const sendButton = screen.getByRole("button", { name: "Senden" });
       expect(sendButton).toBeInTheDocument();
     });
-
-    it("rendert keinen Bildanhänge-Button ohne Vision-Support", () => {
-      render(<UnifiedInputBar {...defaultProps} />);
-
-      // Kein Bildanhänge-Button, wenn onSendVision nicht bereitgestellt wird
-      expect(screen.queryByRole("button", { name: /Bild anhängen/i })).not.toBeInTheDocument();
-    });
-
-    it("rendert Bildanhänge-Button mit Vision-Support", () => {
-      render(
-        <UnifiedInputBar
-          {...defaultProps}
-          onSendVision={() =>
-            Promise.resolve({ id: "1", role: "user", content: "", timestamp: Date.now() })
-          }
-        />,
-      );
-
-      // Bildanhänge-Button sollte vorhanden sein
-      expect(screen.getByRole("button", { name: /Bild anhängen/i })).toBeInTheDocument();
-    });
   });
 
   describe("Texteingabe", () => {
