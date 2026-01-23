@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
+
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { Brain, Cpu, Palette, RotateCcw, Shield, Sparkles, User, X } from "@/lib/icons";
-import { Button } from "@/ui/Button";
+import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
+import { Button } from "@/ui/Button";
 
 export type ContextTab = "role" | "style" | "output" | "model";
 

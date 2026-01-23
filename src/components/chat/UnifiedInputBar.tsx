@@ -1,25 +1,14 @@
 import * as React from "react";
 
-import { useModelCatalog } from "@/contexts/ModelCatalogContext";
-import { useRoles } from "@/contexts/RolesContext";
-import { useImageAttachment } from "@/hooks/useImageAttachment";
-import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { ImagePlus, X } from "@/lib/icons";
 import { Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { type DiscussionPresetKey } from "@/prompts/discussion/presets";
-import type { ChatMessageType } from "@/types/chatMessage";
 import { Button } from "@/ui/Button";
 
 export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
-  onSendVision?: (
-    prompt: string,
-    attachment: NonNullable<ReturnType<typeof useImageAttachment>["attachment"]>,
-  ) => Promise<ChatMessageType | void>;
   isLoading?: boolean;
   placeholder?: string;
   className?: string;
@@ -29,27 +18,12 @@ export function UnifiedInputBar({
   value,
   onChange,
   onSend,
-  onSendVision,
   isLoading = false,
   placeholder = "Schreibe eine Nachricht...",
   className,
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { activeRole: _activeRole } = useRoles();
-  const { models } = useModelCatalog();
-  const { settings, _setCreativity, _setDiscussionPreset, _setPreferredModel } = useSettings();
-
-  // Image attachment state
-  const {
-    attachment,
-    isProcessing: isImageProcessing,
-    error: imageError,
-    fileInputRef,
-    selectImage,
-    clearAttachment,
-    handleFileInputChange,
-  } = useImageAttachment();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -86,78 +60,13 @@ export function UnifiedInputBar({
   };
 
   const handleSend = () => {
-    // If we have an image attachment and vision handler, use vision path
-    if (attachment && onSendVision && value.trim()) {
-      void onSendVision(value, attachment);
-      clearAttachment();
-    } else if (value.trim()) {
-      // Regular text chat
+    if (value.trim()) {
       onSend();
     }
   };
 
-  const creativityOptions = [
-    { value: "10", label: "Präzise (10%)", short: "Präzise" },
-    { value: "30", label: "Klar & fokussiert (30%)", short: "Klar" },
-    { value: "45", label: "Ausgewogen (45%)", short: "Ausgewogen" },
-    { value: "70", label: "Kreativ (70%)", short: "Kreativ" },
-    { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
-  ];
-
-  const _shortDiscussionLabels: Record<DiscussionPresetKey, string> = {
-    locker_neugierig: "Locker",
-    edgy_provokant: "Edgy",
-    nuechtern_pragmatisch: "Nüchtern",
-    akademisch_formell: "Akademisch",
-    freundlich_offen: "Freundlich",
-    analytisch_detailliert: "Analytisch",
-    sarkastisch_witzig: "Sarkastisch",
-    fachlich_tiefgehend: "Fachlich",
-  };
-
-  const _creativityOption = creativityOptions.find(
-    (option) => option.value === String(settings.creativity),
-  );
-  const _selectedModel = models?.find((m) => m.id === settings.preferredModelId);
-  const hasVisionSupport = !!onSendVision;
-
   return (
     <div className={cn("w-full space-y-3", className)}>
-      {/* Attachment Ribbon - Thumbnails above input */}
-      {attachment && (
-        <div className="flex items-center gap-2 p-2 bg-surface-1/40 rounded-xl border border-white/8 backdrop-blur-sm animate-pill-slide-in">
-          <img
-            src={attachment.dataUrl}
-            alt="Angehängtes Bild"
-            className="h-12 w-12 rounded-lg object-cover flex-shrink-0 border border-white/10"
-          />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-ink-primary truncate">
-              {attachment.filename || "Bild"}
-            </p>
-            {attachment.size && (
-              <p className="text-xs text-ink-tertiary">{(attachment.size / 1024).toFixed(1)} KB</p>
-            )}
-          </div>
-          <Button
-            onClick={clearAttachment}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-full flex-shrink-0"
-            aria-label="Bild entfernen"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
-      {/* Image Error Banner */}
-      {imageError && (
-        <div className="px-3 py-2 bg-error/10 border border-error/20 rounded-xl animate-pill-slide-in">
-          <p className="text-sm text-error">{imageError}</p>
-        </div>
-      )}
-
       {/* Main Input Container - Single visual container, no double borders */}
       <div
         className={cn(
@@ -167,33 +76,6 @@ export function UnifiedInputBar({
         )}
         aria-label="Eingabebereich"
       >
-        {/* Image Attachment Button - Disabled due to cost reasons */}
-        {hasVisionSupport && (
-          <Button
-            disabled
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5",
-              "bg-surface-2/50 text-ink-tertiary cursor-not-allowed",
-            )}
-            aria-label="Bild anhängen"
-            title="Bildanalyse ist derzeit aus Kostengründen deaktiviert"
-          >
-            <ImagePlus className="h-5 w-5 opacity-50" />
-          </Button>
-        )}
-
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
-          onChange={handleFileInputChange}
-          className="hidden"
-          aria-label="Bilddatei auswählen"
-        />
-
         {/* Textarea */}
         <textarea
           ref={textareaRef}
@@ -203,7 +85,6 @@ export function UnifiedInputBar({
           placeholder={placeholder}
           className={cn(
             "flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition",
-            attachment && "font-medium",
           )}
           rows={1}
           data-testid="composer-input"
@@ -213,26 +94,24 @@ export function UnifiedInputBar({
         {/* Send Button - Material Chip */}
         <Button
           onClick={handleSend}
-          disabled={(!value.trim() && !attachment) || isLoading || isImageProcessing}
+          disabled={!value.trim() || isLoading}
           variant="primary"
           size="icon"
           className={cn(
             "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5 mr-1",
             !value.trim() &&
               !isLoading &&
-              !attachment &&
               "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
-            (value.trim() || attachment) &&
+            value.trim() &&
               !isLoading &&
-              !isImageProcessing &&
               "bg-accent-chat text-white shadow-glow-sm hover:shadow-glow-md hover:scale-105 active:scale-100 animate-send-pulse",
           )}
           aria-label="Senden"
         >
-          {isLoading || isImageProcessing ? (
+          {isLoading ? (
             <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Send className={cn("h-5 w-5", (value.trim() || attachment) && "ml-0.5")} />
+            <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
           )}
         </Button>
       </div>

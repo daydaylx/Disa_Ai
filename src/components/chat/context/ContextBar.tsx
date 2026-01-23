@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Cpu, Palette, Sparkles, User, MoreHorizontal } from "@/lib/icons";
-import { ContextAction } from "./ContextAction";
-import { OverflowSheet, type ContextTab } from "./OverflowSheet";
+import { Cpu, MoreHorizontal,Palette, Sparkles, User } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
+
+import { ContextAction } from "./ContextAction";
+import { type ContextTab,OverflowSheet } from "./OverflowSheet";
 
 export function ContextBar({ className }: { className?: string }) {
   const [sheetOpen, setSheetOpen] = useState(false);
