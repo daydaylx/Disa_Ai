@@ -273,5 +273,5 @@ export const preCalculatedTokens: Record<'light' | 'dark', CssVariableMap> = {
 } as const;
 
 // Performance: Pre-calculated tokens eliminate ~4ms runtime calculation per theme switch
-// Generated: 2026-01-10T20:24:50.500Z
+// Generated: 2026-01-23T21:48:08.575Z
 // Tokens: 130 variables per theme

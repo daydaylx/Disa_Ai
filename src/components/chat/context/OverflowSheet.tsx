@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
+
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
+import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
 import { Brain, Cpu, Palette, RotateCcw, Shield, Sparkles, User, X } from "@/lib/icons";
-import { Button } from "@/ui/Button";
+import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
+import { Button } from "@/ui/Button";
 
 export type ContextTab = "role" | "style" | "output" | "model";
 
@@ -53,13 +55,13 @@ export function OverflowSheet({ isOpen, onClose, initialTab = "role" }: Overflow
   // Contexts
   const { activeRole, setActiveRole, roles } = useRoles();
   const { models } = useModelCatalog();
+  const { isEnabled: memoryEnabled, toggleMemory } = useMemory();
   const {
     settings,
+    toggleNSFWContent,
     setCreativity,
     setDiscussionPreset,
     setPreferredModel,
-    setMemoryEnabled,
-    setSafetyFilter,
   } = useSettings();
 
   if (!isOpen) return null;
@@ -187,20 +189,20 @@ export function OverflowSheet({ isOpen, onClose, initialTab = "role" }: Overflow
                  <p className="text-xs text-ink-tertiary uppercase tracking-wider mb-2">Erweiterte Einstellungen</p>
                  <div className="grid grid-cols-2 gap-3">
                     <Button
-                      variant={settings.memoryEnabled ? "primary" : "outline"}
-                      onClick={() => setMemoryEnabled(!settings.memoryEnabled)}
+                      variant={memoryEnabled ? "primary" : "outline"}
+                      onClick={toggleMemory}
                       className="justify-start"
                     >
                       <Brain className="h-4 w-4 mr-2" />
-                      Memory {settings.memoryEnabled ? "An" : "Aus"}
+                      Memory {memoryEnabled ? "An" : "Aus"}
                     </Button>
                     <Button
-                      variant={settings.safetyFilter ? "primary" : "outline"}
-                      onClick={() => setSafetyFilter(!settings.safetyFilter)}
+                      variant={!settings.showNSFWContent ? "primary" : "outline"}
+                      onClick={toggleNSFWContent}
                       className="justify-start"
                     >
                       <Shield className="h-4 w-4 mr-2" />
-                      Safety {settings.safetyFilter ? "An" : "Aus"}
+                      Safety {!settings.showNSFWContent ? "An" : "Aus"}
                     </Button>
                  </div>
               </div>
@@ -233,8 +235,8 @@ export function OverflowSheet({ isOpen, onClose, initialTab = "role" }: Overflow
                 setDiscussionPreset("locker_neugierig");
                 setCreativity(45);
                 setPreferredModel(models?.[0]?.id || "");
-                setMemoryEnabled(false);
-                setSafetyFilter(true);
+                if (memoryEnabled) toggleMemory();
+                if (settings.showNSFWContent) toggleNSFWContent();
              }}
            >
              <RotateCcw className="h-4 w-4 mr-2" />

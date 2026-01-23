@@ -142,6 +142,7 @@ class CanvasRenderingContext2DMock {
 
 if (typeof HTMLCanvasElement !== "undefined") {
   const originalGetContext = HTMLCanvasElement.prototype.getContext;
+  // @ts-expect-error - overriding native method for testing
   HTMLCanvasElement.prototype.getContext = function (
     this: HTMLCanvasElement,
     contextType: string,
@@ -154,7 +155,7 @@ if (typeof HTMLCanvasElement !== "undefined") {
       return originalGetContext.call(this, contextType, options);
     }
     return null;
-  } as any;
+  };
 }
 
 // Mock HTMLCanvasElement
@@ -164,6 +165,7 @@ document.createElement = function (tagName: string, options?: ElementCreationOpt
     const canvas = originalCreateElement("canvas", options) as HTMLCanvasElement;
 
     // Mock getContext to return our mock 2D context
+    // @ts-expect-error - overriding native method for testing
     canvas.getContext = function (
       this: HTMLCanvasElement,
       contextType: string,
@@ -172,14 +174,14 @@ document.createElement = function (tagName: string, options?: ElementCreationOpt
         return new CanvasRenderingContext2DMock(this) as unknown as CanvasRenderingContext2D;
       }
       return null;
-    } as any;
+    };
 
     // Mock toDataURL to return a valid base64 data URL
-    canvas.toDataURL = function (type?: string): string {
+    canvas.toDataURL = function (_type?: string): string {
       // Return a minimal valid JPEG data URL (1x1 red pixel)
       const base64 =
         "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA//2Q==";
-      return `data:${type || "image/png"};base64,${base64}`;
+      return `data:${_type || "image/png"};base64,${base64}`;
     };
 
     // Set default dimensions

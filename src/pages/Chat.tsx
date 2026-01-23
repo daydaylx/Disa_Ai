@@ -198,7 +198,7 @@ export default function Chat() {
                       <Card
                         variant="hero"
                         notch="cutout"
-                        notchSize="md"
+                        notchSize="default"
                         tintColor="rgb(var(--tint-color-rgb-default))"
                         className="text-center space-y-4 p-6 relative overflow-hidden"
                         style={
@@ -287,7 +287,6 @@ export default function Chat() {
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
                 onSend={chatLogic.handleSend}
-                onSendVision={chatLogic.handleVisionSend}
                 isLoading={chatLogic.isLoading}
               />
             </div>
