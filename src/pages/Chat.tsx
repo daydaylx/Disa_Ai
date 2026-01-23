@@ -8,7 +8,7 @@ import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
-import { ContextTray } from "../components/chat/ContextTray";
+import { ContextBar } from "../components/chat/context/ContextBar";
 import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { PageLayout } from "../components/layout/PageLayout";
@@ -281,7 +281,8 @@ export default function Chat() {
 
           {/* Input Area - Floating Glass Bottom */}
           <div className="flex-none w-full pointer-events-none z-composer">
-            <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto flex flex-col gap-2">
+              <ContextBar />
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
@@ -293,9 +294,6 @@ export default function Chat() {
           </div>
         </div>
       </PageLayout>
-
-      {/* Context Tray - Swipe-up controls */}
-      <ContextTray />
 
       {/* Global Menu */}
       <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
