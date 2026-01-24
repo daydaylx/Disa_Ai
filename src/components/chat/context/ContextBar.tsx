@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
-import { Cpu, MoreHorizontal,Palette, Sparkles, User } from "@/lib/icons";
+import { Cpu, MoreHorizontal, Palette, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 
 import { ContextAction } from "./ContextAction";
-import { type ContextTab,OverflowSheet } from "./OverflowSheet";
+import { type ContextTab, OverflowSheet } from "./OverflowSheet";
 
 export function ContextBar({ className }: { className?: string }) {
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -41,7 +41,8 @@ export function ContextBar({ className }: { className?: string }) {
   const creativityLabel = `${settings.creativity}%`;
 
   const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
-  const modelLabel = selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
+  const modelLabel =
+    selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
 
   return (
     <>
@@ -50,7 +51,7 @@ export function ContextBar({ className }: { className?: string }) {
           "w-full flex items-center gap-2 overflow-x-auto no-scrollbar mask-linear-fade py-1",
           // Ensure touch scrolling works smoothly
           "touch-pan-x",
-          className
+          className,
         )}
         role="toolbar"
         aria-label="Kontext Aktionen"
@@ -62,30 +63,25 @@ export function ContextBar({ className }: { className?: string }) {
           onClick={() => openSheet("role")}
           aria-label={`Rolle: ${roleLabel}`}
         />
-
         <ContextAction
           icon={<Palette className="h-4 w-4" />}
           label={presetLabel}
           onClick={() => openSheet("style")}
           aria-label={`Stil: ${presetLabel}`}
         />
-
         <ContextAction
           icon={<Sparkles className="h-4 w-4" />}
           label={creativityLabel}
           onClick={() => openSheet("output")}
           aria-label={`Kreativität: ${creativityLabel}`}
         />
-
         <ContextAction
           icon={<Cpu className="h-4 w-4" />}
           label={modelLabel}
           onClick={() => openSheet("model")}
           aria-label={`Modell: ${modelLabel}`}
         />
-
         <div className="flex-1" /> {/* Spacer if needed, or just let them flow */}
-
         <ContextAction
           label=""
           icon={<MoreHorizontal className="h-5 w-5" />}

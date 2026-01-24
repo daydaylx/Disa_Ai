@@ -25,19 +25,24 @@ export const ContextAction = React.forwardRef<HTMLButtonElement, ContextActionPr
             : "bg-surface-1/50 border-white/10 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-chat/50",
           "active:scale-95",
-          className
+          className,
         )}
         {...props}
       >
         {icon && (
-          <span className={cn("flex-shrink-0", isActive ? "text-accent-chat" : "text-ink-tertiary group-hover:text-ink-primary")}>
+          <span
+            className={cn(
+              "flex-shrink-0",
+              isActive ? "text-accent-chat" : "text-ink-tertiary group-hover:text-ink-primary",
+            )}
+          >
             {icon}
           </span>
         )}
         <span>{label}</span>
       </button>
     );
-  }
+  },
 );
 
 ContextAction.displayName = "ContextAction";

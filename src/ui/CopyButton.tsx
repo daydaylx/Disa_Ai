@@ -17,8 +17,10 @@ const variantClasses: Record<CopyButtonVariant, string> = {
   danger: "border-transparent bg-state-danger/10 text-state-danger hover:bg-state-danger/15",
 };
 
-interface CopyButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children" | "onClick"> {
+interface CopyButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "children" | "onClick"
+> {
   text: string;
   onCopied?: () => void;
   size?: "sm" | "md";
