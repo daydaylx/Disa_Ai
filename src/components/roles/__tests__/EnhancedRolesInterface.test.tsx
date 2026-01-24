@@ -113,7 +113,7 @@ describe("EnhancedRolesInterface", () => {
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
+        { name: /Details/i, hidden: true },
       ); // Use within
       fireEvent.click(detailsButton);
     }
@@ -238,7 +238,7 @@ describe("EnhancedRolesInterface", () => {
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
+        { name: /Details/i, hidden: true },
       ); // Use within
       fireEvent.click(detailsButton);
     }
@@ -255,7 +255,7 @@ describe("EnhancedRolesInterface", () => {
 
     if (codeExpertCard) {
       const detailsButton = await within(codeExpertCard as HTMLElement).findByRole("button", {
-        name: "Details",
+        name: /Details/i,
         hidden: true,
       });
       fireEvent.click(detailsButton);
@@ -298,7 +298,9 @@ describe("EnhancedRolesInterface", () => {
 
     // Check that cards have a meaningful accessible name (their role name)
     roleCards.forEach((card) => {
-      expect(card).toHaveAccessibleName();
+      // The role card wrapper contains a button with the accessible name
+      const roleButton = within(card).getByRole("button", { name: /auswählen/i });
+      expect(roleButton).toHaveAccessibleName();
     });
   });
 });
