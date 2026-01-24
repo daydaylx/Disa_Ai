@@ -19,21 +19,16 @@ export {
   AppWindow, // Added
   ArrowLeft,
   ArrowRight, // Added for ThemenPage
-  Award, // Added for game achievements
-  Backpack, // Added for game HUD
   Book,
   Bookmark, // Added
   BookOpenCheck,
   Bot,
-  Box, // Added for game inventory
   Brain,
-  ImagePlus, // Added for vision chat
   Briefcase, // Added for role icons
   Bug, // Added for FeedbackPage
   Cat, // Added
   Check,
   CheckCircle,
-  CheckCircle2, // Added for game quests
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -42,7 +37,6 @@ export {
   Clock,
   Code,
   Code2,
-  Coins, // Added for game HUD
   Copy,
   Cpu,
   Database,
@@ -70,14 +64,12 @@ export {
   Loader2,
   Lock,
   Menu,
-  MapPin, // Added for game HUD
   MessageCircle,
   MessageSquare,
   Mic,
   Moon,
   MoreHorizontal,
   Music, // Added for role icons
-  Package, // Added for game inventory
   Palette,
   Paperclip,
   PenSquare,
@@ -88,21 +80,17 @@ export {
   RotateCcw,
   Save, // Added for game save system
   Scale, // Added for role icons
-  Scroll, // Added for game quests
   Search,
   Send,
   Settings,
   Shield,
-  Skull, // Added for game inventory weapons
   SlidersHorizontal,
   Smartphone,
   Smile,
   Sparkles,
   Square,
   Star,
-  Store, // Added for game trade system
   SunMedium,
-  Swords, // Added for game role icon
   Tag,
   Theater, // Added for role icons
   ThumbsDown,
