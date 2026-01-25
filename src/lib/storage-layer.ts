@@ -2,6 +2,8 @@
 // Modern storage layer using IndexedDB via Dexie
 import Dexie from "dexie";
 
+import { schemaMigration } from "./storage-schema-migration";
+
 const isTestEnvironment =
   typeof process !== "undefined" &&
   (process.env?.NODE_ENV === "test" || Boolean(process.env?.VITEST));
@@ -16,6 +18,9 @@ export interface Conversation {
   messageCount: number;
   messages?: any[];
   isFavorite?: boolean;
+  isArchived?: boolean;
+  archivedAt?: string;
+  isPinned?: boolean;
 }
 
 export interface ConversationMetadata {
@@ -174,10 +179,14 @@ export class ModernStorageLayer {
     }
 
     try {
+      // Initialize with latest schema version
       const database = new Dexie("DisaAI") as DisaDB;
-      database.version(1).stores({
+      const latestVersion = schemaMigration.getLatestVersion();
+
+      // Apply all migrations up to latest version
+      database.version(latestVersion).stores({
         conversations:
-          "id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite",
+          "id, title, createdAt, updatedAt, lastActivity, model, messageCount, isFavorite, isArchived, archivedAt, isPinned",
         metadata: "id, title, createdAt, updatedAt, model, messageCount",
       });
 
@@ -185,6 +194,20 @@ export class ModernStorageLayer {
 
       // Asynchronously open with proper error handling
       await database.open();
+
+      // Check if migration is needed and apply it
+      if (await schemaMigration.needsMigration(database)) {
+        console.warn("[Storage] Schema migration required");
+        const migrationResult = await schemaMigration.migrate(database);
+        if (migrationResult.success) {
+          console.warn(
+            `[Storage] Schema migration completed: v${migrationResult.fromVersion} � v${migrationResult.toVersion}`,
+          );
+        } else {
+          console.error("[Storage] Schema migration failed:", migrationResult.errors);
+        }
+      }
+
       console.warn("[Storage] IndexedDB initialized successfully");
       return database;
     } catch (error) {

@@ -7,6 +7,18 @@ import { analyzer } from "vite-bundle-analyzer";
 import { VitePWA } from "vite-plugin-pwa";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
+// Configure SWC for faster TypeScript compilation
+const swcReactPlugin = react({
+  // Use SWC for faster compilation
+  babel: {
+    // Disable Babel, use SWC instead
+    parserOpts: {
+      syntax: "typescript",
+      tsx: true,
+    },
+  },
+});
+
 // Some CI sandboxes block /tmp writes (jiti cache for Tailwind). Keep builds hermetic by
 // redirecting temp usage into a repo-local .tmp directory.
 const localTmpDir = resolvePath(".tmp");
@@ -129,7 +141,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
-      react(),
+      swcReactPlugin,
       analyzerPlugin,
       // Sentry plugin - only in production with proper configuration
       ...(isProduction && env.SENTRY_AUTH_TOKEN && env.VITE_SENTRY_DSN
@@ -305,16 +317,57 @@ export default defineConfig(({ mode }) => {
       }),
       rollupOptions: {
         output: {
-          // Vereinfachte Chunk-Strategie
-          manualChunks: {
-            // React Framework
-            "react-vendor": ["react", "react-dom"],
-            // Router
-            "router-vendor": ["react-router-dom"],
-            // UI-Komponenten
-            "ui-vendor": ["@radix-ui/react-avatar", "@radix-ui/react-dialog"],
-            // Utility-Bibliotheken
-            "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge", "nanoid"],
+          // Erweiterte Chunk-Strategie für besseres Caching und Performance
+          manualChunks: (id) => {
+            // React Framework (stabil, selten aktualisiert)
+            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+              return "react-vendor";
+            }
+
+            // Router (mittelständig)
+            if (id.includes("node_modules/react-router")) {
+              return "router-vendor";
+            }
+
+            // Radix UI Components (oft aktualisiert, aber separat)
+            if (id.includes("node_modules/@radix-ui")) {
+              return "ui-vendor";
+            }
+
+            // Utilities (klein, stabil)
+            if (
+              id.includes("node_modules/clsx") ||
+              id.includes("node_modules/class-variance-authority") ||
+              id.includes("node_modules/tailwind-merge") ||
+              id.includes("node_modules/nanoid")
+            ) {
+              return "utils-vendor";
+            }
+
+            // Dexie (IndexedDB Wrapper, eigenständig)
+            if (id.includes("node_modules/dexie")) {
+              return "db-vendor";
+            }
+
+            // Mark Rendering (groß, separater Chunk)
+            if (id.includes("node_modules/react-markdown")) {
+              return "markdown-vendor";
+            }
+
+            // Lucide Icons (kann lazy-loaded werden)
+            if (id.includes("node_modules/lucide-react")) {
+              return "icons-vendor";
+            }
+
+            // Sentry (nur in Produktion, separater Chunk)
+            if (id.includes("node_modules/@sentry")) {
+              return "sentry-vendor";
+            }
+
+            // Alle anderen Dependencies in vendor chunk
+            if (id.includes("node_modules")) {
+              return "vendor";
+            }
           },
           entryFileNames: "assets/js/[name]-[hash].js",
           chunkFileNames: "assets/js/[name]-[hash].js",

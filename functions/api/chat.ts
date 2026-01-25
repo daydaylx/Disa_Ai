@@ -12,6 +12,8 @@
 
 interface Env {
   OPENROUTER_API_KEY: string;
+  RATE_LIMIT_MAX_REQUESTS?: string;
+  RATE_LIMIT_WINDOW_MS?: string;
 }
 
 interface ChatMessage {
@@ -41,12 +43,62 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5173",
 ];
 
+// Rate limiting store (in-memory for Cloudflare Workers)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+// API Key format validation
+const API_KEY_PATTERN = /^sk-or-v1-[a-zA-Z0-9]{48}$/;
+
 /**
  * Check if origin is allowed for CORS
  */
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   return ALLOWED_ORIGINS.some((allowed) => origin.startsWith(allowed.replace(/:\d+$/, "")));
+}
+
+/**
+ * Get client IP address from request
+ */
+function getClientIP(request: Request): string {
+  const cfConnectingIP = request.headers.get("CF-Connecting-IP");
+  const xForwardedFor = request.headers.get("X-Forwarded-For");
+  const xRealIP = request.headers.get("X-Real-IP");
+
+  return cfConnectingIP || xForwardedFor?.split(",")[0]?.trim() || xRealIP || "unknown";
+}
+
+/**
+ * Check rate limit for client IP
+ */
+function checkRateLimit(env: Env, ip: string): { allowed: boolean; retryAfter?: number } {
+  const maxRequests = parseInt(env.RATE_LIMIT_MAX_REQUESTS || "100", 10);
+  const windowMs = parseInt(env.RATE_LIMIT_WINDOW_MS || "60000", 10); // 1 minute default
+
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+
+  if (!record || now > record.resetTime) {
+    // First request or window expired
+    rateLimitStore.set(ip, { count: 1, resetTime: now + windowMs });
+    return { allowed: true };
+  }
+
+  if (record.count >= maxRequests) {
+    const retryAfter = Math.ceil((record.resetTime - now) / 1000);
+    return { allowed: false, retryAfter };
+  }
+
+  // Increment counter
+  record.count++;
+  return { allowed: true };
+}
+
+/**
+ * Validate API key format
+ */
+function isValidAPIKey(apiKey: string): boolean {
+  return API_KEY_PATTERN.test(apiKey) || apiKey.startsWith("sk-or-v1-");
 }
 
 /**
@@ -107,13 +159,44 @@ export async function onRequest(context: {
   }
 
   try {
-    // Validate API key is configured
+    // Validate API key is configured and has correct format
     if (!env.OPENROUTER_API_KEY) {
       console.error("❌ OPENROUTER_API_KEY not configured in Cloudflare Secrets");
       return jsonError(
         "Server configuration error: API key not configured. Please set OPENROUTER_API_KEY in Cloudflare Dashboard.",
         500,
         request,
+      );
+    }
+
+    if (!isValidAPIKey(env.OPENROUTER_API_KEY)) {
+      console.error("❌ OPENROUTER_API_KEY has invalid format");
+      return jsonError(
+        "Server configuration error: API key has invalid format. Please check OPENROUTER_API_KEY in Cloudflare Dashboard.",
+        500,
+        request,
+      );
+    }
+
+    // Rate limiting check
+    const clientIP = getClientIP(request);
+    const rateLimitCheck = checkRateLimit(env, clientIP);
+
+    if (!rateLimitCheck.allowed) {
+      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({
+          error: "Rate limit exceeded. Please try again later.",
+          retryAfter: rateLimitCheck.retryAfter,
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": getCORSOrigin(request),
+            "Retry-After": String(rateLimitCheck.retryAfter),
+          },
+        },
       );
     }
 
@@ -136,6 +219,29 @@ export async function onRequest(context: {
 
     if (!body.model || typeof body.model !== "string") {
       return jsonError("Invalid request: 'model' string is required", 400, request);
+    }
+
+    // Validate messages structure
+    for (const msg of body.messages) {
+      if (!msg.role || !["system", "user", "assistant"].includes(msg.role)) {
+        return jsonError(
+          `Invalid message role: ${msg.role}. Must be 'system', 'user', or 'assistant'`,
+          400,
+          request,
+        );
+      }
+      if (typeof msg.content !== "string" || msg.content.trim().length === 0) {
+        return jsonError(`Invalid message content: must be a non-empty string`, 400, request);
+      }
+    }
+
+    // Validate temperature range
+    if (body.temperature !== undefined && (body.temperature < 0 || body.temperature > 2)) {
+      return jsonError(
+        `Invalid temperature: must be between 0 and 2, got ${body.temperature}`,
+        400,
+        request,
+      );
     }
 
     // Build OpenRouter request payload

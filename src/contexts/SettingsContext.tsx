@@ -22,6 +22,8 @@ interface Settings {
   reduceMotion: boolean;
   hapticFeedback: boolean;
   restoreLastConversation: boolean;
+  memoryEnabled: boolean;
+  safetyFilter: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -40,6 +42,8 @@ const DEFAULT_SETTINGS: Settings = {
   reduceMotion: false,
   hapticFeedback: false,
   restoreLastConversation: true,
+  memoryEnabled: false,
+  safetyFilter: true,
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
@@ -168,6 +172,8 @@ interface SettingsContextType {
   setReduceMotion: (val: boolean) => void;
   setHapticFeedback: (val: boolean) => void;
   toggleRestoreLastConversation: () => void;
+  setMemoryEnabled: (val: boolean) => void;
+  setSafetyFilter: (val: boolean) => void;
   resetSettings: () => void;
 }
 
@@ -311,6 +317,20 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
   }, [saveSettings]);
 
+  const setMemoryEnabled = useCallback(
+    (memoryEnabled: boolean) => {
+      saveSettings({ memoryEnabled });
+    },
+    [saveSettings],
+  );
+
+  const setSafetyFilter = useCallback(
+    (safetyFilter: boolean) => {
+      saveSettings({ safetyFilter });
+    },
+    [saveSettings],
+  );
+
   const resetSettings = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -358,6 +378,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setReduceMotion,
     setHapticFeedback,
     toggleRestoreLastConversation,
+    setMemoryEnabled,
+    setSafetyFilter,
     resetSettings,
   };
 

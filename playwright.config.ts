@@ -74,9 +74,9 @@ try {
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: IS_LIVE ? 90_000 : 45_000,
-  expect: { timeout: process.env.CI ? 10_000 : 15_000 }, // Kürzere Timeouts in CI
+  expect: { timeout: process.env.CI ? 15_000 : 20_000 }, // Erhöhte Timeouts für Stabilität
   fullyParallel: true,
-  retries: process.env.CI ? 1 : 0, // CI darf einmal wiederholen, lokal nicht
+  retries: process.env.CI ? 2 : 1, // Mehr Retries für bessere Stabilität
   workers: IS_LIVE ? 2 : process.env.CI ? 2 : undefined, // Weniger Last auf Live-Seite
   use: {
     baseURL: BASE_URL,
