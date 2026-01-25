@@ -53,7 +53,7 @@ vi.mock("dexie", () => {
               below: (_value: any) => ({
                 toArray: () => tableData,
                 and: (_callback: any) => ({
-                  toArray: () => tableData.filter(callback),
+                  toArray: () => tableData.filter(_callback),
                 }),
               }),
               equals: (_value: any) => ({
@@ -62,12 +62,12 @@ vi.mock("dexie", () => {
                 }),
               }),
             };
-            whereMocks.set(field, mock);
+            whereMocks.set(_field, mock);
             return mock;
           },
           filter: (_callback: any) => ({
             reverse: () => ({
-              sortBy: (_field: string) => Promise.resolve(tableData.filter(callback)),
+              sortBy: (_field: string) => Promise.resolve(tableData.filter(_callback)),
             }),
           }),
           update: async (id: string, data: any) => {
@@ -97,7 +97,7 @@ vi.mock("dexie", () => {
       transaction(_mode: string, ..._tables: any[]) {
         return {
           async: async (_callback: any) => {
-            await callback();
+            await _callback();
           },
         };
       }
@@ -135,12 +135,12 @@ describe("SchemaMigrationManager", () => {
       const history = migrationManager.getMigrationHistory();
 
       expect(history).toHaveLength(3);
-      expect(history[0].version).toBe(1);
-      expect(history[0].description).toBe("Initial schema with conversations and metadata tables");
-      expect(history[1].version).toBe(2);
-      expect(history[1].description).toBe("Add archived flag and archivedAt timestamp");
-      expect(history[2].version).toBe(3);
-      expect(history[2].description).toBe("Add pinned flag for conversations");
+      expect(history[0]?.version).toBe(1);
+      expect(history[0]?.description).toBe("Initial schema with conversations and metadata tables");
+      expect(history[1]?.version).toBe(2);
+      expect(history[1]?.description).toBe("Add archived flag and archivedAt timestamp");
+      expect(history[2]?.version).toBe(3);
+      expect(history[2]?.description).toBe("Add pinned flag for conversations");
 
       history.forEach((entry) => {
         expect(entry).toHaveProperty("version");
@@ -375,7 +375,7 @@ describe("SchemaMigrationManager", () => {
       const tableMock = vi.fn().mockReturnValue({
         filter: (_callback: any) => ({
           reverse: () => ({
-            sortBy: (_field: string) => Promise.resolve(archivedConversations.filter(callback)),
+            sortBy: (_field: string) => Promise.resolve(archivedConversations.filter(_callback)),
           }),
         }),
       });
@@ -408,7 +408,7 @@ describe("SchemaMigrationManager", () => {
 
       const belowMock = vi.fn().mockReturnValue({
         and: (_callback: any) => ({
-          toArray: () => oldArchived.filter(callback),
+          toArray: () => oldArchived.filter(_callback),
         }),
       });
 

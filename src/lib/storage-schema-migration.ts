@@ -390,7 +390,7 @@ export class SchemaMigrationManager {
   /**
    * Log migration result to database
    */
-  private logMigrationResult(
+  private async logMigrationResult(
     _db: Dexie,
     result: {
       version: number;
@@ -408,6 +408,7 @@ export class SchemaMigrationManager {
     } catch (error) {
       safeError("Failed to log migration result:", error);
     }
+    return Promise.resolve();
   }
 
   /**

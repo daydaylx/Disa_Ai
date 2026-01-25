@@ -292,7 +292,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
+  const [selectedModels, _setSelectedModels] = useState<Set<string>>(new Set());
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [compareModels, setCompareModels] = useState<EnhancedModel[]>([]);
@@ -394,30 +394,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   const activeModelLabel = useMemo(
     () => enhancedModels.find((m) => m.id === settings.preferredModelId)?.label,
     [enhancedModels, settings.preferredModelId],
-  );
-
-  // Handlers
-  const _handleSelectModel = useCallback(
-    (model: EnhancedModel) => {
-      setSelectedModels((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(model.id)) {
-          newSet.delete(model.id);
-        } else {
-          newSet.add(model.id);
-        }
-        return newSet;
-      });
-
-      // Track usage
-      trackModelUsage(model.id);
-
-      push({
-        kind: "success",
-        title: `${model.label} ${selectedModels.has(model.id) ? "entfernt" : "ausgewählt"}`,
-      });
-    },
-    [selectedModels, trackModelUsage, push],
   );
 
   const [animatingFavorite, setAnimatingFavorite] = useState<string | null>(null);

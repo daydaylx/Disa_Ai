@@ -17,8 +17,8 @@ export function BottomSheet({
   onClose,
   children,
   className,
-  snapPoints = [250],
-  initialSnap = 0,
+  snapPoints: _snapPoints = [250],
+  initialSnap: _initialSnap = 0,
 }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -44,6 +44,7 @@ export function BottomSheet({
         backdropElement?.removeEventListener("click", handleBackdropClick);
       };
     }
+    return undefined;
   }, [isOpen, onClose]);
 
   useEffect(() => {
@@ -61,6 +62,7 @@ export function BottomSheet({
         gestureHandlerRef.current?.destroy();
       };
     }
+    return undefined;
   }, [onClose]);
 
   if (!isOpen) return null;
