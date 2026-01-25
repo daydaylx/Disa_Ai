@@ -74,8 +74,7 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
 });
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
   withAccent?: boolean;
   accentColor?: "primary" | "secondary" | "tertiary" | "models" | "roles";
   tintColor?: string;
