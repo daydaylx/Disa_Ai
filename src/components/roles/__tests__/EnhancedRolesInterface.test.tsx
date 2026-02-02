@@ -101,20 +101,20 @@ describe("EnhancedRolesInterface", () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
     // Check for role names
-    expect(screen.getByText("Kreativer Assistent")).toBeInTheDocument();
-    expect(screen.getByText("Code Experte")).toBeInTheDocument();
+    const creativeRole = await screen.findByText("Kreativer Assistent");
+    const codeRole = await screen.findByText("Code Experte");
+    expect(creativeRole).toBeInTheDocument();
+    expect(codeRole).toBeInTheDocument();
 
     // Expand the first role card to see its description
-    const creativeAssistantCard = screen
-      .getByText("Kreativer Assistent")
-      .closest('[data-testid="role-card"]');
+    const creativeAssistantCard = creativeRole.closest('[data-testid="role-card"]');
     expect(creativeAssistantCard).toBeInTheDocument(); // Ensure card is found
 
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
-      ); // Use within
+        { name: "Details anzeigen" },
+      );
       fireEvent.click(detailsButton);
     }
     // Check for role descriptions (now visible)
@@ -230,16 +230,15 @@ describe("EnhancedRolesInterface", () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
     // Expand the first role card to see its tags
-    const creativeAssistantCard = screen
-      .getByText("Kreativer Assistent")
-      .closest('[data-testid="role-card"]');
+    const creativeRole = await screen.findByText("Kreativer Assistent");
+    const creativeAssistantCard = creativeRole.closest('[data-testid="role-card"]');
     expect(creativeAssistantCard).toBeInTheDocument(); // Ensure card is found
 
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
-      ); // Use within
+        { name: "Details anzeigen" },
+      );
       fireEvent.click(detailsButton);
     }
 
