@@ -242,34 +242,6 @@ export function ChatMessage({
             isUser ? "items-end" : "items-start",
           )}
         >
-          {/* Attachment Thumbnail (for user messages with images) */}
-          {isUser && message.attachments && message.attachments.length > 0 && (
-            <div className="mb-3 space-y-2">
-              {message.attachments.map((att, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-3 p-2.5 rounded-xl bg-surface-1/60 border border-white/10 hover:border-white/15 transition-colors"
-                >
-                  <img
-                    src={att.url}
-                    alt={att.filename || "Angehängtes Bild"}
-                    className="h-20 w-20 rounded-lg object-cover border border-white/10 shadow-sm"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-ink-primary truncate">
-                      {att.filename || "Bild"}
-                    </p>
-                    {att.size && (
-                      <p className="text-xs text-ink-secondary">
-                        {(att.size / 1024).toFixed(1)} KB
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Bubble - Enhanced Design */}
           <div
             className={cn(
