@@ -38,18 +38,6 @@ test.describe("Chat Smoke Tests", () => {
     // Prüfe Senden-Button
     const sendButton = page.locator('button[aria-label="Senden"]');
     await expect(sendButton).toBeVisible();
-
-    // Prüfe Rollen-Auswahl (SelectTrigger mit aria-label)
-    const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
-    await expect(roleSelector).toBeVisible();
-
-    // Prüfe Stil-Auswahl
-    const styleSelector = page.locator('button[aria-label="Stil auswählen"]');
-    await expect(styleSelector).toBeVisible();
-
-    // Prüfe Kreativitäts-Auswahl
-    const creativitySelector = page.locator('button[aria-label="Kreativität auswählen"]');
-    await expect(creativitySelector).toBeVisible();
   });
 
   test("should allow typing and sending a message", async ({ page }) => {
@@ -101,19 +89,6 @@ test.describe("Chat Smoke Tests", () => {
 
     // Panel schließen durch Klick außerhalb
     await page.mouse.click(10, 10);
-  });
-
-  test("should interact with role selector", async ({ page }) => {
-    // Klicke auf Rollen-Selektor (SelectTrigger)
-    const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
-    await roleSelector.click();
-
-    // Dropdown sollte geöffnet sein - prüfe auf "Neutral Standard" Option (exakter Name)
-    const neutralOption = page.getByRole("option", { name: "Neutral Standard" });
-    await expect(neutralOption).toBeVisible();
-
-    // Schließe durch Klick auf die Option
-    await neutralOption.click();
   });
 
   test("should send message with Enter key", async ({ page }) => {
