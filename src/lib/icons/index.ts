@@ -24,7 +24,6 @@ export {
   BookOpenCheck,
   Bot,
   Brain,
-  ImagePlus, // Added for vision chat
   Briefcase, // Added for role icons
   Bug, // Added for FeedbackPage
   Cat, // Added
