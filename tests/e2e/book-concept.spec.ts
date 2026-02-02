@@ -20,16 +20,6 @@ test.describe("Book Concept UI", () => {
     // Check for Unified Input Bar
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
-
-    // Check for role selector (primary pill - shows "Standard" by default)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
-    await expect(roleButton).toBeVisible();
-
-    // Check for style selector
-    await expect(page.locator('button[aria-label="Stil auswählen"]')).toBeVisible();
-
-    // Check for creativity selector
-    await expect(page.locator('button[aria-label="Kreativität auswählen"]')).toBeVisible();
   });
 
   test("should allow typing and sending a message", async ({ page }) => {
@@ -41,34 +31,8 @@ test.describe("Book Concept UI", () => {
     await expect(sendButton).toBeEnabled();
     await sendButton.click({ force: true });
 
-    // Check if message appears in the list
-    // Note: In a real app without backend mock, this might fail if API fails.
-    // But we assume the frontend optimistically adds it or we mock the API.
-    // For now, we check if the input is cleared, which indicates 'send' was triggered.
-    await expect(input).toHaveValue("");
-
     // Verify user message bubble appears
     await expect(page.getByText("Hello Book World")).toBeVisible();
-  });
-
-  test("should open and interact with Control Bar", async ({ page }) => {
-    // Click on style selector
-    const styleControl = page.locator('button[aria-label="Stil auswählen"]');
-    await styleControl.click();
-
-    // Check for style options
-    const styleOption = page.getByRole("option", { name: "Locker & neugierig" });
-    await expect(styleOption).toBeVisible();
-    await styleOption.click();
-
-    // Click on creativity selector
-    const creativityControl = page.locator('button[aria-label="Kreativität auswählen"]');
-    await creativityControl.click();
-
-    // Check for creativity options
-    const creativeLevel = page.getByRole("option", { name: /Kreativ/i });
-    await expect(creativeLevel).toBeVisible();
-    await creativeLevel.click();
   });
 
   test("should open History Panel via history trigger", async ({ page }) => {

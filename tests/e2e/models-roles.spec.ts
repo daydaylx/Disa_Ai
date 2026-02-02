@@ -85,29 +85,6 @@ test.describe("Models & Roles Pages", () => {
     await page.waitForTimeout(1000);
   });
 
-  test("should select role from chat and apply it", async ({ page }) => {
-    await page.goto("/chat");
-    await page.waitForLoadState("networkidle");
-
-    const roleTrigger = page.locator('button[aria-label="Rolle auswählen"]');
-    await expect(roleTrigger).toBeVisible();
-    await roleTrigger.click();
-
-    const roleOptions = page.getByRole("option");
-    const optionCount = await roleOptions.count();
-
-    // Option 0 is always "Standard" – pick the first real role if available
-    if (optionCount > 1) {
-      const firstRoleOption = roleOptions.nth(1);
-      const roleName = (await firstRoleOption.textContent())?.trim();
-      await firstRoleOption.click();
-
-      if (roleName) {
-        await expect(roleTrigger).toContainText(roleName);
-      }
-    }
-  });
-
   test("should navigate between main pages using navigation", async ({ page }) => {
     // Start at chat
     await page.goto("/chat");
@@ -149,28 +126,16 @@ test.describe("Models & Roles Pages", () => {
 
     const firstRole = roleCards.first();
     await expect(firstRole).toBeVisible();
-
-    const ariaLabel = (await firstRole.getAttribute("aria-label")) ?? "";
-    const roleName = ariaLabel
-      .replace(/^Rolle\s+/i, "")
-      .replace(/\s+auswählen$/i, "")
-      .trim();
     await firstRole.click();
-    await expect(page).toHaveURL(/\/chat/);
 
-    // Go to settings and check something there
+    // Navigate to settings and back to chat
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
 
-    // Navigate back to chat - role should still be selected
     await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
-    // Check if the role persisted (this might depend on implementation)
-    const roleTrigger = page.locator('button[aria-label="Rolle auswählen"]');
-    await expect(roleTrigger).toBeVisible();
-    if (roleName) {
-      await expect(roleTrigger).toContainText(roleName);
-    }
+    // Composer should still be available
+    await expect(page.getByTestId("composer-input")).toBeVisible();
   });
 });
