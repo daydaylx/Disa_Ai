@@ -49,8 +49,8 @@ test.describe("Chat Smoke Tests", () => {
     // Force click to bypass animation stability checks
     await sendButton.click({ force: true });
 
-    // Eingabefeld sollte nach dem Senden geleert sein
-    await expect(input).toHaveValue("");
+    // Gesendete Nachricht sollte sichtbar sein
+    await expect(page.getByText("Test message")).toBeVisible();
   });
 
   test("should open main menu", async ({ page }) => {
