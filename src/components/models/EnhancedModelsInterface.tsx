@@ -397,7 +397,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   );
 
   // Handlers
-  const _handleSelectModel = useCallback(
+  const handleSelectModel = useCallback(
     (model: EnhancedModel) => {
       setSelectedModels((prev) => {
         const newSet = new Set(prev);

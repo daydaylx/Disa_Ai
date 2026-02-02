@@ -12,14 +12,7 @@ interface BottomSheetProps {
   initialSnap?: number;
 }
 
-export function BottomSheet({
-  isOpen,
-  onClose,
-  children,
-  className,
-  snapPoints = [250],
-  initialSnap = 0,
-}: BottomSheetProps) {
+export function BottomSheet({ isOpen, onClose, children, className }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const gestureHandlerRef = useRef<TouchGestureHandler | null>(null);
@@ -47,20 +40,22 @@ export function BottomSheet({
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (sheetRef.current) {
-      gestureHandlerRef.current = new TouchGestureHandler(sheetRef.current, {
-        swipeThreshold: 50,
-        preventDefaultSwipe: true,
-      }).onSwipeGesture((event) => {
-        if (event.direction === "down") {
-          onClose();
-        }
-      });
-
-      return () => {
-        gestureHandlerRef.current?.destroy();
-      };
+    if (!sheetRef.current) {
+      return undefined;
     }
+
+    gestureHandlerRef.current = new TouchGestureHandler(sheetRef.current, {
+      swipeThreshold: 50,
+      preventDefaultSwipe: true,
+    }).onSwipeGesture((event) => {
+      if (event.direction === "down") {
+        onClose();
+      }
+    });
+
+    return () => {
+      gestureHandlerRef.current?.destroy();
+    };
   }, [onClose]);
 
   if (!isOpen) return null;

@@ -29,7 +29,6 @@ import {
   Smile,
   Sparkles,
   Star,
-  Swords,
   Tag,
   Theater,
   TrendingUp,
@@ -94,7 +93,7 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
     erotic_creative_author: Feather,
     poet_lyricist: Feather,
     songwriter: Music,
-    "eternia-dm": Swords,
+    "eternia-dm": RotateCcw,
     erotic_author: Feather,
     adult_roleplay_open: Theater,
 
@@ -227,7 +226,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage],
   );
 
-  const _handleStartChat = useCallback(() => {
+  const handleStartChat = useCallback(() => {
     void navigate("/chat");
   }, [navigate]);
 

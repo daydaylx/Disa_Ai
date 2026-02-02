@@ -78,6 +78,7 @@ export {
   Plus,
   RefreshCw,
   RotateCcw,
+  Save,
   Scale, // Added for role icons
   Search,
   Send,
@@ -90,6 +91,7 @@ export {
   Square,
   Star,
   SunMedium,
+  Swords,
   Tag,
   Theater, // Added for role icons
   ThumbsDown,

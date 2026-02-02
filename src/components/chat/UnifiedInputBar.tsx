@@ -6,7 +6,6 @@ import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { type DiscussionPresetKey } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
 
 export interface UnifiedInputBarProps {
@@ -30,7 +29,7 @@ export function UnifiedInputBar({
   const viewport = useVisualViewport();
   const { activeRole: _activeRole } = useRoles();
   const { models } = useModelCatalog();
-  const { settings, _setCreativity, _setDiscussionPreset, _setPreferredModel } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -80,21 +79,6 @@ export function UnifiedInputBar({
     { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
   ];
 
-  const _shortDiscussionLabels: Record<DiscussionPresetKey, string> = {
-    locker_neugierig: "Locker",
-    edgy_provokant: "Edgy",
-    nuechtern_pragmatisch: "Nüchtern",
-    akademisch_formell: "Akademisch",
-    freundlich_offen: "Freundlich",
-    analytisch_detailliert: "Analytisch",
-    sarkastisch_witzig: "Sarkastisch",
-    fachlich_tiefgehend: "Fachlich",
-  };
-
-  const _creativityOption = creativityOptions.find(
-    (option) => option.value === String(settings.creativity),
-  );
-  const _selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const hasContent = value.trim().length > 0;
 
   return (

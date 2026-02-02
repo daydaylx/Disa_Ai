@@ -4,7 +4,7 @@ import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Brain, Cpu, Palette, RotateCcw, Shield, Sparkles, User, X } from "@/lib/icons";
+import { Cpu, Palette, RotateCcw, Sparkles, User, X } from "@/lib/icons";
 import { TouchGestureHandler } from "@/lib/touch/gestures";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
@@ -23,14 +23,7 @@ interface ContextTrayProps {
 export function ContextTray({ isOpen = true, onStateChange, className }: ContextTrayProps) {
   const { activeRole, setActiveRole, roles } = useRoles();
   const { models } = useModelCatalog();
-  const {
-    settings,
-    setCreativity,
-    setDiscussionPreset,
-    setPreferredModel,
-    setMemoryEnabled,
-    setSafetyFilter,
-  } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
   const viewport = useVisualViewport();
 
   const [trayState, setTrayState] = useState<TrayState>("collapsed");
@@ -48,6 +41,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
       }, 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [isOpen]);
 
   // Dismiss first-start hint
@@ -94,29 +88,31 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
 
   // Initialize gesture handler
   useEffect(() => {
-    if (trayRef.current) {
-      gestureHandlerRef.current = new TouchGestureHandler(trayRef.current, {
-        swipeThreshold: 30,
-        preventDefaultSwipe: true,
-      })
-        .onSwipeGesture((event) => {
-          if (event.direction === "up") {
-            handleSwipeUp();
-          } else if (event.direction === "down") {
-            handleSwipeDown();
-          }
-        })
-        .onTapGesture(() => {
-          if (trayState === "collapsed") {
-            setTrayState("peek");
-            onStateChange?.("peek");
-          }
-        });
-
-      return () => {
-        gestureHandlerRef.current?.destroy();
-      };
+    if (!trayRef.current) {
+      return undefined;
     }
+
+    gestureHandlerRef.current = new TouchGestureHandler(trayRef.current, {
+      swipeThreshold: 30,
+      preventDefaultSwipe: true,
+    })
+      .onSwipeGesture((event) => {
+        if (event.direction === "up") {
+          handleSwipeUp();
+        } else if (event.direction === "down") {
+          handleSwipeDown();
+        }
+      })
+      .onTapGesture(() => {
+        if (trayState === "collapsed") {
+          setTrayState("peek");
+          onStateChange?.("peek");
+        }
+      });
+
+    return () => {
+      gestureHandlerRef.current?.destroy();
+    };
   }, [trayState, onStateChange, handleSwipeUp, handleSwipeDown]);
 
   // Close tray when clicking outside
@@ -219,7 +215,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
           <Chip
             icon={<User className="h-4 w-4" />}
             label={activeRole?.name || "Standard"}
-            variant={activeRole ? "primary" : "secondary"}
+            variant="default"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
@@ -227,7 +223,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
           <Chip
             icon={<Palette className="h-4 w-4" />}
             label={discussionPresetLabel}
-            variant="secondary"
+            variant="default"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
@@ -235,7 +231,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
           <Chip
             icon={<Sparkles className="h-4 w-4" />}
             label={creativityShortLabel}
-            variant="secondary"
+            variant="default"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
@@ -243,7 +239,7 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
           <Chip
             icon={<Cpu className="h-4 w-4" />}
             label={modelLabel}
-            variant="secondary"
+            variant="default"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
@@ -253,24 +249,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
         {/* Utility Row */}
         <div className="flex items-center gap-2">
           <Button
-            variant={settings.memoryEnabled ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setMemoryEnabled(!settings.memoryEnabled)}
-            className="flex-1"
-          >
-            <Brain className="h-4 w-4 mr-2" />
-            Memory
-          </Button>
-          <Button
-            variant={settings.safetyFilter ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setSafetyFilter(!settings.safetyFilter)}
-            className="flex-1"
-          >
-            <Shield className="h-4 w-4 mr-2" />
-            Safety
-          </Button>
-          <Button
             variant="ghost"
             size="sm"
             onClick={() => {
@@ -279,8 +257,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
               setDiscussionPreset("locker_neugierig");
               setCreativity(45);
               setPreferredModel(models?.[0]?.id || "");
-              setMemoryEnabled(false);
-              setSafetyFilter(true);
             }}
           >
             <RotateCcw className="h-4 w-4" />
