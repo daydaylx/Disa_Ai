@@ -249,13 +249,13 @@ describe("EnhancedRolesInterface", () => {
       expect(screen.getByText("brainstorming")).toBeInTheDocument();
     });
     // Check for other tags - expand Code Experte card first
-    const codeExpertCard = screen.getByText("Code Experte").closest('[data-testid="role-card"]');
+    const codeExpertRole = await screen.findByText("Code Experte");
+    const codeExpertCard = codeExpertRole.closest('[data-testid="role-card"]');
     expect(codeExpertCard).toBeInTheDocument();
 
     if (codeExpertCard) {
       const detailsButton = await within(codeExpertCard as HTMLElement).findByRole("button", {
-        name: "Details",
-        hidden: true,
+        name: "Details anzeigen",
       });
       fireEvent.click(detailsButton);
     }
