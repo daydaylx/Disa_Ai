@@ -51,18 +51,19 @@ function CodeBlock({ children, language }: { children: string; language?: string
     <div
       ref={elementRef}
       className={cn(
-        "relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/5 shadow-inner",
+        "relative my-3 overflow-hidden rounded-xl bg-surface-inset border border-white/8 shadow-md",
         isVisible && "animate-code-block-fade-in",
+        "hover:border-white/12 hover:shadow-lg transition-all duration-300",
       )}
     >
-      <div className="flex items-center justify-between bg-surface-2/50 px-3 py-1.5 border-b border-white/5">
-        <span className="text-[10px] font-medium uppercase tracking-wider text-ink-tertiary">
+      <div className="flex items-center justify-between bg-surface-3/30 px-3 py-1.5 border-b border-white/5">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-ink-tertiary/80">
           {language || "Code"}
         </span>
         <button
           onClick={handleCopy}
           className={cn(
-            "p-1 text-ink-tertiary hover:text-ink-primary transition-colors action-button-hover",
+            "p-1 text-ink-tertiary hover:text-ink-primary transition-colors action-button-hover rounded-md hover:bg-white/5",
             copied && "animate-copy-feedback",
           )}
         >
@@ -247,12 +248,12 @@ export function ChatMessage({
               {message.attachments.map((att, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-3 p-2 rounded-xl bg-surface-2/30 border border-white/5"
+                  className="flex items-start gap-3 p-2.5 rounded-xl bg-surface-1/60 border border-white/10 hover:border-white/15 transition-colors"
                 >
                   <img
                     src={att.url}
                     alt={att.filename || "Angehängtes Bild"}
-                    className="h-20 w-20 rounded-lg object-cover border border-white/10"
+                    className="h-20 w-20 rounded-lg object-cover border border-white/10 shadow-sm"
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-ink-primary truncate">
@@ -269,13 +270,21 @@ export function ChatMessage({
             </div>
           )}
 
-          {/* Bubble */}
+          {/* Bubble - Enhanced Design */}
           <div
             className={cn(
-              "relative rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
+              "relative px-4 py-3 text-[15px] leading-relaxed backdrop-blur-sm",
+              // Enhanced shadow and transitions
+              "shadow-sm hover:shadow-md transition-all duration-300 message-bubble-hover",
+              // Base bubble styles
               isUser
-                ? "bg-gradient-to-br from-accent-chat-surface via-brand-primary/10 to-surface-1/30 text-ink-primary border border-accent-chat-border rounded-tr-sm hover:shadow-glow-sm"
-                : "bg-gradient-to-br from-surface-1/80 to-surface-2/40 text-ink-primary border border-white/5 rounded-tl-sm",
+                ? "rounded-2xl rounded-tr-md bg-gradient-to-br from-accent-chat/95 via-accent-chat/85 to-accent-chat/75 text-white border border-white/10" // User bubble - Dezenterer Gradient mit Glow
+                : "rounded-2xl rounded-tl-md bg-surface-1/80 border border-white/10 text-ink-primary", // Assistant bubble - Moderner Glass-Look
+              // Hover enhancement for user bubble
+              isUser &&
+                "hover:shadow-[0_4px_16px_rgba(139,92,246,0.3)] hover:border-white/15 hover:-translate-y-[2px]",
+              // Hover enhancement for assistant bubble
+              isAssistant && "hover:border-white/15 hover:-translate-y-[2px] hover:bg-surface-1/90",
             )}
             data-testid="message-bubble"
           >
@@ -286,7 +295,7 @@ export function ChatMessage({
                   ref={textareaRef}
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
-                  className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-ink-primary resize-none text-sm textarea-resize-transition"
+                  className="w-full min-h-[80px] p-3 rounded-lg bg-bg-app border border-white/15 focus:outline-none focus:ring-2 focus:ring-accent-chat/50 text-ink-primary resize-none text-sm textarea-resize-transition"
                 />
                 <div className="flex gap-2 justify-end">
                   <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
@@ -312,18 +321,23 @@ export function ChatMessage({
             )}
           </div>
 
-          {/* Actions Row - hidden on mobile, shown on desktop */}
+          {/* Actions Row - Always partially visible on desktop, full on hover */}
           {!isEditing && (
             <div
               className={cn(
-                "hidden sm:flex items-center gap-1 mt-1 opacity-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity",
+                "flex items-center gap-1 mt-2 transition-all duration-300",
                 isUser ? "justify-end" : "justify-start",
+                // Desktop: visible but subtle, more prominent on hover
+                "hidden sm:flex opacity-40 sm:group-hover:opacity-100",
               )}
             >
               <button
                 onClick={handleCopy}
                 className={cn(
-                  "min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat",
+                  "min-w-[2.75rem] min-h-[2.75rem] p-2 rounded-lg",
+                  "text-ink-tertiary hover:text-ink-primary",
+                  "hover:bg-surface-2/80 transition-all duration-200",
+                  "action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat",
                   copied && "animate-copy-feedback",
                 )}
                 title="Kopieren"
@@ -339,7 +353,7 @@ export function ChatMessage({
               {isUser && onEdit && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                  className="min-w-[2.75rem] min-h-[2.75rem] p-2 rounded-lg text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/80 transition-all duration-200 action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                   title="Bearbeiten"
                   aria-label="Nachricht bearbeiten"
                 >
@@ -350,7 +364,7 @@ export function ChatMessage({
               {isAssistant && isLast && (
                 <button
                   onClick={handleRetry}
-                  className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                  className="min-w-[2.75rem] min-h-[2.75rem] p-2 rounded-lg text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/80 transition-all duration-200 action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                   title="Neu generieren"
                   aria-label="Antwort neu generieren"
                 >
@@ -358,7 +372,7 @@ export function ChatMessage({
                 </button>
               )}
 
-              <span className="text-[10px] text-ink-muted ml-1 select-none">
+              <span className="text-[10px] text-ink-muted ml-1 select-none font-medium">
                 {new Date(message.timestamp).toLocaleTimeString("de-DE", {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -367,14 +381,22 @@ export function ChatMessage({
             </div>
           )}
 
-          {/* Follow-up Suggestions - Always visible for last assistant message */}
+          {/* Follow-up Suggestions - Modern Pill Design */}
           {isAssistant && isLast && onFollowUp && (
             <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
               {followUpSuggestions.map((suggestion, idx) => (
                 <button
                   key={suggestion}
                   onClick={() => onFollowUp(suggestion)}
-                  className="min-h-[2.75rem] text-sm bg-accent-chat-surface text-accent-chat hover:bg-accent-chat-dim px-4 py-2.5 rounded-full border border-accent-chat-border transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                  className={cn(
+                    "px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
+                    "bg-accent-chat/8 border border-accent-chat/20 text-ink-primary",
+                    "hover:bg-accent-chat/12 hover:border-accent-chat/30",
+                    "hover:shadow-[0_2px_8px_rgba(139,92,246,0.15)] hover:-translate-y-0.5",
+                    "active:scale-95 active:shadow-none",
+                    "follow-up-hover",
+                    "min-h-[44px]", // Touch target
+                  )}
                   style={{ animationDelay: `${idx * 50}ms` }}
                 >
                   {suggestion}
@@ -387,13 +409,13 @@ export function ChatMessage({
 
       {/* Long-Press Action Sheet */}
       <BottomSheet isOpen={showActionsSheet} onClose={() => setShowActionsSheet(false)}>
-        <div className="space-y-2">
+        <div className="space-y-1">
           <button
             onClick={handleCopy}
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-2/50 transition-colors text-left"
+            className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-surface-2/60 transition-colors text-left"
           >
             <Copy className="h-5 w-5 text-ink-secondary" />
-            <span>Kopieren</span>
+            <span className="text-ink-primary">Kopieren</span>
           </button>
 
           {isUser && onEdit && (
@@ -402,37 +424,39 @@ export function ChatMessage({
                 setIsEditing(true);
                 setShowActionsSheet(false);
               }}
-              className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-2/50 transition-colors text-left"
+              className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-surface-2/60 transition-colors text-left"
             >
               <Edit2 className="h-5 w-5 text-ink-secondary" />
-              <span>Bearbeiten</span>
+              <span className="text-ink-primary">Bearbeiten</span>
             </button>
           )}
 
           {isAssistant && isLast && onRetry && (
             <button
               onClick={handleRetry}
-              className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-2/50 transition-colors text-left"
+              className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-surface-2/60 transition-colors text-left"
             >
               <RotateCcw className="h-5 w-5 text-ink-secondary" />
-              <span>Neu generieren</span>
+              <span className="text-ink-primary">Neu generieren</span>
             </button>
           )}
 
           <button
             onClick={handleSaveAsNote}
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-2/50 transition-colors text-left"
+            className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-surface-2/60 transition-colors text-left"
           >
             <Save className="h-5 w-5 text-ink-secondary" />
-            <span>Als Notiz speichern</span>
+            <span className="text-ink-primary">Als Notiz speichern</span>
           </button>
+
+          <div className="h-px bg-white/10 my-2" />
 
           <button
             onClick={handleDelete}
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-2/50 transition-colors text-left text-red-400"
+            className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-red-500/10 transition-colors text-left"
           >
-            <Trash2 className="h-5 w-5" />
-            <span>Löschen</span>
+            <Trash2 className="h-5 w-5 text-red-400" />
+            <span className="text-red-400">Löschen</span>
           </button>
         </div>
       </BottomSheet>

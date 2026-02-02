@@ -120,16 +120,17 @@ export function UnifiedInputBar({
   );
   const _selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const hasVisionSupport = !!onSendVision;
+  const hasContent = value.trim().length > 0;
 
   return (
     <div className={cn("w-full space-y-3", className)}>
-      {/* Attachment Ribbon - Thumbnails above input */}
+      {/* Attachment Ribbon - Enhanced Glass Effect */}
       {attachment && (
-        <div className="flex items-center gap-2 p-2 bg-surface-1/40 rounded-xl border border-white/8 backdrop-blur-sm animate-pill-slide-in">
+        <div className="flex items-center gap-2 p-2.5 bg-surface-1/60 rounded-xl border border-accent-chat/20 backdrop-blur-sm shadow-lg animate-pill-slide-in hover:border-accent-chat/30 transition-colors">
           <img
             src={attachment.dataUrl}
             alt="Angehängtes Bild"
-            className="h-12 w-12 rounded-lg object-cover flex-shrink-0 border border-white/10"
+            className="h-12 w-12 rounded-lg object-cover flex-shrink-0 border border-white/15 shadow-sm"
           />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-ink-primary truncate">
@@ -143,7 +144,7 @@ export function UnifiedInputBar({
             onClick={clearAttachment}
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full flex-shrink-0"
+            className="h-8 w-8 rounded-full flex-shrink-0 hover:bg-white/10 transition-colors"
             aria-label="Bild entfernen"
           >
             <X className="h-4 w-4" />
@@ -151,19 +152,27 @@ export function UnifiedInputBar({
         </div>
       )}
 
-      {/* Image Error Banner */}
+      {/* Image Error Banner - Enhanced */}
       {imageError && (
-        <div className="px-3 py-2 bg-error/10 border border-error/20 rounded-xl animate-pill-slide-in">
-          <p className="text-sm text-error">{imageError}</p>
+        <div className="px-3 py-2 bg-error/12 border border-error/25 rounded-xl animate-pill-slide-in">
+          <p className="text-sm text-error font-medium">{imageError}</p>
         </div>
       )}
 
-      {/* Main Input Container - Single visual container, no double borders */}
+      {/* Main Input Container - Enhanced Visual Design */}
       <div
         className={cn(
-          "relative flex items-end gap-3 transition-all input-focus-animation pr-safe-right bg-surface-1/80 border border-white/8 rounded-2xl p-3",
-          "focus-within:border-white/15 focus-within:bg-surface-1",
-          "transition-all duration-200",
+          "relative flex items-end gap-3 transition-all duration-300 ease-out",
+          // Base styling with subtle gradient
+          "bg-gradient-to-b from-surface-1/90 to-surface-2/80",
+          "border border-white/10 rounded-2xl p-3",
+          // Focus states
+          "focus-within:border-accent-chat/40 focus-within:shadow-[0_0_20px_rgba(139,92,246,0.15)]",
+          "focus-within:bg-gradient-to-b focus-within:from-surface-1 focus-within:to-surface-2/90",
+          // Active state with content
+          hasContent && "shadow-md border-white/12",
+          // Backdrop blur for glass effect
+          "backdrop-blur-md",
         )}
         aria-label="Eingabebereich"
       >
@@ -175,11 +184,15 @@ export function UnifiedInputBar({
             variant="ghost"
             size="icon"
             className={cn(
-              "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5",
-              !attachment &&
-                "bg-surface-2/50 text-ink-secondary hover:bg-surface-2 hover:text-ink-primary",
+              "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-300 mb-0.5",
+              // Base state
+              "bg-surface-3/40 text-ink-secondary",
+              "hover:bg-surface-3/60 hover:text-ink-primary hover:scale-105",
+              // Active attachment state
               attachment &&
-                "bg-brand-secondary/10 text-brand-secondary border border-brand-secondary/30",
+                "bg-accent-chat/15 text-accent-chat border border-accent-chat/30 shadow-[0_0_12px_rgba(139,92,246,0.2)]",
+              // Disabled state
+              (isImageProcessing || isLoading) && "opacity-50 cursor-not-allowed hover:scale-100",
             )}
             aria-label="Bild anhängen"
             title="Bild anhängen (JPEG, PNG, WebP, max. 4MB)"
@@ -187,7 +200,9 @@ export function UnifiedInputBar({
             {isImageProcessing ? (
               <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
-              <ImagePlus className={cn("h-5 w-5", attachment && "fill-current")} />
+              <ImagePlus
+                className={cn("h-5 w-5 transition-transform", attachment && "scale-110")}
+              />
             )}
           </Button>
         )}
@@ -202,45 +217,74 @@ export function UnifiedInputBar({
           aria-label="Bilddatei auswählen"
         />
 
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={cn(
-            "flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition",
-            attachment && "font-medium",
+        {/* Textarea - Enhanced Focus Experience */}
+        <div className="flex-1 relative">
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className={cn(
+              "w-full max-h-[160px] min-h-[44px] resize-none bg-transparent",
+              "px-3 py-2.5 text-[16px] leading-relaxed",
+              "text-ink-primary placeholder:text-ink-tertiary/60",
+              "focus:outline-none textarea-resize-transition",
+              attachment && "font-medium",
+              // Improved focus indication
+              "focus:placeholder:text-ink-tertiary/40",
+            )}
+            rows={1}
+            data-testid="composer-input"
+            aria-label="Nachricht eingeben"
+          />
+          {/* Character counter (optional, appears when text is long) */}
+          {value.length > 200 && (
+            <div className="absolute right-3 -top-5 text-[10px] text-ink-tertiary/60">
+              {value.length} Zeichen
+            </div>
           )}
-          rows={1}
-          data-testid="composer-input"
-          aria-label="Nachricht eingeben"
-        />
+        </div>
 
-        {/* Send Button - Material Chip */}
+        {/* Send Button - Enhanced Ready State */}
         <Button
           onClick={handleSend}
           disabled={(!value.trim() && !attachment) || isLoading || isImageProcessing}
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-200 mb-0.5 mr-1",
+            "flex-shrink-0 h-11 w-11 rounded-xl transition-all duration-300 mb-0.5 mr-0.5",
+            // Disabled state - subtle
             !value.trim() &&
-              !isLoading &&
               !attachment &&
-              "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
+              "bg-surface-3/30 text-ink-muted border border-white/5 shadow-none",
+            // Loading state
+            (isLoading || isImageProcessing) && "opacity-70",
+            // Active state - prominent
             (value.trim() || attachment) &&
               !isLoading &&
               !isImageProcessing &&
-              "bg-accent-chat text-white shadow-glow-sm hover:shadow-glow-md hover:scale-105 active:scale-100 animate-send-pulse",
+              "bg-gradient-to-br from-accent-chat to-accent-chat/90 text-white",
+            // Hover effects only when active
+            (value.trim() || attachment) &&
+              !isLoading &&
+              !isImageProcessing &&
+              "shadow-[0_4px_16px_rgba(139,92,246,0.35)] hover:shadow-[0_6px_20px_rgba(139,92,246,0.45)] hover:scale-105 hover:-translate-y-[2px]",
+            // Active press effect
+            (value.trim() || attachment) &&
+              "active:scale-95 active:translate-y-0 active:shadow-[0_2px_8px_rgba(139,92,246,0.3)]",
           )}
           aria-label="Senden"
         >
           {isLoading || isImageProcessing ? (
-            <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            <div className="h-5 w-5 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />
           ) : (
-            <Send className={cn("h-5 w-5", (value.trim() || attachment) && "ml-0.5")} />
+            <Send
+              className={cn(
+                "h-5 w-5 transition-transform",
+                (value.trim() || attachment) && "ml-0.5",
+              )}
+            />
           )}
         </Button>
       </div>
