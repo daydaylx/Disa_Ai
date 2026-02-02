@@ -292,7 +292,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
+  const [selectedModels] = useState<Set<string>>(new Set());
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [compareModels, setCompareModels] = useState<EnhancedModel[]>([]);
