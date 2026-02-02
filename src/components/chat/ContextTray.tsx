@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
@@ -9,9 +9,8 @@ import { TouchGestureHandler } from "@/lib/touch/gestures";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 import { Button } from "@/ui/Button";
-import { Chip } from "@/ui/Chip";
 
-// Define the three snap states for the tray
+// Define is three snap states for tray
 type TrayState = "collapsed" | "peek" | "expanded";
 
 interface ContextTrayProps {
@@ -212,34 +211,38 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
       <div className="w-full space-y-3">
         {/* Quick Bar - 4 Controls prominent */}
         <div className="flex flex-wrap gap-2">
-          <Chip
-            label={activeRole?.name || "Standard"}
-            variant="default"
+          <Button
+            variant="ghost"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
-          />
-          <Chip
-            label={discussionPresetLabel}
-            variant="default"
+          >
+            {activeRole?.name || "Standard"}
+          </Button>
+          <Button
+            variant="ghost"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
-          />
-          <Chip
-            label={creativityShortLabel}
-            variant="default"
+          >
+            {discussionPresetLabel}
+          </Button>
+          <Button
+            variant="ghost"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
-          />
-          <Chip
-            label={modelLabel}
-            variant="default"
+          >
+            {creativityShortLabel}
+          </Button>
+          <Button
+            variant="ghost"
             size="sm"
             onClick={() => setTrayState("expanded")}
             className="cursor-pointer"
-          />
+          >
+            {modelLabel}
+          </Button>
         </div>
 
         {/* Utility Row */}
@@ -269,9 +272,9 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
     const creativityOptions = [
       { value: "10", label: "Präzise (10%)", short: "Präzise" },
       { value: "30", label: "Klar & fokussiert (30%)", short: "Klar" },
-      { value: "45", label: "Ausgewogen (45%)", short: "Ausgew." },
+      { value: "45", label: "Ausgewogen (45%)", short: "Ausgewogen" },
       { value: "70", label: "Kreativ (70%)", short: "Kreativ" },
-      { value: "90", label: "Verspielt (90%)", short: "Versp." },
+      { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
     ];
 
     const discussionPresetOptions = [

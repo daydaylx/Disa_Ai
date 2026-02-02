@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Send } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -25,7 +24,6 @@ export function UnifiedInputBar({
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { settings } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
