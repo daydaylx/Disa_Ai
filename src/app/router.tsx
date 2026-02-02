@@ -22,7 +22,6 @@ const ImpressumPage = lazy(() => import("../pages/ImpressumPage"));
 const DatenschutzPage = lazy(() => import("../pages/DatenschutzPage"));
 const FeedbackPage = lazy(() => import("../pages/FeedbackPage"));
 const ThemenPage = lazy(() => import("../pages/ThemenPage"));
-const GamePage = lazy(() => import("../pages/GamePage"));
 
 function HeaderBackAction({ fallbackTo }: { fallbackTo: string }) {
   const navigate = useNavigate();
@@ -62,22 +61,7 @@ export const appRouter = createBrowserRouter(
         </RouteWrapper>
       ),
     },
-    {
-      path: "/game",
-      element: (
-        <RouteWrapper layout="page">
-          <GamePage />
-        </RouteWrapper>
-      ),
-    },
-    {
-      path: "/game/:scenarioId",
-      element: (
-        <RouteWrapper layout="page">
-          <GamePage />
-        </RouteWrapper>
-      ),
-    },
+
     {
       path: "/studio",
       element: <Navigate to="/chat" replace />,
