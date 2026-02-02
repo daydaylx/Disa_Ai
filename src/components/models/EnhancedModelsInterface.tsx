@@ -397,28 +397,28 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   );
 
   // Handlers
-  const handleSelectModel = useCallback(
-    (model: EnhancedModel) => {
-      setSelectedModels((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(model.id)) {
-          newSet.delete(model.id);
-        } else {
-          newSet.add(model.id);
-        }
-        return newSet;
-      });
-
-      // Track usage
-      trackModelUsage(model.id);
-
-      push({
-        kind: "success",
-        title: `${model.label} ${selectedModels.has(model.id) ? "entfernt" : "ausgewählt"}`,
-      });
-    },
-    [selectedModels, trackModelUsage, push],
-  );
+  // const handleSelectModel = useCallback(
+  //   (model: EnhancedModel) => {
+  //     setSelectedModels((prev) => {
+  //       const newSet = new Set(prev);
+  //       if (newSet.has(model.id)) {
+  //         newSet.delete(model.id);
+  //       } else {
+  //         newSet.add(model.id);
+  //       }
+  //       return newSet;
+  //     });
+  //
+  //     // Track usage
+  //     trackModelUsage(model.id);
+  //
+  //     push({
+  //       kind: "success",
+  //       title: `${model.label} ${selectedModels.has(model.id) ? "entfernt" : "ausgewählt"}`,
+  //     });
+  //   },
+  //   [selectedModels, trackModelUsage, push],
+  // );
 
   const [animatingFavorite, setAnimatingFavorite] = useState<string | null>(null);
 

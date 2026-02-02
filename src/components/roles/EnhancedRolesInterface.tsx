@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { getCategoryStyle } from "@/lib/categoryColors";
 import type { LucideIcon } from "@/lib/icons";
@@ -153,7 +152,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useRoles(); // Added roleLoadError
   const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
-  const navigate = useNavigate();
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
@@ -226,9 +224,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage],
   );
 
-  const handleStartChat = useCallback(() => {
-    void navigate("/chat");
-  }, [navigate]);
+  // const handleStartChat = useCallback(() => {
+  //   void navigate("/chat");
+  // }, [navigate]);
 
   const toggleRoleExpansion = useCallback((roleId: string) => {
     setExpandedRoles((prev) => {
