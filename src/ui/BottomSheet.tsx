@@ -18,25 +18,27 @@ export function BottomSheet({ isOpen, onClose, children, className }: BottomShee
   const gestureHandlerRef = useRef<TouchGestureHandler | null>(null);
 
   useEffect(() => {
-    if (isOpen && sheetRef.current) {
-      // Add body scroll lock
-      document.body.style.overflow = "hidden";
-
-      // Handle backdrop click
-      const handleBackdropClick = (e: MouseEvent) => {
-        if (backdropRef.current === e.target) {
-          onClose();
-        }
-      };
-
-      const backdropElement = backdropRef.current;
-      backdropElement?.addEventListener("click", handleBackdropClick);
-
-      return () => {
-        document.body.style.overflow = "";
-        backdropElement?.removeEventListener("click", handleBackdropClick);
-      };
+    if (!isOpen || !sheetRef.current) {
+      return undefined;
     }
+
+    // Add body scroll lock
+    document.body.style.overflow = "hidden";
+
+    // Handle backdrop click
+    const handleBackdropClick = (e: MouseEvent) => {
+      if (backdropRef.current === e.target) {
+        onClose();
+      }
+    };
+
+    const backdropElement = backdropRef.current;
+    backdropElement?.addEventListener("click", handleBackdropClick);
+
+    return () => {
+      document.body.style.overflow = "";
+      backdropElement?.removeEventListener("click", handleBackdropClick);
+    };
   }, [isOpen, onClose]);
 
   useEffect(() => {

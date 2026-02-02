@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { useModelCatalog } from "@/contexts/ModelCatalogContext";
-import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { Send } from "@/lib/icons";
@@ -27,9 +25,7 @@ export function UnifiedInputBar({
 }: UnifiedInputBarProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const viewport = useVisualViewport();
-  const { activeRole: _activeRole } = useRoles();
-  const { models } = useModelCatalog();
-  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
+  const { settings } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -70,14 +66,6 @@ export function UnifiedInputBar({
       onSend();
     }
   };
-
-  const creativityOptions = [
-    { value: "10", label: "Präzise (10%)", short: "Präzise" },
-    { value: "30", label: "Klar & fokussiert (30%)", short: "Klar" },
-    { value: "45", label: "Ausgewogen (45%)", short: "Ausgewogen" },
-    { value: "70", label: "Kreativ (70%)", short: "Kreativ" },
-    { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
-  ];
 
   const hasContent = value.trim().length > 0;
 

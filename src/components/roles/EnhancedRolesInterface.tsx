@@ -226,7 +226,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage],
   );
 
-  const handleStartChat = useCallback(() => {
+  const _handleStartChat = useCallback(() => {
     void navigate("/chat");
   }, [navigate]);
 

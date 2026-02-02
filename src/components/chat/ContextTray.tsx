@@ -4,7 +4,7 @@ import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
-import { Cpu, Palette, RotateCcw, Sparkles, User, X } from "@/lib/icons";
+import { Cpu, RotateCcw, X } from "@/lib/icons";
 import { TouchGestureHandler } from "@/lib/touch/gestures";
 import { cn } from "@/lib/utils";
 import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
@@ -213,7 +213,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
         {/* Quick Bar - 4 Controls prominent */}
         <div className="flex flex-wrap gap-2">
           <Chip
-            icon={<User className="h-4 w-4" />}
             label={activeRole?.name || "Standard"}
             variant="default"
             size="sm"
@@ -221,7 +220,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
             className="cursor-pointer"
           />
           <Chip
-            icon={<Palette className="h-4 w-4" />}
             label={discussionPresetLabel}
             variant="default"
             size="sm"
@@ -229,7 +227,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
             className="cursor-pointer"
           />
           <Chip
-            icon={<Sparkles className="h-4 w-4" />}
             label={creativityShortLabel}
             variant="default"
             size="sm"
@@ -237,7 +234,6 @@ export function ContextTray({ isOpen = true, onStateChange, className }: Context
             className="cursor-pointer"
           />
           <Chip
-            icon={<Cpu className="h-4 w-4" />}
             label={modelLabel}
             variant="default"
             size="sm"
