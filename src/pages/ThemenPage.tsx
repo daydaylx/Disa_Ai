@@ -31,7 +31,7 @@ export default function ThemenPage() {
         onClick={() => handleStartQuickstart(quickstart)}
         style={{ background: theme.roleGradient }}
         className={cn(
-          "group relative flex items-start gap-4 p-4 transition-all duration-300 shadow-sm overflow-hidden cursor-pointer",
+          "group relative flex items-start gap-4 p-3 sm:p-4 transition-all duration-300 shadow-sm overflow-hidden cursor-pointer",
           "hover:brightness-110",
           theme.hoverBorder,
         )}
@@ -62,7 +62,7 @@ export default function ThemenPage() {
             </h3>
             <ArrowRight
               className={cn(
-                "h-4 w-4 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0",
+                "h-4 w-4 opacity-60 translate-x-0 transition-all sm:opacity-0 sm:-translate-x-2 sm:group-hover:opacity-100 sm:group-hover:translate-x-0",
                 theme.text,
               )}
             />
@@ -95,7 +95,7 @@ export default function ThemenPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4 px-4 sm:px-6">
+      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4 px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Chat accent for discussion topics */}
           <div
@@ -103,7 +103,7 @@ export default function ThemenPage() {
             style={{ background: headerTheme.roleGradient }}
           />
 
-          <div className="relative p-4 sm:p-5">
+          <div className="relative p-3 sm:p-5">
             <PageHeader
               title="Themen & Diskussionen"
               description="Wähle ein Thema, um eine Diskussion mit Disa zu starten."
@@ -114,7 +114,7 @@ export default function ThemenPage() {
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-8">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
         {/* Regular Discussions */}
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">

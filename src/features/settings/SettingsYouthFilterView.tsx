@@ -125,7 +125,7 @@ export function SettingsYouthFilterView() {
                       Bitte gib dein Geburtsjahr ein, um den Jugendschutz zu deaktivieren.
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       type="number"
                       placeholder="YYYY"
@@ -134,10 +134,14 @@ export function SettingsYouthFilterView() {
                       className="flex-1"
                       onKeyDown={(e) => e.key === "Enter" && handleVerify()}
                     />
-                    <Button onClick={handleVerify} variant="primary">
+                    <Button onClick={handleVerify} variant="primary" className="w-full sm:w-auto">
                       Bestätigen
                     </Button>
-                    <Button onClick={() => setShowVerification(false)} variant="ghost">
+                    <Button
+                      onClick={() => setShowVerification(false)}
+                      variant="ghost"
+                      className="w-full sm:w-auto"
+                    >
                       Abbrechen
                     </Button>
                   </div>

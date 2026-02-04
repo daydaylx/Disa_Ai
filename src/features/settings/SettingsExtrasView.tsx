@@ -36,7 +36,7 @@ export function SettingsExtrasView() {
                     Neko-Katze anzeigen
                   </Label>
                   {/* Small decorative badge */}
-                  <span className="px-3xs py-3xs rounded text-[10px] font-bold bg-purple-500/10 text-purple-600 uppercase tracking-wider">
+                  <span className="px-3xs py-3xs rounded text-[10px] font-bold bg-accent-settings/10 text-accent-settings uppercase tracking-wider">
                     Deko
                   </span>
                 </div>

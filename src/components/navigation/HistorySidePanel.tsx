@@ -53,8 +53,9 @@ export function HistorySidePanel({
       {/* Panel - Slide in from right with Chalk Texture */}
       <div
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-l border-white/10 transition-transform duration-300 ease-out transform flex flex-col glass-3",
-          isOpen ? "translate-x-0" : "translate-x-full",
+          "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 transition-transform duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl",
+          "sm:inset-y-0 sm:right-0 sm:bottom-auto sm:h-full sm:max-w-sm sm:border-t-0 sm:border-l sm:rounded-none",
+          isOpen ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-x-full",
         )}
       >
         {/* Header */}
@@ -80,7 +81,7 @@ export function HistorySidePanel({
           <button
             onClick={() => setActiveTab("history")}
             className={cn(
-              "flex-1 py-3 text-sm font-medium transition-colors border-b-2",
+              "flex-1 py-3.5 text-sm font-semibold transition-colors border-b-2",
               activeTab === "history"
                 ? "border-accent-primary text-ink-primary bg-surface-2/60"
                 : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-surface-2/40",
@@ -92,7 +93,7 @@ export function HistorySidePanel({
           <button
             onClick={() => setActiveTab("archive")}
             className={cn(
-              "flex-1 py-3 text-sm font-medium transition-colors border-b-2",
+              "flex-1 py-3.5 text-sm font-semibold transition-colors border-b-2",
               activeTab === "archive"
                 ? "border-accent-primary text-ink-primary bg-surface-2/60"
                 : "border-transparent text-ink-secondary hover:text-ink-primary hover:bg-surface-2/40",

@@ -64,25 +64,50 @@ export function ModelComparisonTable({ models }: ModelComparisonTableProps) {
 
   return (
     <MaterialCard>
-      <div className="flex flex-col">
-        <div className="flex">
-          <div className="w-[200px] font-medium p-4">Eigenschaft</div>
+      <div className="space-y-4">
+        {/* Mobile: Stacked cards */}
+        <div className="space-y-3 sm:hidden">
           {models.map((model) => (
-            <div key={model.id} className="flex-1 text-center font-medium p-4">
-              {model.label}
+            <div
+              key={model.id}
+              className="rounded-xl border border-border-subtle bg-surface-1/40 p-3"
+            >
+              <div className="text-sm font-semibold text-text-primary">{model.label}</div>
+              <div className="mt-2 space-y-2">
+                {properties.map((prop) => (
+                  <div key={prop.label} className="flex items-start justify-between gap-3">
+                    <span className="text-[11px] text-text-meta">{prop.label}</span>
+                    <div className="text-xs text-text-secondary text-right">
+                      {prop.getValue(model)}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
-        {properties.map((prop) => (
-          <div key={prop.label} className="flex border-t border-border-subtle">
-            <div className="w-[200px] font-medium p-4">{prop.label}</div>
+
+        {/* Desktop: Comparison table */}
+        <div className="hidden sm:flex sm:flex-col">
+          <div className="flex">
+            <div className="w-[200px] font-medium p-4">Eigenschaft</div>
             {models.map((model) => (
-              <div key={model.id} className="flex-1 text-center p-4">
-                {prop.getValue(model)}
+              <div key={model.id} className="flex-1 text-center font-medium p-4">
+                {model.label}
               </div>
             ))}
           </div>
-        ))}
+          {properties.map((prop) => (
+            <div key={prop.label} className="flex border-t border-border-subtle">
+              <div className="w-[200px] font-medium p-4">{prop.label}</div>
+              {models.map((model) => (
+                <div key={model.id} className="flex-1 text-center p-4">
+                  {prop.getValue(model)}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </MaterialCard>
   );

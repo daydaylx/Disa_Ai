@@ -317,60 +317,69 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             />
 
             {/* Filter Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-              {/* Favorites Toggle */}
-              <div
-                onClick={() =>
-                  setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-                }
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }));
+            <div className="relative">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
+                {/* Favorites Toggle */}
+                <div
+                  onClick={() =>
+                    setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
                   }
-                }}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
-                  filters.showFavoritesOnly
-                    ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
-                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                )}
-              >
-                <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
-                Favoriten
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setFilters((prev) => ({
+                        ...prev,
+                        showFavoritesOnly: !prev.showFavoritesOnly,
+                      }));
+                    }
+                  }}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
+                    filters.showFavoritesOnly
+                      ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+                      : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                  )}
+                >
+                  <Star
+                    className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")}
+                  />
+                  Favoriten
+                </div>
+
+                <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+                {/* Category Filters */}
+                {CATEGORY_ORDER.map((cat) => {
+                  const isSelected = selectedCategory === cat;
+                  const catTheme = getCategoryStyle(cat);
+                  return (
+                    <div
+                      key={cat}
+                      onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedCategory((prev) => (prev === cat ? null : cat));
+                        }
+                      }}
+                      className={cn(
+                        "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
+                        isSelected
+                          ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
+                          : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                      )}
+                    >
+                      {cat}
+                    </div>
+                  );
+                })}
               </div>
-
-              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-
-              {/* Category Filters */}
-              {CATEGORY_ORDER.map((cat) => {
-                const isSelected = selectedCategory === cat;
-                const catTheme = getCategoryStyle(cat);
-                return (
-                  <div
-                    key={cat}
-                    onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setSelectedCategory((prev) => (prev === cat ? null : cat));
-                      }
-                    }}
-                    className={cn(
-                      "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
-                      isSelected
-                        ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
-                        : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                    )}
-                  >
-                    {cat}
-                  </div>
-                );
-              })}
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent lg:hidden" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent lg:hidden" />
             </div>
             {/* Active Filters Summary */}
             {hasActiveFilters && (

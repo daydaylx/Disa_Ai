@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { BrandWordmark } from "../../app/components/BrandWordmark";
 import type { AppNavItem } from "../../config/navigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
-import { X } from "../../lib/icons";
+import { Info, Shield, X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
 interface AppMenuDrawerProps {
@@ -110,8 +110,8 @@ export function AppMenuDrawer({
   const feedbackItem = SECONDARY_NAV_ITEMS.find((item) => item.id === "feedback");
   const secondaryPages: AppNavItem[] = secondaryItems ?? [
     ...(feedbackItem ? [feedbackItem] : []),
-    { id: "impressum", label: "Impressum", path: "/impressum", Icon: X },
-    { id: "datenschutz", label: "Datenschutz", path: "/datenschutz", Icon: X },
+    { id: "impressum", label: "Impressum", path: "/impressum", Icon: Info },
+    { id: "datenschutz", label: "Datenschutz", path: "/datenschutz", Icon: Shield },
   ];
 
   const quickstartItem =
@@ -135,7 +135,7 @@ export function AppMenuDrawer({
     >
       <div
         className={cn(
-          "absolute top-0 bottom-0 left-0 w-[85vw] max-w-[360px]",
+          "absolute top-0 bottom-0 left-0 w-[92vw] max-w-[360px] sm:w-[85vw]",
           "glass-3 border-r border-white/5 backdrop-blur-2xl",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
