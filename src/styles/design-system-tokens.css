@@ -41,11 +41,11 @@
   --shadow-glow-md: 0 0 17px rgba(139, 92, 246, 0.35); /* reduced by 15% */
 
   /* ========================================================================
-     TOUCH TARGETS - WCAG AA Compliant (reduced by 15%)
+     TOUCH TARGETS - WCAG AA Compliant (Updated to 44px minimum)
      ======================================================================== */
-  --touch-sm: 2.3375rem; /* 37.4px - Minimum für Mobile (reduced by 15%) */
-  --touch-md: 2.55rem; /* 40.8px - Comfortable (reduced by 15%) */
-  --touch-lg: 2.975rem; /* 47.6px - Spacious (reduced by 15%) */
+  --touch-sm: 2.75rem; /* 44px - WCAG AA Minimum for Mobile */
+  --touch-md: 3rem; /* 48px - Comfortable */
+  --touch-lg: 3.5rem; /* 56px - Spacious */
 
   /* ========================================================================
      TRANSITIONS - Performance-optimiert
