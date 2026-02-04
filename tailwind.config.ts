@@ -368,6 +368,13 @@ export default {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "hero-glow": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      // Transition utilities with design token CSS vars
+      transitionDuration: {
+        frame: "var(--frame-transition-duration)", // 200ms from design tokens
+      },
+      transitionTimingFunction: {
+        frame: "var(--frame-transition-easing)", // cubic-bezier(0.4, 0, 0.2, 1)
+      },
       animation: {
         // Core animations
         "fade-in": "fadeIn 0.3s ease-out",

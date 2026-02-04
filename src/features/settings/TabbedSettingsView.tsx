@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
@@ -62,7 +61,6 @@ const SECTIONS = [
 ] as const;
 
 export function TabbedSettingsView() {
-  const navigate = useNavigate();
   const { isEnabled: memoryEnabled } = useMemory();
   const { settings } = useSettings();
 
@@ -99,7 +97,11 @@ export function TabbedSettingsView() {
           return (
             <button
               key={section.id}
-              onClick={() => void navigate(section.to)}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.location.assign(section.to);
+                }
+              }}
               className={cn(
                 "w-full flex items-center gap-4 p-xs rounded-2xl text-left",
                 "bg-surface-1 border border-white/5 shadow-sm",
@@ -115,10 +117,13 @@ export function TabbedSettingsView() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-ink-primary">{section.label}</p>
                 <p className="text-xs text-ink-tertiary leading-snug">{section.description}</p>
+                <span className="mt-1 inline-flex text-[11px] font-medium text-ink-primary bg-surface-2 px-2xs py-3xs rounded-full border border-white/5 sm:hidden">
+                  {status}
+                </span>
               </div>
 
               {/* Status */}
-              <span className="text-[11px] font-medium text-ink-primary bg-surface-2 px-2xs py-3xs rounded-full border border-white/5 flex-shrink-0">
+              <span className="hidden sm:inline-flex text-[11px] font-medium text-ink-primary bg-surface-2 px-2xs py-3xs rounded-full border border-white/5 flex-shrink-0">
                 {status}
               </span>
 

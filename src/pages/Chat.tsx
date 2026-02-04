@@ -195,7 +195,7 @@ export default function Chat() {
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-8 pb-20 px-4 animate-fade-in">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 sm:gap-8 pb-16 sm:pb-20 px-4 animate-fade-in">
                     {/* Hero Card - Disa Frame Branding System with Enhanced Colors */}
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card
@@ -203,7 +203,7 @@ export default function Chat() {
                         notch="cutout"
                         notchSize="lg" // 24px for hero visibility (increased from 22px)
                         tintColor="rgb(var(--tint-color-rgb-default))"
-                        className="text-center space-y-6 p-8 relative overflow-hidden"
+                        className="text-center space-y-6 p-6 sm:p-8 relative overflow-hidden"
                         style={
                           {
                             "--card-tint-alpha": "var(--tint-alpha-hero, 0.18)",
@@ -243,7 +243,7 @@ export default function Chat() {
                     </div>
 
                     {/* Starter Prompts - Suggestion Cards with Enhanced Color Accents */}
-                    <div className="w-full max-w-md grid grid-cols-1 gap-3 px-2">
+                    <div className="w-full max-w-md flex gap-3 overflow-x-auto px-2 pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-1 sm:gap-3 sm:overflow-visible">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => {
                         // Cycle through accent colors - 25% reduced intensity
                         const accentColors = [
@@ -276,7 +276,7 @@ export default function Chat() {
                             tintColor="rgb(var(--tint-color-rgb-default))"
                             className={cn(
                               "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                              "min-h-[56px]", // Mobile touch target (44px + padding)
+                              "min-h-[56px] min-w-[240px] sm:min-w-0 snap-start", // Mobile touch target (44px + padding)
                               "hover:border-white/[0.22] hover:shadow-lg", // Enhanced hover state
                               accent.glow, // Color-specific glow on hover
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",

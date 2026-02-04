@@ -194,7 +194,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
+      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Based on active model's provider */}
           <div
@@ -202,7 +202,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             style={{ background: headerTheme.roleGradient }}
           />
 
-          <div className="relative space-y-3 px-4 py-4">
+          <div className="relative space-y-3 px-3 py-3 sm:px-4 sm:py-4">
             <div className="flex items-start justify-between">
               <PageHeader
                 title="Modelle"
@@ -280,7 +280,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   key={model.id}
                   data-testid="model-card"
                   className={cn(
-                    "relative w-full flex items-center gap-4 min-h-[84px] text-left transition-all duration-300 rounded-2xl border p-4 group overflow-hidden",
+                    "relative w-full flex items-center gap-3 sm:gap-4 min-h-[76px] text-left transition-all duration-300 rounded-2xl border p-3 sm:p-4 group overflow-hidden",
                     isActive
                       ? cn("ring-1", providerTheme.border, providerTheme.glow)
                       : cn("hover:brightness-110", providerTheme.hoverBorder),
@@ -342,7 +342,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         />
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-ink-tertiary font-medium pointer-events-none">
+                    <div className="flex items-center gap-2 mt-0.5 text-xs text-ink-tertiary font-medium pointer-events-none">
                       <span className="truncate text-ink-secondary">{model.provider}</span>
                       <span className="text-ink-muted">·</span>
                       <span className="bg-surface-3/50 px-1.5 py-0.5 rounded text-[10px]">

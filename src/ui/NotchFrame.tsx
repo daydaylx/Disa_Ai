@@ -30,7 +30,7 @@ const notchFrameVariants = cva(
     "border border-[var(--frame-border-color)]",
     "bg-[var(--frame-bg)] backdrop-blur-xl",
     "shadow-[var(--frame-shadow)]",
-    "transition-all duration-[var(--frame-transition-duration)] ease-[var(--frame-transition-easing)]",
+    "transition-all duration-frame ease-frame",
   ],
   {
     variants: {
@@ -97,8 +97,7 @@ const notchFrameVariants = cva(
 );
 
 export interface NotchFrameProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof notchFrameVariants> {
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof notchFrameVariants> {
   /** Whether to render as a different element (button, etc.) */
   as?: "div" | "button" | "article" | "section";
 }
@@ -155,7 +154,7 @@ NotchFrame.displayName = "NotchFrame";
  * Use these when you need to apply the notch effect to existing elements.
  */
 export const notchFrameClasses = {
-  base: "disa-notch disa-notch--interactive border border-[var(--frame-border-color)] bg-[var(--frame-bg)] backdrop-blur-xl shadow-[var(--frame-shadow)] transition-all duration-[var(--frame-transition-duration)] ease-[var(--frame-transition-easing)]",
+  base: "disa-notch disa-notch--interactive border border-[var(--frame-border-color)] bg-[var(--frame-bg)] backdrop-blur-xl shadow-[var(--frame-shadow)] transition-all duration-frame ease-frame",
   notchSm: "[--notch-size:var(--notch-size-sm)]",
   notchMd: "disa-notch--md",
   hoverStates:

@@ -17,9 +17,79 @@ export default function DatenschutzPage() {
             </p>
           </div>
 
+          <div className="rounded-lg bg-surface-2/60 border border-white/5 p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-tertiary">
+              Inhalt
+            </p>
+            <ul className="mt-2 space-y-1 text-sm text-ink-secondary">
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-1">
+                  1. Verantwortlicher
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-2">
+                  2. Allgemeines zur Datenverarbeitung
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-3">
+                  3. Bereitstellung der Website und Server-Logfiles
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-4">
+                  4. Nutzung der KI-Funktion
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-5">
+                  5. Lokale Speicherung im Browser
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-6">
+                  6. Cookies und Tracking
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-7">
+                  7. Kontaktaufnahme per E-Mail
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-8">
+                  8. Speicherdauer
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-9">
+                  9. Rechtsgrundlagen im Überblick
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-10">
+                  10. Deine Rechte als betroffene Person
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-11">
+                  11. Beschwerderecht bei einer Aufsichtsbehörde
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-ink-primary" href="#ds-12">
+                  12. Änderungen dieser Datenschutzerklärung
+                </a>
+              </li>
+            </ul>
+          </div>
+
           {/* 1. Verantwortlicher */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">1. Verantwortlicher</h2>
+            <h2 id="ds-1" className="text-lg font-semibold text-ink-primary">
+              1. Verantwortlicher
+            </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
               <p>
                 Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer
@@ -52,7 +122,7 @@ export default function DatenschutzPage() {
 
           {/* 2. Allgemeines zur Datenverarbeitung */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-2" className="text-lg font-semibold text-ink-primary">
               2. Allgemeines zur Datenverarbeitung
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -82,7 +152,7 @@ export default function DatenschutzPage() {
 
           {/* 3. Bereitstellung der Website und Server-Logfiles */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-3" className="text-lg font-semibold text-ink-primary">
               3. Bereitstellung der Website und Server-Logfiles
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -134,7 +204,7 @@ export default function DatenschutzPage() {
 
           {/* 4. Nutzung der KI-Funktion */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-4" className="text-lg font-semibold text-ink-primary">
               4. Nutzung der KI-Funktion („Disa AI")
             </h2>
 
@@ -229,7 +299,7 @@ export default function DatenschutzPage() {
 
           {/* 5. Lokale Speicherung im Browser */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-5" className="text-lg font-semibold text-ink-primary">
               5. Lokale Speicherung im Browser (LocalStorage / IndexedDB / PWA)
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -271,7 +341,9 @@ export default function DatenschutzPage() {
 
           {/* 6. Cookies und Tracking */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">6. Cookies und Tracking</h2>
+            <h2 id="ds-6" className="text-lg font-semibold text-ink-primary">
+              6. Cookies und Tracking
+            </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
               <p>Aktuell werden auf disaai.de:</p>
               <ul className="list-disc list-inside space-y-1 ml-2">
@@ -293,7 +365,7 @@ export default function DatenschutzPage() {
 
           {/* 7. Kontaktaufnahme per E-Mail */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-7" className="text-lg font-semibold text-ink-primary">
               7. Kontaktaufnahme per E-Mail
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -316,7 +388,9 @@ export default function DatenschutzPage() {
 
           {/* 8. Speicherdauer */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">8. Speicherdauer</h2>
+            <h2 id="ds-8" className="text-lg font-semibold text-ink-primary">
+              8. Speicherdauer
+            </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
               <p>
                 Soweit in dieser Datenschutzerklärung keine abweichenden Speicherdauern angegeben
@@ -345,7 +419,7 @@ export default function DatenschutzPage() {
 
           {/* 9. Rechtsgrundlagen im Überblick */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-9" className="text-lg font-semibold text-ink-primary">
               9. Rechtsgrundlagen im Überblick
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -372,7 +446,7 @@ export default function DatenschutzPage() {
 
           {/* 10. Deine Rechte als betroffene Person */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-10" className="text-lg font-semibold text-ink-primary">
               10. Deine Rechte als betroffene Person
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -404,7 +478,7 @@ export default function DatenschutzPage() {
 
           {/* 11. Beschwerderecht bei einer Aufsichtsbehörde */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-11" className="text-lg font-semibold text-ink-primary">
               11. Beschwerderecht bei einer Aufsichtsbehörde
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -419,7 +493,7 @@ export default function DatenschutzPage() {
 
           {/* 12. Änderungen dieser Datenschutzerklärung */}
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-ink-primary">
+            <h2 id="ds-12" className="text-lg font-semibold text-ink-primary">
               12. Änderungen dieser Datenschutzerklärung
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">

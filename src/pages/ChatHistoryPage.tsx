@@ -117,23 +117,26 @@ export default function ChatHistoryPage() {
               <h3 className="text-base font-semibold text-ink-primary truncate">
                 {conv.title || "Unbenannte Unterhaltung"}
               </h3>
-              <p className="text-xs text-ink-secondary mt-1">
-                {new Date(conv.updatedAt || conv.createdAt || "").toLocaleString("de-DE", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-                {" • "}
-                {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten
-              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-surface-2/70 px-2 py-0.5 text-[10px] text-ink-secondary border border-white/5">
+                  {new Date(conv.updatedAt || conv.createdAt || "").toLocaleString("de-DE", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                <span className="rounded-full bg-surface-2/70 px-2 py-0.5 text-[10px] text-ink-secondary border border-white/5">
+                  {conv.messageCount ?? conv.messages?.length ?? 0} Nachrichten
+                </span>
+              </div>
             </div>
-            <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+            <div className="flex gap-2 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-ink-secondary hover:text-status-error hover:bg-status-error/10 h-9 w-9"
+                className="text-ink-secondary hover:text-status-error hover:bg-status-error/10 h-10 w-10"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(conv.id).catch(console.error);

@@ -77,38 +77,42 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
 
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
-      <div className="flex-1 px-4 py-6 max-w-4xl mx-auto w-full">
+      <div className="flex-1 px-4 py-4 sm:py-6 max-w-4xl mx-auto w-full">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Navigation (Desktop Sidebar / Mobile Horizontal) */}
           <nav className="lg:w-56 flex-shrink-0">
-            <div className="flex gap-2 overflow-x-auto pb-4 lg:flex-col lg:pb-0 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const isActive = derivedActive === item.id;
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.to}
-                    className={cn(
-                      "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200",
-                      "min-w-[140px] lg:min-w-0 lg:w-full",
-                      isActive
-                        ? "bg-accent-settings-dim border-accent-settings-border text-accent-settings shadow-glow-settings"
-                        : "bg-surface-1/40 border-transparent text-ink-secondary hover:bg-surface-1/60 hover:text-ink-primary hover:border-white/5",
-                    )}
-                  >
-                    <Icon
+            <div className="relative">
+              <div className="flex gap-2 overflow-x-auto pb-4 lg:flex-col lg:pb-0 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+                {NAV_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = derivedActive === item.id;
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.to}
                       className={cn(
-                        "h-4 w-4 transition-colors",
+                        "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200",
+                        "min-w-[140px] lg:min-w-0 lg:w-full",
                         isActive
-                          ? "text-accent-settings"
-                          : "text-ink-tertiary group-hover:text-ink-primary",
+                          ? "bg-accent-settings-dim border-accent-settings-border text-accent-settings shadow-glow-settings"
+                          : "bg-surface-1/40 border-transparent text-ink-secondary hover:bg-surface-1/60 hover:text-ink-primary hover:border-white/5",
                       )}
-                    />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </Link>
-                );
-              })}
+                    >
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 transition-colors",
+                          isActive
+                            ? "text-accent-settings"
+                            : "text-ink-tertiary group-hover:text-ink-primary",
+                        )}
+                      />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent lg:hidden" />
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent lg:hidden" />
             </div>
           </nav>
 

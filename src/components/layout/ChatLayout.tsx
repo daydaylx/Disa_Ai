@@ -53,7 +53,7 @@ export function ChatLayout({
               <span className="sr-only">Disa AI</span>
             </div>
             {title && (
-              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg title-transition">
+              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg title-transition max-w-[44vw] sm:max-w-[60vw] truncate">
                 {title}
               </p>
             )}

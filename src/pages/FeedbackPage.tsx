@@ -394,10 +394,10 @@ export default function FeedbackPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveAttachment(attachment.id)}
-                      className="absolute top-1 right-1 bg-status-error/90 hover:bg-status-error text-white rounded-full p-1 transition-colors"
+                      className="absolute top-2 right-2 bg-status-error/90 hover:bg-status-error text-white rounded-full h-7 w-7 flex items-center justify-center transition-colors shadow-md"
                       aria-label="Bild entfernen"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 ))}
