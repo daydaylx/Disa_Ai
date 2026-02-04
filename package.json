@@ -132,7 +132,7 @@
     "vite": "7.2.4",
     "vite-bundle-analyzer": "^1.2.3",
     "vite-plugin-pwa": "^1.1.0",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.18",
     "wrangler": "^4.56.0"
   },
   "overrides": {
