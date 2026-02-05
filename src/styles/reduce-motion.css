@@ -1,0 +1,188 @@
+/**
+ * Reduced Motion - Accessibility & Battery Saving
+ *
+ * Respektiert prefers-reduced-motion und manuelle Settings.
+ * Reduziert/entfernt Animationen für:
+ * - Vestibular Disorders (Motion Sickness)
+ * - Battery Saving
+ * - Performance auf Low-End Devices
+ *
+ * Aktivierung:
+ * - Automatisch: @media (prefers-reduced-motion: reduce)
+ * - Manuell: data-reduce-motion="true" auf <html>
+ */
+
+/* ========================================================================
+   System Preference - prefers-reduced-motion
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Fade-Ins werden zu Instant-Show */
+  .animate-fade-in,
+  .animate-fade-in-slide-up,
+  .animate-fade-in-scale,
+  .animate-slide-up,
+  .animate-slide-in-from-left {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Loading Spinners bleiben (für UX-Feedback) */
+  .animate-spin {
+    animation-duration: 1s !important; /* Langsamer aber nicht disabled */
+  }
+
+  /* Pulse-Effekte deaktivieren */
+  .animate-pulse,
+  .animate-send-pulse {
+    animation: none !important;
+  }
+
+  /* Hover-Transformationen deaktivieren */
+  .hover\:scale-105:hover,
+  .hover\:-translate-y-px:hover,
+  .hover\:shadow-glow-sm:hover,
+  .hover\:shadow-glow-md:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-sm) !important;
+  }
+
+  /* Active-States bleiben minimal */
+  .active\:scale-95:active,
+  .active\:scale-\[0\.97\]:active,
+  .active\:scale-\[0\.98\]:active {
+    transform: scale(0.98) !important; /* Minimal feedback */
+  }
+}
+
+/* ========================================================================
+   Manual Setting - data-reduce-motion="true"
+   ======================================================================== */
+
+[data-reduce-motion="true"] *,
+[data-reduce-motion="true"] *::before,
+[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+[data-reduce-motion="true"] .animate-fade-in,
+[data-reduce-motion="true"] .animate-fade-in-slide-up,
+[data-reduce-motion="true"] .animate-fade-in-scale,
+[data-reduce-motion="true"] .animate-slide-up,
+[data-reduce-motion="true"] .animate-slide-in-from-left,
+[data-reduce-motion="true"] .animate-code-block-fade-in {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+[data-reduce-motion="true"] .animate-spin {
+  animation-duration: 1s !important;
+}
+
+[data-reduce-motion="true"] .animate-pulse,
+[data-reduce-motion="true"] .animate-send-pulse {
+  animation: none !important;
+}
+
+/* ========================================================================
+   Utility Classes
+   ======================================================================== */
+
+/* Explicit No-Motion Class */
+.no-motion {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Essential Motion Only (für kritische UX) */
+.essential-motion {
+  /* Wird NICHT von reduce-motion betroffen */
+  /* Nutzen für: Loading-Spinners, Critical Feedback */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .essential-motion {
+    animation-duration: 1s !important; /* Langsamer aber sichtbar */
+  }
+}
+
+/* ========================================================================
+   Battery Saver Mode - Kombiniert mit Reduce Motion
+   ======================================================================== */
+
+[data-battery-saver="true"] {
+  /* Alle Animationen aus */
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-battery-saver="true"] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Backdrop-Blur aus für Performance */
+[data-battery-saver="true"] .backdrop-blur-sm,
+[data-battery-saver="true"] .backdrop-blur-md,
+[data-battery-saver="true"] .backdrop-blur-lg,
+[data-battery-saver="true"] .backdrop-blur-xl {
+  backdrop-filter: none !important;
+  background-color: rgba(0, 0, 0, 0.8) !important; /* Solid fallback */
+}
+
+/* Shadows minimal */
+[data-battery-saver="true"] .shadow-sm,
+[data-battery-saver="true"] .shadow-md,
+[data-battery-saver="true"] .shadow-lg,
+[data-battery-saver="true"] .shadow-glow-sm,
+[data-battery-saver="true"] .shadow-glow-md {
+  box-shadow: none !important;
+}
+
+/* Transforms aus */
+[data-battery-saver="true"] .hover\:scale-105:hover,
+[data-battery-saver="true"] .hover\:-translate-y-px:hover,
+[data-battery-saver="true"] .active\:scale-95:active {
+  transform: none !important;
+}
+
+/* ========================================================================
+   Accessibility Info Banner
+   ======================================================================== */
+
+.reduced-motion-banner {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #e5e5e5;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reduced-motion-banner {
+    /* Banner selbst hat keine Animation */
+    opacity: 1;
+    animation: none;
+  }
+}

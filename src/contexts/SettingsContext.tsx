@@ -10,7 +10,7 @@ interface Settings {
   enableAnalytics: boolean;
   enableNotifications: boolean;
   enableNeko: boolean; // New Neko Feature
-  theme: "light" | "dark" | "auto";
+  theme: "light" | "dark" | "auto" | "oled";
   language: string;
   preferredModelId: string;
   creativity: number; // 0-100 slider value
@@ -19,6 +19,8 @@ interface Settings {
   discussionMaxSentences: number;
   fontSize: number;
   reduceMotion: boolean;
+  oledMode: boolean; // OLED Dark Theme
+  batterySaver: boolean; // Battery Saving Mode
   hapticFeedback: boolean;
   restoreLastConversation: boolean;
 }
@@ -37,6 +39,8 @@ const DEFAULT_SETTINGS: Settings = {
   discussionMaxSentences: 8,
   fontSize: 16,
   reduceMotion: false,
+  oledMode: false,
+  batterySaver: false,
   hapticFeedback: false,
   restoreLastConversation: true,
 };
@@ -160,6 +164,8 @@ interface SettingsContextType {
   setDiscussionMaxSentences: (val: number) => void;
   setFontSize: (val: number) => void;
   setReduceMotion: (val: boolean) => void;
+  setOledMode: (val: boolean) => void;
+  setBatterySaver: (val: boolean) => void;
   setHapticFeedback: (val: boolean) => void;
   toggleRestoreLastConversation: () => void;
   resetSettings: () => void;
@@ -299,6 +305,20 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     [saveSettings],
   );
 
+  const setOledMode = useCallback(
+    (oledMode: boolean) => {
+      saveSettings({ oledMode });
+    },
+    [saveSettings],
+  );
+
+  const setBatterySaver = useCallback(
+    (batterySaver: boolean) => {
+      saveSettings({ batterySaver });
+    },
+    [saveSettings],
+  );
+
   const toggleRestoreLastConversation = useCallback(() => {
     saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
   }, [saveSettings]);
@@ -318,8 +338,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Side effects
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.documentElement.dataset.theme = settings.theme;
-  }, [settings.theme]);
+    // OLED Mode overrides dark theme
+    const effectiveTheme = settings.oledMode ? "oled" : settings.theme;
+    document.documentElement.dataset.theme = effectiveTheme;
+  }, [settings.theme, settings.oledMode]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -329,7 +351,18 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof document === "undefined" || typeof document.body === "undefined") return;
     document.body.classList.toggle("reduce-motion", settings.reduceMotion);
+    document.documentElement.dataset.reduceMotion = settings.reduceMotion ? "true" : "false";
   }, [settings.reduceMotion]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.dataset.batterySaver = settings.batterySaver ? "true" : "false";
+
+    // Battery Saver aktiviert automatisch Reduce Motion
+    if (settings.batterySaver && !settings.reduceMotion) {
+      document.documentElement.dataset.reduceMotion = "true";
+    }
+  }, [settings.batterySaver, settings.reduceMotion]);
 
   const value = {
     settings,
@@ -347,6 +380,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setDiscussionMaxSentences,
     setFontSize,
     setReduceMotion,
+    setOledMode,
+    setBatterySaver,
     setHapticFeedback,
     toggleRestoreLastConversation,
     resetSettings,

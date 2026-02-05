@@ -4,7 +4,15 @@ import { AppearanceSettingsPanel } from "./components/AppearanceSettingsPanel";
 import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsAppearanceView() {
-  const { settings, setTheme, setFontSize, setReduceMotion, setHapticFeedback } = useSettings();
+  const {
+    settings,
+    setTheme,
+    setFontSize,
+    setReduceMotion,
+    setOledMode,
+    setBatterySaver,
+    setHapticFeedback,
+  } = useSettings();
 
   return (
     <SettingsLayout
@@ -16,10 +24,14 @@ export function SettingsAppearanceView() {
         theme={settings.theme}
         fontSize={settings.fontSize}
         reduceMotion={settings.reduceMotion}
+        oledMode={settings.oledMode}
+        batterySaver={settings.batterySaver}
         hapticFeedback={settings.hapticFeedback}
         onThemeChange={setTheme}
         onFontSizeChange={setFontSize}
         onReduceMotionToggle={() => setReduceMotion(!settings.reduceMotion)}
+        onOledModeToggle={() => setOledMode(!settings.oledMode)}
+        onBatterySaverToggle={() => setBatterySaver(!settings.batterySaver)}
         onHapticFeedbackToggle={() => setHapticFeedback(!settings.hapticFeedback)}
       />
     </SettingsLayout>

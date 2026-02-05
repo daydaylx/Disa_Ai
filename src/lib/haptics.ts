@@ -78,6 +78,12 @@ function isHapticEnabled(): boolean {
  * @returns true wenn Vibration ausgeführt wurde, false sonst
  */
 export function hapticFeedback(type: HapticFeedbackType = "medium"): boolean {
+  // Check if Battery Saver is active
+  if (typeof document !== "undefined") {
+    const batterySaver = document.documentElement.dataset.batterySaver === "true";
+    if (batterySaver) return false;
+  }
+
   // Checks
   if (!isHapticSupported()) return false;
   if (!isHapticEnabled()) return false;

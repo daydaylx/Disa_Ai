@@ -3,13 +3,17 @@ import { Label, Switch } from "@/ui";
 import { FONT_SIZE_MAX, FONT_SIZE_MIN, FONT_SIZE_STEP, THEME_OPTIONS } from "../constants";
 
 interface AppearanceSettingsPanelProps {
-  theme: "light" | "dark" | "auto";
+  theme: "light" | "dark" | "auto" | "oled";
   fontSize: number;
   reduceMotion: boolean;
+  oledMode: boolean;
+  batterySaver: boolean;
   hapticFeedback: boolean;
-  onThemeChange: (theme: "light" | "dark" | "auto") => void;
+  onThemeChange: (theme: "light" | "dark" | "auto" | "oled") => void;
   onFontSizeChange: (size: number) => void;
   onReduceMotionToggle: () => void;
+  onOledModeToggle: () => void;
+  onBatterySaverToggle: () => void;
   onHapticFeedbackToggle: () => void;
 }
 
@@ -17,10 +21,14 @@ export function AppearanceSettingsPanel({
   theme,
   fontSize,
   reduceMotion,
+  oledMode,
+  batterySaver,
   hapticFeedback,
   onThemeChange,
   onFontSizeChange,
   onReduceMotionToggle,
+  onOledModeToggle,
+  onBatterySaverToggle,
   onHapticFeedbackToggle,
 }: AppearanceSettingsPanelProps) {
   return (
@@ -66,8 +74,26 @@ export function AppearanceSettingsPanel({
       {/* Toggles */}
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-sm text-text-primary">OLED Dark Mode</span>
+            <span className="text-xs text-text-muted">
+              Pure Black für OLED Displays (Energie-Effizienz)
+            </span>
+          </div>
+          <Switch checked={oledMode} onCheckedChange={onOledModeToggle} />
+        </div>
+
+        <div className="flex items-center justify-between">
           <span className="text-sm text-text-primary">Animationen reduzieren</span>
           <Switch checked={reduceMotion} onCheckedChange={onReduceMotionToggle} />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-sm text-text-primary">Batteriesparmodus</span>
+            <span className="text-xs text-text-muted">Reduziert Animationen & Effekte</span>
+          </div>
+          <Switch checked={batterySaver} onCheckedChange={onBatterySaverToggle} />
         </div>
 
         <div className="flex items-center justify-between">
