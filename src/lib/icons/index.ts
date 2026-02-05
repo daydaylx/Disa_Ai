@@ -82,6 +82,7 @@ export {
   Search,
   Send,
   Settings,
+  Share2,
   Shield,
   SlidersHorizontal,
   Smartphone,
