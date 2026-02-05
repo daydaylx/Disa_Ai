@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useStickToBottom } from "../../hooks/useStickToBottom";
 import { cn } from "../../lib/utils";
 import type { ChatMessageType } from "../../types/chatMessage";
+import { TypingIndicator } from "../../ui/TypingIndicator";
 import { ChatMessage } from "./ChatMessage";
 
 // Configuration constants
@@ -179,46 +180,8 @@ export function VirtualizedMessageList({
         )}
 
         {isLoading && (
-          <div className="flex items-start gap-4 py-4 animate-fade-in">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-ink-tertiary">
-              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 3a9 9 0 019 9"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-60"
-                />
-                <path
-                  d="M21 12a9 9 0 01-9 9"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-20"
-                />
-              </svg>
-            </div>
-            <div className="flex-1 space-y-2">
-              <div className="flex gap-1.5 h-6 items-center">
-                <span className="text-xs font-medium text-ink-tertiary">Disa denkt nach</span>
-                <div className="flex gap-1 ml-1">
-                  <div
-                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
-                    style={{ animationDelay: "0s" }}
-                  />
-                  <div
-                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
-                    style={{ animationDelay: "0.2s" }}
-                  />
-                  <div
-                    className="h-1.5 w-1.5 animate-smooth-bounce rounded-full bg-ink-tertiary"
-                    style={{ animationDelay: "0.4s" }}
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="py-4 animate-fade-in">
+            <TypingIndicator />
           </div>
         )}
 

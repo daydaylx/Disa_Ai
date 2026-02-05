@@ -22,7 +22,7 @@ import {
 } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
+import { Badge, Button, Card, CardSkeleton, EmptyState, PageHeader, SearchInput } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -249,15 +249,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       <div className="flex-1 overflow-y-auto pb-24 pt-4">
         {!catalog && loading ? (
           // Loading skeletons
-          <div className="space-y-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                data-testid="model-card-skeleton"
-                className="h-20 rounded-2xl bg-surface-1/50 animate-pulse"
-              />
-            ))}
-          </div>
+          <CardSkeleton count={6} />
         ) : error ? ( // Conditional rendering for error state
           <EmptyState
             icon={<Cpu className="h-8 w-8 text-ink-muted" />}

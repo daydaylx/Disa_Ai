@@ -39,7 +39,17 @@ import {
   Zap,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, EmptyState, PageHeader, SearchInput } from "@/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardSkeleton,
+  EmptyState,
+  FilterSkeleton,
+  HeaderSkeleton,
+  PageHeader,
+  SearchInput,
+} from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
@@ -247,28 +257,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   if (rolesLoading) {
     return (
       <div className="flex flex-col h-full p-4 space-y-4">
-        <div
-          data-testid="role-card-skeleton"
-          className="h-12 bg-surface-1 rounded-xl animate-pulse"
-        />
-        <div className="flex gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              data-testid="role-card-skeleton"
-              className="h-8 w-20 bg-surface-1 rounded-full animate-pulse"
-            />
-          ))}
-        </div>
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              data-testid="role-card-skeleton"
-              className="h-24 bg-surface-1 rounded-2xl animate-pulse"
-            />
-          ))}
-        </div>
+        <HeaderSkeleton />
+        <FilterSkeleton count={4} />
+        <CardSkeleton count={6} />
       </div>
     );
   }

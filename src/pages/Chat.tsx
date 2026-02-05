@@ -1,4 +1,4 @@
-import { lazy, memo, useCallback, useMemo, useReducer, useRef } from "react";
+import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { Bookmark, MessageSquare } from "@/lib/icons";
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
+import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
@@ -67,6 +68,11 @@ export default function Chat() {
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
+
+  // Scroll-to-bottom button state
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [newMessageCount, setNewMessageCount] = useState(0);
+  const lastMessageCountRef = useRef(0);
 
   // Deduplicate prompts with strict text normalization
   const uniquePrompts = useMemo(() => {
@@ -131,6 +137,44 @@ export default function Chat() {
     chatLogic.handleStartNewChat();
     closeMenu();
   }, [chatLogic, closeMenu]);
+
+  // Scroll to bottom handler
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setNewMessageCount(0);
+  }, []);
+
+  // Track scroll position to show/hide scroll-to-bottom button
+  useEffect(() => {
+    const scrollContainer = chatScrollRef.current;
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+      // Show button when user is more than 200px from bottom
+      setShowScrollButton(distanceFromBottom > 200);
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    return () => scrollContainer.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track new messages while user is scrolled up
+  useEffect(() => {
+    if (chatLogic.isEmpty) {
+      lastMessageCountRef.current = 0;
+      setNewMessageCount(0);
+      return;
+    }
+
+    const currentCount = chatLogic.messages.length;
+    if (currentCount > lastMessageCountRef.current && showScrollButton) {
+      setNewMessageCount((prev) => prev + 1);
+    }
+    lastMessageCountRef.current = currentCount;
+  }, [chatLogic.messages.length, chatLogic.isEmpty, showScrollButton]);
 
   return (
     <>
@@ -354,6 +398,15 @@ export default function Chat() {
               />
             </div>
           </div>
+
+          {/* Scroll to Bottom FAB */}
+          {!chatLogic.isEmpty && (
+            <ScrollToBottom
+              visible={showScrollButton}
+              onClick={scrollToBottom}
+              newMessageCount={newMessageCount}
+            />
+          )}
         </div>
       </ChatLayout>
 

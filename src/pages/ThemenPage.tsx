@@ -6,7 +6,7 @@ import { CATEGORY_LABELS, QUICKSTARTS } from "@/config/quickstarts";
 import { getCategoryStyle } from "@/lib/categoryColors";
 import { AlertTriangle, Brain, ChevronDown } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, PageHeader } from "@/ui";
+import { Badge, Button, Card, CardSkeleton, PageHeader } from "@/ui";
 
 const regularDiscussions = QUICKSTARTS.filter((q) => q.category !== "verschwörungstheorien");
 const conspiracyDiscussions = QUICKSTARTS.filter((q) => q.category === "verschwörungstheorien");
@@ -15,6 +15,7 @@ export default function ThemenPage() {
   const navigate = useNavigate();
   const headerTheme = getCategoryStyle("Spezial");
   const [expandedThemen, setExpandedThemen] = useState<Set<string>>(new Set());
+  const [isLoading] = useState(false); // For future async loading
 
   const handleStartQuickstart = (quickstart: Quickstart) => {
     void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
@@ -179,47 +180,62 @@ export default function ThemenPage() {
 
       {/* Content Zone - Scrollable List */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
-        {/* Regular Discussions */}
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
-            Diskussionen
-          </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {regularDiscussions.map(renderCard)}
-          </div>
-        </section>
-
-        {/* Conspiracy Theories Section */}
-        {conspiracyDiscussions.length > 0 && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2 px-1">
-              <AlertTriangle className="h-4 w-4 text-status-warning" />
-              <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">
-                Verschwörungstheorien
+        {isLoading ? (
+          <>
+            <section className="space-y-3">
+              <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
+                Diskussionen
               </h2>
-              <Badge
-                variant="outline"
-                className="ml-auto border-status-warning/30 text-status-warning text-[10px] h-5"
-              >
-                Kontrovers
-              </Badge>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {conspiracyDiscussions.map(renderCard)}
-            </div>
-          </section>
-        )}
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <CardSkeleton count={6} />
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
+            {/* Regular Discussions */}
+            <section className="space-y-3">
+              <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
+                Diskussionen
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {regularDiscussions.map(renderCard)}
+              </div>
+            </section>
 
-        {/* Back to Chat Action */}
-        <div className="pt-8 pb-4 flex justify-center">
-          <Button
-            variant="ghost"
-            onClick={() => void navigate("/")}
-            className="text-ink-secondary hover:text-ink-primary"
-          >
-            ← Zurück zum Chat
-          </Button>
-        </div>
+            {/* Conspiracy Theories Section */}
+            {conspiracyDiscussions.length > 0 && (
+              <section className="space-y-3">
+                <div className="flex items-center gap-2 px-1">
+                  <AlertTriangle className="h-4 w-4 text-status-warning" />
+                  <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">
+                    Verschwörungstheorien
+                  </h2>
+                  <Badge
+                    variant="outline"
+                    className="ml-auto border-status-warning/30 text-status-warning text-[10px] h-5"
+                  >
+                    Kontrovers
+                  </Badge>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {conspiracyDiscussions.map(renderCard)}
+                </div>
+              </section>
+            )}
+
+            {/* Back to Chat Action */}
+            <div className="pt-8 pb-4 flex justify-center">
+              <Button
+                variant="ghost"
+                onClick={() => void navigate("/")}
+                className="text-ink-secondary hover:text-ink-primary"
+              >
+                ← Zurück zum Chat
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
