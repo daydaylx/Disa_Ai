@@ -11,6 +11,7 @@ import {
   saveConversation,
   updateConversation,
 } from "../lib/conversation-manager-modern";
+import { safeStorage } from "../lib/safeStorage";
 import { debounceWithCancel } from "../lib/utils/debounce";
 import { safeError } from "../lib/utils/production-logger";
 import type { ChatMessageType, Conversation } from "../types";
@@ -44,23 +45,15 @@ export function useConversationManager({
   const hydratedFromStorageRef = useRef(false);
 
   const persistLastConversationId = useCallback((id: string | null) => {
-    try {
-      if (id) {
-        localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, id);
-      } else {
-        localStorage.removeItem(STORAGE_KEYS.LAST_CONVERSATION);
-      }
-    } catch {
-      /* non-critical */
+    if (id) {
+      safeStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, id);
+    } else {
+      safeStorage.removeItem(STORAGE_KEYS.LAST_CONVERSATION);
     }
   }, []);
 
   const readLastConversationId = useCallback((): string | null => {
-    try {
-      return localStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION);
-    } catch {
-      return null;
-    }
+    return safeStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION);
   }, []);
 
   const refreshConversations = useCallback(async () => {

@@ -1,7 +1,5 @@
-import { useEffect, useRef } from "react";
-
 import { usePWAInstall } from "@/hooks/usePWAInstall";
-import { Download, Share2, Smartphone, X } from "@/lib/icons";
+import { Download, Share2, Smartphone } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 import {
@@ -16,13 +14,6 @@ import {
 
 export function PWAInstallModal() {
   const { isStandalone, isIOS, showPrompt, triggerInstall, dismiss } = usePWAInstall();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (showPrompt && closeButtonRef.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [showPrompt]);
 
   if (isStandalone) {
     return null;
@@ -45,11 +36,7 @@ export function PWAInstallModal() {
 
   return (
     <Dialog open={showPrompt} onOpenChange={(open) => !open && handleDismiss()}>
-      <DialogContent
-        className="max-w-md"
-        onInteractOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={handleDismiss}
-      >
+      <DialogContent className="max-w-md" onEscapeKeyDown={handleDismiss}>
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div
@@ -128,11 +115,7 @@ export function PWAInstallModal() {
               Später
             </Button>
           </DialogClose>
-          <Button
-            onClick={isIOS ? handleDismiss : handleInstall}
-            className="w-full sm:w-auto"
-            ref={isIOS ? closeButtonRef : undefined}
-          >
+          <Button onClick={isIOS ? handleDismiss : handleInstall} className="w-full sm:w-auto">
             {isIOS ? (
               "Verstanden"
             ) : (
@@ -142,14 +125,6 @@ export function PWAInstallModal() {
             )}
           </Button>
         </DialogFooter>
-
-        <DialogClose
-          ref={closeButtonRef}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-surface-2 data-[state=open]:text-ink-secondary"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Schließen</span>
-        </DialogClose>
       </DialogContent>
     </Dialog>
   );

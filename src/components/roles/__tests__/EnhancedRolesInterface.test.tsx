@@ -168,8 +168,8 @@ describe("EnhancedRolesInterface", () => {
 
     renderWithProviders(<EnhancedRolesInterface />);
 
-    // Check for loading indicators
-    const skeletons = screen.queryAllByTestId("role-card-skeleton");
+    // Check for loading indicators (CardSkeleton uses "card-skeleton" testid)
+    const skeletons = screen.queryAllByTestId("card-skeleton");
     expect(skeletons.length).toBeGreaterThan(0); // Only checking for skeletons
   });
 

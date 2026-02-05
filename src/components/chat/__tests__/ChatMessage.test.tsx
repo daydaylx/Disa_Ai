@@ -106,8 +106,10 @@ describe("ChatMessage", () => {
       // Text vor dem Code-Block
       expect(screen.getByText(/Hier ist ein Beispiel/)).toBeInTheDocument();
 
-      // Code-Inhalt
-      expect(screen.getByText(/console\.log\("Hello World"\)/)).toBeInTheDocument();
+      // Code-Inhalt (check for parts of the code since syntax highlighting splits it)
+      expect(screen.getByText("console")).toBeInTheDocument();
+      expect(screen.getByText("log")).toBeInTheDocument();
+      expect(screen.getByText(/"Hello World"/)).toBeInTheDocument();
 
       // Text nach dem Code-Block
       expect(screen.getByText("Das ist JavaScript Code.")).toBeInTheDocument();
@@ -310,7 +312,9 @@ describe("ChatMessage", () => {
       render(<ChatMessage message={codeOnlyMessage} />);
 
       expect(screen.getByText("python")).toBeInTheDocument();
-      expect(screen.getByText("print('Hello')")).toBeInTheDocument();
+      // Check for parts of the code since syntax highlighting splits it
+      expect(screen.getByText("print")).toBeInTheDocument();
+      expect(screen.getByText(/'Hello'/)).toBeInTheDocument();
     });
 
     it("handhabt mehrere Code-Blöcke", () => {
@@ -333,8 +337,11 @@ b = 2
 
       expect(screen.getByText("js")).toBeInTheDocument();
       expect(screen.getByText("python")).toBeInTheDocument();
-      expect(screen.getByText(/const a = 1/)).toBeInTheDocument();
-      expect(screen.getByText(/b = 2/)).toBeInTheDocument();
+      // Check for parts of the code since syntax highlighting splits it
+      expect(screen.getByText("const")).toBeInTheDocument();
+      expect(screen.getAllByText("=").length).toBeGreaterThan(0);
+      expect(screen.getByText("1")).toBeInTheDocument();
+      expect(screen.getByText("2")).toBeInTheDocument();
     });
   });
 });
