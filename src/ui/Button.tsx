@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
+import { hapticFeedback } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -48,9 +49,22 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+  ({ className, variant, size, onClick, ...props }, ref) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      // Haptic feedback on mobile
+      hapticFeedback(variant === "destructive" ? "heavy" : "medium");
+
+      // Call original onClick
+      onClick?.(e);
+    };
+
     return (
-      <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        onClick={handleClick}
+        {...props}
+      />
     );
   },
 );

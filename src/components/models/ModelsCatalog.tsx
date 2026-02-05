@@ -22,7 +22,16 @@ import {
 } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, CardSkeleton, EmptyState, PageHeader, SearchInput } from "@/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardSkeleton,
+  EmptyState,
+  PageHeader,
+  PullToRefresh,
+  SearchInput,
+} from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -246,7 +255,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-24 pt-4">
+      <PullToRefresh onRefresh={async () => await refresh(true)} className="flex-1 pb-24 pt-4">
         {!catalog && loading ? (
           // Loading skeletons
           <CardSkeleton count={6} />
@@ -467,7 +476,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             })}
           </div>
         )}
-      </div>
+      </PullToRefresh>
     </div>
   );
 }

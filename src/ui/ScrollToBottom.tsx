@@ -1,3 +1,4 @@
+import { hapticFeedback } from "@/lib/haptics";
 import { ChevronDown } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
@@ -21,10 +22,15 @@ export function ScrollToBottom({
   newMessageCount = 0,
   className,
 }: ScrollToBottomProps) {
+  const handleClick = () => {
+    hapticFeedback("light");
+    onClick();
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         "fixed bottom-24 right-4 z-50",
         "flex items-center justify-center",
