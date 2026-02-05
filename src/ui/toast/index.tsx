@@ -66,6 +66,91 @@ export function useToastsOptional() {
   return useContext(ToastsContext);
 }
 
+function ToastItem({
+  toast,
+  onDismiss,
+  kindClasses,
+  iconClasses,
+}: {
+  toast: Toast;
+  onDismiss: (id: string) => void;
+  kindClasses: Record<ToastKind, string>;
+  iconClasses: Record<ToastKind, string>;
+}) {
+  const [progress, setProgress] = useState(100);
+
+  useEffect(() => {
+    const duration = toast.duration ?? 5000;
+    if (duration <= 0) return undefined;
+
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
+      setProgress(remaining);
+    }, 16); // ~60fps
+
+    return () => clearInterval(interval);
+  }, [toast.duration]);
+
+  return (
+    <div
+      className={`pointer-events-auto disa-toast-in disa-notch disa-notch--md disa-notch--interactive rounded-md bg-surface-2 px-4 py-3 text-sm shadow-raiseLg transition-all duration-fast overflow-hidden relative ${kindClasses[toast.kind]}`}
+    >
+      {/* Progress bar at bottom */}
+      {(toast.duration ?? 5000) > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-surface-inset overflow-hidden">
+          <div
+            className={`h-full transition-all ease-linear ${iconClasses[toast.kind].replace("text-", "bg-")}`}
+            style={{
+              width: `${progress}%`,
+              transitionDuration: "100ms",
+            }}
+          />
+        </div>
+      )}
+
+      <div className="flex items-start gap-3">
+        {/* Status Icon */}
+        <div className={`mt-0.5 ${iconClasses[toast.kind]}`}>
+          {toast.kind === "success" && <Check className="h-4 w-4" />}
+          {toast.kind === "error" && <X className="h-4 w-4" />}
+          {toast.kind === "warning" && <AlertTriangle className="h-4 w-4" />}
+          {toast.kind === "info" && <NotchSquare className="h-4 w-4" />}
+        </div>
+        <div className="flex-1">
+          {toast.title && (
+            <p className="font-semibold text-text-primary leading-snug">{toast.title}</p>
+          )}
+          {toast.message && (
+            <p className="mt-1 text-xs text-text-secondary leading-relaxed">{toast.message}</p>
+          )}
+        </div>
+        <button
+          type="button"
+          aria-label="Benachrichtigung schließen"
+          className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
+          onClick={() => onDismiss(toast.id)}
+        >
+          ×
+        </button>
+      </div>
+      {toast.action && (
+        <button
+          type="button"
+          className={`mt-3 rounded-sm px-3 py-1.5 text-xs font-semibold transition-all duration-fast shadow-raise hover:shadow-raiseLg active:scale-95 ${iconClasses[toast.kind]} bg-surface-inset`}
+          onClick={() => {
+            toast.action?.onClick();
+            onDismiss(toast.id);
+          }}
+        >
+          {toast.action.label}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function ToastViewport({
   toasts,
   onDismiss,
@@ -126,48 +211,13 @@ function ToastViewport({
       aria-live="polite"
     >
       {toasts.map((toast) => (
-        <div
+        <ToastItem
           key={toast.id}
-          className={`pointer-events-auto disa-toast-in disa-notch disa-notch--md disa-notch--interactive rounded-md bg-surface-2 px-4 py-3 text-sm shadow-raiseLg transition-all duration-fast ${kindClasses[toast.kind]}`}
-        >
-          <div className="flex items-start gap-3">
-            {/* Status Icon */}
-            <div className={`mt-0.5 ${iconClasses[toast.kind]}`}>
-              {toast.kind === "success" && <Check className="h-4 w-4" />}
-              {toast.kind === "error" && <X className="h-4 w-4" />}
-              {toast.kind === "warning" && <AlertTriangle className="h-4 w-4" />}
-              {toast.kind === "info" && <NotchSquare className="h-4 w-4" />}
-            </div>
-            <div className="flex-1">
-              {toast.title && (
-                <p className="font-semibold text-text-primary leading-snug">{toast.title}</p>
-              )}
-              {toast.message && (
-                <p className="mt-1 text-xs text-text-secondary leading-relaxed">{toast.message}</p>
-              )}
-            </div>
-            <button
-              type="button"
-              aria-label="Benachrichtigung schließen"
-              className="ml-1 rounded-sm px-2 text-ink-secondary hover:text-text-primary hover:bg-surface-inset transition-all duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--glass-focus-ring)]"
-              onClick={() => onDismiss(toast.id)}
-            >
-              ×
-            </button>
-          </div>
-          {toast.action && (
-            <button
-              type="button"
-              className={`mt-3 rounded-sm px-3 py-1.5 text-xs font-semibold transition-all duration-fast shadow-raise hover:shadow-raiseLg active:scale-95 ${iconClasses[toast.kind]} bg-surface-inset`}
-              onClick={() => {
-                toast.action?.onClick();
-                onDismiss(toast.id);
-              }}
-            >
-              {toast.action.label}
-            </button>
-          )}
-        </div>
+          toast={toast}
+          onDismiss={onDismiss}
+          kindClasses={kindClasses}
+          iconClasses={iconClasses}
+        />
       ))}
     </div>,
     portalNode,

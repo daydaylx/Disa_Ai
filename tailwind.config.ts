@@ -307,6 +307,16 @@ export default {
           warning: "#f59e0b", // Amber 500
           info: "#06b6d4", // Cyan 500 (palette-reduced)
         },
+        // === SYNTAX HIGHLIGHTING COLORS ===
+        // Lightweight code highlighting for ChatMessage code blocks
+        syntax: {
+          keyword: "#c792ea", // Purple - keywords (const, let, function, etc.)
+          string: "#c3e88d", // Green - strings
+          comment: "#546e7a", // Grey - comments
+          number: "#f78c6c", // Orange - numbers
+          function: "#82aaff", // Blue - function names
+          operator: "#89ddff", // Cyan - operators (+, -, *, etc.)
+        },
       },
       fontFamily: {
         sans: [

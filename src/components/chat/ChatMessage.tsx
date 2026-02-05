@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Check, Copy, Edit2, RotateCcw } from "@/lib/icons";
+import { highlightCode, shouldHighlight } from "@/lib/syntaxHighlight";
 import { Button } from "@/ui/Button";
 
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
@@ -32,6 +33,14 @@ function CodeBlock({ children, language }: { children: string; language?: string
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Apply syntax highlighting if language is supported
+  const highlighted = useMemo(() => {
+    if (shouldHighlight(language)) {
+      return highlightCode(children);
+    }
+    return null;
+  }, [children, language]);
+
   return (
     <div
       ref={elementRef}
@@ -59,7 +68,17 @@ function CodeBlock({ children, language }: { children: string; language?: string
         </button>
       </div>
       <pre className="overflow-x-auto p-3">
-        <code className="font-mono text-sm leading-relaxed text-ink-primary">{children}</code>
+        <code className="font-mono text-sm leading-relaxed">
+          {highlighted ? (
+            highlighted.map((token, i) => (
+              <span key={i} className={token.className}>
+                {token.content}
+              </span>
+            ))
+          ) : (
+            <span className="text-ink-primary">{children}</span>
+          )}
+        </code>
       </pre>
     </div>
   );
