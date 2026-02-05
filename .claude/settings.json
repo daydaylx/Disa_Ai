@@ -45,11 +45,6 @@
     "sqlite": {
       "command": "npx",
       "args": ["-y", "mcp-sqlite", "/home/d/data/app.sqlite"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@itseasy21/mcp-knowledge-graph"],
-      "env": { "MEMORY_FILE_PATH": "/home/d/.cache/mcp/memory.jsonl" }
     }
   }
 }
