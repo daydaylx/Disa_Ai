@@ -34,6 +34,7 @@ interface VirtualizedMessageListProps {
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
   onEdit?: (messageId: string, newContent: string) => void;
+  onDelete?: (messageId: string) => void;
   onFollowUp?: (prompt: string) => void;
   isLoading?: boolean;
   className?: string;
@@ -49,6 +50,7 @@ export function VirtualizedMessageList({
   onRetry,
   onCopy,
   onEdit,
+  onDelete,
   onFollowUp,
   isLoading = false,
   className,
@@ -155,6 +157,7 @@ export function VirtualizedMessageList({
                     onRetry={handleRetry}
                     onCopy={handleCopy}
                     onEdit={onEdit}
+                    onDelete={onDelete}
                     onFollowUp={onFollowUp}
                   />
                 </div>
@@ -172,6 +175,7 @@ export function VirtualizedMessageList({
                   onRetry={handleRetry}
                   onCopy={handleCopy}
                   onEdit={onEdit}
+                  onDelete={onDelete}
                   onFollowUp={onFollowUp}
                 />
               </div>

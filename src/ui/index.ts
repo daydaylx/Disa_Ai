@@ -5,6 +5,7 @@ export * from "./BrandCard";
 export * from "./Button";
 export * from "./Card";
 export * from "./Chip";
+export * from "./ContextMenu";
 export * from "./CopyButton";
 export * from "./Dialog";
 export * from "./FilterChip";

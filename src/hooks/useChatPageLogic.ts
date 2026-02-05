@@ -212,6 +212,20 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     [messages, setMessages, append],
   );
 
+  // Handle delete message
+  const handleDelete = useCallback(
+    (messageId: string) => {
+      const newMessages = messages.filter((m) => m.id !== messageId);
+      setMessages(newMessages);
+      toasts.push({
+        kind: "success",
+        title: "Nachricht gelöscht",
+        message: "Die Nachricht wurde aus dem Verlauf entfernt.",
+      });
+    },
+    [messages, setMessages, toasts],
+  );
+
   // Handle new conversation
   const handleStartNewChat = useCallback(() => {
     newConversation();
@@ -256,6 +270,7 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     handleEdit,
     handleFollowUp,
     handleRetry,
+    handleDelete,
     handleStartNewChat,
     handleStarterClick,
     selectConversation,

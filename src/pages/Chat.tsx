@@ -1,6 +1,8 @@
 import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
+import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
@@ -63,11 +65,36 @@ export default function Chat() {
   const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
   const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
+
+  // Swipe-Right Navigation (zurück zur Übersicht)
+  const { handlers: swipeHandlersNative, dragOffset } = useSwipeGesture({
+    onSwipeRight: () => {
+      void navigate("/");
+    },
+    threshold: 100, // 100px zum Triggern
+  });
+
+  // Wrap native handlers für React
+  const swipeHandlers = {
+    onTouchStart: (e: React.TouchEvent) => {
+      swipeHandlersNative.onTouchStart(e.nativeEvent);
+    },
+    onTouchMove: (e: React.TouchEvent) => {
+      swipeHandlersNative.onTouchMove(e.nativeEvent);
+    },
+    onTouchEnd: () => {
+      swipeHandlersNative.onTouchEnd();
+    },
+    onTouchCancel: () => {
+      swipeHandlersNative.onTouchCancel();
+    },
+  };
 
   // Scroll-to-bottom button state
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -216,11 +243,16 @@ export default function Chat() {
         }
       >
         <div
-          className="flex flex-col relative w-full"
+          {...swipeHandlers}
+          className="flex flex-col relative w-full transition-transform"
           style={{
             // Subtract header height (64px) from viewport height to prevent clipping
             height: viewport.height ? `${viewport.height - 64}px` : "100%",
             minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
+            // Visual feedback während Swipe
+            transform:
+              dragOffset.x > 0 ? `translateX(${Math.min(dragOffset.x * 0.3, 100)}px)` : undefined,
+            transition: dragOffset.x === 0 ? "transform 0.3s ease" : "none",
           }}
         >
           <ChatStatusBanner
@@ -378,6 +410,7 @@ export default function Chat() {
                     onEdit={chatLogic.handleEdit}
                     onFollowUp={chatLogic.handleFollowUp}
                     onRetry={chatLogic.handleRetry}
+                    onDelete={chatLogic.handleDelete}
                     className="w-full pb-4"
                     scrollContainerRef={chatScrollRef}
                   />

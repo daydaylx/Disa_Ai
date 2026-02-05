@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Check, Copy, Edit2, RotateCcw } from "@/lib/icons";
+import { useLongPress } from "@/hooks/useLongPress";
+import { Check, Copy, Edit2, RotateCcw, Trash2 } from "@/lib/icons";
 import { highlightCode, shouldHighlight } from "@/lib/syntaxHighlight";
 import { Button } from "@/ui/Button";
+import type { ContextMenuItem } from "@/ui/ContextMenu";
+import { ContextMenu } from "@/ui/ContextMenu";
 
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { cn } from "../../lib/utils";
@@ -17,6 +20,7 @@ interface ChatMessageProps {
   onRetry?: (messageId: string) => void;
   onCopy?: (content: string) => void;
   onEdit?: (messageId: string, newContent: string) => void;
+  onDelete?: (messageId: string) => void;
   onFollowUp?: (prompt: string) => void;
 }
 
@@ -124,11 +128,13 @@ export function ChatMessage({
   onRetry,
   onCopy,
   onEdit,
+  onDelete,
   onFollowUp,
 }: ChatMessageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
   const [copied, setCopied] = useState(false);
+  const [showContextMenu, setShowContextMenu] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { elementRef, isVisible } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
@@ -166,6 +172,70 @@ export function ChatMessage({
     setIsEditing(!isEditing);
   };
 
+  const handleDelete = () => {
+    onDelete?.(message.id);
+  };
+
+  // Long-Press Handler
+  const { handlers: longPressHandlers } = useLongPress({
+    onLongPress: () => {
+      if (!isEditing) {
+        setShowContextMenu(true);
+      }
+    },
+    delay: 500,
+    enableHaptic: true,
+  });
+
+  // Wrap native handlers for React events
+  const longPressReactHandlers = {
+    onTouchStart: (e: React.TouchEvent) => longPressHandlers.onTouchStart(e),
+    onTouchMove: (e: React.TouchEvent) => longPressHandlers.onTouchMove(e),
+    onTouchEnd: (e: React.TouchEvent) => longPressHandlers.onTouchEnd(e),
+    onTouchCancel: () => longPressHandlers.onTouchCancel(),
+    onMouseDown: (e: React.MouseEvent) => longPressHandlers.onMouseDown(e),
+    onMouseMove: (e: React.MouseEvent) => longPressHandlers.onMouseMove(e),
+    onMouseUp: (e: React.MouseEvent) => longPressHandlers.onMouseUp(e),
+    onMouseLeave: () => longPressHandlers.onMouseLeave(),
+  };
+
+  // Context Menu Items
+  const contextMenuItems: ContextMenuItem[] = [
+    {
+      icon: Copy,
+      label: "Kopieren",
+      onClick: handleCopy,
+    },
+    ...(isUser && onEdit
+      ? [
+          {
+            icon: Edit2,
+            label: "Bearbeiten",
+            onClick: () => setIsEditing(true),
+          },
+        ]
+      : []),
+    ...(isAssistant && onRetry
+      ? [
+          {
+            icon: RotateCcw,
+            label: "Neu generieren",
+            onClick: handleRetry,
+          },
+        ]
+      : []),
+    ...(onDelete
+      ? [
+          {
+            icon: Trash2,
+            label: "Löschen",
+            onClick: handleDelete,
+            danger: true,
+          },
+        ]
+      : []),
+  ];
+
   // Follow-up suggestions - only show first 3 to avoid clutter
   const followUpSuggestions = ["Erkläre das genauer", "Gib mir Beispiele", "Fasse zusammen"];
 
@@ -190,6 +260,7 @@ export function ChatMessage({
       >
         {/* Bubble */}
         <div
+          {...longPressReactHandlers}
           className={cn(
             "relative rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
             isUser
@@ -302,6 +373,15 @@ export function ChatMessage({
           </div>
         )}
       </div>
+
+      {/* Context Menu (Long-Press) */}
+      {showContextMenu && (
+        <ContextMenu
+          title={isUser ? "Deine Nachricht" : "Antwort"}
+          items={contextMenuItems}
+          onClose={() => setShowContextMenu(false)}
+        />
+      )}
     </div>
   );
 }
