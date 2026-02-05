@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/ui/Tooltip";
 import { Router } from "./app/router";
 import { FullPageLoader } from "./components/FullPageLoader";
 import { NekoLayer } from "./components/neko/NekoLayer";
+import { PWAInstallModal } from "./components/pwa/PWAInstallModal";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ModelCatalogProvider } from "./contexts/ModelCatalogContext";
 import { RolesProvider } from "./contexts/RolesContext";
@@ -134,6 +135,7 @@ function AppContent() {
             <Router />
           </Suspense>
           <NekoLayer />
+          <PWAInstallModal />
         </SentryErrorBoundary>
         <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
           <FeatureFlagPanel />

@@ -6,24 +6,6 @@ import { MaterialCard } from "@/ui/MaterialCard";
 import { usePWAInstall } from "../../hooks/usePWAInstall";
 import { Info } from "../../lib/icons";
 
-function isStandalone(): boolean {
-  try {
-    if ((navigator as any).standalone) return true;
-  } catch {
-    // ignore
-  }
-  try {
-    return window.matchMedia("(display-mode: standalone)").matches;
-  } catch {
-    return false;
-  }
-}
-
-function isIOS(): boolean {
-  const ua = navigator.userAgent || "";
-  return /iphone|ipad|ipod/i.test(ua);
-}
-
 function isAndroid(): boolean {
   const ua = navigator.userAgent || "";
   return /android/i.test(ua);
@@ -36,16 +18,19 @@ function isChrome(): boolean {
 
 export function PWADebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
-  const { canInstall, installed } = usePWAInstall();
+  const { canInstall, installed, isStandalone, isIOS, showPrompt, hasUserInteracted } =
+    usePWAInstall();
 
   const debugInfo = {
     userAgent: navigator.userAgent,
-    isStandalone: isStandalone(),
-    isIOS: isIOS(),
+    isStandalone,
+    isIOS,
     isAndroid: isAndroid(),
     isChrome: isChrome(),
     canInstall,
     installed,
+    showPrompt,
+    hasUserInteracted,
     protocol: window.location.protocol,
     host: window.location.host,
     hasServiceWorker: "serviceWorker" in navigator,
@@ -108,6 +93,14 @@ export function PWADebugInfo() {
             <div>
               <span className="font-medium">Already Installed:</span>{" "}
               {debugInfo.installed ? "✅ Yes" : "❌ No"}
+            </div>
+            <div>
+              <span className="font-medium">Show Prompt:</span>{" "}
+              {debugInfo.showPrompt ? "✅ Yes" : "❌ No"}
+            </div>
+            <div>
+              <span className="font-medium">User Interacted:</span>{" "}
+              {debugInfo.hasUserInteracted ? "✅ Yes" : "❌ No"}
             </div>
             <div>
               <span className="font-medium">Service Worker:</span>{" "}
