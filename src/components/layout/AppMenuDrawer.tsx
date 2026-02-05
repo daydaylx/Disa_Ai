@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { BrandWordmark } from "../../app/components/BrandWordmark";
 import type { AppNavItem } from "../../config/navigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
+import { useSwipeGesture } from "../../hooks/useSwipeGesture";
 import { Info, Shield, X } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 
@@ -27,6 +28,21 @@ export function AppMenuDrawer({
   const location = useLocation();
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // Swipe-Down to close
+  const { handlers: swipeHandlersNative, dragOffset } = useSwipeGesture({
+    onSwipeDown: onClose,
+    threshold: 80,
+    enableHaptic: true,
+  });
+
+  // Wrap native handlers for React
+  const swipeHandlers = {
+    onTouchStart: (e: React.TouchEvent) => swipeHandlersNative.onTouchStart(e.nativeEvent),
+    onTouchMove: (e: React.TouchEvent) => swipeHandlersNative.onTouchMove(e.nativeEvent),
+    onTouchEnd: () => swipeHandlersNative.onTouchEnd(),
+    onTouchCancel: () => swipeHandlersNative.onTouchCancel(),
+  };
 
   // Close on Escape
   useEffect(() => {
@@ -134,14 +150,20 @@ export function AppMenuDrawer({
       onClick={onClose}
     >
       <div
+        {...swipeHandlers}
         className={cn(
           "absolute top-0 bottom-0 left-0 w-[92vw] max-w-[360px] sm:w-[85vw]",
           "glass-3 border-r border-white/5 backdrop-blur-2xl",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
           "bg-[rgba(8,8,10,0.75)]",
+          "transition-transform",
           className,
         )}
+        style={{
+          transform: `translateY(${Math.max(0, dragOffset.y)}px)`,
+          opacity: dragOffset.y > 0 ? Math.max(0.5, 1 - dragOffset.y / 200) : 1,
+        }}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
         ref={drawerRef}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { Book, Database, X } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
@@ -35,6 +36,21 @@ export function HistorySidePanel({
 
   const [activeTab, setActiveTab] = useState<"history" | "archive">("history");
 
+  // Swipe-Down to close
+  const { handlers: swipeHandlersNative, dragOffset } = useSwipeGesture({
+    onSwipeDown: onClose,
+    threshold: 80,
+    enableHaptic: true,
+  });
+
+  // Wrap native handlers for React
+  const swipeHandlers = {
+    onTouchStart: (e: React.TouchEvent) => swipeHandlersNative.onTouchStart(e.nativeEvent),
+    onTouchMove: (e: React.TouchEvent) => swipeHandlersNative.onTouchMove(e.nativeEvent),
+    onTouchEnd: () => swipeHandlersNative.onTouchEnd(),
+    onTouchCancel: () => swipeHandlersNative.onTouchCancel(),
+  };
+
   // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
@@ -52,11 +68,18 @@ export function HistorySidePanel({
 
       {/* Panel - Slide in from right with Chalk Texture */}
       <div
+        {...swipeHandlers}
         className={cn(
-          "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 transition-transform duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl",
+          "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl",
           "sm:inset-y-0 sm:right-0 sm:bottom-auto sm:h-full sm:max-w-sm sm:border-t-0 sm:border-l sm:rounded-none",
           isOpen ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-x-full",
         )}
+        style={{
+          transform: isOpen ? `translateY(${Math.max(0, dragOffset.y)}px)` : "translateY(100%)",
+          opacity: dragOffset.y > 0 ? Math.max(0.5, 1 - dragOffset.y / 200) : 1,
+          transition:
+            dragOffset.y > 0 ? "none" : "transform 300ms ease-out, opacity 300ms ease-out",
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-10 pt-safe-top pr-safe-right">
