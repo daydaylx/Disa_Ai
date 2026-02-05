@@ -8,6 +8,7 @@ export * from "./Chip";
 export * from "./ContextMenu";
 export * from "./CopyButton";
 export * from "./Dialog";
+export * from "./FABGroup";
 export * from "./FilterChip";
 export * from "./IconButton";
 export * from "./Input";

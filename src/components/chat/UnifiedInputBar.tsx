@@ -4,6 +4,7 @@ import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
+import { MAX_PROMPT_LENGTH } from "@/lib/chat/validation";
 import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
@@ -152,6 +153,24 @@ export function UnifiedInputBar({
           )}
         </Button>
       </BrandCard>
+
+      {/* Character Counter */}
+      {value.length > MAX_PROMPT_LENGTH * 0.8 && (
+        <div className="flex justify-end px-2 animate-fade-in">
+          <span
+            className={cn(
+              "text-xs font-medium transition-colors",
+              value.length > MAX_PROMPT_LENGTH
+                ? "text-status-error"
+                : value.length > MAX_PROMPT_LENGTH * 0.9
+                  ? "text-status-warning"
+                  : "text-ink-tertiary",
+            )}
+          >
+            {value.length} / {MAX_PROMPT_LENGTH}
+          </span>
+        </div>
+      )}
 
       {/* Context Pills */}
       <div className="w-full px-1">

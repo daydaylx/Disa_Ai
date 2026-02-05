@@ -30,10 +30,10 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-11 px-4 rounded-xl min-w-[2.75rem]",
-        sm: "h-10 rounded-lg px-3 text-xs min-w-[2.5rem]",
+        sm: "h-11 rounded-lg px-3 text-xs min-w-[2.75rem]", // 44px for touch
         lg: "h-14 rounded-xl px-6 text-base min-w-[3.5rem]",
         icon: "h-11 w-11 rounded-xl",
-        "icon-sm": "h-10 w-10 rounded-lg",
+        "icon-sm": "h-11 w-11 rounded-lg", // 44px for touch
       },
     },
     defaultVariants: {
