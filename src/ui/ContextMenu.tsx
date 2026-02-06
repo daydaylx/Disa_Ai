@@ -62,24 +62,25 @@ export function ContextMenu({ items, onClose, title, className }: ContextMenuPro
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-fade-in"
-        onClick={onClose}
-        role="presentation"
-      />
+      <div className="fixed inset-0 z-50 animate-fade-in" onClick={onClose} role="presentation" />
 
       {/* Menu */}
       <div
         ref={menuRef}
         className={cn(
           "fixed bottom-0 left-0 right-0 z-50",
-          "bg-surface-2 rounded-t-2xl",
+          "glass-3 rounded-t-2xl",
           "border-t border-white/10",
           "shadow-2xl",
           "animate-slide-up",
           "pb-safe-bottom",
           className,
         )}
+        style={{
+          background: "rgba(18, 18, 21, 0.58)",
+          backdropFilter: "blur(32px)",
+          WebkitBackdropFilter: "blur(32px)",
+        }}
         role="menu"
         aria-label={title || "Kontext-Menü"}
       >
