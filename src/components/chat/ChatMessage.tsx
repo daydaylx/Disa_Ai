@@ -255,14 +255,12 @@ export function ChatMessage({
       data-testid="message.item"
     >
       {/* Message Content Container */}
-      <div
-        className={cn("relative max-w-[85%] sm:max-w-[75%]", isUser ? "items-end" : "items-start")}
-      >
+      <div className={cn("relative w-full", isUser ? "items-end" : "items-start")}>
         {/* Bubble */}
         <div
           {...longPressReactHandlers}
           className={cn(
-            "relative rounded-2xl px-4 py-3 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
+            "relative rounded-2xl px-5 py-4 text-base leading-loose shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
             isUser
               ? "bg-gradient-to-br from-accent-chat-surface via-brand-primary/10 to-surface-1/30 text-ink-primary border border-accent-chat-border rounded-tr-sm hover:shadow-glow-sm"
               : "bg-gradient-to-br from-surface-1/80 to-surface-2/40 text-ink-primary border border-white/5 rounded-tl-sm",
@@ -288,7 +286,7 @@ export function ChatMessage({
               </div>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-3">
               {parsedContent.map((part, index) => (
                 <div key={index}>
                   {part.type === "text" ? (
