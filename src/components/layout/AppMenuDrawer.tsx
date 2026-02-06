@@ -145,24 +145,23 @@ export function AppMenuDrawer({
   if (!isOpen) return null;
 
   const drawerContent = (
-    <div
-      className="fixed inset-0 z-drawer bg-black/30 backdrop-blur-xl animate-in fade-in duration-200"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-drawer animate-in fade-in duration-200" onClick={onClose}>
       <div
         {...swipeHandlers}
         className={cn(
           "absolute top-0 bottom-0 left-0 w-[92vw] max-w-[360px] sm:w-[85vw]",
-          "glass-3 border-r border-white/5 backdrop-blur-2xl",
+          "glass-3 border-r border-white/5",
           "flex flex-col shadow-2xl",
           "animate-in slide-in-from-left duration-300 ease-out",
-          "bg-[rgba(8,8,10,0.75)]",
           "transition-transform",
           className,
         )}
         style={{
           transform: `translateY(${Math.max(0, dragOffset.y)}px)`,
           opacity: dragOffset.y > 0 ? Math.max(0.5, 1 - dragOffset.y / 200) : 1,
+          background: "rgba(18, 18, 21, 0.58)",
+          backdropFilter: "blur(32px)",
+          WebkitBackdropFilter: "blur(32px)",
         }}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
