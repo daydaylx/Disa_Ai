@@ -42,13 +42,6 @@ export function PullToRefresh({
   const lastScrollTop = useRef(0); // Track scroll position
   const scrollVelocity = useRef(0); // Track scroll velocity
 
-  // Check ob an top-position
-  const isAtTop = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return false;
-    return container.scrollTop === 0;
-  }, []);
-
   const handleTouchStart = useCallback(
     (e: TouchEvent) => {
       if (disabled) return;
