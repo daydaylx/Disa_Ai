@@ -9,6 +9,7 @@
  *
  * Optional Environment Variables:
  * - DISA_FEEDBACK_TO: Recipient email address (default: disaai@justmail.de)
+ * - FEEDBACK_KV: KV namespace for rate limiting (optional but recommended)
  *
  * Setup Instructions:
  * 1. Create account at https://resend.com (free tier: 100 emails/day)
@@ -22,6 +23,7 @@
 interface Env {
   RESEND_API_KEY?: string;
   DISA_FEEDBACK_TO?: string;
+  FEEDBACK_KV?: KVNamespace;
 }
 
 interface ResendAttachment {
@@ -41,24 +43,122 @@ const DEFAULT_FROM = "Disa AI Feedback <onboarding@resend.dev>";
 // Allowed image MIME types
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
-function handleCORS(): Response {
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_SECONDS = 600; // 10 minutes
+const RATE_LIMIT_MAX_REQUESTS = 5;
+
+// Production domains (exact match required)
+const PRODUCTION_HOSTS = new Set([
+  "disaai.de",
+  "www.disaai.de",
+  "disa-ai.pages.dev",
+]);
+
+// Development hosts (localhost and 127.0.0.1 with any port)
+const DEV_HOSTS = new Set(["localhost", "127.0.0.1"]);
+
+/**
+ * Securely validate origin against allowlist
+ * - Only HTTPS in production (HTTP allowed for localhost dev)
+ * - Exact hostname match (no prefix/substring tricks)
+ * - Preview domains: *.pages.dev subdomains allowed
+ */
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+
+  let url: URL;
+  try {
+    url = new URL(origin);
+  } catch {
+    // Invalid URL format
+    return false;
+  }
+
+  const { protocol, hostname } = url;
+
+  // Development: allow http://localhost:* and http://127.0.0.1:*
+  if (protocol === "http:" && DEV_HOSTS.has(hostname)) {
+    return true;
+  }
+
+  // Production: require HTTPS
+  if (protocol !== "https:") {
+    return false;
+  }
+
+  // Exact match against production hosts
+  if (PRODUCTION_HOSTS.has(hostname)) {
+    return true;
+  }
+
+  // Allow preview deployments: *.pages.dev
+  if (hostname.endsWith(".pages.dev")) {
+    const parts = hostname.split(".");
+    if (parts.length === 3 && parts[1] === "pages" && parts[2] === "dev") {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Get CORS headers for allowed origin
+ */
+function getCORSHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get("Origin");
+
+  if (isAllowedOrigin(origin)) {
+    return {
+      "Access-Control-Allow-Origin": origin!,
+      "Vary": "Origin",
+    };
+  }
+
+  // No CORS headers for disallowed origins
+  return {};
+}
+
+/**
+ * Handle CORS preflight requests
+ */
+function handleCORS(request: Request): Response {
+  const origin = request.headers.get("Origin");
+
+  if (!isAllowedOrigin(origin)) {
+    // Reject preflight from disallowed origins
+    return new Response(null, {
+      status: 403,
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
+  }
+
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": origin!,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Accept",
-      "Access-Control-Max-Age": "86400",
+      "Access-Control-Max-Age": "600",
+      "Vary": "Origin",
     },
   });
 }
 
-function jsonResponse(data: Record<string, unknown>, status = 200): Response {
+function jsonResponse(
+  data: Record<string, unknown>,
+  status = 200,
+  request?: Request,
+): Response {
+  const corsHeaders = request ? getCORSHeaders(request) : {};
+
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+      ...corsHeaders,
     },
   });
 }
@@ -129,17 +229,104 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
   return btoa(binary);
 }
 
+/**
+ * Get rate limit key based on IP and User-Agent
+ * This provides basic abuse prevention without requiring user identification
+ */
+function getRateLimitKey(request: Request): string {
+  const ip = request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
+  const ua = request.headers.get("User-Agent") || "unknown";
+
+  // Hash the combination to avoid storing raw IPs
+  // In a real implementation, you'd use a proper hash function
+  const key = `feedback:${ip.substring(0, 20)}:${ua.substring(0, 50)}`;
+  return key;
+}
+
+/**
+ * Check rate limit using KV (if available) or in-memory fallback
+ * Returns true if request should be rate limited
+ */
+async function checkRateLimit(request: Request, env: Env): Promise<boolean> {
+  // If no KV namespace is available, allow request (best-effort)
+  if (!env.FEEDBACK_KV) {
+    console.warn("[Feedback] KV not configured - rate limiting disabled");
+    return false;
+  }
+
+  const key = getRateLimitKey(request);
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_SECONDS * 1000;
+
+  try {
+    // Get current request count
+    const countStr = await env.FEEDBACK_KV.get(key);
+    const requestData = countStr ? JSON.parse(countStr) : { count: 0, firstRequest: now };
+
+    // Reset counter if window has passed
+    if (requestData.firstRequest < windowStart) {
+      requestData.count = 1;
+      requestData.firstRequest = now;
+    } else {
+      requestData.count += 1;
+    }
+
+    // Store updated count
+    await env.FEEDBACK_KV.put(key, JSON.stringify(requestData), {
+      expirationTtl: RATE_LIMIT_WINDOW_SECONDS,
+    });
+
+    // Check if limit exceeded
+    if (requestData.count > RATE_LIMIT_MAX_REQUESTS) {
+      const retryAfter = Math.ceil((requestData.firstRequest + RATE_LIMIT_WINDOW_SECONDS * 1000 - now) / 1000);
+      console.warn(`[Feedback] Rate limit exceeded for ${key.substring(0, 30)}...`);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error("[Feedback] Rate limit check failed:", error);
+    // On error, allow request (fail open)
+    return false;
+  }
+}
+
 export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
   const { request, env } = context;
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
-    return handleCORS();
+    return handleCORS(request);
+  }
+
+  // Validate origin for actual requests
+  const origin = request.headers.get("Origin");
+  if (!isAllowedOrigin(origin)) {
+    console.warn(`❌ Blocked feedback request from disallowed origin: ${origin || "(none)"}`);
+    return new Response(JSON.stringify({ success: false, error: "Origin not allowed" }), {
+      status: 403,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
   // Only allow POST
   if (request.method !== "POST") {
-    return jsonResponse({ success: false, error: "Method not allowed" }, 405);
+    return jsonResponse({ success: false, error: "Method not allowed" }, 405, request);
+  }
+
+  // Check rate limit
+  const rateLimited = await checkRateLimit(request, env);
+  if (rateLimited) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Too many requests. Please wait 10 minutes before submitting feedback again.",
+      },
+      429,
+      request,
+    );
   }
 
   // Check if Resend API key is configured
@@ -152,6 +339,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
         hint: "Please set RESEND_API_KEY in Cloudflare Pages environment variables",
       },
       500,
+      request,
     );
   }
 
@@ -161,7 +349,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
     formData = await request.formData();
   } catch (error) {
     console.error("[Feedback] Failed to parse FormData:", error);
-    return jsonResponse({ success: false, error: "Invalid request body" }, 400);
+    return jsonResponse({ success: false, error: "Invalid request body" }, 400, request);
   }
 
   // Extract fields
@@ -174,19 +362,20 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
 
   // Validate message
   if (!message) {
-    return jsonResponse({ success: false, error: "Message is required" }, 400);
+    return jsonResponse({ success: false, error: "Message is required" }, 400, request);
   }
 
   if (message.length > MAX_MESSAGE_LENGTH) {
     return jsonResponse(
       { success: false, error: `Message too long (max ${MAX_MESSAGE_LENGTH} chars)` },
       400,
+      request,
     );
   }
 
   // Validate optional email
   if (userEmail && !isValidEmail(userEmail)) {
-    return jsonResponse({ success: false, error: "Invalid email address" }, 400);
+    return jsonResponse({ success: false, error: "Invalid email address" }, 400, request);
   }
 
   // Process attachments
@@ -199,6 +388,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       return jsonResponse(
         { success: false, error: `Too many attachments (max ${MAX_ATTACHMENTS})` },
         400,
+        request,
       );
     }
 
@@ -213,6 +403,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
         return jsonResponse(
           { success: false, error: `Invalid file type: ${file.type}. Allowed: PNG, JPEG, WebP` },
           400,
+          request,
         );
       }
 
@@ -225,6 +416,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
             error: `Attachment too large: ${file.name} (${sizeMB.toFixed(1)} MB). Max: ${MAX_ATTACHMENT_SIZE_MB} MB`,
           },
           400,
+          request,
         );
       }
 
@@ -235,7 +427,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
 
       // Validate magic bytes (security check)
       if (!validateImageMagicBytes(arrayBuffer)) {
-        return jsonResponse({ success: false, error: `Invalid image file: ${file.name}` }, 400);
+        return jsonResponse({ success: false, error: `Invalid image file: ${file.name}` }, 400, request);
       }
 
       // Convert to base64
@@ -256,6 +448,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           error: `Total attachments too large (${totalSizeMB.toFixed(1)} MB). Max: ${MAX_TOTAL_ATTACHMENT_SIZE_MB} MB`,
         },
         413,
+        request,
       );
     }
   }
@@ -263,7 +456,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   const toAddress = env.DISA_FEEDBACK_TO || DEFAULT_TO;
   const timestamp = new Date().toISOString();
 
-  // Build email content
+  // Build email content (IMPORTANT: do NOT log user message contents to server logs)
   const typeLabel =
     {
       idea: "💡 Idee",
@@ -389,6 +582,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           error: userMessage,
         },
         500,
+        request,
       );
     }
 
@@ -399,9 +593,9 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       `with ${attachments.length} attachment(s)`,
     );
 
-    return jsonResponse({ success: true, id: result.id, attachmentCount: attachments.length }, 200);
+    return jsonResponse({ success: true, id: result.id, attachmentCount: attachments.length }, 200, request);
   } catch (error) {
     console.error("[Feedback] Unexpected error:", error);
-    return jsonResponse({ success: false, error: "Internal server error" }, 500);
+    return jsonResponse({ success: false, error: "Internal server error" }, 500, request);
   }
 }

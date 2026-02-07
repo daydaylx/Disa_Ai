@@ -1,6 +1,6 @@
 # Known Issues – Beta Release Candidate
 
-> Letzte Aktualisierung: 2025-11-23
+> Letzte Aktualisierung: 2026-02-07
 > Version: v1.0.0 Beta RC
 
 Diese Datei listet bekannte Probleme auf, die während der Beta-Phase auftreten können. Die meisten sind Minor-Issues und werden in kommenden Updates behoben.
@@ -9,7 +9,23 @@ Diese Datei listet bekannte Probleme auf, die während der Beta-Phase auftreten 
 
 ## 🔴 Kritisch
 
-*Aktuell keine kritischen Issues bekannt.*
+### ✅ FIXED: Unsichere CORS Origin-Validierung (2026-02-07)
+- **Beschreibung**: Chat-Proxy und Feedback-Endpoint verwendeten unsichere `startsWith()`-Prüfung für Origins
+- **Risiko**: Erlaubte Spoofing-Angriffe (z.B. `disaai.de.evil.com`)
+- **Status**: ✅ Behoben - Strikte URL-Parsing und exakte Hostname-Prüfung implementiert
+- **Fix-Commit**: [siehe commit history]
+
+### ✅ FIXED: Feedback-Endpoint ohne Rate Limiting (2026-02-07)
+- **Beschreibung**: Feedback-API hatte `Access-Control-Allow-Origin: *` und kein Rate Limiting
+- **Risiko**: Spam/Abuse von beliebigen Origins möglich
+- **Status**: ✅ Behoben - CORS-Allowlist + KV-basiertes Rate Limiting (5 req / 10 min) implementiert
+- **Fix-Commit**: [siehe commit history]
+
+### ✅ FIXED: Streaming Performance bei langen Conversations (2026-02-07)
+- **Beschreibung**: `chatReducer` nutzte `slice().reverse()` pro Token-Chunk → O(n) Arbeit
+- **Symptom**: UI-Lags bei 500+ Nachrichten während Streaming
+- **Status**: ✅ Behoben - Index-Caching implementiert für O(1) Updates
+- **Fix-Commit**: [siehe commit history]
 
 ---
 
@@ -46,7 +62,7 @@ Diese Datei listet bekannte Probleme auf, die während der Beta-Phase auftreten 
 ### Markdown Rendering Edge Cases
 - **Beschreibung**: Sehr komplexe verschachtelte Code-Blöcke werden manchmal nicht korrekt gerendert
 - **Workaround**: Code-Block vereinfachen oder manuell formatieren
-- **Status**: Prism.js/KaTeX-Limitierung
+- **Status**: Prism.js-Limitierung (KaTeX/LaTeX ist aktuell nicht implementiert)
 - **Issue**: TBD
 
 ---

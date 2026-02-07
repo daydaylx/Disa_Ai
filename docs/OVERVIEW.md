@@ -85,7 +85,6 @@ KI-Antworten unterstützen:
 - **Fett**, *kursiv*, ~~durchgestrichen~~
 - Code-Blöcke mit Syntax-Highlighting
 - Listen, Tabellen, Überschriften
-- LaTeX-Formeln (inline `$...$` und Block `$$...$$`)
 
 ---
 
@@ -239,9 +238,9 @@ Bei App-Updates erscheint ein Banner. Klicke auf "Aktualisieren", um die neue Ve
 2. Service Worker deregistrieren (DevTools → Application → Service Workers → Unregister)
 3. Seite neu laden
 
-### Desktop-Hinweis erscheint
+### App auf Desktop nutzen
 
-Die App ist für mobile Geräte optimiert. Auf Desktop erscheint ein Hinweis. Die App kann trotzdem genutzt werden (Dev-Tools → Mobile-Ansicht empfohlen).
+Die App ist primär für mobile Geräte optimiert, funktioniert aber auch auf Desktop-Browsern. Für die beste Erfahrung auf Desktop wird empfohlen, die Browser-DevTools zu nutzen (F12 → Device Toolbar) und ein mobiles Gerät zu emulieren.
 
 ---
 
