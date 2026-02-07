@@ -32,42 +32,106 @@ interface ChatRequest {
 // OpenRouter API endpoint
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-// Allowed origins for CORS validation
-const ALLOWED_ORIGINS = [
-  "https://disaai.de",
-  "https://disa-ai.pages.dev",
-  "http://localhost:5173",
-  "http://localhost:4173",
-  "http://127.0.0.1:5173",
-];
+// Production domains (exact match required)
+const PRODUCTION_HOSTS = new Set([
+  "disaai.de",
+  "www.disaai.de",
+  "disa-ai.pages.dev",
+]);
+
+// Development hosts (localhost and 127.0.0.1 with any port)
+const DEV_HOSTS = new Set(["localhost", "127.0.0.1"]);
 
 /**
- * Check if origin is allowed for CORS
+ * Securely validate origin against allowlist
+ * - Only HTTPS in production (HTTP allowed for localhost dev)
+ * - Exact hostname match (no prefix/substring tricks)
+ * - Preview domains: *.pages.dev subdomains allowed
  */
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
-  return ALLOWED_ORIGINS.some((allowed) => origin.startsWith(allowed.replace(/:\d+$/, "")));
+
+  let url: URL;
+  try {
+    url = new URL(origin);
+  } catch {
+    // Invalid URL format
+    return false;
+  }
+
+  const { protocol, hostname, port } = url;
+
+  // Development: allow http://localhost:* and http://127.0.0.1:*
+  if (protocol === "http:" && DEV_HOSTS.has(hostname)) {
+    return true;
+  }
+
+  // Production: require HTTPS
+  if (protocol !== "https:") {
+    return false;
+  }
+
+  // Exact match against production hosts
+  if (PRODUCTION_HOSTS.has(hostname)) {
+    return true;
+  }
+
+  // Allow preview deployments: *.pages.dev
+  // IMPORTANT: Only *.pages.dev, not arbitrary subdomains
+  if (hostname.endsWith(".pages.dev")) {
+    // Ensure no additional dots before .pages.dev
+    // Valid: my-app-xyz.pages.dev
+    // Invalid: evil.com.pages.dev (blocked by this check)
+    const parts = hostname.split(".");
+    if (parts.length === 3 && parts[1] === "pages" && parts[2] === "dev") {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
- * Get CORS origin header value
+ * Get CORS headers for allowed origin
  */
-function getCORSOrigin(request: Request): string {
+function getCORSHeaders(request: Request): Record<string, string> {
   const origin = request.headers.get("Origin");
-  return isAllowedOrigin(origin) ? origin! : ALLOWED_ORIGINS[0];
+
+  if (isAllowedOrigin(origin)) {
+    return {
+      "Access-Control-Allow-Origin": origin!,
+      "Vary": "Origin",
+    };
+  }
+
+  // No CORS headers for disallowed origins
+  return {};
 }
 
 /**
  * Handle CORS preflight requests
  */
 function handleCORS(request: Request): Response {
+  const origin = request.headers.get("Origin");
+
+  if (!isAllowedOrigin(origin)) {
+    // Reject preflight from disallowed origins
+    return new Response(null, {
+      status: 403,
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
+  }
+
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": getCORSOrigin(request),
+      "Access-Control-Allow-Origin": origin!,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Accept",
-      "Access-Control-Max-Age": "86400",
+      "Access-Control-Max-Age": "600",
+      "Vary": "Origin",
     },
   });
 }
@@ -76,12 +140,13 @@ function handleCORS(request: Request): Response {
  * Return JSON error response with CORS headers
  */
 function jsonError(message: string, status: number, request?: Request): Response {
-  const origin = request ? getCORSOrigin(request) : "*";
+  const corsHeaders = request ? getCORSHeaders(request) : {};
+
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": origin,
+      ...corsHeaders,
     },
   });
 }
@@ -99,6 +164,18 @@ export async function onRequest(context: {
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
     return handleCORS(request);
+  }
+
+  // Validate origin for actual requests
+  const origin = request.headers.get("Origin");
+  if (!isAllowedOrigin(origin)) {
+    console.warn(`❌ Blocked request from disallowed origin: ${origin || "(none)"}`);
+    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
+      status: 403,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
   // Only allow POST requests
@@ -153,9 +230,9 @@ export async function onRequest(context: {
     if (body.max_tokens !== undefined) openRouterPayload.max_tokens = body.max_tokens;
 
     // Get origin for HTTP-Referer header (for OpenRouter attribution)
-    const origin = request.headers.get("origin") || "https://disaai.de";
+    const referer = origin || "https://disaai.de";
 
-    // Log request for debugging (remove in production if too verbose)
+    // Log request for debugging (IMPORTANT: do NOT log message contents or API keys)
     console.log(`📤 Proxying request to OpenRouter: model=${body.model}, stream=${body.stream}`);
 
     // Make request to OpenRouter API
@@ -164,7 +241,7 @@ export async function onRequest(context: {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": origin,
+        "HTTP-Referer": referer,
         "X-Title": "Disa AI",
       },
       body: JSON.stringify(openRouterPayload),
@@ -191,7 +268,7 @@ export async function onRequest(context: {
       return jsonError(errorMessage, openRouterResponse.status, request);
     }
 
-    const corsOrigin = getCORSOrigin(request);
+    const corsHeaders = getCORSHeaders(request);
 
     // Handle streaming response
     if (body.stream) {
@@ -202,7 +279,7 @@ export async function onRequest(context: {
           "Content-Type": "text/event-stream",
           "Cache-Control": "no-cache",
           Connection: "keep-alive",
-          "Access-Control-Allow-Origin": corsOrigin,
+          ...corsHeaders,
         },
       });
     }
@@ -215,7 +292,7 @@ export async function onRequest(context: {
       status: openRouterResponse.status,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": corsOrigin,
+        ...corsHeaders,
       },
     });
   } catch (error) {

@@ -78,6 +78,7 @@ export function useChat({
     abortController: null,
     currentSystemPrompt: _systemPrompt,
     requestOptions: null,
+    currentAssistantMessageIndex: null,
   });
 
   const systemPromptRef = useRef<string | undefined>(_systemPrompt);

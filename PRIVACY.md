@@ -1,72 +1,310 @@
-1 Verantwortliche Stelle und Kontakt
-David Grunert
-E‑Mail: grunert94@hotmail.com
+# Datenschutzerklärung – Disa AI
+
+**Letzte Aktualisierung:** 2026-02-07
+**Version:** 1.1
+
+---
+
+## 1 Verantwortliche Stelle und Kontakt
+
+**David Grunert**
+E-Mail: grunert94@hotmail.com
+
 Die Anwendung wird privat betrieben. Es besteht daher keine gesetzliche Verpflichtung zur Benennung eines Datenschutzbeauftragten. Bei Fragen zum Datenschutz können Sie sich aber jederzeit an die obige Adresse wenden.
-2 Welche Daten werden verarbeitet?
-2.1 Nutzereingaben und Chat‑Daten
-Wenn Sie im Chat Texte eingeben, werden diese zusammen mit den von Ihnen gewählten Einstellungen (z. B. Modellname, Temperatur) an einen Serverless‑Proxy gesendet, der die Anfrage an die Plattform OpenRouter weiterleitet. Der Quellcode der Funktion in unserem Repository zeigt, dass der Proxy Ihre Chat‑Nachrichten unverändert an die OpenRouter‑API schickt und dabei unseren API‑Schlüssel sowie einen HTTP‑Referer mit der Herkunfts‑URL übermittelt�.
-raw.githubusercontent.com
-Die OpenRouter‑Plattform wiederum leitet Ihre Eingaben an den jeweils ausgewählten Modellanbieter (z. B. OpenAI, Mistral, Anthropic) weiter. Wir haben keinerlei Kontrolle darüber, ob diese Anbieter Ihre Inhalte speichern oder für Trainingszwecke nutzen. Laut der OpenRouter‑Privacy‑Policy (Stand April 2025) sammelt OpenRouter personenbezogene Daten, speichert Kopien Ihrer Anfragen und kann Tracking‑Technologien einsetzen�. Zusätzlich gibt OpenRouter an, dass die einzelnen Modellanbieter eigene, teils abweichende Datenrichtlinien haben und Sie sich dort informieren müssen�.
-openrouter.ai
-openrouter.ai
-Wichtig: Wenn Sie im Chat personenbezogene Daten (z. B. Namen, Adressen, Gesundheits‑ oder Finanzdaten) eingeben, gelangen diese an OpenRouter und möglicherweise an Drittanbieter. Wir raten dringend davon ab, vertrauliche Informationen einzugeben.
-2.2 Lokale Speicherung im Browser
-Die Anwendung speichert verschiedene Datensätze in Ihrem Browser (LocalStorage/SessionStorage). In der Datei storageKeys.ts sind die Schlüssel definiert. Dazu gehören u. a.:
-Konversationen und Metadaten (disa:conversations, disa:conversations:metadata, disa:last-conversation-id)�
-raw.githubusercontent.com
-Nutzerpräferenzen, Theme‑Einstellungen und Favoriten (disa-ai-settings, disa:theme-preference, disa:favorites-data)�
-raw.githubusercontent.com
-API‑Schlüssel (falls Sie einen eigenen OpenRouter‑API‑Key verwenden)�
-raw.githubusercontent.com
-Analyse‑Events und Sitzungen (disa:usage-analytics, disa:analytics-events)�
-raw.githubusercontent.com
-Diese Informationen verbleiben auf Ihrem Gerät und werden nicht an uns übertragen. Sie können die gespeicherten Daten jederzeit löschen, indem Sie in Ihrem Browser die Website‑Daten (Cookies und Site Data) für disaai.de löschen. Beachten Sie, dass der Chat‑Verlauf dann verloren geht.
-2.3 Technische Zugriffsdaten
-Beim Aufruf der Anwendung verarbeiten unsere technischen Dienstleister automatisch Protokoll‑ und Verbindungsdaten, um die Seite auszuliefern und vor Angriffen zu schützen. Dazu gehören insbesondere IP‑Adresse, Browser‑Typ, Betriebssystem, angeforderte Ressourcen sowie Datum und Uhrzeit des Zugriffs�. Diese Daten werden aus Sicherheitsgründen benötigt und begründen ein berechtigtes Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO.
-raw.githubusercontent.com
-3 Eingesetzte Dienstleister und Drittanbieter
-3.1 Cloudflare (Hosting und Content Delivery Network)
-Unsere Anwendung wird über Cloudflare Pages gehostet. Cloudflare sorgt für die Bereitstellung der statischen Inhalte, die Abwehr von DDoS‑Angriffen und die Auslieferung über ein weltweites CDN. Die in der Datei \_headers definierte Content‑Security‑Policy erlaubt Verbindungen zu static.cloudflareinsights.com und cloudflareinsights.com�. Cloudflare verarbeitet technische Daten wie IP‑Adresse, Browser‑Typ, Zeitstempel und angeforderte Ressourcen�.
-raw.githubusercontent.com
-raw.githubusercontent.com
-Darüber hinaus ist in der Anwendung Cloudflare Web Analytics (früher „Browser Insights“) aktiv. Laut Cloudflare handelt es sich um eine „privacy‑first“‑Lösung: Das Unternehmen erhebt keine cookies und verwendet keine clientseitigen Speichermechanismen; IP‑Adresse und User‑Agent werden nicht zur Erstellung von Nutzerprofilen genutzt�. Cloudflare erhebt anonyme Metriken (z. B. Seitenaufrufe, Ladezeiten) zur Analyse der Performance�. Wir nutzen diese Statistiken, um die Stabilität und Geschwindigkeit der Anwendung zu verbessern.
-cloudflare.com
-cloudflare.com
-3.2 OpenRouter und Modellanbieter
-Wie oben erläutert, werden Ihre Chat‑Eingaben an OpenRouter weitergeleitet, das wiederum diverse KI‑Modelle bereitstellt. OpenRouter erhebt und speichert persönliche Daten, einschließlich Ihrer Eingaben, sowie technische Metadaten wie IP‑Adresse, Browser‑Informationen und Cookies�. Wir haben keinen Einfluss auf die Datenverarbeitungs‑ und Retentions‑praxis der einzelnen Modellanbieter; OpenRouter informiert lediglich darüber, dass die Nutzungsbedingungen je nach Provider variieren�.
-openrouter.ai
-openrouter.ai
-3.3 INWX (Domain‑Provider)
-Die Domain disaai.de wird über INWX GmbH & Co. KG verwaltet. INWX verarbeitet technische Daten (z. B. IP‑Adresse, DNS‑Anfragen) zur Domainverwaltung�. Diese Verarbeitung erfolgt im berechtigten Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO.
-raw.githubusercontent.com
-3.4 Feedback‑Seite
-Im Feedback‑Formular können Sie Ideen, Fehler oder UI‑Vorschläge übermitteln. Der Quellcode zeigt, dass Ihre Nachricht clientseitig an eine fiktive „API“ gesendet wird und anonymisierte technische Details (Browser‑ und Geräteinformationen) angehängt werden��. In der aktuellen Version erfolgt keine tatsächliche Übertragung an einen Server, sondern lediglich eine Simulation. Wenn künftig eine echte API verwendet wird, werden Ihre Angaben und die technischen Details entsprechend an diesen Dienstleister übermittelt. Nutzen Sie das Feedback‑Formular nur, wenn Sie damit einverstanden sind.
-raw.githubusercontent.com
-raw.githubusercontent.com
-4 Rechtsgrundlagen der Verarbeitung
-Erbringung des Dienstes (Vertragsdurchführung) – Die Verarbeitung Ihrer Chat‑Eingaben und der technische Betrieb der Anwendung erfolgen, um Ihnen die angefragte Funktion zu liefern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
-Berechtigtes Interesse – Die Erhebung von technischen Zugriffsdaten und die Nutzung von Cloudflare Web Analytics dienen der Sicherheit und Leistungsanalyse unserer Website. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
-Einwilligung für optionale Funktionen – Wenn Sie einen eigenen OpenRouter‑API‑Key hinterlegen oder bestimmte Modelle nutzen, erfolgt die Verarbeitung Ihrer Daten auf Grundlage Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Sie können die Einwilligung jederzeit widerrufen, indem Sie den API‑Key aus den Einstellungen entfernen.
-5 Datenübermittlungen in Drittstaaten
-Cloudflare Inc. und OpenRouter Inc. haben ihren Sitz in den USA. Bei der Nutzung der Anwendung werden Ihre Daten an Server außerhalb der Europäischen Union übermittelt. Für Cloudflare bestehen Standardvertragsklauseln und zusätzliche Maßnahmen; Cloudflare verspricht ein hohes Datenschutzniveau, weist jedoch darauf hin, dass die USA aus Sicht des Europäischen Gerichtshofs kein gleichwertiges Datenschutzniveau bieten�. OpenRouter unterliegt US‑Recht. Wir haben keinen Einfluss auf deren Verarbeitung. Durch die Nutzung der KI‑Funktionen willigen Sie in diese Übermittlung ein.
-cloudflare.com
-6 Speicherdauer und Löschung
-Lokaler Speicher – Chat‑Verläufe, Einstellungen und Favoriten verbleiben dauerhaft in Ihrem Browser, bis Sie diese manuell löschen. Wir speichern keine Kopie.
-OpenRouter und Modellanbieter – Wir erhalten keine Informationen darüber, wie lange OpenRouter oder die angeschlossenen Anbieter Ihre Daten aufbewahren. Laut deren eigenen Angaben wird ein Teil der Logs zu Analyse‑ und Sicherheitszwecken gespeichert�.
-openrouter.ai
-Server‑Logs und Cloudflare‑Analytics – Technische Zugriffsdaten werden für Sicherheitszwecke gespeichert und anschließend automatisch gelöscht. Cloudflare beschreibt, dass seine Web‑Analytics keine Identifikation einzelner Nutzer ermöglicht und keine langfristigen Profile anlegt�.
-cloudflare.com
-7 Ihre Rechte
+
+---
+
+## 2 Welche Daten werden verarbeitet?
+
+### 2.1 Nutzereingaben und Chat-Daten
+
+Wenn Sie im Chat Texte eingeben, werden diese zusammen mit den von Ihnen gewählten Einstellungen (z.B. Modellname, Temperatur) über einen Serverless-Proxy (`/api/chat`) weitergeleitet.
+
+**Technischer Ablauf:**
+1. Ihre Chat-Nachrichten werden clientseitig an unseren Cloudflare-Proxy gesendet
+2. Der Proxy leitet die Anfrage an die OpenRouter-API weiter, unter Verwendung unseres API-Schlüssels
+3. OpenRouter leitet Ihre Eingaben an den jeweils ausgewählten Modellanbieter (z.B. OpenAI, Mistral, Anthropic) weiter
+
+**Wichtiger Hinweis:**
+- Der Proxy sendet keine Message-Inhalte in Server-Logs (nur Metadaten wie Modellname)
+- Wir haben keinerlei Kontrolle darüber, ob Drittanbieter (OpenRouter, Modellanbieter) Ihre Inhalte speichern oder für Trainingszwecke nutzen
+- Laut der OpenRouter Privacy Policy sammelt OpenRouter personenbezogene Daten und speichert Kopien Ihrer Anfragen
+- Die einzelnen Modellanbieter haben eigene, teils abweichende Datenrichtlinien
+
+**Empfehlung:** Geben Sie im Chat **keine personenbezogenen Daten** (Namen, Adressen, Gesundheits- oder Finanzdaten) ein. Verwenden Sie die App nur für allgemeine Anfragen.
+
+---
+
+### 2.2 Lokale Speicherung im Browser
+
+Die Anwendung speichert verschiedene Datensätze **ausschließlich in Ihrem Browser**. Diese Daten verlassen Ihr Gerät nicht und werden nicht an uns übertragen.
+
+**Im Browser gespeichert (localStorage/sessionStorage/IndexedDB):**
+- **Konversationen und Chat-Verlauf** - Ihre Gespräche mit der KI
+- **Nutzerpräferenzen** - Theme, Favoriten, Settings
+- **API-Schlüssel** (falls Sie einen eigenen OpenRouter-Key verwenden) - Nur im `sessionStorage`, wird beim Tab-Schließen gelöscht
+
+**Löschen der Daten:**
+Sie können die gespeicherten Daten jederzeit löschen, indem Sie in Ihrem Browser die Website-Daten (Cookies und Site Data) für `disaai.de` löschen. Beachten Sie, dass der Chat-Verlauf dann verloren geht.
+
+---
+
+### 2.3 Technische Zugriffsdaten
+
+Beim Aufruf der Anwendung verarbeiten unsere technischen Dienstleister automatisch Protokoll- und Verbindungsdaten, um die Seite auszuliefern und vor Angriffen zu schützen.
+
+**Verarbeitete Daten:**
+- IP-Adresse
+- Browser-Typ und Version
+- Betriebssystem
+- Angeforderte Ressourcen
+- Datum und Uhrzeit des Zugriffs
+
+Diese Daten werden aus Sicherheitsgründen benötigt und begründen ein berechtigtes Interesse gemäß **Art. 6 Abs. 1 lit. f DSGVO**.
+
+---
+
+### 2.4 Feedback-Funktion
+
+Wenn Sie das Feedback-Formular nutzen, werden folgende Daten verarbeitet:
+- Ihre Nachricht
+- Optional: Ihre E-Mail-Adresse
+- Kategorie und Kontext-Informationen
+- Browser User-Agent
+- Zeitstempel
+
+**Technischer Ablauf:**
+1. Ihre Feedback-Daten werden an unseren Cloudflare-Proxy (`/api/feedback`) gesendet
+2. Der Proxy validiert die Daten und prüft Rate Limits (5 Anfragen / 10 Minuten)
+3. Bei erfolgreicher Validierung wird das Feedback per E-Mail über Resend.com versendet
+
+**Wichtig:**
+- Feedback-Inhalte werden NICHT in Server-Logs gespeichert
+- Rate Limiting erfolgt über Cloudflare KV (speichert IP-Hash + User-Agent-Hash für 10 Minuten)
+- Nutzen Sie das Feedback-Formular nur, wenn Sie mit dieser Verarbeitung einverstanden sind
+
+---
+
+## 3 Eingesetzte Dienstleister und Drittanbieter
+
+### 3.1 Cloudflare (Hosting und CDN)
+
+**Dienstleister:** Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA
+
+**Zweck:**
+- Hosting der statischen Anwendung (Cloudflare Pages)
+- Content Delivery Network (CDN)
+- DDoS-Schutz
+- Web Analytics (anonymisiert)
+
+**Verarbeitete Daten:**
+- IP-Adresse
+- Browser-Informationen
+- Zeitstempel
+- Angeforderte Ressourcen
+
+**Cloudflare Web Analytics:**
+- Privacy-first Lösung ohne Cookies oder clientseitigen Speicher
+- Keine Erstellung von Nutzerprofilen
+- Anonyme Metriken (Seitenaufrufe, Ladezeiten)
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherer und performanter Bereitstellung)
+
+**Weitere Informationen:** [Cloudflare Privacy Policy](https://www.cloudflare.com/privacypolicy/)
+
+---
+
+### 3.2 OpenRouter und Modellanbieter
+
+**Dienstleister:** OpenRouter Inc., USA
+
+**Zweck:**
+- Bereitstellung von KI-Modellen verschiedener Anbieter
+- Weiterleitung von Chat-Anfragen
+
+**Verarbeitete Daten:**
+- Ihre Chat-Nachrichten
+- Technische Metadaten (IP-Adresse, Browser-Informationen)
+- Cookies (falls von OpenRouter gesetzt)
+
+**Wichtige Hinweise:**
+- OpenRouter sammelt und speichert personenbezogene Daten laut eigener Privacy Policy
+- Die einzelnen Modellanbieter (OpenAI, Anthropic, Google, etc.) haben eigene Datenrichtlinien
+- Wir haben **keinen Einfluss** auf die Datenverarbeitungs- und Retentionspraxis der Drittanbieter
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. lit. a DSGVO (Einwilligung durch Nutzung)
+
+**Weitere Informationen:**
+- [OpenRouter Privacy Policy](https://openrouter.ai/privacy)
+- Modellanbieter-Policies: Siehe jeweilige Anbieter-Websites
+
+---
+
+### 3.3 INWX (Domain-Provider)
+
+**Dienstleister:** INWX GmbH & Co. KG, Deutschland
+
+**Zweck:**
+- Domainverwaltung für `disaai.de`
+- DNS-Dienste
+
+**Verarbeitete Daten:**
+- Technische DNS-Anfragedaten
+- IP-Adressen bei DNS-Lookup
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an Domainbetrieb)
+
+---
+
+### 3.4 Resend (E-Mail-Versand)
+
+**Dienstleister:** Resend, Inc., USA
+
+**Zweck:**
+- Versand von Feedback-E-Mails
+
+**Verarbeitete Daten:**
+- Feedback-Nachricht
+- Optional: Nutzer-E-Mail-Adresse
+- Metadaten (User-Agent, Zeitstempel)
+
+**Rechtsgrundlage:** Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch Nutzung des Feedback-Formulars)
+
+**Weitere Informationen:** [Resend Privacy Policy](https://resend.com/legal/privacy-policy)
+
+---
+
+## 4 Rechtsgrundlagen der Verarbeitung
+
+| Zweck | Rechtsgrundlage |
+|-------|-----------------|
+| Chat-Funktion (OpenRouter API) | Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) |
+| Technische Zugriffsdaten, Sicherheit | Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse) |
+| Cloudflare Web Analytics | Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an Performance-Analyse) |
+| Feedback-Funktion | Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) |
+| Optionaler eigener API-Key | Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) |
+
+**Widerruf der Einwilligung:**
+- API-Key: In den Einstellungen entfernen
+- Feedback: Nicht mehr nutzen (bereits versendete E-Mails können nicht zurückgezogen werden)
+
+---
+
+## 5 Datenübermittlungen in Drittstaaten
+
+**USA (Drittland):**
+- Cloudflare Inc. (USA)
+- OpenRouter Inc. (USA)
+- Resend Inc. (USA)
+
+**Wichtiger Hinweis:**
+Laut Europäischem Gerichtshof bieten die USA kein gleichwertiges Datenschutzniveau wie die EU. Cloudflare nutzt Standardvertragsklauseln und zusätzliche Schutzmaßnahmen. Für OpenRouter und Resend gelten deren eigene Datenschutzverpflichtungen.
+
+**Durch die Nutzung der Anwendung willigen Sie in diese Übermittlungen ein.**
+
+---
+
+## 6 Speicherdauer und Löschung
+
+| Datentyp | Speicherort | Speicherdauer | Löschung |
+|----------|-------------|---------------|----------|
+| Chat-Verlauf, Settings | Browser (lokal) | Unbegrenzt, bis manuell gelöscht | Browser-Daten für disaai.de löschen |
+| API-Key (sessionStorage) | Browser (Session) | Bis Tab/Browser geschlossen | Automatisch beim Schließen |
+| OpenRouter Logs | OpenRouter (USA) | Siehe OpenRouter Privacy Policy | Nicht durch uns steuerbar |
+| Cloudflare Logs | Cloudflare (USA) | Gemäß Cloudflare-Policy (kurz, für Security) | Automatisch nach Ablauf |
+| Feedback E-Mails | Resend, Postfach | Resend: kurz; Postfach: bis manuell gelöscht | E-Mail aus Postfach löschen |
+
+**Lokale Daten löschen:**
+1. Browser-Einstellungen öffnen
+2. "Cookies und Website-Daten löschen" für `disaai.de`
+3. Alternativ: Browser-DevTools → Application → Storage → Clear Site Data
+
+---
+
+## 7 Ihre Rechte
+
 Sie haben gegenüber uns und den eingesetzten Dienstleistern folgende Rechte:
-Auskunft (Art. 15 DSGVO) – Sie können Auskunft darüber verlangen, welche personenbezogenen Daten wir verarbeiten.
-Berichtigung (Art. 16 DSGVO) – Sollten Daten fehlerhaft sein, haben Sie ein Recht auf Berichtigung.
-Löschung (Art. 17 DSGVO) – Sie können die Löschung Ihrer personenbezogenen Daten verlangen, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Beachten Sie, dass wir keine Chat‑Daten speichern; für Löschungen bei OpenRouter oder den Modellanbietern müssen Sie sich an diese Anbieter wenden.
-Einschränkung der Verarbeitung (Art. 18 DSGVO) – Sie können die Einschränkung der Verarbeitung verlangen.
-Datenübertragbarkeit (Art. 20 DSGVO) – Sie haben das Recht, Daten in einem strukturierten, gängigen Format zu erhalten.
-Widerspruch (Art. 21 DSGVO) – Sie können aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit der Verarbeitung personenbezogener Daten widersprechen.
-Beschwerde bei einer Aufsichtsbehörde – Wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer Daten gegen Datenschutzrecht verstößt, können Sie sich bei einer Datenschutzaufsichtsbehörde beschweren. Zuständig für uns ist die Berliner Beauftragte für Datenschutz und Informationsfreiheit (https://www.datenschutz-berlin.de).
-8 Sicherheit und Verschlüsselung
-Die Anwendung wird ausschließlich über HTTPS ausgeliefert; dadurch wird der Transportweg verschlüsselt�. Wir haben zusätzliche Sicherheits‑Header implementiert (u. a. CSP, HSTS und Permission‑Policy)�. Dennoch sollten Sie sich darüber im Klaren sein, dass die Vertraulichkeit Ihrer Eingaben nicht gewährleistet werden kann, da die Nachrichten an externe KI‑Dienste übertragen werden und dort verarbeitet werden. Nutzen Sie die Anwendung daher nur für allgemeine Anfragen und nicht für vertrauliche Geschäfts‑ oder Privatangelegenheiten.
-raw.githubusercontent.com
-raw.githubusercontent.com
-Fazit: Disa AI ist ein experimenteller Chat‑Dienst, der externe KI‑Anbieter nutzt. Lokale Speicherung und Cloudflare‑Analytics sind datensparsam umgesetzt, allerdings verlassen Ihre Eingaben spätestens beim Aufruf der OpenRouter‑API Ihr Gerät. Eine „garantiert private“ Nutzung, wie in der Werbeaussage suggeriert, existiert daher nicht. Prüfen Sie vor der Nutzung, ob Sie dieses Risiko eingehen möchten.
+
+### 7.1 Auskunft (Art. 15 DSGVO)
+Sie können Auskunft darüber verlangen, welche personenbezogenen Daten wir verarbeiten.
+
+### 7.2 Berichtigung (Art. 16 DSGVO)
+Sollten Daten fehlerhaft sein, haben Sie ein Recht auf Berichtigung.
+
+### 7.3 Löschung (Art. 17 DSGVO)
+Sie können die Löschung Ihrer personenbezogenen Daten verlangen, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+
+**Wichtig:** Wir speichern keine Chat-Daten auf unseren Servern. Für Löschungen bei OpenRouter oder den Modellanbietern müssen Sie sich direkt an diese Anbieter wenden.
+
+### 7.4 Einschränkung der Verarbeitung (Art. 18 DSGVO)
+Sie können die Einschränkung der Verarbeitung verlangen.
+
+### 7.5 Datenübertragbarkeit (Art. 20 DSGVO)
+Sie haben das Recht, Daten in einem strukturierten, gängigen Format zu erhalten.
+
+### 7.6 Widerspruch (Art. 21 DSGVO)
+Sie können aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit der Verarbeitung personenbezogener Daten widersprechen.
+
+### 7.7 Beschwerde bei einer Aufsichtsbehörde
+Wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer Daten gegen Datenschutzrecht verstößt, können Sie sich bei einer Datenschutzaufsichtsbehörde beschweren.
+
+**Zuständige Behörde für uns:**
+Berliner Beauftragte für Datenschutz und Informationsfreiheit
+[https://www.datenschutz-berlin.de](https://www.datenschutz-berlin.de)
+
+---
+
+## 8 Sicherheit und Verschlüsselung
+
+**Transportverschlüsselung:**
+- Die Anwendung wird ausschließlich über **HTTPS** ausgeliefert
+- Sicherheits-Header implementiert: CSP, HSTS, Permission-Policy
+
+**CORS-Schutz:**
+- Strikte Origin-Validierung für `/api/chat` und `/api/feedback`
+- Nur erlaubte Domains können API-Anfragen stellen
+- `Vary: Origin` Header für korrekte Caching-Behandlung
+
+**Rate Limiting:**
+- Feedback-Endpoint: 5 Anfragen / 10 Minuten (KV-basiert)
+- Schutz vor Spam und Abuse
+
+**Logging:**
+- **Keine Logs von Chat-Inhalten** in Serverless Functions
+- Nur technische Metadaten (Modellname, Status Codes)
+- Keine Speicherung von API-Keys in Logs
+
+**Wichtiger Hinweis:**
+Die Vertraulichkeit Ihrer Eingaben kann **nicht garantiert** werden, da die Nachrichten an externe KI-Dienste übertragen werden. Nutzen Sie die Anwendung daher **nur für allgemeine Anfragen** und nicht für vertrauliche Geschäfts- oder Privatangelegenheiten.
+
+---
+
+## 9 Datenschutz-Disclaimer
+
+Disa AI ist ein experimenteller Chat-Client, der externe KI-Anbieter nutzt.
+
+**Wichtige Klarstellungen:**
+- ❌ Wir garantieren **keine absolute Privatsphäre** für Chat-Inhalte
+- ❌ Wir haben **keine Kontrolle** über Drittanbieter (OpenRouter, Modellanbieter)
+- ✅ Lokale Speicherung und Cloudflare-Analytics sind datensparsam umgesetzt
+- ✅ CORS-Schutz und Rate Limiting implementiert (Stand: 2026-02-07)
+- ✅ Keine Logs von sensiblen Inhalten
+
+**Prüfen Sie vor der Nutzung, ob Sie mit diesen Bedingungen einverstanden sind.**
+
+---
+
+## 10 Änderungen dieser Datenschutzerklärung
+
+Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte Rechtslage oder Änderungen unserer Dienste anzupassen. Für erneute Besuche gilt jeweils die aktuelle Version.
+
+**Letzte Änderung:** 2026-02-07 (Security-Updates: CORS, Rate Limiting, Streaming Performance)
+
+---
+
+## 11 Kontakt
+
+Bei Fragen oder Anliegen zum Datenschutz wenden Sie sich bitte an:
+
+**David Grunert**
+E-Mail: grunert94@hotmail.com

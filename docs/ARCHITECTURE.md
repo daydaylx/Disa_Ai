@@ -50,7 +50,8 @@ src/
 │   ├── router.tsx       # Route-Definitionen
 │   ├── components/      # App-Shell-Komponenten
 │   │   ├── RouteWrapper.tsx
-│   │   └── MobileOnlyGate.tsx
+│   │   ├── AnimatedLogo.tsx
+│   │   └── BrandWordmark.tsx
 │   └── contexts/        # Globale Provider
 │
 ├── components/          # UI-Komponenten
@@ -123,8 +124,8 @@ Initialisiert React und rendert die App in das DOM.
 
 - Importiert globale Styles
 - Setzt Provider (Settings, Toast, etc.)
-- Implementiert `MobileOnlyGate` (Desktop-Warnung)
 - Korrigiert Viewport-Höhe (`--vh`)
+- Rendert Router und App-Layout
 
 ### `src/app/router.tsx`
 
@@ -216,11 +217,13 @@ Die meiste State-Logik liegt in React Hooks:
 ### Reducer
 
 `chatReducer` verwaltet den Chat-State mit Actions wie:
-- `ADD_USER_MESSAGE`
-- `START_ASSISTANT_RESPONSE`
-- `APPEND_ASSISTANT_CHUNK`
-- `FINISH_ASSISTANT_RESPONSE`
-- `SET_ERROR`
+- `ADD_MESSAGE` - Fügt neue Nachricht hinzu
+- `UPDATE_MESSAGE` - Aktualisiert bestehende Nachricht (z.B. streaming chunks)
+- `SET_MESSAGES` - Ersetzt alle Nachrichten
+- `SET_LOADING` - Setzt loading state
+- `SET_ERROR` - Setzt error state
+
+**Performance-Optimierung:** Der Reducer cached den Index der aktuell streamenden Assistant-Message (`currentAssistantMessageIndex`), um O(1) Updates statt O(n) Array-Reverse bei jedem Chunk zu ermöglichen.
 
 ---
 
