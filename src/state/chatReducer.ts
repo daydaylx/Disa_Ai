@@ -34,7 +34,9 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       const newMessages = [...state.messages, action.message];
       // If adding an assistant message, track its index for efficient updates
       const newIndex =
-        action.message.role === "assistant" ? newMessages.length - 1 : state.currentAssistantMessageIndex;
+        action.message.role === "assistant"
+          ? newMessages.length - 1
+          : state.currentAssistantMessageIndex;
 
       return {
         ...state,

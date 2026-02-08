@@ -33,11 +33,7 @@ interface ChatRequest {
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 // Production domains (exact match required)
-const PRODUCTION_HOSTS = new Set([
-  "disaai.de",
-  "www.disaai.de",
-  "disa-ai.pages.dev",
-]);
+const PRODUCTION_HOSTS = new Set(["disaai.de", "www.disaai.de", "disa-ai.pages.dev"]);
 
 // Development hosts (localhost and 127.0.0.1 with any port)
 const DEV_HOSTS = new Set(["localhost", "127.0.0.1"]);
@@ -100,7 +96,7 @@ function getCORSHeaders(request: Request): Record<string, string> {
   if (isAllowedOrigin(origin)) {
     return {
       "Access-Control-Allow-Origin": origin!,
-      "Vary": "Origin",
+      Vary: "Origin",
     };
   }
 
@@ -131,7 +127,7 @@ function handleCORS(request: Request): Response {
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Accept",
       "Access-Control-Max-Age": "600",
-      "Vary": "Origin",
+      Vary: "Origin",
     },
   });
 }

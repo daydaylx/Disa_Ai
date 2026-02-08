@@ -48,11 +48,7 @@ const RATE_LIMIT_WINDOW_SECONDS = 600; // 10 minutes
 const RATE_LIMIT_MAX_REQUESTS = 5;
 
 // Production domains (exact match required)
-const PRODUCTION_HOSTS = new Set([
-  "disaai.de",
-  "www.disaai.de",
-  "disa-ai.pages.dev",
-]);
+const PRODUCTION_HOSTS = new Set(["disaai.de", "www.disaai.de", "disa-ai.pages.dev"]);
 
 // Development hosts (localhost and 127.0.0.1 with any port)
 const DEV_HOSTS = new Set(["localhost", "127.0.0.1"]);
@@ -111,7 +107,7 @@ function getCORSHeaders(request: Request): Record<string, string> {
   if (isAllowedOrigin(origin)) {
     return {
       "Access-Control-Allow-Origin": origin!,
-      "Vary": "Origin",
+      Vary: "Origin",
     };
   }
 
@@ -142,16 +138,12 @@ function handleCORS(request: Request): Response {
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Accept",
       "Access-Control-Max-Age": "600",
-      "Vary": "Origin",
+      Vary: "Origin",
     },
   });
 }
 
-function jsonResponse(
-  data: Record<string, unknown>,
-  status = 200,
-  request?: Request,
-): Response {
+function jsonResponse(data: Record<string, unknown>, status = 200, request?: Request): Response {
   const corsHeaders = request ? getCORSHeaders(request) : {};
 
   return new Response(JSON.stringify(data), {
@@ -234,7 +226,8 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
  * This provides basic abuse prevention without requiring user identification
  */
 function getRateLimitKey(request: Request): string {
-  const ip = request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
+  const ip =
+    request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
   const ua = request.headers.get("User-Agent") || "unknown";
 
   // Hash the combination to avoid storing raw IPs
@@ -278,7 +271,9 @@ async function checkRateLimit(request: Request, env: Env): Promise<boolean> {
 
     // Check if limit exceeded
     if (requestData.count > RATE_LIMIT_MAX_REQUESTS) {
-      const retryAfter = Math.ceil((requestData.firstRequest + RATE_LIMIT_WINDOW_SECONDS * 1000 - now) / 1000);
+      const retryAfter = Math.ceil(
+        (requestData.firstRequest + RATE_LIMIT_WINDOW_SECONDS * 1000 - now) / 1000,
+      );
       console.warn(`[Feedback] Rate limit exceeded for ${key.substring(0, 30)}...`);
       return true;
     }
@@ -427,7 +422,11 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
 
       // Validate magic bytes (security check)
       if (!validateImageMagicBytes(arrayBuffer)) {
-        return jsonResponse({ success: false, error: `Invalid image file: ${file.name}` }, 400, request);
+        return jsonResponse(
+          { success: false, error: `Invalid image file: ${file.name}` },
+          400,
+          request,
+        );
       }
 
       // Convert to base64
@@ -593,7 +592,11 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       `with ${attachments.length} attachment(s)`,
     );
 
-    return jsonResponse({ success: true, id: result.id, attachmentCount: attachments.length }, 200, request);
+    return jsonResponse(
+      { success: true, id: result.id, attachmentCount: attachments.length },
+      200,
+      request,
+    );
   } catch (error) {
     console.error("[Feedback] Unexpected error:", error);
     return jsonResponse({ success: false, error: "Internal server error" }, 500, request);
