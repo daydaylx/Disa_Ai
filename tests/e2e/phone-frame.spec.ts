@@ -69,13 +69,15 @@ test.describe("Phone Frame - Mobile UI on Desktop", () => {
     // Body should not be scrollable (content scrolls within phone frame)
     expect(bodyOverflowY).not.toBe("scroll");
 
-    // Phone frame content should be scrollable
+    // Phone frame content should prevent double scroll (inner containers handle scrolling)
     const phoneFrameContent = page.locator(".phone-frame-content");
     const contentOverflowY = await phoneFrameContent.evaluate((el) => {
       return window.getComputedStyle(el).overflowY;
     });
 
-    expect(contentOverflowY).toBe("auto");
+    // Phone frame itself has overflow hidden to prevent double scroll
+    // Inner containers (like chat messages list) handle their own scrolling
+    expect(contentOverflowY).toBe("hidden");
   });
 
   test("should not show multi-column grids on desktop", async ({ page }) => {

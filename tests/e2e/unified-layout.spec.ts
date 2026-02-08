@@ -25,8 +25,9 @@ test.describe("Unified Layout Tests", () => {
       await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
       await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
-      // Brand/logo should be present
-      await expect(page.getByTestId("brand-logo")).toBeVisible();
+      // Brand/logo should be present (may have multiple instances - sidebar + header)
+      // Check that at least one is visible
+      await expect(page.getByTestId("brand-logo").first()).toBeVisible();
     }
   });
 
