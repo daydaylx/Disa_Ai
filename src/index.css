@@ -461,6 +461,8 @@
   /* Centered mobile viewport container */
   width: 100%;
   max-width: 430px; /* iPhone 14 Pro Max width */
+  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   min-height: 100dvh;
   min-height: calc(var(--vh, 1vh) * 100);
   background: var(--bg-app);
@@ -468,11 +470,8 @@
   position: relative;
   /* Subtle shadow on desktop to enhance "phone" feeling */
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
-  /* Ensure content scrolls within frame, not outside */
-  overflow-y: auto;
-  overflow-x: hidden;
-  /* iOS smooth scrolling */
-  -webkit-overflow-scrolling: touch;
+  /* Prevent double scroll; inner containers handle scrolling */
+  overflow: hidden;
 }
 
 /* Branding Animations */

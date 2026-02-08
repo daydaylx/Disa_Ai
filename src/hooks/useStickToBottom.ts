@@ -54,7 +54,7 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
   );
 
   const scrollToBottomInstant = useCallback(() => {
-    scrollToBottom("instant");
+    scrollToBottom("auto");
   }, [scrollToBottom]);
 
   // Throttled auto-scroll function
@@ -65,10 +65,10 @@ export function useStickToBottom(options: UseStickToBottomOptions = {}) {
 
     throttleTimeoutRef.current = setTimeout(() => {
       if (scrollRef.current && shouldAutoScroll) {
-        // Use instant scrolling for updates to avoid "fighting" the animation
+        // Use auto scrolling for updates to avoid "fighting" the animation
         scrollRef.current.scrollTo({
           top: scrollRef.current.scrollHeight,
-          behavior: "instant",
+          behavior: "auto",
         });
       }
       throttleTimeoutRef.current = null;

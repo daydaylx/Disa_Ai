@@ -90,8 +90,8 @@ function AppShellLayout({
   const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
 
   return (
-    <div className="relative min-h-screen-mobile bg-bg-app text-text-primary">
-      <div className="relative flex min-h-screen-mobile flex-col lg:flex-row">
+    <div className="relative h-full min-h-screen-mobile bg-bg-app text-text-primary">
+      <div className="relative flex h-full min-h-0 flex-col lg:flex-row">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-skip-link focus:rounded focus:bg-accent focus:px-6 focus:py-4 focus:text-white focus:font-medium focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-accent tap-target min-h-[44px] min-w-[44px] flex items-center justify-center"
@@ -132,7 +132,7 @@ function AppShellLayout({
           </div>
         </aside>
 
-        <div className="flex min-h-screen-mobile flex-1 flex-col safe-area-bottom">
+        <div className="flex min-h-0 flex-1 flex-col safe-area-bottom">
           {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
           {!isChatMode ? (
             <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header shadow-sm">
@@ -172,16 +172,16 @@ function AppShellLayout({
             key={location.pathname}
             // Remove background handling here for Chat Mode, BookLayout does it
             className={cn(
-              "relative flex flex-1 flex-col",
+              "relative flex flex-1 flex-col min-h-0",
               isChatMode ? "bg-transparent" : "bg-bg-app",
             )}
             tabIndex={-1}
           >
             <div
               className={cn(
-                "mx-auto flex w-full flex-1 flex-col",
+                "mx-auto flex w-full flex-1 flex-col min-h-0",
                 isChatMode
-                  ? "w-full p-0 max-w-none overflow-hidden" // Let BookLayout handle constraints
+                  ? "w-full p-0 max-w-none" // Let BookLayout handle constraints
                   : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",
               )}
             >

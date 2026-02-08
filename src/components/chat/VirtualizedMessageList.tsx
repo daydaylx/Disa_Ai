@@ -62,7 +62,7 @@ export function VirtualizedMessageList({
   const didInitialScrollRef = useRef(false);
   const lastConversationKeyRef = useRef<string | undefined>(conversationKey);
 
-  const { scrollRef, isSticking, scrollToBottom } = useStickToBottom({
+  const { scrollRef, scrollToBottomInstant } = useStickToBottom({
     threshold: DEFAULT_SCROLL_TO_BOTTOM_THRESHOLD_PX,
     enabled: true,
     containerRef: scrollContainerRef,
@@ -115,10 +115,10 @@ export function VirtualizedMessageList({
       try {
         rowVirtualizer.scrollToIndex(messages.length - 1, { align: "end" });
       } catch {
-        scrollToBottom("instant");
+        scrollToBottomInstant();
       }
     });
-  }, [conversationKey, messages.length, rowVirtualizer, scrollToBottom]);
+  }, [conversationKey, messages.length, rowVirtualizer, scrollToBottomInstant]);
 
   const attachInternalRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -186,19 +186,6 @@ export function VirtualizedMessageList({
         {isLoading && (
           <div className="py-4 animate-fade-in">
             <TypingIndicator />
-          </div>
-        )}
-
-        {/* Scroll to Bottom FAB */}
-        {!isSticking && (
-          <div className="pointer-events-none fixed bottom-[calc(7.5rem+env(safe-area-inset-bottom))] left-1/2 z-fab -translate-x-1/2 animate-fade-in">
-            <button
-              onClick={() => scrollToBottom()}
-              className="pointer-events-auto flex h-10 items-center gap-2 rounded-full bg-surface-2/80 px-4 text-sm font-medium text-ink-primary backdrop-blur border border-white/10 shadow-lg hover:bg-surface-3 hover:border-accent-chat-border hover:shadow-glow-sm"
-              aria-label="Zu neuen Nachrichten scrollen"
-            >
-              ↓ Neueste
-            </button>
           </div>
         )}
       </div>

@@ -16,7 +16,6 @@ import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
-import { useVisualViewport } from "../hooks/useVisualViewport";
 
 const VirtualizedMessageList = memo(
   lazy(() =>
@@ -62,7 +61,6 @@ const initialState: UIState = {
 };
 
 export default function Chat() {
-  const viewport = useVisualViewport();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -244,11 +242,8 @@ export default function Chat() {
       >
         <div
           {...swipeHandlers}
-          className="flex flex-col relative w-full transition-transform"
+          className="flex flex-col relative w-full transition-transform flex-1 min-h-0"
           style={{
-            // Subtract header height (64px) from viewport height to prevent clipping
-            height: viewport.height ? `${viewport.height - 64}px` : "100%",
-            minHeight: viewport.height ? `${viewport.height - 64}px` : "100%",
             // Visual feedback während Swipe
             transform:
               dragOffset.x > 0 ? `translateX(${Math.min(dragOffset.x * 0.3, 100)}px)` : undefined,

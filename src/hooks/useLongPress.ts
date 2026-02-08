@@ -33,11 +33,6 @@ export function useLongPress(config: LongPressConfig) {
   // Start Long-Press Timer
   const handleStart = useCallback(
     (event: React.TouchEvent | React.MouseEvent) => {
-      // Prevent default to avoid context menu on mobile
-      if ("touches" in event) {
-        event.preventDefault();
-      }
-
       // Speichere Start-Position
       const position =
         "touches" in event
@@ -111,6 +106,10 @@ export function useLongPress(config: LongPressConfig) {
     clearTimer();
   }, [clearTimer]);
 
+  const handleContextMenu = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+  }, []);
+
   return {
     // Event handlers für DOM-Element
     handlers: {
@@ -125,6 +124,7 @@ export function useLongPress(config: LongPressConfig) {
       onMouseMove: handleMove,
       onMouseUp: handleEnd,
       onMouseLeave: handleCancel,
+      onContextMenu: handleContextMenu,
     },
     // State
     isLongPressing: isLongPressRef.current,

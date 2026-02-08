@@ -1,181 +1,300 @@
 /**
- * Cloudflare Function: /api/chat
+ * Cloudflare Function: /api/chat (SECURED)
  *
- * Proxies chat requests to OpenRouter API using server-side API key.
- * This prevents exposing the API key to clients and enables free-tier access for all users.
+ * Proxies chat requests to OpenRouter API with security measures:
+ * - HMAC-based authentication
+ * - Origin/Referer validation
+ * - Rate limiting (in-memory)
+ * - Request validation (Zod)
+ * - Abuse controls
  *
  * Environment Variables Required (Cloudflare Secrets):
  * - OPENROUTER_API_KEY: Your OpenRouter API key
+ * - PROXY_SHARED_SECRET: Shared secret for HMAC verification
  *
- * @see https://developers.cloudflare.com/pages/functions/
+ * @see docs/guides/PROXY_SECURITY.md
  */
+
+import { z } from "zod";
 
 interface Env {
   OPENROUTER_API_KEY: string;
+  PROXY_SHARED_SECRET: string;
 }
+
+// =====================
+// TYPES & SCHEMAS
+// =====================
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
 }
 
+const ChatMessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().max(10000), // Max 10 KB per message
+});
+
 interface ChatRequest {
   messages: ChatMessage[];
   model: string;
-  stream: boolean;
+  stream?: boolean;
   temperature?: number;
   top_p?: number;
   presence_penalty?: number;
   max_tokens?: number;
 }
 
-// OpenRouter API endpoint
+const ChatRequestSchema = z.object({
+  messages: z.array(ChatMessageSchema).min(1).max(50), // 1-50 messages
+  model: z.string(),
+  stream: z.boolean().optional().default(true),
+  temperature: z.number().min(0).max(2).optional(),
+  top_p: z.number().min(0).max(1).optional(),
+  presence_penalty: z.number().min(-2).max(2).optional(),
+  max_tokens: z.number().min(1).max(8192).optional(),
+});
+
+// =====================
+// CONSTANTS
+// =====================
+
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-// Production domains (exact match required)
-const PRODUCTION_HOSTS = new Set([
-  "disaai.de",
-  "www.disaai.de",
-  "disa-ai.pages.dev",
-]);
+const ALLOWED_ORIGINS = ["https://disaai.de", "https://disa-ai.pages.dev"] as const;
 
-// Development hosts (localhost and 127.0.0.1 with any port)
-const DEV_HOSTS = new Set(["localhost", "127.0.0.1"]);
+const ALLOWED_MODELS = [
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "google/gemma-2-9b-it:free",
+  "mistralai/mistral-7b-instruct:free",
+  "microsoft/phi-3-mini-128k-instruct:free",
+  "qwen/qwen-2.5-7b-instruct:free",
+] as const;
 
-/**
- * Securely validate origin against allowlist
- * - Only HTTPS in production (HTTP allowed for localhost dev)
- * - Exact hostname match (no prefix/substring tricks)
- * - Preview domains: *.pages.dev subdomains allowed
- */
+const RATE_LIMIT_CONFIG = {
+  requestsPerMinute: 60,
+  windowMs: 60 * 1000, // 60 seconds
+  maxConcurrentStreams: 3,
+} as const;
+
+const ABUSE_CONTROLS = {
+  maxRequestBodySize: 100 * 1024, // 100 KB
+  maxStreamDurationMs: 120 * 1000, // 120 seconds
+  requestTimeoutMs: 60 * 1000, // 60 seconds
+} as const;
+
+// =====================
+// RATE LIMITING (In-Memory)
+// =====================
+
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
+
+// Simple in-memory rate limit tracker
+const rateLimitMap = new Map<string, RateLimitEntry>();
+
+function checkRateLimit(clientIp: string): { allowed: boolean; remaining?: number } {
+  const now = Date.now();
+  const entry = rateLimitMap.get(clientIp);
+
+  if (!entry || now > entry.resetTime) {
+    // New window or expired
+    rateLimitMap.set(clientIp, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_CONFIG.windowMs,
+    });
+    return { allowed: true, remaining: RATE_LIMIT_CONFIG.requestsPerMinute - 1 };
+  }
+
+  if (entry.count >= RATE_LIMIT_CONFIG.requestsPerMinute) {
+    return { allowed: false };
+  }
+
+  // Increment counter
+  entry.count++;
+  return { allowed: true, remaining: RATE_LIMIT_CONFIG.requestsPerMinute - entry.count };
+}
+
+// =====================
+// ORIGIN VALIDATION
+// =====================
+
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin as any);
+}
 
-  let url: URL;
+function getCORSOrigin(request: Request): string {
+  const origin = request.headers.get("Origin");
+  return isAllowedOrigin(origin) ? origin! : ALLOWED_ORIGINS[0];
+}
+
+function isValidReferer(request: Request): boolean {
+  const referer = request.headers.get("Referer");
+  if (!referer) return false;
+
+  const origin = request.headers.get("Origin") || "";
   try {
-    url = new URL(origin);
+    const refererOrigin = new URL(referer).origin;
+    return refererOrigin === origin && ALLOWED_ORIGINS.includes(refererOrigin as any);
   } catch {
-    // Invalid URL format
+    return false;
+  }
+}
+
+// =====================
+// HMAC VERIFICATION
+// =====================
+
+// Synchronous HMAC generation using crypto.subtle
+// Note: This is async, but we'll use it properly
+async function generateHMAC(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = encoder.encode(secret);
+  const message = encoder.encode(data);
+
+  const keyData = await crypto.subtle.importKey(
+    "raw",
+    key,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+
+  const signature = await crypto.subtle.sign("HMAC", keyData, message);
+
+  const hashArray = Array.from(new Uint8Array(signature));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function verifyHMAC(
+  body: string,
+  signature: string,
+  secret: string,
+  timestamp: number,
+): Promise<boolean> {
+  // Check timestamp (prevent replay attacks)
+  const now = Math.floor(Date.now() / 1000);
+  const timestampWindow = 300; // 5 minutes
+
+  if (Math.abs(now - timestamp) > timestampWindow) {
     return false;
   }
 
-  const { protocol, hostname, port } = url;
+  const data = `${body}:${timestamp}`;
+  const expectedSignature = await generateHMAC(data, secret);
 
-  // Development: allow http://localhost:* and http://127.0.0.1:*
-  if (protocol === "http:" && DEV_HOSTS.has(hostname)) {
-    return true;
-  }
+  return signature === expectedSignature;
+}
 
-  // Production: require HTTPS
-  if (protocol !== "https:") {
-    return false;
-  }
+// =====================
+// ABUSE CONTROLS
+// =====================
 
-  // Exact match against production hosts
-  if (PRODUCTION_HOSTS.has(hostname)) {
-    return true;
-  }
-
-  // Allow preview deployments: *.pages.dev
-  // IMPORTANT: Only *.pages.dev, not arbitrary subdomains
-  if (hostname.endsWith(".pages.dev")) {
-    // Ensure no additional dots before .pages.dev
-    // Valid: my-app-xyz.pages.dev
-    // Invalid: evil.com.pages.dev (blocked by this check)
-    const parts = hostname.split(".");
-    if (parts.length === 3 && parts[1] === "pages" && parts[2] === "dev") {
-      return true;
+async function validateRequestSize(request: Request): Promise<boolean> {
+  try {
+    const contentLength = request.headers.get("Content-Length");
+    if (contentLength && parseInt(contentLength, 10) > ABUSE_CONTROLS.maxRequestBodySize) {
+      return false;
     }
-  }
 
-  return false;
+    const body = await request.text();
+    return body.length <= ABUSE_CONTROLS.maxRequestBodySize;
+  } catch {
+    return false;
+  }
 }
 
-/**
- * Get CORS headers for allowed origin
- */
-function getCORSHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get("Origin");
+function checkConcurrencyLimit(clientIp: string): { allowed: boolean; active: number } {
+  const activeKey = `concurrent:${clientIp}`;
+  const entry = rateLimitMap.get(activeKey);
+  const active = entry?.count || 0;
 
-  if (isAllowedOrigin(origin)) {
-    return {
-      "Access-Control-Allow-Origin": origin!,
-      "Vary": "Origin",
-    };
+  if (active >= RATE_LIMIT_CONFIG.maxConcurrentStreams) {
+    return { allowed: false, active };
   }
 
-  // No CORS headers for disallowed origins
-  return {};
+  // Increment for new request
+  if (entry) {
+    entry.count++;
+  } else {
+    rateLimitMap.set(activeKey, { count: 1, resetTime: Date.now() + 3600000 });
+  }
+
+  return { allowed: true, active: active + 1 };
 }
 
-/**
- * Handle CORS preflight requests
- */
+function decrementConcurrency(clientIp: string): void {
+  const activeKey = `concurrent:${clientIp}`;
+  const entry = rateLimitMap.get(activeKey);
+  if (entry && entry.count > 0) {
+    entry.count--;
+  }
+}
+
+// =====================
+// RESPONSE HELPERS
+// =====================
+
 function handleCORS(request: Request): Response {
-  const origin = request.headers.get("Origin");
-
-  if (!isAllowedOrigin(origin)) {
-    // Reject preflight from disallowed origins
-    return new Response(null, {
-      status: 403,
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    });
-  }
-
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": origin!,
+      "Access-Control-Allow-Origin": getCORSOrigin(request),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Accept",
-      "Access-Control-Max-Age": "600",
-      "Vary": "Origin",
+      "Access-Control-Allow-Headers": "Content-Type, Accept, X-Proxy-Secret, X-Proxy-Timestamp",
+      "Access-Control-Max-Age": "86400",
     },
   });
 }
 
-/**
- * Return JSON error response with CORS headers
- */
 function jsonError(message: string, status: number, request?: Request): Response {
-  const corsHeaders = request ? getCORSHeaders(request) : {};
-
+  const origin = request ? getCORSOrigin(request) : "*";
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: {
       "Content-Type": "application/json",
-      ...corsHeaders,
+      "Access-Control-Allow-Origin": origin,
     },
   });
 }
 
-/**
- * Main request handler for Cloudflare Pages Function
- */
+function rateLimitError(request: Request, remaining: number): Response {
+  const origin = getCORSOrigin(request);
+  return new Response(
+    JSON.stringify({
+      error: "Rate limit exceeded",
+      retryAfter: RATE_LIMIT_CONFIG.windowMs / 1000,
+      remaining,
+    }),
+    {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": origin,
+        "Retry-After": "60",
+      },
+    },
+  );
+}
+
+// =====================
+// MAIN HANDLER
+// =====================
+
 export async function onRequest(context: {
   request: Request;
   env: Env;
   waitUntil: (promise: Promise<any>) => void;
 }): Promise<Response> {
-  const { request, env } = context;
+  const { request, env, waitUntil: _waitUntil } = context;
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
     return handleCORS(request);
-  }
-
-  // Validate origin for actual requests
-  const origin = request.headers.get("Origin");
-  if (!isAllowedOrigin(origin)) {
-    console.warn(`❌ Blocked request from disallowed origin: ${origin || "(none)"}`);
-    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
-      status: 403,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
   }
 
   // Only allow POST requests
@@ -184,56 +303,148 @@ export async function onRequest(context: {
   }
 
   try {
-    // Validate API key is configured
+    // Validate environment variables
     if (!env.OPENROUTER_API_KEY) {
-      console.error("❌ OPENROUTER_API_KEY not configured in Cloudflare Secrets");
+      console.error("❌ OPENROUTER_API_KEY not configured");
+      return jsonError("Server configuration error: API key not configured", 500, request);
+    }
+
+    if (!env.PROXY_SHARED_SECRET) {
+      console.error("❌ PROXY_SHARED_SECRET not configured");
+      return jsonError("Server configuration error: Shared secret not configured", 500, request);
+    }
+
+    // Validate Origin and Referer
+    const origin = request.headers.get("Origin");
+    if (!isAllowedOrigin(origin)) {
+      console.warn(`⚠️ Forbidden origin: ${origin}`);
+      return jsonError("Forbidden origin", 403, request);
+    }
+
+    if (!isValidReferer(request)) {
+      console.warn(`⚠️ Invalid referer for origin: ${origin}`);
+      return jsonError("Invalid referer", 403, request);
+    }
+
+    // Validate request size
+    const validSize = await validateRequestSize(request);
+    if (!validSize) {
+      console.warn("⚠️ Request size exceeds limit");
+      return jsonError("Request size exceeds limit", 400, request);
+    }
+
+    // Get client IP for rate limiting
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+
+    // Check rate limit
+    const rateLimitResult = checkRateLimit(clientIp);
+    if (!rateLimitResult.allowed) {
+      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIp}`);
+      return rateLimitError(request, rateLimitResult.remaining || 0);
+    }
+
+    // Check concurrency limit for streaming requests
+    const concurrencyResult = checkConcurrencyLimit(clientIp);
+    if (!concurrencyResult.allowed) {
+      console.warn(`⚠️ Concurrency limit exceeded for IP: ${clientIp}`);
       return jsonError(
-        "Server configuration error: API key not configured. Please set OPENROUTER_API_KEY in Cloudflare Dashboard.",
-        500,
+        "Too many concurrent requests. Please wait for current requests to complete.",
+        429,
         request,
       );
     }
 
+    // Re-read body (we consumed it for size validation)
+    const requestBody = await request.text();
+
     // Parse request body
-    let body: ChatRequest;
+    let parsedBody: ChatRequest;
     try {
-      body = await request.json();
+      parsedBody = JSON.parse(requestBody);
     } catch {
       return jsonError("Invalid JSON in request body", 400, request);
     }
 
-    // Validate required fields
-    if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+    // Validate with Zod schema
+    const validationResult = ChatRequestSchema.safeParse(parsedBody);
+    if (!validationResult.success) {
+      console.warn(`⚠️ Invalid request: ${JSON.stringify(validationResult.error.issues)}`);
       return jsonError(
-        "Invalid request: 'messages' array is required and must not be empty",
+        "Invalid request: " +
+          validationResult.error.issues.map((e) => `${e.path.join(".")}: ${e.message}`).join(", "),
         400,
         request,
       );
     }
 
-    if (!body.model || typeof body.model !== "string") {
-      return jsonError("Invalid request: 'model' string is required", 400, request);
+    // Manual model validation
+    if (!ALLOWED_MODELS.includes(validationResult.data.model as any)) {
+      console.warn(`⚠️ Invalid model: ${validationResult.data.model}`);
+      return jsonError(
+        `Model not allowed: ${validationResult.data.model}. Allowed models: ${ALLOWED_MODELS.join(", ")}`,
+        400,
+        request,
+      );
+    }
+
+    // Verify HMAC signature
+    const signature = request.headers.get("X-Proxy-Secret");
+    const timestamp = request.headers.get("X-Proxy-Timestamp");
+
+    if (!signature || !timestamp) {
+      console.warn("⚠️ Missing authentication headers");
+      return jsonError(
+        "Missing authentication headers (X-Proxy-Secret, X-Proxy-Timestamp)",
+        401,
+        request,
+      );
+    }
+
+    const timestampNum = parseInt(timestamp, 10);
+    if (isNaN(timestampNum)) {
+      return jsonError("Invalid timestamp format", 400, request);
+    }
+
+    const validHMAC = await verifyHMAC(
+      requestBody,
+      signature,
+      env.PROXY_SHARED_SECRET,
+      timestampNum,
+    );
+
+    if (!validHMAC) {
+      console.warn("⚠️ Invalid HMAC signature");
+      return jsonError("Invalid authentication signature", 401, request);
     }
 
     // Build OpenRouter request payload
     const openRouterPayload: Record<string, unknown> = {
-      model: body.model,
-      messages: body.messages,
-      stream: body.stream ?? true,
+      model: validationResult.data.model,
+      messages: validationResult.data.messages,
+      stream: validationResult.data.stream ?? true,
     };
 
     // Add optional parameters if provided
-    if (body.temperature !== undefined) openRouterPayload.temperature = body.temperature;
-    if (body.top_p !== undefined) openRouterPayload.top_p = body.top_p;
-    if (body.presence_penalty !== undefined)
-      openRouterPayload.presence_penalty = body.presence_penalty;
-    if (body.max_tokens !== undefined) openRouterPayload.max_tokens = body.max_tokens;
+    if (validationResult.data.temperature !== undefined) {
+      openRouterPayload.temperature = validationResult.data.temperature;
+    }
+    if (validationResult.data.top_p !== undefined) {
+      openRouterPayload.top_p = validationResult.data.top_p;
+    }
+    if (validationResult.data.presence_penalty !== undefined) {
+      openRouterPayload.presence_penalty = validationResult.data.presence_penalty;
+    }
+    if (validationResult.data.max_tokens !== undefined) {
+      openRouterPayload.max_tokens = validationResult.data.max_tokens;
+    }
 
-    // Get origin for HTTP-Referer header (for OpenRouter attribution)
-    const referer = origin || "https://disaai.de";
+    // Get origin for HTTP-Referer header
+    const requestOrigin = origin || "https://disaai.de";
 
-    // Log request for debugging (IMPORTANT: do NOT log message contents or API keys)
-    console.log(`📤 Proxying request to OpenRouter: model=${body.model}, stream=${body.stream}`);
+    // Log request (minimal for security)
+    console.log(
+      `✅ Proxying authenticated request: model=${validationResult.data.model}, ip=${clientIp}`,
+    );
 
     // Make request to OpenRouter API
     const openRouterResponse = await fetch(OPENROUTER_API_URL, {
@@ -241,7 +452,7 @@ export async function onRequest(context: {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": referer,
+        "HTTP-Referer": requestOrigin,
         "X-Title": "Disa AI",
       },
       body: JSON.stringify(openRouterPayload),
@@ -253,33 +464,72 @@ export async function onRequest(context: {
         `❌ OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`,
       );
 
-      // Try to get error details from OpenRouter
       let errorMessage = `OpenRouter API error: ${openRouterResponse.status}`;
       try {
         const errorData = await openRouterResponse.json();
         if (errorData?.error) {
-          errorMessage = errorData.error.message || errorData.error;
+          errorMessage =
+            typeof errorData.error === "string" ? errorData.error : errorData.error.message;
         }
       } catch {
-        // If we can't parse the error, use the status text
         errorMessage = `OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`;
       }
+
+      decrementConcurrency(clientIp);
 
       return jsonError(errorMessage, openRouterResponse.status, request);
     }
 
-    const corsHeaders = getCORSHeaders(request);
+    const corsOrigin = getCORSOrigin(request);
 
     // Handle streaming response
-    if (body.stream) {
+    if (validationResult.data.stream) {
       console.log("✅ Streaming response from OpenRouter");
-      return new Response(openRouterResponse.body, {
+
+      // Set up stream timeout
+      const streamController = new AbortController();
+      const timeoutId = setTimeout(() => {
+        streamController.abort();
+      }, ABUSE_CONTROLS.maxStreamDurationMs);
+
+      const streamWithTimeout = new ReadableStream({
+        async start(controller) {
+          const reader = openRouterResponse.body?.getReader();
+          if (!reader) {
+            controller.close();
+            return;
+          }
+
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+
+              controller.enqueue(value);
+            }
+
+            controller.close();
+          } catch (error: any) {
+            if (error.name === "AbortError") {
+              console.warn("⚠️ Stream timeout exceeded");
+              controller.error(new Error("Stream timeout exceeded"));
+            } else {
+              controller.error(error);
+            }
+          } finally {
+            clearTimeout(timeoutId);
+            decrementConcurrency(clientIp);
+          }
+        },
+      });
+
+      return new Response(streamWithTimeout, {
         status: openRouterResponse.status,
         headers: {
           "Content-Type": "text/event-stream",
           "Cache-Control": "no-cache",
           Connection: "keep-alive",
-          ...corsHeaders,
+          "Access-Control-Allow-Origin": corsOrigin,
         },
       });
     }
@@ -288,20 +538,26 @@ export async function onRequest(context: {
     const responseData = await openRouterResponse.json();
     console.log("✅ Non-streaming response from OpenRouter");
 
+    decrementConcurrency(clientIp);
+
     return new Response(JSON.stringify(responseData), {
       status: openRouterResponse.status,
       headers: {
         "Content-Type": "application/json",
-        ...corsHeaders,
+        "Access-Control-Allow-Origin": corsOrigin,
       },
     });
   } catch (error) {
     console.error("❌ Unexpected error in /api/chat:", error);
 
+    // Get client IP for rate limit decrement
+    const clientIp = context.request.headers.get("CF-Connecting-IP") || "unknown";
+    decrementConcurrency(clientIp);
+
     return jsonError(
       error instanceof Error ? error.message : "Internal server error",
       500,
-      request,
+      context.request,
     );
   }
 }

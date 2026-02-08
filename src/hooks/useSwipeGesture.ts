@@ -33,6 +33,10 @@ export function useSwipeGesture(config: SwipeConfig) {
   const touchEnd = useRef<TouchPosition | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const gestureAxis = useRef<"x" | "y" | null>(null);
+  const hasHorizontal = !!onSwipeLeft || !!onSwipeRight;
+  const hasVertical = !!onSwipeUp || !!onSwipeDown;
+  const DIRECTION_LOCK_PX = 8;
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
     const touch = e.touches[0];
@@ -44,31 +48,79 @@ export function useSwipeGesture(config: SwipeConfig) {
       time: Date.now(),
     };
     touchEnd.current = null;
-    setIsDragging(true);
+    gestureAxis.current = null;
+    setIsDragging(false);
     setDragOffset({ x: 0, y: 0 });
   }, []);
 
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    const touch = e.touches[0];
-    if (!touch || !touchStart.current) return;
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch || !touchStart.current) return;
 
-    const currentX = touch.clientX;
-    const currentY = touch.clientY;
+      const currentX = touch.clientX;
+      const currentY = touch.clientY;
 
-    // Berechne Drag-Offset für visuelles Feedback
-    const offsetX = currentX - touchStart.current.x;
-    const offsetY = currentY - touchStart.current.y;
-    setDragOffset({ x: offsetX, y: offsetY });
+      const deltaX = currentX - touchStart.current.x;
+      const deltaY = currentY - touchStart.current.y;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
 
-    touchEnd.current = {
-      x: currentX,
-      y: currentY,
-      time: Date.now(),
-    };
-  }, []);
+      // Direction lock to avoid re-rendering during normal scrolls
+      if (!gestureAxis.current) {
+        if (hasHorizontal && !hasVertical) {
+          if (absX > absY && absX > DIRECTION_LOCK_PX) {
+            gestureAxis.current = "x";
+          } else {
+            return;
+          }
+        } else if (hasVertical && !hasHorizontal) {
+          if (absY > absX && absY > DIRECTION_LOCK_PX) {
+            gestureAxis.current = "y";
+          } else {
+            return;
+          }
+        } else if (hasHorizontal || hasVertical) {
+          if (absX < DIRECTION_LOCK_PX && absY < DIRECTION_LOCK_PX) {
+            return;
+          }
+          gestureAxis.current = absX >= absY ? "x" : "y";
+        } else {
+          return;
+        }
+      }
+
+      if (!isDragging) {
+        setIsDragging(true);
+      }
+
+      // Berechne Drag-Offset für visuelles Feedback (nur relevante Achse)
+      if (gestureAxis.current === "x") {
+        let offsetX = deltaX;
+        if (!onSwipeRight && offsetX > 0) offsetX = 0;
+        if (!onSwipeLeft && offsetX < 0) offsetX = 0;
+        setDragOffset({ x: offsetX, y: 0 });
+      } else if (gestureAxis.current === "y") {
+        let offsetY = deltaY;
+        if (!onSwipeDown && offsetY > 0) offsetY = 0;
+        if (!onSwipeUp && offsetY < 0) offsetY = 0;
+        setDragOffset({ x: 0, y: offsetY });
+      }
+
+      touchEnd.current = {
+        x: currentX,
+        y: currentY,
+        time: Date.now(),
+      };
+    },
+    [hasHorizontal, hasVertical, isDragging, onSwipeDown, onSwipeLeft, onSwipeRight, onSwipeUp],
+  );
 
   const handleTouchEnd = useCallback(() => {
-    if (!touchStart.current || !touchEnd.current) {
+    if (!touchStart.current || !touchEnd.current || !gestureAxis.current) {
+      touchStart.current = null;
+      touchEnd.current = null;
+      gestureAxis.current = null;
       setIsDragging(false);
       setDragOffset({ x: 0, y: 0 });
       return;
@@ -112,6 +164,7 @@ export function useSwipeGesture(config: SwipeConfig) {
     // Reset
     touchStart.current = null;
     touchEnd.current = null;
+    gestureAxis.current = null;
     setIsDragging(false);
     setDragOffset({ x: 0, y: 0 });
   }, [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown, threshold, velocity, enableHaptic]);

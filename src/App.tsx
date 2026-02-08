@@ -149,17 +149,32 @@ export default function App() {
   // Initialize viewport height with optimized throttling for scroll performance and fix overflow
   const prevBodyOverflowRef = useRef<string>("");
   const prevDocOverflowRef = useRef<string>("");
+  const rafIdRef = useRef<number | null>(null);
+  const lastHeightRef = useRef(0);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
 
+    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
+
     const applyViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
+      const height = getViewportHeight();
+      if (Math.abs(height - lastHeightRef.current) < 1) return;
+      lastHeightRef.current = height;
+      const vh = height * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
 
+    const scheduleViewportHeight = () => {
+      if (rafIdRef.current !== null) return;
+      rafIdRef.current = window.requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        applyViewportHeight();
+      });
+    };
+
     const handleOrientationChange = () => {
-      setTimeout(applyViewportHeight, 100);
+      setTimeout(scheduleViewportHeight, 100);
     };
 
     // Apply initial styles to prevent horizontal scrolling
@@ -168,15 +183,23 @@ export default function App() {
     document.body.style.overflowX = "hidden";
     document.documentElement.style.overflowX = "hidden";
 
-    window.__disaSetViewportHeight = applyViewportHeight;
-    applyViewportHeight();
-    window.addEventListener("resize", applyViewportHeight, { passive: true });
+    window.__disaSetViewportHeight = scheduleViewportHeight;
+    scheduleViewportHeight();
+    window.addEventListener("resize", scheduleViewportHeight, { passive: true });
     window.addEventListener("orientationchange", handleOrientationChange);
+    window.visualViewport?.addEventListener("resize", scheduleViewportHeight, { passive: true });
+    window.visualViewport?.addEventListener("scroll", scheduleViewportHeight, { passive: true });
 
     return () => {
-      window.removeEventListener("resize", applyViewportHeight);
+      window.removeEventListener("resize", scheduleViewportHeight);
       window.removeEventListener("orientationchange", handleOrientationChange);
-      if (window.__disaSetViewportHeight === applyViewportHeight) {
+      window.visualViewport?.removeEventListener("resize", scheduleViewportHeight);
+      window.visualViewport?.removeEventListener("scroll", scheduleViewportHeight);
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+      if (window.__disaSetViewportHeight === scheduleViewportHeight) {
         delete window.__disaSetViewportHeight;
       }
       document.body.style.overflowX = prevBodyOverflowRef.current;

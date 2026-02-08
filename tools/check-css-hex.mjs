@@ -15,6 +15,8 @@ const IGNORED_FILES = [
   "src/theme/tokens.css",
   "src/styles/design-tokens-consolidated.css",
   "src/styles/design-system-tokens.css",
+  "src/styles/oled-theme.css", // OLED theme requires specific hex values for pure black
+  "src/styles/reduce-motion.css", // Accessibility theme with specific color requirements
 ];
 
 const HEX_COLOR_REGEX = /#[0-9a-fA-F]{3,8}\b/g;

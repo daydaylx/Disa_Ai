@@ -296,7 +296,7 @@ export class AccessibilityUtils {
     const mainElement = document.querySelector(targetSelector) as HTMLElement;
     if (mainElement) {
       mainElement.focus({ preventScroll: true });
-      mainElement.scrollIntoView({ behavior: "instant", block: "start" });
+      mainElement.scrollIntoView({ behavior: "auto", block: "start" });
       this.announce("Navigation to main content completed", "polite");
     }
   }
