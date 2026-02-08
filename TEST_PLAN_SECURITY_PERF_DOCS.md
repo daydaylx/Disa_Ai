@@ -13,6 +13,7 @@
 #### Test Cases:
 
 **Valid Origins (should be allowed):**
+
 - ✅ `https://disaai.de` - Production domain
 - ✅ `https://www.disaai.de` - WWW subdomain
 - ✅ `https://disa-ai.pages.dev` - Cloudflare Pages primary
@@ -23,6 +24,7 @@
 - ✅ `http://127.0.0.1:8080` - Localhost with custom port
 
 **Invalid Origins (should be blocked):**
+
 - ❌ `https://disaai.de.evil.com` - Subdomain spoofing
 - ❌ `https://evil.disaai.de` - Reverse subdomain
 - ❌ `https://disa-ai.pages.dev.attacker.com` - Pages.dev spoofing
@@ -37,35 +39,35 @@
 
 ```javascript
 // Pseudo-test for isAllowedOrigin function
-describe('isAllowedOrigin', () => {
-  test('allows production domains', () => {
-    expect(isAllowedOrigin('https://disaai.de')).toBe(true);
-    expect(isAllowedOrigin('https://www.disaai.de')).toBe(true);
+describe("isAllowedOrigin", () => {
+  test("allows production domains", () => {
+    expect(isAllowedOrigin("https://disaai.de")).toBe(true);
+    expect(isAllowedOrigin("https://www.disaai.de")).toBe(true);
   });
 
-  test('allows preview domains', () => {
-    expect(isAllowedOrigin('https://disa-ai.pages.dev')).toBe(true);
-    expect(isAllowedOrigin('https://preview-xyz.pages.dev')).toBe(true);
+  test("allows preview domains", () => {
+    expect(isAllowedOrigin("https://disa-ai.pages.dev")).toBe(true);
+    expect(isAllowedOrigin("https://preview-xyz.pages.dev")).toBe(true);
   });
 
-  test('allows localhost dev', () => {
-    expect(isAllowedOrigin('http://localhost:5173')).toBe(true);
-    expect(isAllowedOrigin('http://127.0.0.1:5173')).toBe(true);
+  test("allows localhost dev", () => {
+    expect(isAllowedOrigin("http://localhost:5173")).toBe(true);
+    expect(isAllowedOrigin("http://127.0.0.1:5173")).toBe(true);
   });
 
-  test('blocks spoofed domains', () => {
-    expect(isAllowedOrigin('https://disaai.de.evil.com')).toBe(false);
-    expect(isAllowedOrigin('https://evil.disaai.de')).toBe(false);
+  test("blocks spoofed domains", () => {
+    expect(isAllowedOrigin("https://disaai.de.evil.com")).toBe(false);
+    expect(isAllowedOrigin("https://evil.disaai.de")).toBe(false);
   });
 
-  test('blocks non-HTTPS production', () => {
-    expect(isAllowedOrigin('http://disaai.de')).toBe(false);
+  test("blocks non-HTTPS production", () => {
+    expect(isAllowedOrigin("http://disaai.de")).toBe(false);
   });
 
-  test('blocks invalid origins', () => {
+  test("blocks invalid origins", () => {
     expect(isAllowedOrigin(null)).toBe(false);
-    expect(isAllowedOrigin('')).toBe(false);
-    expect(isAllowedOrigin('not-a-url')).toBe(false);
+    expect(isAllowedOrigin("")).toBe(false);
+    expect(isAllowedOrigin("not-a-url")).toBe(false);
   });
 });
 ```
@@ -77,37 +79,41 @@ describe('isAllowedOrigin', () => {
 #### Test Cases:
 
 **Normal Usage:**
+
 - ✅ First request → Allow (200)
 - ✅ Second request within window → Allow (200)
 - ✅ Fifth request within window → Allow (200)
 - ✅ Sixth request within window → Rate limited (429)
 
 **Window Expiry:**
+
 - ✅ Request after 10+ minutes → Counter reset, allow (200)
 
 **KV Unavailable:**
+
 - ✅ If KV namespace not configured → Best-effort, allow all (with warning log)
 
 **Error Handling:**
+
 - ✅ KV read error → Fail open, allow request
 - ✅ KV write error → Fail open, allow request
 
 #### Implementation:
 
 ```javascript
-describe('checkRateLimit', () => {
+describe("checkRateLimit", () => {
   beforeEach(() => {
     // Mock KV namespace
   });
 
-  test('allows first 5 requests', async () => {
+  test("allows first 5 requests", async () => {
     for (let i = 0; i < 5; i++) {
       const rateLimited = await checkRateLimit(mockRequest, mockEnv);
       expect(rateLimited).toBe(false);
     }
   });
 
-  test('blocks 6th request within window', async () => {
+  test("blocks 6th request within window", async () => {
     // Make 5 requests
     for (let i = 0; i < 5; i++) {
       await checkRateLimit(mockRequest, mockEnv);
@@ -118,7 +124,7 @@ describe('checkRateLimit', () => {
     expect(rateLimited).toBe(true);
   });
 
-  test('resets counter after window expires', async () => {
+  test("resets counter after window expires", async () => {
     // Make 5 requests
     for (let i = 0; i < 5; i++) {
       await checkRateLimit(mockRequest, mockEnv);
@@ -132,7 +138,7 @@ describe('checkRateLimit', () => {
     expect(rateLimited).toBe(false);
   });
 
-  test('fails open when KV unavailable', async () => {
+  test("fails open when KV unavailable", async () => {
     const envWithoutKV = { ...mockEnv, FEEDBACK_KV: undefined };
     const rateLimited = await checkRateLimit(mockRequest, envWithoutKV);
     expect(rateLimited).toBe(false);
@@ -147,6 +153,7 @@ describe('checkRateLimit', () => {
 #### Test Cases:
 
 **Index Caching:**
+
 - ✅ ADD_MESSAGE with assistant role → Sets `currentAssistantMessageIndex`
 - ✅ UPDATE_MESSAGE with cached index → O(1) lookup (fast path)
 - ✅ UPDATE_MESSAGE with invalid cache → Fallback to search (slow path)
@@ -154,6 +161,7 @@ describe('checkRateLimit', () => {
 - ✅ RESET → Resets cache to `null`
 
 **Edge Cases:**
+
 - ✅ Update message that doesn't exist → No-op
 - ✅ Update message with same content → Skip update (performance)
 - ✅ Update message when cache points to deleted message → Fallback works
@@ -161,64 +169,64 @@ describe('checkRateLimit', () => {
 #### Implementation:
 
 ```javascript
-describe('chatReducer performance', () => {
-  test('caches assistant message index on ADD_MESSAGE', () => {
+describe("chatReducer performance", () => {
+  test("caches assistant message index on ADD_MESSAGE", () => {
     const state = initialState;
     const action = {
-      type: 'ADD_MESSAGE',
-      message: { id: 'msg-1', role: 'assistant', content: 'Hi' }
+      type: "ADD_MESSAGE",
+      message: { id: "msg-1", role: "assistant", content: "Hi" },
     };
     const newState = chatReducer(state, action);
     expect(newState.currentAssistantMessageIndex).toBe(0);
   });
 
-  test('uses cached index for UPDATE_MESSAGE (fast path)', () => {
+  test("uses cached index for UPDATE_MESSAGE (fast path)", () => {
     const state = {
       ...initialState,
-      messages: [{ id: 'msg-1', role: 'assistant', content: 'Hi' }],
-      currentAssistantMessageIndex: 0
+      messages: [{ id: "msg-1", role: "assistant", content: "Hi" }],
+      currentAssistantMessageIndex: 0,
     };
 
     const action = {
-      type: 'UPDATE_MESSAGE',
-      id: 'msg-1',
-      content: 'Hi there'
+      type: "UPDATE_MESSAGE",
+      id: "msg-1",
+      content: "Hi there",
     };
 
     const newState = chatReducer(state, action);
-    expect(newState.messages[0].content).toBe('Hi there');
+    expect(newState.messages[0].content).toBe("Hi there");
     expect(newState.currentAssistantMessageIndex).toBe(0);
   });
 
-  test('falls back to search when cache invalid', () => {
+  test("falls back to search when cache invalid", () => {
     const state = {
       ...initialState,
       messages: [
-        { id: 'msg-1', role: 'user', content: 'Hello' },
-        { id: 'msg-2', role: 'assistant', content: 'Hi' }
+        { id: "msg-1", role: "user", content: "Hello" },
+        { id: "msg-2", role: "assistant", content: "Hi" },
       ],
-      currentAssistantMessageIndex: 0 // Points to wrong message
+      currentAssistantMessageIndex: 0, // Points to wrong message
     };
 
     const action = {
-      type: 'UPDATE_MESSAGE',
-      id: 'msg-2',
-      content: 'Hi there'
+      type: "UPDATE_MESSAGE",
+      id: "msg-2",
+      content: "Hi there",
     };
 
     const newState = chatReducer(state, action);
-    expect(newState.messages[1].content).toBe('Hi there');
+    expect(newState.messages[1].content).toBe("Hi there");
   });
 
-  test('resets cache on SET_MESSAGES', () => {
+  test("resets cache on SET_MESSAGES", () => {
     const state = {
       ...initialState,
-      currentAssistantMessageIndex: 5
+      currentAssistantMessageIndex: 5,
     };
 
     const action = {
-      type: 'SET_MESSAGES',
-      messages: []
+      type: "SET_MESSAGES",
+      messages: [],
     };
 
     const newState = chatReducer(state, action);
@@ -236,6 +244,7 @@ describe('chatReducer performance', () => {
 #### Test Cases:
 
 **Valid Preflight:**
+
 ```bash
 curl -X OPTIONS https://disaai.de/api/chat \
   -H "Origin: https://disaai.de" \
@@ -244,6 +253,7 @@ curl -X OPTIONS https://disaai.de/api/chat \
 ```
 
 **Expected Response:**
+
 - Status: `204 No Content`
 - Headers:
   - `Access-Control-Allow-Origin: https://disaai.de`
@@ -253,6 +263,7 @@ curl -X OPTIONS https://disaai.de/api/chat \
   - `Vary: Origin`
 
 **Invalid Preflight:**
+
 ```bash
 curl -X OPTIONS https://disaai.de/api/chat \
   -H "Origin: https://evil.com" \
@@ -260,6 +271,7 @@ curl -X OPTIONS https://disaai.de/api/chat \
 ```
 
 **Expected Response:**
+
 - Status: `403 Forbidden`
 - No CORS headers
 
@@ -270,6 +282,7 @@ curl -X OPTIONS https://disaai.de/api/chat \
 #### Chat Endpoint:
 
 **Valid Request:**
+
 ```bash
 curl -X POST https://disaai.de/api/chat \
   -H "Origin: https://disaai.de" \
@@ -279,6 +292,7 @@ curl -X POST https://disaai.de/api/chat \
 ```
 
 **Expected Response:**
+
 - Status: `200 OK`
 - Headers:
   - `Access-Control-Allow-Origin: https://disaai.de`
@@ -286,6 +300,7 @@ curl -X POST https://disaai.de/api/chat \
   - `Content-Type: application/json`
 
 **Blocked Request:**
+
 ```bash
 curl -X POST https://disaai.de/api/chat \
   -H "Origin: https://evil.com" \
@@ -295,6 +310,7 @@ curl -X POST https://disaai.de/api/chat \
 ```
 
 **Expected Response:**
+
 - Status: `403 Forbidden`
 - Body: `{"error": "Origin not allowed"}`
 - No CORS headers
@@ -304,6 +320,7 @@ curl -X POST https://disaai.de/api/chat \
 #### Feedback Endpoint:
 
 **Valid Request (first 5):**
+
 ```bash
 curl -X POST https://disaai.de/api/feedback \
   -H "Origin: https://disaai.de" \
@@ -314,6 +331,7 @@ curl -X POST https://disaai.de/api/feedback \
 ```
 
 **Expected Response:**
+
 - Status: `200 OK`
 - Body: `{"success": true, "id": "...", "attachmentCount": 0}`
 - Headers:
@@ -321,6 +339,7 @@ curl -X POST https://disaai.de/api/feedback \
   - `Vary: Origin`
 
 **Rate Limited Request (6th within 10 min):**
+
 ```bash
 # After 5 requests within 10 minutes
 curl -X POST https://disaai.de/api/feedback \
@@ -331,6 +350,7 @@ curl -X POST https://disaai.de/api/feedback \
 ```
 
 **Expected Response:**
+
 - Status: `429 Too Many Requests`
 - Body: `{"success": false, "error": "Too many requests. Please wait 10 minutes..."}`
 
@@ -339,21 +359,25 @@ curl -X POST https://disaai.de/api/feedback \
 ### 2.3 Streaming Performance Test
 
 **Setup:**
+
 1. Create conversation with 500+ messages
 2. Start new assistant message stream
 3. Send 100+ token chunks rapidly
 
 **Measurements:**
+
 - Time per UPDATE_MESSAGE dispatch
 - UI render time per chunk
 - Total stream processing time
 
 **Success Criteria:**
+
 - Average chunk processing time < 5ms
 - No visible UI lag during streaming
 - No memory leaks (check DevTools Performance)
 
 **Manual Test:**
+
 1. Open app in Chrome DevTools
 2. Open Performance tab
 3. Start recording
@@ -368,15 +392,15 @@ curl -X POST https://disaai.de/api/feedback \
 ### 3.1 Chat Flow (Playwright)
 
 ```javascript
-test('chat with streaming works with CORS', async ({ page }) => {
-  await page.goto('https://disaai.de');
+test("chat with streaming works with CORS", async ({ page }) => {
+  await page.goto("https://disaai.de");
 
   // Verify origin is correct
   const origin = await page.evaluate(() => window.location.origin);
-  expect(origin).toBe('https://disaai.de');
+  expect(origin).toBe("https://disaai.de");
 
   // Type message
-  await page.fill('[data-testid="chat-input"]', 'Hello, tell me a joke');
+  await page.fill('[data-testid="chat-input"]', "Hello, tell me a joke");
   await page.click('[data-testid="send-button"]');
 
   // Wait for streaming to start
@@ -384,13 +408,13 @@ test('chat with streaming works with CORS', async ({ page }) => {
 
   // Verify no CORS errors in console
   const errors = [];
-  page.on('console', msg => {
-    if (msg.type() === 'error') errors.push(msg.text());
+  page.on("console", (msg) => {
+    if (msg.type() === "error") errors.push(msg.text());
   });
 
   await page.waitForTimeout(5000); // Wait for stream to complete
 
-  const corsErrors = errors.filter(e => e.includes('CORS') || e.includes('Origin'));
+  const corsErrors = errors.filter((e) => e.includes("CORS") || e.includes("Origin"));
   expect(corsErrors).toHaveLength(0);
 });
 ```
@@ -400,8 +424,8 @@ test('chat with streaming works with CORS', async ({ page }) => {
 ### 3.2 Feedback Submission
 
 ```javascript
-test('feedback with rate limiting', async ({ page }) => {
-  await page.goto('https://disaai.de/feedback');
+test("feedback with rate limiting", async ({ page }) => {
+  await page.goto("https://disaai.de/feedback");
 
   // Submit 5 feedback messages
   for (let i = 0; i < 5; i++) {
@@ -411,12 +435,12 @@ test('feedback with rate limiting', async ({ page }) => {
   }
 
   // 6th attempt should be rate limited
-  await page.fill('[data-testid="feedback-message"]', 'Test 6');
+  await page.fill('[data-testid="feedback-message"]', "Test 6");
   await page.click('[data-testid="submit-feedback"]');
   await page.waitForSelector('[data-testid="feedback-error"]');
 
   const errorText = await page.textContent('[data-testid="feedback-error"]');
-  expect(errorText).toContain('Too many requests');
+  expect(errorText).toContain("Too many requests");
 });
 ```
 
@@ -425,26 +449,26 @@ test('feedback with rate limiting', async ({ page }) => {
 ### 3.3 Long Conversation Performance
 
 ```javascript
-test('streaming performance with 500+ messages', async ({ page }) => {
+test("streaming performance with 500+ messages", async ({ page }) => {
   // Pre-populate conversation with 500 messages
-  await page.goto('https://disaai.de');
+  await page.goto("https://disaai.de");
   await page.evaluate(() => {
     const messages = [];
     for (let i = 0; i < 500; i++) {
       messages.push({
         id: `msg-${i}`,
-        role: i % 2 === 0 ? 'user' : 'assistant',
-        content: `Message ${i}`
+        role: i % 2 === 0 ? "user" : "assistant",
+        content: `Message ${i}`,
       });
     }
-    localStorage.setItem('disa:test-conversation', JSON.stringify(messages));
+    localStorage.setItem("disa:test-conversation", JSON.stringify(messages));
   });
 
   // Reload and measure streaming performance
   await page.reload();
 
   const startTime = Date.now();
-  await page.fill('[data-testid="chat-input"]', 'Continue the conversation');
+  await page.fill('[data-testid="chat-input"]', "Continue the conversation");
   await page.click('[data-testid="send-button"]');
 
   // Wait for streaming to complete
@@ -458,8 +482,8 @@ test('streaming performance with 500+ messages', async ({ page }) => {
 
   // Check for performance warnings in console
   const warnings = [];
-  page.on('console', msg => {
-    if (msg.text().includes('slow') || msg.text().includes('performance')) {
+  page.on("console", (msg) => {
+    if (msg.text().includes("slow") || msg.text().includes("performance")) {
       warnings.push(msg.text());
     }
   });
@@ -477,7 +501,7 @@ test('streaming performance with 500+ messages', async ({ page }) => {
 - [x] Origin validation uses URL parsing (not string matching)
 - [x] Only HTTPS allowed in production (except localhost dev)
 - [x] Exact hostname match (no prefix/substring tricks)
-- [x] Preview domains validated correctly (*.pages.dev with 3-part check)
+- [x] Preview domains validated correctly (\*.pages.dev with 3-part check)
 - [x] `Vary: Origin` header set on all responses
 - [x] Preflight rejections return 403 (not 200 with wrong headers)
 - [x] Actual requests blocked if origin invalid (403)
@@ -511,7 +535,7 @@ test('streaming performance with 500+ messages', async ({ page }) => {
 
 ### 4.5 Headers
 
-- [x] `Access-Control-Allow-Origin` set to specific origin (not *)
+- [x] `Access-Control-Allow-Origin` set to specific origin (not \*)
 - [x] `Vary: Origin` set for caching correctness
 - [x] `Access-Control-Allow-Methods` restricted to POST, OPTIONS
 - [x] `Access-Control-Allow-Headers` restricted to needed headers
@@ -594,21 +618,21 @@ test('streaming performance with 500+ messages', async ({ page }) => {
 const state = {
   messages: Array.from({ length: 500 }, (_, i) => ({
     id: `msg-${i}`,
-    role: i % 2 === 0 ? 'user' : 'assistant',
-    content: `Message ${i}`
+    role: i % 2 === 0 ? "user" : "assistant",
+    content: `Message ${i}`,
   })),
-  currentAssistantMessageIndex: 499
+  currentAssistantMessageIndex: 499,
 };
 
-console.time('UPDATE_MESSAGE');
+console.time("UPDATE_MESSAGE");
 for (let i = 0; i < 100; i++) {
   chatReducer(state, {
-    type: 'UPDATE_MESSAGE',
-    id: 'msg-499',
-    content: `Updated content ${i}`
+    type: "UPDATE_MESSAGE",
+    id: "msg-499",
+    content: `Updated content ${i}`,
   });
 }
-console.timeEnd('UPDATE_MESSAGE');
+console.timeEnd("UPDATE_MESSAGE");
 
 // Should be < 500ms total
 ```
@@ -618,17 +642,20 @@ console.timeEnd('UPDATE_MESSAGE');
 ## 8. Summary
 
 ### Fixed Issues:
+
 1. ✅ Unsecure CORS origin validation (startsWith vulnerability)
 2. ✅ Feedback endpoint without rate limiting
 3. ✅ Streaming performance bottleneck (O(n) reverse + search)
 
 ### Updated Documentation:
+
 1. ✅ OVERVIEW.md - Removed LaTeX, updated MobileOnlyGate
 2. ✅ ARCHITECTURE.md - Corrected reducer actions, added performance notes
 3. ✅ known-issues.md - Added fixed security/performance issues
 4. ✅ PRIVACY.md - Fixed formatting, updated security section
 
 ### Security Improvements:
+
 1. ✅ Strict URL-based origin validation
 2. ✅ Exact hostname matching (no spoofing)
 3. ✅ KV-based rate limiting (5 req / 10 min)
@@ -636,6 +663,7 @@ console.timeEnd('UPDATE_MESSAGE');
 5. ✅ No sensitive data in logs
 
 ### Performance Improvements:
+
 1. ✅ O(1) message updates via index caching
 2. ✅ ~10x faster streaming with long conversations
 3. ✅ No UI lag on mobile devices
@@ -652,6 +680,6 @@ console.timeEnd('UPDATE_MESSAGE');
 6. Monitor Cloudflare logs and analytics
 7. Verify production endpoints work correctly
 
-**Test Completion Date:** _____________
+**Test Completion Date:** **\*\***\_**\*\***
 
-**Tester Signature:** _____________
+**Tester Signature:** **\*\***\_**\*\***
