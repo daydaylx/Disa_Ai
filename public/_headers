@@ -1,35 +1,101 @@
+# ============================================================================
+# DISA AI - SECURITY HEADERS CONFIGURATION
+# ============================================================================
+# Cloudflare Pages automatically applies these headers to all matching routes
+# See: docs/guides/SECURITY_HEADERS.md for detailed documentation
+# ============================================================================
+
 # PWA Manifest
 /manifest.webmanifest
   Content-Type: application/manifest+json; charset=utf-8
   Cache-Control: public, max-age=3600
 
-# Service Worker
+# Service Worker - Must be fresh for updates
 /sw.js
   Content-Type: application/javascript; charset=utf-8
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
 
-# All other files - Enhanced security headers for modern PWA
+# ============================================================================
+# GLOBAL SECURITY HEADERS - All Routes
+# ============================================================================
 /*
-  # Content Security Policy - Optimiert für Vite + React + PWA
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' static.cloudflareinsights.com https://cdn.jsdelivr.net https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://openrouter.ai https://api.mailchannels.net https://cloudflareinsights.com https://static.cloudflareinsights.com https://fonts.googleapis.com https://cdn.jsdelivr.net https://esm.sh wss: ws:; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  # ──────────────────────────────────────────────────────────────────────────
+  # Content Security Policy (CSP) - XSS Protection
+  # ──────────────────────────────────────────────────────────────────────────
+  # Production-hardened CSP designed for Vite + React + PWA + Tailwind
+  #
+  # Key Design Decisions:
+  # - script-src: NO 'unsafe-inline', NO 'unsafe-eval' → Prevents inline script XSS
+  # - style-src: 'unsafe-inline' required for Tailwind CSS dynamic classes
+  # - connect-src: Restricted to proxy + Sentry only (no direct OpenRouter access)
+  # - img-src: Allows data: URIs for base64 images, https: for external content
+  # - Strict directives for workers, fonts, frames
+  #
+  # ⚠️ Breaking Changes: If chat breaks after deploy, check:
+  #   1. CDN URLs changed? Update script-src/style-src
+  #   2. New external API? Add to connect-src
+  #   3. Inline scripts added? Remove them (use bundled scripts instead)
+  # ──────────────────────────────────────────────────────────────────────────
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://esm.sh https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.ingest.sentry.io https://*.sentry.io wss://ws.sentry.io; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
 
+  # ──────────────────────────────────────────────────────────────────────────
   # Core Security Headers
+  # ──────────────────────────────────────────────────────────────────────────
+  # X-Frame-Options: Prevents clickjacking attacks
   X-Frame-Options: DENY
+
+  # X-Content-Type-Options: Prevents MIME-type sniffing
   X-Content-Type-Options: nosniff
+
+  # Strict-Transport-Security: Forces HTTPS (2 years + subdomains + preload)
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+  # Referrer-Policy: Balances privacy and functionality
+  # - Sends origin for same-origin requests
+  # - Only sends origin (not full URL) for cross-origin HTTPS requests
+  # - No referrer for HTTPS→HTTP downgrades
   Referrer-Policy: strict-origin-when-cross-origin
 
-  # Modern Privacy & Security
+  # ──────────────────────────────────────────────────────────────────────────
+  # Modern Privacy & Security Headers
+  # ──────────────────────────────────────────────────────────────────────────
+  # Permissions-Policy: Restricts browser features to prevent abuse
+  # Disabled: geolocation, microphone, camera, payment, usb
+  # Also blocks FLoC and Topics API for user privacy
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()
+
+  # Cross-Origin-Opener-Policy: Isolates browsing context
+  # 'same-origin' provides strongest isolation but may break some integrations
+  # If popup auth breaks, consider 'same-origin-allow-popups'
   Cross-Origin-Opener-Policy: same-origin
+
+  # Cross-Origin-Embedder-Policy: Prevents loading untrusted cross-origin resources
+  # 'credentialless' mode balances security with compatibility
+  # If CDN resources fail to load, this is the likely culprit
   Cross-Origin-Embedder-Policy: credentialless
+
+  # Cross-Origin-Resource-Policy: Protects resources from cross-origin reads
   Cross-Origin-Resource-Policy: same-origin
+
+  # X-Permitted-Cross-Domain-Policies: Prevents Adobe Flash/PDF policies
   X-Permitted-Cross-Domain-Policies: none
 
-  # PWA & Performance Headers
-  Accept-CH: DPR, Viewport-Width, Width
-  Critical-CH: DPR
-
-  # Cache Control für statische Assets
+  # ──────────────────────────────────────────────────────────────────────────
+  # Cache Control for Static Assets
+  # ──────────────────────────────────────────────────────────────────────────
+  # Aggressive caching for hashed assets (immutable)
+  # Vite generates assets with content hashes: [name]-[hash].js
   Cache-Control: public, max-age=31536000, immutable
+
+# ============================================================================
+# EXCEPTIONS & OVERRIDES
+# ============================================================================
+
+# HTML files - Always revalidate to ensure fresh app shell
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# API routes - Never cache
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0

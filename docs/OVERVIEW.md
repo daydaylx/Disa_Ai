@@ -246,6 +246,51 @@ Die App ist primär für mobile Geräte optimiert, funktioniert aber auch auf De
 
 ## Weiterführende Dokumentation
 
-- [Technische Architektur](ARCHITECTURE.md)
-- [Konfiguration](CONFIG.md)
-- [Bekannte Probleme](guides/known-issues.md)
+### Grundlagen
+
+| Dokument | Inhalt |
+|----------|--------|
+| [Architektur](ARCHITECTURE.md) | Technische Architektur |
+| [Konfiguration](CONFIG.md) | Konfiguration und Feature-Flags |
+| [Bekannte Probleme](guides/known-issues.md) | Probleme und Workarounds |
+
+### Entwickler-Guides
+
+| Dokument | Inhalt |
+|----------|--------|
+| [Umgebungsvariablen](guides/ENVIRONMENT_VARIABLES.md) | Alle Umgebungsvariablen |
+| [Test-Setup](guides/tests-setup.md) | Tests ausführen |
+| [Release-Playbook](guides/RELEASE_PLAYBOOK.md) | Release-Prozess |
+
+### Reports & Audits
+
+| Dokument | Inhalt |
+|----------|--------|
+| [Reports Übersicht](reports/README.md) | Alle Reports und Audits |
+| [Chat-Audit](reports/chat-audit-report.md) | Chat-Seite Analyse |
+| [Design-System](reports/design-system-improvements.md) | UI-Verbesserungen |
+| [Test-Coverage](reports/test-expansion-summary.md) | Test-Abdeckung |
+
+### AI-Agenten
+
+| Dokument | Inhalt |
+|----------|--------|
+| [AGENTS.md](../AGENTS.md) | Repository Guidelines |
+| [CLAUDE.md](../CLAUDE.md) | Claude Code Referenz |
+| [GEMINI.md](../GEMINI.md) | Gemini Referenz |
+
+---
+
+## Dokumentationsstruktur
+
+```
+docs/
+├── OVERVIEW.md              # Diese Datei - App-Übersicht
+├── ARCHITECTURE.md          # Technische Architektur
+├── CONFIG.md                # Konfiguration
+├── guides/                  # Entwickler-Guides
+├── reports/                 # Reports & Audits
+│   └── audits/              # Technische Audits
+├── decisions/               # Architecture Decision Records
+└── agents/                  # AI-Agent Referenzen
+```
