@@ -22,18 +22,7 @@ interface PerformanceHUDProps {
   fps?: number;
 }
 
-/**
- * Simple hash function for content caching
- * @internal - reserved for future use
- */
-function _hashContent(content: string): string {
-  let hash = 5381;
-  for (let i = 0; i < content.length; i++) {
-    hash = (hash << 5) - hash + content.charCodeAt(i);
-    hash = hash & 0x7fffffff;
-  }
-  return hash.toString(36);
-}
+// Performance monitoring utilities - no unused helpers needed
 
 /**
  * Performance monitoring hook
@@ -100,25 +89,24 @@ export function usePerformanceMonitor(componentName: string, enabled = isDevEnvi
   }
 
   return {
-    trackRender:
-      renderStartTimeRef.current === 0
-        ? startTracking
-        : () => {
-            return () => {
-              if (renderStartTimeRef.current === 0) return startTracking();
-              const startTime = renderStartTimeRef.current;
-              const endTime = performance.now();
-              const renderTime = endTime - startTime;
+    trackRender: () => {
+      const startTime = performance.now();
+      renderStartTimeRef.current = startTime;
 
-              const currentAvg = avgRenderTime.current;
-              const count = renderCountRef.current;
-              const newAvg = currentAvg + (renderTime - currentAvg) / (count + 1);
-              avgRenderTime.current = newAvg;
+      return () => {
+        const endTime = performance.now();
+        const renderTime = endTime - startTime;
 
-              renderStartTimeRef.current = 0;
-              return renderTime;
-            };
-          },
+        const currentAvg = avgRenderTime.current;
+        const count = renderCountRef.current;
+        const newAvg = currentAvg + (renderTime - currentAvg) / (count + 1);
+        avgRenderTime.current = newAvg;
+        renderCountRef.current = count + 1;
+
+        renderStartTimeRef.current = 0;
+        return renderTime;
+      };
+    },
     getMetrics,
   };
 }
@@ -155,6 +143,13 @@ function getFPS(): number {
 
   return 0;
 }
+
+// Type for parsed markdown parts (code blocks, text, etc.)
+type ParsedPart = {
+  type: string;
+  content: string;
+  language?: string;
+};
 
 class MarkdownCache {
   private cache = new Map<string, ParsedPart[]>();
