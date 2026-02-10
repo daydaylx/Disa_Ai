@@ -37,7 +37,7 @@
   #   2. New external API? Add to connect-src
   #   3. Inline scripts added? Remove them (use bundled scripts instead)
   # ──────────────────────────────────────────────────────────────────────────
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://esm.sh https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://openrouter.ai https://cloudflareinsights.com https://*.ingest.sentry.io https://*.sentry.io wss://ws.sentry.io; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://esm.sh https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://openrouter.ai https://cloudflareinsights.com https://fonts.googleapis.com https://*.ingest.sentry.io https://*.sentry.io wss://ws.sentry.io; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
 
   # ──────────────────────────────────────────────────────────────────────────
   # Core Security Headers
