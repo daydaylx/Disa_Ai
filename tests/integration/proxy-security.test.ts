@@ -85,6 +85,42 @@ describe("Proxy Security - Authentication", () => {
     delete process.env.VITE_PROXY_SHARED_SECRET;
   });
 
+  it("should bind the proxy signature to the timestamp (anti-replay)", async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: {
+        get: vi.fn((name: string) => {
+          if (name === "content-type") return "application/json";
+          return null;
+        }),
+      },
+      json: async () => ({
+        choices: [{ message: { content: "ok" } }],
+      }),
+    };
+
+    // Same response for both calls
+    mockFetch.mockResolvedValue(mockResponse);
+
+    const messages = [{ role: "user" as const, content: "test message" }];
+
+    const nowSpy = vi.spyOn(Date, "now");
+    nowSpy.mockReturnValueOnce(1700000000000); // timestamp A
+    await chatOnceViaProxy(messages);
+
+    nowSpy.mockReturnValueOnce(1700000005000); // timestamp B
+    await chatOnceViaProxy(messages);
+
+    nowSpy.mockRestore();
+
+    const firstCallHeaders = mockFetch.mock.calls[0]?.[1]?.headers as Record<string, string>;
+    const secondCallHeaders = mockFetch.mock.calls[1]?.[1]?.headers as Record<string, string>;
+
+    expect(firstCallHeaders["X-Proxy-Timestamp"]).not.toBe(secondCallHeaders["X-Proxy-Timestamp"]);
+    expect(firstCallHeaders["X-Proxy-Secret"]).not.toBe(secondCallHeaders["X-Proxy-Secret"]);
+  });
+
   it("should handle 401 Unauthorized error", async () => {
     const mockResponse = {
       ok: false,

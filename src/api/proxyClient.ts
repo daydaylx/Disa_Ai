@@ -15,13 +15,18 @@ const PROXY_CLIENT_ID = "disa-ai-app";
  * Generate HMAC signature for proxy authentication
  *
  * @param body - Request body string
+ * @param timestamp - Unix timestamp (seconds)
  * @param secret - Shared secret for HMAC
  * @returns HMAC signature
  */
-async function generateProxySignature(body: string, secret: string): Promise<string> {
+async function generateProxySignature(
+  body: string,
+  timestamp: number,
+  secret: string,
+): Promise<string> {
   const encoder = new TextEncoder();
   const key = encoder.encode(secret);
-  const message = encoder.encode(body);
+  const message = encoder.encode(`${body}:${timestamp}`);
 
   const keyData = await crypto.subtle.importKey(
     "raw",
@@ -103,7 +108,7 @@ export async function chatStreamViaProxy(
     }
 
     const bodyString = JSON.stringify(payload);
-    const signature = await generateProxySignature(bodyString, secret);
+    const signature = await generateProxySignature(bodyString, timestamp, secret);
 
     const response = await fetch(PROXY_CONFIG.endpoint, {
       method: "POST",
@@ -261,7 +266,7 @@ export async function chatOnceViaProxy(
     };
 
     const bodyString = JSON.stringify(payload);
-    const signature = await generateProxySignature(bodyString, secret);
+    const signature = await generateProxySignature(bodyString, timestamp, secret);
 
     const response = await fetch(PROXY_CONFIG.endpoint, {
       method: "POST",
