@@ -27,7 +27,7 @@ test.describe("Unified Layout Tests", () => {
 
       // Brand/logo should be present (may have multiple instances - sidebar + header)
       // Check that at least one is visible
-      await expect(page.getByTestId("brand-logo").first()).toBeVisible();
+      await expect(page.locator('[data-testid="brand-logo"]:visible').first()).toBeVisible();
     }
   });
 

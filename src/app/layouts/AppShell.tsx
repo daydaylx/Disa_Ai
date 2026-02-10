@@ -166,8 +166,8 @@ function AppShellLayout({
           ) : null}
 
           <div
-            id="main"
-            role="main"
+            id={isChatMode ? undefined : "main"}
+            role={isChatMode ? undefined : "main"}
             data-testid="app-main"
             key={location.pathname}
             // Remove background handling here for Chat Mode, BookLayout does it
@@ -175,7 +175,7 @@ function AppShellLayout({
               "relative flex flex-1 flex-col min-h-0",
               isChatMode ? "bg-transparent" : "bg-bg-app",
             )}
-            tabIndex={-1}
+            tabIndex={isChatMode ? undefined : -1}
           >
             <div
               className={cn(

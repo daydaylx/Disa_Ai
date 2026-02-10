@@ -59,8 +59,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/app-icons/icon-180.png" />
 
     <!-- PWA Manifest -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap"
@@ -78,10 +76,6 @@
       rel="stylesheet"
     />
     <link rel="manifest" href="/manifest.webmanifest?v=2" />
-
-    <!-- DNS Prefetch & Preconnect for API -->
-    <link rel="dns-prefetch" href="https://openrouter.ai" />
-    <link rel="preconnect" href="https://openrouter.ai" crossorigin />
 
     <!-- Module Preload for critical chunks will be added by Vite -->
     <style>
@@ -826,24 +820,6 @@
         container.appendChild(warning);
       });
     </script>
-    <script>
-      // Mobile viewport height fix with shared helper
-      (function () {
-        const applyViewportHeight = () => {
-          if (typeof window.__disaSetViewportHeight === "function") {
-            window.__disaSetViewportHeight();
-            return;
-          }
-          const vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty("--vh", `${vh}px`);
-        };
-
-        applyViewportHeight();
-        window.addEventListener("resize", applyViewportHeight);
-        window.addEventListener("orientationchange", () => {
-          setTimeout(applyViewportHeight, 100);
-        });
-      })();
-    </script>
+    <script src="/viewport-height.js"></script>
   </body>
 </html>

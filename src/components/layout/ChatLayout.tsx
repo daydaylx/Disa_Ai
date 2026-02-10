@@ -65,7 +65,9 @@ export function ChatLayout({
       </header>
 
       {/* Main Page Content Area */}
-      <div
+      <main
+        id="main"
+        tabIndex={-1}
         className={cn(
           "flex-1 relative flex flex-col w-full max-w-5xl mx-auto overflow-hidden px-4 sm:px-6 min-h-0",
           className,
@@ -73,7 +75,7 @@ export function ChatLayout({
       >
         <h1 className="sr-only">Disa AI – Chat</h1>
         {children}
-      </div>
+      </main>
     </div>
   );
 }

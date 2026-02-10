@@ -28,7 +28,7 @@
   # Key Design Decisions:
   # - script-src: NO 'unsafe-inline', NO 'unsafe-eval' → Prevents inline script XSS
   # - style-src: 'unsafe-inline' required for Tailwind CSS dynamic classes
-  # - connect-src: Restricted to proxy + Sentry only (no direct OpenRouter access)
+  # - connect-src: Restricts runtime APIs to explicitly allowed domains
   # - img-src: Allows data: URIs for base64 images, https: for external content
   # - Strict directives for workers, fonts, frames
   #
@@ -37,7 +37,7 @@
   #   2. New external API? Add to connect-src
   #   3. Inline scripts added? Remove them (use bundled scripts instead)
   # ──────────────────────────────────────────────────────────────────────────
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://esm.sh https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://*.ingest.sentry.io https://*.sentry.io wss://ws.sentry.io; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://esm.sh https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https://openrouter.ai https://cloudflareinsights.com https://*.ingest.sentry.io https://*.sentry.io wss://ws.sentry.io; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
 
   # ──────────────────────────────────────────────────────────────────────────
   # Core Security Headers
@@ -81,20 +81,21 @@
   # X-Permitted-Cross-Domain-Policies: Prevents Adobe Flash/PDF policies
   X-Permitted-Cross-Domain-Policies: none
 
-  # ──────────────────────────────────────────────────────────────────────────
-  # Cache Control for Static Assets
-  # ──────────────────────────────────────────────────────────────────────────
-  # Aggressive caching for hashed assets (immutable)
-  # Vite generates assets with content hashes: [name]-[hash].js
-  Cache-Control: public, max-age=31536000, immutable
-
 # ============================================================================
 # EXCEPTIONS & OVERRIDES
 # ============================================================================
 
+# SPA shell route - Always revalidate to ensure fresh app shell
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
 # HTML files - Always revalidate to ensure fresh app shell
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+
+# Aggressive caching for hashed assets (immutable)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # API routes - Never cache
 /api/*

@@ -391,7 +391,7 @@ export default function Chat() {
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="text-sm text-ink-muted hover:text-ink-secondary transition-colors mt-2 flex items-center gap-2"
+                      className="text-sm text-ink-secondary hover:text-ink-primary transition-colors mt-2 flex items-center gap-2"
                     >
                       Einstellungen anpassen
                       <span className="text-xs">→</span>
