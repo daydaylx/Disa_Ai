@@ -5,7 +5,7 @@
     "destination": "dist",
     "root_dir": ".",
     "environment_variables": {
-      "NODE_VERSION": "20.19",
+      "NODE_VERSION": "20.19.0",
       "CF_PAGES": "true",
       "VITE_OPENROUTER_BASE_URL": "https://openrouter.ai/api/v1",
       "VITE_BASE_URL": "/",

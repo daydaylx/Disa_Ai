@@ -46,6 +46,7 @@ Diese Referenz listet alle Umgebungsvariablen auf, die das Projekt aktuell auswe
 
 | Variable | Pflicht? | Zweck | Referenz |
 | --- | --- | --- | --- |
+| `NODE_VERSION` | nein | Node.js Version fuer Cloudflare Pages Build (Vite 7 benoetigt `^20.19.0 || >=22.12.0`). | [`deploy/cloudflare/cloudflare-pages.json`](../deploy/cloudflare/cloudflare-pages.json), [`.nvmrc`](../.nvmrc) |
 | `NODE_ENV` | ja (Build) | Steuert Build-/Runtime-Modus. | Diverse, z.B. [`scripts/run-preview.mjs`](../scripts/run-preview.mjs) |
 | `BUNDLE_ANALYZE` | optional | Aktiviert Bundle-Analyser. | [`vite.config.ts`](../vite.config.ts) |
 | `BUNDLE_ANALYZE_MODE` | optional | Modus für Bundle-Analyser (`static`, `server`, …). | [`vite.config.ts`](../vite.config.ts) |
