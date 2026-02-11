@@ -194,18 +194,16 @@ async function verifyHMAC(
 // ABUSE CONTROLS
 // =====================
 
-async function validateRequestSize(request: Request): Promise<boolean> {
-  try {
-    const contentLength = request.headers.get("Content-Length");
-    if (contentLength && parseInt(contentLength, 10) > ABUSE_CONTROLS.maxRequestBodySize) {
+function isRequestBodySizeAllowed(request: Request, requestBody: string): boolean {
+  const contentLength = request.headers.get("Content-Length");
+  if (contentLength) {
+    const size = parseInt(contentLength, 10);
+    if (!Number.isNaN(size) && size > ABUSE_CONTROLS.maxRequestBodySize) {
       return false;
     }
-
-    const body = await request.text();
-    return body.length <= ABUSE_CONTROLS.maxRequestBodySize;
-  } catch {
-    return false;
   }
+
+  return requestBody.length <= ABUSE_CONTROLS.maxRequestBodySize;
 }
 
 function checkConcurrencyLimit(clientIp: string): { allowed: boolean; active: number } {
@@ -302,6 +300,10 @@ export async function onRequest(context: {
     return jsonError("Method not allowed. Use POST.", 405, request);
   }
 
+  // Track streaming concurrency so we can always decrement on errors.
+  let concurrencyAcquired = false;
+  let concurrencyClientIp = "unknown";
+
   try {
     // Validate environment variables
     if (!env.OPENROUTER_API_KEY) {
@@ -326,36 +328,24 @@ export async function onRequest(context: {
       return jsonError("Invalid referer", 403, request);
     }
 
-    // Validate request size
-    const validSize = await validateRequestSize(request);
-    if (!validSize) {
-      console.warn("⚠️ Request size exceeds limit");
+    // Reject oversized requests early (best-effort)
+    const contentLength = request.headers.get("Content-Length");
+    if (contentLength) {
+      const size = parseInt(contentLength, 10);
+      if (!Number.isNaN(size) && size > ABUSE_CONTROLS.maxRequestBodySize) {
+        console.warn("⚠️ Request size exceeds limit (Content-Length)");
+        return jsonError("Request size exceeds limit", 400, request);
+      }
+    }
+
+    // Read body once (Request body streams can only be consumed once)
+    const requestBody = await request.text();
+
+    // Validate request size (body length)
+    if (!isRequestBodySizeAllowed(request, requestBody)) {
+      console.warn("⚠️ Request size exceeds limit (body length)");
       return jsonError("Request size exceeds limit", 400, request);
     }
-
-    // Get client IP for rate limiting
-    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
-
-    // Check rate limit
-    const rateLimitResult = checkRateLimit(clientIp);
-    if (!rateLimitResult.allowed) {
-      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIp}`);
-      return rateLimitError(request, rateLimitResult.remaining || 0);
-    }
-
-    // Check concurrency limit for streaming requests
-    const concurrencyResult = checkConcurrencyLimit(clientIp);
-    if (!concurrencyResult.allowed) {
-      console.warn(`⚠️ Concurrency limit exceeded for IP: ${clientIp}`);
-      return jsonError(
-        "Too many concurrent requests. Please wait for current requests to complete.",
-        429,
-        request,
-      );
-    }
-
-    // Re-read body (we consumed it for size validation)
-    const requestBody = await request.text();
 
     // Parse request body
     let parsedBody: ChatRequest;
@@ -387,6 +377,17 @@ export async function onRequest(context: {
       );
     }
 
+    // Get client IP for abuse controls
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    concurrencyClientIp = clientIp;
+
+    // Check rate limit (cheap, before HMAC)
+    const rateLimitResult = checkRateLimit(clientIp);
+    if (!rateLimitResult.allowed) {
+      console.warn(`⚠️ Rate limit exceeded for IP: ${clientIp}`);
+      return rateLimitError(request, rateLimitResult.remaining || 0);
+    }
+
     // Verify HMAC signature
     const signature = request.headers.get("X-Proxy-Secret");
     const timestamp = request.headers.get("X-Proxy-Timestamp");
@@ -415,6 +416,23 @@ export async function onRequest(context: {
     if (!validHMAC) {
       console.warn("⚠️ Invalid HMAC signature");
       return jsonError("Invalid authentication signature", 401, request);
+    }
+
+    // Concurrency limit is only meaningful for streaming (long-lived) requests.
+    const wantsStream = Boolean(validationResult.data.stream ?? true);
+    concurrencyAcquired = false;
+
+    if (wantsStream) {
+      const concurrencyResult = checkConcurrencyLimit(clientIp);
+      if (!concurrencyResult.allowed) {
+        console.warn(`⚠️ Concurrency limit exceeded for IP: ${clientIp}`);
+        return jsonError(
+          "Too many concurrent requests. Please wait for current requests to complete.",
+          429,
+          request,
+        );
+      }
+      concurrencyAcquired = true;
     }
 
     // Build OpenRouter request payload
@@ -475,7 +493,10 @@ export async function onRequest(context: {
         errorMessage = `OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`;
       }
 
-      decrementConcurrency(clientIp);
+      if (concurrencyAcquired) {
+        decrementConcurrency(clientIp);
+        concurrencyAcquired = false;
+      }
 
       return jsonError(errorMessage, openRouterResponse.status, request);
     }
@@ -518,7 +539,10 @@ export async function onRequest(context: {
             }
           } finally {
             clearTimeout(timeoutId);
-            decrementConcurrency(clientIp);
+            if (concurrencyAcquired) {
+              decrementConcurrency(clientIp);
+              concurrencyAcquired = false;
+            }
           }
         },
       });
@@ -538,7 +562,10 @@ export async function onRequest(context: {
     const responseData = await openRouterResponse.json();
     console.log("✅ Non-streaming response from OpenRouter");
 
-    decrementConcurrency(clientIp);
+    if (concurrencyAcquired) {
+      decrementConcurrency(clientIp);
+      concurrencyAcquired = false;
+    }
 
     return new Response(JSON.stringify(responseData), {
       status: openRouterResponse.status,
@@ -550,9 +577,10 @@ export async function onRequest(context: {
   } catch (error) {
     console.error("❌ Unexpected error in /api/chat:", error);
 
-    // Get client IP for rate limit decrement
-    const clientIp = context.request.headers.get("CF-Connecting-IP") || "unknown";
-    decrementConcurrency(clientIp);
+    if (concurrencyAcquired) {
+      decrementConcurrency(concurrencyClientIp);
+      concurrencyAcquired = false;
+    }
 
     return jsonError(
       error instanceof Error ? error.message : "Internal server error",
