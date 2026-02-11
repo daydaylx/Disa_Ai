@@ -6,8 +6,9 @@ test.describe("Book Concept UI", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
     await page.goto("/");
-    // Wait for initial load
-    await page.waitForLoadState("networkidle");
+    // Wait for initial load (avoid networkidle flakiness with SW/PWA)
+    await page.waitForLoadState("domcontentloaded");
+    await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 30000 });
   });
 
   test("should display the Book Layout correctly", async ({ page }) => {
@@ -48,7 +49,7 @@ test.describe("Book Concept UI", () => {
     await expect(input).toHaveValue("");
 
     // Verify user message bubble appears
-    await expect(page.getByText("Hello Book World")).toBeVisible();
+    await expect(page.getByTestId("message-list").getByText("Hello Book World")).toBeVisible();
   });
 
   test("should open and interact with Control Bar", async ({ page }) => {

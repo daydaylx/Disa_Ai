@@ -81,13 +81,13 @@ Der Plasma-Orb sollte jetzt zeigen:
 
 ```typescript
 // ❌ VORHER: Tone Mapping aktiv
-gl={{ antialias: true }}
+gl={ { antialias: true } }
 
 // ✅ NACHHER: Tone Mapping deaktiviert
-gl={{
+gl={ {
   antialias: true,
   toneMapping: THREE.NoToneMapping  // ← KRITISCH
-}}
+} }
 
 // ❌ VORHER: AdditiveBlending auf Core
 blending={THREE.AdditiveBlending}

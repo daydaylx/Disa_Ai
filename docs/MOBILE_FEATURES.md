@@ -109,7 +109,7 @@ const { handlers, dragOffset } = useSwipeGesture({
   enableHaptic: true,
 });
 
-<div {...handlers} style={{ transform: `translateX(${dragOffset.x}px)` }}>
+<div {...handlers} style={ { transform: `translateX(${dragOffset.x}px)` } }>
   Swipe mich!
 </div>
 ```
