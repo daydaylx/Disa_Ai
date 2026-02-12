@@ -66,10 +66,20 @@ const ALLOWED_ORIGINS = ["https://disaai.de", "https://disa-ai.pages.dev"] as co
 
 const ALLOWED_MODELS = [
   "meta-llama/llama-3.3-70b-instruct:free",
+  "meta-llama/llama-3.2-3b-instruct:free",
+  "meta-llama/llama-3.1-8b-instruct:free",
   "google/gemma-2-9b-it:free",
   "mistralai/mistral-7b-instruct:free",
+  "mistralai/devstral-2512:free",
   "microsoft/phi-3-mini-128k-instruct:free",
+  "qwen/qwen-2-7b-instruct:free",
   "qwen/qwen-2.5-7b-instruct:free",
+  "allenai/olmo-3.1-32b-think:free",
+  "allenai/olmo-3-32b-think:free",
+  "xiaomi/mimo-v2-flash:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
+  "arcee-ai/trinity-mini:free",
+  "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
 ] as const;
 
 const RATE_LIMIT_CONFIG = {
