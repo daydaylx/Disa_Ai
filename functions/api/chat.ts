@@ -64,6 +64,9 @@ const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const ALLOWED_ORIGINS = ["https://disaai.de", "https://disa-ai.pages.dev"] as const;
 
+// Cloudflare Pages preview deployments use <hash>.disa-ai.pages.dev
+const PAGES_PREVIEW_PATTERN = /^https:\/\/[a-f0-9]+\.disa-ai\.pages\.dev$/;
+
 const ALLOWED_MODELS = [
   "meta-llama/llama-3.3-70b-instruct:free",
   "meta-llama/llama-3.2-3b-instruct:free",
@@ -134,12 +137,15 @@ function checkRateLimit(clientIp: string): { allowed: boolean; remaining?: numbe
 
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
-  return ALLOWED_ORIGINS.includes(origin as any);
+  if (ALLOWED_ORIGINS.includes(origin as any)) return true;
+  // Support Cloudflare Pages preview deployments (e.g. abc123.disa-ai.pages.dev)
+  return PAGES_PREVIEW_PATTERN.test(origin);
 }
 
 function getCORSOrigin(request: Request): string {
   const origin = request.headers.get("Origin");
-  return isAllowedOrigin(origin) ? origin! : ALLOWED_ORIGINS[0];
+  if (origin && isAllowedOrigin(origin)) return origin;
+  return ALLOWED_ORIGINS[0];
 }
 
 function isValidReferer(request: Request): boolean {
@@ -149,7 +155,7 @@ function isValidReferer(request: Request): boolean {
   const origin = request.headers.get("Origin") || "";
   try {
     const refererOrigin = new URL(referer).origin;
-    return refererOrigin === origin && ALLOWED_ORIGINS.includes(refererOrigin as any);
+    return refererOrigin === origin && isAllowedOrigin(refererOrigin);
   } catch {
     return false;
   }

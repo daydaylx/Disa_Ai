@@ -10,6 +10,17 @@ compatibility_flags = ["nodejs_compat"]
 # Pages-specific configuration
 pages_build_output_dir = "dist"
 
-# Note: Environment variables for production are set in Cloudflare Dashboard.
-# For local development, create a .dev.vars file with your secrets:
-#   OPENROUTER_API_KEY=sk-or-v1-your-key-here
+# =====================================================================
+# Required Cloudflare Secrets (set via CF Dashboard → Pages → Settings):
+#
+#   OPENROUTER_API_KEY    — Your OpenRouter API key (server-side only, never exposed to client)
+#   PROXY_SHARED_SECRET   — HMAC shared secret for /api/chat proxy authentication
+#
+# Required Build-Time Environment Variable (set in CF Pages Build Settings):
+#
+#   VITE_PROXY_SHARED_SECRET — Must match PROXY_SHARED_SECRET above.
+#                              This is baked into the JS bundle (not a real secret).
+#
+# After changing any variable: trigger a new deployment (Settings → Deployments → Retry).
+# For local development, create a .dev.vars file (see .dev.vars.example).
+# =====================================================================
