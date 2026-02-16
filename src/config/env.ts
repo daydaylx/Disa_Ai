@@ -11,6 +11,12 @@ export interface EnvConfig {
   VITE_BASE_URL: string;
   VITE_ENABLE_DEBUG: boolean;
   VITE_ENABLE_PWA: boolean;
+  /**
+   * Anti-abuse HMAC token for the /api/chat proxy.
+   * Must match PROXY_SHARED_SECRET on the Cloudflare Pages Function side.
+   * Not a real secret — it is baked into the JS bundle.
+   */
+  VITE_PROXY_SHARED_SECRET?: string;
 }
 
 /**
@@ -149,6 +155,14 @@ function validateEnvironment(): EnvValidationResult {
     }
   }
 
+  // Warn if proxy shared secret is not set in production
+  if (isProduction && !envVars.VITE_PROXY_SHARED_SECRET) {
+    warnings.push(
+      "VITE_PROXY_SHARED_SECRET: Nicht gesetzt. " +
+        "Proxy-Modus (/api/chat) funktioniert nur mit konfiguriertem Shared Secret.",
+    );
+  }
+
   // Note: VITE_OPENROUTER_BASE_URL warning removed - defaults are acceptable
 
   const config: EnvConfig = {
@@ -167,6 +181,7 @@ function validateEnvironment(): EnvValidationResult {
     VITE_BASE_URL: envVars.VITE_BASE_URL?.trim() || "/",
     VITE_ENABLE_DEBUG: toBoolean(envVars.VITE_ENABLE_DEBUG, false),
     VITE_ENABLE_PWA: toBoolean(envVars.VITE_ENABLE_PWA, true),
+    VITE_PROXY_SHARED_SECRET: envVars.VITE_PROXY_SHARED_SECRET || undefined,
   };
 
   return {

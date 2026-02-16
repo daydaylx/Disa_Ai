@@ -43,8 +43,14 @@ async function generateProxySignature(
 }
 
 /**
- * Get proxy shared secret from environment or fallback
- * In production, this should be set via VITE_PROXY_SHARED_SECRET env var
+ * Get proxy shared secret from environment or fallback.
+ *
+ * VITE_PROXY_SHARED_SECRET is a **build-time** variable baked into the JS bundle.
+ * It is NOT a real secret — it serves as an anti-abuse HMAC token that must match
+ * the server-side PROXY_SHARED_SECRET Cloudflare Secret.
+ *
+ * Set it in Cloudflare Pages → Settings → Environment Variables → Production
+ * as a plaintext variable (NOT encrypted, since it goes into the bundle anyway).
  */
 function getProxySharedSecret(): string {
   // Priority: env var > development fallback
@@ -59,7 +65,9 @@ function getProxySharedSecret(): string {
   }
 
   throw new Error(
-    "Proxy shared secret not configured. Set VITE_PROXY_SHARED_SECRET environment variable.",
+    "VITE_PROXY_SHARED_SECRET ist nicht konfiguriert. " +
+      "Setze diese Variable in Cloudflare Pages → Settings → Environment Variables (Production). " +
+      "Der Wert muss mit PROXY_SHARED_SECRET (Cloudflare Secret) übereinstimmen.",
   );
 }
 
