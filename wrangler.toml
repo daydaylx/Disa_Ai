@@ -3,7 +3,7 @@
 # This file configures Cloudflare Pages Functions for local development.
 # Use `npm run dev:functions` or `npm run preview:functions` to test locally.
 
-name = "disa-ai"
+name = "disaai"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
