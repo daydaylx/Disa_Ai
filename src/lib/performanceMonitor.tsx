@@ -199,7 +199,7 @@ export function PerformanceHUD({
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-50 bg-black/80 text-white text-xs font-mono p-3 rounded-lg shadow-lg pointer-events-none"
+      className="fixed bottom-4 right-4 z-debug bg-black/80 text-white text-xs font-mono p-3 rounded-lg shadow-lg pointer-events-none"
       style={{ backdropFilter: "blur(4px)" }}
     >
       <div className="space-y-1">

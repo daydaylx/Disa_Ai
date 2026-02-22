@@ -171,7 +171,7 @@ export function PullToRefresh({
     <div ref={containerRef} className={cn("relative overflow-auto", className)}>
       {/* Pull-Indicator */}
       <div
-        className="absolute top-0 left-0 right-0 flex items-center justify-center pointer-events-none z-50"
+        className="absolute top-0 left-0 right-0 flex items-center justify-center pointer-events-none z-popover"
         style={{
           height: pullDistance,
           opacity,

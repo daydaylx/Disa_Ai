@@ -53,7 +53,7 @@ export function PageTransition({ children, className = "" }: PageTransitionProps
           {/* Subtle page stack effect */}
           <div className="absolute inset-0 border border-ink/10">
             {/* Main content */}
-            <div className="relative z-10 h-full">{children}</div>
+            <div className="relative z-content h-full">{children}</div>
           </div>
 
           {/* Page stack indicators (visual book metaphor) */}

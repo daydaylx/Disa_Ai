@@ -107,7 +107,7 @@ export default function ThemenPage() {
         <div className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none">
           <button
             type="button"
-            className="absolute inset-0 z-10 cursor-pointer rounded-none bg-transparent pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 focus-visible:ring-inset"
+            className="absolute inset-0 z-content cursor-pointer rounded-none bg-transparent pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 focus-visible:ring-inset"
             onClick={() => handleStartQuickstart(quickstart)}
             aria-label={`Thema ${quickstart.title} starten`}
           />
@@ -139,7 +139,7 @@ export default function ThemenPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col items-end gap-2 pr-10 relative z-20 pointer-events-auto">
+          <div className="flex flex-col items-end gap-2 pr-10 relative z-sticky-header pointer-events-auto">
             <button
               type="button"
               onClick={(e) => {

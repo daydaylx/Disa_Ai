@@ -52,7 +52,7 @@ export function ListRow({
 
       {onPress ? (
         <div
-          className="absolute inset-0 z-20 cursor-pointer"
+          className="absolute inset-0 z-sticky-header cursor-pointer"
           role="button"
           tabIndex={0}
           aria-label={pressLabel}
@@ -68,10 +68,12 @@ export function ListRow({
       ) : null}
 
       {topRight ? (
-        <div className="pointer-events-auto absolute right-3 top-3 z-30">{topRight}</div>
+        <div className="pointer-events-auto absolute right-3 top-3 z-sticky-content">
+          {topRight}
+        </div>
       ) : null}
 
-      <div className={cn("relative z-10 flex items-center gap-4", topRight && "pr-[5.5rem]")}>
+      <div className={cn("relative z-content flex items-center gap-4", topRight && "pr-[5.5rem]")}>
         {leading ? <div className="shrink-0">{leading}</div> : null}
 
         <div className="min-w-0 flex-1">
@@ -79,10 +81,12 @@ export function ListRow({
           {subtitle ? <p className="mt-1 truncate text-xs text-ink-secondary">{subtitle}</p> : null}
         </div>
 
-        {trailing ? <div className="pointer-events-auto relative z-30">{trailing}</div> : null}
+        {trailing ? (
+          <div className="pointer-events-auto relative z-sticky-content">{trailing}</div>
+        ) : null}
       </div>
 
-      {children ? <div className="relative z-10 mt-3">{children}</div> : null}
+      {children ? <div className="relative z-content mt-3">{children}</div> : null}
     </div>
   );
 }

@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { Book, Database, X } from "@/lib/icons";
+import { getOverlayRoot, lockActiveScrollOwner } from "@/lib/overlay";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
 
@@ -56,10 +58,33 @@ export function HistorySidePanel({
     if (e.target === e.currentTarget) onClose();
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    const unlockScroll = lockActiveScrollOwner();
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      unlockScroll();
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-drawer" role="dialog" aria-modal="true">
+  const panelContent = (
+    <div
+      className="fixed inset-0 z-drawer pointer-events-auto"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Inhaltsverzeichnis"
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-lg transition-opacity duration-300"
@@ -72,17 +97,17 @@ export function HistorySidePanel({
         className={cn(
           "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl",
           "sm:inset-y-0 sm:right-0 sm:bottom-auto sm:h-full sm:max-w-sm sm:border-t-0 sm:border-l sm:rounded-none",
-          isOpen ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-x-full",
+          "translate-y-0 sm:translate-x-0",
         )}
         style={{
-          transform: isOpen ? `translateY(${Math.max(0, dragOffset.y)}px)` : "translateY(100%)",
+          transform: `translateY(${Math.max(0, dragOffset.y)}px)`,
           opacity: dragOffset.y > 0 ? Math.max(0.5, 1 - dragOffset.y / 200) : 1,
           transition:
             dragOffset.y > 0 ? "none" : "transform 300ms ease-out, opacity 300ms ease-out",
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-10 pt-safe-top pr-safe-right">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 z-sticky-header pt-safe-top pr-safe-right">
           <div>
             <h2 className="text-base font-semibold text-ink-primary tracking-tight">
               Inhaltsverzeichnis
@@ -197,4 +222,8 @@ export function HistorySidePanel({
       </div>
     </div>
   );
+
+  const overlayRoot = getOverlayRoot();
+  if (!overlayRoot) return panelContent;
+  return createPortal(panelContent, overlayRoot);
 }

@@ -59,7 +59,7 @@ export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLo
       <span className="presence-mark" aria-hidden="true" data-state={state} />
 
       {/* Wordmark Text with gradient accents */}
-      <span className="relative z-10">
+      <span className="relative z-content">
         <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent font-bold">
           Disa
         </span>{" "}

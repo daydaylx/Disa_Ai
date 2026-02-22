@@ -77,7 +77,7 @@ export const PremiumCard = React.memo(
         {/* Content mit Padding für Accent-Strip */}
         <div
           className={cn(
-            "relative z-10",
+            "relative z-content",
             withAccentStrip && "pt-3 px-4 pb-4",
             !withAccentStrip && "p-4",
           )}
