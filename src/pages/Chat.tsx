@@ -2,8 +2,13 @@ import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useSta
 import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
+import { DRAWER_NAV_ITEMS } from "@/config/navigation";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
+import { useRoles } from "@/contexts/RolesContext";
+import { useMemory } from "@/hooks/useMemory";
+import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-import { Bookmark, MessageSquare } from "@/lib/icons";
+import { Bookmark, Cpu, HardDrive, MessageSquare, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
 import { Button } from "@/ui/Button";
@@ -64,6 +69,10 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { models } = useModelCatalog();
+  const { activeRole } = useRoles();
+  const { settings } = useSettings();
+  const { isEnabled: memoryEnabled } = useMemory();
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
@@ -115,6 +124,15 @@ export default function Chat() {
       return true;
     });
   }, []);
+
+  const activeModelLabel = useMemo(() => {
+    if (!settings.preferredModelId) return "Automatisch";
+    const selectedModel = models?.find((model) => model.id === settings.preferredModelId);
+    const rawLabel = selectedModel?.label || selectedModel?.id || settings.preferredModelId;
+    return rawLabel.split("/").pop() || rawLabel;
+  }, [models, settings.preferredModelId]);
+
+  const roleLabel = useMemo(() => activeRole?.name || "Standard", [activeRole]);
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
@@ -256,105 +274,118 @@ export default function Chat() {
             rateLimitInfo={chatLogic.rateLimitInfo}
           />
 
+          <div className="px-4 pt-2">
+            <div className="mx-auto flex w-full max-w-3xl items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+              <button
+                type="button"
+                onClick={() => chatLogic.navigate("/settings/api-data")}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
+                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
+                  "border-accent-models/30 hover:border-accent-models/50 hover:text-ink-primary",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-models/60",
+                )}
+                aria-label={`Aktives Modell: ${activeModelLabel}`}
+              >
+                <Cpu className="h-3.5 w-3.5 text-accent-models" />
+                <span>Modell: {activeModelLabel}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => chatLogic.navigate("/roles")}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
+                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
+                  "border-accent-roles/30 hover:border-accent-roles/50 hover:text-ink-primary",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-roles/60",
+                )}
+                aria-label={`Aktive Rolle: ${roleLabel}`}
+              >
+                <User className="h-3.5 w-3.5 text-accent-roles" />
+                <span>Rolle: {roleLabel}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => chatLogic.navigate("/settings/memory")}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
+                  "text-xs font-medium transition-colors whitespace-nowrap",
+                  memoryEnabled
+                    ? "border-status-success/35 text-ink-secondary hover:border-status-success/50 hover:text-ink-primary"
+                    : "border-status-warning/35 text-ink-secondary hover:border-status-warning/50 hover:text-ink-primary",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60",
+                )}
+                aria-label={`Memory ist ${memoryEnabled ? "aktiv" : "deaktiviert"}`}
+              >
+                <HardDrive
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    memoryEnabled ? "text-status-success" : "text-status-warning",
+                  )}
+                />
+                <span>Memory: {memoryEnabled ? "Aktiv" : "Aus"}</span>
+              </button>
+            </div>
+          </div>
+
           {/* Messages Area */}
           <div
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 pt-4"
+            className="flex-1 overflow-y-auto min-h-0 pt-3"
             role="log"
             aria-label="Chat messages"
           >
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div className="flex-1 flex flex-col gap-6 py-4">
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-6 sm:gap-8 pb-16 sm:pb-20 px-4 animate-fade-in">
-                    {/* Hero Card - Disa Frame Branding System with Enhanced Colors */}
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 sm:pb-20 px-4 animate-fade-in">
                     <div className="w-full max-w-md animate-fade-in-scale">
-                      <Card
-                        variant="tintedSoft"
-                        notch="cutout"
-                        notchSize="lg" // 24px for hero visibility (increased from 22px)
-                        tintColor="rgb(var(--tint-color-rgb-default))"
-                        className="text-center space-y-6 p-6 sm:p-8 relative overflow-hidden"
-                        style={
-                          {
-                            "--card-tint-alpha": "var(--tint-alpha-hero, 0.18)",
-                            "--notch-edge-opacity": "0.35",
-                          } as React.CSSProperties
-                        }
-                      >
-                        {/* Decorative gradient orbs for visual interest - 25% reduced */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-radial from-accent-chat/15 to-transparent blur-xl pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-radial from-accent-models/11 to-transparent blur-xl pointer-events-none" />
-
-                        {/* Main Title - Animated Brandmark with shimmer and breathing */}
-                        <div className="space-y-3 relative z-10">
-                          <AnimatedBrandmark />
-                          <div className="space-y-2">
-                            {/* Subtle accent line with gradient glow - 25% reduced */}
-                            <div className="relative w-32 h-px mx-auto">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-primary/45 to-transparent" />
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-chat/30 to-transparent blur-sm" />
-                            </div>
-                            <p className="text-xs sm:text-sm text-ink-tertiary font-medium tracking-[0.1em] uppercase opacity-80 animate-wordmark-intro-delay-1">
-                              DEIN KI-ASSISTENT
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Welcome Text */}
-                        <div className="space-y-3 pt-2 animate-wordmark-intro-delay-2">
-                          <h2 className="text-lg font-medium text-ink-primary">
+                      <Card variant="surface" className="space-y-5 p-6 sm:p-8 text-center">
+                        <AnimatedBrandmark className="mx-auto origin-top scale-[0.62] sm:scale-[0.7]" />
+                        <div className="mx-auto h-px w-20 bg-white/12" />
+                        <div className="space-y-2">
+                          <h2 className="text-lg font-semibold text-ink-primary">
                             Was kann ich für dich tun?
                           </h2>
-                          <p className="text-sm text-ink-secondary font-normal">
-                            Tippe unten eine Frage ein oder wähle einen der Vorschläge.
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            Tippe unten eine Frage ein oder nutze einen Schnellstart.
                           </p>
                         </div>
                       </Card>
                     </div>
 
-                    {/* Starter Prompts - Suggestion Cards with Enhanced Color Accents */}
-                    <div className="w-full max-w-md flex gap-3 overflow-x-auto px-2 pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-1 sm:gap-3 sm:overflow-visible">
+                    <div className="w-full max-w-md flex gap-2.5 overflow-x-auto px-1 pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-1 sm:gap-3 sm:overflow-visible">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => {
-                        // Cycle through accent colors - 25% reduced intensity
-                        const accentColors = [
+                        const accentStyles = [
                           {
-                            bg: "bg-accent-chat/8",
-                            text: "text-accent-chat",
-                            border: "border-accent-chat/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-chat-glow),0.11)]",
+                            bar: "bg-accent-chat/80",
+                            iconWrap: "bg-accent-chat/12 text-accent-chat",
+                            border: "border-accent-chat/25",
                           },
                           {
-                            bg: "bg-accent-models/8",
-                            text: "text-accent-models",
-                            border: "border-accent-models/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(var(--accent-models-glow),0.11)]",
+                            bar: "bg-accent-models/80",
+                            iconWrap: "bg-accent-models/12 text-accent-models",
+                            border: "border-accent-models/25",
                           },
                           {
-                            bg: "bg-brand-primary/8",
-                            text: "text-brand-primary",
-                            border: "border-brand-primary/15",
-                            glow: "group-hover:shadow-[0_0_15px_rgba(139,92,246,0.11)]",
+                            bar: "bg-brand-primary/80",
+                            iconWrap: "bg-brand-primary/12 text-brand-primary",
+                            border: "border-brand-primary/25",
                           },
                         ] as const;
-                        const accent = accentColors[index % accentColors.length]!;
+                        const accent = accentStyles[index % accentStyles.length]!;
 
                         return (
-                          <Card
+                          <button
                             key={prompt}
-                            variant="tintedSoft"
-                            notch="none"
-                            tintColor="rgb(var(--tint-color-rgb-default))"
+                            type="button"
                             className={cn(
-                              "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 text-left transition-all group animate-slide-up opacity-0 fill-mode-forwards cursor-pointer",
-                              "min-h-[56px] min-w-[240px] sm:min-w-0 snap-start", // Mobile touch target (44px + padding)
-                              "hover:border-white/[0.22] hover:shadow-lg", // Enhanced hover state
-                              accent.glow, // Color-specific glow on hover
+                              "group relative flex min-h-[56px] min-w-[240px] snap-start items-center gap-3 overflow-hidden rounded-2xl border bg-surface-card px-3 py-3 text-left",
+                              "text-ink-primary transition-all animate-slide-up opacity-0 fill-mode-forwards sm:min-w-0 sm:gap-4 sm:px-4 sm:py-4",
+                              "hover:border-white/[0.22] hover:bg-surface-2/60",
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
-                              "active:translate-y-[1px] active:shadow-sm",
-                              "bg-surface-card text-ink-primary",
-                              "border",
-                              accent.border, // Add colored border
+                              "active:translate-y-px",
+                              accent.border,
                             )}
                             style={{ animationDelay: `${index * 100}ms` }}
                             onClick={() => chatLogic.handleStarterClick(prompt)}
@@ -364,34 +395,34 @@ export default function Chat() {
                                 chatLogic.handleStarterClick(prompt);
                               }
                             }}
-                            tabIndex={0}
-                            role="button"
                             aria-label={`Starter-Prompt: ${prompt}`}
                           >
-                            <div
+                            <span
                               className={cn(
-                                "p-2.5 sm:p-3 rounded-xl transition-all flex-shrink-0",
-                                "bg-surface-2",
-                                accent.bg,
-                                accent.text,
-                                "group-hover:scale-[1.04]", // Subtle scale on hover - 25% reduced
+                                "absolute inset-y-2 left-2 w-1 rounded-full",
+                                accent.bar,
+                              )}
+                            />
+                            <span
+                              className={cn(
+                                "inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl",
+                                accent.iconWrap,
                               )}
                             >
-                              <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5" />
-                            </div>
-                            <span className="text-sm font-medium text-ink-primary flex-1 group-hover:text-ink-primary/90">
+                              <MessageSquare className="h-4 w-4" />
+                            </span>
+                            <span className="flex-1 text-sm font-medium leading-snug text-ink-primary">
                               {prompt}
                             </span>
-                          </Card>
+                          </button>
                         );
                       })}
                     </div>
 
-                    {/* Quick Link to Settings - Subtle */}
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="text-sm text-ink-secondary hover:text-ink-primary transition-colors mt-2 flex items-center gap-2"
+                      className="mt-1 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-surface-1/50 px-3 py-2 text-sm text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary"
                     >
                       Einstellungen anpassen
                       <span className="text-xs">→</span>
@@ -417,7 +448,7 @@ export default function Chat() {
 
           {/* Input Area - Floating Glass Bottom */}
           <div className="flex-none w-full pointer-events-none z-20">
-            <div className="max-w-3xl mx-auto px-4 pb-safe-bottom pt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto px-4 pb-[calc(env(safe-area-inset-bottom,0px)+var(--app-bottom-nav-height,0px))] lg:pb-safe-bottom pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
@@ -439,7 +470,12 @@ export default function Chat() {
       </ChatLayout>
 
       {/* Global Menu */}
-      <AppMenuDrawer isOpen={isMenuOpen} onClose={closeMenu} />
+      <AppMenuDrawer
+        isOpen={isMenuOpen}
+        onClose={closeMenu}
+        navItems={DRAWER_NAV_ITEMS}
+        secondaryItems={[]}
+      />
 
       {/* History Side Panel */}
       <HistorySidePanel

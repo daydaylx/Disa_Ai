@@ -74,9 +74,9 @@ test.describe("Chat Smoke Tests", () => {
     const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
     await expect(menuDrawer).toBeVisible();
 
-    // Prüfe Navigation-Links
-    await expect(menuDrawer.getByText("Einstellungen")).toBeVisible();
-    await expect(menuDrawer.getByText("Impressum")).toBeVisible();
+    // Prüfe Navigation-Links (Drawer enthält Secondary-Ziele)
+    await expect(menuDrawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
+    await expect(menuDrawer.getByRole("link", { name: /^Impressum\b/i })).toBeVisible();
 
     // Menü schließen
     const closeButton = menuDrawer.locator('button[aria-label="Menü schließen"]');

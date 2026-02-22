@@ -27,7 +27,7 @@ const RoleCardComponent = React.memo(
 
     return (
       <Card
-        variant="roleStrong"
+        variant="tinted"
         roleColor={roleColor || "139 92 246"} // Default to brand color
         className={cn("flex flex-col h-full", className)}
       >

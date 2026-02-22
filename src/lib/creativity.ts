@@ -63,6 +63,6 @@ export function mapCreativityToParams(
 function modelSupportsPresencePenalty(modelId?: string): boolean {
   if (!modelId) return false;
   const id = modelId.toLowerCase();
-  const providers = ["openai", "gpt", "llama", "mistral", "qwen", "dolphin", "anthropic"];
+  const providers = ["openai", "gpt", "llama", "mistral", "qwen", "dolphin", "anthropic", "nvidia"];
   return providers.some((p) => id.includes(p));
 }

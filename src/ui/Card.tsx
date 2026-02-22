@@ -3,23 +3,47 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const cardVariants = cva("relative rounded-2xl border transition-all duration-300", {
+type CoreCardVariant = "surface" | "tinted" | "hero";
+type LegacyCardVariant =
+  | "default"
+  | "flat"
+  | "outline"
+  | "interactive"
+  | "elevated"
+  | "inset"
+  | "premium"
+  | "plain"
+  | "tintedSoft"
+  | "roleStrong";
+type CardVariant = CoreCardVariant | LegacyCardVariant;
+
+const LEGACY_CARD_VARIANTS: Record<LegacyCardVariant, CoreCardVariant> = {
+  default: "surface",
+  flat: "surface",
+  outline: "surface",
+  interactive: "surface",
+  elevated: "surface",
+  inset: "surface",
+  premium: "hero",
+  plain: "surface",
+  tintedSoft: "tinted",
+  roleStrong: "tinted",
+};
+
+function normalizeRgbTuple(value: string): string {
+  return value.replaceAll(",", " ").replace(/\s+/g, " ").trim();
+}
+
+const cardVariants = cva("relative rounded-2xl border transition-all duration-200", {
   variants: {
     variant: {
-      default: "bg-surface-1/60 backdrop-blur-md border-white/[0.12] shadow-sm", // Glassy standard - visible border
-      flat: "border-transparent bg-surface-1/40 backdrop-blur-none shadow-none",
-      outline: "bg-transparent border-white/10",
-      interactive:
-        "bg-surface-1/60 backdrop-blur-md border-white/[0.12] hover:border-brand-primary/30 hover:bg-surface-1/80 hover:shadow-glow-sm cursor-pointer active:scale-[0.99]",
-      elevated: "bg-surface-2 border-white/10 shadow-md",
-      inset: "bg-black/20 border-black/10 shadow-inner",
-      premium:
-        "bg-surface-2/80 backdrop-blur-xl border-brand-secondary/20 shadow-lg overflow-hidden",
-      // Disa Frame Branding System variants
-      plain: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Minimal border (12% opacity - visible)
-      tintedSoft: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Global cards with soft tint
-      roleStrong: "bg-surface-card border-white/[0.14] shadow-surface-subtle", // Role/Themen with strong tint
-      tinted: "bg-surface-card border-white/[0.12] shadow-surface-subtle", // Legacy alias for tintedSoft
+      surface: "bg-surface-card border-white/[0.08] shadow-surface-subtle",
+      tinted: "bg-surface-card border-white/[0.08] shadow-surface-subtle overflow-hidden",
+      hero: "bg-surface-2/80 border-white/[0.12] shadow-md overflow-hidden",
+    },
+    interactive: {
+      true: "cursor-pointer active:translate-y-px active:shadow-sm hover:border-white/[0.14] hover:bg-surface-2/70",
+      false: "",
     },
     padding: {
       none: "p-0",
@@ -44,25 +68,9 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
       lg: "",
     },
   },
-  compoundVariants: [
-    {
-      variant: "interactive",
-      accent: "models",
-      className: "hover:border-accent-models-border hover:shadow-glow-models",
-    },
-    {
-      variant: "interactive",
-      accent: "roles",
-      className: "hover:border-accent-roles-border hover:shadow-glow-roles",
-    },
-    {
-      variant: "interactive",
-      accent: "settings",
-      className: "hover:border-accent-settings-border hover:shadow-glow-settings",
-    },
-  ],
   defaultVariants: {
-    variant: "default",
+    variant: "surface",
+    interactive: false,
     padding: "default",
     accent: "none",
     notch: "none",
@@ -70,8 +78,14 @@ const cardVariants = cva("relative rounded-2xl border transition-all duration-30
   },
 });
 
+type CardVariantOptions = VariantProps<typeof cardVariants>;
+
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
+    Omit<CardVariantOptions, "variant" | "interactive"> {
+  variant?: CardVariant;
+  interactive?: boolean;
   withAccent?: boolean;
   accentColor?: "primary" | "secondary" | "tertiary" | "models" | "roles";
   tintColor?: string;
@@ -84,6 +98,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       className,
       variant,
       padding,
+      interactive,
       accent,
       notch,
       notchSize = "default",
@@ -92,11 +107,20 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       tintColor,
       roleColor,
       children,
+      style,
       ...props
     },
     ref,
   ) => {
-    const showAccent = withAccent && variant === "premium";
+    const resolvedVariant: CoreCardVariant = React.useMemo(() => {
+      if (!variant) return "surface";
+      return variant in LEGACY_CARD_VARIANTS
+        ? LEGACY_CARD_VARIANTS[variant as LegacyCardVariant]
+        : (variant as CoreCardVariant);
+    }, [variant]);
+
+    const resolvedInteractive = interactive ?? variant === "interactive";
+    const showAccent = withAccent && resolvedVariant === "hero";
     const accentColorClass = {
       primary: "bg-brand-primary",
       secondary: "bg-brand-secondary",
@@ -105,32 +129,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       roles: "bg-accent-roles",
     }[accentColor];
 
-    // Determine tint strength - Disa Frame Branding System
+    // Legacy roleStrong keeps stronger tint while using the same core card surface.
     const tintAlpha = React.useMemo(() => {
-      if (variant === "tintedSoft" || variant === "tinted") return "var(--tint-alpha-soft)"; // Global cards: 0.06-0.10
+      if (resolvedVariant !== "tinted") return "0";
       if (variant === "roleStrong") return "var(--tint-alpha-strong)"; // Role/Themen: 0.20-0.35
-      return "0";
-    }, [variant]);
+      return "var(--tint-alpha-soft)"; // Global cards: 0.06-0.10
+    }, [resolvedVariant, variant]);
 
     // Generate tint style - Tint geometry: 0-18% strongest, fade until 65%
     const tintStyle = React.useMemo(() => {
-      if (!tintColor && !roleColor) return {};
-      if (variant === "plain") return {};
+      if (resolvedVariant !== "tinted") return {};
+      const resolvedTintColor = roleColor ? normalizeRgbTuple(roleColor) : tintColor;
+      if (!resolvedTintColor) return {};
 
-      // For roleStrong: Strong solid/gradient
-      if (variant === "roleStrong" && roleColor) {
-        return {
-          "--card-tint-color": `rgb(${roleColor})`,
-          "--card-tint-alpha": tintAlpha,
-        } as React.CSSProperties;
-      }
-
-      // For tintedSoft/tinted: Gradient with proper geometry (0-18% strongest, fade until 65%)
       return {
-        "--card-tint-color": tintColor,
+        "--card-tint-color": resolvedTintColor,
         "--card-tint-alpha": tintAlpha,
       } as React.CSSProperties;
-    }, [tintColor, roleColor, variant, tintAlpha]);
+    }, [resolvedVariant, tintColor, roleColor, tintAlpha]);
 
     // Notch size attribute for CSS-based notch system
     const notchSizeAttr = notchSize ?? "default";
@@ -138,8 +154,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={cn(cardVariants({ variant, padding, accent, notch, notchSize, className }))}
-        style={tintStyle}
+        className={cn(
+          cardVariants({
+            variant: resolvedVariant,
+            interactive: resolvedInteractive,
+            padding,
+            accent,
+            notch,
+            notchSize,
+            className,
+          }),
+        )}
+        style={{ ...tintStyle, ...style }}
+        data-variant={resolvedVariant}
         data-notch-size={notch === "cutout" ? notchSizeAttr : undefined}
         {...props}
       >
@@ -148,7 +175,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
 
         {/* Tint Overlay - Gradient with proper geometry (0-18% strongest, fade until 65%) */}
-        {(variant === "tintedSoft" || variant === "tinted" || variant === "roleStrong") && (
+        {resolvedVariant === "tinted" && (
           <div
             className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden"
             style={{

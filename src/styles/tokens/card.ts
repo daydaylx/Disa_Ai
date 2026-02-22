@@ -22,26 +22,26 @@ export interface CardTokens {
 }
 
 export const cardTokens: CardTokens = {
-  radius: "18px",
-  background: "rgba(12, 12, 18, 0.72)",
+  radius: "16px",
+  background: "rgba(16, 20, 30, 0.78)",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.12)", // Default: 12% opacity (increased from 8% for visibility)
-  borderColorHover: "rgba(255, 255, 255, 0.18)", // Hover: clearly visible (increased from 12%)
-  borderColorFocus: "rgba(139, 92, 246, 0.40)", // Focus: clearly visible brand color
-  shadow: "0 10px 40px rgba(0, 0, 0, 0.35)",
-  shadowHover: "0 12px 48px rgba(0, 0, 0, 0.4)",
-  shadowFocus: "0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35)",
-  shadowPressed: "0 6px 24px rgba(0, 0, 0, 0.45)",
+  borderColor: "rgba(255, 255, 255, 0.08)",
+  borderColorHover: "rgba(255, 255, 255, 0.12)",
+  borderColorFocus: "rgba(139, 92, 246, 0.30)",
+  shadow: "0 6px 18px rgba(0, 0, 0, 0.32)",
+  shadowHover: "0 10px 26px rgba(0, 0, 0, 0.38)",
+  shadowFocus: "0 0 0 2px rgba(139, 92, 246, 0.34), 0 10px 26px rgba(0, 0, 0, 0.38)",
+  shadowPressed: "0 4px 14px rgba(0, 0, 0, 0.42)",
 
   tintAngle: "90deg", // Horizontal gradient (left → right)
   tintFadeX: "65%", // Tint geometry: fade until 65% (was 80%)
-  tintAlphaSoft: "0.08", // Global cards: soft tint (0.06-0.10 range)
-  tintAlphaHero: "0.14", // Hero cards: soft+ tint (increased from 0.12 for visibility)
-  tintAlphaStrong: "0.28", // Role/Themen cards: strong tint (0.20-0.35 range)
-  tintColorDefault: "139, 92, 246",
+  tintAlphaSoft: "0.08", // Global cards: soft tint
+  tintAlphaHero: "0.16", // Hero cards: slightly stronger tint
+  tintAlphaStrong: "0.20", // Strong tint for selected accents
+  tintColorDefault: "139 92 246",
 
-  roleTeal: "45, 212, 191",
-  roleMagenta: "236, 72, 153",
+  roleTeal: "45 212 191",
+  roleMagenta: "236 72 153",
 };
 
 export const cardCssVars = {

@@ -109,10 +109,10 @@ export function UnifiedInputBar({
 
       {/* Main Input Container - Material-based with clear focus */}
       <BrandCard
-        variant="tinted"
+        variant="plain"
         padding="sm"
         className={cn(
-          "relative flex items-end gap-3 transition-all backdrop-blur-sm input-focus-animation pr-safe-right",
+          "relative flex items-end gap-2 pr-safe-right transition-all backdrop-blur-sm input-focus-animation",
         )}
         aria-label="Eingabebereich"
       >
@@ -123,7 +123,7 @@ export function UnifiedInputBar({
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Schreibe eine Nachricht..."
-          className="flex-1 max-h-[160px] min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[16px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none leading-relaxed textarea-resize-transition"
+          className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-3 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus:outline-none textarea-resize-transition"
           rows={1}
           data-testid="composer-input"
           aria-label="Nachricht eingeben"
@@ -136,13 +136,12 @@ export function UnifiedInputBar({
           variant="primary"
           size="icon"
           className={cn(
-            "flex-shrink-0 h-10 w-10 rounded-xl transition-all duration-200 mb-0.5 mr-1",
-            !value.trim() &&
-              !isLoading &&
-              "opacity-40 bg-surface-2 text-ink-tertiary hover:bg-surface-2 shadow-sm",
+            "mb-0.5 mr-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/10 transition-all duration-150",
+            !value.trim() && !isLoading && "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
             value.trim() &&
               !isLoading &&
-              "bg-accent-chat text-white shadow-glow-sm hover:shadow-glow-md hover:scale-105 active:scale-100 animate-send-pulse",
+              "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90 active:translate-y-px",
+            isLoading && "bg-accent-chat/80 text-white",
           )}
           aria-label="Senden"
         >

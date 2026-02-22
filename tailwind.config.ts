@@ -336,43 +336,43 @@ export default {
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-top": "env(safe-area-inset-top)",
-        header: "3.4rem", // Standard header height (reduced by 15%)
+        header: "3.5rem", // Standard header height
       },
       borderRadius: {
-        "3xl": "1.275rem", // (reduced by 15%)
-        "2xl": "0.85rem", // (reduced by 15%)
-        xl: "0.6375rem", // (reduced by 15%)
-        lg: "0.425rem", // (reduced by 15%)
-        md: "0.31875rem", // (reduced by 15%)
-        sm: "0.2125rem", // (reduced by 15%)
+        "3xl": "1.25rem", // 20px
+        "2xl": "1rem", // 16px
+        xl: "0.75rem", // 12px
+        lg: "0.625rem", // 10px
+        md: "0.5rem", // 8px
+        sm: "0.375rem", // 6px
       },
       boxShadow: {
-        sm: "0 0.85px 1.7px 0 rgba(0, 0, 0, 0.05)", // (reduced by 15%)
-        md: "0 3.4px 5.1px -0.85px rgba(0, 0, 0, 0.2), 0 1.7px 3.4px -0.85px rgba(0, 0, 0, 0.1)", // (reduced by 15%)
-        lg: "0 8.5px 12.75px -2.55px rgba(0, 0, 0, 0.3), 0 3.4px 5.1px -1.7px rgba(0, 0, 0, 0.15)", // (reduced by 15%)
-        // Glow effects - Primary (Violet) (reduced by 15%)
-        "glow-sm": "0 0 8.5px rgba(139, 92, 246, 0.3)",
-        "glow-md": "0 0 17px rgba(139, 92, 246, 0.4)",
-        "glow-lg": "0 0 25.5px rgba(139, 92, 246, 0.5)",
-        // Page-specific glow effects (reduced by 15%)
-        "glow-models": "0 0 10.2px rgba(6, 182, 212, 0.25)",
-        "glow-models-lg": "0 0 20.4px rgba(6, 182, 212, 0.35)",
-        "glow-roles": "0 0 10.2px rgba(244, 114, 182, 0.25)",
-        "glow-roles-lg": "0 0 20.4px rgba(244, 114, 182, 0.35)",
-        "glow-settings": "0 0 8.5px rgba(99, 102, 241, 0.20)",
-        "glow-text": "0 0 8.5px rgba(139, 92, 246, 0.5)",
-        // Category-specific glow effects (reduced by 15%)
-        "glow-wissenschaft": "0 0 10.2px rgba(16, 185, 129, 0.25)",
-        "glow-realpolitik": "0 0 10.2px rgba(99, 102, 241, 0.25)",
-        "glow-hypothetisch": "0 0 10.2px rgba(139, 92, 246, 0.25)",
-        "glow-kultur": "0 0 10.2px rgba(245, 158, 11, 0.25)",
-        "glow-technical": "0 0 10.2px rgba(6, 182, 212, 0.25)",
-        "glow-business": "0 0 10.2px rgba(99, 102, 241, 0.25)",
-        "glow-creative": "0 0 10.2px rgba(251, 113, 133, 0.25)",
-        "glow-assistance": "0 0 10.2px rgba(99, 102, 241, 0.25)",
-        "glow-analysis": "0 0 10.2px rgba(6, 182, 212, 0.25)",
-        "glow-research": "0 0 10.2px rgba(16, 185, 129, 0.25)",
-        "glow-education": "0 0 10.2px rgba(245, 158, 11, 0.25)",
+        sm: "0 4px 12px rgba(0, 0, 0, 0.18)",
+        md: "0 6px 18px rgba(0, 0, 0, 0.24)",
+        lg: "0 12px 28px rgba(0, 0, 0, 0.32)",
+        // Glow effects - reserved for active/focus states
+        "glow-sm": "0 0 10px rgba(139, 92, 246, 0.2)",
+        "glow-md": "0 0 18px rgba(139, 92, 246, 0.3)",
+        "glow-lg": "0 0 28px rgba(139, 92, 246, 0.4)",
+        // Page-specific glow effects
+        "glow-models": "0 0 12px rgba(6, 182, 212, 0.22)",
+        "glow-models-lg": "0 0 22px rgba(6, 182, 212, 0.3)",
+        "glow-roles": "0 0 12px rgba(244, 114, 182, 0.22)",
+        "glow-roles-lg": "0 0 22px rgba(244, 114, 182, 0.3)",
+        "glow-settings": "0 0 10px rgba(99, 102, 241, 0.2)",
+        "glow-text": "0 0 10px rgba(139, 92, 246, 0.35)",
+        // Category-specific glow effects
+        "glow-wissenschaft": "0 0 12px rgba(16, 185, 129, 0.22)",
+        "glow-realpolitik": "0 0 12px rgba(99, 102, 241, 0.22)",
+        "glow-hypothetisch": "0 0 12px rgba(139, 92, 246, 0.22)",
+        "glow-kultur": "0 0 12px rgba(245, 158, 11, 0.22)",
+        "glow-technical": "0 0 12px rgba(6, 182, 212, 0.22)",
+        "glow-business": "0 0 12px rgba(99, 102, 241, 0.22)",
+        "glow-creative": "0 0 12px rgba(251, 113, 133, 0.22)",
+        "glow-assistance": "0 0 12px rgba(99, 102, 241, 0.22)",
+        "glow-analysis": "0 0 12px rgba(6, 182, 212, 0.22)",
+        "glow-research": "0 0 12px rgba(16, 185, 129, 0.22)",
+        "glow-education": "0 0 12px rgba(245, 158, 11, 0.22)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

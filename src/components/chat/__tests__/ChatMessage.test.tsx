@@ -275,14 +275,14 @@ describe("ChatMessage", () => {
       const { rerender } = render(<ChatMessage message={userMessage} />);
 
       const userBubble = screen.getByTestId("message-bubble");
-      expect(userBubble).toHaveClass("bg-gradient-to-br");
-      expect(userBubble).toHaveClass("border-accent-chat-border");
+      expect(userBubble).toHaveClass("bg-accent-chat-surface/65");
+      expect(userBubble).toHaveClass("border-accent-chat/30");
 
       rerender(<ChatMessage message={assistantMessage} />);
 
       const assistantBubble = screen.getByTestId("message-bubble");
-      expect(assistantBubble).toHaveClass("bg-gradient-to-br");
-      expect(assistantBubble).toHaveClass("border-white/5");
+      expect(assistantBubble).toHaveClass("bg-surface-card");
+      expect(assistantBubble).toHaveClass("border-white/10");
     });
   });
 

@@ -4,38 +4,17 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
+import { MobileBottomNav } from "../../components/navigation/MobileBottomNav";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
-import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
-import { Bookmark, Brain, Cpu, Info, MessageSquare, Settings, Users } from "../../lib/icons";
+import {
+  DRAWER_NAV_ITEMS,
+  isNavItemActive,
+  PRIMARY_NAV_ITEMS,
+  SECONDARY_NAV_ITEMS,
+} from "../../config/navigation";
+import { Bookmark } from "../../lib/icons";
 import { cn } from "../../lib/utils";
 import { BrandWordmark } from "../components/BrandWordmark";
-
-const HAMBURGER_NAV_ITEMS = [
-  { id: "models", label: "Modelle", path: "/models", Icon: Cpu, activePattern: /^\/models/ },
-  { id: "roles", label: "Rollen", path: "/roles", Icon: Users, activePattern: /^\/roles/ },
-  {
-    id: "settings",
-    label: "Einstellungen",
-    path: "/settings",
-    Icon: Settings,
-    activePattern: /^\/settings/,
-  },
-  {
-    id: "quickstarts",
-    label: "Quickstarts",
-    path: "/themen",
-    Icon: Brain,
-    activePattern: /^\/themen/,
-  },
-  {
-    id: "feedback",
-    label: "Feedback",
-    path: "/feedback",
-    Icon: MessageSquare,
-    activePattern: /^\/feedback/,
-  },
-  { id: "about", label: "Über", path: "/impressum", Icon: Info, activePattern: /^\/impressum/ },
-] satisfies typeof PRIMARY_NAV_ITEMS;
 
 interface AppShellProps {
   children: ReactNode;
@@ -132,7 +111,14 @@ function AppShellLayout({
           </div>
         </aside>
 
-        <div className="flex min-h-0 flex-1 flex-col safe-area-bottom">
+        <div
+          className={cn(
+            "flex min-h-0 flex-1 flex-col safe-area-bottom",
+            isChatMode
+              ? "pb-0"
+              : "pb-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom,0px))] lg:pb-0",
+          )}
+        >
           {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
           {!isChatMode ? (
             <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header shadow-sm">
@@ -209,10 +195,12 @@ function AppShellLayout({
           <AppMenuDrawer
             isOpen={menuDrawer.isOpen}
             onClose={menuDrawer.closeMenu}
-            navItems={HAMBURGER_NAV_ITEMS}
+            navItems={DRAWER_NAV_ITEMS}
             secondaryItems={[]}
           />
         </div>
+
+        <MobileBottomNav />
       </div>
     </div>
   );

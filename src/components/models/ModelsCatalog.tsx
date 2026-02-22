@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -24,10 +24,11 @@ import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import {
   Badge,
+  BottomSheet,
   Button,
-  Card,
   CardSkeleton,
   EmptyState,
+  ListRow,
   PageHeader,
   PullToRefresh,
   SearchInput,
@@ -161,7 +162,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { models: catalog, loading, error, refresh } = useModelCatalog();
   const [search, setSearch] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [expandedModels, setExpandedModels] = useState<Set<string>>(new Set());
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -171,15 +172,6 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       setIsRefreshing(false);
     }
   };
-
-  const toggleModelExpansion = useCallback((modelId: string) => {
-    setExpandedModels((prev) => {
-      const next = new Set(prev);
-      if (next.has(modelId)) next.delete(modelId);
-      else next.add(modelId);
-      return next;
-    });
-  }, []);
 
   const filtered = useMemo(() => {
     if (!catalog) return [] as ModelEntry[];
@@ -203,6 +195,13 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
   const activeModelId = settings.preferredModelId;
   const isLoading = loading || isRefreshing;
+  const selectedModel = useMemo(
+    () => catalog?.find((entry) => entry.id === selectedModelId) ?? null,
+    [catalog, selectedModelId],
+  );
+  const selectedModelTheme = selectedModel
+    ? getCategoryStyle(getProviderColorTheme(selectedModel.provider))
+    : getCategoryStyle("cyan");
 
   // Get the active model's provider for header theming
   const activeModel = catalog?.find((m) => m.id === activeModelId);
@@ -283,200 +282,169 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);
-              const isExpanded = expandedModels.has(model.id);
               const providerTheme = getCategoryStyle(getProviderColorTheme(model.provider));
               const ProviderIcon = getProviderIcon(model.provider);
 
               return (
-                <Card
+                <ListRow
                   key={model.id}
                   data-testid="model-card"
                   aria-label={model.label ?? model.id}
-                  variant="roleStrong"
-                  notch="none"
-                  padding="none"
+                  title={model.label ?? model.id}
+                  subtitle={model.provider || "Unknown"}
+                  active={isActive}
+                  onPress={() => setPreferredModel(model.id)}
+                  pressLabel={`Modell ${model.label ?? model.id} auswählen`}
+                  pressed={isActive}
+                  accentClassName={providerTheme.textBg}
                   className={cn(
-                    "relative transition-all duration-300 group overflow-hidden",
                     isActive
-                      ? cn("ring-1", providerTheme.border, providerTheme.glow)
-                      : cn("hover:brightness-110", providerTheme.hoverBorder),
+                      ? cn("border-white/[0.14]", providerTheme.border, providerTheme.glow)
+                      : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
                   )}
-                  style={{ background: providerTheme.roleGradient }}
-                >
-                  <div className="absolute right-3 top-3 flex items-center gap-2 z-20">
-                    {isActive && (
-                      <Badge
-                        className={cn(
-                          "text-[10px] px-2 h-5 shadow-sm",
-                          providerTheme.badge,
-                          providerTheme.badgeText,
-                        )}
-                      >
-                        Aktiv
-                      </Badge>
-                    )}
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleModelFavorite(model.id);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleModelFavorite(model.id);
-                        }
-                      }}
-                      aria-label={
-                        isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
-                      }
-                      className={cn(
-                        "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors cursor-pointer pointer-events-auto",
-                        isFavorite
-                          ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                          : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
-                      )}
-                    >
-                      <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
-                    </div>
-                  </div>
-
-                  {/* Main Row - Clickable area */}
-                  <div
-                    className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none"
-                    aria-label={`Modell ${model.label ?? model.id} auswählen`}
-                  >
-                    {/* Invisible clickable overlay */}
-                    <div
-                      className="absolute inset-0 cursor-pointer pointer-events-auto z-0"
-                      onClick={() => setPreferredModel(model.id)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          setPreferredModel(model.id);
-                        }
-                      }}
-                      aria-label={`Modell ${model.label ?? model.id} auswählen`}
-                      aria-pressed={isActive}
-                    />
-                    {/* Icon */}
+                  leading={
                     <div
                       className={cn(
-                        "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                        "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
                         isActive
                           ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
-                          : cn(
-                              providerTheme.iconBg,
-                              providerTheme.iconText,
-                              providerTheme.groupHoverIconBg,
-                            ),
+                          : cn(providerTheme.iconBg, providerTheme.iconText),
                       )}
                     >
                       <ProviderIcon className="h-6 w-6" />
                     </div>
-
-                    {/* Info */}
-                    <div className="relative flex-1 min-w-0">
-                      <span
-                        className={cn(
-                          "font-semibold text-sm truncate block",
-                          isActive
-                            ? providerTheme.text
-                            : "text-ink-primary group-hover:text-ink-primary",
-                        )}
-                      >
-                        {model.label ?? model.id}
-                      </span>
-                      <p className="text-xs text-ink-secondary truncate mt-1">
-                        {model.provider || "Unknown"}
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex flex-col items-end gap-2 pr-10 relative z-20 pointer-events-auto">
+                  }
+                  topRight={
+                    <div className="flex items-center gap-2">
+                      {isActive ? (
+                        <Badge
+                          className={cn(
+                            "h-5 px-2 text-[10px] shadow-sm",
+                            providerTheme.badge,
+                            providerTheme.badgeText,
+                          )}
+                        >
+                          Aktiv
+                        </Badge>
+                      ) : null}
                       <button
                         type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleModelExpansion(model.id);
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleModelFavorite(model.id);
                         }}
-                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-none p-0"
+                        aria-label={
+                          isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
+                        }
+                        className={cn(
+                          "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                          isFavorite
+                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                        )}
                       >
-                        Details
-                        <ChevronDown
-                          className={cn(
-                            "h-3.5 w-3.5 transition-transform",
-                            isExpanded && "rotate-180",
-                          )}
-                        />
+                        <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
                       </button>
                     </div>
-                  </div>
-
-                  {/* Expanded Details */}
-                  {isExpanded && (
-                    <div
-                      id={`model-details-${model.id}`}
-                      className="px-4 pb-4 pt-0 animate-fade-in"
+                  }
+                  trailing={
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setSelectedModelId(model.id);
+                      }}
+                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                     >
-                      <div
-                        className={cn(
-                          "space-y-3 rounded-xl border px-4 py-4",
-                          providerTheme.bg,
-                          providerTheme.border,
-                        )}
-                      >
-                        {/* Context & Pricing Info */}
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            <p className="text-xs text-ink-tertiary font-medium">Context Window</p>
-                            <p className="text-sm text-ink-primary font-semibold">
-                              {getContextTokens(model).toLocaleString()} Tokens
-                            </p>
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-xs text-ink-tertiary font-medium">Pricing</p>
-                            <p className="text-sm text-ink-primary font-semibold">
-                              {getPriceLabel(model)}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Tags */}
-                        {model.tags && model.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
-                            {model.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                className={cn(
-                                  "text-[10px] px-2 h-5",
-                                  providerTheme.badge,
-                                  providerTheme.badgeText,
-                                )}
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Model ID */}
-                        <div className="p-3 rounded-xl bg-surface-1/50 text-xs text-ink-tertiary font-mono border border-white/5">
-                          {model.id}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </Card>
+                      Details
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </button>
+                  }
+                />
               );
             })}
           </div>
         )}
       </PullToRefresh>
+
+      <BottomSheet
+        open={!!selectedModel}
+        onClose={() => setSelectedModelId(null)}
+        title={selectedModel?.label ?? selectedModel?.id}
+        description={selectedModel?.provider || "Modell-Details"}
+        footer={
+          selectedModel ? (
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
+                onClick={() => setSelectedModelId(null)}
+              >
+                Schließen
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                disabled={activeModelId === selectedModel.id}
+                onClick={() => {
+                  setPreferredModel(selectedModel.id);
+                  setSelectedModelId(null);
+                }}
+              >
+                {activeModelId === selectedModel.id ? "Bereits aktiv" : "Als aktiv setzen"}
+              </Button>
+            </div>
+          ) : null
+        }
+      >
+        {selectedModel ? (
+          <div
+            className={cn(
+              "space-y-3 rounded-xl border px-4 py-4",
+              selectedModelTheme.bg,
+              selectedModelTheme.border,
+            )}
+          >
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-ink-tertiary">Context Window</p>
+                <p className="text-sm font-semibold text-ink-primary">
+                  {getContextTokens(selectedModel).toLocaleString()} Tokens
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-ink-tertiary">Pricing</p>
+                <p className="text-sm font-semibold text-ink-primary">
+                  {getPriceLabel(selectedModel)}
+                </p>
+              </div>
+            </div>
+
+            {selectedModel.tags && selectedModel.tags.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
+                {selectedModel.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    className={cn(
+                      "h-5 px-2 text-[10px]",
+                      selectedModelTheme.badge,
+                      selectedModelTheme.badgeText,
+                    )}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+
+            <div className="rounded-xl border border-white/5 bg-surface-1/50 p-3 font-mono text-xs text-ink-tertiary">
+              {selectedModel.id}
+            </div>
+          </div>
+        ) : null}
+      </BottomSheet>
     </div>
   );
 }

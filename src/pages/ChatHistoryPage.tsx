@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { ConversationCard } from "@/components/conversation/ConversationCard";
-import { getCategoryStyle } from "@/lib/categoryColors";
-import { Edit2, MessageSquare, Share2, Trash2 } from "@/lib/icons";
-import { ContextMenu, PullToRefresh, useToasts } from "@/ui";
+import { AlertCircle, Edit2, MessageSquare, Share2, Trash2 } from "@/lib/icons";
+import { ContextMenu, EmptyState, PullToRefresh, useToasts } from "@/ui";
 import { Button } from "@/ui/Button";
 import type { ContextMenuItem } from "@/ui/ContextMenu";
 
@@ -17,12 +16,12 @@ import {
 export default function ChatHistoryPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [expandedConvs, setExpandedConvs] = useState<Set<string>>(new Set());
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [selectedConvId, setSelectedConvId] = useState<string | null>(null);
-  const toasts = useToasts();
+  const { push } = useToasts();
   const navigate = useNavigate();
-  const theme = getCategoryStyle("generic"); // Fallback to Slate
 
   const toggleConversationExpansion = useCallback((convId: string) => {
     setExpandedConvs((prev) => {
@@ -36,11 +35,13 @@ export default function ChatHistoryPage() {
   const loadConversations = useCallback(async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const list = await getAllConversations();
       setConversations(list);
     } catch (error) {
       console.error("Failed to load conversations", error);
-      toasts.push({
+      setLoadError("Konversationen konnten nicht geladen werden.");
+      push({
         kind: "error",
         title: "Fehler",
         message: "Konversationen konnten nicht geladen werden.",
@@ -48,7 +49,7 @@ export default function ChatHistoryPage() {
     } finally {
       setLoading(false);
     }
-  }, [toasts]);
+  }, [push]);
 
   useEffect(() => {
     void loadConversations();
@@ -62,10 +63,10 @@ export default function ChatHistoryPage() {
     try {
       await deleteConversation(id);
       await loadConversations();
-      toasts.push({ kind: "success", title: "Gelöscht", message: "Konversation entfernt." });
+      push({ kind: "success", title: "Gelöscht", message: "Konversation entfernt." });
     } catch (error) {
       console.error("Failed to delete conversation", error);
-      toasts.push({
+      push({
         kind: "error",
         title: "Fehler",
         message: "Konversation konnte nicht gelöscht werden.",
@@ -79,7 +80,7 @@ export default function ChatHistoryPage() {
 
     const newTitle = prompt("Neuer Titel für die Unterhaltung:", conv.title);
     if (newTitle && newTitle.trim()) {
-      toasts.push({
+      push({
         kind: "info",
         title: "Umbenennen",
         message: "Umbenennen wird in einer zukünftigen Version unterstützt.",
@@ -107,7 +108,7 @@ export default function ChatHistoryPage() {
         }
       }
     } else {
-      toasts.push({
+      push({
         kind: "warning",
         title: "Nicht verfügbar",
         message: "Teilen wird auf diesem Gerät nicht unterstützt.",
@@ -133,7 +134,21 @@ export default function ChatHistoryPage() {
           </div>
         )}
 
-        {!loading && conversations.length === 0 && (
+        {!loading && loadError && (
+          <EmptyState
+            icon={<AlertCircle className="h-6 w-6" />}
+            title="Verlauf konnte nicht geladen werden"
+            description={loadError}
+            className="rounded-2xl border border-status-error/25 bg-status-error/10"
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void loadConversations()}>
+                Erneut versuchen
+              </Button>
+            }
+          />
+        )}
+
+        {!loading && !loadError && conversations.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-white/10 rounded-2xl bg-surface-1/30">
             <div className="h-12 w-12 bg-surface-2 rounded-full flex items-center justify-center mb-4 text-ink-tertiary">
               <MessageSquare className="h-6 w-6" />
@@ -153,23 +168,24 @@ export default function ChatHistoryPage() {
           </div>
         )}
 
-        <div className="grid gap-3">
-          {conversations.map((conv) => (
-            <ConversationCard
-              key={conv.id}
-              conversation={conv}
-              isExpanded={expandedConvs.has(conv.id)}
-              theme={theme}
-              onOpen={handleOpen}
-              onDelete={handleDelete}
-              onToggleExpansion={toggleConversationExpansion}
-              onLongPress={() => {
-                setSelectedConvId(conv.id);
-                setShowContextMenu(true);
-              }}
-            />
-          ))}
-        </div>
+        {!loading && !loadError && (
+          <div className="grid gap-3">
+            {conversations.map((conv) => (
+              <ConversationCard
+                key={conv.id}
+                conversation={conv}
+                isExpanded={expandedConvs.has(conv.id)}
+                onOpen={handleOpen}
+                onDelete={handleDelete}
+                onToggleExpansion={toggleConversationExpansion}
+                onLongPress={() => {
+                  setSelectedConvId(conv.id);
+                  setShowContextMenu(true);
+                }}
+              />
+            ))}
+          </div>
+        )}
       </PullToRefresh>
 
       {/* Context Menu (Long-Press) */}

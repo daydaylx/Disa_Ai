@@ -79,7 +79,7 @@ test.describe("Models & Roles Pages", () => {
 
     // Check that clicking a role selects it or navigates to details
     const firstRole = roleCards.first();
-    await firstRole.click();
+    await firstRole.click({ force: true });
 
     // Should either navigate back to chat or show selection state
     await page.waitForTimeout(1000);
@@ -113,29 +113,26 @@ test.describe("Models & Roles Pages", () => {
     await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
-    // Open main menu
-    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
-    await menuButton.click();
-    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-    await expect(menuDrawer).toBeVisible();
+    const bottomNav = page.getByTestId("mobile-bottom-nav");
 
-    // Navigate to settings
-    const settingsLink = menuDrawer.getByRole("link", { name: /^Einstellungen\b/i });
+    // Navigate to settings via primary bottom navigation
+    const settingsLink = bottomNav.getByRole("link", { name: /^Einstellungen\b/i });
     await expect(settingsLink).toBeVisible();
     await settingsLink.click();
     await expect(page).toHaveURL(/\/settings/);
 
-    // Navigate back to chat
-    await page.goto("/chat");
-    await page.waitForLoadState("networkidle");
-
-    // Navigate to models using menu
-    await menuButton.click();
-    await expect(menuDrawer).toBeVisible();
-    const modelsLink = menuDrawer.getByRole("link", { name: /^Modelle\b/i });
+    // Navigate to models via primary bottom navigation
+    const modelsLink = bottomNav.getByRole("link", { name: /^Modelle\b/i });
     await expect(modelsLink).toBeVisible();
     await modelsLink.click();
     await expect(page).toHaveURL(/\/models/);
+
+    // Secondary navigation remains available in drawer
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
+    await menuButton.click();
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(menuDrawer).toBeVisible();
+    await expect(menuDrawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
   });
 
   test("should maintain selected role and model state", async ({ page }) => {
@@ -143,11 +140,7 @@ test.describe("Models & Roles Pages", () => {
     await page.goto("/roles");
     await page.waitForLoadState("networkidle");
 
-    const roleCards = page
-      .locator('[data-testid="role-card"]')
-      .or(page.locator('[role="button"]').filter({ has: page.locator("text=/Rolle|Persona/") }));
-
-    const firstRole = roleCards.first();
+    const firstRole = page.getByRole("button", { name: /Rolle .* auswählen/i }).first();
     await expect(firstRole).toBeVisible();
 
     const ariaLabel = (await firstRole.getAttribute("aria-label")) ?? "";
@@ -155,7 +148,7 @@ test.describe("Models & Roles Pages", () => {
       .replace(/^Rolle\s+/i, "")
       .replace(/\s+auswählen$/i, "")
       .trim();
-    await firstRole.click();
+    await firstRole.click({ force: true });
     await expect(page).toHaveURL(/\/chat/);
 
     // Go to settings and check something there

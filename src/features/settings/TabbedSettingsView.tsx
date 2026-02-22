@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
-import { getCategoryStyle } from "@/lib/categoryColors";
 import { cn } from "@/lib/utils";
-import { Badge, Card, SettingsSkeleton } from "@/ui";
+import { Badge, BottomSheet, Button, EmptyState, ListRow, SettingsSkeleton } from "@/ui";
 
 import {
   BookOpenCheck,
@@ -62,10 +62,51 @@ const SECTIONS = [
   },
 ] as const;
 
-export function TabbedSettingsView() {
+type SettingsSection = (typeof SECTIONS)[number];
+
+export function loadSettingsSections(): Promise<SettingsSection[]> {
+  return Promise.resolve([...SECTIONS]);
+}
+
+interface TabbedSettingsViewProps {
+  loadSections?: () => Promise<SettingsSection[]>;
+}
+
+export function TabbedSettingsView({
+  loadSections = loadSettingsSections,
+}: TabbedSettingsViewProps = {}) {
   const { isEnabled: memoryEnabled } = useMemory();
   const { settings } = useSettings();
-  const [isLoading] = useState(false); // For future async loading
+  const navigate = useNavigate();
+  const [sections, setSections] = useState<SettingsSection[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
+
+  const refreshSections = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError(null);
+
+    try {
+      const loadedSections = await loadSections();
+      setSections(loadedSections);
+
+      if (loadedSections.length === 0) {
+        setSelectedSectionId(null);
+      }
+    } catch (error) {
+      console.error("Failed to load settings sections", error);
+      setSections([]);
+      setSelectedSectionId(null);
+      setLoadError("Einstellungsbereiche konnten nicht geladen werden.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [loadSections]);
+
+  useEffect(() => {
+    void refreshSections();
+  }, [refreshSections]);
 
   const statusMap = useMemo(
     () => ({
@@ -85,6 +126,10 @@ export function TabbedSettingsView() {
       settings.theme,
     ],
   );
+  const selectedSection = sections.find((section) => section.id === selectedSectionId) ?? null;
+  const selectedSectionStatus = selectedSection
+    ? statusMap[selectedSection.id as keyof typeof statusMap]
+    : null;
 
   return (
     <SettingsLayout
@@ -95,97 +140,117 @@ export function TabbedSettingsView() {
       <div className="space-y-3 pb-4xl">
         {isLoading ? (
           <SettingsSkeleton count={6} />
+        ) : loadError ? (
+          <EmptyState
+            title="Einstellungen konnten nicht geladen werden"
+            description={loadError}
+            className="rounded-2xl border border-status-error/25 bg-status-error/10"
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  void refreshSections();
+                }}
+              >
+                Erneut versuchen
+              </Button>
+            }
+          />
+        ) : sections.length === 0 ? (
+          <EmptyState
+            title="Keine Einstellungsbereiche verfügbar"
+            description="Derzeit sind keine Bereiche für die Einstellungen hinterlegt."
+            className="rounded-2xl border border-white/10 bg-surface-1/40"
+          />
         ) : (
-          SECTIONS.map((section) => {
+          sections.map((section) => {
             const Icon = section.icon;
             const status = statusMap[section.id as keyof typeof statusMap];
-            const theme = getCategoryStyle("Settings");
 
             return (
-              <Card
+              <ListRow
                 key={section.id}
-                variant="roleStrong"
-                notch="none"
-                padding="none"
-                style={{ background: theme.roleGradient }}
+                title={section.label}
+                subtitle={section.description}
+                onPress={() => {
+                  void navigate(section.to);
+                }}
+                pressLabel={`${section.label} öffnen`}
+                accentClassName="bg-accent-settings"
                 className={cn(
-                  "relative transition-all duration-300 group overflow-hidden",
-                  "hover:brightness-110",
-                  theme.hoverBorder,
+                  "border-white/[0.08]",
+                  "hover:border-accent-settings-border/60 hover:bg-surface-2/65",
                 )}
-              >
-                {/* Status Badge - Top Right */}
-                <div className="absolute right-3 top-3 z-20">
-                  <Badge
-                    className={cn("text-[10px] px-2 h-5 shadow-sm", theme.badge, theme.badgeText)}
-                  >
-                    {status}
-                  </Badge>
-                </div>
-
-                {/* Main Row - Clickable area */}
-                <div
-                  className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none"
-                  aria-label={`${section.label} öffnen`}
-                >
-                  {/* Invisible clickable overlay */}
-                  <div
-                    className="absolute inset-0 cursor-pointer pointer-events-auto z-0"
-                    onClick={() => {
-                      if (typeof window !== "undefined") {
-                        window.location.assign(section.to);
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        if (typeof window !== "undefined") {
-                          window.location.assign(section.to);
-                        }
-                      }
-                    }}
-                    aria-label={`${section.label} öffnen`}
-                  />
-
-                  {/* Icon */}
-                  <div
-                    className={cn(
-                      "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
-                      theme.iconBg,
-                      theme.iconText,
-                      theme.groupHoverIconBg,
-                    )}
-                  >
+                leading={
+                  <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-settings-surface text-accent-settings transition-colors">
                     <Icon className="h-6 w-6" />
                   </div>
-
-                  {/* Info */}
-                  <div className="relative flex-1 min-w-0">
-                    <span
-                      className={cn(
-                        "font-semibold text-sm truncate block",
-                        "text-ink-primary group-hover:text-ink-primary",
-                      )}
-                    >
-                      {section.label}
-                    </span>
-                    <p className="text-xs text-ink-secondary truncate mt-1">
-                      {section.description}
-                    </p>
-                  </div>
-
-                  {/* Chevron */}
-                  <div className="relative z-10 pr-10">
-                    <ChevronRight className="h-4 w-4 text-ink-tertiary" />
-                  </div>
-                </div>
-              </Card>
+                }
+                topRight={
+                  <Badge className="h-5 border border-accent-settings-border/40 bg-accent-settings-dim px-2 text-[10px] text-accent-settings shadow-sm">
+                    {status}
+                  </Badge>
+                }
+                trailing={
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedSectionId(section.id);
+                    }}
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                  >
+                    Details
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                }
+              />
             );
           })
         )}
       </div>
+
+      <BottomSheet
+        open={!!selectedSection}
+        onClose={() => setSelectedSectionId(null)}
+        title={selectedSection?.label}
+        description={selectedSection?.description}
+        footer={
+          selectedSection ? (
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
+                onClick={() => setSelectedSectionId(null)}
+              >
+                Schließen
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                onClick={() => {
+                  setSelectedSectionId(null);
+                  void navigate(selectedSection.to);
+                }}
+              >
+                Öffnen
+              </Button>
+            </div>
+          ) : null
+        }
+      >
+        {selectedSection ? (
+          <div className="rounded-xl border border-accent-settings-border/30 bg-accent-settings-dim/30 px-4 py-4">
+            <p className="text-sm text-ink-secondary">
+              Aktueller Status:{" "}
+              <span className="font-semibold text-ink-primary">{selectedSectionStatus}</span>
+            </p>
+          </div>
+        ) : null}
+      </BottomSheet>
     </SettingsLayout>
   );
 }

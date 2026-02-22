@@ -24,13 +24,9 @@ export function ChatLayout({
   logoState = "idle",
 }: ChatLayoutProps) {
   return (
-    <div className="relative flex h-[calc(var(--vh,1vh)*100)] w-full flex-col bg-bg-app text-ink-primary overflow-hidden selection:bg-accent-primary/30">
-      {/* Enhanced Header with Color Accents */}
-      <header className="relative z-header glass-header shadow-sm overflow-hidden h-[3.5rem] sm:h-16">
-        {/* Subtle gradient overlay - 25% reduced intensity */}
-        <div className="absolute inset-0 bg-gradient-to-r from-accent-chat/[0.02] via-transparent to-accent-models/[0.02] pointer-events-none" />
-        <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-between px-4 sm:px-6 relative z-10">
-          {/* Left: Hamburger Menu */}
+    <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-bg-app text-ink-primary selection:bg-accent-primary/30">
+      <header className="relative z-header h-[3.5rem] overflow-hidden border-b border-white/8 bg-surface-2/85 shadow-sm backdrop-blur-xl sm:h-16">
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -38,8 +34,8 @@ export function ChatLayout({
               onClick={onMenuClick}
               aria-label="Menü öffnen"
               className={cn(
-                "text-ink-primary hover:bg-surface-2 ripple-effect",
-                "hover:text-accent-chat transition-colors duration-200",
+                "text-ink-primary transition-colors duration-200",
+                "hover:bg-surface-1/70 hover:text-ink-primary",
               )}
             >
               <Menu className="h-5 w-5" />
@@ -53,18 +49,16 @@ export function ChatLayout({
               <span className="sr-only">Disa AI</span>
             </div>
             {title && (
-              <p className="text-base font-semibold tracking-tight text-ink-primary sm:text-lg title-transition max-w-[44vw] sm:max-w-[60vw] truncate">
+              <p className="max-w-[44vw] truncate text-sm font-medium tracking-tight text-ink-primary sm:max-w-[60vw] sm:text-base">
                 {title}
               </p>
             )}
           </div>
 
-          {/* Right: Actions */}
           <div className="flex items-center gap-2 pr-safe-right">{headerActions}</div>
         </div>
       </header>
 
-      {/* Main Page Content Area */}
       <main
         id="main"
         tabIndex={-1}

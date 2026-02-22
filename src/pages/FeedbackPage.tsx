@@ -20,7 +20,7 @@ import {
   X,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Button, Card, useToasts } from "@/ui";
+import { Button, Card, InfoBanner, useToasts } from "@/ui";
 
 const FEEDBACK_TYPES = [
   { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-settings" },
@@ -47,9 +47,12 @@ export default function FeedbackPage() {
   const [attachments, setAttachments] = useState<AttachmentPreview[]>([]);
   const [isSending, setIsSending] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Handle file selection
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmitError(null);
+
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
@@ -150,6 +153,7 @@ export default function FeedbackPage() {
     const trimmedEmail = email.trim();
 
     if (!trimmedMessage || isSending) return;
+    setSubmitError(null);
 
     // Rate limiting: Check if user sent feedback recently (3 minutes cooldown)
     const RATE_LIMIT_KEY = "feedback_last_sent";
@@ -166,6 +170,7 @@ export default function FeedbackPage() {
             title: "Bitte warte kurz",
             message: `Du kannst in ${remainingSeconds} Sekunden erneut Feedback senden.`,
           });
+          setSubmitError(`Du kannst in ${remainingSeconds} Sekunden erneut Feedback senden.`);
           return;
         }
       }
@@ -252,6 +257,7 @@ export default function FeedbackPage() {
       setMessage("");
       setEmail("");
       setAttachments([]);
+      setSubmitError(null);
       setIsSending(false);
       void navigate("/settings");
     } catch (error) {
@@ -264,9 +270,16 @@ export default function FeedbackPage() {
         title: "Senden fehlgeschlagen",
         message: errorMessage,
       });
+      setSubmitError(errorMessage);
       setIsSending(false);
     }
   };
+
+  const statusMessage = isSending
+    ? "Feedback wird gesendet."
+    : isCompressing
+      ? "Bilder werden optimiert."
+      : null;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-full p-4 overflow-y-auto">
@@ -278,12 +291,28 @@ export default function FeedbackPage() {
           </p>
         </div>
 
+        {submitError ? (
+          <InfoBanner variant="error" title="Senden fehlgeschlagen" className="mb-5 rounded-xl">
+            {submitError}
+          </InfoBanner>
+        ) : null}
+
+        {statusMessage ? (
+          <InfoBanner className="mb-5 rounded-xl" title="Status">
+            {statusMessage}
+          </InfoBanner>
+        ) : null}
+
+        <p className="sr-only" aria-live="polite">
+          {statusMessage ?? (submitError ? `Fehler: ${submitError}` : "")}
+        </p>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Feedback Type Selection */}
-          <div className="space-y-3">
-            <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
+          <fieldset className="space-y-3">
+            <legend className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
               Worum geht es?
-            </label>
+            </legend>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {FEEDBACK_TYPES.map((item) => {
                 const Icon = item.icon;
@@ -293,6 +322,7 @@ export default function FeedbackPage() {
                     key={item.id}
                     type="button"
                     onClick={() => setType(item.id)}
+                    aria-pressed={isSelected}
                     className={cn(
                       "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all",
                       isSelected
@@ -315,14 +345,18 @@ export default function FeedbackPage() {
                 );
               })}
             </div>
-          </div>
+          </fieldset>
 
           {/* Message Textarea */}
           <div className="space-y-3">
-            <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
+            <label
+              htmlFor="feedback-message"
+              className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary"
+            >
               Deine Nachricht
             </label>
             <textarea
+              id="feedback-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Beschreibe deine Idee oder das Problem..."
@@ -368,7 +402,11 @@ export default function FeedbackPage() {
             </Button>
 
             {/* Attachment Previews */}
-            {attachments.length > 0 && (
+            {attachments.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-white/10 bg-surface-1/40 px-3 py-3 text-xs text-ink-tertiary">
+                Noch keine Screenshots hinzugefügt.
+              </div>
+            ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {attachments.map((attachment) => (
                   <div
@@ -394,7 +432,7 @@ export default function FeedbackPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveAttachment(attachment.id)}
-                      className="absolute top-2 right-2 bg-status-error/90 hover:bg-status-error text-white rounded-full h-7 w-7 flex items-center justify-center transition-colors shadow-md"
+                      className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full bg-status-error/90 text-white shadow-md transition-colors hover:bg-status-error"
                       aria-label="Bild entfernen"
                     >
                       <X className="h-3.5 w-3.5" />
@@ -413,10 +451,14 @@ export default function FeedbackPage() {
 
           {/* Email Input */}
           <div className="space-y-3">
-            <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
+            <label
+              htmlFor="feedback-email"
+              className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary"
+            >
               E-Mail (optional) 🔒
             </label>
             <input
+              id="feedback-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -442,6 +484,7 @@ export default function FeedbackPage() {
             variant="primary"
             size="lg"
             disabled={isSending || !message.trim() || isCompressing}
+            aria-busy={isSending}
             className="w-full"
           >
             {isSending ? (

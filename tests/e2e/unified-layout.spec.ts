@@ -112,29 +112,34 @@ test.describe("Unified Layout Tests", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
+    const bottomNav = page.getByTestId("mobile-bottom-nav");
 
-    // Navigate to different pages and check they load
-    const navigationTests = [
+    // Primary navigation lives in the bottom nav
+    const primaryNavTests = [
       { linkText: "Einstellungen", expectedPath: /\/settings/ },
       { linkText: "Modelle", expectedPath: /\/models/ },
       { linkText: "Rollen", expectedPath: /\/roles/ },
+      { linkText: "Chat", expectedPath: /\/chat/ },
     ];
 
-    for (const { linkText, expectedPath } of navigationTests) {
-      // Mobile-only UI: always use drawer navigation
-      await menuButton.click();
-
-      const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-      await expect(menuDrawer).toBeVisible();
-
-      const link = menuDrawer.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
+    for (const { linkText, expectedPath } of primaryNavTests) {
+      const link = bottomNav.getByRole("link", { name: new RegExp(`^${linkText}\\b`, "i") });
       await expect(link).toBeVisible();
       await link.click();
 
       await expect(page).toHaveURL(expectedPath);
       await page.waitForLoadState("networkidle");
     }
+
+    // Secondary navigation remains in the drawer
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
+    await menuButton.click();
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(menuDrawer).toBeVisible();
+    const historyLink = menuDrawer.getByRole("link", { name: /^Verlauf\b/i });
+    await expect(historyLink).toBeVisible();
+    await historyLink.click();
+    await expect(page).toHaveURL(/\/chat\/history/);
   });
 
   test("should maintain mobile-only layout on all screen sizes", async ({ page }) => {

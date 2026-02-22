@@ -41,12 +41,13 @@ import {
 import { cn } from "@/lib/utils";
 import {
   Badge,
+  BottomSheet,
   Button,
-  Card,
   CardSkeleton,
   EmptyState,
   FilterSkeleton,
   HeaderSkeleton,
+  ListRow,
   PageHeader,
   SearchInput,
 } from "@/ui";
@@ -167,7 +168,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [expandedRoles, setExpandedRoles] = useState<Set<string>>(new Set());
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
@@ -236,16 +237,11 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage, navigate],
   );
 
-  const toggleRoleExpansion = useCallback((roleId: string) => {
-    setExpandedRoles((prev) => {
-      const next = new Set(prev);
-      if (next.has(roleId)) next.delete(roleId);
-      else next.add(roleId);
-      return next;
-    });
-  }, []);
-
   const hasActiveFilters = selectedCategory || filters.showFavoritesOnly || searchQuery;
+  const selectedRole = useMemo(
+    () => filteredRoles.find((role) => role.id === selectedRoleId) ?? null,
+    [filteredRoles, selectedRoleId],
+  );
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -413,178 +409,146 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           <div className="space-y-3">
             {filteredRoles.map((role) => {
               const isActive = activeRole?.id === role.id;
-              const isExpanded = expandedRoles.has(role.id);
               const isFavorite = isRoleFavorite(role.id);
               const theme = getCategoryStyle(role.category);
               const RoleIcon = getRoleIcon(role);
 
               return (
-                <Card
+                <ListRow
                   key={role.id}
                   data-testid="role-card"
                   aria-label={role.name}
-                  variant="roleStrong"
-                  notch="none"
-                  padding="none"
+                  title={role.name}
+                  subtitle={role.category || "Spezial"}
+                  active={isActive}
+                  onPress={() => handleActivateRole(role)}
+                  pressLabel={`Rolle ${role.name} auswählen`}
+                  pressed={isActive}
+                  accentClassName={theme.textBg}
                   className={cn(
-                    "relative transition-all duration-300 group overflow-hidden",
                     isActive
-                      ? cn("ring-1", theme.border, theme.glow)
-                      : cn("hover:brightness-110", theme.hoverBorder),
+                      ? cn("border-white/[0.14]", theme.border, theme.glow)
+                      : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
                   )}
-                  style={{ background: theme.roleGradient }}
-                >
-                  <div className="absolute right-3 top-3 flex items-center gap-2 z-20">
-                    {isActive && (
-                      <Badge
-                        className={cn(
-                          "text-[10px] px-2 h-5 shadow-sm",
-                          theme.badge,
-                          theme.badgeText,
-                        )}
-                      >
-                        Aktiv
-                      </Badge>
-                    )}
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleRoleFavorite(role.id);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleRoleFavorite(role.id);
-                        }
-                      }}
-                      aria-label={
-                        isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
-                      }
-                      className={cn(
-                        "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors cursor-pointer pointer-events-auto",
-                        isFavorite
-                          ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                          : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
-                      )}
-                    >
-                      {" "}
-                      <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
-                    </div>
-                  </div>
-
-                  {/* Main Row - Clickable area */}
-                  <div
-                    className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none"
-                    aria-label={`Rolle ${role.name} auswählen`}
-                  >
-                    {/* Invisible clickable overlay */}
-                    <div
-                      className="absolute inset-0 cursor-pointer pointer-events-auto z-0"
-                      onClick={() => handleActivateRole(role)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          handleActivateRole(role);
-                        }
-                      }}
-                      aria-label={`Rolle ${role.name} auswählen`}
-                      aria-pressed={isActive}
-                    />
-                    {/* Icon */}
+                  leading={
                     <div
                       className={cn(
-                        "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+                        "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
                         isActive
                           ? cn(theme.iconBg, theme.iconText, "shadow-inner")
-                          : cn(theme.iconBg, theme.iconText, theme.groupHoverIconBg),
+                          : cn(theme.iconBg, theme.iconText),
                       )}
                     >
                       <RoleIcon className="h-6 w-6" />
                     </div>
-
-                    {/* Info */}
-                    <div className="relative flex-1 min-w-0">
-                      <span
-                        className={cn(
-                          "font-semibold text-sm truncate block",
-                          isActive ? theme.text : "text-ink-primary group-hover:text-ink-primary",
-                        )}
-                      >
-                        {role.name}
-                      </span>
-                      <p className="text-xs text-ink-secondary truncate mt-1">
-                        {role.category || "Spezial"}
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex flex-col items-end gap-2 pr-10 relative z-20 pointer-events-auto">
+                  }
+                  topRight={
+                    <div className="flex items-center gap-2">
+                      {isActive ? (
+                        <Badge
+                          className={cn(
+                            "h-5 px-2 text-[10px] shadow-sm",
+                            theme.badge,
+                            theme.badgeText,
+                          )}
+                        >
+                          Aktiv
+                        </Badge>
+                      ) : null}
                       <button
                         type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleRoleExpansion(role.id);
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleRoleFavorite(role.id);
                         }}
-                        className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-none p-0"
+                        aria-label={
+                          isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
+                        }
+                        className={cn(
+                          "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                          isFavorite
+                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                        )}
                       >
-                        Details
-                        <ChevronDown
-                          className={cn(
-                            "h-3.5 w-3.5 transition-transform",
-                            isExpanded && "rotate-180",
-                          )}
-                        />
+                        <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
                       </button>
                     </div>
-                  </div>
-
-                  {/* Expanded Details */}
-                  {isExpanded && (
-                    <div id={`role-details-${role.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-                      <div
-                        className={cn(
-                          "space-y-3 rounded-xl border px-4 py-4",
-                          theme.bg,
-                          theme.border,
-                        )}
-                      >
-                        <p className="text-sm text-ink-secondary leading-relaxed">
-                          {role.description}
-                        </p>
-
-                        {role.tags && role.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
-                            {role.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                className={cn("text-[10px] px-2 h-5", theme.badge, theme.badgeText)}
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-
-                        {role.systemPrompt && (
-                          <div className="p-3 rounded-xl bg-surface-1/50 text-xs text-ink-tertiary font-mono border border-white/5 max-h-24 overflow-y-auto">
-                            {role.systemPrompt.slice(0, 200)}
-                            {role.systemPrompt.length > 200 && "..."}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </Card>
+                  }
+                  trailing={
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setSelectedRoleId(role.id);
+                      }}
+                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                    >
+                      Details
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </button>
+                  }
+                />
               );
             })}
           </div>
         )}
       </div>
+
+      <BottomSheet
+        open={!!selectedRole}
+        onClose={() => setSelectedRoleId(null)}
+        title={selectedRole?.name}
+        description={selectedRole?.category || "Rollen-Details"}
+        footer={
+          selectedRole ? (
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
+                onClick={() => setSelectedRoleId(null)}
+              >
+                Schließen
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                onClick={() => {
+                  handleActivateRole(selectedRole);
+                  setSelectedRoleId(null);
+                }}
+              >
+                {activeRole?.id === selectedRole.id ? "Aktiv" : "Aktivieren"}
+              </Button>
+            </div>
+          ) : null
+        }
+      >
+        {selectedRole ? (
+          <div className="space-y-3 rounded-xl border px-4 py-4">
+            <p className="text-sm leading-relaxed text-ink-secondary">{selectedRole.description}</p>
+
+            {selectedRole.tags && selectedRole.tags.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
+                {selectedRole.tags.map((tag) => (
+                  <Badge key={tag} className={cn("h-5 px-2 text-[10px]")}>
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+
+            {selectedRole.systemPrompt ? (
+              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-3 font-mono text-xs text-ink-tertiary">
+                {selectedRole.systemPrompt.slice(0, 220)}
+                {selectedRole.systemPrompt.length > 220 ? "..." : ""}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </BottomSheet>
     </div>
   );
 }

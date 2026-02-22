@@ -95,9 +95,11 @@ test.describe("Phone Frame - Mobile UI on Desktop", () => {
       await page.waitForLoadState("networkidle");
       await page.waitForTimeout(500);
 
-      // Check if grid exists
-      const grid = page.locator(selector).first();
-      const gridCount = await grid.count();
+      // Check if a content grid exists inside the main page area
+      // (exclude shell elements like bottom navigation)
+      const mainArea = page.locator("main");
+      const grid = mainArea.locator(selector).first();
+      const gridCount = await mainArea.locator(selector).count();
 
       if (gridCount > 0) {
         // Grid should exist but use single column (mobile layout)

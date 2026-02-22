@@ -7,38 +7,38 @@
 
 :root {
   /* ========================================================================
-     SPACING SCALE - 8px Rhythm (reduced by 15%)
+     SPACING SCALE - 8/12/16/24 Rhythm
      ======================================================================== */
   --space-0: 0;
-  --space-1: 0.2125rem; /* 3.4px (reduced by 15%) */
-  --space-2: 0.425rem; /* 6.8px (reduced by 15%) */
-  --space-3: 0.6375rem; /* 10.2px (reduced by 15%) */
-  --space-4: 0.85rem; /* 13.6px (reduced by 15%) */
-  --space-5: 1.0625rem; /* 17px (reduced by 15%) */
-  --space-6: 1.275rem; /* 20.4px (reduced by 15%) */
-  --space-8: 1.7rem; /* 27.2px (reduced by 15%) */
-  --space-10: 2.125rem; /* 34px (reduced by 15%) */
-  --space-12: 2.55rem; /* 40.8px (reduced by 15%) */
-  --space-16: 3.4rem; /* 54.4px (reduced by 15%) */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.5rem; /* 24px */
+  --space-6: 2rem; /* 32px */
+  --space-8: 2.5rem; /* 40px */
+  --space-10: 3rem; /* 48px */
+  --space-12: 4rem; /* 64px */
+  --space-16: 6rem; /* 96px */
 
   /* ========================================================================
-     BORDER RADIUS - 3-Stufen Hierarchie (reduced by 15%)
+     BORDER RADIUS - 12 / 16 / 20
      ======================================================================== */
-  --radius-sm: 0.425rem; /* 6.8px - Chips, Small buttons (reduced by 15%) */
-  --radius-md: 0.6375rem; /* 10.2px - Cards, Inputs, Standard buttons (reduced by 15%) */
-  --radius-lg: 0.85rem; /* 13.6px - Panels, Modals (reduced by 15%) */
+  --radius-sm: 0.75rem; /* 12px - Inputs, controls */
+  --radius-md: 1rem; /* 16px - Cards */
+  --radius-lg: 1.25rem; /* 20px - Hero/sheets */
 
   /* ========================================================================
-     SHADOWS - 2-Level Elevation (Glassmorphism 2.0) (reduced by 15%)
+     SHADOWS - Subtle + Focus
      ======================================================================== */
-  --shadow-sm: 0 0.85px 2.55px rgba(0, 0, 0, 0.12); /* reduced by 15% */
-  --shadow-md: 0 1.7px 6.8px rgba(0, 0, 0, 0.15); /* reduced by 15% */
-  --shadow-lg: 0 6.8px 20.4px rgba(0, 0, 0, 0.2); /* reduced by 15% */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.32);
 
-  /* Focus & Glow (reduced by 15%) */
-  --shadow-focus: 0 0 0 1.7px var(--color-brand-primary); /* reduced by 15% */
-  --shadow-glow-sm: 0 0 10.2px rgba(139, 92, 246, 0.25); /* reduced by 15% */
-  --shadow-glow-md: 0 0 17px rgba(139, 92, 246, 0.35); /* reduced by 15% */
+  /* Focus & Glow */
+  --shadow-focus: 0 0 0 2px var(--color-brand-primary), 0 8px 22px rgba(0, 0, 0, 0.28);
+  --shadow-glow-sm: 0 0 10px rgba(139, 92, 246, 0.2);
+  --shadow-glow-md: 0 0 18px rgba(139, 92, 246, 0.3);
 
   /* ========================================================================
      TOUCH TARGETS - WCAG AA Compliant (Updated to 44px minimum)
@@ -58,8 +58,8 @@
      BORDERS - Konsistente Opacities
      ======================================================================== */
   --border-hairline: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.12);
-  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.16);
 }
 
 /* ========================================================================

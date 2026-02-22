@@ -107,7 +107,7 @@
      ======================================================================== */
 
   /* Card Variants - Branding System */
-  [data-variant="plain"] {
+  [data-variant="surface"] {
     background-color: rgb(var(--card-bg-rgb));
     border: 1px solid rgba(var(--card-border-rgb), 0.08); /* Konsistente Border */
     box-shadow: var(--shadow-surface-subtle);
@@ -119,16 +119,16 @@
     box-shadow: var(--shadow-surface-subtle);
   }
 
-  [data-variant="roleStrong"] {
+  [data-variant="hero"] {
     background-color: rgb(var(--card-bg-rgb));
-    border: 1px solid rgba(var(--card-border-rgb), 0.12); /* Stärker für Roles */
-    box-shadow: var(--shadow-surface-subtle);
+    border: 1px solid rgba(var(--card-border-rgb), 0.12); /* Höhere Elevation */
+    box-shadow: var(--shadow-surface-prominent);
   }
 
   /* Focus States - Improved visibility */
-  [data-variant="plain"]:focus-visible,
+  [data-variant="surface"]:focus-visible,
   [data-variant="tinted"]:focus-visible,
-  [data-variant="roleStrong"]:focus-visible {
+  [data-variant="hero"]:focus-visible {
     outline: 2px solid var(--color-brand-primary);
     outline-offset: 2px;
     border-color: rgba(var(--card-border-rgb), 0.2); /* Stärkere Border on focus */
@@ -136,26 +136,26 @@
 
   /* Hover States (Desktop only) */
   @media (hover: hover) {
-    [data-variant="plain"]:hover,
+    [data-variant="surface"]:hover,
     [data-variant="tinted"]:hover,
-    [data-variant="roleStrong"]:hover {
+    [data-variant="hero"]:hover {
       border-color: rgba(var(--card-border-rgb), calc(var(--card-border-alpha) + 0.05));
     }
   }
 
   /* Pressed States */
-  [data-variant="plain"]:active,
+  [data-variant="surface"]:active,
   [data-variant="tinted"]:active,
-  [data-variant="roleStrong"]:active {
+  [data-variant="hero"]:active {
     box-shadow: var(--card-shadow-pressed);
     transform: translateY(1px);
   }
 
   /* Reduced Motion Support */
   @media (prefers-reduced-motion: reduce) {
-    [data-variant="plain"]:active,
+    [data-variant="surface"]:active,
     [data-variant="tinted"]:active,
-    [data-variant="roleStrong"]:active {
+    [data-variant="hero"]:active {
       transform: none;
     }
   }

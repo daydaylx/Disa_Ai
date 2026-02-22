@@ -22,8 +22,8 @@ test.describe("Book Concept UI", () => {
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
 
-    // Check for role selector (primary pill - shows "Standard" by default)
-    const roleButton = page.locator("button").filter({ hasText: /Standard/i });
+    // Check for role selector
+    const roleButton = page.locator('button[aria-label="Rolle auswählen"]');
     await expect(roleButton).toBeVisible();
 
     // Check for style selector
@@ -95,8 +95,8 @@ test.describe("Book Concept UI", () => {
     await expect(drawer).toBeVisible();
 
     // Check links
-    await expect(drawer.getByText("Einstellungen")).toBeVisible();
-    await expect(drawer.getByText("Impressum")).toBeVisible();
+    await expect(drawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
+    await expect(drawer.getByRole("link", { name: /^Impressum\b/i })).toBeVisible();
 
     // Close menu
     const closeButton = drawer.locator('button[aria-label="Menü schließen"]');

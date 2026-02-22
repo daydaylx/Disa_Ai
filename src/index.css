@@ -30,6 +30,9 @@
   --accent-settings: theme(colors.accent-settings.DEFAULT);
   --accent-settings-dim: theme(colors.accent-settings.dim);
 
+  /* Mobile navigation shell */
+  --app-bottom-nav-height: 4.25rem;
+
   /* Viewport Height Fix */
   --vh: 1vh;
 
@@ -80,26 +83,26 @@
   --shadow-status-info: 0 0 16px rgba(6, 182, 212, 0.28);
 
   /* Card + Tint System - Disa Frame Branding */
-  --card-radius: 18px;
-  --card-bg: rgba(12, 12, 18, 0.72);
+  --card-radius: 16px;
+  --card-bg: rgba(16, 20, 30, 0.78);
   --card-border-width: 1px;
   --card-border-color: rgba(255, 255, 255, 0.08);
   --card-border-color-hover: rgba(255, 255, 255, 0.12);
-  --card-border-color-focus: rgba(139, 92, 246, 0.4);
-  --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
-  --card-shadow-focus: 0 8px 32px rgba(139, 92, 246, 0.18), 0 10px 40px rgba(0, 0, 0, 0.35);
-  --card-shadow-pressed: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --card-border-color-focus: rgba(139, 92, 246, 0.3);
+  --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+  --card-shadow-hover: 0 10px 26px rgba(0, 0, 0, 0.38);
+  --card-shadow-focus: 0 0 0 2px rgba(139, 92, 246, 0.34), 0 10px 26px rgba(0, 0, 0, 0.38);
+  --card-shadow-pressed: 0 4px 14px rgba(0, 0, 0, 0.42);
 
   --tint-angle: 90deg;
   --tint-fade-x: 65%;
   --tint-alpha-soft: 0.08;
-  --tint-alpha-hero: 0.12;
-  --tint-alpha-strong: 0.28;
-  --tint-color-rgb-default: 139, 92, 246;
+  --tint-alpha-hero: 0.16;
+  --tint-alpha-strong: 0.2;
+  --tint-color-rgb-default: 139 92 246;
 
-  --role-teal-rgb: 45, 212, 191;
-  --role-magenta-rgb: 236, 72, 153;
+  --role-teal-rgb: 45 212 191;
+  --role-magenta-rgb: 236 72 153;
 
   /* Frame/Notch System - Disa AI Signature Visual */
   --frame-radius: 16px;

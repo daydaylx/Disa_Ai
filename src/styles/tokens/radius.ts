@@ -30,26 +30,26 @@ export type RadiusTokens = {
 
 export const radiusTokens: RadiusTokens = {
   none: "0px",
-  xs: "10.2px", // Deprecated: Use sm instead (reduced by 15%)
-  sm: "10.2px", // Small elements: buttons, chips, badges (reduced by 15%)
-  md: "13.6px", // Medium elements: cards, inputs, dialogs (reduced by 15%)
-  lg: "17px", // Large elements: panels, large cards (reduced by 15%)
-  xl: "13.6px", // Deprecated: Use md instead (reduced by 15%)
+  xs: "8px", // Micro elements and tight corners
+  sm: "12px", // Inputs, buttons, compact surfaces
+  md: "16px", // Standard cards and list rows
+  lg: "20px", // Hero surfaces and sheets
+  xl: "20px", // Alias to large radius
   pill: "9999px", // Fully rounded (pills, avatars)
   full: "50%",
 
   /* Additional radii for specific components */
-  scrollbar: "13.6px", // (reduced by 15%)
-  focus: "10.2px", // (reduced by 15%)
-  toast: "10.2px", // (reduced by 15%)
-  installPrompt: "13.6px", // (reduced by 15%)
-  button: "10.2px", // (reduced by 15%)
-  badge: "10.2px", // (reduced by 15%)
+  scrollbar: "12px",
+  focus: "12px",
+  toast: "16px",
+  installPrompt: "20px",
+  button: "12px",
+  badge: "9999px",
 
-  /* Glassmorphism Card System - 3 consistent radii */
-  card: "13.6px", // Standard cards (reduced by 15%)
-  cardInner: "10.2px", // Inner elements (reduced by 15%)
-  cardSmall: "10.2px", // Small elements (reduced by 15%)
+  /* Core card radii */
+  card: "16px", // Standard cards
+  cardInner: "12px", // Inputs / inner groups
+  cardSmall: "12px", // Small nested surfaces
   avatar: "50%",
 };
 

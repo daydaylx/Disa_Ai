@@ -255,15 +255,14 @@ export function ChatMessage({
       data-testid="message.item"
     >
       {/* Message Content Container */}
-      <div className={cn("relative w-full", isUser ? "items-end" : "items-start")}>
-        {/* Bubble */}
+      <div className="relative w-full">
         <div
           {...longPressReactHandlers}
           className={cn(
-            "relative rounded-2xl px-5 py-4 text-base leading-loose shadow-sm backdrop-blur-md ring-1 ring-white/5 message-bubble-hover",
+            "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-3.5 text-[0.98rem] leading-7 shadow-sm ring-1 ring-white/5",
             isUser
-              ? "bg-gradient-to-br from-accent-chat-surface via-brand-primary/10 to-surface-1/30 text-ink-primary border border-accent-chat-border rounded-tr-sm hover:shadow-glow-sm"
-              : "bg-gradient-to-br from-surface-1/80 to-surface-2/40 text-ink-primary border border-white/5 rounded-tl-sm",
+              ? "ml-auto rounded-tr-sm border-accent-chat/30 bg-accent-chat-surface/65 text-ink-primary"
+              : "mr-auto rounded-tl-sm border-white/10 bg-surface-card text-ink-primary",
           )}
           data-testid="message-bubble"
         >
@@ -357,12 +356,12 @@ export function ChatMessage({
 
         {/* Follow-up Suggestions - Always visible for last assistant message */}
         {isAssistant && isLast && onFollowUp && (
-          <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
+          <div className="mt-3 flex flex-wrap gap-2 animate-fade-in">
             {followUpSuggestions.map((suggestion, idx) => (
               <button
                 key={suggestion}
                 onClick={() => onFollowUp(suggestion)}
-                className="min-h-[2.75rem] text-sm bg-accent-chat-surface text-accent-chat hover:bg-accent-chat-dim px-4 py-2.5 rounded-full border border-accent-chat-border transition-all shadow-sm backdrop-blur-sm font-medium follow-up-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                className="min-h-[2.75rem] rounded-full border border-accent-chat/30 bg-surface-1/85 px-4 py-2.5 text-sm font-medium text-accent-chat transition-colors hover:border-accent-chat/50 hover:bg-accent-chat/10 focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
                 {suggestion}

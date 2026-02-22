@@ -185,11 +185,11 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       linkHover: "#7C3AED",
     },
     border: {
-      hairline: "rgba(15, 23, 36, 0.08)",
-      subtle: "rgba(15, 23, 36, 0.15)",
+      hairline: "rgba(15, 23, 36, 0.06)",
+      subtle: "rgba(15, 23, 36, 0.12)",
       strong: "rgba(15, 23, 36, 0.3)",
       focus: "#8B5CF6",
-      divider: "rgba(15, 23, 36, 0.12)",
+      divider: "rgba(15, 23, 36, 0.1)",
     },
     brand: {
       primary: "#8B5CF6",
@@ -294,8 +294,8 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       cardBorderRgb: "15 23 36", // RGB for card border
       cardBorderAlpha: "0.08", // Default border alpha
       cardRadius: "16px", // Standard card radius
-      cardShadow: "0 2px 8px rgba(0, 0, 0, 0.08)", // Subtle shadow
-      cardShadowPressed: "0 1px 4px rgba(0, 0, 0, 0.12)", // Pressed state
+      cardShadow: "0 6px 18px rgba(15, 23, 36, 0.12)", // Subtle shadow
+      cardShadowPressed: "0 4px 14px rgba(15, 23, 36, 0.18)", // Pressed state
       tintFade: "65%", // Tint fade percentage
       tintAlphaSoft: "0.08", // Global subtle tint
       tintAlphaStrong: "0.20", // Role/theme strong tint
@@ -328,10 +328,10 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
     },
     border: {
       hairline: "rgba(255, 255, 255, 0.08)",
-      subtle: "rgba(255, 255, 255, 0.16)",
-      strong: "rgba(255, 255, 255, 0.3)",
+      subtle: "rgba(255, 255, 255, 0.12)",
+      strong: "rgba(255, 255, 255, 0.22)",
       focus: "#8B5CF6",
-      divider: "rgba(255, 255, 255, 0.12)",
+      divider: "rgba(255, 255, 255, 0.1)",
     },
     brand: {
       primary: "#8B5CF6",
@@ -434,13 +434,13 @@ export const colorTokens: Record<ThemeMode, ColorScheme> = {
       pageBgRgb: "19 19 20", // RGB values for dark mode page background (matches actual bg-app)
       cardBgRgb: "21 29 49", // RGB for card background
       cardBorderRgb: "255 255 255", // RGB for card border
-      cardBorderAlpha: "0.12", // Default border alpha
+      cardBorderAlpha: "0.08", // Default border alpha
       cardRadius: "16px", // Standard card radius
-      cardShadow: "0 2px 8px rgba(0, 0, 0, 0.3)", // Subtle shadow
-      cardShadowPressed: "0 1px 4px rgba(0, 0, 0, 0.4)", // Pressed state
+      cardShadow: "0 6px 18px rgba(0, 0, 0, 0.32)", // Subtle shadow
+      cardShadowPressed: "0 4px 14px rgba(0, 0, 0, 0.42)", // Pressed state
       tintFade: "65%", // Tint fade percentage
-      tintAlphaSoft: "0.10", // Global subtle tint (slightly stronger in dark)
-      tintAlphaStrong: "0.25", // Role/theme strong tint
+      tintAlphaSoft: "0.08", // Global subtle tint
+      tintAlphaStrong: "0.20", // Role/theme strong tint
       brandRgb: "139 92 246", // Brand purple RGB
       rolePrimaryRgb: "139 92 246", // Primary role color
       roleSecondaryRgb: "167 139 250", // Secondary role color

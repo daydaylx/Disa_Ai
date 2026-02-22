@@ -1,5 +1,15 @@
 import type { LucideIcon } from "@/lib/icons";
-import { Brain, Cpu, Home, MessageSquare, Settings, Users } from "@/lib/icons";
+import {
+  Brain,
+  Cpu,
+  History,
+  Home,
+  Info,
+  MessageSquare,
+  Settings,
+  Shield,
+  Users,
+} from "@/lib/icons";
 
 export type AppNavItem = {
   id: string;
@@ -61,6 +71,49 @@ export const SECONDARY_NAV_ITEMS: AppNavItem[] = [
     Icon: MessageSquare,
     activePattern: /^\/feedback/,
     description: "Melde Ideen & Fehler",
+  },
+];
+
+export const DRAWER_NAV_ITEMS: AppNavItem[] = [
+  {
+    id: "history",
+    label: "Verlauf",
+    path: "/chat/history",
+    Icon: History,
+    activePattern: /^\/chat\/history/,
+    description: "Gespeicherte Unterhaltungen",
+  },
+  {
+    id: "themen",
+    label: "Themen",
+    path: "/themen",
+    Icon: Brain,
+    activePattern: /^\/themen/,
+    description: "Quickstarts & Diskussionen",
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    path: "/feedback",
+    Icon: MessageSquare,
+    activePattern: /^\/feedback/,
+    description: "Ideen und Fehler melden",
+  },
+  {
+    id: "impressum",
+    label: "Impressum",
+    path: "/impressum",
+    Icon: Info,
+    activePattern: /^\/impressum/,
+    description: "Rechtliche Angaben",
+  },
+  {
+    id: "datenschutz",
+    label: "Datenschutz",
+    path: "/datenschutz",
+    Icon: Shield,
+    activePattern: /^\/datenschutz/,
+    description: "Datenschutz & Hinweise",
   },
 ];
 

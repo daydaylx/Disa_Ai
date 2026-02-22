@@ -8,7 +8,6 @@ import type { Conversation } from "../../types";
 interface ConversationCardProps {
   conversation: Conversation;
   isExpanded: boolean;
-  theme: { roleGradient: string };
   onOpen: (id: string) => void;
   onDelete: (id: string) => Promise<void>;
   onToggleExpansion: (id: string) => void;
@@ -18,7 +17,6 @@ interface ConversationCardProps {
 export function ConversationCard({
   conversation,
   isExpanded,
-  theme,
   onOpen,
   onDelete,
   onToggleExpansion,
@@ -46,19 +44,23 @@ export function ConversationCard({
   return (
     <Card
       {...longPressReactHandlers}
-      variant="roleStrong"
+      variant="surface"
+      interactive
       notch="none"
       padding="none"
-      style={{ background: theme.roleGradient }}
       className={cn(
-        "relative transition-all duration-300 group overflow-hidden",
-        "hover:brightness-110 border-white/5",
+        "relative group overflow-hidden border-white/[0.08]",
+        "hover:border-white/[0.14] hover:bg-surface-2/65",
       )}
     >
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-accent-chat"
+        aria-hidden
+      />
       {/* Main Row */}
       <div className="flex items-center gap-4 p-4">
         {/* Icon */}
-        <div className="flex-shrink-0 h-12 w-12 rounded-2xl bg-surface-2/80 flex items-center justify-center text-ink-secondary">
+        <div className="flex-shrink-0 h-12 w-12 rounded-2xl bg-accent-chat-surface flex items-center justify-center text-accent-chat">
           <MessageSquare className="h-6 w-6" />
         </div>
 
@@ -105,7 +107,8 @@ export function ConversationCard({
               e.stopPropagation();
               onToggleExpansion(conversation.id);
             }}
-            className="inline-flex items-center gap-1 text-xs text-ink-tertiary hover:text-ink-primary transition-colors cursor-pointer bg-transparent border-none p-2"
+            className="inline-flex h-11 w-11 items-center justify-center gap-1 rounded-lg border-none bg-transparent text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+            aria-label={isExpanded ? "Verlaufsdetails einklappen" : "Verlaufsdetails ausklappen"}
           >
             <ChevronDown
               className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
@@ -114,7 +117,7 @@ export function ConversationCard({
           <Button
             variant="ghost"
             size="icon"
-            className="text-ink-secondary hover:text-status-error hover:bg-status-error/10 h-10 w-10"
+            className="text-ink-secondary hover:text-status-error hover:bg-status-error/10"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(conversation.id).catch(console.error);

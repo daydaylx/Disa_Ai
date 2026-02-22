@@ -1,5 +1,5 @@
 /**
- * Spacing tokens built on an 8px rhythm with a few micro adjustments.
+ * Spacing tokens built on a strict 8/12/16/24 rhythm.
  * Values are emitted in rem to stay device agnostic.
  */
 
@@ -54,27 +54,27 @@ export type SpacingTokens = {
 
 const spacingScale: SpacingScale = {
   none: "0px",
-  "3xs": "0.425rem", // 6.8px (reduced by 15%)
-  "2xs": "0.6375rem", // 10.2px (reduced by 15%)
-  xs: "0.85rem", // 13.6px (reduced by 15%)
-  sm: "1.0625rem", // 17px (reduced by 15%)
-  md: "1.275rem", // 20.4px (reduced by 15%)
-  lg: "1.7rem", // 27.2px (reduced by 15%)
-  xl: "2.125rem", // 34px (reduced by 15%)
-  "2xl": "2.55rem", // 40.8px (reduced by 15%)
-  "3xl": "2.975rem", // 47.6px (reduced by 15%)
-  "4xl": "3.4rem", // 54.4px (reduced by 15%)
+  "3xs": "0.5rem", // 8px
+  "2xs": "0.75rem", // 12px
+  xs: "1rem", // 16px
+  sm: "1.5rem", // 24px
+  md: "2rem", // 32px
+  lg: "2.5rem", // 40px
+  xl: "3rem", // 48px
+  "2xl": "4rem", // 64px
+  "3xl": "5rem", // 80px
+  "4xl": "6rem", // 96px
 };
 
 const semanticSpacing: SemanticSpacing = {
-  stackXs: spacingScale["2xs"],
-  stackSm: spacingScale.xs,
-  stackMd: spacingScale.sm,
-  stackLg: spacingScale.md,
+  stackXs: spacingScale["3xs"],
+  stackSm: spacingScale["2xs"],
+  stackMd: spacingScale.xs,
+  stackLg: spacingScale.sm,
   inlineSm: spacingScale["2xs"],
   inlineMd: spacingScale.xs,
   inlineLg: spacingScale.sm,
-  section: spacingScale.xl,
+  section: spacingScale.md,
   containerX: spacingScale.xs,
   containerY: spacingScale.sm,
 };
@@ -83,17 +83,17 @@ export const spacingTokens: SpacingTokens = {
   scale: spacingScale,
   semantic: semanticSpacing,
   touch: {
-    compact: "2.3375rem", // 37.4px (reduced by 15%)
-    comfortable: "2.55rem", // 40.8px (reduced by 15%)
-    relaxed: "2.7625rem", // 44.2px (reduced by 15%)
-    spacious: "2.975rem", // 47.6px (reduced by 15%)
+    compact: "2.75rem", // 44px
+    comfortable: "3rem", // 48px
+    relaxed: "3.25rem", // 52px
+    spacious: "3.5rem", // 56px
   },
   fixed: {
-    scrollbar: "6.8px", // (reduced by 15%)
-    rippleMax: "170px", // (reduced by 15%)
-    bottomsheetHandle: "4.25px", // (reduced by 15%)
-    bottomsheetHandleWidth: "34px", // (reduced by 15%)
-    bottomsheetBorder: "1.7px", // (reduced by 15%)
+    scrollbar: "8px",
+    rippleMax: "200px",
+    bottomsheetHandle: "5px",
+    bottomsheetHandleWidth: "40px",
+    bottomsheetBorder: "2px",
   },
 };
 
