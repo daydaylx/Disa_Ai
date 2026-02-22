@@ -5,7 +5,7 @@ import * as memory from "../api/memory";
 // chatOnce wird im Modul memory importiert → wir mocken Rückgabe
 vi.mock("../api/openrouter", () => ({
   chatOnce: vi.fn(() => Promise.resolve({ text: "- Punkt 1\n- Punkt 2" })),
-  getModelFallback: vi.fn(() => "meta-llama/llama-3.3-70b-instruct:free"),
+  getModelFallback: vi.fn(() => "nvidia/nemotron-3-nano-30b-a3b:free"),
 }));
 
 describe("addExplicitMemory", () => {

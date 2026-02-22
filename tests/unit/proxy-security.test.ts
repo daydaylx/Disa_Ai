@@ -211,25 +211,25 @@ describe("Proxy Security - Abuse Controls", () => {
   });
 });
 
-describe("Proxy Security - Model Allowlist", () => {
-  it("should contain allowed models", () => {
-    const allowedModels = [
-      "meta-llama/llama-3.3-70b-instruct:free",
-      "google/gemma-2-9b-it:free",
-      "mistralai/mistral-7b-instruct:free",
-      "microsoft/phi-3-mini-128k-instruct:free",
-      "qwen/qwen-2.5-7b-instruct:free",
-    ];
+describe("Proxy Security - Free Model Policy", () => {
+  it("should only accept free-model IDs", () => {
+    const validFreeModel = "nvidia/nemotron-3-nano-30b-a3b:free";
+    const paidModel = "openai/gpt-4o";
 
-    expect(allowedModels.length).toBeGreaterThan(0);
+    expect(validFreeModel.endsWith(":free")).toBe(true);
+    expect(paidModel.endsWith(":free")).toBe(false);
   });
 
-  it("should reject unknown models", () => {
-    const allowedModels = ["meta-llama/llama-3.3-70b-instruct:free", "google/gemma-2-9b-it:free"];
+  it("should validate requested model against live free catalog", () => {
+    const liveFreeModels = new Set([
+      "nvidia/nemotron-3-nano-30b-a3b:free",
+      "openai/gpt-oss-20b:free",
+      "google/gemma-3-12b-it:free",
+    ]);
+    const unknownModel = "meta-llama/llama-3.1-8b-instruct:free";
 
-    const unknownModel = "gpt-4-turbo-preview";
-
-    expect(allowedModels.includes(unknownModel as any)).toBe(false);
+    expect(liveFreeModels.has("nvidia/nemotron-3-nano-30b-a3b:free")).toBe(true);
+    expect(liveFreeModels.has(unknownModel)).toBe(false);
   });
 });
 

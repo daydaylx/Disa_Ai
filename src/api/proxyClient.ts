@@ -7,6 +7,7 @@ const PROXY_CONFIG = {
   timeoutMs: 60000,
   maxRetries: 3,
 } as const;
+const DEFAULT_PROXY_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
 
 // Client identifier for proxy
 const PROXY_CLIENT_ID = "disa-ai-app";
@@ -103,7 +104,7 @@ export async function chatStreamViaProxy(
 
     const payload: Record<string, unknown> = {
       messages,
-      model: opts?.model || "meta-llama/llama-3.3-70b-instruct:free",
+      model: opts?.model || DEFAULT_PROXY_MODEL,
       stream: true,
     };
 
@@ -269,7 +270,7 @@ export async function chatOnceViaProxy(
 
     const payload = {
       messages,
-      model: opts?.model || "meta-llama/llama-3.3-70b-instruct:free",
+      model: opts?.model || DEFAULT_PROXY_MODEL,
       stream: false,
     };
 

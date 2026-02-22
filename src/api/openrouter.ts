@@ -76,9 +76,9 @@ function getHeaders() {
 
 export function getModelFallback() {
   try {
-    return localStorage.getItem(MODEL_KEY) || "meta-llama/llama-3.3-70b-instruct:free";
+    return localStorage.getItem(MODEL_KEY) || "nvidia/nemotron-3-nano-30b-a3b:free";
   } catch {
-    return "meta-llama/llama-3.3-70b-instruct:free";
+    return "nvidia/nemotron-3-nano-30b-a3b:free";
   }
 }
 

@@ -61,29 +61,16 @@ const ChatRequestSchema = z.object({
 // =====================
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+const OPENROUTER_MODELS_API_URL = "https://openrouter.ai/api/v1/models";
 
 const ALLOWED_ORIGINS = ["https://disaai.de", "https://disa-ai.pages.dev"] as const;
 
 // Cloudflare Pages preview deployments use <hash>.disa-ai.pages.dev
 const PAGES_PREVIEW_PATTERN = /^https:\/\/[a-f0-9]+\.disa-ai\.pages\.dev$/;
 
-const ALLOWED_MODELS = [
-  "meta-llama/llama-3.3-70b-instruct:free",
-  "meta-llama/llama-3.2-3b-instruct:free",
-  "meta-llama/llama-3.1-8b-instruct:free",
-  "google/gemma-2-9b-it:free",
-  "mistralai/mistral-7b-instruct:free",
-  "mistralai/devstral-2512:free",
-  "microsoft/phi-3-mini-128k-instruct:free",
-  "qwen/qwen-2-7b-instruct:free",
-  "qwen/qwen-2.5-7b-instruct:free",
-  "allenai/olmo-3.1-32b-think:free",
-  "allenai/olmo-3-32b-think:free",
-  "xiaomi/mimo-v2-flash:free",
-  "nvidia/nemotron-3-nano-30b-a3b:free",
-  "arcee-ai/trinity-mini:free",
-  "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-] as const;
+const MODEL_SUFFIX_FREE = ":free";
+const MODELS_FETCH_TIMEOUT_MS = 15000;
+const MODEL_FALLBACK_MAX_ATTEMPTS = 3;
 
 const RATE_LIMIT_CONFIG = {
   requestsPerMinute: 60,
@@ -96,6 +83,19 @@ const ABUSE_CONTROLS = {
   maxStreamDurationMs: 120 * 1000, // 120 seconds
   requestTimeoutMs: 60 * 1000, // 60 seconds
 } as const;
+
+interface OpenRouterErrorPayload {
+  error?: string | { message?: string };
+  message?: string;
+}
+
+interface OpenRouterModelCatalogEntry {
+  id?: unknown;
+}
+
+interface OpenRouterModelsResponse {
+  data?: OpenRouterModelCatalogEntry[];
+}
 
 // =====================
 // RATE LIMITING (In-Memory)
@@ -159,6 +159,116 @@ function isValidReferer(request: Request): boolean {
   } catch {
     return false;
   }
+}
+
+function getRequestOrigin(origin: string | null): string {
+  return origin || "https://disaai.de";
+}
+
+function isFreeModelId(modelId: string): boolean {
+  return modelId.endsWith(MODEL_SUFFIX_FREE);
+}
+
+function buildFallbackModelCandidates(primaryModel: string, freeModelIds: Set<string>): string[] {
+  return Array.from(freeModelIds)
+    .filter((modelId) => modelId !== primaryModel)
+    .sort((a, b) => a.localeCompare(b));
+}
+
+function isRetryableModelFailure(status: number, message: string): boolean {
+  if (status === 402 || status === 404) return true;
+  if (status !== 429) return false;
+
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("temporarily rate-limited upstream") ||
+    normalized.includes("provider returned error") ||
+    normalized.includes("no endpoints found")
+  );
+}
+
+async function parseOpenRouterError(
+  response: Response,
+): Promise<{ status: number; message: string }> {
+  let errorMessage = `OpenRouter API error: ${response.status} ${response.statusText}`;
+
+  try {
+    const errorData = (await response.json()) as OpenRouterErrorPayload;
+    if (errorData?.error) {
+      errorMessage =
+        typeof errorData.error === "string"
+          ? errorData.error
+          : errorData.error.message || errorMessage;
+    } else if (typeof errorData?.message === "string" && errorData.message.trim().length > 0) {
+      errorMessage = errorData.message;
+    }
+  } catch {
+    // Ignore JSON parsing errors and keep status-based fallback message.
+  }
+
+  return { status: response.status, message: errorMessage };
+}
+
+async function fetchLiveFreeModelIds(apiKey: string, requestOrigin: string): Promise<Set<string>> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, MODELS_FETCH_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(OPENROUTER_MODELS_API_URL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": requestOrigin,
+        "X-Title": "Disa AI",
+      },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const parsedError = await parseOpenRouterError(response);
+      throw new Error(
+        `Unable to fetch OpenRouter model catalog (${parsedError.status}): ${parsedError.message}`,
+      );
+    }
+
+    const payload = (await response.json()) as OpenRouterModelsResponse;
+    const freeModelIds = new Set<string>();
+
+    for (const entry of payload.data ?? []) {
+      const modelId = typeof entry?.id === "string" ? entry.id : "";
+      if (modelId && isFreeModelId(modelId)) {
+        freeModelIds.add(modelId);
+      }
+    }
+
+    if (freeModelIds.size === 0) {
+      throw new Error("OpenRouter model catalog returned no free models.");
+    }
+
+    return freeModelIds;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function sendOpenRouterChatRequest(
+  apiKey: string,
+  requestOrigin: string,
+  payload: Record<string, unknown>,
+): Promise<Response> {
+  return fetch(OPENROUTER_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+      "HTTP-Referer": requestOrigin,
+      "X-Title": "Disa AI",
+    },
+    body: JSON.stringify(payload),
+  });
 }
 
 // =====================
@@ -344,6 +454,8 @@ export async function onRequest(context: {
       return jsonError("Invalid referer", 403, request);
     }
 
+    const requestOrigin = getRequestOrigin(origin);
+
     // Reject oversized requests early (best-effort)
     const contentLength = request.headers.get("Content-Length");
     if (contentLength) {
@@ -383,11 +495,11 @@ export async function onRequest(context: {
       );
     }
 
-    // Manual model validation
-    if (!ALLOWED_MODELS.includes(validationResult.data.model as any)) {
-      console.warn(`⚠️ Invalid model: ${validationResult.data.model}`);
+    // Cheap pre-check: only free models are allowed.
+    if (!isFreeModelId(validationResult.data.model)) {
+      console.warn(`⚠️ Non-free model rejected: ${validationResult.data.model}`);
       return jsonError(
-        `Model not allowed: ${validationResult.data.model}. Allowed models: ${ALLOWED_MODELS.join(", ")}`,
+        `Model not allowed: ${validationResult.data.model}. Only free OpenRouter models (:free) are supported.`,
         400,
         request,
       );
@@ -434,6 +546,28 @@ export async function onRequest(context: {
       return jsonError("Invalid authentication signature", 401, request);
     }
 
+    // Fresh model check: always validate against OpenRouter's current free model catalog.
+    let liveFreeModelIds: Set<string>;
+    try {
+      liveFreeModelIds = await fetchLiveFreeModelIds(env.OPENROUTER_API_KEY, requestOrigin);
+    } catch (error) {
+      console.error("❌ Failed to fetch live free models:", error);
+      return jsonError(
+        "OpenRouter model catalog unavailable. Please retry in a few seconds.",
+        503,
+        request,
+      );
+    }
+
+    if (!liveFreeModelIds.has(validationResult.data.model)) {
+      console.warn(`⚠️ Model not in live free catalog: ${validationResult.data.model}`);
+      return jsonError(
+        `Model not allowed: ${validationResult.data.model}. Please choose a currently available free OpenRouter model.`,
+        400,
+        request,
+      );
+    }
+
     // Concurrency limit is only meaningful for streaming (long-lived) requests.
     const wantsStream = Boolean(validationResult.data.stream ?? true);
     concurrencyAcquired = false;
@@ -472,49 +606,63 @@ export async function onRequest(context: {
       openRouterPayload.max_tokens = validationResult.data.max_tokens;
     }
 
-    // Get origin for HTTP-Referer header
-    const requestOrigin = origin || "https://disaai.de";
-
     // Log request (minimal for security)
-    console.log(
-      `✅ Proxying authenticated request: model=${validationResult.data.model}, ip=${clientIp}`,
+    let activeModel = validationResult.data.model;
+    console.log(`✅ Proxying authenticated request: model=${activeModel}, ip=${clientIp}`);
+
+    let openRouterResponse = await sendOpenRouterChatRequest(
+      env.OPENROUTER_API_KEY,
+      requestOrigin,
+      openRouterPayload,
     );
 
-    // Make request to OpenRouter API
-    const openRouterResponse = await fetch(OPENROUTER_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": requestOrigin,
-        "X-Title": "Disa AI",
-      },
-      body: JSON.stringify(openRouterPayload),
-    });
+    let fallbackAttempts = 0;
+    let fallbackCandidateIndex = 0;
+    const fallbackCandidates = buildFallbackModelCandidates(activeModel, liveFreeModelIds);
+    let lastOpenRouterError = {
+      status: openRouterResponse.status,
+      message: `OpenRouter API error: ${openRouterResponse.status}`,
+    };
 
-    // Check if OpenRouter request was successful
-    if (!openRouterResponse.ok) {
-      console.error(
-        `❌ OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`,
+    while (!openRouterResponse.ok) {
+      lastOpenRouterError = await parseOpenRouterError(openRouterResponse);
+      const canRetryModel = isRetryableModelFailure(
+        lastOpenRouterError.status,
+        lastOpenRouterError.message,
+      );
+      const nextFallbackModel = fallbackCandidates[fallbackCandidateIndex];
+
+      if (!canRetryModel || !nextFallbackModel || fallbackAttempts >= MODEL_FALLBACK_MAX_ATTEMPTS) {
+        break;
+      }
+
+      fallbackAttempts += 1;
+      fallbackCandidateIndex += 1;
+      activeModel = nextFallbackModel;
+      openRouterPayload.model = activeModel;
+
+      console.warn(
+        `⚠️ Retrying with fallback model (${fallbackAttempts}/${MODEL_FALLBACK_MAX_ATTEMPTS}): ${activeModel}`,
       );
 
-      let errorMessage = `OpenRouter API error: ${openRouterResponse.status}`;
-      try {
-        const errorData = await openRouterResponse.json();
-        if (errorData?.error) {
-          errorMessage =
-            typeof errorData.error === "string" ? errorData.error : errorData.error.message;
-        }
-      } catch {
-        errorMessage = `OpenRouter API error: ${openRouterResponse.status} ${openRouterResponse.statusText}`;
-      }
+      openRouterResponse = await sendOpenRouterChatRequest(
+        env.OPENROUTER_API_KEY,
+        requestOrigin,
+        openRouterPayload,
+      );
+    }
+
+    if (!openRouterResponse.ok) {
+      console.error(
+        `❌ OpenRouter API error after ${fallbackAttempts} fallback attempt(s): ${lastOpenRouterError.status} ${lastOpenRouterError.message}`,
+      );
 
       if (concurrencyAcquired) {
         decrementConcurrency(clientIp);
         concurrencyAcquired = false;
       }
 
-      return jsonError(errorMessage, openRouterResponse.status, request);
+      return jsonError(lastOpenRouterError.message, lastOpenRouterError.status, request);
     }
 
     const corsOrigin = getCORSOrigin(request);

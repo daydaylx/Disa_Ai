@@ -8,7 +8,7 @@ export type LegacyModelOption = {
   isPremium?: boolean;
 };
 
-export const DEFAULT_MODEL_ID = "meta-llama/llama-3.3-70b-instruct:free";
+export const DEFAULT_MODEL_ID = "nvidia/nemotron-3-nano-30b-a3b:free";
 
 const LEGACY_MODEL_ORDER = [
   DEFAULT_MODEL_ID,
@@ -21,8 +21,8 @@ const LEGACY_MODEL_ORDER = [
 
 const LEGACY_MODEL_PRESET_MAP: Record<string, Omit<LegacyModelOption, "id">> = {
   [DEFAULT_MODEL_ID]: {
-    label: "Llama 3.3 70B Instruct",
-    description: "Open-Source Standard, zuverlässig und kostenlos.",
+    label: "NVIDIA Nemotron 3 Nano 30B",
+    description: "Schnelles Free-Modell mit aktuell hoher Verfügbarkeit.",
     isFree: true,
   },
   "cognitivecomputations/dolphin-mistral-24b-venice-edition:free": {
