@@ -188,7 +188,7 @@ export function TabbedSettingsView({
                   </div>
                 }
                 topRight={
-                  <Badge className="h-5 border border-accent-settings-border/40 bg-accent-settings-dim px-2 text-[10px] text-accent-settings shadow-sm">
+                  <Badge className="h-5 border border-accent-settings-border/50 bg-accent-settings-dim/70 px-2 text-[11px] font-semibold text-ink-primary shadow-sm">
                     {status}
                   </Badge>
                 }
