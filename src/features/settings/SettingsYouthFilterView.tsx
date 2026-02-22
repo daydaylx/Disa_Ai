@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Button, Input, Label, PremiumCard, useToasts } from "@/ui";
+import { Button, Card, Input, ListRow, Switch, useToasts } from "@/ui";
 
 import { useSettings } from "../../hooks/useSettings";
 import { Shield } from "../../lib/icons";
@@ -50,9 +50,11 @@ export function SettingsYouthFilterView() {
     setBirthYear("");
   };
 
-  const handleToggle = () => {
-    if (youthProtectionEnabled) {
-      // Need to verify
+  const handleToggle = (checked: boolean) => {
+    if (checked === youthProtectionEnabled) return;
+
+    if (!checked) {
+      // Need to verify before disabling youth protection
       setShowVerification(true);
     } else {
       // Enable directly
@@ -71,63 +73,66 @@ export function SettingsYouthFilterView() {
       title="Jugendfilter"
       description="Einfacher Schalter für NSFW-Inhalte. Jugendschutz AN blendet Erwachsenen-Content aus."
     >
-      <div className="space-y-4">
-        <PremiumCard variant="default" className="max-w-2xl mx-auto">
-          <div className="space-y-6 pb-4xl">
-            <div className="flex items-center justify-between p-xs rounded-md border bg-surface-inset">
-              <div className="space-y-1">
-                <Label className="text-base font-semibold text-text-primary">
-                  Jugendschutz {youthProtectionEnabled ? "AN" : "AUS"}
-                </Label>
-                <p className="text-xs text-text-muted">
-                  {youthProtectionEnabled
-                    ? "NSFW wird gefiltert. Sicher für geteilte Geräte."
-                    : "NSFW wird angezeigt. Nur in privater Umgebung verwenden."}
-                </p>
-              </div>
-              <button
-                onClick={handleToggle}
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-fast ${
-                  youthProtectionEnabled ? "bg-brand shadow-brandGlow" : "bg-surface-inset"
-                }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-fast ${
-                    youthProtectionEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
+      <div className="space-y-4 pb-4xl">
+        <Card variant="surface" accent="settings" className="mx-auto w-full max-w-2xl">
+          <div className="space-y-3">
+            <ListRow
+              title={`Jugendschutz ${youthProtectionEnabled ? "AN" : "AUS"}`}
+              subtitle={
+                youthProtectionEnabled
+                  ? "NSFW wird gefiltert. Sicher für geteilte Geräte."
+                  : "NSFW wird angezeigt. Nur in privater Umgebung verwenden."
+              }
+              accentClassName="bg-accent-settings"
+              className="border-white/[0.08] bg-surface-2/35"
+              leading={
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-settings-surface text-accent-settings">
+                  <Shield className="h-6 w-6" />
+                </div>
+              }
+              trailing={
+                <Switch
+                  checked={youthProtectionEnabled}
+                  onCheckedChange={handleToggle}
+                  aria-label="Jugendschutz umschalten"
                 />
-              </button>
-            </div>
+              }
+            />
 
-            <div className="flex items-center gap-2 px-2xs py-3xs rounded-md bg-brand/10 border border-brand/20">
-              <Shield className="w-4 h-4 text-brand" />
-              <span className="text-sm font-medium text-brand">
+            <div className="flex items-center gap-2 rounded-xl border border-accent-settings-border/35 bg-accent-settings-dim/30 px-3 py-2.5">
+              <Shield className="h-4 w-4 text-accent-settings" />
+              <span className="text-sm font-medium text-ink-primary">
                 {youthProtectionEnabled ? "Jugendschutz aktiv" : "NSFW erlaubt"}
               </span>
             </div>
 
-            <div className="rounded-md bg-surface-inset shadow-inset p-2xs space-y-1">
-              <p className="text-xs font-medium text-text-primary">Hinweis</p>
-              <p className="text-xs text-text-secondary leading-relaxed">
+            <Card variant="surface" padding="sm" className="border-white/[0.08] bg-surface-2/35">
+              <p className="text-xs font-medium text-ink-primary">Hinweis</p>
+              <p className="mt-1 text-xs leading-relaxed text-ink-secondary">
                 Die Einstellung wirkt sofort auf alle neuen Antworten und wird lokal gespeichert.
-                Exporte/Im- und Exporte deiner Chats bleiben unverändert.
+                Exporte und Importe deiner Chats bleiben unverändert.
               </p>
-            </div>
+            </Card>
 
             {showVerification && (
-              <div className="rounded-xl border border-border-highlight/50 bg-surface-2 p-4 animate-in fade-in zoom-in-95 duration-200">
+              <Card
+                variant="surface"
+                padding="sm"
+                className="animate-in fade-in zoom-in-95 duration-200 border-accent-settings-border/45 bg-accent-settings-dim/25"
+              >
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-text-primary">
+                    <h4 className="text-sm font-semibold text-ink-primary">
                       Altersbestätigung erforderlich
                     </h4>
-                    <p className="text-xs text-text-secondary mt-1">
+                    <p className="mt-1 text-xs text-ink-secondary">
                       Bitte gib dein Geburtsjahr ein, um den Jugendschutz zu deaktivieren.
                     </p>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     <Input
                       type="number"
+                      inputMode="numeric"
                       placeholder="YYYY"
                       value={birthYear}
                       onChange={(e) => setBirthYear(e.target.value)}
@@ -146,10 +151,10 @@ export function SettingsYouthFilterView() {
                     </Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             )}
           </div>
-        </PremiumCard>
+        </Card>
       </div>
     </SettingsLayout>
   );

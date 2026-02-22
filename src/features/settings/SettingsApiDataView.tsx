@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button, Input, Label, PremiumCard, PrimaryButton, useToasts } from "@/ui";
+import { Button, Card, Input, Label, useToasts } from "@/ui";
 
 import { StorageMigration } from "../../components/StorageMigration";
 import { STORAGE_KEYS } from "../../config/storageKeys";
@@ -240,188 +240,191 @@ export function SettingsApiDataView() {
       title="API & Daten"
       description="OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen."
     >
-      <div className="space-y-4 pb-4xl">
-        <PremiumCard variant="default" className="max-w-3xl mx-auto">
-          <div className="space-y-8">
-            <section className="space-y-4">
-              <div className="flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-brand" />
-                <h3 className="text-sm font-semibold text-text-primary">Schlüssel & Verbindung</h3>
+      <div className="mx-auto w-full max-w-3xl space-y-3 pb-4xl">
+        <Card variant="surface" accent="settings" className="border-white/[0.1]">
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <KeyRound className="h-4 w-4 text-accent-settings" />
+              <h3 className="text-sm font-semibold text-ink-primary">Schlüssel & Verbindung</h3>
+            </div>
+
+            {hasApiKey && (
+              <div className="flex w-fit items-center gap-2 rounded-xl border border-accent-settings-border/40 bg-accent-settings-dim/35 px-3 py-1.5">
+                <div className="h-2 w-2 rounded-full bg-accent-settings" />
+                <span className="text-sm font-medium text-ink-primary">API-Key aktiv</span>
               </div>
+            )}
 
-              {hasApiKey && (
-                <div className="flex items-center gap-2 px-2xs py-3xs rounded-md bg-brand/10 border border-brand/20">
-                  <div className="w-2 h-2 rounded-full bg-brand shadow-brandGlow" />
-                  <span className="text-sm font-medium text-brand">API-Key aktiv</span>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                <Label htmlFor="api-key" className="text-sm font-semibold text-text-primary">
-                  OpenRouter Key
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="api-key"
-                    type={showKey ? "text" : "password"}
-                    value={apiKey}
-                    onChange={handleApiKeyChange}
-                    placeholder="sk-or-..."
-                    className="pr-2xl"
-                    autoComplete="off"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowKey(!showKey)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-3xs rounded-sm text-text-muted hover:text-brand hover:bg-brand/10 transition-all duration-fast"
-                    aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
-                  >
-                    {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="api-base-url" className="text-sm font-semibold text-text-primary">
-                  OpenRouter Base URL
-                </Label>
+            <div className="space-y-3">
+              <Label htmlFor="api-key" className="text-sm font-semibold text-ink-primary">
+                OpenRouter Key
+              </Label>
+              <div className="relative">
                 <Input
-                  id="api-base-url"
-                  type="url"
-                  value={baseUrl}
-                  onChange={(e) => setBaseUrl(e.target.value)}
-                  placeholder="https://openrouter.ai"
+                  id="api-key"
+                  type={showKey ? "text" : "password"}
+                  value={apiKey}
+                  onChange={handleApiKeyChange}
+                  placeholder="sk-or-..."
+                  className="pr-12"
                   autoComplete="off"
-                  aria-label="OpenRouter Basis-URL"
                 />
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <PrimaryButton
-                  onClick={handleSaveKey}
-                  className="w-full sm:w-auto shadow-brandGlow"
+                <button
+                  type="button"
+                  onClick={() => setShowKey(!showKey)}
+                  className="absolute right-2 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:bg-accent-settings-dim/40 hover:text-accent-settings"
+                  aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
                 >
-                  Speichern
-                </PrimaryButton>
-                {hasApiKey && (
-                  <Button
-                    variant="secondary"
-                    onClick={handleRemoveKey}
-                    className="w-full sm:w-auto"
-                  >
-                    Entfernen
-                  </Button>
-                )}
+                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
+            </div>
 
-              <div className="rounded-md bg-surface-inset shadow-inset p-3">
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  🔒 Der API-Key bleibt lokal (Session Storage). Ohne Key nutzt Disa AI den
-                  kostenlosen Service. Für fortgeschrittene Nutzer: eigene Modelle und höhere
-                  Limits.
-                </p>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <div className="flex items-center gap-2">
-                <HardDrive className="w-4 h-4 text-brand" />
-                <h3 className="text-sm font-semibold text-text-primary">Speicherstatistiken</h3>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3 rounded-md bg-surface-inset">
-                  <div className="text-lg font-bold text-brand">
-                    {stats?.totalConversations || 0}
-                  </div>
-                  <div className="text-xs text-text-muted">Gespräche</div>
-                </div>
-                <div className="p-3 rounded-md bg-surface-inset">
-                  <div className="text-lg font-bold text-brand">{stats?.totalMessages || 0}</div>
-                  <div className="text-xs text-text-muted">Nachrichten</div>
-                </div>
-                <div className="p-3 rounded-md bg-surface-inset">
-                  <div className="text-lg font-bold text-brand">
-                    {stats?.averageMessagesPerConversation?.toFixed(1) || "0.0"}
-                  </div>
-                  <div className="text-xs text-text-muted">⌀ Nachrichten</div>
-                </div>
-                <div className="p-3 rounded-md bg-surface-inset">
-                  <div className="text-lg font-bold text-brand">
-                    {formatFileSize(stats?.storageSize || 0)}
-                  </div>
-                  <div className="text-xs text-text-muted">Speicher</div>
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Download className="w-4 h-4 text-brand" />
-                <h3 className="text-sm font-semibold text-text-primary">Export</h3>
-              </div>
-              <PrimaryButton
-                onClick={handleExportConversations}
-                disabled={isExporting}
-                className="w-full sm:w-auto flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                {isExporting ? "Exportiere..." : "Alle Gespräche exportieren"}
-              </PrimaryButton>
-              <p className="text-xs text-text-muted">
-                Erstellt eine JSON-Datei mit allen Gesprächen. Sicher für Backups oder Umzug auf ein
-                neues Gerät.
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Upload className="w-4 h-4 text-brand" />
-                <h3 className="text-sm font-semibold text-text-primary">Import</h3>
-              </div>
-              <Button
-                variant="secondary"
-                onClick={handleImportConversations}
-                disabled={isImporting}
-                className="w-full sm:w-auto flex items-center gap-2"
-              >
-                <Upload className="w-4 h-4" />
-                {isImporting ? "Importiere..." : "Gespräche-Datei auswählen"}
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleFileSelection}
-                className="hidden"
+            <div className="space-y-2">
+              <Label htmlFor="api-base-url" className="text-sm font-semibold text-ink-primary">
+                OpenRouter Base URL
+              </Label>
+              <Input
+                id="api-base-url"
+                type="url"
+                value={baseUrl}
+                onChange={(e) => setBaseUrl(e.target.value)}
+                placeholder="https://openrouter.ai"
+                autoComplete="off"
+                aria-label="OpenRouter Basis-URL"
               />
-              <p className="text-xs text-text-muted">
-                Unterstützt JSON-Dateien im Disa AI Format. Bestehende Gespräche bleiben erhalten.
-              </p>
-            </section>
+            </div>
 
-            <section className="space-y-4 border-t border-border pt-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-text-primary">Migration & Recovery</h3>
-                <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
-                  {showMigration ? "Schließen" : "Öffnen"}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button onClick={handleSaveKey} variant="primary" className="w-full sm:w-auto">
+                Speichern
+              </Button>
+              {hasApiKey && (
+                <Button variant="secondary" onClick={handleRemoveKey} className="w-full sm:w-auto">
+                  Entfernen
                 </Button>
+              )}
+            </div>
+
+            <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+              <p className="text-xs leading-relaxed text-ink-secondary">
+                Der API-Key bleibt lokal (Session Storage). Ohne Key nutzt Disa AI den kostenlosen
+                Service. Mit eigenem Key sind eigene Modelle und höhere Limits nutzbar.
+              </p>
+            </div>
+          </section>
+        </Card>
+
+        <Card variant="surface" className="border-white/[0.08]">
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <HardDrive className="h-4 w-4 text-accent-settings" />
+              <h3 className="text-sm font-semibold text-ink-primary">Speicherstatistiken</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+                <div className="text-lg font-bold text-accent-settings">
+                  {stats?.totalConversations || 0}
+                </div>
+                <div className="text-xs text-ink-tertiary">Gespräche</div>
               </div>
-              {showMigration && (
+              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+                <div className="text-lg font-bold text-accent-settings">
+                  {stats?.totalMessages || 0}
+                </div>
+                <div className="text-xs text-ink-tertiary">Nachrichten</div>
+              </div>
+              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+                <div className="text-lg font-bold text-accent-settings">
+                  {stats?.averageMessagesPerConversation?.toFixed(1) || "0.0"}
+                </div>
+                <div className="text-xs text-ink-tertiary">Ø Nachrichten</div>
+              </div>
+              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+                <div className="text-lg font-bold text-accent-settings">
+                  {formatFileSize(stats?.storageSize || 0)}
+                </div>
+                <div className="text-xs text-ink-tertiary">Speicher</div>
+              </div>
+            </div>
+          </section>
+        </Card>
+
+        <Card variant="surface" className="border-white/[0.08]">
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Download className="h-4 w-4 text-accent-settings" />
+              <h3 className="text-sm font-semibold text-ink-primary">Export</h3>
+            </div>
+            <Button
+              onClick={handleExportConversations}
+              disabled={isExporting}
+              variant="primary"
+              className="w-full sm:w-auto"
+            >
+              <Download className="h-4 w-4" />
+              <span>{isExporting ? "Exportiere..." : "Alle Gespräche exportieren"}</span>
+            </Button>
+            <p className="text-xs text-ink-secondary">
+              Erstellt eine JSON-Datei mit allen Gesprächen. Sicher für Backups oder Umzug auf ein
+              neues Gerät.
+            </p>
+          </section>
+        </Card>
+
+        <Card variant="surface" className="border-white/[0.08]">
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Upload className="h-4 w-4 text-accent-settings" />
+              <h3 className="text-sm font-semibold text-ink-primary">Import</h3>
+            </div>
+            <Button
+              variant="secondary"
+              onClick={handleImportConversations}
+              disabled={isImporting}
+              className="w-full sm:w-auto"
+            >
+              <Upload className="h-4 w-4" />
+              <span>{isImporting ? "Importiere..." : "Gespräche-Datei auswählen"}</span>
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileSelection}
+              className="hidden"
+            />
+            <p className="text-xs text-ink-secondary">
+              Unterstützt JSON-Dateien im Disa AI Format. Bestehende Gespräche bleiben erhalten.
+            </p>
+          </section>
+        </Card>
+
+        <Card variant="surface" className="border-white/[0.08]">
+          <section className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h3 className="text-sm font-semibold text-ink-primary">Migration & Recovery</h3>
+              <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
+                {showMigration ? "Schließen" : "Öffnen"}
+              </Button>
+            </div>
+            {showMigration && (
+              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 p-2">
                 <StorageMigration
                   onMigrationComplete={refresh}
                   onClose={() => setShowMigration(false)}
                 />
-              )}
-            </section>
+              </div>
+            )}
+          </section>
+        </Card>
 
-            <div className="rounded-md bg-surface-inset shadow-inset p-3">
-              <p className="text-xs text-text-secondary leading-relaxed">
-                💾 Exportdateien enthalten alle Nachrichten, Metadaten und verwendete Modelle.
-                Import mergt neue Gespräche, ohne bestehende zu überschreiben.
-              </p>
-            </div>
-          </div>
-        </PremiumCard>
+        <Card variant="surface" padding="sm" className="border-white/[0.08] bg-surface-2/35">
+          <p className="text-xs leading-relaxed text-ink-secondary">
+            Exportdateien enthalten Nachrichten, Metadaten und verwendete Modelle. Der Import führt
+            neue Gespräche zusammen, ohne bestehende zu überschreiben.
+          </p>
+        </Card>
       </div>
     </SettingsLayout>
   );
