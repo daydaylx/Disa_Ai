@@ -48,6 +48,12 @@
   --touch-lg: 3.5rem; /* 56px - Spacious */
 
   /* ========================================================================
+     LAYOUT HEIGHTS - Header & Chrome Elements
+     ======================================================================== */
+  --header-height: 3.5rem; /* 56px - Mobile header (standard) */
+  --header-height-lg: 4rem; /* 64px - Desktop header (if needed) */
+
+  /* ========================================================================
      TRANSITIONS - Performance-optimiert
      ======================================================================== */
   --transition-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
