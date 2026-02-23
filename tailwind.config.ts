@@ -336,6 +336,8 @@ export default {
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-top": "env(safe-area-inset-top)",
+        "page-bottom": "var(--page-bottom-padding)",
+        "page-bottom-safe": "var(--page-bottom-padding-safe)",
       },
       height: {
         header: "var(--header-height)",

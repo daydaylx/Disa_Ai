@@ -390,7 +390,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-24 pt-4">
+      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}

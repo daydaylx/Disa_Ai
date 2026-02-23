@@ -254,7 +254,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <PullToRefresh onRefresh={async () => await refresh(true)} className="flex-1 pb-24 pt-4">
+      <PullToRefresh
+        onRefresh={async () => await refresh(true)}
+        className="flex-1 pb-page-bottom-safe pt-4"
+      >
         {!catalog && loading ? (
           // Loading skeletons
           <CardSkeleton count={6} />
