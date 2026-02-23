@@ -236,7 +236,8 @@ async function collectIssues(page, route, state, viewportLabel) {
       const overlaps = (a, b) =>
         !!a && !!b && a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 
-      const nav = box(document.querySelector('[data-testid="mobile-bottom-nav"]'));
+      const navElement = document.querySelector('[data-testid="mobile-bottom-nav"]');
+      const nav = box(navElement);
       const composerInput = document.querySelector('[data-testid="composer-input"]');
       const composer = box(
         composerInput?.closest("div.pointer-events-auto") ||
@@ -251,6 +252,16 @@ async function collectIssues(page, route, state, viewportLabel) {
       const drawer = box(document.querySelector('[role="dialog"][aria-label="Navigationsmenü"]'));
 
       const screenshot = `${route.replace(/^\//, "") || "home"}__${state}__${viewportLabel}.png`;
+
+      if (navElement && isVisible(navElement)) {
+        issues.push({
+          screenshot,
+          type: "Deprecated UI",
+          component: "MobileBottomNav",
+          cause: "Bottom Navigation ist sichtbar, obwohl sie vollständig entfernt sein muss",
+          severity: "S1",
+        });
+      }
 
       if (composer && nav && composer.bottom > nav.top + 2) {
         issues.push({

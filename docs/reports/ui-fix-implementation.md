@@ -178,3 +178,97 @@ Following the plan in `docs/reports/ui-fix-plan.md`, all arbitrary z-index value
 1. **Phase 2**: Portal & Scroll Verification (audit createPortal usage, document patterns)
 2. **Phase 4**: Screenshot Testing Automation (build comparison tooling)
 3. **Final Verification**: Run full acceptance criteria validation
+
+---
+
+## Phase 2: Navigation ohne Bottom Navigation (2026-02-23)
+
+**Scope laut Plan**: Entfernen/Deaktivieren der Bottom Navigation als primäres Navigationsmuster, Bereinigung von Navigation-Interaktionen und Nachweis über Snapshot + Audit.
+
+### Umgesetzte Änderungen
+
+#### 1) Primärnavigation in den Drawer überführt
+
+**Datei:** `src/config/navigation.tsx`
+
+`DRAWER_NAV_ITEMS` wurde um die primären Ziele erweitert:
+
+- `Chat` (`/chat`)
+- `Modelle` (`/models`)
+- `Rollen` (`/roles`)
+- `Einstellungen` (`/settings`)
+
+Damit ist die globale Navigation ohne BottomNav direkt im Menü-Drawer verfügbar.
+
+#### 2) Chat-Interaktionen entkoppelt (Drawer vs. Verlauf)
+
+**Datei:** `src/pages/Chat.tsx`
+
+Umgesetzt:
+
+- zusätzlicher Reducer-Action-Typ `SET_HISTORY_OPEN`,
+- explizite `closeHistory()`-Logik,
+- `handleOpenMenu()` schließt einen offenen Verlauf vor dem Öffnen des Drawers,
+- `handleToggleHistory()` schließt einen offenen Drawer vor dem Öffnen des Verlaufs,
+- `HistorySidePanel` nutzt `onClose={closeHistory}`,
+- `handleSelectConversation()` und `handleStartNewChat()` schließen Verlauf + Drawer deterministisch.
+
+Effekt:
+
+- kein gleichzeitiges Overlay-Chaos,
+- klarere Navigationshierarchie im Chat-Flow,
+- stabilere mobile Interaktion.
+
+#### 3) E2E-Navigationstests auf Drawer-Flow migriert
+
+**Dateien:**
+
+- `tests/e2e/models-roles.spec.ts`
+- `tests/e2e/unified-layout.spec.ts`
+
+Umgesetzt:
+
+- veraltete BottomNav-Erwartungen entfernt,
+- Navigation auf `Menü öffnen` + Drawer-Link-Auswahl umgestellt,
+- sekundäre Navigation (`Verlauf`) weiterhin im Drawer geprüft.
+
+Ergebnis:
+
+- betroffene Suite lokal grün (**14 passed** für beide Specs zusammen).
+
+#### 4) Audit gegen „Deprecated UI“ gehärtet
+
+**Datei:** `tools/ui-baseline-audit.mjs`
+
+Neue Regel:
+
+- wenn `[data-testid="mobile-bottom-nav"]` sichtbar ist → `S1`-Issue `Deprecated UI`.
+
+Effekt:
+
+- BottomNav-Regressionen werden im Baseline-Audit sofort als Blocker markiert.
+
+### Validierung & Nachweise (Phase 2)
+
+#### A) Before/After Snapshot-Artefakte
+
+- **Before:** `docs/reports/ui-after-2026-02-23/phase-2-before/` (**81 PNGs**)
+- **After:** `docs/reports/ui-after-2026-02-23/phase-2/` (**81 PNGs**)
+
+Dateimengen sind 1:1 vollständig (keine fehlenden Screenshots zwischen Before/After).
+
+#### B) UI-Audit
+
+- Ergebnisdatei: `docs/reports/ui-after-2026-02-23/phase-2/ui-signals.json`
+- Inhalt:
+  - `total: 0`
+  - `issues: []`
+
+### Phase-2 Status
+
+✅ Phase 2 ist auf Nachweisebene abgeschlossen:
+
+- Navigation funktioniert ohne sichtbare BottomNav,
+- Drawer enthält primäre und sekundäre Ziele,
+- Chat-Overlay-Interaktion (Drawer/History) ist mutual exclusive,
+- Snapshot + Audit sind vollständig und ohne Befunde.

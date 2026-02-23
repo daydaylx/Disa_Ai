@@ -49,12 +49,14 @@ interface UIState {
   isHistoryOpen: boolean;
 }
 
-type UIAction = { type: "TOGGLE_HISTORY" };
+type UIAction = { type: "TOGGLE_HISTORY" } | { type: "SET_HISTORY_OPEN"; open: boolean };
 
 const uiReducer = (state: UIState, action: UIAction): UIState => {
   switch (action.type) {
     case "TOGGLE_HISTORY":
       return { ...state, isHistoryOpen: !state.isHistoryOpen };
+    case "SET_HISTORY_OPEN":
+      return { ...state, isHistoryOpen: action.open };
     default:
       return state;
   }
@@ -77,7 +79,32 @@ export default function Chat() {
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
-  const toggleHistory = () => dispatch({ type: "TOGGLE_HISTORY" });
+
+  const setHistoryOpen = useCallback((open: boolean) => {
+    dispatch({ type: "SET_HISTORY_OPEN", open });
+  }, []);
+
+  const toggleHistory = useCallback(() => {
+    dispatch({ type: "TOGGLE_HISTORY" });
+  }, []);
+
+  const closeHistory = useCallback(() => {
+    setHistoryOpen(false);
+  }, [setHistoryOpen]);
+
+  const handleOpenMenu = useCallback(() => {
+    if (uiState.isHistoryOpen) {
+      closeHistory();
+    }
+    openMenu();
+  }, [closeHistory, openMenu, uiState.isHistoryOpen]);
+
+  const handleToggleHistory = useCallback(() => {
+    if (!uiState.isHistoryOpen && isMenuOpen) {
+      closeMenu();
+    }
+    toggleHistory();
+  }, [closeMenu, isMenuOpen, toggleHistory, uiState.isHistoryOpen]);
 
   // Swipe-Right Navigation (zurück zur Übersicht)
   const { handlers: swipeHandlersNative, dragOffset } = useSwipeGesture({
@@ -173,15 +200,17 @@ export default function Chat() {
   const handleSelectConversation = useCallback(
     (id: string) => {
       void chatLogic.selectConversation(id);
+      closeHistory();
       closeMenu();
     },
-    [chatLogic, closeMenu],
+    [chatLogic, closeHistory, closeMenu],
   );
 
   const handleStartNewChat = useCallback(() => {
     chatLogic.handleStartNewChat();
+    closeHistory();
     closeMenu();
-  }, [chatLogic, closeMenu]);
+  }, [chatLogic, closeHistory, closeMenu]);
 
   // Scroll to bottom handler
   const scrollToBottom = useCallback(() => {
@@ -248,13 +277,13 @@ export default function Chat() {
     <>
       <ChatLayout
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
-        onMenuClick={openMenu}
+        onMenuClick={handleOpenMenu}
         logoState={getLogoState()}
         headerActions={
           <Button
             variant="secondary"
             size="sm"
-            onClick={toggleHistory}
+            onClick={handleToggleHistory}
             aria-label="Verlauf öffnen"
             aria-expanded={uiState.isHistoryOpen}
             className={cn(
@@ -517,7 +546,7 @@ export default function Chat() {
       {/* History Side Panel */}
       <HistorySidePanel
         isOpen={uiState.isHistoryOpen}
-        onClose={toggleHistory}
+        onClose={closeHistory}
         conversations={chatLogic.conversations}
         activeId={chatLogic.activeConversationId}
         onSelect={handleSelectConversation}

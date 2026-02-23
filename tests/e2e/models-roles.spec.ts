@@ -113,26 +113,33 @@ test.describe("Models & Roles Pages", () => {
     await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
-    const bottomNav = page.getByTestId("mobile-bottom-nav");
+    const openMenuDrawer = async () => {
+      const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
+      await expect(menuButton).toBeVisible();
+      await menuButton.click();
 
-    // Navigate to settings via primary bottom navigation
-    const settingsLink = bottomNav.getByRole("link", { name: /^Einstellungen\b/i });
+      const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+      await expect(menuDrawer).toBeVisible();
+      return menuDrawer;
+    };
+
+    // Navigate to settings via drawer navigation
+    const settingsDrawer = await openMenuDrawer();
+    const settingsLink = settingsDrawer.getByRole("link", { name: /^Einstellungen\b/i });
     await expect(settingsLink).toBeVisible();
     await settingsLink.click();
     await expect(page).toHaveURL(/\/settings/);
 
-    // Navigate to models via primary bottom navigation
-    const modelsLink = bottomNav.getByRole("link", { name: /^Modelle\b/i });
+    // Navigate to models via drawer navigation
+    const modelsDrawer = await openMenuDrawer();
+    const modelsLink = modelsDrawer.getByRole("link", { name: /^Modelle\b/i });
     await expect(modelsLink).toBeVisible();
     await modelsLink.click();
     await expect(page).toHaveURL(/\/models/);
 
     // Secondary navigation remains available in drawer
-    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
-    await menuButton.click();
-    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
-    await expect(menuDrawer).toBeVisible();
-    await expect(menuDrawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
+    const secondaryDrawer = await openMenuDrawer();
+    await expect(secondaryDrawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
   });
 
   test("should maintain selected role and model state", async ({ page }) => {

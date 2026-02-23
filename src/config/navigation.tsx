@@ -76,6 +76,38 @@ export const SECONDARY_NAV_ITEMS: AppNavItem[] = [
 
 export const DRAWER_NAV_ITEMS: AppNavItem[] = [
   {
+    id: "chat",
+    label: "Chat",
+    path: "/chat",
+    Icon: Home,
+    activePattern: /^\/(chat|$)(?!history)/,
+    description: "Unterhaltungen & KI-Assistenz",
+  },
+  {
+    id: "models",
+    label: "Modelle",
+    path: "/models",
+    Icon: Cpu,
+    activePattern: /^\/models/,
+    description: "Modelle & Leistungsprofile",
+  },
+  {
+    id: "roles",
+    label: "Rollen",
+    path: "/roles",
+    Icon: Users,
+    activePattern: /^\/roles/,
+    description: "Persona-Katalog & Templates",
+  },
+  {
+    id: "settings",
+    label: "Einstellungen",
+    path: "/settings",
+    Icon: Settings,
+    activePattern: /^\/settings/,
+    description: "API, Modelle & Darstellung",
+  },
+  {
     id: "history",
     label: "Verlauf",
     path: "/chat/history",
