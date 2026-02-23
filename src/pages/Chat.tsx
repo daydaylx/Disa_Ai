@@ -8,13 +8,14 @@ import { useRoles } from "@/contexts/RolesContext";
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-import { Bookmark, Cpu, HardDrive, MessageSquare, User } from "@/lib/icons";
+import { Bookmark, MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
 import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
+import { ChatQuickSettings } from "../components/chat/ChatQuickSettings";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
@@ -329,56 +330,15 @@ export default function Chat() {
           />
 
           <div className="px-4 pt-2">
-            <div className="mx-auto flex w-full max-w-3xl items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/settings/api-data")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-                  "border-accent-models/30 hover:border-accent-models/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-models/60",
-                )}
-                aria-label={`Aktives Modell: ${activeModelLabel}`}
-              >
-                <Cpu className="h-3.5 w-3.5 text-accent-models" />
-                <span>Modell: {activeModelLabel}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/roles")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-                  "border-accent-roles/30 hover:border-accent-roles/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-roles/60",
-                )}
-                aria-label={`Aktive Rolle: ${roleLabel}`}
-              >
-                <User className="h-3.5 w-3.5 text-accent-roles" />
-                <span>Rolle: {roleLabel}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/settings/memory")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium transition-colors whitespace-nowrap",
-                  memoryEnabled
-                    ? "border-status-success/35 text-ink-secondary hover:border-status-success/50 hover:text-ink-primary"
-                    : "border-status-warning/35 text-ink-secondary hover:border-status-warning/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60",
-                )}
-                aria-label={`Memory ist ${memoryEnabled ? "aktiv" : "deaktiviert"}`}
-              >
-                <HardDrive
-                  className={cn(
-                    "h-3.5 w-3.5",
-                    memoryEnabled ? "text-status-success" : "text-status-warning",
-                  )}
-                />
-                <span>Memory: {memoryEnabled ? "Aktiv" : "Aus"}</span>
-              </button>
+            <div className="mx-auto flex w-full max-w-3xl items-center">
+              <ChatQuickSettings
+                activeModelLabel={activeModelLabel}
+                roleLabel={roleLabel}
+                memoryEnabled={memoryEnabled}
+                onNavigateModels={() => chatLogic.navigate("/settings/api-data")}
+                onNavigateRoles={() => chatLogic.navigate("/roles")}
+                onNavigateMemory={() => chatLogic.navigate("/settings/memory")}
+              />
             </div>
           </div>
 
