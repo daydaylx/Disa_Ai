@@ -7,6 +7,7 @@ interface ScrollToBottomProps {
   visible: boolean;
   newMessageCount?: number;
   className?: string;
+  keyboardOffset?: number;
 }
 
 /**
@@ -21,6 +22,7 @@ export function ScrollToBottom({
   visible,
   newMessageCount = 0,
   className,
+  keyboardOffset = 0,
 }: ScrollToBottomProps) {
   const handleClick = () => {
     hapticFeedback("light");
@@ -32,7 +34,7 @@ export function ScrollToBottom({
       type="button"
       onClick={handleClick}
       className={cn(
-        "fixed bottom-24 right-4 z-50",
+        "fixed right-4 z-fab",
         "flex items-center justify-center",
         "h-11 w-11 rounded-full shadow-lg",
         "bg-accent-primary text-white",
@@ -44,6 +46,7 @@ export function ScrollToBottom({
       )}
       aria-label={newMessageCount > 0 ? `${newMessageCount} neue Nachrichten` : "Zum Ende scrollen"}
       style={{
+        bottom: `calc(var(--inset-safe-bottom, 0px) + var(--composer-offset, 0px) + var(--keyboard-offset, 0px) + 16px + ${Math.max(0, keyboardOffset)}px)`,
         transition:
           "opacity 180ms var(--disa-ease-standard), transform 180ms var(--disa-ease-standard)",
       }}

@@ -107,6 +107,8 @@ export default function Chat() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [newMessageCount, setNewMessageCount] = useState(0);
   const lastMessageCountRef = useRef(0);
+  const composerRef = useRef<HTMLDivElement>(null);
+  const [composerHeight, setComposerHeight] = useState(0);
 
   // Deduplicate prompts with strict text normalization
   const uniquePrompts = useMemo(() => {
@@ -202,6 +204,29 @@ export default function Chat() {
 
     scrollContainer.addEventListener("scroll", handleScroll);
     return () => scrollContainer.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateComposerHeight = () => {
+      const height = composerRef.current?.offsetHeight ?? 0;
+      setComposerHeight(height);
+      document.documentElement.style.setProperty("--composer-offset", `${height}px`);
+    };
+
+    updateComposerHeight();
+
+    const observer = new ResizeObserver(updateComposerHeight);
+    if (composerRef.current) {
+      observer.observe(composerRef.current);
+    }
+
+    window.addEventListener("resize", updateComposerHeight, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateComposerHeight);
+      document.documentElement.style.removeProperty("--composer-offset");
+    };
   }, []);
 
   // Track new messages while user is scrolled up
@@ -334,9 +359,15 @@ export default function Chat() {
             className="flex-1 overflow-y-auto min-h-0 pt-3"
             role="log"
             aria-label="Chat messages"
+            data-scroll-owner="active"
           >
             <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
-              <div className="flex-1 flex flex-col gap-6 py-4">
+              <div
+                className="flex-1 flex flex-col gap-6 py-4"
+                style={{
+                  paddingBottom: `calc(var(--inset-safe-bottom, 0px) + ${Math.max(composerHeight + 16, 96)}px)`,
+                }}
+              >
                 {chatLogic.isEmpty ? (
                   <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 sm:pb-20 px-4 animate-fade-in">
                     <div className="w-full max-w-md animate-fade-in-scale">
@@ -447,8 +478,14 @@ export default function Chat() {
           </div>
 
           {/* Input Area - Floating Glass Bottom */}
-          <div className="flex-none w-full pointer-events-none z-20">
-            <div className="max-w-3xl mx-auto px-4 pb-[calc(env(safe-area-inset-bottom,0px)+var(--app-bottom-nav-height,0px))] lg:pb-safe-bottom pt-2 pointer-events-auto">
+          <div
+            ref={composerRef}
+            className="sticky bottom-0 z-composer flex-none w-full pointer-events-none"
+            style={{
+              paddingBottom: "var(--inset-safe-bottom, 0px)",
+            }}
+          >
+            <div className="max-w-3xl mx-auto px-4 pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}

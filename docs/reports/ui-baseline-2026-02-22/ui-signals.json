@@ -1,0 +1,223 @@
+{
+  "generatedAt": "2026-02-22T10:06:57.532Z",
+  "total": 31,
+  "issues": [
+    {
+      "screenshot": "chat__default__360x800.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 800 > Nav-Top 708",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__drawer-open__360x800.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 800 > Nav-Top 708",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__history-open__360x800.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 800 > Nav-Top 708",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__keyboard-focus__360x800.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 800 > Nav-Top 708",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__360x800.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 800 > Nav-Top 708",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__360x800.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + MobileBottomNav",
+      "cause": "FAB überlappt Bottom-Navigation",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__360x800.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + Composer",
+      "cause": "FAB kollidiert mit Composer",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "feedback__default__360x800.png",
+      "type": "Clipping",
+      "component": "Feedback textarea + MobileBottomNav",
+      "cause": "Textarea ragt in BottomNav-Bereich",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "feedback__drawer-open__360x800.png",
+      "type": "Clipping",
+      "component": "Feedback textarea + MobileBottomNav",
+      "cause": "Textarea ragt in BottomNav-Bereich",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__default__390x844.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 844 > Nav-Top 752",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__drawer-open__390x844.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 844 > Nav-Top 752",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__history-open__390x844.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 844 > Nav-Top 752",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__keyboard-focus__390x844.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 844 > Nav-Top 752",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__390x844.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 844 > Nav-Top 752",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__default__412x915.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 915 > Nav-Top 823",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__drawer-open__412x915.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 915 > Nav-Top 823",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__history-open__412x915.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 915 > Nav-Top 823",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__keyboard-focus__412x915.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 915 > Nav-Top 823",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__412x915.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 915 > Nav-Top 823",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__412x915.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + MobileBottomNav",
+      "cause": "FAB überlappt Bottom-Navigation",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__412x915.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + Composer",
+      "cause": "FAB kollidiert mit Composer",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__default__430x932.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 932 > Nav-Top 840",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__drawer-open__430x932.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 932 > Nav-Top 840",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__history-open__430x932.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 932 > Nav-Top 840",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__keyboard-focus__430x932.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 932 > Nav-Top 840",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__430x932.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 932 > Nav-Top 840",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__430x932.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + MobileBottomNav",
+      "cause": "FAB überlappt Bottom-Navigation",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__long-history-scrollfab__430x932.png",
+      "type": "Layering",
+      "component": "ScrollToBottom + Composer",
+      "cause": "FAB kollidiert mit Composer",
+      "severity": "S2"
+    },
+    {
+      "screenshot": "chat__default__768x1024.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 1024 > Nav-Top 932",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__drawer-open__768x1024.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 1024 > Nav-Top 932",
+      "severity": "S1"
+    },
+    {
+      "screenshot": "chat__keyboard-focus__768x1024.png",
+      "type": "Overlap",
+      "component": "Composer + MobileBottomNav",
+      "cause": "Composer-Bottom 1024 > Nav-Top 932",
+      "severity": "S1"
+    }
+  ]
+}

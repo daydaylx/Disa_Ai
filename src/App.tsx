@@ -134,6 +134,7 @@ function AppContent() {
           <Suspense fallback={<FullPageLoader message="Inhalt wird geladen" />}>
             <Router />
           </Suspense>
+          <div id="app-overlay-root" className="absolute inset-0 pointer-events-none" />
           <NekoLayer />
           <PWAInstallModal />
         </SentryErrorBoundary>

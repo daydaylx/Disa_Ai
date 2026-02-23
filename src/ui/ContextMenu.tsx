@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 import { hapticFeedback } from "@/lib/haptics";
 import type { LucideIcon } from "@/lib/icons";
+import { getOverlayRoot, lockActiveScrollOwner } from "@/lib/overlay";
 import { cn } from "@/lib/utils";
 
 export interface ContextMenuItem {
@@ -47,7 +49,12 @@ export function ContextMenu({ items, onClose, title, className }: ContextMenuPro
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    const unlockScroll = lockActiveScrollOwner();
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      unlockScroll();
+    };
   }, [onClose]);
 
   // Handle item click
@@ -59,21 +66,27 @@ export function ContextMenu({ items, onClose, title, className }: ContextMenuPro
     onClose();
   };
 
-  return (
+  const overlayRoot = getOverlayRoot();
+
+  const menuContent = (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-50 animate-fade-in" onClick={onClose} role="presentation" />
+      <div
+        className="fixed inset-0 z-bottom-sheet pointer-events-auto animate-fade-in"
+        onClick={onClose}
+        role="presentation"
+      />
 
       {/* Menu */}
       <div
         ref={menuRef}
         className={cn(
-          "fixed bottom-0 left-0 right-0 z-50",
+          "fixed bottom-0 left-0 right-0 z-bottom-sheet pointer-events-auto",
           "glass-3 rounded-t-2xl",
           "border-t border-white/10",
           "shadow-2xl",
           "animate-slide-up",
-          "pb-safe-bottom",
+          "pb-[calc(var(--inset-safe-bottom,0px)+12px)]",
           className,
         )}
         style={{
@@ -146,4 +159,10 @@ export function ContextMenu({ items, onClose, title, className }: ContextMenuPro
       </div>
     </>
   );
+
+  if (!overlayRoot) {
+    return menuContent;
+  }
+
+  return createPortal(menuContent, overlayRoot);
 }

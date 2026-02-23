@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -64,7 +64,7 @@ describe("AppShell Layout", () => {
     expect(children).toHaveTextContent("Child Content");
   });
 
-  it("renders mobile bottom navigation with primary destinations", () => {
+  it("does not render mobile bottom navigation", () => {
     render(
       <MemoryRouter initialEntries={["/models"]}>
         <AppShell>
@@ -73,11 +73,6 @@ describe("AppShell Layout", () => {
       </MemoryRouter>,
     );
 
-    const bottomNav = screen.getByTestId("mobile-bottom-nav");
-    expect(bottomNav).toBeInTheDocument();
-    expect(within(bottomNav).getByRole("link", { name: /Chat/i })).toBeInTheDocument();
-    expect(within(bottomNav).getByRole("link", { name: /Modelle/i })).toBeInTheDocument();
-    expect(within(bottomNav).getByRole("link", { name: /Rollen/i })).toBeInTheDocument();
-    expect(within(bottomNav).getByRole("link", { name: /Einstellungen/i })).toBeInTheDocument();
+    expect(screen.queryByTestId("mobile-bottom-nav")).not.toBeInTheDocument();
   });
 });

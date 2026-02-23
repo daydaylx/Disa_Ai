@@ -2,6 +2,7 @@ import { type ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 import { X } from "@/lib/icons";
+import { getOverlayRoot, lockActiveScrollOwner } from "@/lib/overlay";
 import { cn } from "@/lib/utils";
 
 interface BottomSheetProps {
@@ -30,24 +31,25 @@ export function BottomSheet({
       if (event.key === "Escape") onClose();
     };
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
+    const unlockScroll = lockActiveScrollOwner();
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
+      unlockScroll();
     };
   }, [onClose, open]);
 
-  if (!open || typeof document === "undefined") return null;
+  const overlayRoot = getOverlayRoot();
 
-  return createPortal(
+  if (!open) return null;
+
+  const sheetContent = (
     <>
       <button
         type="button"
         aria-label="Detailansicht schließen"
-        className="fixed inset-0 z-bottom-sheet bg-black/45 backdrop-blur-sm"
+        className="fixed inset-0 z-bottom-sheet pointer-events-auto bg-black/45 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -56,7 +58,7 @@ export function BottomSheet({
         aria-modal="true"
         aria-label={title || "Details"}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-bottom-sheet animate-slide-up rounded-t-2xl border-t border-white/10 bg-surface-2/95 px-4 pb-[calc(env(safe-area-inset-bottom,0px)+12px)] pt-3 shadow-2xl backdrop-blur-xl",
+          "fixed inset-x-0 bottom-0 z-bottom-sheet pointer-events-auto animate-slide-up rounded-t-2xl border-t border-white/10 bg-surface-2/95 px-4 pb-[calc(var(--inset-safe-bottom,0px)+12px)] pt-3 shadow-2xl backdrop-blur-xl",
           className,
         )}
       >
@@ -83,7 +85,10 @@ export function BottomSheet({
           {footer ? <div className="pt-3">{footer}</div> : null}
         </div>
       </section>
-    </>,
-    document.body,
+    </>
   );
+
+  if (!overlayRoot) return sheetContent;
+
+  return createPortal(sheetContent, overlayRoot);
 }

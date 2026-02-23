@@ -30,9 +30,6 @@
   --accent-settings: theme(colors.accent-settings.DEFAULT);
   --accent-settings-dim: theme(colors.accent-settings.dim);
 
-  /* Mobile navigation shell */
-  --app-bottom-nav-height: 4.25rem;
-
   /* Viewport Height Fix */
   --vh: 1vh;
 

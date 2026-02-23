@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { createPortal } from "react-dom";
 
 import { AlertTriangle, Check, NotchSquare, X } from "@/lib/icons";
+import { getOverlayRoot } from "@/lib/overlay";
 
 type ToastKind = "success" | "error" | "warning" | "info";
 
@@ -163,12 +164,15 @@ function ToastViewport({
   useEffect(() => {
     if (typeof document === "undefined") return undefined;
 
+    const overlayRoot = getOverlayRoot();
+    if (!overlayRoot) return undefined;
+
     let node = document.getElementById("toast-root");
     let created = false;
     if (!node) {
       node = document.createElement("div");
       node.id = "toast-root";
-      document.body.appendChild(node);
+      overlayRoot.appendChild(node);
       created = true;
     }
     setPortalNode(node);

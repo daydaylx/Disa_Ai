@@ -44,6 +44,11 @@ function readSafeAreaInsets(): SafeAreaInsets {
 
 function applySafeAreaInsets(insets: SafeAreaInsets): void {
   const root = document.documentElement;
+  root.style.setProperty("--inset-safe-top", `${insets.top}px`);
+  root.style.setProperty("--inset-safe-right", `${insets.right}px`);
+  root.style.setProperty("--inset-safe-bottom", `${insets.bottom}px`);
+  root.style.setProperty("--inset-safe-left", `${insets.left}px`);
+
   root.style.setProperty("--safe-area-top", `${insets.top}px`);
   root.style.setProperty("--safe-area-right", `${insets.right}px`);
   root.style.setProperty("--safe-area-bottom", `${insets.bottom}px`);

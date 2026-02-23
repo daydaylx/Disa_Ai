@@ -8,6 +8,7 @@ import type { AppNavItem } from "../../config/navigation";
 import { isNavItemActive, PRIMARY_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "../../config/navigation";
 import { useSwipeGesture } from "../../hooks/useSwipeGesture";
 import { Info, Shield, X } from "../../lib/icons";
+import { getOverlayRoot, lockActiveScrollOwner } from "../../lib/overlay";
 import { cn } from "../../lib/utils";
 
 interface AppMenuDrawerProps {
@@ -93,33 +94,11 @@ export function AppMenuDrawer({
     }
   };
 
-  // Lock background scroll
+  // Lock active scroll owner
   useEffect(() => {
     if (!isOpen) return;
 
-    const scrollY = window.scrollY;
-    // Capture original styles to restore later
-    const originalStyles = {
-      overflow: document.body.style.overflow,
-      position: document.body.style.position,
-      top: document.body.style.top,
-      width: document.body.style.width,
-    };
-
-    // Lock body
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-
-    return () => {
-      // Restore styles
-      document.body.style.overflow = originalStyles.overflow;
-      document.body.style.position = originalStyles.position;
-      document.body.style.top = originalStyles.top;
-      document.body.style.width = originalStyles.width;
-      window.scrollTo(0, scrollY);
-    };
+    return lockActiveScrollOwner();
   }, [isOpen]);
 
   // Prepare Navigation Items
@@ -145,7 +124,10 @@ export function AppMenuDrawer({
   if (!isOpen) return null;
 
   const drawerContent = (
-    <div className="fixed inset-0 z-drawer animate-in fade-in duration-200" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-drawer pointer-events-auto animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div
         {...swipeHandlers}
         className={cn(
@@ -280,8 +262,9 @@ export function AppMenuDrawer({
     </div>
   );
 
-  if (typeof document === "undefined") return drawerContent;
-  return createPortal(drawerContent, document.body);
+  const overlayRoot = getOverlayRoot();
+  if (!overlayRoot) return drawerContent;
+  return createPortal(drawerContent, overlayRoot);
 }
 
 // Header Icon Component

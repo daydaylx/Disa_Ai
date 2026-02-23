@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AppMenuDrawer, MenuIcon, useMenuDrawer } from "../../components/layout/AppMenuDrawer";
 import { MobileBackButton } from "../../components/navigation/MobileBackButton";
-import { MobileBottomNav } from "../../components/navigation/MobileBottomNav";
 import { PrimaryNavigation } from "../../components/navigation/PrimaryNavigation";
 import {
   DRAWER_NAV_ITEMS,
@@ -111,14 +110,7 @@ function AppShellLayout({
           </div>
         </aside>
 
-        <div
-          className={cn(
-            "flex min-h-0 flex-1 flex-col safe-area-bottom",
-            isChatMode
-              ? "pb-0"
-              : "pb-[calc(var(--app-bottom-nav-height)+env(safe-area-inset-bottom,0px))] lg:pb-0",
-          )}
-        >
+        <div className="flex min-h-0 flex-1 flex-col">
           {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
           {!isChatMode ? (
             <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header shadow-sm">
@@ -170,6 +162,7 @@ function AppShellLayout({
                   ? "w-full p-0 max-w-none" // Let BookLayout handle constraints
                   : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",
               )}
+              data-scroll-owner={!isChatMode ? "active" : undefined}
             >
               <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "gap-6")}>
                 {!isChatMode && (resolvedPageTitle || pageHeaderActions) ? (
@@ -199,8 +192,6 @@ function AppShellLayout({
             secondaryItems={[]}
           />
         </div>
-
-        <MobileBottomNav />
       </div>
     </div>
   );
