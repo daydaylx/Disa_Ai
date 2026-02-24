@@ -8,11 +8,11 @@ import { useRoles } from "@/contexts/RolesContext";
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-import { Bookmark, MessageSquare } from "@/lib/icons";
+import { MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
-import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
+import { HistoryFAB } from "@/ui/HistoryFAB";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatQuickSettings } from "../components/chat/ChatQuickSettings";
@@ -280,38 +280,6 @@ export default function Chat() {
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={handleOpenMenu}
         logoState={getLogoState()}
-        headerActions={
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleToggleHistory}
-            aria-label="Verlauf öffnen"
-            aria-expanded={uiState.isHistoryOpen}
-            className={cn(
-              "gap-2 px-3 relative overflow-visible",
-              "border-accent-chat/15 hover:border-accent-chat/30",
-              "hover:bg-accent-chat/4 transition-all duration-200",
-              uiState.isHistoryOpen && "bg-accent-chat/8 border-accent-chat/30",
-              "min-h-[44px] sm:min-h-0", // Mobile touch target optimization
-            )}
-          >
-            <Bookmark
-              className={cn(
-                "h-4 w-4 transition-colors",
-                uiState.isHistoryOpen
-                  ? "text-accent-chat fill-accent-chat/23"
-                  : "text-accent-chat/53",
-              )}
-            />
-            <span className="hidden sm:inline text-ink-primary">Verlauf</span>
-            {chatLogic.conversations && chatLogic.conversations.length > 0 && (
-              <span
-                className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent-chat shadow-[0_0_6px_rgba(var(--accent-chat-glow),0.45)]"
-                aria-label={`${chatLogic.conversations.length} Unterhaltungen`}
-              />
-            )}
-          </Button>
-        }
       >
         <div
           {...swipeHandlers}
@@ -484,13 +452,20 @@ export default function Chat() {
             </div>
           </div>
 
-          {/* Scroll to Bottom FAB */}
+          {/* FABs: History (left) and Scroll (right) */}
           {!chatLogic.isEmpty && (
-            <ScrollToBottom
-              visible={showScrollButton}
-              onClick={scrollToBottom}
-              newMessageCount={newMessageCount}
-            />
+            <>
+              <HistoryFAB
+                onClick={handleToggleHistory}
+                isOpen={uiState.isHistoryOpen}
+                conversationCount={chatLogic.conversations?.length ?? 0}
+              />
+              <ScrollToBottom
+                visible={showScrollButton}
+                onClick={scrollToBottom}
+                newMessageCount={newMessageCount}
+              />
+            </>
           )}
         </div>
       </ChatLayout>

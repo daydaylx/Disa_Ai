@@ -11,7 +11,6 @@ interface ChatLayoutProps {
   title?: string;
   onMenuClick?: () => void;
   className?: string;
-  headerActions?: ReactNode;
   logoState?: LogoState;
 }
 
@@ -20,7 +19,6 @@ export function ChatLayout({
   title,
   onMenuClick,
   className,
-  headerActions,
   logoState = "idle",
 }: ChatLayoutProps) {
   return (
@@ -54,8 +52,6 @@ export function ChatLayout({
               </p>
             )}
           </div>
-
-          <div className="flex items-center gap-2 pr-safe-right">{headerActions}</div>
         </div>
       </header>
 
