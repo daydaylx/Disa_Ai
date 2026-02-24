@@ -42,7 +42,7 @@ export function HistoryFAB({
         "focus:outline-none focus:ring-2 focus:ring-accent-chat focus:ring-offset-2",
         isOpen
           ? "bg-accent-chat text-white"
-          : "bg-surface-1/90 backdrop-blur-sm text-accent-chat border border-accent-chat/30",
+          : "bg-surface-1/90 backdrop-blur-sm text-accent-chat border border-accent-chat/20",
         className,
       )}
       aria-label={

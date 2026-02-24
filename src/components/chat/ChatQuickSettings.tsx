@@ -63,7 +63,7 @@ export function ChatQuickSettings({
         className={cn(
           "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
           "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-          "border-accent-models/30 hover:border-accent-models/50 hover:text-ink-primary",
+          "border-accent-models/20 hover:border-accent-models/40 hover:text-ink-primary",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-models/60",
         )}
         aria-label={`Aktives Modell: ${activeModelLabel}`}
@@ -78,7 +78,7 @@ export function ChatQuickSettings({
         className={cn(
           "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
           "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-          "border-accent-roles/30 hover:border-accent-roles/50 hover:text-ink-primary",
+          "border-accent-roles/20 hover:border-accent-roles/40 hover:text-ink-primary",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-roles/60",
         )}
         aria-label={`Aktive Rolle: ${roleLabel}`}

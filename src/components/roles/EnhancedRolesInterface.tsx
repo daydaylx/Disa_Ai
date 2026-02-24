@@ -300,7 +300,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Rolle suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/50 focus:ring-accent-roles/20"
+              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/40 focus:ring-accent-roles/20"
             />
 
             {/* Filter Pills */}

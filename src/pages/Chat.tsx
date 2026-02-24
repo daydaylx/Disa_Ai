@@ -366,12 +366,12 @@ export default function Chat() {
                           {
                             bar: "bg-accent-chat/80",
                             iconWrap: "bg-accent-chat/12 text-accent-chat",
-                            border: "border-accent-chat/25",
+                            border: "border-accent-chat/15",
                           },
                           {
                             bar: "bg-accent-models/80",
                             iconWrap: "bg-accent-models/12 text-accent-models",
-                            border: "border-accent-models/25",
+                            border: "border-accent-models/15",
                           },
                           {
                             bar: "bg-brand-primary/80",
