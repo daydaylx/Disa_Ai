@@ -107,6 +107,7 @@ storybook-static
 !.env.example
 !.env.build.example
 !.dev.vars.example
+!.env.production
 
 # local junk
 .venv/
