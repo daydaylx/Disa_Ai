@@ -140,7 +140,7 @@ export function UnifiedInputBar({
             !value.trim() && !isLoading && "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
             value.trim() &&
               !isLoading &&
-              "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90 active:translate-y-px",
+              "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
             isLoading && "bg-accent-chat/80 text-white",
           )}
           aria-label="Senden"

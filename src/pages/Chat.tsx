@@ -390,7 +390,6 @@ export default function Chat() {
                               "text-ink-primary transition-all animate-slide-up opacity-0 fill-mode-forwards sm:min-w-0 sm:gap-4 sm:px-4 sm:py-4",
                               "hover:border-white/[0.22] hover:bg-surface-2/60",
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
-                              "active:translate-y-px",
                               accent.border,
                             )}
                             style={{ animationDelay: `${index * 100}ms` }}

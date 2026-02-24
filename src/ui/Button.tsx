@@ -10,23 +10,22 @@ const buttonVariants = cva(
     "transition-all duration-200",
     "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary",
     "disabled:pointer-events-none disabled:opacity-50",
-    "active:scale-[0.97]",
   ],
   {
     variants: {
       variant: {
         primary:
-          "bg-brand-primary text-white shadow-sm hover:bg-brand-primary/90 hover:shadow-glow-sm hover:-translate-y-px",
+          "bg-brand-primary text-white shadow-sm hover:bg-brand-primary/90 hover:shadow-glow-sm",
         secondary:
-          "bg-surface-2 text-ink-primary border border-white/8 hover:bg-surface-3 hover:border-white/12 hover:-translate-y-px",
+          "bg-surface-2 text-ink-primary border border-white/8 hover:bg-surface-3 hover:border-white/12",
         destructive:
-          "bg-surface-1 text-status-error border border-white/8 hover:bg-surface-2 hover:border-status-error/30 hover:-translate-y-px",
+          "bg-surface-1 text-status-error border border-white/8 hover:bg-surface-2 hover:border-status-error/30",
         outline:
-          "border border-white/12 bg-transparent hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary hover:border-white/20 hover:-translate-y-px",
+          "border border-white/12 bg-transparent hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary hover:border-white/20",
         ghost: "hover:bg-surface-2/50 text-ink-secondary hover:text-ink-primary",
         link: "text-brand-primary underline-offset-4 hover:underline",
         glass:
-          "bg-surface-1/40 backdrop-blur-md border border-white/12 text-ink-primary hover:bg-surface-1/60 hover:border-white/20 shadow-sm hover:-translate-y-px",
+          "bg-surface-1/40 backdrop-blur-md border border-white/12 text-ink-primary hover:bg-surface-1/60 hover:border-white/20 shadow-sm",
       },
       size: {
         default: "h-11 px-4 rounded-xl min-w-[2.75rem]",
