@@ -150,7 +150,10 @@ async function seedLongChatConversation(page) {
         req.onerror = () => reject(req.error ?? new Error("IndexedDB open failed"));
         req.onsuccess = () => {
           const db = req.result;
-          if (!db.objectStoreNames.contains("conversations") || !db.objectStoreNames.contains("metadata")) {
+          if (
+            !db.objectStoreNames.contains("conversations") ||
+            !db.objectStoreNames.contains("metadata")
+          ) {
             db.close();
             reject(new Error("IndexedDB stores missing"));
             return;
@@ -185,7 +188,14 @@ async function seedLongChatConversation(page) {
         };
       });
     },
-    { settingsKey: SETTINGS_KEY, lastConversationKey: LAST_CONVERSATION_KEY, id, createdAt, updatedAt, messages },
+    {
+      settingsKey: SETTINGS_KEY,
+      lastConversationKey: LAST_CONVERSATION_KEY,
+      id,
+      createdAt,
+      updatedAt,
+      messages,
+    },
   );
 }
 
@@ -220,7 +230,11 @@ async function collectIssues(page, route, state, viewportLabel) {
       const isVisible = (element) => {
         if (!element) return false;
         const style = window.getComputedStyle(element);
-        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          Number(style.opacity) === 0
+        ) {
           return false;
         }
         const r = element.getBoundingClientRect();
@@ -230,7 +244,14 @@ async function collectIssues(page, route, state, viewportLabel) {
       const box = (element) => {
         if (!isVisible(element)) return null;
         const r = element.getBoundingClientRect();
-        return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+        return {
+          left: r.left,
+          top: r.top,
+          right: r.right,
+          bottom: r.bottom,
+          width: r.width,
+          height: r.height,
+        };
       };
 
       const overlaps = (a, b) =>
@@ -421,7 +442,9 @@ async function run() {
               el.scrollTop = 0;
             });
             await page.waitForTimeout(250);
-            collected.push(...(await collectIssues(page, route, "long-history-scrollfab", viewport.label)));
+            collected.push(
+              ...(await collectIssues(page, route, "long-history-scrollfab", viewport.label)),
+            );
           }
         }
 
@@ -444,7 +467,9 @@ async function run() {
   const dedup = [];
   const seen = new Set();
   for (const issue of collected) {
-    const key = [issue.screenshot, issue.type, issue.component, issue.cause, issue.severity].join("|");
+    const key = [issue.screenshot, issue.type, issue.component, issue.cause, issue.severity].join(
+      "|",
+    );
     if (!seen.has(key)) {
       seen.add(key);
       dedup.push(issue);
