@@ -104,7 +104,7 @@ export default function ThemenPage() {
           aria-hidden
         />
         {/* Main Row - Clickable area */}
-        <div className="flex items-center gap-4 p-4 cursor-pointer pointer-events-none">
+        <div className="flex items-center gap-xsp-4 cursor-pointer pointer-events-none">
           <button
             type="button"
             className="absolute inset-0 z-content cursor-pointer rounded-none bg-transparent pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 focus-visible:ring-inset"
@@ -166,7 +166,7 @@ export default function ThemenPage() {
         {/* Expanded Details */}
         {isExpanded && (
           <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-            <div className={cn("space-y-3 rounded-xl border px-4 py-4", theme.bg, theme.border)}>
+            <div className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}>
               {/* Full Description */}
               <div>
                 <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>
@@ -210,7 +210,7 @@ export default function ThemenPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4 px-4 sm:px-6">
+      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4 px-xssm:px-6">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Chat accent for discussion topics */}
           <div
@@ -229,9 +229,9 @@ export default function ThemenPage() {
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
+      <div className="flex-1 overflow-y-auto px-xssm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
         {isLoading ? (
-          <section className="space-y-3">
+          <section className="space-y-2xs">
             <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
               Diskussionen
             </h2>
@@ -279,7 +279,7 @@ export default function ThemenPage() {
 
             {/* Regular Discussions */}
             {regularDiscussions.length > 0 && (
-              <section className="space-y-3">
+              <section className="space-y-2xs">
                 <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
                   Diskussionen
                 </h2>
@@ -291,7 +291,7 @@ export default function ThemenPage() {
 
             {/* Conspiracy Theories Section */}
             {conspiracyDiscussions.length > 0 && (
-              <section className="space-y-3">
+              <section className="space-y-2xs">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
                   <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">

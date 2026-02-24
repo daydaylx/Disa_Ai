@@ -220,7 +220,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             style={{ background: headerTheme.roleGradient }}
           />
 
-          <div className="relative space-y-3 px-3 py-3 sm:px-4 sm:py-4">
+          <div className="relative space-y-2xs px-2xspy-3 sm:px-4 sm:py-4">
             <div className="flex items-start justify-between">
               <PageHeader
                 title="Modelle"
@@ -281,7 +281,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2xs">
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);
@@ -405,12 +405,12 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         {selectedModel ? (
           <div
             className={cn(
-              "space-y-3 rounded-xl border px-4 py-4",
+              "space-y-2xs rounded-xl border px-xspy-4",
               selectedModelTheme.bg,
               selectedModelTheme.border,
             )}
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2xs">
               <div className="space-y-1">
                 <p className="text-xs font-medium text-ink-tertiary">Context Window</p>
                 <p className="text-sm font-semibold text-ink-primary">
@@ -442,7 +442,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               </div>
             ) : null}
 
-            <div className="rounded-xl border border-white/5 bg-surface-1/50 p-3 font-mono text-xs text-ink-tertiary">
+            <div className="rounded-xl border border-white/5 bg-surface-1/50 p-2xsfont-mono text-xs text-ink-tertiary">
               {selectedModel.id}
             </div>
           </div>
