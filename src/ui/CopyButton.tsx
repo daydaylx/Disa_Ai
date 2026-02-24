@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 type CopyButtonVariant = "base" | "brand" | "ghost" | "danger";
 
 const sizeClasses: Record<"sm" | "md", string> = {
-  sm: "h-10 w-10",
+  sm: "h-11 w-11", // 44px minimum for touch targets
   md: "h-11 px-4",
 };
 

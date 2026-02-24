@@ -5,16 +5,18 @@ import { type LogoState } from "@/app/components/AnimatedLogo";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
+import { type ChatApiStatus } from "@/hooks/useChat";
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-import { Bookmark, Cpu, HardDrive, MessageSquare, User } from "@/lib/icons";
+import { MessageSquare } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
-import { Button } from "@/ui/Button";
 import { Card } from "@/ui/Card";
+import { HistoryFAB } from "@/ui/HistoryFAB";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
+import { ChatQuickSettings } from "../components/chat/ChatQuickSettings";
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
@@ -79,6 +81,13 @@ export default function Chat() {
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+
+  // Dismissed status banners (reset on successful message send)
+  const [dismissedBanners, setDismissedBanners] = useState<Set<ChatApiStatus>>(new Set());
+
+  const dismissBanner = useCallback((statusKey: ChatApiStatus) => {
+    setDismissedBanners((prev) => new Set(prev).add(statusKey));
+  }, []);
 
   const setHistoryOpen = useCallback((open: boolean) => {
     dispatch({ type: "SET_HISTORY_OPEN", open });
@@ -273,44 +282,19 @@ export default function Chat() {
     lastMessageCountRef.current = currentCount;
   }, [chatLogic.messages.length, chatLogic.isEmpty, showScrollButton]);
 
+  // Reset dismissed banners on successful message send
+  useEffect(() => {
+    if (chatLogic.apiStatus === "ok" && dismissedBanners.size > 0) {
+      setDismissedBanners(new Set());
+    }
+  }, [chatLogic.apiStatus, dismissedBanners.size]);
+
   return (
     <>
       <ChatLayout
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={handleOpenMenu}
         logoState={getLogoState()}
-        headerActions={
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleToggleHistory}
-            aria-label="Verlauf öffnen"
-            aria-expanded={uiState.isHistoryOpen}
-            className={cn(
-              "gap-2 px-3 relative overflow-visible",
-              "border-accent-chat/15 hover:border-accent-chat/30",
-              "hover:bg-accent-chat/4 transition-all duration-200",
-              uiState.isHistoryOpen && "bg-accent-chat/8 border-accent-chat/30",
-              "min-h-[44px] sm:min-h-0", // Mobile touch target optimization
-            )}
-          >
-            <Bookmark
-              className={cn(
-                "h-4 w-4 transition-colors",
-                uiState.isHistoryOpen
-                  ? "text-accent-chat fill-accent-chat/23"
-                  : "text-accent-chat/53",
-              )}
-            />
-            <span className="hidden sm:inline text-ink-primary">Verlauf</span>
-            {chatLogic.conversations && chatLogic.conversations.length > 0 && (
-              <span
-                className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-accent-chat shadow-[0_0_6px_rgba(var(--accent-chat-glow),0.45)]"
-                aria-label={`${chatLogic.conversations.length} Unterhaltungen`}
-              />
-            )}
-          </Button>
-        }
       >
         <div
           {...swipeHandlers}
@@ -322,63 +306,25 @@ export default function Chat() {
             transition: dragOffset.x === 0 ? "transform 0.3s ease" : "none",
           }}
         >
-          <ChatStatusBanner
-            status={chatLogic.apiStatus}
-            error={chatLogic.error}
-            rateLimitInfo={chatLogic.rateLimitInfo}
-          />
+          {!dismissedBanners.has(chatLogic.apiStatus) && (
+            <ChatStatusBanner
+              status={chatLogic.apiStatus}
+              error={chatLogic.error}
+              rateLimitInfo={chatLogic.rateLimitInfo}
+              onDismiss={() => dismissBanner(chatLogic.apiStatus)}
+            />
+          )}
 
           <div className="px-4 pt-2">
-            <div className="mx-auto flex w-full max-w-3xl items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/settings/api-data")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-                  "border-accent-models/30 hover:border-accent-models/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-models/60",
-                )}
-                aria-label={`Aktives Modell: ${activeModelLabel}`}
-              >
-                <Cpu className="h-3.5 w-3.5 text-accent-models" />
-                <span>Modell: {activeModelLabel}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/roles")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium text-ink-secondary transition-colors whitespace-nowrap",
-                  "border-accent-roles/30 hover:border-accent-roles/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-roles/60",
-                )}
-                aria-label={`Aktive Rolle: ${roleLabel}`}
-              >
-                <User className="h-3.5 w-3.5 text-accent-roles" />
-                <span>Rolle: {roleLabel}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => chatLogic.navigate("/settings/memory")}
-                className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 rounded-full border bg-surface-1/70 px-3 py-2",
-                  "text-xs font-medium transition-colors whitespace-nowrap",
-                  memoryEnabled
-                    ? "border-status-success/35 text-ink-secondary hover:border-status-success/50 hover:text-ink-primary"
-                    : "border-status-warning/35 text-ink-secondary hover:border-status-warning/50 hover:text-ink-primary",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60",
-                )}
-                aria-label={`Memory ist ${memoryEnabled ? "aktiv" : "deaktiviert"}`}
-              >
-                <HardDrive
-                  className={cn(
-                    "h-3.5 w-3.5",
-                    memoryEnabled ? "text-status-success" : "text-status-warning",
-                  )}
-                />
-                <span>Memory: {memoryEnabled ? "Aktiv" : "Aus"}</span>
-              </button>
+            <div className="mx-auto flex w-full max-w-3xl items-center">
+              <ChatQuickSettings
+                activeModelLabel={activeModelLabel}
+                roleLabel={roleLabel}
+                memoryEnabled={memoryEnabled}
+                onNavigateModels={() => chatLogic.navigate("/settings/api-data")}
+                onNavigateRoles={() => chatLogic.navigate("/roles")}
+                onNavigateMemory={() => chatLogic.navigate("/settings/memory")}
+              />
             </div>
           </div>
 
@@ -398,7 +344,7 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 sm:pb-20 px-4 animate-fade-in">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 sm:pb-20 px-xsanimate-fade-in">
                     <div className="w-full max-w-md animate-fade-in-scale">
                       <Card variant="surface" className="space-y-5 p-6 sm:p-8 text-center">
                         <AnimatedBrandmark className="mx-auto origin-top scale-[0.62] sm:scale-[0.7]" />
@@ -420,12 +366,12 @@ export default function Chat() {
                           {
                             bar: "bg-accent-chat/80",
                             iconWrap: "bg-accent-chat/12 text-accent-chat",
-                            border: "border-accent-chat/25",
+                            border: "border-accent-chat/15",
                           },
                           {
                             bar: "bg-accent-models/80",
                             iconWrap: "bg-accent-models/12 text-accent-models",
-                            border: "border-accent-models/25",
+                            border: "border-accent-models/15",
                           },
                           {
                             bar: "bg-brand-primary/80",
@@ -440,11 +386,10 @@ export default function Chat() {
                             key={prompt}
                             type="button"
                             className={cn(
-                              "group relative flex min-h-[56px] min-w-[240px] snap-start items-center gap-3 overflow-hidden rounded-2xl border bg-surface-card px-3 py-3 text-left",
+                              "group relative flex min-h-[56px] min-w-[240px] snap-start items-center gap-2xsoverflow-hidden rounded-2xl border bg-surface-card px-2xspy-3 text-left",
                               "text-ink-primary transition-all animate-slide-up opacity-0 fill-mode-forwards sm:min-w-0 sm:gap-4 sm:px-4 sm:py-4",
                               "hover:border-white/[0.22] hover:bg-surface-2/60",
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
-                              "active:translate-y-px",
                               accent.border,
                             )}
                             style={{ animationDelay: `${index * 100}ms` }}
@@ -482,7 +427,7 @@ export default function Chat() {
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="mt-1 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-surface-1/50 px-3 py-2 text-sm text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary"
+                      className="mt-1 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-surface-1/50 px-2xspy-2 text-sm text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary"
                     >
                       Einstellungen anpassen
                       <span className="text-xs">→</span>
@@ -514,7 +459,7 @@ export default function Chat() {
               paddingBottom: "var(--inset-safe-bottom, 0px)",
             }}
           >
-            <div className="max-w-3xl mx-auto px-4 pt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto px-xspt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
@@ -524,13 +469,20 @@ export default function Chat() {
             </div>
           </div>
 
-          {/* Scroll to Bottom FAB */}
+          {/* FABs: History (left) and Scroll (right) */}
           {!chatLogic.isEmpty && (
-            <ScrollToBottom
-              visible={showScrollButton}
-              onClick={scrollToBottom}
-              newMessageCount={newMessageCount}
-            />
+            <>
+              <HistoryFAB
+                onClick={handleToggleHistory}
+                isOpen={uiState.isHistoryOpen}
+                conversationCount={chatLogic.conversations?.length ?? 0}
+              />
+              <ScrollToBottom
+                visible={showScrollButton}
+                onClick={scrollToBottom}
+                newMessageCount={newMessageCount}
+              />
+            </>
           )}
         </div>
       </ChatLayout>

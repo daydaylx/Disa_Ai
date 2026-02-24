@@ -261,7 +261,7 @@ export function ChatMessage({
           className={cn(
             "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-3.5 text-[0.98rem] leading-7 shadow-sm ring-1 ring-white/5",
             isUser
-              ? "ml-auto rounded-tr-sm border-accent-chat/30 bg-accent-chat-surface/65 text-ink-primary"
+              ? "ml-auto rounded-tr-sm border-accent-chat/20 bg-accent-chat-surface/65 text-ink-primary"
               : "mr-auto rounded-tl-sm border-white/10 bg-surface-card text-ink-primary",
           )}
           data-testid="message-bubble"
@@ -361,7 +361,7 @@ export function ChatMessage({
               <button
                 key={suggestion}
                 onClick={() => onFollowUp(suggestion)}
-                className="min-h-[2.75rem] rounded-full border border-accent-chat/30 bg-surface-1/85 px-4 py-2.5 text-sm font-medium text-accent-chat transition-colors hover:border-accent-chat/50 hover:bg-accent-chat/10 focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                className="min-h-[2.75rem] rounded-full border border-accent-chat/20 bg-surface-1/85 px-4 py-2.5 text-sm font-medium text-accent-chat transition-colors hover:border-accent-chat/40 hover:bg-accent-chat/10 focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
                 {suggestion}

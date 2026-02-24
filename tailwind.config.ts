@@ -336,7 +336,16 @@ export default {
         ...semanticSpacingScale,
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-top": "env(safe-area-inset-top)",
-        header: "3.5rem", // Standard header height
+        "page-bottom": "var(--page-bottom-padding)",
+        "page-bottom-safe": "var(--page-bottom-padding-safe)",
+      },
+      height: {
+        header: "var(--header-height)",
+        "header-lg": "var(--header-height-lg)",
+      },
+      inset: {
+        header: "var(--header-height)",
+        "header-lg": "var(--header-height-lg)",
       },
       borderRadius: {
         "3xl": "1.25rem", // 20px

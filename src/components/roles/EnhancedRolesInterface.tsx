@@ -252,7 +252,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Conditional rendering for loading and error states
   if (rolesLoading) {
     return (
-      <div className="flex flex-col h-full p-4 space-y-4">
+      <div className="flex flex-col h-full p-xsspace-y-xs">
         <HeaderSkeleton />
         <FilterSkeleton count={4} />
         <CardSkeleton count={6} />
@@ -280,7 +280,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-4">
+      <div className="flex-none sticky top-header lg:top-header-lg z-sticky-content pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
           {/* Ambient Header Glow - Roles accent (Pink) or Selected Category */}
           <div
@@ -288,7 +288,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             style={{ background: headerTheme.roleGradient }}
           />
 
-          <div className="relative space-y-3 px-4 py-4">
+          <div className="relative space-y-2xs px-xspy-4">
             <PageHeader
               title="Rollen"
               description={`${filteredRoles.length} von ${roles.length} verfügbar`}
@@ -300,7 +300,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Rolle suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/50 focus:ring-accent-roles/20"
+              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/40 focus:ring-accent-roles/20"
             />
 
             {/* Filter Pills */}
@@ -323,7 +323,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     }
                   }}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
+                    "flex items-center gap-1.5 px-2xspy-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
                     filters.showFavoritesOnly
                       ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                       : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -390,7 +390,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-24 pt-4">
+      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}
@@ -406,7 +406,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2xs">
             {filteredRoles.map((role) => {
               const isActive = activeRole?.id === role.id;
               const isFavorite = isRoleFavorite(role.id);
@@ -527,7 +527,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         }
       >
         {selectedRole ? (
-          <div className="space-y-3 rounded-xl border px-4 py-4">
+          <div className="space-y-2xs rounded-xl border px-xspy-4">
             <p className="text-sm leading-relaxed text-ink-secondary">{selectedRole.description}</p>
 
             {selectedRole.tags && selectedRole.tags.length > 0 ? (
@@ -541,7 +541,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             ) : null}
 
             {selectedRole.systemPrompt ? (
-              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-3 font-mono text-xs text-ink-tertiary">
+              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-2xsfont-mono text-xs text-ink-tertiary">
                 {selectedRole.systemPrompt.slice(0, 220)}
                 {selectedRole.systemPrompt.length > 220 ? "..." : ""}
               </div>
