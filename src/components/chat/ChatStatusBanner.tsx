@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import type { ChatApiStatus } from "@/hooks/useChat";
-import { AlertCircle, AlertTriangle, XCircle } from "@/lib/icons";
+import { AlertCircle, AlertTriangle, X, XCircle } from "@/lib/icons";
 import { hasApiKey } from "@/lib/openrouter/key";
 import { cn } from "@/lib/utils";
 import { Button } from "@/ui/Button";
@@ -20,7 +20,12 @@ interface ChatStatusBannerProps {
 
 type BannerTone = "warning" | "error" | "info";
 
-export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBannerProps) {
+export function ChatStatusBanner({
+  status,
+  error,
+  rateLimitInfo,
+  onDismiss,
+}: ChatStatusBannerProps) {
   const navigate = useNavigate();
   const userHasKey = hasApiKey();
 
@@ -124,12 +129,27 @@ export function ChatStatusBanner({ status, error, rateLimitInfo }: ChatStatusBan
     <MaterialCard
       variant="raised"
       className={cn(
-        "mx-[var(--spacing-4)] my-3 rounded-2xl border px-4 py-3 shadow-lg",
+        "mx-[var(--spacing-4)] my-3 rounded-2xl border px-4 py-3 shadow-lg relative",
         tone.bg,
         tone.border,
       )}
       data-testid="chat-status-banner"
     >
+      {onDismiss && (
+        <button
+          type="button"
+          onClick={onDismiss}
+          className={cn(
+            "absolute top-2 right-2 p-1.5 rounded-lg",
+            "text-ink-tertiary hover:text-ink-primary",
+            "hover:bg-surface-2/50 transition-colors",
+            "focus:outline-none focus:ring-2 focus:ring-brand-primary/60",
+          )}
+          aria-label="Banner schließen"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
       <div className="flex items-start gap-3">
         <span
           className={cn(

@@ -5,6 +5,7 @@ import { type LogoState } from "@/app/components/AnimatedLogo";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
+import { type ChatApiStatus } from "@/hooks/useChat";
 import { useMemory } from "@/hooks/useMemory";
 import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
@@ -80,6 +81,13 @@ export default function Chat() {
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+
+  // Dismissed status banners (reset on successful message send)
+  const [dismissedBanners, setDismissedBanners] = useState<Set<ChatApiStatus>>(new Set());
+
+  const dismissBanner = useCallback((statusKey: ChatApiStatus) => {
+    setDismissedBanners((prev) => new Set(prev).add(statusKey));
+  }, []);
 
   const setHistoryOpen = useCallback((open: boolean) => {
     dispatch({ type: "SET_HISTORY_OPEN", open });
@@ -274,6 +282,13 @@ export default function Chat() {
     lastMessageCountRef.current = currentCount;
   }, [chatLogic.messages.length, chatLogic.isEmpty, showScrollButton]);
 
+  // Reset dismissed banners on successful message send
+  useEffect(() => {
+    if (chatLogic.apiStatus === "ok" && dismissedBanners.size > 0) {
+      setDismissedBanners(new Set());
+    }
+  }, [chatLogic.apiStatus, dismissedBanners.size]);
+
   return (
     <>
       <ChatLayout
@@ -291,11 +306,14 @@ export default function Chat() {
             transition: dragOffset.x === 0 ? "transform 0.3s ease" : "none",
           }}
         >
-          <ChatStatusBanner
-            status={chatLogic.apiStatus}
-            error={chatLogic.error}
-            rateLimitInfo={chatLogic.rateLimitInfo}
-          />
+          {!dismissedBanners.has(chatLogic.apiStatus) && (
+            <ChatStatusBanner
+              status={chatLogic.apiStatus}
+              error={chatLogic.error}
+              rateLimitInfo={chatLogic.rateLimitInfo}
+              onDismiss={() => dismissBanner(chatLogic.apiStatus)}
+            />
+          )}
 
           <div className="px-4 pt-2">
             <div className="mx-auto flex w-full max-w-3xl items-center">
