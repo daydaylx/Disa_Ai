@@ -321,34 +321,45 @@ test.describe("Touch Target Compliance", () => {
 });
 
 test.describe("Performance - Animation Budget", () => {
-  test("reduced animations don't cause layout shift", async ({ page }) => {
-    await page.goto("/");
+  test("reduced animations don't cause layout shift", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "Layout shift API checks are only reliable in Chromium.");
 
-    // Measure CLS (Cumulative Layout Shift)
+    await page.goto("/");
+    await expect(page.getByRole("textbox", { name: /nachricht eingeben/i })).toBeVisible();
+    await page.waitForLoadState("networkidle");
+
+    // Ensure fonts/layout are stable before observing CLS.
+    await page.evaluate(async () => {
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
+
+    // Measure post-settle CLS only (exclude initial page-load shifts).
     const cls = await page.evaluate(() => {
-      return new Promise((resolve) => {
+      type LayoutShiftEntry = PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+
+      return new Promise<number>((resolve) => {
         let clsScore = 0;
         const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            // @ts-expect-error - hadRecentInput exists on layout-shift entries
+          for (const entry of list.getEntries() as LayoutShiftEntry[]) {
             if (!entry.hadRecentInput) {
-              // @ts-expect-error - value exists on layout-shift entries
-              clsScore += entry.value;
+              clsScore += entry.value ?? 0;
             }
           }
         });
 
-        observer.observe({ type: "layout-shift", buffered: true });
+        observer.observe({ type: "layout-shift", buffered: false });
 
-        // Stop observing after 2 seconds
+        // Observe a short idle window where no animation-driven shifts should occur.
         setTimeout(() => {
           observer.disconnect();
           resolve(clsScore);
-        }, 2000);
+        }, 1500);
       });
     });
 
-    // CLS should be low (< 0.1 is good, < 0.25 is acceptable)
-    expect(cls).toBeLessThan(0.25);
+    expect(cls).toBeLessThan(0.1);
   });
 });
