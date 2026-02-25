@@ -174,12 +174,14 @@ function safeInitialize(): void {
     }
   }
 
-  // Accessibility enforcement (non-critical)
-  try {
-    initializeA11yEnforcement();
-    safeWarn("[INIT] A11y enforcement initialized");
-  } catch (error: unknown) {
-    safeWarn("[INIT] A11y enforcement failed:", error);
+  // Accessibility enforcement (DEV only — DOM scanning is too expensive for production)
+  if (import.meta.env.DEV) {
+    try {
+      initializeA11yEnforcement();
+      safeWarn("[INIT] A11y enforcement initialized");
+    } catch (error: unknown) {
+      safeWarn("[INIT] A11y enforcement failed:", error);
+    }
   }
 }
 

@@ -344,10 +344,10 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 sm:pb-20 px-xsanimate-fade-in">
+                  <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-16 px-xs animate-fade-in">
                     <div className="w-full max-w-md animate-fade-in-scale">
-                      <Card variant="surface" className="space-y-5 p-6 sm:p-8 text-center">
-                        <AnimatedBrandmark className="mx-auto origin-top scale-[0.62] sm:scale-[0.7]" />
+                      <Card variant="surface" className="space-y-5 p-6 text-center">
+                        <AnimatedBrandmark className="mx-auto origin-top scale-[0.62]" />
                         <div className="mx-auto h-px w-20 bg-white/12" />
                         <div className="space-y-2">
                           <h2 className="text-lg font-semibold text-ink-primary">
@@ -360,7 +360,7 @@ export default function Chat() {
                       </Card>
                     </div>
 
-                    <div className="w-full max-w-md flex gap-2.5 overflow-x-auto px-1 pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-1 sm:gap-3 sm:overflow-visible">
+                    <div className="w-full max-w-md flex gap-2.5 overflow-x-auto px-1 pb-2 snap-x snap-mandatory">
                       {uniquePrompts.slice(0, 3).map((prompt, index) => {
                         const accentStyles = [
                           {
@@ -386,8 +386,8 @@ export default function Chat() {
                             key={prompt}
                             type="button"
                             className={cn(
-                              "group relative flex min-h-[56px] min-w-[240px] snap-start items-center gap-2xsoverflow-hidden rounded-2xl border bg-surface-card px-2xspy-3 text-left",
-                              "text-ink-primary transition-all animate-slide-up opacity-0 fill-mode-forwards sm:min-w-0 sm:gap-4 sm:px-4 sm:py-4",
+                              "group relative flex min-h-[56px] min-w-[240px] snap-start items-center gap-2xs overflow-hidden rounded-2xl border bg-surface-card px-2xs py-3 text-left",
+                              "text-ink-primary transition-all animate-slide-up opacity-0 fill-mode-forwards",
                               "hover:border-white/[0.22] hover:bg-surface-2/60",
                               "focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2",
                               accent.border,
@@ -427,7 +427,7 @@ export default function Chat() {
                     <button
                       type="button"
                       onClick={() => chatLogic.navigate("/settings")}
-                      className="mt-1 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-surface-1/50 px-2xspy-2 text-sm text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary"
+                      className="mt-1 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-surface-1/50 px-2xs py-2 text-sm text-ink-secondary transition-colors hover:border-white/20 hover:text-ink-primary"
                     >
                       Einstellungen anpassen
                       <span className="text-xs">→</span>
@@ -459,7 +459,7 @@ export default function Chat() {
               paddingBottom: "var(--inset-safe-bottom, 0px)",
             }}
           >
-            <div className="max-w-3xl mx-auto px-xspt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto px-xs pt-2 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
