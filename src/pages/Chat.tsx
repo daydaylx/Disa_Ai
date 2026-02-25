@@ -1,13 +1,9 @@
-import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { lazy, memo, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
-import { useModelCatalog } from "@/contexts/ModelCatalogContext";
-import { useRoles } from "@/contexts/RolesContext";
 import { type ChatApiStatus } from "@/hooks/useChat";
-import { useMemory } from "@/hooks/useMemory";
-import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
 import { HistoryFAB } from "@/ui/HistoryFAB";
@@ -62,10 +58,6 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { models } = useModelCatalog();
-  const { activeRole } = useRoles();
-  const { settings } = useSettings();
-  const { isEnabled: memoryEnabled } = useMemory();
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
@@ -134,16 +126,6 @@ export default function Chat() {
   const lastMessageCountRef = useRef(0);
   const composerRef = useRef<HTMLDivElement>(null);
   const [composerHeight, setComposerHeight] = useState(0);
-
-  // Deduplicate prompts with strict text normalization
-  const activeModelLabel = useMemo(() => {
-    if (!settings.preferredModelId) return "Automatisch";
-    const selectedModel = models?.find((model) => model.id === settings.preferredModelId);
-    const rawLabel = selectedModel?.label || selectedModel?.id || settings.preferredModelId;
-    return rawLabel.split("/").pop() || rawLabel;
-  }, [models, settings.preferredModelId]);
-
-  const roleLabel = useMemo(() => activeRole?.name || "Standard", [activeRole]);
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
