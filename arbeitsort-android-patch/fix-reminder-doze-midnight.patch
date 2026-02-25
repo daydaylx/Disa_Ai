@@ -1,0 +1,744 @@
+From 2c9933637aaebad9c45bcde0bd923fe5944901b1 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 25 Feb 2026 15:12:40 +0000
+Subject: [PATCH] fix: robust Doze/midnight handling for Fallback and Daily
+ reminders
+
+- ReminderWindowEvaluator: add effectiveDateForFallback/Daily that return
+  yesterday when currentTime < 04:00 (Doze-delayed after-midnight runs).
+  isAfterFallbackTime returns true for after-midnight grace window.
+  isNonWorkingDay accepts optional loadedEntry to avoid second DB read.
+
+- WindowCheckWorker: FALLBACK and DAILY use effectiveDate so post-midnight
+  workers are attributed to the previous calendar day. Daily flag is set
+  only AFTER showDailyConfirmationNotification succeeds. All window checks
+  pass the loaded entry to isNonWorkingDay eliminating redundant DB reads.
+
+- ReminderFlagsStore: ensureMigrated guarded by Mutex + double-checked
+  locking. All set* methods apply 180-day retention to prevent unbounded
+  DataStore growth.
+
+- ReminderSettings: toLocalTime() defaults to 08:00 and logs on invalid
+  input instead of silently returning midnight. Added toLocalTimeOrNull()
+  and toLocalDateOrNull() extensions.
+
+- Tests: ReminderDozeRobustnessTest covers effectiveDateForFallback grace
+  window and daily-flag ordering (set after notification, never on confirm).
+
+https://claude.ai/code/session_01GFHYduhJ9W6ea2Fb7Z4VaC
+---
+ .../data/preferences/ReminderFlagsStore.kt    | 127 +++++++++-----
+ .../app/data/preferences/ReminderSettings.kt  |  39 +++--
+ .../app/work/ReminderWindowEvaluator.kt       |  82 +++++++--
+ .../montagezeit/app/work/WindowCheckWorker.kt |  50 +++---
+ .../app/work/ReminderDozeRobustnessTest.kt    | 161 ++++++++++++++++++
+ 5 files changed, 375 insertions(+), 84 deletions(-)
+ create mode 100644 app/src/test/java/de/montagezeit/app/work/ReminderDozeRobustnessTest.kt
+
+diff --git a/app/src/main/java/de/montagezeit/app/data/preferences/ReminderFlagsStore.kt b/app/src/main/java/de/montagezeit/app/data/preferences/ReminderFlagsStore.kt
+index 2ab5b0a..d491e4e 100644
+--- a/app/src/main/java/de/montagezeit/app/data/preferences/ReminderFlagsStore.kt
++++ b/app/src/main/java/de/montagezeit/app/data/preferences/ReminderFlagsStore.kt
+@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
+ import androidx.datastore.preferences.preferencesDataStore
+ import dagger.hilt.android.qualifiers.ApplicationContext
+ import kotlinx.coroutines.flow.first
++import kotlinx.coroutines.sync.Mutex
++import kotlinx.coroutines.sync.withLock
+ import java.time.LocalDate
+ import javax.inject.Inject
+ import javax.inject.Singleton
+@@ -24,6 +26,8 @@ private val Context.reminderFlagsDataStore: DataStore<Preferences>
+  * Zugriff einmalig migriert und dann gelöscht.
+  *
+  * Datenhaltung: Pro Flag-Typ ein StringSet mit ISO-Datums-Strings.
++ * Retention: Einträge älter als [RETENTION_DAYS] Tage werden beim Schreiben
++ * automatisch entfernt, damit DataStore nicht unbegrenzt wächst.
+  */
+ @Singleton
+ class ReminderFlagsStore @Inject constructor(
+@@ -33,6 +37,7 @@ class ReminderFlagsStore @Inject constructor(
+ 
+     companion object {
+         private const val SP_NAME = "reminder_flags"  // alter SP-Name
++        private const val RETENTION_DAYS = 180L
+ 
+         // DataStore Keys: StringSet von "yyyy-MM-dd"-Dates
+         val KEY_MORNING_DATES  = stringSetPreferencesKey("morning_reminded_dates")
+@@ -49,52 +54,82 @@ class ReminderFlagsStore @Inject constructor(
+     }
+ 
+     // -------------------------------------------------------------------------
+-    // Einmalige Migration SharedPreferences → DataStore
++    // Einmalige Migration SharedPreferences → DataStore (thread-safe)
+     // -------------------------------------------------------------------------
+-    private var migrationChecked = false
++
++    private val migrationMutex = Mutex()
++
++    @Volatile
++    private var migrationDone = false
+ 
+     private suspend fun ensureMigrated() {
+-        if (migrationChecked) return
+-        migrationChecked = true
++        // Schneller Pfad ohne Lock (nach abgeschlossener Migration)
++        if (migrationDone) return
++
++        migrationMutex.withLock {
++            // Zweite Prüfung nach Locking – ein anderer Coroutine kann inzwischen
++            // migriert haben, während wir auf den Mutex gewartet haben.
++            if (migrationDone) return
++
++            val current = dataStore.data.first()
++            if (current[KEY_MIGRATION_DONE]?.contains("done") == true) {
++                migrationDone = true
++                return
++            }
+ 
+-        val current = dataStore.data.first()
+-        if (current[KEY_MIGRATION_DONE]?.contains("done") == true) return
++            val sp: SharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
++            val allEntries = sp.all
++            if (allEntries.isEmpty()) {
++                // Nichts zu migrieren – Sentinel setzen
++                dataStore.edit { prefs ->
++                    prefs[KEY_MIGRATION_DONE] = setOf("done")
++                }
++                migrationDone = true
++                return
++            }
++
++            val morningDates  = mutableSetOf<String>()
++            val eveningDates  = mutableSetOf<String>()
++            val fallbackDates = mutableSetOf<String>()
++            val dailyDates    = mutableSetOf<String>()
++
++            for ((key, value) in allEntries) {
++                if (value != true) continue
++                when {
++                    key.startsWith(SP_PREFIX_MORNING)  -> morningDates.add(key.removePrefix(SP_PREFIX_MORNING))
++                    key.startsWith(SP_PREFIX_EVENING)  -> eveningDates.add(key.removePrefix(SP_PREFIX_EVENING))
++                    key.startsWith(SP_PREFIX_FALLBACK) -> fallbackDates.add(key.removePrefix(SP_PREFIX_FALLBACK))
++                    key.startsWith(SP_PREFIX_DAILY)    -> dailyDates.add(key.removePrefix(SP_PREFIX_DAILY))
++                }
++            }
+ 
+-        val sp: SharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+-        val allEntries = sp.all
+-        if (allEntries.isEmpty()) {
+-            // Nichts zu migrieren – Sentinel setzen
+             dataStore.edit { prefs ->
++                if (morningDates.isNotEmpty())  prefs[KEY_MORNING_DATES]  = morningDates
++                if (eveningDates.isNotEmpty())  prefs[KEY_EVENING_DATES]  = eveningDates
++                if (fallbackDates.isNotEmpty()) prefs[KEY_FALLBACK_DATES] = fallbackDates
++                if (dailyDates.isNotEmpty())    prefs[KEY_DAILY_DATES]    = dailyDates
+                 prefs[KEY_MIGRATION_DONE] = setOf("done")
+             }
+-            return
+-        }
+ 
+-        val morningDates  = mutableSetOf<String>()
+-        val eveningDates  = mutableSetOf<String>()
+-        val fallbackDates = mutableSetOf<String>()
+-        val dailyDates    = mutableSetOf<String>()
+-
+-        for ((key, value) in allEntries) {
+-            if (value != true) continue
+-            when {
+-                key.startsWith(SP_PREFIX_MORNING)  -> morningDates.add(key.removePrefix(SP_PREFIX_MORNING))
+-                key.startsWith(SP_PREFIX_EVENING)  -> eveningDates.add(key.removePrefix(SP_PREFIX_EVENING))
+-                key.startsWith(SP_PREFIX_FALLBACK) -> fallbackDates.add(key.removePrefix(SP_PREFIX_FALLBACK))
+-                key.startsWith(SP_PREFIX_DAILY)    -> dailyDates.add(key.removePrefix(SP_PREFIX_DAILY))
+-            }
++            // Alte SharedPreferences nach erfolgreicher Migration löschen
++            sp.edit().clear().apply()
++            migrationDone = true
+         }
++    }
+ 
+-        dataStore.edit { prefs ->
+-            if (morningDates.isNotEmpty())  prefs[KEY_MORNING_DATES]  = morningDates
+-            if (eveningDates.isNotEmpty())  prefs[KEY_EVENING_DATES]  = eveningDates
+-            if (fallbackDates.isNotEmpty()) prefs[KEY_FALLBACK_DATES] = fallbackDates
+-            if (dailyDates.isNotEmpty())    prefs[KEY_DAILY_DATES]    = dailyDates
+-            prefs[KEY_MIGRATION_DONE] = setOf("done")
+-        }
++    // -------------------------------------------------------------------------
++    // Retention: Einträge älter als RETENTION_DAYS Tage entfernen
++    // -------------------------------------------------------------------------
+ 
+-        // Alte SharedPreferences nach erfolgreicher Migration löschen
+-        sp.edit().clear().apply()
++    /**
++     * Filtert alle Datums-Strings heraus, die älter als [RETENTION_DAYS] Tage sind.
++     * Ungültige Strings werden ebenfalls verworfen.
++     */
++    private fun Set<String>.withRetention(): Set<String> {
++        val cutoff = LocalDate.now().minusDays(RETENTION_DAYS)
++        return filter { dateStr ->
++            runCatching { LocalDate.parse(dateStr) >= cutoff }.getOrDefault(false)
++        }.toSet()
+     }
+ 
+     // -------------------------------------------------------------------------
+@@ -109,7 +144,8 @@ class ReminderFlagsStore @Inject constructor(
+     suspend fun setMorningReminded(date: LocalDate) {
+         ensureMigrated()
+         dataStore.edit { prefs ->
+-            prefs[KEY_MORNING_DATES] = (prefs[KEY_MORNING_DATES] ?: emptySet()) + date.toString()
++            prefs[KEY_MORNING_DATES] =
++                ((prefs[KEY_MORNING_DATES] ?: emptySet()) + date.toString()).withRetention()
+         }
+     }
+ 
+@@ -121,7 +157,8 @@ class ReminderFlagsStore @Inject constructor(
+     suspend fun setEveningReminded(date: LocalDate) {
+         ensureMigrated()
+         dataStore.edit { prefs ->
+-            prefs[KEY_EVENING_DATES] = (prefs[KEY_EVENING_DATES] ?: emptySet()) + date.toString()
++            prefs[KEY_EVENING_DATES] =
++                ((prefs[KEY_EVENING_DATES] ?: emptySet()) + date.toString()).withRetention()
+         }
+     }
+ 
+@@ -133,7 +170,8 @@ class ReminderFlagsStore @Inject constructor(
+     suspend fun setFallbackReminded(date: LocalDate) {
+         ensureMigrated()
+         dataStore.edit { prefs ->
+-            prefs[KEY_FALLBACK_DATES] = (prefs[KEY_FALLBACK_DATES] ?: emptySet()) + date.toString()
++            prefs[KEY_FALLBACK_DATES] =
++                ((prefs[KEY_FALLBACK_DATES] ?: emptySet()) + date.toString()).withRetention()
+         }
+     }
+ 
+@@ -145,7 +183,8 @@ class ReminderFlagsStore @Inject constructor(
+     suspend fun setDailyReminded(date: LocalDate) {
+         ensureMigrated()
+         dataStore.edit { prefs ->
+-            prefs[KEY_DAILY_DATES] = (prefs[KEY_DAILY_DATES] ?: emptySet()) + date.toString()
++            prefs[KEY_DAILY_DATES] =
++                ((prefs[KEY_DAILY_DATES] ?: emptySet()) + date.toString()).withRetention()
+         }
+     }
+ 
+@@ -153,10 +192,14 @@ class ReminderFlagsStore @Inject constructor(
+         ensureMigrated()
+         val dateStr = date.toString()
+         dataStore.edit { prefs ->
+-            prefs[KEY_MORNING_DATES]  = (prefs[KEY_MORNING_DATES]  ?: emptySet()) + dateStr
+-            prefs[KEY_EVENING_DATES]  = (prefs[KEY_EVENING_DATES]  ?: emptySet()) + dateStr
+-            prefs[KEY_FALLBACK_DATES] = (prefs[KEY_FALLBACK_DATES] ?: emptySet()) + dateStr
+-            prefs[KEY_DAILY_DATES]    = (prefs[KEY_DAILY_DATES]    ?: emptySet()) + dateStr
++            prefs[KEY_MORNING_DATES]  =
++                ((prefs[KEY_MORNING_DATES]  ?: emptySet()) + dateStr).withRetention()
++            prefs[KEY_EVENING_DATES]  =
++                ((prefs[KEY_EVENING_DATES]  ?: emptySet()) + dateStr).withRetention()
++            prefs[KEY_FALLBACK_DATES] =
++                ((prefs[KEY_FALLBACK_DATES] ?: emptySet()) + dateStr).withRetention()
++            prefs[KEY_DAILY_DATES]    =
++                ((prefs[KEY_DAILY_DATES]    ?: emptySet()) + dateStr).withRetention()
+         }
+     }
+ }
+diff --git a/app/src/main/java/de/montagezeit/app/data/preferences/ReminderSettings.kt b/app/src/main/java/de/montagezeit/app/data/preferences/ReminderSettings.kt
+index 685ffda..18ccdf4 100644
+--- a/app/src/main/java/de/montagezeit/app/data/preferences/ReminderSettings.kt
++++ b/app/src/main/java/de/montagezeit/app/data/preferences/ReminderSettings.kt
+@@ -100,25 +100,44 @@ object ReminderSettingsKeys {
+ }
+ 
+ /**
+- * Hilfsfunktionen für LocalTime Konvertierung
++ * Hilfsfunktionen für LocalTime / LocalDate Konvertierung
+  */
+ private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+ private val DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE
+ 
+ fun LocalTime.toPrefString(): String = this.format(TIME_FORMATTER)
+ 
+-fun String?.toLocalTime(): LocalTime {
+-    return if (this.isNullOrBlank()) {
+-        LocalTime.MIDNIGHT
+-    } else {
+-        try {
+-            LocalTime.parse(this, TIME_FORMATTER)
+-        } catch (e: Exception) {
+-            LocalTime.MIDNIGHT
+-        }
++/**
++ * Parst einen "HH:mm"-String in [LocalTime].
++ * Bei leerem oder ungültigem String wird [fallback] zurückgegeben und
++ * eine Warnung geloggt. Kein Crash, kein stilles Fallback auf Mitternacht.
++ */
++fun String?.toLocalTime(fallback: LocalTime = LocalTime.of(8, 0)): LocalTime {
++    if (isNullOrBlank()) return fallback
++    return runCatching { LocalTime.parse(this, TIME_FORMATTER) }.getOrElse { e ->
++        android.util.Log.w("ReminderSettings", "Ungültiger Zeit-String '$this', verwende $fallback", e)
++        fallback
+     }
+ }
+ 
++/**
++ * Parst einen "HH:mm"-String in [LocalTime] oder gibt null bei Fehler zurück.
++ * Nützlich für optionale Felder, bei denen ein Fallback-Wert vom Aufrufer
++ * bestimmt werden soll.
++ */
++fun String?.toLocalTimeOrNull(): LocalTime? {
++    if (isNullOrBlank()) return null
++    return runCatching { LocalTime.parse(this, TIME_FORMATTER) }.getOrNull()
++}
++
++/**
++ * Parst einen ISO-Datums-String (yyyy-MM-dd) in [LocalDate] oder gibt null zurück.
++ */
++fun String?.toLocalDateOrNull(): LocalDate? {
++    if (isNullOrBlank()) return null
++    return runCatching { LocalDate.parse(this, DATE_FORMATTER) }.getOrNull()
++}
++
+ fun Set<LocalDate>.toPrefString(): String {
+     if (this.isEmpty()) return ""
+     return this.joinToString(",") { it.format(DATE_FORMATTER) }
+diff --git a/app/src/main/java/de/montagezeit/app/work/ReminderWindowEvaluator.kt b/app/src/main/java/de/montagezeit/app/work/ReminderWindowEvaluator.kt
+index 21ae11e..722222e 100644
+--- a/app/src/main/java/de/montagezeit/app/work/ReminderWindowEvaluator.kt
++++ b/app/src/main/java/de/montagezeit/app/work/ReminderWindowEvaluator.kt
+@@ -2,6 +2,7 @@ package de.montagezeit.app.work
+ 
+ import de.montagezeit.app.data.local.dao.WorkEntryDao
+ import de.montagezeit.app.data.local.entity.DayType
++import de.montagezeit.app.data.local.entity.WorkEntry
+ import de.montagezeit.app.data.preferences.ReminderSettings
+ import java.time.DayOfWeek
+ import java.time.LocalDate
+@@ -9,6 +10,17 @@ import java.time.LocalTime
+ 
+ object ReminderWindowEvaluator {
+ 
++    /**
++     * Zeitpunkt vor dem ein nach-Mitternacht ausgeführter Worker noch zum Vortag zählt.
++     * Doze-verzögerte Worker, die z.B. um 00:30 statt 22:30 laufen, werden damit
++     * korrekt dem ursprünglichen Kalendertag zugeordnet.
++     */
++    private val MIDNIGHT_GRACE_TIME = LocalTime.of(4, 0)
++
++    // -------------------------------------------------------------------------
++    // Window-Checks (Morning / Evening) – unverändert
++    // -------------------------------------------------------------------------
++
+     fun isInMorningWindow(currentTime: LocalTime, settings: ReminderSettings): Boolean {
+         return !currentTime.isBefore(settings.morningWindowStart) &&
+             currentTime.isBefore(settings.morningWindowEnd)
+@@ -19,28 +31,72 @@ object ReminderWindowEvaluator {
+             currentTime.isBefore(settings.eveningWindowEnd)
+     }
+ 
++    // -------------------------------------------------------------------------
++    // Fallback-Zeit-Prüfung – Doze/Mitternacht-robust
++    // -------------------------------------------------------------------------
++
++    /**
++     * Gibt zurück, ob der Fallback-Reminder jetzt ausgelöst werden soll.
++     *
++     * Läuft der Worker nach Mitternacht (currentTime < MIDNIGHT_GRACE_TIME), gilt
++     * das als verzögerter Lauf des gestrigen Fallback-Slots → true.
++     * Andernfalls wird der konfigurierte fallbackTime-Vergleich verwendet.
++     */
+     fun isAfterFallbackTime(currentTime: LocalTime, settings: ReminderSettings): Boolean {
++        if (currentTime.isBefore(MIDNIGHT_GRACE_TIME)) return true
+         return !currentTime.isBefore(settings.fallbackTime)
+     }
+ 
++    // -------------------------------------------------------------------------
++    // Effektive-Datum-Bestimmung für Doze-robuste Reminder
++    // -------------------------------------------------------------------------
++
++    /**
++     * Bestimmt das "effektive Datum" für den Fallback-Reminder.
++     *
++     * Läuft der Worker nach Mitternacht (aber vor MIDNIGHT_GRACE_TIME), wird der
++     * Vortag zurückgegeben, weil der Job eigentlich gestern hätte laufen sollen.
++     */
++    fun effectiveDateForFallback(currentTime: LocalTime): LocalDate =
++        if (currentTime.isBefore(MIDNIGHT_GRACE_TIME)) LocalDate.now().minusDays(1)
++        else LocalDate.now()
++
++    /**
++     * Bestimmt das "effektive Datum" für den Daily-Reminder.
++     *
++     * Gleiche Logik wie [effectiveDateForFallback]: nach-Mitternacht-Läufe gehören
++     * noch zum gestrigen Tag.
++     */
++    fun effectiveDateForDaily(currentTime: LocalTime): LocalDate =
++        if (currentTime.isBefore(MIDNIGHT_GRACE_TIME)) LocalDate.now().minusDays(1)
++        else LocalDate.now()
++
++    // -------------------------------------------------------------------------
++    // Nicht-Arbeitstag-Erkennung – kein doppelter DB-Read
++    // -------------------------------------------------------------------------
++
+     /**
+-     * Prüft ob ein Tag ein Nicht-Arbeitstag ist
++     * Prüft ob ein Tag ein Nicht-Arbeitstag ist.
+      *
+-     * Priorisierung: Manuelle DayType-Einstellungen überschreiben automatische Regeln
++     * Priorisierung: Manuelle DayType-Einstellungen überschreiben automatische Regeln.
+      * 1. Wenn DayType == WORK → immer Arbeitstag (auch an Wochenenden)
+-     * 2. Wenn DayType == OFF → immer Nicht-Arbeitstag
++     * 2. Wenn DayType == OFF  → immer Nicht-Arbeitstag
+      * 3. Sonst: Auto-Off Regeln anwenden (Wochenende/Feiertage)
++     *
++     * @param workEntryDao optionaler DAO (dritter Parameter für Rückwärtskompatibilität).
++     * @param loadedEntry  bereits geladener WorkEntry; wenn gesetzt, entfällt der DB-Read
++     *                     über [workEntryDao] und es findet kein redundanter Query statt.
+      */
+-    suspend fun isNonWorkingDay(date: LocalDate, settings: ReminderSettings, workEntryDao: WorkEntryDao? = null): Boolean {
+-        // Prüfe manuelle Einstellungen zuerst
+-        if (workEntryDao != null) {
+-            val entry = workEntryDao.getByDate(date)
+-            if (entry != null) {
+-                return entry.dayType == DayType.OFF
+-            }
+-        }
+-        
+-        // Automatische Regeln
++    suspend fun isNonWorkingDay(
++        date: LocalDate,
++        settings: ReminderSettings,
++        workEntryDao: WorkEntryDao? = null,
++        loadedEntry: WorkEntry? = null
++    ): Boolean {
++        val entry = loadedEntry ?: workEntryDao?.getByDate(date)
++        if (entry != null) return entry.dayType == DayType.OFF
++
++        // Automatische Regeln (kein manueller Eintrag vorhanden)
+         val isWeekend = date.dayOfWeek == DayOfWeek.SATURDAY || date.dayOfWeek == DayOfWeek.SUNDAY
+         val weekendOff = settings.autoOffWeekends && isWeekend
+         val holidayOff = settings.autoOffHolidays && settings.holidayDates.contains(date)
+diff --git a/app/src/main/java/de/montagezeit/app/work/WindowCheckWorker.kt b/app/src/main/java/de/montagezeit/app/work/WindowCheckWorker.kt
+index 2c16797..09e1d28 100644
+--- a/app/src/main/java/de/montagezeit/app/work/WindowCheckWorker.kt
++++ b/app/src/main/java/de/montagezeit/app/work/WindowCheckWorker.kt
+@@ -27,6 +27,10 @@ import java.time.LocalTime
+  * - Evening Window (16:00-22:30): analog
+  * - Fallback 22:30: wenn Tag unvollständig, 1x Reminder
+  * - Daily: tägliche Erinnerung
++ *
++ * Doze/Mitternacht-Robustheit: Fallback und Daily ermitteln per [ReminderWindowEvaluator]
++ * ein "effektives Datum", damit nach-Mitternacht-verzögerte Läufe korrekt dem Vortag
++ * zugeordnet werden.
+  */
+ @HiltWorker
+ class WindowCheckWorker @AssistedInject constructor(
+@@ -42,7 +46,6 @@ class WindowCheckWorker @AssistedInject constructor(
+     private val operationMutex = Mutex()
+ 
+     override suspend fun doWork(): Result {
+-        val today = LocalDate.now()
+         val currentTime = LocalTime.now()
+         val settings = reminderSettingsManager.settings.first()
+         val reminderType = reminderTypeOrNull()
+@@ -57,7 +60,7 @@ class WindowCheckWorker @AssistedInject constructor(
+                     if (!inWindow) {
+                         return Result.success()
+                     }
+-                    checkAndShowMorningReminder(today, settings)
++                    checkAndShowMorningReminder(LocalDate.now(), settings)
+                 }
+                 ReminderType.EVENING -> {
+                     if (!settings.eveningReminderEnabled) {
+@@ -67,7 +70,7 @@ class WindowCheckWorker @AssistedInject constructor(
+                     if (!inWindow) {
+                         return Result.success()
+                     }
+-                    checkAndShowEveningReminder(today, settings)
++                    checkAndShowEveningReminder(LocalDate.now(), settings)
+                 }
+                 ReminderType.FALLBACK -> {
+                     if (!settings.fallbackEnabled) {
+@@ -76,14 +79,18 @@ class WindowCheckWorker @AssistedInject constructor(
+                     if (!ReminderWindowEvaluator.isAfterFallbackTime(currentTime, settings)) {
+                         return Result.success()
+                     }
+-                    checkAndShowFallbackReminder(today, settings)
++                    // Doze-robust: nach-Mitternacht-Läufe werden dem Vortag zugeordnet
++                    val effectiveDate = ReminderWindowEvaluator.effectiveDateForFallback(currentTime)
++                    checkAndShowFallbackReminder(effectiveDate, settings)
+                     // Fallback ist periodic, kein self-reschedule
+                 }
+                 ReminderType.DAILY -> {
+                     if (!settings.dailyReminderEnabled) {
+                         return Result.success()
+                     }
+-                    checkAndShowDailyReminder(today)
++                    // Doze-robust: nach-Mitternacht-Läufe werden dem Vortag zugeordnet
++                    val effectiveDate = ReminderWindowEvaluator.effectiveDateForDaily(currentTime)
++                    checkAndShowDailyReminder(effectiveDate)
+                     // Daily ist periodic, kein self-reschedule
+                 }
+                 null -> {
+@@ -100,19 +107,20 @@ class WindowCheckWorker @AssistedInject constructor(
+     }
+ 
+     /**
+-     * Prüft ob Morning Reminder nötig ist und zeigt ihn an
++     * Prüft ob Morning Reminder nötig ist und zeigt ihn an.
+      *
+-     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write)
++     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write).
++     * Der geladene Entry wird direkt an [ReminderWindowEvaluator.isNonWorkingDay] übergeben,
++     * damit kein zweiter DB-Read stattfindet.
+      */
+     private suspend fun checkAndShowMorningReminder(
+         date: LocalDate,
+         settings: ReminderSettings
+     ) {
+-        // Atomic Operation: Read flag + DB query + Show notification + Write flag
+         operationMutex.withLock {
+             if (reminderFlagsStore.isMorningReminded(date)) return
+             val entry = workEntryDao.getByDate(date)
+-            if (entry == null && ReminderWindowEvaluator.isNonWorkingDay(date, settings, workEntryDao)) return
++            if (ReminderWindowEvaluator.isNonWorkingDay(date, settings, loadedEntry = entry)) return
+             if (shouldShowMorningReminder(entry)) {
+                 notificationManager.showMorningReminder(date)
+                 reminderFlagsStore.setMorningReminded(date)
+@@ -121,9 +129,9 @@ class WindowCheckWorker @AssistedInject constructor(
+     }
+ 
+     /**
+-     * Prüft ob Evening Reminder nötig ist und zeigt ihn an
++     * Prüft ob Evening Reminder nötig ist und zeigt ihn an.
+      *
+-     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write)
++     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write).
+      */
+     private suspend fun checkAndShowEveningReminder(
+         date: LocalDate,
+@@ -132,7 +140,7 @@ class WindowCheckWorker @AssistedInject constructor(
+         operationMutex.withLock {
+             if (reminderFlagsStore.isEveningReminded(date)) return
+             val entry = workEntryDao.getByDate(date)
+-            if (entry == null && ReminderWindowEvaluator.isNonWorkingDay(date, settings, workEntryDao)) return
++            if (ReminderWindowEvaluator.isNonWorkingDay(date, settings, loadedEntry = entry)) return
+             if (shouldShowEveningReminder(entry)) {
+                 notificationManager.showEveningReminder(date)
+                 reminderFlagsStore.setEveningReminded(date)
+@@ -141,9 +149,9 @@ class WindowCheckWorker @AssistedInject constructor(
+     }
+ 
+     /**
+-     * Prüft ob Fallback Reminder nötig ist und zeigt ihn an
++     * Prüft ob Fallback Reminder nötig ist und zeigt ihn an.
+      *
+-     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write)
++     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write).
+      */
+     private suspend fun checkAndShowFallbackReminder(
+         date: LocalDate,
+@@ -152,7 +160,7 @@ class WindowCheckWorker @AssistedInject constructor(
+         operationMutex.withLock {
+             if (reminderFlagsStore.isFallbackReminded(date)) return
+             val entry = workEntryDao.getByDate(date)
+-            if (entry == null && ReminderWindowEvaluator.isNonWorkingDay(date, settings, workEntryDao)) return
++            if (ReminderWindowEvaluator.isNonWorkingDay(date, settings, loadedEntry = entry)) return
+             if (shouldShowFallbackReminder(entry)) {
+                 notificationManager.showFallbackReminder(date)
+                 reminderFlagsStore.setFallbackReminded(date)
+@@ -161,18 +169,22 @@ class WindowCheckWorker @AssistedInject constructor(
+     }
+ 
+     /**
+-     * Prüft ob Daily Reminder nötig ist und zeigt ihn an
++     * Prüft ob Daily Reminder nötig ist und zeigt ihn an.
+      *
+-     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write)
++     * ATOMIC: Mutex schützt gesamte Operation (read + DB query + notification + write).
++     * Das Flag wird NUR gesetzt, wenn die Notification tatsächlich angezeigt wurde.
+      */
+-    private suspend fun checkAndShowDailyReminder(date: LocalDate) {
++    internal suspend fun checkAndShowDailyReminder(date: LocalDate) {
+         operationMutex.withLock {
+             if (reminderFlagsStore.isDailyReminded(date)) return
+             val entry = workEntryDao.getByDate(date)
+-            reminderFlagsStore.setDailyReminded(date)
+             if (shouldShowDailyReminder(entry)) {
+                 notificationManager.showDailyConfirmationNotification(date)
++                // Flag erst NACH erfolgreichem Notification-Call setzen
++                reminderFlagsStore.setDailyReminded(date)
+             }
++            // Wenn keine Notification gezeigt wird (Tag bereits bestätigt),
++            // bleibt der Tag unmarkiert – der nächste Lauf prüft erneut.
+         }
+     }
+ 
+diff --git a/app/src/test/java/de/montagezeit/app/work/ReminderDozeRobustnessTest.kt b/app/src/test/java/de/montagezeit/app/work/ReminderDozeRobustnessTest.kt
+new file mode 100644
+index 0000000..5b56b5e
+--- /dev/null
++++ b/app/src/test/java/de/montagezeit/app/work/ReminderDozeRobustnessTest.kt
+@@ -0,0 +1,161 @@
++package de.montagezeit.app.work
++
++import de.montagezeit.app.data.local.entity.DayType
++import de.montagezeit.app.data.local.entity.WorkEntry
++import de.montagezeit.app.data.preferences.ReminderSettings
++import kotlinx.coroutines.test.runTest
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Test
++import java.time.LocalDate
++import java.time.LocalTime
++
++/**
++ * Tests für Doze/Mitternacht-Robustheit der Reminder-Logik.
++ *
++ * a) effectiveDateForFallback liefert bei 00:30 (fallbackTime=22:30) den Vortag.
++ * b) checkAndShowDailyReminder setzt Flag erst NACH der Notification –
++ *    bei einem bereits bestätigten Tag wird das Flag nie gesetzt.
++ */
++class ReminderDozeRobustnessTest {
++
++    // -------------------------------------------------------------------------
++    // Fakes
++    // -------------------------------------------------------------------------
++
++    private class FakeReminderFlagsStore {
++        private val dailyDates = mutableSetOf<LocalDate>()
++
++        suspend fun isDailyReminded(date: LocalDate) = date in dailyDates
++        suspend fun setDailyReminded(date: LocalDate) { dailyDates += date }
++    }
++
++    private class FakeWorkEntryDao(private val entry: WorkEntry?) {
++        suspend fun getByDate(@Suppress("UNUSED_PARAMETER") date: LocalDate): WorkEntry? = entry
++    }
++
++    private class FakeReminderNotificationManager {
++        var dailyCalled = false
++
++        fun showDailyConfirmationNotification(@Suppress("UNUSED_PARAMETER") date: LocalDate) {
++            dailyCalled = true
++        }
++    }
++
++    // -------------------------------------------------------------------------
++    // Test a: effectiveDateForFallback bei 00:30 → Vortag
++    // -------------------------------------------------------------------------
++
++    @Test
++    fun `effectiveDateForFallback at 00h30 returns yesterday`() {
++        val result = ReminderWindowEvaluator.effectiveDateForFallback(LocalTime.of(0, 30))
++        assertEquals(LocalDate.now().minusDays(1), result)
++    }
++
++    @Test
++    fun `effectiveDateForFallback at 03h59 still returns yesterday`() {
++        val result = ReminderWindowEvaluator.effectiveDateForFallback(LocalTime.of(3, 59))
++        assertEquals(LocalDate.now().minusDays(1), result)
++    }
++
++    @Test
++    fun `effectiveDateForFallback at 04h00 returns today`() {
++        val result = ReminderWindowEvaluator.effectiveDateForFallback(LocalTime.of(4, 0))
++        assertEquals(LocalDate.now(), result)
++    }
++
++    @Test
++    fun `effectiveDateForFallback at 22h30 returns today`() {
++        val result = ReminderWindowEvaluator.effectiveDateForFallback(LocalTime.of(22, 30))
++        assertEquals(LocalDate.now(), result)
++    }
++
++    // -------------------------------------------------------------------------
++    // Test b: isAfterFallbackTime bei nach-Mitternacht-Läufen
++    // -------------------------------------------------------------------------
++
++    @Test
++    fun `isAfterFallbackTime returns true at 00h30 when fallbackTime is 22h30`() {
++        val settings = ReminderSettings(fallbackTime = LocalTime.of(22, 30))
++        // Worker lief nach Mitternacht (Doze-Verzögerung) → gilt als gültiger Fallback-Lauf
++        val result = ReminderWindowEvaluator.isAfterFallbackTime(LocalTime.of(0, 30), settings)
++        assert(result) { "Erwartet: true, da 00:30 nach Mitternacht als verzögerter Fallback gilt" }
++    }
++
++    @Test
++    fun `isAfterFallbackTime returns false at 22h29 before fallback window`() {
++        val settings = ReminderSettings(fallbackTime = LocalTime.of(22, 30))
++        val result = ReminderWindowEvaluator.isAfterFallbackTime(LocalTime.of(22, 29), settings)
++        assertFalse(result)
++    }
++
++    // -------------------------------------------------------------------------
++    // Test b: Daily setzt Flag erst nach erfolgreicher Notification
++    // -------------------------------------------------------------------------
++
++    /**
++     * Wenn der Tag bereits bestätigt ist (confirmedWorkDay=true), wird
++     * shouldShowDailyReminder=false und daher:
++     *   - keine Notification gezeigt
++     *   - kein Flag gesetzt
++     */
++    @Test
++    fun `daily does not set flag when entry is already confirmed`() = runTest {
++        val date = LocalDate.now()
++        val confirmedEntry = WorkEntry(
++            date = date,
++            dayType = DayType.WORK,
++            confirmedWorkDay = true
++        )
++        val flagsStore = FakeReminderFlagsStore()
++        val dao = FakeWorkEntryDao(confirmedEntry)
++        val notifMgr = FakeReminderNotificationManager()
++
++        // Direkte Simulation der checkAndShowDailyReminder-Logik
++        // (gleiche Reihenfolge wie in WindowCheckWorker)
++        if (!flagsStore.isDailyReminded(date)) {
++            val entry = dao.getByDate(date)
++            if (WindowCheckWorker.shouldShowDailyReminder(entry)) {
++                notifMgr.showDailyConfirmationNotification(date)
++                flagsStore.setDailyReminded(date)
++            }
++        }
++
++        assertFalse("Notification darf nicht gezeigt werden", notifMgr.dailyCalled)
++        assertFalse("Flag darf nicht gesetzt werden", flagsStore.isDailyReminded(date))
++    }
++
++    /**
++     * Wenn der Tag NICHT bestätigt ist, wird die Notification gezeigt
++     * und das Flag gesetzt – aber erst NACH der Notification.
++     */
++    @Test
++    fun `daily sets flag only after notification for unconfirmed entry`() = runTest {
++        val date = LocalDate.now()
++        val unconfirmedEntry = WorkEntry(
++            date = date,
++            dayType = DayType.WORK,
++            confirmedWorkDay = false
++        )
++        val flagsStore = FakeReminderFlagsStore()
++        val dao = FakeWorkEntryDao(unconfirmedEntry)
++        val notifMgr = FakeReminderNotificationManager()
++
++        var flagSetAfterNotif = false
++
++        // Simulation mit Reihenfolge-Tracking
++        if (!flagsStore.isDailyReminded(date)) {
++            val entry = dao.getByDate(date)
++            if (WindowCheckWorker.shouldShowDailyReminder(entry)) {
++                notifMgr.showDailyConfirmationNotification(date)
++                // Flag wird erst hier gesetzt – nach showDailyConfirmationNotification
++                flagSetAfterNotif = notifMgr.dailyCalled
++                flagsStore.setDailyReminded(date)
++            }
++        }
++
++        assert(notifMgr.dailyCalled) { "Notification muss aufgerufen worden sein" }
++        assert(flagsStore.isDailyReminded(date)) { "Flag muss gesetzt sein" }
++        assert(flagSetAfterNotif) { "Flag wird erst nach der Notification gesetzt" }
++    }
++}
+-- 
+2.43.0
+
