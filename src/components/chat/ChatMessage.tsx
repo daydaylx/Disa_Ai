@@ -60,9 +60,10 @@ function CodeBlock({ children, language }: { children: string; language?: string
         <button
           onClick={handleCopy}
           className={cn(
-            "p-1 text-ink-tertiary hover:text-ink-primary transition-colors action-button-hover",
+            "min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary transition-colors action-button-hover rounded-lg focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat",
             copied && "animate-copy-feedback",
           )}
+          aria-label="Code kopieren"
         >
           {copied ? (
             <Check className="h-3.5 w-3.5 text-status-success" />
@@ -303,7 +304,7 @@ export function ChatMessage({
         {!isEditing && (
           <div
             className={cn(
-              "flex items-center gap-1 mt-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity",
+              "flex items-center gap-1 mt-1 opacity-100 transition-opacity",
               isUser ? "justify-end" : "justify-start",
             )}
           >
