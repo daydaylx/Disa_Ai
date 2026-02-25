@@ -88,10 +88,10 @@ describe("ModelsCatalog", () => {
     );
   };
 
-  it("should render the models catalog header", () => {
+  it("should render the models catalog summary bar", () => {
     renderWithProviders(<ModelsCatalog />);
 
-    expect(screen.getByRole("heading", { level: 1, name: /Modelle/i })).toBeInTheDocument();
+    expect(screen.getByText(/2 Modelle · 0 Favoriten/i)).toBeInTheDocument();
   });
 
   it("should display model cards", async () => {
@@ -110,23 +110,6 @@ describe("ModelsCatalog", () => {
     // Check that Details buttons are present for expanding model information
     const detailsButtons = screen.getAllByText("Details");
     expect(detailsButtons.length).toBe(2);
-  });
-
-  it("should filter models when searching", async () => {
-    renderWithProviders(<ModelsCatalog />);
-
-    // Find search input
-    const searchInput = screen.getByPlaceholderText(/Suchen|Search/i);
-    expect(searchInput).toBeInTheDocument();
-
-    // Type in search
-    fireEvent.change(searchInput, { target: { value: "GPT" } });
-
-    // Should only show GPT model
-    await waitFor(() => {
-      expect(screen.getByText("GPT-4o Mini")).toBeInTheDocument();
-      expect(screen.queryByText("Claude 3 Haiku")).not.toBeInTheDocument();
-    });
   });
 
   it("should show loading state", () => {

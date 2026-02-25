@@ -48,8 +48,6 @@ import {
   FilterSkeleton,
   HeaderSkeleton,
   ListRow,
-  PageHeader,
-  SearchInput,
 } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -166,7 +164,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const navigate = useNavigate();
 
   // Local state
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
@@ -213,7 +210,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const filteredRoles = useFilteredList<EnhancedRole>(
     enhancedRoles,
     filters,
-    searchQuery,
+    "",
     filterFnCallback,
     sortFnCallback,
   );
@@ -237,14 +234,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage, navigate],
   );
 
-  const hasActiveFilters = selectedCategory || filters.showFavoritesOnly || searchQuery;
+  const hasActiveFilters = selectedCategory || filters.showFavoritesOnly;
   const selectedRole = useMemo(
     () => filteredRoles.find((role) => role.id === selectedRoleId) ?? null,
     [filteredRoles, selectedRoleId],
   );
 
   const clearFilters = () => {
-    setSearchQuery("");
     setSelectedCategory(null);
     setFilters((prev) => ({ ...prev, showFavoritesOnly: false }));
   };
@@ -279,34 +275,32 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-header lg:top-header-lg z-sticky-content pt-4">
+      <div className="flex-none pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Roles accent (Pink) or Selected Category */}
           <div
             className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
             style={{ background: headerTheme.roleGradient }}
           />
 
-          <div className="relative space-y-2xs px-xspy-4">
-            <PageHeader
-              title="Rollen"
-              description={`${filteredRoles.length} von ${roles.length} verfügbar`}
-              className="mb-0"
-            />
+          <div className="relative space-y-3 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-ink-secondary">
+                {filteredRoles.length} von {roles.length} Rollen verfügbar
+              </div>
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
+                >
+                  <RotateCcw className="h-3 w-3 mr-1" /> Reset
+                </Button>
+              )}
+            </div>
 
-            {/* Search */}
-            <SearchInput
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Rolle suchen..."
-              className="w-full bg-surface-2/50 border-white/10 focus:border-accent-roles/40 focus:ring-accent-roles/20"
-            />
-
-            {/* Filter Pills */}
             <div className="relative">
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-                {/* Favorites Toggle */}
                 <div
                   onClick={() =>
                     setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
@@ -337,7 +331,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
                 <div className="w-px h-4 bg-white/10 flex-shrink-0" />
 
-                {/* Category Filters */}
                 {CATEGORY_ORDER.map((cat) => {
                   const isSelected = selectedCategory === cat;
                   const catTheme = getCategoryStyle(cat);
@@ -368,23 +361,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent lg:hidden" />
               <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent lg:hidden" />
             </div>
-            {/* Active Filters Summary */}
-            {hasActiveFilters && (
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-ink-tertiary">
-                  {filteredRoles.length} Ergebnisse
-                  {selectedCategory && ` in ${selectedCategory}`}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
-                >
-                  <RotateCcw className="h-3 w-3 mr-1" /> Reset
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -98,6 +98,7 @@ export function UnifiedInputBar({
     (option) => option.value === String(settings.creativity),
   );
   const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
+  const [showExtraControls, setShowExtraControls] = React.useState(false);
 
   const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const modelLabel =
@@ -173,7 +174,7 @@ export function UnifiedInputBar({
 
       {/* Context Pills */}
       <div className="w-full px-1">
-        <div className="flex w-full items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-1 -mx-1 mask-linear-fade">
+        <div className="flex w-full items-center gap-2 overflow-hidden px-1">
           {/* Role Dropdown */}
           <Select
             value={activeRole?.id || "standard"}
@@ -209,48 +210,13 @@ export function UnifiedInputBar({
           </Select>
 
           {/* Style Dropdown */}
-          <Select
-            value={settings.discussionPreset}
-            onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
+          <button
+            type="button"
+            onClick={() => setShowExtraControls((prev) => !prev)}
+            className="flex h-9 items-center justify-center rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium tracking-tight text-ink-secondary transition-colors hover:border-white/12 hover:text-ink-primary"
           >
-            <SelectTrigger
-              aria-label="Stil auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "50ms" }}
-            >
-              <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{discussionPresetLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="w-64">
-              {discussionPresetOptions.map((preset) => (
-                <SelectItem key={preset.key} value={preset.key}>
-                  {preset.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Creativity Dropdown */}
-          <Select
-            value={String(settings.creativity)}
-            onValueChange={(value) => setCreativity(Number(value))}
-          >
-            <SelectTrigger
-              aria-label="Kreativität auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "100ms" }}
-            >
-              <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{creativityShortLabel}</span>
-            </SelectTrigger>
-            <SelectContent className="w-64">
-              {creativityOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
+          </button>
 
           {/* Model Dropdown */}
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
@@ -271,6 +237,49 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
         </div>
+        {showExtraControls && (
+          <div className="mt-2 flex w-full items-center gap-2 overflow-hidden px-1">
+            <Select
+              value={settings.discussionPreset}
+              onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
+            >
+              <SelectTrigger
+                aria-label="Stil auswählen"
+                className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+              >
+                <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                <span className="whitespace-nowrap">{discussionPresetLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="w-64">
+                {discussionPresetOptions.map((preset) => (
+                  <SelectItem key={preset.key} value={preset.key}>
+                    {preset.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={String(settings.creativity)}
+              onValueChange={(value) => setCreativity(Number(value))}
+            >
+              <SelectTrigger
+                aria-label="Kreativität auswählen"
+                className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+              >
+                <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                <span className="whitespace-nowrap">{creativityShortLabel}</span>
+              </SelectTrigger>
+              <SelectContent className="w-64">
+                {creativityOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
     </div>
   );

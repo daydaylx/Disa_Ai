@@ -87,13 +87,16 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität)", () => {
+    it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität) nach Entfaltung", async () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       // Rollen-Auswahl
       expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
 
       // Stil-Auswahl
+      const toggle = screen.getByRole("button", { name: /Mehr Optionen/i });
+      await userEvent.click(toggle);
+
       expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
 
       // Kreativitäts-Auswahl
@@ -231,10 +234,12 @@ describe("UnifiedInputBar", () => {
       expect(button).toHaveAttribute("aria-label", "Senden");
     });
 
-    it("hat korrekte aria-labels auf den Selektoren", () => {
+    it("hat korrekte aria-labels auf den Selektoren", async () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
+      const toggle = screen.getByRole("button", { name: /Mehr Optionen/i });
+      await userEvent.click(toggle);
       expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
       expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
       // Model selector has been moved to settings

@@ -91,10 +91,10 @@ describe("EnhancedRolesInterface", () => {
     );
   };
 
-  it("should render the roles interface header", () => {
+  it("should display the roles header summary", () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
-    expect(screen.getByRole("heading", { level: 1, name: /Rollen/i })).toBeInTheDocument();
+    expect(screen.getByText(/2 von 2 Rollen verfügbar/i)).toBeInTheDocument();
   });
 
   it("should display role cards", async () => {
@@ -137,23 +137,6 @@ describe("EnhancedRolesInterface", () => {
     await waitFor(() => {
       expect(screen.getByText("Kreativer Assistent")).toBeInTheDocument();
       expect(screen.queryByText("Code Experte")).not.toBeInTheDocument();
-    });
-  });
-
-  it("should search roles by name or description", async () => {
-    renderWithProviders(<EnhancedRolesInterface />);
-
-    // Find search input
-    const searchInput = screen.getByPlaceholderText(/Suchen|Search/i);
-    expect(searchInput).toBeInTheDocument();
-
-    // Type in search
-    fireEvent.change(searchInput, { target: { value: "Code" } });
-
-    // Should only show code-related role
-    await waitFor(() => {
-      expect(screen.getByText("Code Experte")).toBeInTheDocument();
-      expect(screen.queryByText("Kreativer Assistent")).not.toBeInTheDocument();
     });
   });
 

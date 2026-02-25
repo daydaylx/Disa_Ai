@@ -22,17 +22,7 @@ import {
 } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import {
-  Badge,
-  BottomSheet,
-  Button,
-  CardSkeleton,
-  EmptyState,
-  ListRow,
-  PageHeader,
-  PullToRefresh,
-  SearchInput,
-} from "@/ui";
+import { Badge, BottomSheet, Button, CardSkeleton, EmptyState, ListRow, PullToRefresh } from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -160,7 +150,6 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const { settings, setPreferredModel } = useSettings();
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
   const { models: catalog, loading, error, refresh } = useModelCatalog();
-  const [search, setSearch] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
@@ -175,23 +164,14 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
   const filtered = useMemo(() => {
     if (!catalog) return [] as ModelEntry[];
-    const query = search.trim().toLowerCase();
 
-    // Sort: Favorites first, then by name
-    const sorted = [...catalog].sort((a, b) => {
+    return [...catalog].sort((a, b) => {
       const favA = isModelFavorite(a.id) ? 1 : 0;
       const favB = isModelFavorite(b.id) ? 1 : 0;
       if (favA !== favB) return favB - favA;
       return (a.label || a.id).localeCompare(b.label || b.id);
     });
-
-    if (!query) return sorted;
-    return sorted.filter((entry) => {
-      const haystack =
-        `${entry.id} ${entry.label ?? ""} ${entry.provider ?? ""} ${entry.tags.join(" ")}`.toLowerCase();
-      return haystack.includes(query);
-    });
-  }, [catalog, search, isModelFavorite]);
+  }, [catalog, isModelFavorite]);
 
   const activeModelId = settings.preferredModelId;
   const isLoading = loading || isRefreshing;
@@ -211,22 +191,17 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-header lg:top-header-lg z-sticky-content pt-3 sm:pt-4">
+      <div className="flex-none pt-3 sm:pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Based on active model's provider */}
           <div
             className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
             style={{ background: headerTheme.roleGradient }}
           />
-
-          <div className="relative space-y-2xs px-2xspy-3 sm:px-4 sm:py-4">
-            <div className="flex items-start justify-between">
-              <PageHeader
-                title="Modelle"
-                description={`${catalog?.length ?? 0} verfügbar · ${favorites.models.items.length} Favoriten`}
-                className="mb-0 flex-1"
-              />
+          <div className="relative space-y-3 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-ink-secondary">
+                {catalog?.length ?? 0} Modelle · {favorites.models.items.length} Favoriten
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
@@ -239,16 +214,6 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                 <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
               </Button>
             </div>
-
-            <SearchInput
-              value={search}
-              onChange={setSearch}
-              placeholder="Modell suchen..."
-              className={cn(
-                "w-full bg-surface-2/50 border-white/10 transition-colors",
-                `focus:ring-opacity-20 ${headerTheme.text.replace("text-", "focus:border-")} ${headerTheme.text.replace("text-", "focus:ring-")}`,
-              )}
-            />
           </div>
         </div>
       </div>
