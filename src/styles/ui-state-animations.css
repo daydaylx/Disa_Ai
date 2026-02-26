@@ -609,7 +609,14 @@
   }
 }
 
+.input-focus-animation {
+  transition: box-shadow var(--disa-duration-medium) var(--disa-ease-standard);
+}
+
 .input-focus-animation:focus-within {
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, 0.25),
+    0 0 20px rgba(139, 92, 246, 0.1);
   animation: input-focus-scale var(--disa-duration-fast) var(--disa-ease-standard);
 }
 

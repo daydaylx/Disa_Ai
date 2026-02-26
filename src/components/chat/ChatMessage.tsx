@@ -260,10 +260,10 @@ export function ChatMessage({
         <div
           {...longPressReactHandlers}
           className={cn(
-            "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-3.5 text-[0.98rem] leading-7 shadow-sm ring-1 ring-white/5",
+            "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-3.5 text-[0.98rem] leading-7",
             isUser
-              ? "ml-auto rounded-tr-sm border-accent-chat/20 bg-accent-chat-surface/65 text-ink-primary"
-              : "mr-auto rounded-tl-sm border-white/10 bg-surface-card text-ink-primary",
+              ? "ml-auto rounded-tr-sm border-accent-chat/35 bg-accent-chat-surface/65 text-ink-primary shadow-[0_0_0_1px_rgba(139,92,246,0.12),0_4px_16px_rgba(139,92,246,0.1)] ring-1 ring-white/5"
+              : "mr-auto rounded-tl-sm border-white/15 bg-surface-card/80 backdrop-blur-sm text-ink-primary shadow-md ring-1 ring-inset ring-white/[0.07]",
           )}
           data-testid="message-bubble"
         >

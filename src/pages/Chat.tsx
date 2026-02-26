@@ -292,22 +292,22 @@ export default function Chat() {
                       className="absolute w-52 h-52 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139,92,246,0.16) 0%, rgba(56,189,248,0.07) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(56,189,248,0.09) 50%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />
                     {/* Pulse ring 1 */}
                     <div
-                      className="absolute w-36 h-36 rounded-full border border-brand-primary/20 pointer-events-none motion-safe:animate-ping-slow"
+                      className="absolute w-36 h-36 rounded-full border border-brand-primary/28 pointer-events-none motion-safe:animate-ping-slow"
                       aria-hidden="true"
                     />
                     {/* Pulse ring 2 – staggered */}
                     <div
-                      className="absolute w-36 h-36 rounded-full border border-accent-chat/15 pointer-events-none motion-safe:animate-ping-slow"
+                      className="absolute w-36 h-36 rounded-full border border-accent-chat/22 pointer-events-none motion-safe:animate-ping-slow"
                       style={{ animationDelay: "1.5s" }}
                       aria-hidden="true"
                     />
-                    <AnimatedBrandmark className="relative mx-auto scale-[0.75]" />
+                    <AnimatedBrandmark className="relative mx-auto scale-[0.85]" />
                   </div>
                 ) : (
                   <VirtualizedMessageList
