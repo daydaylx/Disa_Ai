@@ -25,12 +25,7 @@ export function ChatLayout({
 }: ChatLayoutProps) {
   return (
     <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-bg-app text-ink-primary selection:bg-accent-primary/30">
-      <header className="relative z-header h-header overflow-hidden border-b border-white/[0.06] bg-surface-2/90 shadow-[0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-sm sm:h-16">
-        {/* Subtle brand gradient shimmer across the header */}
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-brand-primary/[0.04] via-transparent to-accent-chat/[0.03] pointer-events-none"
-          aria-hidden="true"
-        />
+      <header className="relative z-header h-header overflow-hidden bg-transparent sm:h-16">
         <div className="relative z-content mx-auto flex h-full w-full max-w-5xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button
