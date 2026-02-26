@@ -136,7 +136,9 @@ export function UnifiedInputBar({
             size="icon"
             className={cn(
               "mb-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/10 transition-all duration-150",
-              !value.trim() && !isLoading && "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
+              !value.trim() &&
+                !isLoading &&
+                "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
               value.trim() &&
                 !isLoading &&
                 "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
