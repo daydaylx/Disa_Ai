@@ -292,7 +292,7 @@ export default function Chat() {
                       className="absolute w-64 h-64 rounded-full blur-3xl pointer-events-none"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(56,189,248,0.03) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(56,189,248,0.05) 50%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />

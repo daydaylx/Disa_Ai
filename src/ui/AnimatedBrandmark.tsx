@@ -19,6 +19,42 @@ interface AnimatedBrandmarkProps {
 export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) => {
   return (
     <div className={cn("relative inline-block", className)}>
+      {/* Aurora glow blobs */}
+      <div aria-hidden="true" className="pointer-events-none select-none">
+        {/* Violet blob – top-left */}
+        <div
+          className="absolute rounded-full blur-2xl motion-safe:animate-aurora-a"
+          style={{
+            width: "160px",
+            height: "80px",
+            background: "rgba(139,92,246,0.22)",
+            top: "-30%",
+            left: "-40%",
+          }}
+        />
+        {/* Cyan blob – right */}
+        <div
+          className="absolute rounded-full blur-2xl motion-safe:animate-aurora-b"
+          style={{
+            width: "130px",
+            height: "70px",
+            background: "rgba(56,189,248,0.18)",
+            top: "10%",
+            right: "-35%",
+          }}
+        />
+        {/* Fuchsia accent – bottom-center, static */}
+        <div
+          className="absolute rounded-full blur-3xl opacity-10"
+          style={{
+            width: "100px",
+            height: "50px",
+            background: "rgba(244,114,182,0.20)",
+            bottom: "-20%",
+            left: "20%",
+          }}
+        />
+      </div>
       {/* Main text with gradient */}
       <h1
         className={cn(

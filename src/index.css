@@ -682,6 +682,50 @@
     animation: brand-glow 10s ease-in-out infinite;
   }
 
+  /* Aurora glow blobs – soft drifting violet/cyan light behind brandmark */
+  @keyframes aurora-drift-a {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0.22;
+    }
+    33% {
+      transform: translate(-10px, -7px) scale(1.08);
+      opacity: 0.3;
+    }
+    66% {
+      transform: translate(7px, 5px) scale(0.94);
+      opacity: 0.16;
+    }
+  }
+
+  @keyframes aurora-drift-b {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0.18;
+    }
+    40% {
+      transform: translate(9px, 5px) scale(1.06);
+      opacity: 0.26;
+    }
+    70% {
+      transform: translate(-7px, -9px) scale(0.96);
+      opacity: 0.13;
+    }
+  }
+
+  .animate-aurora-a {
+    animation: aurora-drift-a 14s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .animate-aurora-b {
+    animation: aurora-drift-b 18s ease-in-out infinite;
+    animation-delay: -5s;
+    will-change: transform, opacity;
+  }
+
   /* Reduced motion - disable all intro animations */
   @media (prefers-reduced-motion: reduce) {
     body::before,
@@ -705,9 +749,11 @@
     .animate-brand-breathe,
     .animate-brand-shimmer,
     .animate-brand-shimmer-delayed,
-    .animate-brand-glow {
+    .animate-brand-glow,
+    .animate-aurora-a,
+    .animate-aurora-b {
       animation: none !important;
-      opacity: 1 !important;
+      opacity: 0.12 !important;
       transform: none !important;
     }
   }
