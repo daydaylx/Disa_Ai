@@ -3,10 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
+import { useModelCatalog } from "@/contexts/ModelCatalogContext";
+import { useRoles } from "@/contexts/RolesContext";
 import { type ChatApiStatus } from "@/hooks/useChat";
+import { useMemory } from "@/hooks/useMemory";
+import { useSettings } from "@/hooks/useSettings";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
+import { Cpu, HardDrive, History, Plus, SlidersHorizontal, User } from "@/lib/icons";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
-import { HistoryFAB } from "@/ui/HistoryFAB";
+import { BottomSheet } from "@/ui/BottomSheet";
+import { Button } from "@/ui/Button";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
@@ -62,6 +68,12 @@ export default function Chat() {
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
   const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
+  const [isContextSheetOpen, setIsContextSheetOpen] = useState(false);
+
+  const { activeRole } = useRoles();
+  const { isEnabled: memoryEnabled } = useMemory();
+  const { settings } = useSettings();
+  const { models } = useModelCatalog();
 
   // Dismissed status banners (reset on successful message send)
   const [dismissedBanners, setDismissedBanners] = useState<Set<ChatApiStatus>>(new Set());
@@ -86,6 +98,7 @@ export default function Chat() {
     if (uiState.isHistoryOpen) {
       closeHistory();
     }
+    setIsContextSheetOpen(false);
     openMenu();
   }, [closeHistory, openMenu, uiState.isHistoryOpen]);
 
@@ -93,6 +106,7 @@ export default function Chat() {
     if (!uiState.isHistoryOpen && isMenuOpen) {
       closeMenu();
     }
+    setIsContextSheetOpen(false);
     toggleHistory();
   }, [closeMenu, isMenuOpen, toggleHistory, uiState.isHistoryOpen]);
 
@@ -135,6 +149,15 @@ export default function Chat() {
     onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
 
+  const selectedModel = models?.find((model) => model.id === settings.preferredModelId);
+  const modelLabel =
+    selectedModel?.label?.split("/").pop() ||
+    selectedModel?.id?.split("/").pop() ||
+    settings.preferredModelId.split("/").pop() ||
+    "Automatisch";
+  const roleLabel = activeRole?.name || "Standard";
+  const memoryLabel = memoryEnabled ? "Aktiv" : "Aus";
+
   // Calculate logo state for presence animation
   const getLogoState = (): LogoState => {
     if (chatLogic.error) return "error";
@@ -175,6 +198,20 @@ export default function Chat() {
     closeHistory();
     closeMenu();
   }, [chatLogic, closeHistory, closeMenu]);
+
+  const closeContextSheet = useCallback(() => {
+    setIsContextSheetOpen(false);
+  }, []);
+
+  const navigateFromContext = useCallback(
+    (path: string) => {
+      closeContextSheet();
+      closeHistory();
+      closeMenu();
+      void navigate(path);
+    },
+    [closeContextSheet, closeHistory, closeMenu, navigate],
+  );
 
   // Scroll to bottom handler
   const scrollToBottom = useCallback(() => {
@@ -250,6 +287,90 @@ export default function Chat() {
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={handleOpenMenu}
         logoState={getLogoState()}
+        headerActions={
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant={uiState.isHistoryOpen ? "secondary" : "ghost"}
+              size="icon"
+              onClick={handleToggleHistory}
+              aria-label={uiState.isHistoryOpen ? "Verlauf schließen" : "Verlauf öffnen"}
+              className={uiState.isHistoryOpen ? "text-ink-primary" : "text-ink-secondary"}
+            >
+              <History className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleStartNewChat}
+              aria-label="Neue Unterhaltung starten"
+              className="text-ink-secondary hover:text-ink-primary"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        }
+        subHeader={
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+            <button
+              type="button"
+              onClick={() => navigateFromContext("/models")}
+              className="group inline-flex min-h-[2.75rem] items-center gap-2.5 rounded-2xl border border-white/12 bg-surface-1/78 px-3.5 py-2 text-ink-primary transition-colors hover:border-accent-models/38 hover:bg-surface-1/88"
+              aria-label={`Aktives Modell: ${modelLabel}`}
+            >
+              <span className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-accent-models/14 text-accent-models">
+                <Cpu className="h-3.5 w-3.5" />
+              </span>
+              <span className="flex min-w-0 flex-col text-left">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Modell
+                </span>
+                <span className="truncate text-[0.78rem] font-medium text-ink-primary">
+                  {modelLabel}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigateFromContext("/roles")}
+              className="group inline-flex min-h-[2.75rem] items-center gap-2.5 rounded-2xl border border-white/12 bg-surface-1/78 px-3.5 py-2 text-ink-primary transition-colors hover:border-accent-roles/38 hover:bg-surface-1/88"
+              aria-label={`Aktive Rolle: ${roleLabel}`}
+            >
+              <span className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-accent-roles/14 text-accent-roles">
+                <User className="h-3.5 w-3.5" />
+              </span>
+              <span className="flex min-w-0 flex-col text-left">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Rolle
+                </span>
+                <span className="truncate text-[0.78rem] font-medium text-ink-primary">
+                  {roleLabel}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                closeHistory();
+                closeMenu();
+                setIsContextSheetOpen(true);
+              }}
+              className="inline-flex min-h-[2.75rem] items-center gap-2.5 rounded-2xl border border-white/12 bg-surface-1/78 px-3.5 py-2 text-ink-secondary transition-colors hover:border-white/22 hover:bg-surface-1/88 hover:text-ink-primary"
+              aria-label="Weitere Chat-Optionen"
+            >
+              <span className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/8">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+              </span>
+              <span className="flex min-w-0 flex-col text-left">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Kontext
+                </span>
+                <span className="truncate text-[0.78rem] font-medium text-ink-secondary">Mehr</span>
+              </span>
+            </button>
+          </div>
+        }
       >
         <div
           {...swipeHandlers}
@@ -273,7 +394,7 @@ export default function Chat() {
           {/* Messages Area */}
           <div
             ref={chatScrollRef}
-            className="flex-1 overflow-y-auto min-h-0 pt-3"
+            className="flex-1 min-h-0 overflow-y-auto pt-2"
             role="log"
             aria-label="Chat messages"
             data-scroll-owner="active"
@@ -286,28 +407,63 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="relative flex flex-1 items-center justify-center px-4">
-                    {/* Atmospheric glow orb */}
-                    <div
-                      className="absolute w-52 h-52 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(139,92,246,0.16) 0%, rgba(56,189,248,0.07) 50%, transparent 70%)",
-                      }}
-                      aria-hidden="true"
-                    />
-                    {/* Pulse ring 1 */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-brand-primary/20 pointer-events-none motion-safe:animate-ping-slow"
-                      aria-hidden="true"
-                    />
-                    {/* Pulse ring 2 – staggered */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-accent-chat/15 pointer-events-none motion-safe:animate-ping-slow"
-                      style={{ animationDelay: "1.5s" }}
-                      aria-hidden="true"
-                    />
-                    <AnimatedBrandmark className="relative mx-auto scale-[0.75]" />
+                  <div className="relative flex flex-1 items-center justify-center px-2">
+                    <section className="animate-fade-in-scale relative mx-auto w-full max-w-xl overflow-hidden rounded-[1.5rem] border border-white/12 bg-surface-1/78 px-5 py-6 shadow-[0_14px_36px_rgba(0,0,0,0.3)] backdrop-blur-sm">
+                      <div
+                        className="pointer-events-none absolute inset-x-0 top-0 h-20"
+                        style={{
+                          background:
+                            "linear-gradient(180deg, rgba(139,92,246,0.15) 0%, rgba(139,92,246,0.04) 56%, transparent 100%)",
+                        }}
+                        aria-hidden="true"
+                      />
+
+                      <AnimatedBrandmark className="relative mx-auto scale-[0.68]" />
+
+                      <div className="relative mt-4 text-center">
+                        <h2 className="text-xl font-semibold tracking-tight text-ink-primary">
+                          Womit kann ich dir helfen?
+                        </h2>
+                        <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-secondary">
+                          Stell eine Frage oder starte mit einer kurzen Idee.
+                        </p>
+                      </div>
+
+                      <div className="relative mt-6 grid gap-2.5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            chatLogic.handleStarterClick(
+                              "Schreib mir ein kurzes Gedicht ueber den Mond.",
+                            )
+                          }
+                          className="group inline-flex min-h-[2.75rem] items-center gap-2 rounded-xl border border-white/14 bg-surface-2/72 px-4 py-3 text-left text-sm font-medium text-ink-primary transition-colors hover:border-accent-chat/30 hover:bg-surface-2/85"
+                        >
+                          <span className="h-5 w-1 rounded-full bg-accent-chat/80 transition-opacity group-hover:opacity-100" />
+                          Schreib mir ein kurzes Gedicht.
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            chatLogic.handleStarterClick(
+                              "Erklaere mir ein aktuelles Thema in einfachen Worten mit Beispielen.",
+                            )
+                          }
+                          className="group inline-flex min-h-[2.75rem] items-center gap-2 rounded-xl border border-white/14 bg-surface-2/72 px-4 py-3 text-left text-sm font-medium text-ink-primary transition-colors hover:border-accent-chat/30 hover:bg-surface-2/85"
+                        >
+                          <span className="h-5 w-1 rounded-full bg-accent-chat/80 transition-opacity group-hover:opacity-100" />
+                          Erklaere ein Thema einfach.
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => navigateFromContext("/themen")}
+                        className="relative mt-5 inline-flex min-h-[2.75rem] items-center justify-center rounded-full border border-white/14 bg-surface-2/58 px-5 text-sm font-medium text-ink-secondary transition-colors hover:border-white/22 hover:text-ink-primary"
+                      >
+                        Mehr Inspiration in Quickstarts
+                      </button>
+                    </section>
                   </div>
                 ) : (
                   <VirtualizedMessageList
@@ -345,23 +501,103 @@ export default function Chat() {
             </div>
           </div>
 
-          {/* FABs: History (left) and Scroll (right) */}
+          {/* FAB: Scroll to bottom */}
           {!chatLogic.isEmpty && (
-            <>
-              <HistoryFAB
-                onClick={handleToggleHistory}
-                isOpen={uiState.isHistoryOpen}
-                conversationCount={chatLogic.conversations?.length ?? 0}
-              />
-              <ScrollToBottom
-                visible={showScrollButton}
-                onClick={scrollToBottom}
-                newMessageCount={newMessageCount}
-              />
-            </>
+            <ScrollToBottom
+              visible={showScrollButton}
+              onClick={scrollToBottom}
+              newMessageCount={newMessageCount}
+            />
           )}
         </div>
       </ChatLayout>
+
+      <BottomSheet
+        open={isContextSheetOpen}
+        onClose={closeContextSheet}
+        title="Chat-Kontext"
+        description="Schnell zu den wichtigsten Einstellungen wechseln."
+      >
+        <div className="space-y-2">
+          <button
+            type="button"
+            onClick={() => navigateFromContext("/models")}
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/12 bg-surface-1/72 px-3.5 py-3 text-left transition-colors hover:border-accent-models/32 hover:bg-surface-1/82"
+          >
+            <span className="inline-flex min-w-0 items-center gap-2.5 text-ink-primary">
+              <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-accent-models/14 text-accent-models">
+                <Cpu className="h-4 w-4" />
+              </span>
+              <span className="flex min-w-0 flex-col">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Modell
+                </span>
+                <span className="truncate text-sm font-medium text-ink-primary">{modelLabel}</span>
+              </span>
+            </span>
+            <span className="text-xs text-ink-secondary">Oeffnen</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateFromContext("/roles")}
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/12 bg-surface-1/72 px-3.5 py-3 text-left transition-colors hover:border-accent-roles/32 hover:bg-surface-1/82"
+          >
+            <span className="inline-flex min-w-0 items-center gap-2.5 text-ink-primary">
+              <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-accent-roles/14 text-accent-roles">
+                <User className="h-4 w-4" />
+              </span>
+              <span className="flex min-w-0 flex-col">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Rolle
+                </span>
+                <span className="truncate text-sm font-medium text-ink-primary">{roleLabel}</span>
+              </span>
+            </span>
+            <span className="text-xs text-ink-secondary">Oeffnen</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateFromContext("/settings/memory")}
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/12 bg-surface-1/72 px-3.5 py-3 text-left transition-colors hover:border-status-success/32 hover:bg-surface-1/82"
+          >
+            <span className="inline-flex min-w-0 items-center gap-2.5 text-ink-primary">
+              <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-status-success/14 text-status-success">
+                <HardDrive className="h-4 w-4" />
+              </span>
+              <span className="flex min-w-0 flex-col">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Memory
+                </span>
+                <span className="truncate text-sm font-medium text-ink-primary">{memoryLabel}</span>
+              </span>
+            </span>
+            <span className="text-xs text-ink-secondary">Oeffnen</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateFromContext("/settings/behavior")}
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/12 bg-surface-1/72 px-3.5 py-3 text-left transition-colors hover:border-accent-primary/32 hover:bg-surface-1/82"
+          >
+            <span className="inline-flex min-w-0 items-center gap-2.5 text-ink-primary">
+              <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-accent-primary/14 text-accent-primary">
+                <SlidersHorizontal className="h-4 w-4" />
+              </span>
+              <span className="flex min-w-0 flex-col">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                  Stil
+                </span>
+                <span className="truncate text-sm font-medium text-ink-primary">
+                  Kreativitaet und Verhalten
+                </span>
+              </span>
+            </span>
+            <span className="text-xs text-ink-secondary">Oeffnen</span>
+          </button>
+        </div>
+      </BottomSheet>
 
       {/* Global Menu */}
       <AppMenuDrawer
