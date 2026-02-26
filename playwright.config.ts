@@ -1,17 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const IS_LIVE = process.env.PLAYWRIGHT_LIVE === "1";
-const WEB_SERVER_PORT = process.env.PLAYWRIGHT_WEB_PORT ?? process.env.PLAYWRIGHT_PORT ?? "5173";
-const WEB_SERVER_HOST = process.env.PLAYWRIGHT_WEB_HOST ?? "127.0.0.1";
-const WEB_SERVER_MODE = (process.env.PLAYWRIGHT_WEB_SERVER ?? "auto").toLowerCase();
-const ENABLE_WEB_SERVER =
-  WEB_SERVER_MODE !== "0" && WEB_SERVER_MODE !== "false" && WEB_SERVER_MODE !== "off";
-const LOCAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${WEB_SERVER_PORT}`;
+const PORT = process.env.PLAYWRIGHT_PORT ?? "5173";
+const LOCAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
 const LIVE_BASE_URL = process.env.LIVE_BASE_URL ?? "https://disaai.de";
 const BASE_URL = IS_LIVE ? LIVE_BASE_URL : LOCAL_BASE_URL;
-const WEB_SERVER_COMMAND =
-  process.env.PLAYWRIGHT_WEB_COMMAND ??
-  `npm run dev -- --host=${WEB_SERVER_HOST} --port=${WEB_SERVER_PORT}`;
 
 const projects = [
   {
@@ -83,16 +76,14 @@ export default defineConfig({
 
   webServer: IS_LIVE
     ? undefined
-    : ENABLE_WEB_SERVER
-      ? {
-          command: WEB_SERVER_COMMAND,
-          url: BASE_URL,
-          reuseExistingServer: true,
-          timeout: 120_000, // Mehr Zeit für Server-Start
-          stdout: "pipe", // Reduziert Noise
-          stderr: "pipe",
-        }
-      : undefined,
+    : {
+        command: `npm run dev -- --port=${PORT}`,
+        url: BASE_URL,
+        reuseExistingServer: true,
+        timeout: 120_000, // Mehr Zeit für Server-Start
+        stdout: "pipe", // Reduziert Noise
+        stderr: "pipe",
+      },
   projects,
 
   // Global setup and teardown

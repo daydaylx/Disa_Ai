@@ -321,7 +321,7 @@ export default function Chat() {
                 <Cpu className="h-3.5 w-3.5" />
               </span>
               <span className="flex min-w-0 flex-col text-left">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Modell
                 </span>
                 <span className="truncate text-[0.78rem] font-medium text-ink-primary">
@@ -340,7 +340,7 @@ export default function Chat() {
                 <User className="h-3.5 w-3.5" />
               </span>
               <span className="flex min-w-0 flex-col text-left">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Rolle
                 </span>
                 <span className="truncate text-[0.78rem] font-medium text-ink-primary">
@@ -363,7 +363,7 @@ export default function Chat() {
                 <SlidersHorizontal className="h-3.5 w-3.5" />
               </span>
               <span className="flex min-w-0 flex-col text-left">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Kontext
                 </span>
                 <span className="truncate text-[0.78rem] font-medium text-ink-secondary">Mehr</span>
@@ -529,7 +529,7 @@ export default function Chat() {
                 <Cpu className="h-4 w-4" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Modell
                 </span>
                 <span className="truncate text-sm font-medium text-ink-primary">{modelLabel}</span>
@@ -548,7 +548,7 @@ export default function Chat() {
                 <User className="h-4 w-4" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Rolle
                 </span>
                 <span className="truncate text-sm font-medium text-ink-primary">{roleLabel}</span>
@@ -567,7 +567,7 @@ export default function Chat() {
                 <HardDrive className="h-4 w-4" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Memory
                 </span>
                 <span className="truncate text-sm font-medium text-ink-primary">{memoryLabel}</span>
@@ -586,7 +586,7 @@ export default function Chat() {
                 <SlidersHorizontal className="h-4 w-4" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-tertiary">
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-ink-muted">
                   Stil
                 </span>
                 <span className="truncate text-sm font-medium text-ink-primary">
