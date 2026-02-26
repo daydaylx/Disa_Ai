@@ -23,7 +23,7 @@ export function ChatLayout({
 }: ChatLayoutProps) {
   return (
     <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-bg-app text-ink-primary selection:bg-accent-primary/30">
-      <header className="relative z-header h-header overflow-hidden border-b border-white/8 bg-surface-2/85 shadow-sm backdrop-blur-xl sm:h-16">
+      <header className="relative z-header h-header overflow-hidden bg-transparent sm:h-16">
         <div className="relative z-content mx-auto flex h-full w-full max-w-5xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button
