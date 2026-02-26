@@ -27,9 +27,6 @@ test.describe("Chat Smoke Tests", () => {
     // Prüfe Hauptmenü-Button (korrektes aria-label)
     await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
 
-    // Prüfe Verlauf-Button
-    await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
-
     // Prüfe Eingabefeld
     const input = page.getByTestId("composer-input");
     await expect(input).toBeVisible();
@@ -85,22 +82,19 @@ test.describe("Chat Smoke Tests", () => {
   });
 
   test("should open history panel", async ({ page }) => {
-    const historyButton = page.locator('button[aria-label="Verlauf öffnen"]');
-    await historyButton.click();
+    // HistoryFAB ist nur sichtbar wenn Konversationen existieren.
+    // Stattdessen: History über das Menü öffnen (immer verfügbar)
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
+    await menuButton.click();
 
-    // History-Panel sollte als Dialog sichtbar sein
-    const historyPanel = page.getByRole("dialog");
-    await expect(historyPanel).toBeVisible({ timeout: 10000 });
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(menuDrawer).toBeVisible();
 
-    // Prüfe Tabs im History-Panel - warte explizit auf die Buttons
-    const historyTab = historyPanel.locator("button", { hasText: "Chat‑Verlauf" });
-    const archiveTab = historyPanel.locator("button", { hasText: "Archiv" });
+    const historyLink = menuDrawer.getByRole("link", { name: /^Verlauf\b/i });
+    await historyLink.click();
 
-    await expect(historyTab).toBeVisible({ timeout: 5000 });
-    await expect(archiveTab).toBeVisible({ timeout: 5000 });
-
-    // Panel schließen durch Klick außerhalb
-    await page.mouse.click(10, 10);
+    // History-Seite sollte geladen sein
+    await expect(page).toHaveURL(/\/chat\/history/);
   });
 
   test("should interact with role selector", async ({ page }) => {
