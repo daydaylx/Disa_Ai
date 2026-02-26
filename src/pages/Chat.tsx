@@ -10,6 +10,7 @@ import { HistoryFAB } from "@/ui/HistoryFAB";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { QuickstartChips } from "../components/chat/QuickstartChips";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
@@ -286,28 +287,12 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="relative flex flex-1 items-center justify-center px-4">
-                    {/* Atmospheric glow orb */}
-                    <div
-                      className="absolute w-52 h-52 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(139,92,246,0.16) 0%, rgba(56,189,248,0.07) 50%, transparent 70%)",
-                      }}
-                      aria-hidden="true"
+                  <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8">
+                    <AnimatedBrandmark className="mx-auto scale-50" />
+                    <QuickstartChips
+                      onSelect={(system, user) => startWithPreset.current(system, user)}
+                      className="w-full max-w-lg"
                     />
-                    {/* Pulse ring 1 */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-brand-primary/20 pointer-events-none motion-safe:animate-ping-slow"
-                      aria-hidden="true"
-                    />
-                    {/* Pulse ring 2 – staggered */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-accent-chat/15 pointer-events-none motion-safe:animate-ping-slow"
-                      style={{ animationDelay: "1.5s" }}
-                      aria-hidden="true"
-                    />
-                    <AnimatedBrandmark className="relative mx-auto scale-[0.75]" />
                   </div>
                 ) : (
                   <VirtualizedMessageList

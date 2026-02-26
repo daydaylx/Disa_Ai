@@ -87,20 +87,17 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität) nach Entfaltung", async () => {
+    it("rendert die Kontext-Selektoren (Rolle, Modell)", () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       // Rollen-Auswahl
       expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
 
-      // Stil-Auswahl
-      const toggle = screen.getByRole("button", { name: /Mehr Optionen/i });
-      await userEvent.click(toggle);
+      // Modell-Auswahl
+      expect(screen.getByRole("combobox", { name: "Modell auswählen" })).toBeInTheDocument();
 
-      expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
-
-      // Kreativitäts-Auswahl
-      expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
+      // Stil- und Kreativitäts-Auswahl wurden aus Input-Bar entfernt
+      // und sind über Settings → Behavior erreichbar
     });
   });
 
@@ -234,15 +231,13 @@ describe("UnifiedInputBar", () => {
       expect(button).toHaveAttribute("aria-label", "Senden");
     });
 
-    it("hat korrekte aria-labels auf den Selektoren", async () => {
+    it("hat korrekte aria-labels auf den Selektoren", () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       expect(screen.getByRole("combobox", { name: "Rolle auswählen" })).toBeInTheDocument();
-      const toggle = screen.getByRole("button", { name: /Mehr Optionen/i });
-      await userEvent.click(toggle);
-      expect(screen.getByRole("combobox", { name: "Stil auswählen" })).toBeInTheDocument();
-      expect(screen.getByRole("combobox", { name: "Kreativität auswählen" })).toBeInTheDocument();
-      // Model selector has been moved to settings
+      // Style and Creativity selectors have been removed from input area
+      // Model selector remains available
+      expect(screen.getByRole("combobox", { name: "Modell auswählen" })).toBeInTheDocument();
     });
   });
 });

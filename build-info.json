@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-7ccec5d",
-  "buildTime": "2026-02-16T12:27:09.519Z",
-  "gitSha": "7ccec5d35aeac8e1af60d102833f5ef221340ae8",
-  "gitBranch": "claude/fix-api-key-security-sQTs6",
+  "buildId": "v1.0.2-7b4b9b2",
+  "buildTime": "2026-02-25T23:18:59.999Z",
+  "gitSha": "7b4b9b208fe85da0890e85d3ec9a28a2df49dc63",
+  "gitBranch": "main",
   "version": "1.0.2"
 }
