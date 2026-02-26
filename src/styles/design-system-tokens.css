@@ -48,14 +48,6 @@
   --touch-lg: 3.5rem; /* 56px - Spacious */
 
   /* ========================================================================
-     COMPACT PILLS - For role/model selector pills
-     ======================================================================== */
-  --pill-compact-height: 1.75rem; /* 28px - h-7 */
-  --pill-compact-padding-x: 0.5rem; /* 8px - px-2 */
-  --pill-compact-text: 0.625rem; /* 10px - text-[10px] */
-  --pill-compact-icon: 0.75rem; /* 12px - h-3 w-3 */
-
-  /* ========================================================================
      LAYOUT HEIGHTS - Header & Chrome Elements
      ======================================================================== */
   --header-height: 3.5rem; /* 56px - Mobile header (standard) */

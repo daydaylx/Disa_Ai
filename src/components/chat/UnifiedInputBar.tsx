@@ -5,8 +5,9 @@ import { useRoles } from "@/contexts/RolesContext";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { MAX_PROMPT_LENGTH } from "@/lib/chat/validation";
-import { Cpu, Send, User } from "@/lib/icons";
+import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { BrandCard } from "@/ui/BrandCard";
 import { Button } from "@/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/ui/Select";
@@ -30,7 +31,7 @@ export function UnifiedInputBar({
   const viewport = useVisualViewport();
   const { activeRole, setActiveRole, roles } = useRoles();
   const { models } = useModelCatalog();
-  const { settings, setPreferredModel } = useSettings();
+  const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -67,6 +68,37 @@ export function UnifiedInputBar({
   };
 
   const roleLabel = activeRole?.name || "Standard";
+
+  const creativityOptions = [
+    { value: "10", label: "Präzise (10%)", short: "Präzise" },
+    { value: "30", label: "Klar & fokussiert (30%)", short: "Klar" },
+    { value: "45", label: "Ausgewogen (45%)", short: "Ausgewogen" },
+    { value: "70", label: "Kreativ (70%)", short: "Kreativ" },
+    { value: "90", label: "Verspielt (90%)", short: "Verspielt" },
+  ];
+
+  const shortDiscussionLabels: Record<DiscussionPresetKey, string> = {
+    locker_neugierig: "Locker",
+    edgy_provokant: "Edgy",
+    nuechtern_pragmatisch: "Nüchtern",
+    akademisch_formell: "Akademisch",
+    freundlich_offen: "Freundlich",
+    analytisch_detailliert: "Analytisch",
+    sarkastisch_witzig: "Sarkastisch",
+    fachlich_tiefgehend: "Fachlich",
+  };
+
+  const discussionPresetLabel =
+    settings.discussionPreset && shortDiscussionLabels[settings.discussionPreset]
+      ? shortDiscussionLabels[settings.discussionPreset]
+      : discussionPresetOptions.find((preset) => preset.key === settings.discussionPreset)?.label ||
+        "Standard";
+
+  const creativityOption = creativityOptions.find(
+    (option) => option.value === String(settings.creativity),
+  );
+  const creativityShortLabel = creativityOption?.short || `${settings.creativity}%`;
+  const [showExtraControls, setShowExtraControls] = React.useState(false);
 
   const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const modelLabel =
@@ -107,7 +139,9 @@ export function UnifiedInputBar({
               !value.trim() &&
                 !isLoading &&
                 "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
-              value.trim() && !isLoading && "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
+              value.trim() &&
+                !isLoading &&
+                "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
               isLoading && "bg-accent-chat/80 text-white",
             )}
             aria-label="Senden"
@@ -123,7 +157,7 @@ export function UnifiedInputBar({
         {/* Hairline separator between typing and context zones */}
         <div className="border-t border-white/[0.07]" />
 
-        {/* Zone B – Context pills row */}
+        {/* Zone B – Context pills row 1 */}
         <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
           {/* Role Dropdown */}
           <Select
@@ -140,13 +174,13 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-7 min-w-fit items-center justify-center gap-2 px-2 text-[10px] font-medium leading-none role-badge-transition animate-pill-slide-in",
+                "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none role-badge-transition animate-pill-slide-in",
                 activeRole
                   ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-ink-primary shadow-[var(--card-shadow-focus)]"
                   : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
               )}
             >
-              <User className="h-3 w-3 flex-shrink-0" />
+              <User className="h-3.5 w-3.5 flex-shrink-0" />
               <span className="whitespace-nowrap">{roleLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
@@ -159,14 +193,23 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
 
+          {/* More options toggle */}
+          <button
+            type="button"
+            onClick={() => setShowExtraControls((prev) => !prev)}
+            className="flex h-9 items-center justify-center rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium tracking-tight text-ink-secondary transition-colors hover:border-white/12 hover:text-ink-primary"
+          >
+            {showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
+          </button>
+
           {/* Model Dropdown */}
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex h-7 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-2 text-[10px] font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
+              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
               style={{ animationDelay: "150ms" }}
             >
-              <Cpu className="h-3 w-3 flex-shrink-0 opacity-60" />
+              <Cpu className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
               <span className="whitespace-nowrap">{modelLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
@@ -178,10 +221,58 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
         </div>
+
+        {/* Zone C – Context pills row 2 (optional) */}
+        {showExtraControls && (
+          <>
+            <div className="border-t border-white/[0.05]" />
+            <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
+              <Select
+                value={settings.discussionPreset}
+                onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
+              >
+                <SelectTrigger
+                  aria-label="Stil auswählen"
+                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                >
+                  <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <span className="whitespace-nowrap">{discussionPresetLabel}</span>
+                </SelectTrigger>
+                <SelectContent className="w-64">
+                  {discussionPresetOptions.map((preset) => (
+                    <SelectItem key={preset.key} value={preset.key}>
+                      {preset.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={String(settings.creativity)}
+                onValueChange={(value) => setCreativity(Number(value))}
+              >
+                <SelectTrigger
+                  aria-label="Kreativität auswählen"
+                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                >
+                  <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <span className="whitespace-nowrap">{creativityShortLabel}</span>
+                </SelectTrigger>
+                <SelectContent className="w-64">
+                  {creativityOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
       </BrandCard>
 
       {/* Character Counter – below the card */}
-      {value.length > MAX_PROMPT_LENGTH * 0.5 && (
+      {value.length > MAX_PROMPT_LENGTH * 0.8 && (
         <div className="flex justify-end px-2 mt-1 animate-fade-in">
           <span
             className={cn(

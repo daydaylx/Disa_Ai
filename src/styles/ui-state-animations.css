@@ -283,16 +283,14 @@
   z-index: 0;
   filter: blur(9px);
   will-change: opacity, transform;
-  /* Enhanced Idle State with dual-layer gradient for richer glow */
-  background:
-    radial-gradient(circle at 30% 30%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
-    radial-gradient(
-      circle,
-      rgba(139, 92, 246, 0.5) 0%,
-      rgba(167, 139, 250, 0.35) 40%,
-      rgba(139, 92, 246, 0.18) 70%,
-      transparent 90%
-    );
+  /* Subtle Idle State - 25% reduced intensity */
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.41) 0%,
+    rgba(167, 139, 250, 0.26) 40%,
+    rgba(139, 92, 246, 0.11) 70%,
+    transparent 90%
+  );
   animation: presence-idle 10s ease-in-out infinite;
   isolation: isolate;
 }
@@ -300,39 +298,39 @@
 @keyframes presence-idle {
   0%,
   100% {
-    opacity: 0.65;
-    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.93);
   }
   50% {
-    opacity: 0.85;
-    transform: translate(-50%, -50%) scale(1.12);
+    opacity: 0.68;
+    transform: translate(-50%, -50%) scale(1.08);
   }
 }
 
 @keyframes presence-typing {
   0%,
   100% {
-    opacity: 0.7;
-    transform: translate(-50%, -50%) scale(0.97);
+    opacity: 0.53;
+    transform: translate(-50%, -50%) scale(0.96);
   }
   50% {
-    opacity: 0.88;
-    transform: translate(-50%, -50%) scale(1.14);
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.11);
   }
 }
 
 @keyframes presence-thinking {
   0% {
-    opacity: 0.75;
-    transform: translate(-50%, -50%) scale(0.98);
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.96);
   }
   50% {
-    opacity: 0.92;
-    transform: translate(-50%, -50%) scale(1.16);
+    opacity: 0.83;
+    transform: translate(-50%, -50%) scale(1.15);
   }
   100% {
-    opacity: 0.75;
-    transform: translate(-50%, -50%) scale(0.98);
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.96);
   }
 }
 
@@ -351,32 +349,28 @@
   }
 }
 
-/* Enhanced State Modifiers - faster cycles for better feedback */
+/* Subtle State Modifiers - 25% reduced intensity */
 .presence-mark[data-state="typing"] {
-  animation: presence-typing 3s ease-in-out infinite;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(167, 139, 250, 0.35) 0%, transparent 50%),
-    radial-gradient(
-      circle,
-      rgba(139, 92, 246, 0.56) 0%,
-      rgba(167, 139, 250, 0.38) 40%,
-      rgba(139, 92, 246, 0.19) 70%,
-      transparent 90%
-    );
+  animation: presence-typing 4s ease-in-out infinite;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.56) 0%,
+    rgba(167, 139, 250, 0.38) 40%,
+    rgba(139, 92, 246, 0.19) 70%,
+    transparent 90%
+  );
 }
 
 .presence-mark[data-state="thinking"],
 .presence-mark[data-state="loading"] {
-  animation: presence-thinking 2s ease-in-out infinite;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(167, 139, 250, 0.4) 0%, transparent 50%),
-    radial-gradient(
-      circle,
-      rgba(167, 139, 250, 0.64) 0%,
-      rgba(139, 92, 246, 0.45) 40%,
-      rgba(167, 139, 250, 0.23) 70%,
-      transparent 90%
-    );
+  animation: presence-thinking 2.5s ease-in-out infinite;
+  background: radial-gradient(
+    circle,
+    rgba(167, 139, 250, 0.64) 0%,
+    rgba(139, 92, 246, 0.45) 40%,
+    rgba(167, 139, 250, 0.23) 70%,
+    transparent 90%
+  );
 }
 
 .presence-mark[data-state="error"] {
@@ -442,16 +436,16 @@
     transition: opacity 0.3s ease;
   }
   .presence-mark[data-state="idle"] {
-    opacity: 0.15;
+    opacity: 0.08;
   }
   .presence-mark[data-state="typing"] {
-    opacity: 0.25;
+    opacity: 0.2;
   }
   .presence-mark[data-state="thinking"] {
-    opacity: 0.35;
+    opacity: 0.3;
   }
   .presence-mark[data-state="error"] {
-    opacity: 0.4;
+    opacity: 0.35;
   }
 }
 
@@ -605,20 +599,18 @@
    INPUT AREA ANIMATIONS
    ============================================================================ */
 
-/* Focus glow animation for input - enhanced visibility with box-shadow */
-@keyframes input-focus-glow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
-    border-color: rgba(139, 92, 246, 0.3);
+/* Focus scale animation for input */
+@keyframes input-focus-scale {
+  from {
+    transform: scale(1);
   }
-  100% {
-    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.15), 0 0 12px rgba(139, 92, 246, 0.12);
-    border-color: rgba(139, 92, 246, 0.4);
+  to {
+    transform: scale(1.01);
   }
 }
 
 .input-focus-animation:focus-within {
-  animation: input-focus-glow 200ms var(--disa-ease-emphasized) forwards;
+  animation: input-focus-scale var(--disa-duration-fast) var(--disa-ease-standard);
 }
 
 /* Send button pulse */
@@ -863,74 +855,6 @@
 }
 
 /* ============================================================================
-   BRANDMARK ANIMATIONS
-   ============================================================================ */
-
-/* Intro: Text appears with fade + slide-up */
-@keyframes wordmark-intro {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-wordmark-intro {
-  animation: wordmark-intro 600ms var(--disa-ease-emphasized) both;
-}
-
-/* Breathing: Subtle scale + translateY for "alive" feel */
-@keyframes brand-breathe {
-  0%,
-  100% {
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    transform: scale(1.02) translateY(-1px);
-  }
-}
-
-.motion-safe:animate-brand-breathe {
-  animation: brand-breathe 4s ease-in-out infinite;
-}
-
-/* Shimmer: Cyan gradient moves across text */
-@keyframes brand-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.motion-safe:animate-brand-shimmer {
-  animation: brand-shimmer 5s linear infinite;
-}
-
-.motion-safe:animate-brand-shimmer-delayed {
-  animation: brand-shimmer 5s linear 1s infinite; /* 1s delay für "AI" */
-}
-
-/* Glow: Subtle backdrop blur glow */
-@keyframes brand-glow {
-  0%,
-  100% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-.motion-safe:animate-brand-glow {
-  animation: brand-glow 3s ease-in-out infinite;
-}
-
-/* ============================================================================
    REDUCED MOTION OVERRIDES
    ============================================================================ */
 
@@ -944,25 +868,13 @@
   .animate-text-shimmer,
   .animate-pulse-slow,
   .animate-smooth-bounce,
-  .animate-copy-feedback,
-  /* Brandmark animations */
-  .animate-wordmark-intro,
-  .motion-safe:animate-brand-breathe,
-  .motion-safe:animate-brand-shimmer,
-  .motion-safe:animate-brand-shimmer-delayed,
-  .motion-safe:animate-brand-glow {
-    animation: none !important;
+  .animate-copy-feedback {
+    animation: none;
     opacity: 1;
     transform: none;
   }
 
-  /* Static focus ring instead of animation */
-  .input-focus-animation:focus-within {
-    animation: none;
-    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3);
-    border-color: rgba(139, 92, 246, 0.4);
-  }
-
+  .input-focus-animation:focus-within,
   .role-badge-transition,
   .edit-mode-transition,
   .textarea-resize-transition,
