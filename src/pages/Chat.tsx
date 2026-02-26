@@ -287,27 +287,16 @@ export default function Chat() {
               >
                 {chatLogic.isEmpty ? (
                   <div className="relative flex flex-1 items-center justify-center px-4">
-                    {/* Atmospheric glow orb */}
+                    {/* Subtle atmospheric glow - static and low opacity for depth, not distraction */}
                     <div
-                      className="absolute w-52 h-52 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
+                      className="absolute w-64 h-64 rounded-full blur-3xl pointer-events-none"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(56,189,248,0.09) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(56,189,248,0.03) 50%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />
-                    {/* Pulse ring 1 */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-brand-primary/28 pointer-events-none motion-safe:animate-ping-slow"
-                      aria-hidden="true"
-                    />
-                    {/* Pulse ring 2 – staggered */}
-                    <div
-                      className="absolute w-36 h-36 rounded-full border border-accent-chat/22 pointer-events-none motion-safe:animate-ping-slow"
-                      style={{ animationDelay: "1.5s" }}
-                      aria-hidden="true"
-                    />
-                    <AnimatedBrandmark className="relative mx-auto scale-[0.85]" />
+                    <AnimatedBrandmark className="relative mx-auto scale-[0.9]" />
                   </div>
                 ) : (
                   <VirtualizedMessageList
@@ -335,7 +324,7 @@ export default function Chat() {
               paddingBottom: "var(--inset-safe-bottom, 0px)",
             }}
           >
-            <div className="max-w-3xl mx-auto px-xspt-2 pointer-events-auto">
+            <div className="max-w-3xl mx-auto px-4 pt-2 pb-4 pointer-events-auto">
               <UnifiedInputBar
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}

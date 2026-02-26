@@ -30,62 +30,18 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
         style={{ fontWeight: 750 }}
       >
         {/* "Disa" with gradient */}
-        <span className="relative inline-block">
-          <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent">
+        <span className="relative inline-block pr-2">
+          <span className="bg-gradient-to-br from-brand-primary via-purple-500 to-brand-primary/80 bg-clip-text text-transparent">
             Disa
           </span>
-          {/* Turquoise shimmer overlay for "Disa" */}
-          <span
-            className={cn(
-              "absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent",
-              "bg-clip-text text-transparent",
-              "motion-safe:animate-brand-shimmer",
-              "pointer-events-none",
-            )}
-            aria-hidden="true"
-            style={{
-              backgroundSize: "200% 100%",
-              backgroundPosition: "-100% 0",
-            }}
-          >
-            Disa
-          </span>
-        </span>{" "}
+        </span>
         {/* "AI" with gradient */}
         <span className="relative inline-block">
-          <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent">
-            AI
-          </span>
-          {/* Turquoise shimmer overlay for "AI" */}
-          <span
-            className={cn(
-              "absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/45 to-transparent",
-              "bg-clip-text text-transparent",
-              "motion-safe:animate-brand-shimmer-delayed",
-              "pointer-events-none",
-            )}
-            aria-hidden="true"
-            style={{
-              backgroundSize: "200% 100%",
-              backgroundPosition: "-100% 0",
-            }}
-          >
+          <span className="bg-gradient-to-br from-accent-chat to-cyan-500/80 bg-clip-text text-transparent">
             AI
           </span>
         </span>
       </h1>
-
-      {/* Optional subtle glow - very minimal */}
-      <div
-        className={cn(
-          "absolute inset-0 blur-xl opacity-0",
-          "motion-safe:animate-brand-glow",
-          "pointer-events-none -z-10",
-        )}
-        aria-hidden="true"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 via-purple-400/10 to-cyan-400/10" />
-      </div>
     </div>
   );
 });

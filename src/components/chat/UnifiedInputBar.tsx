@@ -110,19 +110,22 @@ export function UnifiedInputBar({
       <BrandCard
         variant="plain"
         padding="none"
-        className={cn("relative transition-all backdrop-blur-sm input-focus-animation")}
+        className={cn(
+          "relative transition-all duration-300 bg-surface-1/40 backdrop-blur-md border-white/10 input-focus-animation shadow-lg",
+          "hover:border-white/20 focus-within:border-brand-primary/30 focus-within:bg-surface-1/60",
+        )}
         aria-label="Eingabebereich"
       >
         {/* Zone A – Typing area */}
-        <div className="flex items-end gap-2 px-3 pt-3 pb-1 pr-safe-right">
+        <div className="flex items-end gap-3 px-4 pt-3 pb-2 pr-safe-right">
           {/* Textarea */}
           <textarea
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Schreibe eine Nachricht..."
-            className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-0 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus:outline-none textarea-resize-transition"
+            placeholder="Nachricht an Disa..."
+            className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-0 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-muted/50 focus:outline-none textarea-resize-transition"
             rows={1}
             data-testid="composer-input"
             aria-label="Nachricht eingeben"
@@ -135,31 +138,29 @@ export function UnifiedInputBar({
             variant="primary"
             size="icon"
             className={cn(
-              "mb-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/10 transition-all duration-150",
-              !value.trim() &&
-                !isLoading &&
-                "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
+              "mb-1 h-10 w-10 flex-shrink-0 rounded-xl border border-white/5 transition-all duration-200",
+              !value.trim() && !isLoading && "bg-white/5 text-ink-muted/30 shadow-none opacity-40",
               value.trim() &&
                 !isLoading &&
-                "bg-accent-chat text-white shadow-[0_0_0_1px_rgba(139,92,246,0.4),0_4px_14px_rgba(139,92,246,0.35)] hover:bg-accent-chat/90",
+                "bg-accent-chat text-white shadow-lg shadow-accent-chat/20 hover:scale-105 active:scale-95",
               isLoading && "bg-accent-chat/80 text-white",
             )}
             aria-label="Senden"
           >
             {isLoading ? (
-              <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
-              <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
+              <Send className={cn("h-4.5 w-4.5", value.trim() && "translate-x-0.5")} />
             )}
           </Button>
         </div>
 
-        {/* Hairline separator between typing and context zones */}
-        <div className="border-t border-white/[0.07]" />
+        {/* Subtle hairline separator */}
+        <div className="mx-4 border-t border-white/[0.05]" />
 
-        {/* Zone B – Context pills row 1 */}
-        <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
-          {/* Role Dropdown */}
+        {/* Zone B – Context pills */}
+        <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar px-3 py-2.5">
+          {/* Role Pill */}
           <Select
             value={activeRole?.id || "standard"}
             onValueChange={(id) => {
@@ -174,17 +175,17 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-9 min-w-fit items-center justify-center gap-2 px-3 text-xs font-medium leading-none role-badge-transition animate-pill-slide-in",
+                "flex h-7.5 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
                 activeRole
-                  ? "rounded-2xl border border-[var(--card-border-color-focus)] bg-brand-secondary/10 text-ink-primary shadow-[var(--card-shadow-focus)]"
-                  : "rounded-full border border-white/8 bg-surface-1/40 text-ink-secondary hover:border-white/12 hover:text-ink-primary hover:bg-surface-1/60",
+                  ? "bg-brand-primary/15 text-brand-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
+                  : "bg-white/5 text-ink-secondary border border-transparent hover:bg-white/10",
               )}
             >
-              <User className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="whitespace-nowrap">{roleLabel}</span>
+              <User className="h-3 w-3" />
+              <span className="max-w-[80px] truncate">{roleLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
-              <SelectItem value="standard">Standard</SelectItem>
+              <SelectItem value="standard">Standard-Verhalten</SelectItem>
               {roles.map((role) => (
                 <SelectItem key={role.id} value={role.id}>
                   {role.name}
@@ -193,24 +194,14 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
 
-          {/* More options toggle */}
-          <button
-            type="button"
-            onClick={() => setShowExtraControls((prev) => !prev)}
-            className="flex h-9 items-center justify-center rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium tracking-tight text-ink-secondary transition-colors hover:border-white/12 hover:text-ink-primary"
-          >
-            {showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
-          </button>
-
-          {/* Model Dropdown */}
+          {/* Model Pill */}
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary animate-pill-slide-in"
-              style={{ animationDelay: "150ms" }}
+              className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10 hover:text-ink-secondary"
             >
-              <Cpu className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-              <span className="whitespace-nowrap">{modelLabel}</span>
+              <Cpu className="h-3 w-3 opacity-70" />
+              <span className="max-w-[80px] truncate">{modelLabel}</span>
             </SelectTrigger>
             <SelectContent className="max-h-[280px] w-64">
               {models?.map((model) => (
@@ -220,22 +211,40 @@ export function UnifiedInputBar({
               ))}
             </SelectContent>
           </Select>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* More options toggle */}
+          <button
+            type="button"
+            onClick={() => setShowExtraControls((prev) => !prev)}
+            className={cn(
+              "flex h-7.5 w-7.5 items-center justify-center rounded-full transition-all",
+              showExtraControls
+                ? "bg-brand-primary text-white"
+                : "bg-white/5 text-ink-tertiary hover:bg-white/10",
+            )}
+            title={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
+          >
+            <Palette className="h-3 w-3" />
+          </button>
         </div>
 
-        {/* Zone C – Context pills row 2 (optional) */}
+        {/* Zone C – Extra controls (Expandable) */}
         {showExtraControls && (
-          <>
-            <div className="border-t border-white/[0.05]" />
-            <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
+          <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="mx-4 border-t border-white/[0.05]" />
+            <div className="flex w-full items-center gap-1.5 overflow-x-auto no-scrollbar px-3 py-2.5">
               <Select
                 value={settings.discussionPreset}
                 onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
               >
                 <SelectTrigger
                   aria-label="Stil auswählen"
-                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
-                  <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <Sparkles className="h-3 w-3 opacity-70" />
                   <span className="whitespace-nowrap">{discussionPresetLabel}</span>
                 </SelectTrigger>
                 <SelectContent className="w-64">
@@ -253,9 +262,9 @@ export function UnifiedInputBar({
               >
                 <SelectTrigger
                   aria-label="Kreativität auswählen"
-                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
-                  <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <span className="text-[10px] font-bold opacity-70">%</span>
                   <span className="whitespace-nowrap">{creativityShortLabel}</span>
                 </SelectTrigger>
                 <SelectContent className="w-64">
@@ -267,7 +276,7 @@ export function UnifiedInputBar({
                 </SelectContent>
               </Select>
             </div>
-          </>
+          </div>
         )}
       </BrandCard>
 

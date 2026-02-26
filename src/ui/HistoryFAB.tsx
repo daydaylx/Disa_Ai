@@ -34,12 +34,13 @@ export function HistoryFAB({
       type="button"
       onClick={handleClick}
       className={cn(
-        "fixed left-4 z-fab",
+        "fixed z-fab",
         "flex items-center justify-center",
         "h-11 w-11 rounded-full shadow-lg",
         "transition-all duration-300",
         "hover:scale-110 hover:shadow-xl active:scale-95",
         "focus:outline-none focus:ring-2 focus:ring-accent-chat focus:ring-offset-2",
+        "left-4 sm:left-[calc(50%-1.375rem-22rem)]", // Centers relative to the 3xl (48rem) container on larger screens
         isOpen
           ? "bg-accent-chat text-white"
           : "bg-surface-1/90 backdrop-blur-sm text-accent-chat border border-accent-chat/20",

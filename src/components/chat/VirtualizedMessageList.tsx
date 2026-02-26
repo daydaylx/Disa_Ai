@@ -130,7 +130,7 @@ export function VirtualizedMessageList({
   );
 
   return (
-    <div data-testid="message-list" className={cn("flex flex-col gap-6", className)}>
+    <div data-testid="message-list" className={cn("flex flex-col gap-4", className)}>
       <div ref={scrollContainerRef ? undefined : attachInternalRef} className="flex flex-col">
         {shouldVirtualize ? (
           <div className="relative w-full" style={{ height: rowVirtualizer.getTotalSize() }}>
@@ -146,7 +146,7 @@ export function VirtualizedMessageList({
                   ref={rowVirtualizer.measureElement}
                   className={cn(
                     "absolute left-0 top-0 w-full",
-                    virtualRow.index === messages.length - 1 ? "pb-0" : "pb-6",
+                    virtualRow.index === messages.length - 1 ? "pb-0" : "pb-4",
                   )}
                   style={{ transform: `translateY(${virtualRow.start}px)` }}
                 >
@@ -165,7 +165,7 @@ export function VirtualizedMessageList({
             })}
           </div>
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             {messages.map((message, index) => (
               <div key={message.id} data-testid="message-row">
                 <MemoizedChatMessage

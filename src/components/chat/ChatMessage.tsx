@@ -260,10 +260,10 @@ export function ChatMessage({
         <div
           {...longPressReactHandlers}
           className={cn(
-            "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-3.5 text-[0.98rem] leading-7",
+            "relative w-fit max-w-[min(100%,48rem)] rounded-2xl border px-4 py-2.5 text-[0.96rem] leading-relaxed",
             isUser
-              ? "ml-auto rounded-tr-sm border-accent-chat/35 bg-accent-chat-surface/65 text-ink-primary shadow-[0_0_0_1px_rgba(139,92,246,0.12),0_4px_16px_rgba(139,92,246,0.1)] ring-1 ring-white/5"
-              : "mr-auto rounded-tl-sm border-white/15 bg-surface-card/80 backdrop-blur-sm text-ink-primary shadow-md ring-1 ring-inset ring-white/[0.07]",
+              ? "ml-auto rounded-tr-md border-accent-chat/30 bg-accent-chat-surface/50 text-ink-primary shadow-sm shadow-accent-chat/5 ring-1 ring-white/5"
+              : "mr-auto rounded-tl-md border-white/10 bg-surface-card/70 backdrop-blur-md text-ink-primary shadow-sm ring-1 ring-inset ring-white/[0.05]",
           )}
           data-testid="message-bubble"
         >
@@ -286,7 +286,7 @@ export function ChatMessage({
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {parsedContent.map((part, index) => (
                 <div key={index}>
                   {part.type === "text" ? (
@@ -300,53 +300,55 @@ export function ChatMessage({
           )}
         </div>
 
-        {/* Actions Row */}
+        {/* Actions Row - Hidden by default, shown on hover or for last assistant message */}
         {!isEditing && (
           <div
             className={cn(
-              "flex items-center gap-1 mt-1 opacity-100 transition-opacity",
+              "flex items-center gap-1 mt-1 transition-all duration-200",
               isUser ? "justify-end" : "justify-start",
+              "opacity-0 group-hover:opacity-100 focus-within:opacity-100",
+              isAssistant && isLast && "opacity-100", // Always show for last message to aid discoverability
             )}
           >
             <button
               onClick={handleCopy}
               className={cn(
-                "min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat",
+                "min-w-[2.25rem] min-h-[2.25rem] p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover",
                 copied && "animate-copy-feedback",
               )}
               title="Kopieren"
               aria-label="Nachricht kopieren"
             >
               {copied ? (
-                <Check className="h-4 w-4 text-status-success" />
+                <Check className="h-3.5 w-3.5 text-status-success" />
               ) : (
-                <Copy className="h-4 w-4" />
+                <Copy className="h-3.5 w-3.5" />
               )}
             </button>
 
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                className="min-w-[2.25rem] min-h-[2.25rem] p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover"
                 title="Bearbeiten"
                 aria-label="Nachricht bearbeiten"
               >
-                <Edit2 className="h-4 w-4" />
+                <Edit2 className="h-3.5 w-3.5" />
               </button>
             )}
 
             {isAssistant && isLast && (
               <button
                 onClick={handleRetry}
-                className="min-w-[2.75rem] min-h-[2.75rem] p-2 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-chat"
+                className="min-w-[2.25rem] min-h-[2.25rem] p-1.5 text-ink-tertiary hover:text-ink-primary hover:bg-surface-2/50 rounded-lg transition-all action-button-hover"
                 title="Neu generieren"
                 aria-label="Antwort neu generieren"
               >
-                <RotateCcw className="h-4 w-4" />
+                <RotateCcw className="h-3.5 w-3.5" />
               </button>
             )}
 
-            <span className="text-[10px] text-ink-muted ml-1 select-none">
+            <span className="text-[10px] text-ink-muted/60 ml-1 select-none font-medium">
               {new Date(message.timestamp).toLocaleTimeString("de-DE", {
                 hour: "2-digit",
                 minute: "2-digit",
