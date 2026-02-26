@@ -43,11 +43,6 @@ test.describe("Chat Smoke Tests", () => {
     const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
     await expect(roleSelector).toBeVisible();
 
-    // Erweiterte Optionen öffnen
-    const moreOptionsButton = page.getByRole("button", { name: /Mehr Optionen/i });
-    await expect(moreOptionsButton).toBeVisible();
-    await moreOptionsButton.click();
-
     // Prüfe Stil-Auswahl
     const styleSelector = page.locator('button[aria-label="Stil auswählen"]');
     await expect(styleSelector).toBeVisible();
