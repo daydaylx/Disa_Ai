@@ -105,76 +105,58 @@ export function UnifiedInputBar({
     selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
 
   return (
-    <div className={cn("w-full space-y-2", className)}>
-      {/* Model selection moved to settings - cleaner input area */}
-
-      {/* Main Input Container - Material-based with clear focus */}
+    <div className={cn("w-full", className)}>
+      {/* Unified Input Card – textarea + context pills in one BrandCard */}
       <BrandCard
         variant="plain"
-        padding="sm"
-        className={cn(
-          "relative flex items-end gap-2 pr-safe-right transition-all backdrop-blur-sm input-focus-animation",
-        )}
+        padding="none"
+        className={cn("relative transition-all backdrop-blur-sm input-focus-animation")}
         aria-label="Eingabebereich"
       >
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Schreibe eine Nachricht..."
-          className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-3 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus:outline-none textarea-resize-transition"
-          rows={1}
-          data-testid="composer-input"
-          aria-label="Nachricht eingeben"
-        />
+        {/* Zone A – Typing area */}
+        <div className="flex items-end gap-2 px-3 pt-3 pb-1 pr-safe-right">
+          {/* Textarea */}
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Schreibe eine Nachricht..."
+            className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-0 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-tertiary focus:outline-none textarea-resize-transition"
+            rows={1}
+            data-testid="composer-input"
+            aria-label="Nachricht eingeben"
+          />
 
-        {/* Send Button - Material Chip */}
-        <Button
-          onClick={onSend}
-          disabled={!value.trim() || isLoading}
-          variant="primary"
-          size="icon"
-          className={cn(
-            "mb-0.5 mr-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/10 transition-all duration-150",
-            !value.trim() && !isLoading && "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
-            value.trim() &&
-              !isLoading &&
-              "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
-            isLoading && "bg-accent-chat/80 text-white",
-          )}
-          aria-label="Senden"
-        >
-          {isLoading ? (
-            <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
-          )}
-        </Button>
-      </BrandCard>
-
-      {/* Character Counter */}
-      {value.length > MAX_PROMPT_LENGTH * 0.8 && (
-        <div className="flex justify-end px-2 animate-fade-in">
-          <span
+          {/* Send Button */}
+          <Button
+            onClick={onSend}
+            disabled={!value.trim() || isLoading}
+            variant="primary"
+            size="icon"
             className={cn(
-              "text-xs font-medium transition-colors",
-              value.length > MAX_PROMPT_LENGTH
-                ? "text-status-error"
-                : value.length > MAX_PROMPT_LENGTH * 0.9
-                  ? "text-status-warning"
-                  : "text-ink-tertiary",
+              "mb-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/10 transition-all duration-150",
+              !value.trim() && !isLoading && "bg-surface-2 text-ink-tertiary shadow-none opacity-55",
+              value.trim() &&
+                !isLoading &&
+                "bg-accent-chat text-white shadow-md hover:bg-accent-chat/90",
+              isLoading && "bg-accent-chat/80 text-white",
             )}
+            aria-label="Senden"
           >
-            {value.length} / {MAX_PROMPT_LENGTH}
-          </span>
+            {isLoading ? (
+              <div className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Send className={cn("h-5 w-5", value.trim() && "ml-0.5")} />
+            )}
+          </Button>
         </div>
-      )}
 
-      {/* Context Pills */}
-      <div className="w-full px-1">
-        <div className="flex w-full items-center gap-2 overflow-hidden px-1">
+        {/* Hairline separator between typing and context zones */}
+        <div className="border-t border-white/[0.07]" />
+
+        {/* Zone B – Context pills row 1 */}
+        <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
           {/* Role Dropdown */}
           <Select
             value={activeRole?.id || "standard"}
@@ -209,7 +191,7 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
 
-          {/* Style Dropdown */}
+          {/* More options toggle */}
           <button
             type="button"
             onClick={() => setShowExtraControls((prev) => !prev)}
@@ -237,50 +219,73 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
         </div>
-        {showExtraControls && (
-          <div className="mt-2 flex w-full items-center gap-2 overflow-hidden px-1">
-            <Select
-              value={settings.discussionPreset}
-              onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
-            >
-              <SelectTrigger
-                aria-label="Stil auswählen"
-                className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
-              >
-                <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-                <span className="whitespace-nowrap">{discussionPresetLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="w-64">
-                {discussionPresetOptions.map((preset) => (
-                  <SelectItem key={preset.key} value={preset.key}>
-                    {preset.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
 
-            <Select
-              value={String(settings.creativity)}
-              onValueChange={(value) => setCreativity(Number(value))}
-            >
-              <SelectTrigger
-                aria-label="Kreativität auswählen"
-                className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+        {/* Zone C – Context pills row 2 (optional) */}
+        {showExtraControls && (
+          <>
+            <div className="border-t border-white/[0.05]" />
+            <div className="flex w-full items-center gap-2 overflow-hidden px-3 py-2">
+              <Select
+                value={settings.discussionPreset}
+                onValueChange={(preset) => setDiscussionPreset(preset as DiscussionPresetKey)}
               >
-                <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-                <span className="whitespace-nowrap">{creativityShortLabel}</span>
-              </SelectTrigger>
-              <SelectContent className="w-64">
-                {creativityOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+                <SelectTrigger
+                  aria-label="Stil auswählen"
+                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                >
+                  <Palette className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <span className="whitespace-nowrap">{discussionPresetLabel}</span>
+                </SelectTrigger>
+                <SelectContent className="w-64">
+                  {discussionPresetOptions.map((preset) => (
+                    <SelectItem key={preset.key} value={preset.key}>
+                      {preset.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={String(settings.creativity)}
+                onValueChange={(value) => setCreativity(Number(value))}
+              >
+                <SelectTrigger
+                  aria-label="Kreativität auswählen"
+                  className="flex h-9 min-w-fit items-center justify-center gap-2 rounded-full border border-white/8 bg-surface-1/40 px-3 text-xs font-medium leading-none text-ink-tertiary transition-colors hover:border-white/12 hover:bg-surface-1/60 hover:text-ink-secondary"
+                >
+                  <Sparkles className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
+                  <span className="whitespace-nowrap">{creativityShortLabel}</span>
+                </SelectTrigger>
+                <SelectContent className="w-64">
+                  {creativityOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
         )}
-      </div>
+      </BrandCard>
+
+      {/* Character Counter – below the card */}
+      {value.length > MAX_PROMPT_LENGTH * 0.8 && (
+        <div className="flex justify-end px-2 mt-1 animate-fade-in">
+          <span
+            className={cn(
+              "text-xs font-medium transition-colors",
+              value.length > MAX_PROMPT_LENGTH
+                ? "text-status-error"
+                : value.length > MAX_PROMPT_LENGTH * 0.9
+                  ? "text-status-warning"
+                  : "text-ink-tertiary",
+            )}
+          >
+            {value.length} / {MAX_PROMPT_LENGTH}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
