@@ -36,17 +36,10 @@ test.describe("Chat Smoke Tests", () => {
     const sendButton = page.locator('button[aria-label="Senden"]');
     await expect(sendButton).toBeVisible();
 
-    // Prüfe Rollen-Auswahl (SelectTrigger mit aria-label)
+    // Prüfe Rollen-Auswahl (SelectTrigger mit aria-label, Zone B - immer sichtbar)
     const roleSelector = page.locator('button[aria-label="Rolle auswählen"]');
     await expect(roleSelector).toBeVisible();
-
-    // Prüfe Stil-Auswahl
-    const styleSelector = page.locator('button[aria-label="Stil auswählen"]');
-    await expect(styleSelector).toBeVisible();
-
-    // Prüfe Kreativitäts-Auswahl
-    const creativitySelector = page.locator('button[aria-label="Kreativität auswählen"]');
-    await expect(creativitySelector).toBeVisible();
+    // Stil- und Kreativitäts-Auswahl sind in Zone C (hinter Palette-Toggle) – nicht immer sichtbar
   });
 
   test("should allow typing and sending a message", async ({ page }) => {
