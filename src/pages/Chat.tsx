@@ -11,7 +11,7 @@ import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { QuickstartStrip } from "../components/chat/QuickstartStrip";
-import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
+import { AppMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { getQuickstarts } from "../config/quickstarts";
@@ -36,16 +36,35 @@ const UnifiedInputBar = memo(
 // Define actions for the reducer
 interface UIState {
   isHistoryOpen: boolean;
+  isMenuOpen: boolean;
 }
 
-type UIAction = { type: "TOGGLE_HISTORY" } | { type: "SET_HISTORY_OPEN"; open: boolean };
+type UIAction =
+  | { type: "TOGGLE_HISTORY" }
+  | { type: "SET_HISTORY_OPEN"; open: boolean }
+  | { type: "OPEN_MENU" }
+  | { type: "CLOSE_MENU" };
 
 const uiReducer = (state: UIState, action: UIAction): UIState => {
   switch (action.type) {
-    case "TOGGLE_HISTORY":
-      return { ...state, isHistoryOpen: !state.isHistoryOpen };
+    case "TOGGLE_HISTORY": {
+      const nextHistoryOpen = !state.isHistoryOpen;
+      return {
+        ...state,
+        isHistoryOpen: nextHistoryOpen,
+        isMenuOpen: nextHistoryOpen ? false : state.isMenuOpen,
+      };
+    }
     case "SET_HISTORY_OPEN":
-      return { ...state, isHistoryOpen: action.open };
+      return {
+        ...state,
+        isHistoryOpen: action.open,
+        isMenuOpen: action.open ? false : state.isMenuOpen,
+      };
+    case "OPEN_MENU":
+      return { ...state, isMenuOpen: true, isHistoryOpen: false };
+    case "CLOSE_MENU":
+      return { ...state, isMenuOpen: false };
     default:
       return state;
   }
@@ -54,6 +73,7 @@ const uiReducer = (state: UIState, action: UIAction): UIState => {
 // Initial state
 const initialState: UIState = {
   isHistoryOpen: false,
+  isMenuOpen: false,
 };
 
 export default function Chat() {
@@ -63,13 +83,16 @@ export default function Chat() {
 
   // UI State
   const [uiState, dispatch] = useReducer(uiReducer, initialState);
-  const { isOpen: isMenuOpen, openMenu, closeMenu } = useMenuDrawer();
 
   // Dismissed status banners (reset on successful message send)
   const [dismissedBanners, setDismissedBanners] = useState<Set<ChatApiStatus>>(new Set());
 
   const dismissBanner = useCallback((statusKey: ChatApiStatus) => {
     setDismissedBanners((prev) => new Set(prev).add(statusKey));
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    dispatch({ type: "CLOSE_MENU" });
   }, []);
 
   const setHistoryOpen = useCallback((open: boolean) => {
@@ -85,18 +108,12 @@ export default function Chat() {
   }, [setHistoryOpen]);
 
   const handleOpenMenu = useCallback(() => {
-    if (uiState.isHistoryOpen) {
-      closeHistory();
-    }
-    openMenu();
-  }, [closeHistory, openMenu, uiState.isHistoryOpen]);
+    dispatch({ type: "OPEN_MENU" });
+  }, []);
 
   const handleToggleHistory = useCallback(() => {
-    if (!uiState.isHistoryOpen && isMenuOpen) {
-      closeMenu();
-    }
     toggleHistory();
-  }, [closeMenu, isMenuOpen, toggleHistory, uiState.isHistoryOpen]);
+  }, [toggleHistory]);
 
   // Swipe-Right Navigation (zurück zur Übersicht)
   const { handlers: swipeHandlersNative, dragOffset } = useSwipeGesture({
@@ -392,7 +409,7 @@ export default function Chat() {
 
       {/* Global Menu */}
       <AppMenuDrawer
-        isOpen={isMenuOpen}
+        isOpen={uiState.isMenuOpen}
         onClose={closeMenu}
         navItems={DRAWER_NAV_ITEMS}
         secondaryItems={[]}

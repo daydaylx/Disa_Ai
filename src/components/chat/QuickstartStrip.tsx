@@ -50,7 +50,7 @@ export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps)
               className={cn(
                 "animate-fade-in-slide-up",
                 "shrink-0 flex items-center gap-1.5",
-                "h-7.5 rounded-full px-3",
+                "h-11 rounded-full px-3",
                 "text-xs text-ink-secondary",
                 "bg-white/5 border border-white/[0.08]",
                 "hover:bg-white/10 hover:text-ink-primary",

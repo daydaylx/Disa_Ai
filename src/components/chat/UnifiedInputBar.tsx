@@ -138,7 +138,7 @@ export function UnifiedInputBar({
             variant="primary"
             size="icon"
             className={cn(
-              "mb-1 h-10 w-10 flex-shrink-0 rounded-xl border border-white/5 transition-all duration-200",
+              "mb-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/5 transition-all duration-200",
               !value.trim() && !isLoading && "bg-white/5 text-ink-muted/30 shadow-none opacity-40",
               value.trim() &&
                 !isLoading &&
@@ -175,7 +175,7 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-7.5 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
+                "flex h-11 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
                 activeRole
                   ? "bg-brand-primary/15 text-brand-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
                   : "bg-white/5 text-ink-secondary border border-transparent hover:bg-white/10",
@@ -198,7 +198,7 @@ export function UnifiedInputBar({
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10 hover:text-ink-secondary"
+              className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10 hover:text-ink-secondary"
             >
               <Cpu className="h-3 w-3 opacity-70" />
               <span className="max-w-[80px] truncate">{modelLabel}</span>
@@ -220,7 +220,7 @@ export function UnifiedInputBar({
             type="button"
             onClick={() => setShowExtraControls((prev) => !prev)}
             className={cn(
-              "relative flex h-7.5 w-7.5 items-center justify-center rounded-full transition-all",
+              "relative flex h-11 w-11 items-center justify-center rounded-full transition-all",
               showExtraControls
                 ? "bg-brand-primary text-white"
                 : "bg-white/5 text-ink-tertiary hover:bg-white/10",
@@ -248,7 +248,7 @@ export function UnifiedInputBar({
               >
                 <SelectTrigger
                   aria-label="Stil auswählen"
-                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
+                  className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
                   <Sparkles className="h-3 w-3 opacity-70" />
                   <span className="whitespace-nowrap">{discussionPresetLabel}</span>
@@ -268,7 +268,7 @@ export function UnifiedInputBar({
               >
                 <SelectTrigger
                   aria-label="Kreativität auswählen"
-                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
+                  className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
                   <span className="text-[10px] font-bold opacity-70">%</span>
                   <span className="whitespace-nowrap">{creativityShortLabel}</span>

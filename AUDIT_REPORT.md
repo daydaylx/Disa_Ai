@@ -45,14 +45,18 @@
 
 ## Findings Tracker
 
-| Datei                                 | Zweck                                            | Findings                                                                                                                                 | Risiko | Fix-Status |
-| ------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
-| `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup      | high   | done       |
-| `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                              | medium | done       |
-| `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
-| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
-| `src/lib/css-feature-detection.ts`    | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
-| `src/hooks/useBookNavigation.ts`      | Book-style chat navigation state orchestration   | Hook subscribed to settings without usage; transition timer tracked in state causing avoidable rerenders and timer lifecycle complexity  | medium | done       |
+| Datei                                     | Zweck                                            | Findings                                                                                                                                 | Risiko | Fix-Status |
+| ----------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
+| `src/App.tsx`                             | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup      | high   | done       |
+| `src/app/components/RouteWrapper.tsx`     | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                              | medium | done       |
+| `src/lib/analytics.ts`                    | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
+| `src/main.tsx`                            | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
+| `src/lib/css-feature-detection.ts`        | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
+| `src/hooks/useBookNavigation.ts`          | Book-style chat navigation state orchestration   | Hook subscribed to settings without usage; transition timer tracked in state causing avoidable rerenders and timer lifecycle complexity  | medium | done       |
+| `src/pages/Chat.tsx`                      | Chat page orchestration and overlay coordination | Menu and history panel state were managed in separate state paths, creating overlap/intercept races                                      | medium | done       |
+| `src/components/chat/UnifiedInputBar.tsx` | Primary chat composer controls                   | Multiple interactive controls were below 44px touch target sizing                                                                        | medium | done       |
+| `src/components/chat/QuickstartStrip.tsx` | Quick action pills in chat intro                 | Quickstart pills were rendered below 44px touch target sizing                                                                            | medium | done       |
+| `index.html`                              | Static no-JS fallback shell                      | Fallback demo action/send buttons were below 44px and surfaced in early E2E timing checks                                                | medium | done       |
 
 ## Fix Log
 
@@ -221,3 +225,36 @@
     - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
   - Conclusion:
     - Navigation hook cleanup introduced no new deterministic failure family.
+
+### Block 8 - Overlay Exclusivity + Touch Target Compliance
+
+- Files:
+  - `src/pages/Chat.tsx`
+  - `src/components/chat/UnifiedInputBar.tsx`
+  - `src/components/chat/QuickstartStrip.tsx`
+  - `index.html`
+- Problem:
+  - Chat overlay exclusivity relied on separate menu hook state and history reducer state, allowing pointer interception race windows.
+  - Several interactive chat controls remained under 44px touch target size.
+  - Static no-JS fallback action buttons (visible during initial load timing) were also under 44px.
+- Impact:
+  - Drawer/history overlap could block message send interactions in edge timing paths.
+  - Touch target compliance test failed and mobile tap reliability degraded.
+  - E2E checks that sample early visible buttons failed even before SPA hydration completed.
+- Minimal fix:
+  - Move menu open/close into the existing local UI reducer in `Chat.tsx`; enforce menu/history mutual exclusivity atomically in reducer actions.
+  - Increase composer control sizes in `UnifiedInputBar` to `h-11`/`w-11`.
+  - Increase quickstart pill height in `QuickstartStrip` to `h-11`.
+  - Set `index.html` fallback quick-action and send buttons to `min-height: 44px` with centered inline-flex layout.
+- Verification:
+  - Quick repro script (`playwright` + Pixel 7, reduced motion) before fix showed fallback button heights `31.375`/`33`.
+  - Same script after fix showed fallback button heights `44`.
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (9 tests, reduced from 10; `chrome-density.spec.ts:223` now PASS)
+  - Remaining failures:
+    - `tests/e2e/chrome-density.spec.ts`: `:54`, `:125`, `:155`, `:186`, `:249`
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58`
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
+  - Conclusion:
+    - Touch-target baseline issue is fixed; remaining failures stay in pre-existing message/render timing and page-content visibility cluster.
