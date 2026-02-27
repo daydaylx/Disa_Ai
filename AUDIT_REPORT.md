@@ -17,7 +17,7 @@
 | `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change | high   | done       |
 | `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                   | medium | done       |
 | `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync                          | high   | done       |
-| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlaps with `useServiceWorker` path                             | high   | todo       |
+| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path                           | high   | done       |
 
 ## Fix Log
 
@@ -49,3 +49,24 @@
     - `npx playwright test tests/e2e/chrome-density.spec.ts tests/e2e/models-roles.spec.ts tests/e2e/unified-layout.spec.ts` -> FAIL (same 9 failing specs)
   - Conclusion:
     - E2E failures are pre-existing/unstable in these specs, not introduced by Block 1 changes.
+
+### Block 2 - Service Worker Registration Path
+
+- Files:
+  - `src/main.tsx`
+- Problem:
+  - Service worker registration in `main.tsx` overlapped with registration in `useServiceWorker`.
+- Impact:
+  - Increased risk of duplicate registrations, race conditions, and hard-to-debug update behavior.
+- Minimal fix:
+  - Keep persistent storage request in bootstrap.
+  - Restrict `main.tsx` to dev-only `dev-sw.js` registration.
+  - Leave production service worker registration to the existing `useServiceWorker` flow.
+- Verification:
+  - `npm run lint` -> PASS
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run test:unit` -> PASS
+  - `npm run e2e` -> FAIL (same 9 baseline specs as Block 1)
+  - Conclusion:
+    - No new E2E regression signature introduced by Block 2.
