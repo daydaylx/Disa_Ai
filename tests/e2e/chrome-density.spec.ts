@@ -14,8 +14,12 @@
 
 import { expect, test } from "@playwright/test";
 
+import { skipOnboarding } from "./utils";
+
 test.describe("Chrome Density - Chat Page", () => {
   test.beforeEach(async ({ page }) => {
+    await skipOnboarding(page);
+
     // Mock API to prevent actual OpenRouter calls
     await page.route("**/api.openrouter.ai/**", (route) =>
       route.fulfill({
@@ -28,82 +32,59 @@ test.describe("Chrome Density - Chat Page", () => {
   test("default state shows minimal chrome", async ({ page }) => {
     await page.goto("/");
 
-    // Visible elements: Header, Quick Settings (collapsed), Composer
+    // Visible elements: Header, base controls, composer
     await expect(page.locator("header")).toBeVisible();
-    await expect(page.getByRole("button", { name: /einstellungen/i })).toBeVisible();
-    await expect(page.locator('[data-testid="unified-input-bar"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Rolle auswählen"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Modell auswählen"]')).toBeVisible();
+    await expect(page.getByTestId("composer-input")).toBeVisible();
 
     // Not visible: FABs (only appear with messages), History panel
     const scrollToBottomFAB = page.locator('[data-testid="scroll-to-bottom"]');
-    const historyFAB = page.locator("button").filter({ has: page.locator("svg.lucide-bookmark") });
+    const historyFAB = page.locator('button[aria-label^="Verlauf öffnen"]');
 
     await expect(scrollToBottomFAB).not.toBeVisible();
     await expect(historyFAB).not.toBeVisible();
 
-    // Verify Quick Settings is collapsed (single chip, not 3 pills)
-    const quickSettings = page.getByRole("button", { name: /einstellungen/i });
-    await expect(quickSettings).toBeVisible();
-
-    // Should NOT show expanded pills initially
-    const modelPill = page.getByText(/model:/i);
-    const rolePill = page.getByText(/rolle:/i);
-    await expect(modelPill).not.toBeVisible();
-    await expect(rolePill).not.toBeVisible();
+    // Extra controls are collapsed behind toggle
+    await expect(page.locator('button[title="Mehr Optionen"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Stil auswählen"]')).not.toBeVisible();
+    await expect(page.locator('button[aria-label="Kreativität auswählen"]')).not.toBeVisible();
   });
 
   test("with messages - shows FABs and keeps pills collapsed", async ({ page }) => {
     await page.goto("/");
 
     // Send a message to trigger FAB appearance
-    const input = page.locator('[data-testid="unified-input-bar"] textarea');
+    const input = page.getByTestId("composer-input");
     await input.fill("Test message");
-    await page.locator('[data-testid="unified-input-bar"] button[aria-label="Senden"]').click();
+    await page.locator('button[aria-label="Senden"]').click();
 
     // Wait for message to appear
-    await page.waitForSelector(".chat-message", { timeout: 5000 });
+    await expect(page.getByTestId("message-row").first()).toBeVisible({ timeout: 5000 });
 
     // FABs should now be visible
-    const historyFAB = page.locator("button").filter({ has: page.locator("svg.lucide-bookmark") });
+    const historyFAB = page.locator('button[aria-label^="Verlauf öffnen"]');
     await expect(historyFAB).toBeVisible();
 
-    // Quick Settings should still be collapsed
-    const quickSettings = page.getByRole("button", { name: /einstellungen/i });
-    await expect(quickSettings).toBeVisible();
-
-    // Count visible chrome elements (should be ≤ 4)
-    const header = page.locator("header");
-    const composer = page.locator('[data-testid="unified-input-bar"]');
-
-    await expect(header).toBeVisible();
-    await expect(quickSettings).toBeVisible();
-    await expect(composer).toBeVisible();
-    await expect(historyFAB).toBeVisible();
-
-    // Total: 4 elements (Header, Quick Settings, Composer, History FAB)
-    // Success: Down from 6-7 in Phase 2
+    // Extra controls should still be collapsed
+    await expect(page.locator('button[title="Mehr Optionen"]')).toBeVisible();
+    await expect(page.locator('button[aria-label="Stil auswählen"]')).not.toBeVisible();
   });
 
-  test("Quick Settings expands and auto-collapses", async ({ page }) => {
+  test("extra controls can be expanded and collapsed", async ({ page }) => {
     await page.goto("/");
 
-    // Click to expand Quick Settings
-    const quickSettings = page.getByRole("button", { name: /einstellungen/i });
-    await quickSettings.click();
+    const moreOptions = page.locator('button[title="Mehr Optionen"]');
+    await moreOptions.click();
 
-    // Should show 3 pills after expansion
-    await expect(page.getByText(/model:/i)).toBeVisible({ timeout: 1000 });
-    await expect(page.getByText(/rolle:/i)).toBeVisible();
-    await expect(page.getByText(/memory/i)).toBeVisible();
+    await expect(page.locator('button[aria-label="Stil auswählen"]')).toBeVisible({
+      timeout: 1000,
+    });
+    await expect(page.locator('button[aria-label="Kreativität auswählen"]')).toBeVisible();
 
-    // Collapsed chip should not be visible when expanded
-    await expect(quickSettings).not.toBeVisible();
-
-    // Wait for auto-collapse (5 seconds according to component logic)
-    await page.waitForTimeout(5500);
-
-    // Should collapse back to single chip
-    await expect(quickSettings).toBeVisible();
-    await expect(page.getByText(/model:/i)).not.toBeVisible();
+    const lessOptions = page.locator('button[title="Weniger Optionen"]');
+    await lessOptions.click();
+    await expect(page.locator('button[aria-label="Stil auswählen"]')).not.toBeVisible();
   });
 
   test("status banner is dismissible", async ({ page }) => {
@@ -118,9 +99,9 @@ test.describe("Chrome Density - Chat Page", () => {
     );
 
     // Try to send a message to trigger error banner
-    const input = page.locator('[data-testid="unified-input-bar"] textarea');
+    const input = page.getByTestId("composer-input");
     await input.fill("Test");
-    await page.locator('[data-testid="unified-input-bar"] button[aria-label="Senden"]').click();
+    await page.locator('button[aria-label="Senden"]').click();
 
     // Wait for potential banner (might not appear depending on error handling)
     await page.waitForTimeout(2000);
@@ -142,28 +123,29 @@ test.describe("Chrome Density - Chat Page", () => {
 
 test.describe("Chrome Density - Mutual Exclusivity", () => {
   test("menu drawer closes history panel", async ({ page }) => {
+    await skipOnboarding(page);
     await page.goto("/");
 
     // Send message to make history FAB visible
-    const input = page.locator('[data-testid="unified-input-bar"] textarea');
+    const input = page.getByTestId("composer-input");
     await input.fill("Test message");
-    await page.locator('[data-testid="unified-input-bar"] button[aria-label="Senden"]').click();
-    await page.waitForSelector(".chat-message", { timeout: 5000 });
+    await page.locator('button[aria-label="Senden"]').click();
+    await expect(page.getByTestId("message-row").first()).toBeVisible({ timeout: 5000 });
 
     // Open history panel
-    const historyFAB = page.locator("button").filter({ has: page.locator("svg.lucide-bookmark") });
+    const historyFAB = page.locator('button[aria-label^="Verlauf öffnen"]');
     await historyFAB.click();
 
     // History panel should be visible
-    const historyPanel = page.locator('[data-testid="history-panel"]');
+    const historyPanel = page.getByRole("dialog", { name: "Inhaltsverzeichnis" });
     await expect(historyPanel).toBeVisible({ timeout: 2000 });
 
     // Open menu drawer
-    const menuButton = page.locator("header button").first(); // Menu button in header
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
     await menuButton.click();
 
     // Menu drawer should be visible
-    const menuDrawer = page.locator('[data-testid="menu-drawer"]');
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
     await expect(menuDrawer).toBeVisible({ timeout: 2000 });
 
     // History panel should be closed (mutual exclusivity)
@@ -171,27 +153,28 @@ test.describe("Chrome Density - Mutual Exclusivity", () => {
   });
 
   test("history panel closes menu drawer", async ({ page }) => {
+    await skipOnboarding(page);
     await page.goto("/");
 
     // Open menu drawer first
-    const menuButton = page.locator("header button").first();
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]:visible').first();
     await menuButton.click();
 
-    const menuDrawer = page.locator('[data-testid="menu-drawer"]');
+    const menuDrawer = page.getByRole("dialog", { name: "Navigationsmenü" });
     await expect(menuDrawer).toBeVisible({ timeout: 2000 });
 
     // Send message to make history FAB visible
-    const input = page.locator('[data-testid="unified-input-bar"] textarea');
+    const input = page.getByTestId("composer-input");
     await input.fill("Test");
-    await page.locator('[data-testid="unified-input-bar"] button[aria-label="Senden"]').click();
-    await page.waitForSelector(".chat-message", { timeout: 5000 });
+    await page.locator('button[aria-label="Senden"]').click();
+    await expect(page.getByTestId("message-row").first()).toBeVisible({ timeout: 5000 });
 
     // Open history panel
-    const historyFAB = page.locator("button").filter({ has: page.locator("svg.lucide-bookmark") });
+    const historyFAB = page.locator('button[aria-label^="Verlauf öffnen"]');
     await historyFAB.click();
 
     // History panel should be visible
-    const historyPanel = page.locator('[data-testid="history-panel"]');
+    const historyPanel = page.getByRole("dialog", { name: "Inhaltsverzeichnis" });
     await expect(historyPanel).toBeVisible({ timeout: 2000 });
 
     // Menu drawer should be closed
@@ -238,6 +221,7 @@ test.describe("Chrome Density - Models Page", () => {
 
 test.describe("Touch Target Compliance", () => {
   test("all interactive buttons meet 44px minimum", async ({ page }) => {
+    await skipOnboarding(page);
     await page.goto("/");
 
     // Get all buttons
@@ -263,16 +247,17 @@ test.describe("Touch Target Compliance", () => {
   });
 
   test("FABs meet touch target size", async ({ page }) => {
+    await skipOnboarding(page);
     await page.goto("/");
 
     // Send message to make FABs visible
-    const input = page.locator('[data-testid="unified-input-bar"] textarea');
+    const input = page.getByTestId("composer-input");
     await input.fill("Test");
-    await page.locator('[data-testid="unified-input-bar"] button[aria-label="Senden"]').click();
-    await page.waitForSelector(".chat-message", { timeout: 5000 });
+    await page.locator('button[aria-label="Senden"]').click();
+    await expect(page.getByTestId("message-row").first()).toBeVisible({ timeout: 5000 });
 
     // Check History FAB
-    const historyFAB = page.locator("button").filter({ has: page.locator("svg.lucide-bookmark") });
+    const historyFAB = page.locator('button[aria-label^="Verlauf öffnen"]');
     await expect(historyFAB).toBeVisible();
 
     const fabBox = await historyFAB.boundingBox();
@@ -324,6 +309,7 @@ test.describe("Performance - Animation Budget", () => {
   test("reduced animations don't cause layout shift", async ({ page, browserName }) => {
     test.skip(browserName !== "chromium", "Layout shift API checks are only reliable in Chromium.");
 
+    await skipOnboarding(page);
     await page.goto("/");
     await expect(page.getByRole("textbox", { name: /nachricht eingeben/i })).toBeVisible();
     await page.waitForLoadState("networkidle");

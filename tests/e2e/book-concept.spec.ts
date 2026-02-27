@@ -15,8 +15,12 @@ test.describe("Book Concept UI", () => {
     // Check for Hamburger Menu
     await expect(page.locator('button[aria-label="Menü öffnen"]')).toBeVisible();
 
-    // Check for History trigger
-    await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
+    // History is available via the drawer on empty chat state
+    await page.locator('button[aria-label="Menü öffnen"]').click();
+    const drawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByRole("link", { name: /^Verlauf\b/i })).toBeVisible();
+    await page.locator('button[aria-label="Menü schließen"]').click();
 
     // Check for Unified Input Bar
     const input = page.getByTestId("composer-input");
@@ -25,6 +29,11 @@ test.describe("Book Concept UI", () => {
     // Check for role selector
     const roleButton = page.locator('button[aria-label="Rolle auswählen"]');
     await expect(roleButton).toBeVisible();
+
+    // Additional controls are behind "Mehr Optionen"
+    const extraControlsToggle = page.locator('button[title="Mehr Optionen"]');
+    await expect(extraControlsToggle).toBeVisible();
+    await extraControlsToggle.click();
 
     // Check for style selector
     await expect(page.locator('button[aria-label="Stil auswählen"]')).toBeVisible();
@@ -53,6 +62,9 @@ test.describe("Book Concept UI", () => {
   });
 
   test("should open and interact with Control Bar", async ({ page }) => {
+    // Open secondary controls first
+    await page.locator('button[title="Mehr Optionen"]').click();
+
     // Click on style selector
     const styleControl = page.locator('button[aria-label="Stil auswählen"]');
     await styleControl.click();
@@ -72,18 +84,19 @@ test.describe("Book Concept UI", () => {
     await creativeLevel.click();
   });
 
-  test("should open History Panel via history trigger", async ({ page }) => {
-    const historyTrigger = page.locator('button[aria-label="Verlauf öffnen"]');
-    await historyTrigger.click();
+  test("should open History page via navigation menu", async ({ page }) => {
+    const menuButton = page.locator('button[aria-label="Menü öffnen"]');
+    await menuButton.click();
 
-    // Prefer the actual history panel dialog (avoid picking other complementary regions)
-    const historyPanel = page.getByRole("dialog").filter({ hasText: "Inhaltsverzeichnis" });
-    await expect(historyPanel).toBeVisible();
-    await expect(historyPanel.getByRole("button", { name: "Chat‑Verlauf" })).toBeVisible();
-    await expect(historyPanel.getByRole("button", { name: "Archiv" })).toBeVisible();
+    const drawer = page.getByRole("dialog", { name: "Navigationsmenü" });
+    await expect(drawer).toBeVisible();
 
-    // Close it by clicking outside
-    await page.mouse.click(10, 10);
+    const historyLink = drawer.getByRole("link", { name: /^Verlauf\b/i });
+    await expect(historyLink).toBeVisible();
+    await historyLink.click();
+
+    await expect(page).toHaveURL(/\/chat\/history/);
+    await expect(page.getByRole("heading", { name: /Gespeicherte Unterhaltungen/i })).toBeVisible();
   });
 
   test("should open Main Menu via Hamburger", async ({ page }) => {

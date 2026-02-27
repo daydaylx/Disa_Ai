@@ -285,13 +285,19 @@ export default function Chat() {
             aria-label="Chat messages"
             data-scroll-owner="active"
           >
-            <div className="px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
+            <div className="relative px-4 max-w-3xl mx-auto w-full min-h-full flex flex-col">
               <div
-                className="flex-1 flex flex-col gap-6 py-4"
+                className="relative z-[1] flex-1 flex flex-col gap-6 py-4"
                 style={{
                   paddingBottom: `calc(var(--inset-safe-bottom, 0px) + ${Math.max(composerHeight + 16, 96)}px)`,
                 }}
               >
+                {!chatLogic.isEmpty && (
+                  <>
+                    <div className="chat-active-atmosphere" aria-hidden="true" />
+                    <div className="hero-noise chat-active-noise" aria-hidden="true" />
+                  </>
+                )}
                 {chatLogic.isEmpty ? (
                   <div className="relative flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-[14%]">
                     {/* Atmospheric glow – slightly larger for more warmth */}

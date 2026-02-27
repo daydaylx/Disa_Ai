@@ -9,6 +9,7 @@ describe("AnimatedBrandmark", () => {
     const root = container.querySelector(".brandmark-motion");
     expect(root).toHaveAttribute("data-intensity", "accent");
     expect(root).toHaveAttribute("data-mode", "hero");
+    expect(container.querySelector('[data-layer="halo-ring"]')).toBeInTheDocument();
   });
 
   it("keeps text visible without intro animation when playIntro is false", () => {

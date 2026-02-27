@@ -506,6 +506,55 @@ html[data-reduced-motion="true"] {
     background-repeat: repeat;
     opacity: 0.035;
   }
+
+  .chat-active-atmosphere {
+    position: absolute;
+    top: clamp(24px, 7vh, 56px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(210px, 64vw, 360px);
+    height: clamp(110px, 34vw, 180px);
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(40px);
+    opacity: 0.3;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(139, 92, 246, 0.18) 0%,
+      rgba(56, 189, 248, 0.08) 52%,
+      transparent 78%
+    );
+    will-change: opacity, transform;
+  }
+
+  .chat-active-noise {
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: clamp(180px, 46vh, 340px);
+    opacity: 0.022;
+    mask-image: linear-gradient(to bottom, black 0%, black 62%, transparent 100%);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 62%, transparent 100%);
+  }
+
+  @media (min-width: 640px) {
+    .chat-active-atmosphere {
+      width: clamp(260px, 52vw, 420px);
+      height: clamp(130px, 22vw, 210px);
+      opacity: 0.2;
+    }
+
+    .chat-active-noise {
+      opacity: 0.014;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .chat-active-atmosphere {
+      opacity: 0.36;
+      filter: blur(34px);
+    }
+  }
 }
 
 /* Scrollbar Styling */

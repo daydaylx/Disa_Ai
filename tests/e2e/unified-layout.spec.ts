@@ -23,7 +23,6 @@ test.describe("Unified Layout Tests", () => {
       // Mobile-only UI is enforced on all screen sizes (no desktop sidebar)
       // Some pages render multiple "Menü öffnen" buttons (hidden + visible). Prefer the visible one.
       await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
-      await expect(page.locator('button[aria-label="Verlauf öffnen"]')).toBeVisible();
 
       // Brand/logo should be present (may have multiple instances - sidebar + header)
       // Check that at least one is visible
