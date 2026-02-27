@@ -9,12 +9,16 @@
 /manifest.webmanifest
   Content-Type: application/manifest+json; charset=utf-8
   Cache-Control: public, max-age=3600
+  CDN-Cache-Control: max-age=86400
+  Cache-Tag: manifest,pwa
 
 # Service Worker - Must be fresh for updates
 /sw.js
   Content-Type: application/javascript; charset=utf-8
   Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: no-cache
   Service-Worker-Allowed: /
+  Cache-Tag: sw,pwa
 
 # ============================================================================
 # GLOBAL SECURITY HEADERS - All Routes
@@ -85,17 +89,37 @@
 # EXCEPTIONS & OVERRIDES
 # ============================================================================
 
+# ──────────────────────────────────────────────────────────────────────────
 # SPA shell route - Always revalidate to ensure fresh app shell
+# ──────────────────────────────────────────────────────────────────────────
+# CDN-Cache-Control: Cloudflare Edge Cache directive (bypasses browser cache)
+# Cloudflare-CDN-Cache-Control: Explicit Cloudflare-only directive
+# Cache-Tag: Allows selective cache purging via Cloudflare API
+# ──────────────────────────────────────────────────────────────────────────
 /
   Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: no-cache
+  Cloudflare-CDN-Cache-Control: no-cache
+  Cache-Tag: html,app-shell
 
 # HTML files - Always revalidate to ensure fresh app shell
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: no-cache
+  Cloudflare-CDN-Cache-Control: no-cache
+  Cache-Tag: html,app-shell
 
+# ──────────────────────────────────────────────────────────────────────────
 # Aggressive caching for hashed assets (immutable)
+# ──────────────────────────────────────────────────────────────────────────
+# Vite generates content-hashed filenames (e.g., main-hJzJLWLU.js)
+# → Safe to cache indefinitely (immutable)
+# → CDN caches for 1 year, browser caches forever
+# ──────────────────────────────────────────────────────────────────────────
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+  CDN-Cache-Control: max-age=31536000
+  Cache-Tag: assets,static
 
 # API routes - Never cache
 /api/*

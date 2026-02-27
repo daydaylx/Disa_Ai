@@ -54,7 +54,11 @@
     "mcp:update": "npm update @modelcontextprotocol/server-* --save-dev",
     "jules:docs": "cat .claude/JULES_WORKFLOWS.md",
     "jules:quick": "cat .claude/JULES_QUICK_REFERENCE.md",
-    "jules:help": "echo '📚 Jules Documentation:' && echo '  npm run jules:docs     - Vollständige Workflows' && echo '  npm run jules:quick    - Quick Reference' && echo '  cat .claude/JULES_INTEGRATION.md - Setup Guide'"
+    "jules:help": "echo '📚 Jules Documentation:' && echo '  npm run jules:docs     - Vollständige Workflows' && echo '  npm run jules:quick    - Quick Reference' && echo '  cat .claude/JULES_INTEGRATION.md - Setup Guide'",
+    "cache:purge": "bash scripts/purge-cloudflare-cache.sh",
+    "cache:purge:html": "bash scripts/purge-cloudflare-cache.sh html",
+    "cache:purge:assets": "bash scripts/purge-cloudflare-cache.sh assets",
+    "cache:purge:all": "bash scripts/purge-cloudflare-cache.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
