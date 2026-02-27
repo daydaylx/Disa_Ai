@@ -220,7 +220,7 @@ export function UnifiedInputBar({
             type="button"
             onClick={() => setShowExtraControls((prev) => !prev)}
             className={cn(
-              "flex h-7.5 w-7.5 items-center justify-center rounded-full transition-all",
+              "relative flex h-7.5 w-7.5 items-center justify-center rounded-full transition-all",
               showExtraControls
                 ? "bg-brand-primary text-white"
                 : "bg-white/5 text-ink-tertiary hover:bg-white/10",
@@ -228,6 +228,12 @@ export function UnifiedInputBar({
             title={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
           >
             <Palette className="h-3 w-3" />
+            {!showExtraControls && (
+              <span
+                aria-hidden="true"
+                className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-brand-primary/70"
+              />
+            )}
           </button>
         </div>
 

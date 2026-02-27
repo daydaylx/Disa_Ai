@@ -78,6 +78,12 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
           </span>
         </span>
       </h1>
+      <p
+        className="mt-3 text-center text-sm tracking-wide text-ink-secondary/70 animate-wordmark-intro"
+        style={{ animationDelay: "0.4s" }}
+      >
+        Was möchtest du wissen?
+      </p>
     </div>
   );
 });

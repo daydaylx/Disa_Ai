@@ -286,7 +286,7 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="relative flex flex-1 items-center justify-center px-4">
+                  <div className="relative flex flex-1 items-center justify-center px-4 pb-[14%]">
                     {/* Subtle atmospheric glow - static and low opacity for depth, not distraction */}
                     <div
                       className="absolute w-64 h-64 rounded-full blur-3xl pointer-events-none"
@@ -296,7 +296,7 @@ export default function Chat() {
                       }}
                       aria-hidden="true"
                     />
-                    <AnimatedBrandmark className="relative mx-auto scale-[0.9]" />
+                    <AnimatedBrandmark className="relative mx-auto" />
                   </div>
                 ) : (
                   <VirtualizedMessageList
