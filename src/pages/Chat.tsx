@@ -1,7 +1,7 @@
 import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { type LogoState } from "@/app/components/AnimatedLogo";
+import { getChatLogoState } from "@/app/components/logoState";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
 import { type ChatApiStatus } from "@/hooks/useChat";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
@@ -140,13 +140,15 @@ export default function Chat() {
   // Loaded once — static data, no network call
   const quickstarts = useMemo(() => getQuickstarts(), []);
 
-  // Calculate logo state for presence animation
-  const getLogoState = (): LogoState => {
-    if (chatLogic.error) return "error";
-    if (chatLogic.isLoading) return "thinking";
-    if (chatLogic.input && chatLogic.input.trim().length > 0) return "typing";
-    return "idle";
-  };
+  const logoState = useMemo(
+    () =>
+      getChatLogoState({
+        hasError: Boolean(chatLogic.error),
+        isLoading: chatLogic.isLoading,
+        inputValue: chatLogic.input,
+      }),
+    [chatLogic.error, chatLogic.isLoading, chatLogic.input],
+  );
 
   // Define preset handler now that chatLogic is available
   startWithPreset.current = useCallback(
@@ -254,7 +256,7 @@ export default function Chat() {
       <ChatLayout
         title={chatLogic.activeConversation?.title || "Neue Unterhaltung"}
         onMenuClick={handleOpenMenu}
-        logoState={getLogoState()}
+        logoState={logoState}
       >
         <div
           {...swipeHandlers}
@@ -301,7 +303,12 @@ export default function Chat() {
                       }}
                       aria-hidden="true"
                     />
-                    <AnimatedBrandmark className="relative mx-auto" />
+                    <AnimatedBrandmark
+                      className="relative mx-auto"
+                      intensity="premium"
+                      mode="hero"
+                      playIntro={chatLogic.isEmpty}
+                    />
                     <QuickstartStrip
                       quickstarts={quickstarts}
                       onSelect={(q) =>

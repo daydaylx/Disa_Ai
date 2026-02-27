@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
  * Logo animation states
  */
 export type LogoState = "idle" | "loading" | "typing" | "thinking" | "success" | "error";
+export type LogoMotionIntensity = "subtle" | "premium" | "accent";
+export type LogoMotionMode = "header" | "hero";
 
 export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "children"> {
   /**
@@ -13,6 +15,18 @@ export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "childre
    * @default "idle"
    */
   state?: LogoState;
+
+  /**
+   * Controls visibility and energy of logo motion.
+   * @default "subtle"
+   */
+  intensity?: LogoMotionIntensity;
+
+  /**
+   * Motion profile for context-specific tuning.
+   * @default "header"
+   */
+  motionMode?: LogoMotionMode;
 }
 
 /**
@@ -27,10 +41,10 @@ export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "childre
  * extended to create a high-quality, ambient presence rather than distracting motion.
  *
  * **States and Animation Timings**:
- * - `idle`: Ultra-slow, barely visible pulse (10s cycle, opacity: 0.08-0.18)
- * - `typing`: Slightly more active pulse (5s cycle, opacity: 0.2-0.45)
- * - `thinking`, `loading`: Active streaming pulse (2.5s cycle, opacity: 0.3-0.65)
- * - `error`: Single quick ping (0.75s one-shot, then returns to idle)
+ * - `idle`: Slow ambient pulse (~8.6s cycle)
+ * - `typing`: Slightly elevated pulse (~5.4s cycle)
+ * - `thinking`, `loading`: Clearly active pulse (~2.8s cycle)
+ * - `error`: One-shot alert pulse (~560ms), then returns to idle
  *
  * **Accessibility**: Respects `prefers-reduced-motion` by showing static,
  * reduced-opacity glows instead of animated pulsing.
@@ -44,11 +58,17 @@ export interface AnimatedLogoProps extends Omit<ComponentProps<"span">, "childre
  * <AnimatedLogo state="thinking" />
  * ```
  */
-export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLogoProps) {
+export function AnimatedLogo({
+  state = "idle",
+  intensity = "subtle",
+  motionMode = "header",
+  className,
+  ...props
+}: AnimatedLogoProps) {
   return (
     <span
       className={cn(
-        "relative inline-flex items-baseline font-semibold tracking-tight select-none",
+        "brand-wordmark relative inline-flex items-baseline font-semibold tracking-tight select-none",
         "isolation-isolate", // Creates a stacking context for the pseudo-element
         className,
       )}
@@ -56,7 +76,16 @@ export function AnimatedLogo({ state = "idle", className, ...props }: AnimatedLo
       {...props}
     >
       {/* Presence Mark: Animated via CSS based on parent's data-state */}
-      <span className="presence-mark" aria-hidden="true" data-state={state} />
+      <span
+        className="presence-mark"
+        aria-hidden="true"
+        data-state={state}
+        data-intensity={intensity}
+        data-mode={motionMode}
+      >
+        <span className="presence-mark__core" />
+        <span className="presence-mark__halo" />
+      </span>
 
       {/* Wordmark Text with gradient accents */}
       <span className="relative z-content">

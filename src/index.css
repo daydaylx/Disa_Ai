@@ -721,6 +721,18 @@ html[data-reduced-motion="true"] {
     }
   }
 
+  /* Intermittent shimmer pass for premium brand text */
+  @keyframes brand-shimmer-luxe {
+    0%,
+    68% {
+      background-position: -130% 0;
+    }
+    86%,
+    100% {
+      background-position: 170% 0;
+    }
+  }
+
   .animate-brand-shimmer {
     animation: brand-shimmer 12s linear infinite;
   }
@@ -780,62 +792,63 @@ html[data-reduced-motion="true"] {
   }
 
   .animate-aurora-a {
-    animation: aurora-drift-a 14s ease-in-out infinite;
+    animation: aurora-drift-a 18s ease-in-out infinite;
     will-change: transform, opacity;
   }
 
   .animate-aurora-b {
-    animation: aurora-drift-b 18s ease-in-out infinite;
-    animation-delay: -5s;
+    animation: aurora-drift-b 24s ease-in-out infinite;
+    animation-delay: -6s;
     will-change: transform, opacity;
   }
 
-  /* Word-reveal: blur clears as word slides up – staggered per word */
+  /* Word-reveal: clean lift for premium readability */
   @keyframes word-reveal {
     0% {
       opacity: 0;
       transform: translateY(12px);
-      filter: blur(10px);
     }
     60% {
       opacity: 1;
       transform: translateY(-2px);
-      filter: blur(0);
     }
     100% {
       opacity: 1;
       transform: translateY(0);
-      filter: blur(0);
     }
   }
 
   .animate-word-reveal {
     animation: word-reveal 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
   }
 
   .animate-word-reveal-delayed {
     animation: word-reveal 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
     opacity: 0;
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
   }
 
   /* Neon-Glow pulse behind logo text */
   @keyframes logo-neon-pulse {
     0%,
     100% {
-      opacity: 0.05;
-      transform: scale(1);
+      opacity: 0.08;
+      transform: scale(0.99);
     }
-    50% {
-      opacity: 0.18;
-      transform: scale(1.06);
+    46% {
+      opacity: 0.24;
+      transform: scale(1.035);
+    }
+    70% {
+      opacity: 0.14;
+      transform: scale(1.01);
     }
   }
 
   .animate-logo-neon-pulse {
-    animation: logo-neon-pulse 4s ease-in-out infinite;
+    animation: logo-neon-pulse 6.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     will-change: opacity, transform;
   }
 
@@ -854,7 +867,7 @@ html[data-reduced-motion="true"] {
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-background-clip: text;
     color: transparent;
-    animation: brand-shimmer 12s linear infinite;
+    animation: brand-shimmer-luxe 16s linear infinite;
     will-change: background-position;
   }
 
@@ -873,8 +886,41 @@ html[data-reduced-motion="true"] {
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-background-clip: text;
     color: transparent;
-    animation: brand-shimmer 12s linear 2s infinite;
+    animation: brand-shimmer-luxe 16s linear 2.4s infinite;
     will-change: background-position;
+  }
+
+  .brandmark-motion[data-intensity="subtle"] .logo-text-shimmer-disa,
+  .brandmark-motion[data-intensity="subtle"] .logo-text-shimmer-ai {
+    animation-duration: 20s;
+  }
+
+  .brandmark-motion[data-intensity="accent"] .logo-text-shimmer-disa,
+  .brandmark-motion[data-intensity="accent"] .logo-text-shimmer-ai {
+    animation-duration: 12s;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .brandmark-motion[data-mode="hero"][data-intensity="premium"] [data-layer="aurora-a"] {
+      opacity: 0.34;
+    }
+
+    .brandmark-motion[data-mode="hero"][data-intensity="premium"] [data-layer="aurora-b"] {
+      opacity: 0.28;
+    }
+
+    .brandmark-motion[data-mode="hero"][data-intensity="premium"] [data-layer="aurora-accent"] {
+      opacity: 0.2;
+    }
+
+    .brandmark-motion[data-mode="hero"][data-intensity="premium"] [data-layer="neon"] {
+      opacity: 0.2;
+    }
+
+    .brandmark-motion[data-mode="hero"] .logo-text-shimmer-disa,
+    .brandmark-motion[data-mode="hero"] .logo-text-shimmer-ai {
+      animation-duration: 18s;
+    }
   }
 
   /* ============================================================================

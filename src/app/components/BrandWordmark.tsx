@@ -1,6 +1,11 @@
 import type { ComponentProps } from "react";
 
-import { AnimatedLogo, type LogoState } from "./AnimatedLogo";
+import {
+  AnimatedLogo,
+  type LogoMotionIntensity,
+  type LogoMotionMode,
+  type LogoState,
+} from "./AnimatedLogo";
 
 export interface BrandWordmarkProps extends Omit<ComponentProps<"span">, "children"> {
   /**
@@ -8,6 +13,18 @@ export interface BrandWordmarkProps extends Omit<ComponentProps<"span">, "childr
    * @default "idle"
    */
   state?: LogoState;
+
+  /**
+   * Controls visibility and energy of logo motion.
+   * @default "subtle"
+   */
+  intensity?: LogoMotionIntensity;
+
+  /**
+   * Motion profile for context-specific tuning.
+   * @default "header"
+   */
+  motionMode?: LogoMotionMode;
 
   /**
    * Whether to show the thinking cursor
@@ -25,8 +42,18 @@ export interface BrandWordmarkProps extends Omit<ComponentProps<"span">, "childr
 export function BrandWordmark({
   className,
   state = "idle",
+  intensity = "subtle",
+  motionMode = "header",
   showCursor: _showCursor = false, // Not used currently, reserved for future cursor animation
   ...props
 }: BrandWordmarkProps) {
-  return <AnimatedLogo className={className} state={state} {...props} />;
+  return (
+    <AnimatedLogo
+      className={className}
+      intensity={intensity}
+      motionMode={motionMode}
+      state={state}
+      {...props}
+    />
+  );
 }

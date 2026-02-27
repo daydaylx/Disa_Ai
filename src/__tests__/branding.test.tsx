@@ -17,10 +17,25 @@ describe("BrandWordmark", () => {
 
     // Check for animated logo with presence mark
     expect(getByTestId("animated-logo")).toBeInTheDocument();
-    expect(container.querySelector(".presence-mark")).toBeInTheDocument();
+    const presenceMark = container.querySelector(".presence-mark");
+    expect(presenceMark).toBeInTheDocument();
+    expect(presenceMark).toHaveAttribute("data-intensity", "subtle");
+    expect(presenceMark).toHaveAttribute("data-mode", "header");
+    expect(container.querySelector(".presence-mark__core")).toBeInTheDocument();
+    expect(container.querySelector(".presence-mark__halo")).toBeInTheDocument();
 
     // Ensure no separators are present
     expect(container.textContent?.includes("|")).toBe(false);
     expect(container.textContent?.includes("▮")).toBe(false);
+  });
+
+  it("forwards state and motion props to presence mark", () => {
+    const { container } = render(
+      <BrandWordmark intensity="accent" motionMode="hero" state="thinking" />,
+    );
+    const presenceMark = container.querySelector(".presence-mark");
+    expect(presenceMark).toHaveAttribute("data-intensity", "accent");
+    expect(presenceMark).toHaveAttribute("data-mode", "hero");
+    expect(presenceMark).toHaveAttribute("data-state", "thinking");
   });
 });

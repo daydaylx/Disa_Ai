@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 
-import { type LogoState } from "@/app/components/AnimatedLogo";
+import { type LogoMotionIntensity, type LogoState } from "@/app/components/AnimatedLogo";
 import { BrandWordmark } from "@/app/components/BrandWordmark";
 import { Menu } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ interface ChatLayoutProps {
   onMenuClick?: () => void;
   className?: string;
   logoState?: LogoState;
+  logoIntensity?: LogoMotionIntensity;
 }
 
 export function ChatLayout({
@@ -20,6 +21,7 @@ export function ChatLayout({
   onMenuClick,
   className,
   logoState = "idle",
+  logoIntensity = "premium",
 }: ChatLayoutProps) {
   return (
     <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-bg-app text-ink-primary selection:bg-accent-primary/30">
@@ -46,6 +48,8 @@ export function ChatLayout({
             <div className="flex items-center gap-2">
               <BrandWordmark
                 className="h-5 w-auto text-ink-primary"
+                intensity={logoIntensity}
+                motionMode="header"
                 state={logoState}
                 data-testid="brand-logo"
               />
