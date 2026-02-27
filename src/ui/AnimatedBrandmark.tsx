@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef } from "react";
 
+import type { LogoState } from "@/app/components/AnimatedLogo";
 import { cn } from "@/lib/utils";
 
 interface AnimatedBrandmarkProps {
@@ -7,6 +8,7 @@ interface AnimatedBrandmarkProps {
   mode?: "header" | "hero";
   intensity?: "subtle" | "premium" | "accent";
   playIntro?: boolean;
+  state?: LogoState;
 }
 
 let heroIntroPlayed = false;
@@ -17,6 +19,7 @@ export const AnimatedBrandmark = memo(
     mode = "hero",
     intensity = "premium",
     playIntro = true,
+    state = "idle",
   }: AnimatedBrandmarkProps) => {
     const shouldRunIntroRef = useRef(Boolean(playIntro && mode === "hero" && !heroIntroPlayed));
 
@@ -34,6 +37,7 @@ export const AnimatedBrandmark = memo(
         data-intensity={intensity}
         data-intro={shouldRunIntro ? "on" : "off"}
         data-mode={mode}
+        data-state={state}
       >
         <div aria-hidden="true" className="pointer-events-none select-none">
           <div
@@ -71,6 +75,13 @@ export const AnimatedBrandmark = memo(
             }}
           />
         </div>
+
+        {/* Halo ring – conic-gradient ellipse that slowly rotates behind the logo */}
+        <div
+          aria-hidden="true"
+          className="halo-ring motion-safe:animate-halo-ring-spin"
+          data-layer="halo-ring"
+        />
 
         <div
           aria-hidden="true"

@@ -294,20 +294,32 @@ export default function Chat() {
               >
                 {chatLogic.isEmpty ? (
                   <div className="relative flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-[14%]">
-                    {/* Subtle atmospheric glow - static and low opacity for depth, not distraction */}
+                    {/* Atmospheric glow – slightly larger for more warmth */}
                     <div
-                      className="absolute w-64 h-64 rounded-full blur-3xl pointer-events-none"
+                      className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(56,189,248,0.05) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, rgba(56, 189, 248, 0.06) 50%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />
+                    {/* Vignette – dark edges draw focus toward the logo */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.18) 100%)",
+                      }}
+                      aria-hidden="true"
+                    />
+                    {/* Noise overlay – subtle film-grain texture for premium depth */}
+                    <div className="hero-noise" aria-hidden="true" />
                     <AnimatedBrandmark
                       className="relative mx-auto"
                       intensity="premium"
                       mode="hero"
                       playIntro={chatLogic.isEmpty}
+                      state={logoState}
                     />
                     <QuickstartStrip
                       quickstarts={quickstarts}

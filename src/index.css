@@ -111,6 +111,7 @@
   --blur-aurora-heavy-desktop: 48px;
   --blur-neon-mobile: 6px;
   --blur-neon-desktop: 16px;
+  --blur-halo-mobile: 14px;
 
   /* Frame/Notch System - Disa AI Signature Visual */
   --frame-radius: 16px;
@@ -145,6 +146,7 @@
     --blur-aurora-mobile: 6px;
     --blur-aurora-heavy-mobile: 10px;
     --blur-neon-mobile: 4px;
+    --blur-halo-mobile: 10px;
   }
 }
 
@@ -154,6 +156,7 @@
     --blur-aurora-mobile: var(--blur-aurora-desktop);
     --blur-aurora-heavy-mobile: var(--blur-aurora-heavy-desktop);
     --blur-neon-mobile: var(--blur-neon-desktop);
+    --blur-halo-mobile: 16px;
   }
 }
 
@@ -488,6 +491,20 @@ html[data-reduced-motion="true"] {
 
   .neon-blur {
     filter: blur(var(--blur-neon-mobile));
+  }
+
+  /* Hero noise overlay – SVG feTurbulence film-grain for premium depth */
+  /* GPU-only: pure CSS background-image, zero JavaScript cost */
+  /* stylelint-disable-next-line function-url-quotes */
+  .hero-noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* stylelint-disable-next-line function-url-quotes */
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    opacity: 0.035;
   }
 }
 
@@ -850,6 +867,85 @@ html[data-reduced-motion="true"] {
   .animate-logo-neon-pulse {
     animation: logo-neon-pulse 6.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     will-change: opacity, transform;
+  }
+
+  /* ============================================================================
+     HALO RING – Rotating conic-gradient ellipse behind the hero logo
+     Centered via top/left 50% + translate(-50%,-50%) in the keyframe so
+     the rotation axis stays on the element's geometric center.
+     ========================================================================== */
+
+  @keyframes halo-ring-spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  /* Base halo-ring styles – no animation here; applied via motion-safe: variant */
+  .halo-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Default: translate only (no rotation), overridden by keyframe when animated */
+    transform: translate(-50%, -50%);
+    width: clamp(160px, 42vw, 240px);
+    height: clamp(80px, 21vw, 120px);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(139, 92, 246, 0.22) 0%,
+      rgba(56, 189, 248, 0.18) 25%,
+      transparent 40%,
+      transparent 70%,
+      rgba(139, 92, 246, 0.12) 90%,
+      rgba(139, 92, 246, 0.22) 100%
+    );
+    filter: blur(var(--blur-halo-mobile, 14px));
+    opacity: 0.6;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .animate-halo-ring-spin {
+    animation: halo-ring-spin 32s linear infinite;
+  }
+
+  /* ============================================================================
+     STATE-AWARE OVERRIDES – Hero logo responds to chat state
+     Only active when prefers-reduced-motion is not set (safe for vestibular)
+     ========================================================================== */
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Typing: neon subtly brighter */
+    .brandmark-motion[data-state="typing"] [data-layer="neon"] {
+      opacity: 0.9;
+      animation-duration: 5s;
+    }
+
+    /* Thinking/Loading: neon pulses faster, halo ring speeds up */
+    .brandmark-motion[data-state="thinking"] [data-layer="neon"] {
+      animation-duration: 3.8s;
+    }
+
+    .brandmark-motion[data-state="thinking"] .halo-ring {
+      animation-duration: 20s;
+      opacity: 0.75;
+    }
+
+    /* Error: neon shifts to red-tinted glow */
+    .brandmark-motion[data-state="error"] [data-layer="neon"] {
+      background: radial-gradient(
+        ellipse 80% 60% at 50% 50%,
+        rgba(239, 68, 68, 0.2),
+        rgba(139, 92, 246, 0.1),
+        transparent
+      );
+      animation-duration: 2.4s;
+    }
   }
 
   /* Shimmer gradient for "Disa" – violet sweep */

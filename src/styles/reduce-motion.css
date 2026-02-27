@@ -48,6 +48,12 @@
     animation: none !important;
   }
 
+  /* Halo ring: statisch, kein Rotieren */
+  .halo-ring {
+    animation: none !important;
+    transform: translate(-50%, -50%) !important; /* Zentriert bleiben, kein Rotate */
+  }
+
   /* Hover-Transformationen deaktivieren */
   .hover\:scale-105:hover,
   .hover\:-translate-y-px:hover,
