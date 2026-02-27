@@ -68,6 +68,16 @@ function applySafeAreaInsets(insets: SafeAreaInsets): void {
   }
 }
 
+/**
+ * Applies effects preference based on user accessibility settings AND device capabilities.
+ *
+ * 3-Tier System:
+ * - MINIMAL (data-reduced-motion="true"): User prefers no animations → blur=0, animations off
+ * - REDUCED (data-effects="reduced"): Low-power device → blur=6-12px, slower animations
+ * - FULL (data-effects="full"): Normal device → blur=16-48px, all animations
+ *
+ * CRITICAL: Text opacity remains ≥0.9 in ALL modes!
+ */
 function applyEffectsPreference(): void {
   const root = document.documentElement;
   const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -75,12 +85,16 @@ function applyEffectsPreference(): void {
   const saveData = Boolean(connection?.saveData);
   const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
 
-  const shouldReduce =
-    Boolean(prefersReducedMotion) ||
-    Boolean(saveData) ||
-    (typeof deviceMemory === "number" && deviceMemory <= 4);
-
-  root.dataset.effects = shouldReduce ? "reduced" : "full";
+  if (prefersReducedMotion) {
+    // Accessibility-Präferenz → MINIMAL (keine Animationen, kein Blur)
+    root.dataset.reducedMotion = "true";
+    root.dataset.effects = "minimal";
+  } else {
+    // Keine A11y-Präferenz → Check Device Capability
+    root.dataset.reducedMotion = "false";
+    const isLowPower = saveData || (typeof deviceMemory === "number" && deviceMemory <= 4);
+    root.dataset.effects = isLowPower ? "reduced" : "full";
+  }
 }
 
 export function initializeDeviceSafeArea(): void {

@@ -67,6 +67,14 @@
   --transition-slow: 300ms cubic-bezier(0.2, 0, 0, 1);
 
   /* ========================================================================
+     ANIMATION DURATIONS - Mobile-optimiert
+     ======================================================================== */
+  --animation-aurora: 14s;
+  --animation-shimmer: 12s;
+  --animation-neon-pulse: 4s;
+  --animation-word-reveal: 700ms;
+
+  /* ========================================================================
      BORDERS - Konsistente Opacities
      ======================================================================== */
   --border-hairline: rgba(255, 255, 255, 0.08);

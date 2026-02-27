@@ -26,7 +26,7 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
       <div aria-hidden="true" className="pointer-events-none select-none">
         {/* Violet blob – top-left */}
         <div
-          className="absolute rounded-full blur-2xl motion-safe:animate-aurora-a"
+          className="absolute rounded-full aurora-blur motion-safe:animate-aurora-a"
           style={{
             width: "160px",
             height: "80px",
@@ -37,7 +37,7 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
         />
         {/* Cyan blob – right */}
         <div
-          className="absolute rounded-full blur-2xl motion-safe:animate-aurora-b"
+          className="absolute rounded-full aurora-blur motion-safe:animate-aurora-b"
           style={{
             width: "130px",
             height: "70px",
@@ -48,7 +48,7 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
         />
         {/* Fuchsia accent – bottom-center */}
         <div
-          className="absolute rounded-full blur-3xl"
+          className="absolute rounded-full aurora-blur-heavy"
           style={{
             width: "100px",
             height: "50px",
@@ -63,11 +63,10 @@ export const AnimatedBrandmark = memo(({ className }: AnimatedBrandmarkProps) =>
       {/* Neon-glow backdrop – pulses violet/cyan behind the text */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-2xl motion-safe:animate-logo-neon-pulse"
+        className="pointer-events-none absolute inset-0 rounded-2xl neon-blur motion-safe:animate-logo-neon-pulse"
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(139,92,246,0.25), rgba(56,189,248,0.15), transparent)",
-          filter: "blur(16px)",
         }}
       />
 

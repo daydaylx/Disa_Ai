@@ -101,6 +101,17 @@
   --role-teal-rgb: 45 212 191;
   --role-magenta-rgb: 236 72 153;
 
+  /* ========================================================================
+     MOBILE-ADAPTIVE BLUR - GPU-friendly für AnimatedBrandmark
+     3-Tier System: Full (Desktop) → Reduced (Mobile) → Minimal (A11y)
+     ======================================================================== */
+  --blur-aurora-mobile: 8px;
+  --blur-aurora-desktop: 32px;
+  --blur-aurora-heavy-mobile: 12px;
+  --blur-aurora-heavy-desktop: 48px;
+  --blur-neon-mobile: 6px;
+  --blur-neon-desktop: 16px;
+
   /* Frame/Notch System - Disa AI Signature Visual */
   --frame-radius: 16px;
   --frame-border-width: 1px;
@@ -122,6 +133,42 @@
 
   /* Page background for notch cutout */
   --page-bg-rgb: 19, 19, 20;
+}
+
+/* ========================================================================
+   MOBILE BLUR ADAPTATION - Responsive Device Tiers
+   ======================================================================== */
+
+/* Mobile: Leichtere Blur-Werte für bessere Performance */
+@media (hover: none) and (pointer: coarse) {
+  :root {
+    --blur-aurora-mobile: 6px;
+    --blur-aurora-heavy-mobile: 10px;
+    --blur-neon-mobile: 4px;
+  }
+}
+
+/* Desktop: Volle Blur-Werte */
+@media (hover: hover) or (min-width: 768px) {
+  :root {
+    --blur-aurora-mobile: var(--blur-aurora-desktop);
+    --blur-aurora-heavy-mobile: var(--blur-aurora-heavy-desktop);
+    --blur-neon-mobile: var(--blur-neon-desktop);
+  }
+}
+
+/* Reduced Effects (Low-Power Devices): Leicht aber sichtbar */
+html[data-effects="reduced"]:not([data-reduced-motion="true"]) {
+  --blur-aurora-mobile: 6px;
+  --blur-aurora-heavy-mobile: 8px;
+  --blur-neon-mobile: 4px;
+}
+
+/* Minimal (Accessibility Preference): Kein Blur */
+html[data-reduced-motion="true"] {
+  --blur-aurora-mobile: 0;
+  --blur-aurora-heavy-mobile: 0;
+  --blur-neon-mobile: 0;
 }
 
 @layer base {
@@ -424,6 +471,23 @@
       black calc(100% - 12px),
       transparent
     );
+  }
+
+  /* ============================================================================
+     DEVICE-ADAPTIVE BLUR UTILITIES - für AnimatedBrandmark
+     Nutzt CSS-Variablen die basierend auf Gerät/Accessibility angepasst werden
+     ========================================================================== */
+
+  .aurora-blur {
+    filter: blur(var(--blur-aurora-mobile));
+  }
+
+  .aurora-blur-heavy {
+    filter: blur(var(--blur-aurora-heavy-mobile));
+  }
+
+  .neon-blur {
+    filter: blur(var(--blur-neon-mobile));
   }
 }
 
@@ -813,8 +877,12 @@
     will-change: background-position;
   }
 
-  /* Reduced motion - disable all intro animations */
+  /* ============================================================================
+     ACCESSIBILITY: Reduced Motion - Text bleibt IMMER sichtbar
+     Animationen werden statisch, aber Opacity wird NIE unter 0.9 gesetzt
+     ========================================================================== */
   @media (prefers-reduced-motion: reduce) {
+    /* Ambient blobs: statisch aber als Umgebungslicht sichtbar */
     body::before,
     body::after {
       animation: none !important;
@@ -824,6 +892,23 @@
       will-change: auto;
     }
 
+    /* Aurora blobs: statisch aber sichtbar als Ambient-Licht */
+    .animate-aurora-a,
+    .animate-aurora-b {
+      animation: none !important;
+      opacity: 0.15 !important; /* Sichtbar als Hintergrund-Glow */
+      transform: none !important;
+    }
+
+    /* Glow/Pulse-Effekte: statisch aber sichtbar */
+    .animate-logo-neon-pulse,
+    .animate-brand-glow {
+      animation: none !important;
+      opacity: 0.1 !important; /* Leichter statischer Glow */
+      transform: none !important;
+    }
+
+    /* Dekorative Animationen: deaktiviert */
     .animate-wordmark-intro,
     .animate-wordmark-intro-delay-1,
     .animate-wordmark-intro-delay-2,
@@ -835,28 +920,25 @@
     .animate-fade-in-scale,
     .animate-brand-breathe,
     .animate-brand-shimmer,
-    .animate-brand-shimmer-delayed,
-    .animate-brand-glow,
-    .animate-aurora-a,
-    .animate-aurora-b,
-    .animate-logo-neon-pulse {
+    .animate-brand-shimmer-delayed {
       animation: none !important;
-      opacity: 0.12 !important;
       transform: none !important;
     }
 
+    /* Logo-Text: IMMER voll sichtbar - KRITISCH! */
     .animate-word-reveal,
     .animate-word-reveal-delayed {
       animation: none !important;
-      opacity: 1 !important;
+      opacity: 1 !important; /* ✅ Text niemals unsichtbar */
       transform: none !important;
       filter: none !important;
     }
 
+    /* Shimmer-Gradient: statische Position (zentriert) */
     .logo-text-shimmer-disa,
     .logo-text-shimmer-ai {
       animation: none !important;
-      background-position: 0 0;
+      background-position: 50% 0; /* Zentriert statt -100% */
     }
   }
 
