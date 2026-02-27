@@ -80,14 +80,14 @@ export function HistorySidePanel({
 
   const panelContent = (
     <div
-      className="fixed inset-0 z-drawer pointer-events-auto"
+      className="fixed inset-0 z-drawer pointer-events-none"
       role="dialog"
       aria-modal="true"
       aria-label="Inhaltsverzeichnis"
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-lg transition-opacity duration-300"
+        className="absolute inset-x-0 bottom-0 top-[calc(var(--header-height-mobile)+var(--inset-safe-top,0px))] bg-black/50 backdrop-blur-lg transition-opacity duration-300 pointer-events-auto sm:top-[calc(var(--header-height-desktop)+var(--inset-safe-top,0px))]"
         onClick={handleBackdropClick}
       />
 
@@ -95,7 +95,7 @@ export function HistorySidePanel({
       <div
         {...swipeHandlers}
         className={cn(
-          "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl",
+          "absolute inset-x-0 bottom-0 h-[85vh] w-full border-t border-white/10 duration-300 ease-out transform flex flex-col glass-3 rounded-t-2xl pointer-events-auto",
           "sm:inset-y-0 sm:right-0 sm:bottom-auto sm:h-full sm:max-w-sm sm:border-t-0 sm:border-l sm:rounded-none",
           "translate-y-0 sm:translate-x-0",
         )}

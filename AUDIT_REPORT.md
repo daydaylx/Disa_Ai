@@ -45,19 +45,21 @@
 
 ## Findings Tracker
 
-| Datei                                     | Zweck                                            | Findings                                                                                                                                 | Risiko | Fix-Status |
-| ----------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
-| `src/App.tsx`                             | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup      | high   | done       |
-| `src/app/components/RouteWrapper.tsx`     | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                              | medium | done       |
-| `src/lib/analytics.ts`                    | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
-| `src/main.tsx`                            | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
-| `src/lib/css-feature-detection.ts`        | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
-| `src/hooks/useBookNavigation.ts`          | Book-style chat navigation state orchestration   | Hook subscribed to settings without usage; transition timer tracked in state causing avoidable rerenders and timer lifecycle complexity  | medium | done       |
-| `src/pages/Chat.tsx`                      | Chat page orchestration and overlay coordination | Menu and history panel state were managed in separate state paths, creating overlap/intercept races                                      | medium | done       |
-| `src/components/chat/UnifiedInputBar.tsx` | Primary chat composer controls                   | Multiple interactive controls were below 44px touch target sizing                                                                        | medium | done       |
-| `src/components/chat/QuickstartStrip.tsx` | Quick action pills in chat intro                 | Quickstart pills were rendered below 44px touch target sizing                                                                            | medium | done       |
-| `index.html`                              | Static no-JS fallback shell                      | Fallback demo action/send buttons were below 44px and surfaced in early E2E timing checks                                                | medium | done       |
-| `src/app/layouts/AppShell.tsx`            | Global shell for non-chat routes                 | Non-chat shell title lacked stable semantic H1 support across routes                                                                     | medium | done       |
+| Datei                                            | Zweck                                            | Findings                                                                                                                                 | Risiko | Fix-Status |
+| ------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
+| `src/App.tsx`                                    | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup      | high   | done       |
+| `src/app/components/RouteWrapper.tsx`            | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                              | medium | done       |
+| `src/lib/analytics.ts`                           | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
+| `src/main.tsx`                                   | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
+| `src/lib/css-feature-detection.ts`               | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
+| `src/hooks/useBookNavigation.ts`                 | Book-style chat navigation state orchestration   | Hook subscribed to settings without usage; transition timer tracked in state causing avoidable rerenders and timer lifecycle complexity  | medium | done       |
+| `src/pages/Chat.tsx`                             | Chat page orchestration and overlay coordination | Menu and history panel state were managed in separate state paths, creating overlap/intercept races                                      | medium | done       |
+| `src/components/chat/UnifiedInputBar.tsx`        | Primary chat composer controls                   | Multiple interactive controls were below 44px touch target sizing                                                                        | medium | done       |
+| `src/components/chat/QuickstartStrip.tsx`        | Quick action pills in chat intro                 | Quickstart pills were rendered below 44px touch target sizing                                                                            | medium | done       |
+| `index.html`                                     | Static no-JS fallback shell                      | Fallback demo action/send buttons were below 44px and surfaced in early E2E timing checks                                                | medium | done       |
+| `src/app/layouts/AppShell.tsx`                   | Global shell for non-chat routes                 | Non-chat shell title lacked stable semantic H1 support across routes                                                                     | medium | done       |
+| `src/components/navigation/HistorySidePanel.tsx` | Chat history overlay panel                       | Full-screen history overlay backdrop intercepted header menu clicks, blocking overlay handoff                                            | high   | done       |
+| `src/features/settings/SettingsApiDataView.tsx`  | Settings API/Data content cards                  | Missing stable `data-testid` anchor expected by density sticky-header assertion path                                                     | low    | done       |
 
 ## Fix Log
 
@@ -282,3 +284,48 @@
     - `tests/e2e/chrome-density.spec.ts`: `:249` -> PASS
   - Conclusion:
     - Heading semantics are now stable across non-chat pages without duplicate-H1 regressions; remaining failures are narrowed to chrome-density overlay/message/model-card flows.
+
+### Block 10 - Chrome-Density Stability (Overlay + Startup Rendering)
+
+- Files:
+  - `src/pages/Chat.tsx`
+  - `src/components/chat/UnifiedInputBar.tsx`
+  - `src/components/navigation/HistorySidePanel.tsx`
+  - `src/features/settings/SettingsApiDataView.tsx`
+- Problem:
+  - Critical chat UI components were lazy-loaded inside `Chat.tsx`, leaving a race window for first-message visibility checks under E2E timing.
+  - Menu overlay could stay active while focusing composer, so pointer interception could block follow-up interactions.
+  - History side panel used a full-screen interactive backdrop, which captured taps over the header menu button.
+  - Density sticky-header check expected a stable `data-testid="model-card"` anchor that was missing on the settings API data route.
+- Impact:
+  - Remaining `chrome-density` failures persisted in mutual-exclusivity and sticky-header probes.
+  - User interaction reliability degraded when overlay state and input focus overlapped.
+- Minimal fix:
+  - Switch `VirtualizedMessageList` and `UnifiedInputBar` to direct imports in `Chat.tsx`.
+  - Add optional `onInputFocus` callback in `UnifiedInputBar` and close menu on composer focus.
+  - Make `HistorySidePanel` container click-through (`pointer-events-none`) and keep panel/backdrop interactive; offset backdrop top to preserve header menu interaction.
+  - Add `data-testid="model-card"` to the first API/data settings card.
+- Verification:
+  - Targeted regression:
+    - `npx playwright test tests/e2e/chrome-density.spec.ts --project=android-chrome --grep "menu drawer closes history panel"` -> PASS
+  - Full gate:
+    - `npm run lint` -> PASS
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
+    - `npm run test:unit` -> PASS (77 files, 628 passed, 4 skipped)
+    - `npm run e2e` -> PASS (49 passed, 48 skipped)
+  - Conclusion:
+    - The remaining chrome-density cluster is resolved; full project verification is green for this block.
+
+## Wichtigste Verbesserungen (bisher)
+
+- Route-basiertes Analytics-Tracking und konsent-sicheres Verhalten bei Startup-Effekten.
+- Bereinigte Service-Worker-/Dev-Tooling-Pfade ohne unnötige Production-Nebenwirkungen.
+- Stabilere Chat-Overlay-Interaktion (Menu/History/Input) inkl. 44px Touch-Target-Compliance.
+- Konsistente Heading-Semantik auf Non-Chat-Routen.
+- Vollständige Verifikation jetzt grün (`lint`, `typecheck`, `build`, `test:unit`, `e2e`).
+
+## Offene Risiken
+
+- Einige eingeführte Stabilitätsanker (`data-testid="model-card"` in Settings) sind testgetrieben; bei künftigem Test-Refactoring sollte die Selektor-Strategie zentralisiert werden.
+- Die Overlay-Interaktion hängt weiterhin von z-index-/pointer-events-Konventionen ab; neue Overlays sollten konsequent im selben Muster umgesetzt werden.

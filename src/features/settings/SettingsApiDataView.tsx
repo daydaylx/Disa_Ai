@@ -241,7 +241,12 @@ export function SettingsApiDataView() {
       description="OpenRouter verbinden, Backups exportieren/importieren und lokale Speicher nutzen."
     >
       <div className="mx-auto w-full max-w-3xl space-y-3 pb-4xl">
-        <Card variant="surface" accent="settings" className="border-white/[0.1]">
+        <Card
+          variant="surface"
+          accent="settings"
+          className="border-white/[0.1]"
+          data-testid="model-card"
+        >
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <KeyRound className="h-4 w-4 text-accent-settings" />

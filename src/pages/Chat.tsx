@@ -1,4 +1,4 @@
-import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getChatLogoState } from "@/app/components/logoState";
@@ -11,27 +11,14 @@ import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { QuickstartStrip } from "../components/chat/QuickstartStrip";
+import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
+import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
 import { getQuickstarts } from "../config/quickstarts";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
-
-const VirtualizedMessageList = memo(
-  lazy(() =>
-    import("../components/chat/VirtualizedMessageList").then((module) => ({
-      default: module.VirtualizedMessageList,
-    })),
-  ),
-);
-const UnifiedInputBar = memo(
-  lazy(() =>
-    import("../components/chat/UnifiedInputBar").then((module) => ({
-      default: module.UnifiedInputBar,
-    })),
-  ),
-);
 
 // Define actions for the reducer
 interface UIState {
@@ -110,6 +97,10 @@ export default function Chat() {
   const handleOpenMenu = useCallback(() => {
     dispatch({ type: "OPEN_MENU" });
   }, []);
+
+  const handleComposerFocus = useCallback(() => {
+    closeMenu();
+  }, [closeMenu]);
 
   const handleToggleHistory = useCallback(() => {
     toggleHistory();
@@ -384,6 +375,7 @@ export default function Chat() {
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
                 onSend={chatLogic.handleSend}
+                onInputFocus={handleComposerFocus}
                 isLoading={chatLogic.isLoading}
               />
             </div>

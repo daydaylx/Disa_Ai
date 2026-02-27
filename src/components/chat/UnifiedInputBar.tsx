@@ -16,6 +16,7 @@ export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
+  onInputFocus?: () => void;
   isLoading?: boolean;
   className?: string;
 }
@@ -24,6 +25,7 @@ export function UnifiedInputBar({
   value,
   onChange,
   onSend,
+  onInputFocus,
   isLoading = false,
   className,
 }: UnifiedInputBarProps) {
@@ -123,6 +125,7 @@ export function UnifiedInputBar({
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            onFocus={onInputFocus}
             onKeyDown={handleKeyDown}
             placeholder="Nachricht an Disa..."
             className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-0 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-muted/50 focus:outline-none textarea-resize-transition"
