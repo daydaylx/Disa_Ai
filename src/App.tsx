@@ -46,20 +46,53 @@ function AppContent() {
 
   // Sync metadata from conversations on startup to fix any missing metadata entries
   useEffect(() => {
-    void syncMetadataFromConversations()
-      .then((result) => {
-        if (result.synced > 0) {
-          console.warn(
-            `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
-          );
-        }
-        if (result.errors.length > 0) {
-          console.warn("[Storage] Sync errors:", result.errors);
-        }
-      })
-      .catch((error) => {
-        console.error("[Storage] Failed to sync metadata:", error);
+    let cancelled = false;
+    let idleCallbackId: number | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const runSync = () => {
+      if (cancelled) return;
+      void syncMetadataFromConversations()
+        .then((result) => {
+          if (cancelled) return;
+          if (result.synced > 0) {
+            console.warn(
+              `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
+            );
+          }
+          if (result.errors.length > 0) {
+            console.warn("[Storage] Sync errors:", result.errors);
+          }
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          console.error("[Storage] Failed to sync metadata:", error);
+        });
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      idleCallbackId = window.requestIdleCallback(() => {
+        runSync();
       });
+    } else {
+      timeoutId = setTimeout(() => {
+        runSync();
+      }, 0);
+    }
+
+    return () => {
+      cancelled = true;
+      if (
+        idleCallbackId !== null &&
+        typeof window !== "undefined" &&
+        "cancelIdleCallback" in window
+      ) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   return (

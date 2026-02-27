@@ -10,14 +10,47 @@
   - Build updates generated files (`build-info.json`, `src/styles/design-tokens.generated.ts`).
   - For this audit, generated-only diffs are reset after verification unless part of a real fix.
 
+## Phase 0 - Landkarte (Entry Points + Critical Paths)
+
+- App start:
+  - `src/main.tsx` bootstraps global CSS, env init, sentry init, React mount, theme init, storage persistence, dev SW, dev a11y enforcement.
+  - `src/App.tsx` wires providers, service worker hook usage, analytics opt-in handling, startup metadata sync, Router render, global overlays.
+- Routing:
+  - `src/app/router.tsx` defines all SPA routes, lazy page imports, redirects, and browser router future flags.
+  - `src/app/components/RouteWrapper.tsx` wraps each route with `AppShell`, `ErrorBoundary`, `Suspense`, and route-level analytics tracking.
+- Provider/state layer:
+  - In `App.tsx`: `SettingsProvider`, `ToastsProvider`, `FavoritesProvider`, `RolesProvider`, `ModelCatalogProvider`.
+  - `useSettings` state gates analytics behavior and feature toggles.
+- Storage/data layer:
+  - `syncMetadataFromConversations` in `src/lib/conversation-manager-modern` performs startup metadata reconciliation.
+- Analytics:
+  - `src/lib/analytics.ts` handles local event/session/pageview tracking.
+- Error handling/recovery:
+  - `src/lib/monitoring/sentry` initialization in `main.tsx` and boundary usage in `App.tsx`.
+  - `main.tsx` includes preload error overlay and app reset/reload hooks.
+- PWA/SW:
+  - `useServiceWorker` in app runtime path.
+  - Dev-only SW registration in `main.tsx`.
+- UI overlays/modals:
+  - Global overlay root (`#app-overlay-root`) and `PWAInstallModal` mounted in `AppContent`.
+
+## Dependency Map Light
+
+- `src/main.tsx` -> `src/App.tsx` -> providers/hooks/router -> page modules.
+- `src/App.tsx` -> `useSettings` -> analytics enable/disable.
+- `src/App.tsx` -> `useServiceWorker` (runtime registration/update path).
+- `src/App.tsx` -> `Router` -> `RouteWrapper` -> `AppShell` + route lazy pages.
+- `RouteWrapper` -> `analytics.trackPageView` on location changes (gated by settings).
+- `main.tsx` bootstrapping (env/sentry/theme/dev tooling) executes before first routed render.
+
 ## Findings Tracker
 
-| Datei                                 | Zweck                                            | Findings                                                                                      | Risiko | Fix-Status |
-| ------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------- | ------ | ---------- |
-| `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change | high   | done       |
-| `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                   | medium | done       |
-| `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync                          | high   | done       |
-| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path                           | high   | done       |
+| Datei                                 | Zweck                                            | Findings                                                                                                                            | Risiko | Fix-Status |
+| ------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
+| `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup | high   | done       |
+| `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                         | medium | done       |
+| `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync                                                                | high   | done       |
+| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path                                                                 | high   | done       |
 
 ## Fix Log
 
@@ -93,3 +126,25 @@
     - `FeatureFlagPanel-*.js` no longer emitted in production build output.
   - Conclusion:
     - Fix removes dev-panel production bundle overhead without introducing new deterministic failures.
+
+### Block 4 - Defer Startup Metadata Sync
+
+- Files:
+  - `src/App.tsx`
+- Problem:
+  - `syncMetadataFromConversations()` ran immediately on mount.
+- Impact:
+  - Startup side effects can contend with first paint and initial interaction on slower devices.
+- Minimal fix:
+  - Schedule sync via `requestIdleCallback` when available.
+  - Use `setTimeout(..., 0)` fallback.
+  - Add cleanup/cancellation guard to avoid stale async handling on unmount.
+- Verification:
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (same baseline 9 specs as Blocks 1-3):
+    - `tests/e2e/chrome-density.spec.ts`: `:54`, `:125`, `:155`, `:186`, `:223`
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58`
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
+  - Conclusion:
+    - No new failing signature introduced by this startup deferral.
