@@ -1,4 +1,4 @@
-import { lazy, memo, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { lazy, memo, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { type LogoState } from "@/app/components/AnimatedLogo";
@@ -10,9 +10,11 @@ import { HistoryFAB } from "@/ui/HistoryFAB";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
+import { QuickstartStrip } from "../components/chat/QuickstartStrip";
 import { AppMenuDrawer, useMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
 import { HistorySidePanel } from "../components/navigation/HistorySidePanel";
+import { getQuickstarts } from "../config/quickstarts";
 import { useChatPageLogic } from "../hooks/useChatPageLogic";
 import { useChatQuickstart } from "../hooks/useChatQuickstart";
 
@@ -134,6 +136,9 @@ export default function Chat() {
   const chatLogic = useChatPageLogic({
     onStartWithPreset: (system, user) => startWithPreset.current(system, user),
   });
+
+  // Loaded once — static data, no network call
+  const quickstarts = useMemo(() => getQuickstarts(), []);
 
   // Calculate logo state for presence animation
   const getLogoState = (): LogoState => {
@@ -286,7 +291,7 @@ export default function Chat() {
                 }}
               >
                 {chatLogic.isEmpty ? (
-                  <div className="relative flex flex-1 items-center justify-center px-4 pb-[14%]">
+                  <div className="relative flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-[14%]">
                     {/* Subtle atmospheric glow - static and low opacity for depth, not distraction */}
                     <div
                       className="absolute w-64 h-64 rounded-full blur-3xl pointer-events-none"
@@ -297,6 +302,14 @@ export default function Chat() {
                       aria-hidden="true"
                     />
                     <AnimatedBrandmark className="relative mx-auto" />
+                    <QuickstartStrip
+                      quickstarts={quickstarts}
+                      onSelect={(q) =>
+                        void chatLogic.append({ role: "user", content: q.user }, undefined, {
+                          systemPrompt: q.system,
+                        })
+                      }
+                    />
                   </div>
                 ) : (
                   <VirtualizedMessageList

@@ -266,6 +266,7 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
     conversations,
 
     // Handlers
+    append,
     handleSend,
     handleEdit,
     handleFollowUp,
