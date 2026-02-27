@@ -70,3 +70,26 @@
   - `npm run e2e` -> FAIL (same 9 baseline specs as Block 1)
   - Conclusion:
     - No new E2E regression signature introduced by Block 2.
+
+### Block 3 - Dev-Only Feature Flag Panel
+
+- Files:
+  - `src/App.tsx`
+- Problem:
+  - `FeatureFlagPanel` was still part of production lazy chunking, even though it only renders in dev.
+- Impact:
+  - Unnecessary production bundle chunk and extra lazy-load path.
+- Minimal fix:
+  - Gate panel lazy import by `import.meta.env.DEV` at compile time.
+  - Render panel block only when panel component exists.
+- Verification:
+  - `npm run lint` -> PASS
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run test:unit` -> PASS
+  - `npm run e2e` -> FAIL (same baseline suite; flaky count 9-10)
+  - Build signal:
+    - Production output dropped from 54 chunks to 53 chunks.
+    - `FeatureFlagPanel-*.js` no longer emitted in production build output.
+  - Conclusion:
+    - Fix removes dev-panel production bundle overhead without introducing new deterministic failures.

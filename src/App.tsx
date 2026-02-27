@@ -26,11 +26,13 @@ declare global {
   }
 }
 
-const FeatureFlagPanel = lazy(() =>
-  import("./components/dev/FeatureFlagPanel").then((module) => ({
-    default: module.FeatureFlagPanel,
-  })),
-);
+const FeatureFlagPanel = import.meta.env.DEV
+  ? lazy(() =>
+      import("./components/dev/FeatureFlagPanel").then((module) => ({
+        default: module.FeatureFlagPanel,
+      })),
+    )
+  : null;
 
 // AppContent component that runs inside the providers
 function AppContent() {
@@ -122,9 +124,11 @@ function AppContent() {
           <NekoLayer />
           <PWAInstallModal />
         </SentryErrorBoundary>
-        <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
-          <FeatureFlagPanel />
-        </Suspense>
+        {FeatureFlagPanel ? (
+          <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
+            <FeatureFlagPanel />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );
