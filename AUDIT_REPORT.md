@@ -52,6 +52,7 @@
 | `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
 | `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
 | `src/lib/css-feature-detection.ts`    | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
+| `src/hooks/useBookNavigation.ts`      | Book-style chat navigation state orchestration   | Hook subscribed to settings without usage; transition timer tracked in state causing avoidable rerenders and timer lifecycle complexity  | medium | done       |
 
 ## Fix Log
 
@@ -196,3 +197,27 @@
     - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
   - Conclusion:
     - Analytics throttling and env-gating changes introduced no new E2E failure signature.
+
+### Block 7 - Book Navigation Render/Timer Stabilization
+
+- Files:
+  - `src/hooks/useBookNavigation.ts`
+- Problem:
+  - `useBookNavigation` subscribed to `useSettings` and exposed `settings` despite not using it for navigation behavior.
+  - Transition timeout handle was stored in component state.
+- Impact:
+  - Unnecessary rerenders whenever settings changed, even for callers that only need navigation state.
+  - Extra state updates for timeout bookkeeping and higher chance of timer cleanup edge cases during rapid transitions.
+- Minimal fix:
+  - Remove unused `useSettings` subscription and `settings` value from hook return.
+  - Replace timeout state with `useRef<ReturnType<typeof setTimeout> | null>`.
+  - Clear/replace existing timer before creating a new one and clear timer on unmount.
+- Verification:
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (10 tests, same unstable baseline cluster):
+    - `tests/e2e/chrome-density.spec.ts`: `:54`, `:125`, `:155`, `:186`, `:223`, `:249`
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58`
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
+  - Conclusion:
+    - Navigation hook cleanup introduced no new deterministic failure family.
