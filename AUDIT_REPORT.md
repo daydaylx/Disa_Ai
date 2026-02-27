@@ -57,6 +57,7 @@
 | `src/components/chat/UnifiedInputBar.tsx` | Primary chat composer controls                   | Multiple interactive controls were below 44px touch target sizing                                                                        | medium | done       |
 | `src/components/chat/QuickstartStrip.tsx` | Quick action pills in chat intro                 | Quickstart pills were rendered below 44px touch target sizing                                                                            | medium | done       |
 | `index.html`                              | Static no-JS fallback shell                      | Fallback demo action/send buttons were below 44px and surfaced in early E2E timing checks                                                | medium | done       |
+| `src/app/layouts/AppShell.tsx`            | Global shell for non-chat routes                 | Non-chat shell title lacked stable semantic H1 support across routes                                                                     | medium | done       |
 
 ## Fix Log
 
@@ -258,3 +259,26 @@
     - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
   - Conclusion:
     - Touch-target baseline issue is fixed; remaining failures stay in pre-existing message/render timing and page-content visibility cluster.
+
+### Block 9 - AppShell H1 Semantics Without Duplicate Headings
+
+- Files:
+  - `src/app/layouts/AppShell.tsx`
+- Problem:
+  - Non-chat shell page title was not exposed as a semantic level-1 heading on key routes (e.g. models/roles), breaking route heading assertions.
+- Impact:
+  - Accessibility/test semantics were inconsistent and caused `models-roles` + `unified-layout` heading checks to fail.
+- Minimal fix:
+  - Render the shell title as `<h1>` for routes without their own page-level H1.
+  - Keep the shell title as `<p>` on routes that already render internal H1s (`/settings*`, `/feedback`, `/impressum`, `/datenschutz`) to avoid duplicate heading conflicts.
+- Verification:
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (3 tests, reduced from 9):
+    - `tests/e2e/chrome-density.spec.ts`: `:125`, `:155`, `:186`
+  - Resolved in this block:
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58` -> PASS
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209` -> PASS
+    - `tests/e2e/chrome-density.spec.ts`: `:249` -> PASS
+  - Conclusion:
+    - Heading semantics are now stable across non-chat pages without duplicate-H1 regressions; remaining failures are narrowed to chrome-density overlay/message/model-card flows.
