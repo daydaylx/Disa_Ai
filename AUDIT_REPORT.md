@@ -50,7 +50,8 @@
 | `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup | high   | done       |
 | `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                         | medium | done       |
 | `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync                                                                | high   | done       |
-| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path                                                                 | high   | done       |
+| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal       | high   | done       |
+| `src/lib/css-feature-detection.ts`    | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                           | low    | done       |
 
 ## Fix Log
 
@@ -148,3 +149,27 @@
     - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
   - Conclusion:
     - No new failing signature introduced by this startup deferral.
+
+### Block 5 - Startup Preload/Error Signal Hardening
+
+- Files:
+  - `src/main.tsx`
+  - `src/lib/css-feature-detection.ts`
+- Problem:
+  - Preload error handler classified any `HTMLImageElement` load error as critical preload failure.
+  - CSS feature-detection startup diagnostics logged with `console.warn` in production.
+- Impact:
+  - Non-critical image/network glitches could trigger a full-screen fatal recovery overlay.
+  - Unnecessary production log noise on every app start.
+- Minimal fix:
+  - Restrict critical preload element detection to script/link assets only.
+  - Gate CSS feature-detection diagnostics to `import.meta.env.DEV`.
+- Verification:
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (same baseline 9 specs as Blocks 1-4):
+    - `tests/e2e/chrome-density.spec.ts`: `:54`, `:125`, `:155`, `:186`, `:223`
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58`
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
+  - Conclusion:
+    - Startup hardening changes did not introduce new E2E failure patterns.

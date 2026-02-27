@@ -347,9 +347,7 @@ function installPreloadErrorHandler(): void {
       errorName === "CSS_CHUNK_LOAD_FAILED";
 
     const isAssetElementError =
-      target instanceof HTMLScriptElement ||
-      target instanceof HTMLLinkElement ||
-      target instanceof HTMLImageElement;
+      target instanceof HTMLScriptElement || target instanceof HTMLLinkElement;
 
     return matchesChunkFailure || isAssetElementError;
   };
