@@ -45,13 +45,13 @@
 
 ## Findings Tracker
 
-| Datei                                 | Zweck                                            | Findings                                                                                                                            | Risiko | Fix-Status |
-| ------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
-| `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup | high   | done       |
-| `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                         | medium | done       |
-| `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync                                                                | high   | done       |
-| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal       | high   | done       |
-| `src/lib/css-feature-detection.ts`    | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                           | low    | done       |
+| Datei                                 | Zweck                                            | Findings                                                                                                                                 | Risiko | Fix-Status |
+| ------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
+| `src/App.tsx`                         | App shell, provider wiring, startup side effects | Notification permission was requested automatically; pageview was not tracked on route change; metadata sync ran eagerly at startup      | high   | done       |
+| `src/app/components/RouteWrapper.tsx` | Route-level wrapper for all main pages           | Missing route-based analytics tracking hook                                                                                              | medium | done       |
+| `src/lib/analytics.ts`                | Local analytics event/session tracking           | Module-level initial pageview could run before settings consent sync; resize tracking wrote too frequently; dev check used `process.env` | high   | done       |
+| `src/main.tsx`                        | App bootstrap and early runtime init             | Service worker registration overlapped with `useServiceWorker` path; preload error handler treated image load errors as fatal            | high   | done       |
+| `src/lib/css-feature-detection.ts`    | Runtime CSS capability detection at app startup  | Startup feature-detection logs were emitted unconditionally in production                                                                | low    | done       |
 
 ## Fix Log
 
@@ -173,3 +173,26 @@
     - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
   - Conclusion:
     - Startup hardening changes did not introduce new E2E failure patterns.
+
+### Block 6 - Analytics Event Pressure Reduction
+
+- Files:
+  - `src/lib/analytics.ts`
+- Problem:
+  - `resize` events triggered immediate `viewport_change` tracking on every event, causing frequent localStorage writes.
+  - Development logging used `process.env.NODE_ENV` in Vite runtime code.
+- Impact:
+  - Avoidable event/write pressure during viewport changes (especially on mobile rotate/resize bursts).
+  - Less reliable dev/prod gating in a Vite-native frontend runtime.
+- Minimal fix:
+  - Debounce viewport tracking (`200ms`) before dispatching `viewport_change`.
+  - Switch debug log gate to `import.meta.env.DEV`.
+- Verification:
+  - `npm run lint && npm run typecheck && npm run build && npm run test:unit && npm run e2e`
+  - lint/typecheck/build/unit -> PASS
+  - e2e -> FAIL (same baseline 9 specs as Blocks 1-5):
+    - `tests/e2e/chrome-density.spec.ts`: `:54`, `:125`, `:155`, `:186`, `:223`
+    - `tests/e2e/models-roles.spec.ts`: `:10`, `:58`
+    - `tests/e2e/unified-layout.spec.ts`: `:58`, `:209`
+  - Conclusion:
+    - Analytics throttling and env-gating changes introduced no new E2E failure signature.
