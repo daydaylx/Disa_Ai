@@ -341,10 +341,8 @@ export function setAnalyticsEnabled(enabled: boolean): void {
   analytics.setEnabled(enabled);
 }
 
-// Auto-track page loads
+// Install global error listeners
 if (typeof window !== "undefined") {
-  analytics.trackPageView(window.location.pathname);
-
   // Track unhandled errors
   window.addEventListener("error", (event) => {
     analytics.trackError(new Error(event.message), "unhandled_error");

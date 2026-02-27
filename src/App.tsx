@@ -16,7 +16,7 @@ import { RolesProvider } from "./contexts/RolesContext";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
-import { analytics, setAnalyticsEnabled } from "./lib/analytics";
+import { setAnalyticsEnabled } from "./lib/analytics";
 import { syncMetadataFromConversations } from "./lib/conversation-manager-modern";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
@@ -40,22 +40,6 @@ function AppContent() {
   // Apply analytics opt-in/out
   useEffect(() => {
     setAnalyticsEnabled(settings.enableAnalytics);
-  }, [settings.enableAnalytics]);
-
-  // Apply notification preference (best-effort)
-  useEffect(() => {
-    if (!settings.enableNotifications) return;
-    if (typeof window === "undefined" || typeof Notification === "undefined") return;
-    if (Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  }, [settings.enableNotifications]);
-
-  // Track route-level page view when analytics enabled
-  useEffect(() => {
-    if (typeof window !== "undefined" && settings.enableAnalytics) {
-      analytics.trackPageView(window.location.pathname);
-    }
   }, [settings.enableAnalytics]);
 
   // Sync metadata from conversations on startup to fix any missing metadata entries
