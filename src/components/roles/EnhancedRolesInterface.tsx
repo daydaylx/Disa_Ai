@@ -276,9 +276,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("flex flex-col h-full", className)}>
       <div className="flex-none pt-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
           <div
-            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
             style={{ background: headerTheme.roleGradient }}
           />
 
@@ -334,7 +334,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       className={cn(
                         "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
                         isSelected
-                          ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
+                          ? cn(catTheme.bg, catTheme.border, catTheme.text)
                           : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
                       )}
                     >
@@ -388,7 +388,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   accentClassName={theme.textBg}
                   className={cn(
                     isActive
-                      ? cn("border-white/[0.14]", theme.border, theme.glow)
+                      ? cn("border-white/[0.14]", theme.border)
                       : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
                   )}
                   leading={
@@ -426,10 +426,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                         }
                         className={cn(
-                          "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                          "relative flex h-8 w-8 items-center justify-center rounded-lg text-ink-tertiary transition-colors",
                           isFavorite
-                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                            ? "text-status-warning hover:text-status-warning"
+                            : "hover:text-ink-primary",
                         )}
                       >
                         <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
@@ -443,10 +443,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         event.stopPropagation();
                         setSelectedRoleId(role.id);
                       }}
-                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                      aria-label="Details"
+                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                     >
-                      Details
-                      <ChevronDown className="h-3.5 w-3.5" />
+                      <ChevronDown className="h-4 w-4" />
                     </button>
                   }
                 />

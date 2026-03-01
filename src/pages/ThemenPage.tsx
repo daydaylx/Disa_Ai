@@ -153,11 +153,10 @@ export default function ThemenPage() {
                   ? `Details zu ${quickstart.title} einklappen`
                   : `Details zu ${quickstart.title} ausklappen`
               }
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg border-none bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border-none bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
             >
-              Details
               <ChevronDown
-                className={cn("h-3.5 w-3.5 transition-transform", isExpanded && "rotate-180")}
+                className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
               />
             </button>
           </div>
@@ -211,10 +210,10 @@ export default function ThemenPage() {
     <div className="flex flex-col h-full">
       {/* Header Zone - Vibrant Glass */}
       <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4 px-xssm:px-6">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
-          {/* Ambient Header Glow - Chat accent for discussion topics */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
+          {/* Ambient tint – subtle category hint, no blur fog */}
           <div
-            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
             style={{ background: headerTheme.roleGradient }}
           />
 

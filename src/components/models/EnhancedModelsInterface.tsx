@@ -5,9 +5,9 @@
  * Features: Sticky Header, Quick Actions, FAB, Bottom Sheet Details
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { ChevronDown, DollarSign, GitCompare, Search, Star, Zap } from "@/lib/icons";
+import { ChevronDown, Search, Star, Zap } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import {
   Badge,
@@ -19,7 +19,6 @@ import {
   DialogTitle,
   FilterChip,
   Input,
-  MaterialCard,
   Skeleton,
   useToasts,
 } from "@/ui";
@@ -32,7 +31,6 @@ import { useSettings } from "../../hooks/useSettings";
 import { getCategoryStyle } from "../../lib/categoryColors";
 import { cn } from "../../lib/utils";
 import type { EnhancedModel, ModelCategory } from "../../types/enhanced-interfaces";
-import { ModelComparisonTable } from "./ModelComparisonTable";
 
 type SortOption = "name" | "performance" | "price";
 
@@ -294,10 +292,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
   // Local state
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set());
   const [detailsModel, setDetailsModel] = useState<EnhancedModel | null>(null);
-  const [isCompareOpen, setIsCompareOpen] = useState(false);
-  const [compareModels, setCompareModels] = useState<EnhancedModel[]>([]);
   const [filters, dispatchFilters] = React.useReducer(filterReducer, initialFilters);
 
   // Load models dynamically from OpenRouter
@@ -393,35 +388,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     modelSortFn,
   );
 
-  const activeModelLabel = useMemo(
-    () => enhancedModels.find((m) => m.id === settings.preferredModelId)?.label,
-    [enhancedModels, settings.preferredModelId],
-  );
-
-  // Handlers
-  const handleSelectModel = useCallback(
-    (model: EnhancedModel) => {
-      setSelectedModels((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(model.id)) {
-          newSet.delete(model.id);
-        } else {
-          newSet.add(model.id);
-        }
-        return newSet;
-      });
-
-      // Track usage
-      trackModelUsage(model.id);
-
-      push({
-        kind: "success",
-        title: `${model.label} ${selectedModels.has(model.id) ? "entfernt" : "ausgewählt"}`,
-      });
-    },
-    [selectedModels, trackModelUsage, push],
-  );
-
   const [animatingFavorite, setAnimatingFavorite] = useState<string | null>(null);
 
   const handleToggleFavorite = useCallback(
@@ -454,21 +420,6 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     [setPreferredModel, trackModelUsage, push],
   );
 
-  const handleCompareModels = useCallback(() => {
-    if (selectedModels.size < 2) {
-      push({
-        kind: "warning",
-        title: "Mindestens 2 Modelle zum Vergleichen auswählen",
-      });
-      return;
-    }
-
-    // Get the selected models for comparison
-    const modelsToCompare = enhancedModels.filter((model) => selectedModels.has(model.id));
-    setCompareModels(modelsToCompare);
-    setIsCompareOpen(true);
-  }, [selectedModels, enhancedModels, push]);
-
   // Show loading state while models are being loaded
   if (isLoadingModels) {
     return (
@@ -492,28 +443,28 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
   return (
     <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
-      {/* MATERIAL INSET HEADER PANEL */}
-      <div className="sticky top-0 z-header bg-surface-1 shadow-inset">
-        <div className="p-4 space-y-4">
-          {/* Search Input - Material Style */}
+      {/* Sticky Filter Header */}
+      <div className="sticky top-0 z-header bg-surface-1 border-b border-white/[0.06]">
+        <div className="p-4 space-y-3">
+          {/* Search Input */}
           <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-inset rounded-sm p-1.5 shadow-inset">
-              <Search className="w-4 h-4 text-ink-secondary" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <Search className="w-4 h-4 text-ink-tertiary" />
             </div>
             <Input
               placeholder="Modelle durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-md bg-surface-2 pl-14 pr-4 py-3 text-base shadow-raise focus:shadow-raiseLg transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-surface-2 border-white/[0.08] rounded-xl text-sm"
             />
           </div>
 
           {/* Filter Chips Row */}
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
-              leading={<Star className="w-4 h-4" />}
+              leading={<Star className="w-3.5 h-3.5" />}
             >
               Favoriten
             </FilterChip>
@@ -522,212 +473,145 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               onClick={() =>
                 dispatchFilters({ type: "setShowFreeOnly", value: !filters.showFreeOnly })
               }
-              leading={<Zap className="w-4 h-4" />}
+              leading={<Zap className="w-3.5 h-3.5" />}
             >
               Kostenlos
-            </FilterChip>
-            <FilterChip
-              selected={filters.showPremiumOnly}
-              onClick={() =>
-                dispatchFilters({
-                  type: "setShowPremiumOnly",
-                  value: !filters.showPremiumOnly,
-                })
-              }
-              leading={<DollarSign className="w-4 h-4" />}
-            >
-              Premium
             </FilterChip>
           </div>
         </div>
       </div>
 
-      {/* Models List */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-4">
-          {/* Results Header - Typography Semantic */}
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-medium text-text-secondary">
-              {filteredModels.length} Modelle gefunden
-              {searchQuery && <span className="text-text-accent"> für "{searchQuery}"</span>}
-            </h2>
-            {selectedModels.size > 0 && (
-              <div className="text-sm text-text-meta">{selectedModels.size} ausgewählt</div>
-            )}
-          </div>
-          {settings.preferredModelId && (
-            <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-surface-2 bg-surface-inset px-2xs py-3xs text-sm text-text-secondary shadow-inset">
-              <span className="font-semibold text-text-primary">Aktives Modell:</span>
-              <Badge variant="secondary" className="text-xs">
-                {activeModelLabel ?? settings.preferredModelId}
-              </Badge>
-            </div>
+      {/* Results meta row */}
+      <div className="px-4 pt-3 pb-1">
+        <p className="text-xs text-ink-tertiary">
+          {filteredModels.length} Modell{filteredModels.length !== 1 ? "e" : ""}
+          {searchQuery && (
+            <span>
+              {" "}
+              für <span className="text-ink-secondary">"{searchQuery}"</span>
+            </span>
           )}
+        </p>
+      </div>
 
-          {/* Models Grid */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredModels.map((model) => {
-              const isActive = settings.preferredModelId === model.id;
-              const theme = getCategoryStyle(model.category);
+      {/* Compact model list */}
+      <div className="flex-1 overflow-auto">
+        <div className="px-4 pb-8 space-y-2">
+          {filteredModels.map((model) => {
+            const isActive = settings.preferredModelId === model.id;
+            const isFav = isModelFavorite(model.id);
+            const theme = getCategoryStyle(model.category);
+            const providerInitial = model.provider.charAt(0).toUpperCase();
 
-              return (
-                <div key={model.id} className="space-y-2">
-                  <MaterialCard
-                    variant="raised"
-                    style={{ background: theme.roleGradient }}
-                    className={cn(
-                      "relative p-4 cursor-pointer transition-all duration-fast animate-card-enter overflow-hidden",
-                      "border border-white/10",
-                      "hover:brightness-110 hover:border-accent-models-border/50 hover:shadow-glow-models",
-                      "before:absolute before:left-0 before:top-3 before:bottom-3 before:w-1 before:rounded-r-full before:transition-opacity",
-                      "before:bg-accent-models before:opacity-40 hover:before:opacity-80",
-                      isActive &&
-                        "ring-2 ring-accent-models shadow-glow-models-lg before:opacity-100 border-accent-models-border",
-                    )}
-                    onClick={() => handleSelectModel(model)}
-                  >
-                    {/* CARD HEADER */}
-                    <div className="flex flex-col gap-2 mb-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-text-on-raised text-base flex-1 min-w-0 pr-2">
-                          <span className="truncate inline-block max-w-full" title={model.label}>
-                            {model.label}
-                          </span>
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          {isActive && (
-                            <Badge
-                              variant="secondary"
-                              className="text-[11px] bg-brand/10 text-brand"
-                            >
-                              Aktiv
-                            </Badge>
-                          )}
-                          {model.pricing.isFree && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Zap className="w-3 h-3 mr-1" />
-                              FREE
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
+            return (
+              <div
+                key={model.id}
+                className={cn(
+                  "relative flex items-center gap-3 rounded-2xl border p-3 transition-all duration-200",
+                  isActive
+                    ? cn("bg-surface-2/70 border-white/[0.14]", theme.border)
+                    : "bg-surface-card border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                )}
+              >
+                {/* Left accent stripe */}
+                <div
+                  className={cn(
+                    "pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl",
+                    theme.textBg,
+                  )}
+                  aria-hidden
+                />
 
-                      <p className="text-sm text-text-secondary" title={model.provider}>
-                        {model.provider}
-                      </p>
-                    </div>
+                {/* Provider avatar – tapping activates the model */}
+                <button
+                  type="button"
+                  onClick={() => handleActivateModel(model)}
+                  aria-label={`${model.label} aktivieren`}
+                  className={cn(
+                    "relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-sm font-bold transition-colors",
+                    theme.iconBg,
+                    theme.iconText,
+                  )}
+                >
+                  {providerInitial}
+                </button>
 
-                    {/* Performance Bars */}
-                    <div className="space-y-2 mb-4">
-                      <PerformanceBar
-                        label="Qualität"
-                        value={model.qualityScore ?? 70}
-                        color="primary"
-                      />
-                      <PerformanceBar
-                        label="Kontext"
-                        value={model.contextScore ?? 0}
-                        color="success"
-                      />
-                      <PerformanceBar
-                        label="Offenheit"
-                        value={(model.openness ?? 0) * 100}
-                        color="warning"
-                      />
-                    </div>
-
-                    {/* Badges Row */}
-                    <div className="flex flex-wrap gap-2">
-                      {/* Price Info */}
-                      {!model.pricing.isFree && (
-                        <Badge variant="secondary" className="text-xs">
-                          <DollarSign className="w-3 h-3 mr-1" />
-                          {formatPricePerK(model.pricing.inputPrice)}
-                        </Badge>
-                      )}
-
-                      <Badge variant="secondary" className="text-xs">
-                        {formatContext(model.context.maxTokens)} context
+                {/* Name / provider */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-sm text-ink-primary truncate">
+                      {model.label}
+                    </span>
+                    {isActive && (
+                      <Badge
+                        className={cn(
+                          "h-5 px-2 text-[10px] flex-shrink-0",
+                          theme.badge,
+                          theme.badgeText,
+                        )}
+                      >
+                        Aktiv
                       </Badge>
-
-                      {/* Primary Tag */}
-                      {model.tags[0] && (
-                        <Badge
-                          variant="secondary"
-                          className="max-w-[100px] truncate text-xs"
-                          title={model.tags[0]}
-                        >
-                          {model.tags[0]}
-                        </Badge>
-                      )}
-
-                      {/* Capabilities */}
-                      {model.capabilities.multimodal && (
-                        <Badge variant="secondary" className="text-xs" title="Multimodal">
-                          🖼️
-                        </Badge>
-                      )}
-                      {model.capabilities.codeGeneration && (
-                        <Badge variant="secondary" className="text-xs" title="Code Generation">
-                          💻
-                        </Badge>
-                      )}
-                    </div>
-                  </MaterialCard>
-
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant={isActive ? "secondary" : "primary"}
-                      size="sm"
-                      disabled={isActive}
-                      onClick={() => handleActivateModel(model)}
-                    >
-                      {isActive ? "Aktiv" : "Aktivieren"}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="p-2 h-auto"
-                      aria-label={
-                        isModelFavorite(model.id)
-                          ? "Von Favoriten entfernen"
-                          : "Zu Favoriten hinzufügen"
-                      }
-                      onClick={() => handleToggleFavorite(model)}
-                    >
-                      <Star
-                        className={`w-4 h-4 ${
-                          isModelFavorite(model.id)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-text-secondary"
-                        } ${animatingFavorite === model.id ? "animate-favorite-pop" : ""}`}
-                      />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="p-2 h-auto"
-                      aria-label="Modelldetails anzeigen"
-                      onClick={() => setDetailsModel(model)}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
+                    )}
                   </div>
+                  <p className="text-xs text-ink-secondary truncate mt-0.5">{model.provider}</p>
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Meta badges */}
+                <div className="hidden sm:flex items-center gap-1.5 flex-shrink-0">
+                  {model.pricing.isFree && (
+                    <Badge variant="secondary" className="text-[10px] h-5 px-1.5">
+                      <Zap className="w-2.5 h-2.5 mr-0.5" />
+                      FREE
+                    </Badge>
+                  )}
+                  <Badge variant="secondary" className="text-[10px] h-5 px-1.5">
+                    {formatContext(model.context.maxTokens)}
+                  </Badge>
+                </div>
+
+                {/* Trailing actions */}
+                <div className="flex items-center gap-0.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleFavorite(model)}
+                    aria-label={isFav ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
+                      isFav ? "text-status-warning" : "text-ink-tertiary hover:text-ink-primary",
+                    )}
+                  >
+                    <Star
+                      className={cn(
+                        "w-4 h-4",
+                        isFav && "fill-current",
+                        animatingFavorite === model.id && "animate-favorite-pop",
+                      )}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDetailsModel(model)}
+                    aria-label="Modelldetails anzeigen"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:text-ink-primary"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
 
           {/* Empty State */}
           {filteredModels.length === 0 && !modelLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Search className="w-8 h-8 text-ink-secondary" />
+              <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-surface-2 border border-white/[0.08] flex items-center justify-center">
+                <Search className="w-6 h-6 text-ink-tertiary" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">
+              <h3 className="text-base font-semibold text-ink-primary mb-2">
                 Keine Modelle gefunden
               </h3>
-              <p className="text-text-secondary">
+              <p className="text-sm text-ink-secondary">
                 {searchQuery
                   ? `Keine Ergebnisse für "${searchQuery}"`
                   : "Versuche es mit anderen Filtereinstellungen"}
@@ -738,58 +622,17 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           {/* Error State */}
           {modelLoadError && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-md bg-surface-inset shadow-inset flex items-center justify-center">
-                <Search className="w-8 h-8 text-accent-danger" />
+              <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-surface-2 border border-white/[0.08] flex items-center justify-center">
+                <Search className="w-6 h-6 text-status-error" />
               </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-3">
+              <h3 className="text-base font-semibold text-ink-primary mb-2">
                 Modelle konnten nicht geladen werden
               </h3>
-              <p className="text-text-secondary mb-6 max-w-md mx-auto">{modelLoadError}</p>
-              <p className="text-sm text-text-meta">
-                Prüfe deine Verbindung zur OpenRouter-API und ob die optionale Datei{" "}
-                <code className="px-3xs py-3xs bg-surface-inset shadow-inset rounded-sm">
-                  public/models_metadata.json
-                </code>{" "}
-                vorhanden ist.
-              </p>
+              <p className="text-sm text-ink-secondary mb-4 max-w-xs mx-auto">{modelLoadError}</p>
             </div>
           )}
         </div>
       </div>
-
-      {/* Floating Action Button - Material Hero */}
-      {selectedModels.size > 0 && (
-        <div className="fixed bottom-6 right-6 z-popover">
-          <Button
-            variant="primary"
-            className="rounded-full w-14 h-14 shadow-raiseLg hover:shadow-accentGlowLg"
-            onClick={handleCompareModels}
-          >
-            <GitCompare className="w-6 h-6" />
-            <span className="sr-only">Vergleichen</span>
-          </Button>
-          {selectedModels.size > 1 && (
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-accent-primary text-white rounded-full shadow-accentGlow flex items-center justify-center text-xs font-bold">
-              {selectedModels.size}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Comparison Dialog */}
-      <Dialog open={isCompareOpen} onOpenChange={setIsCompareOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Modellvergleich</DialogTitle>
-            <DialogDescription>
-              Vergleich von {compareModels.length} ausgewählten Modellen
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            {compareModels.length > 0 && <ModelComparisonTable models={compareModels} />}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Details Dialog */}
       <Dialog open={!!detailsModel} onOpenChange={(isOpen) => !isOpen && setDetailsModel(null)}>
@@ -799,38 +642,55 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <DialogTitle>{detailsModel.label}</DialogTitle>
               <DialogDescription>{detailsModel.description}</DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-2 gap-4 py-4">
-              <div>
-                <h4 className="font-medium mb-2 text-sm text-fg-muted">Metriken</h4>
-                <div className="space-y-2">
-                  <PerformanceBar
-                    label="Qualität"
-                    value={detailsModel.qualityScore ?? 70}
-                    color="primary"
-                  />
-                  <PerformanceBar
-                    label="Kontext"
-                    value={detailsModel.contextScore ?? 0}
-                    color="success"
-                  />
-                  <PerformanceBar
-                    label="Offenheit"
-                    value={(detailsModel.openness ?? 0) * 100}
-                    color="warning"
-                  />
-                </div>
+            <div className="py-4 space-y-4">
+              <div className="space-y-2">
+                <PerformanceBar
+                  label="Qualität"
+                  value={detailsModel.qualityScore ?? 70}
+                  color="primary"
+                />
+                <PerformanceBar
+                  label="Kontext"
+                  value={detailsModel.contextScore ?? 0}
+                  color="success"
+                />
+                <PerformanceBar
+                  label="Offenheit"
+                  value={(detailsModel.openness ?? 0) * 100}
+                  color="warning"
+                />
               </div>
-              <div>
-                <h4 className="font-medium mb-2 text-sm text-fg-muted">Details</h4>
-                <div className="space-y-1 text-sm text-fg">
-                  <div>Provider: {detailsModel.provider}</div>
-                  <div>Context: {formatContext(detailsModel.context.maxTokens)}</div>
-                  <div>Tier: {detailsModel.tier}</div>
-                  {!detailsModel.pricing.isFree && (
-                    <div>Price: {formatPricePerK(detailsModel.pricing.inputPrice)}</div>
-                  )}
+              <div className="space-y-1 text-sm text-ink-secondary">
+                <div>
+                  Provider: <span className="text-ink-primary">{detailsModel.provider}</span>
                 </div>
+                <div>
+                  Kontext:{" "}
+                  <span className="text-ink-primary">
+                    {formatContext(detailsModel.context.maxTokens)}
+                  </span>
+                </div>
+                {!detailsModel.pricing.isFree && (
+                  <div>
+                    Preis:{" "}
+                    <span className="text-ink-primary">
+                      {formatPricePerK(detailsModel.pricing.inputPrice)}
+                    </span>
+                  </div>
+                )}
               </div>
+              <Button
+                variant="primary"
+                size="sm"
+                className="w-full"
+                disabled={settings.preferredModelId === detailsModel.id}
+                onClick={() => {
+                  handleActivateModel(detailsModel);
+                  setDetailsModel(null);
+                }}
+              >
+                {settings.preferredModelId === detailsModel.id ? "Aktives Modell" : "Aktivieren"}
+              </Button>
             </div>
           </DialogContent>
         )}
