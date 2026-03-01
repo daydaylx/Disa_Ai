@@ -173,18 +173,15 @@ function AppShellLayout({
                 {!isChatMode && (resolvedPageTitle || pageHeaderActions) ? (
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     {resolvedPageTitle ? (
-                      <div className="flex items-center gap-2">
-                        <BrandWordmark className="text-sm text-text-secondary lg:hidden" />
-                        {shouldRenderShellHeadingAsH1 ? (
-                          <h1 className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
-                            {resolvedPageTitle}
-                          </h1>
-                        ) : (
-                          <p className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
-                            {resolvedPageTitle}
-                          </p>
-                        )}
-                      </div>
+                      shouldRenderShellHeadingAsH1 ? (
+                        <h1 className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                          {resolvedPageTitle}
+                        </h1>
+                      ) : (
+                        <p className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                          {resolvedPageTitle}
+                        </p>
+                      )
                     ) : null}
                     {pageHeaderActions ? (
                       <div className="flex flex-wrap gap-2 sm:justify-end">{pageHeaderActions}</div>

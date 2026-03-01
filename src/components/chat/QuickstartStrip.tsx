@@ -28,11 +28,12 @@ const CATEGORY_DOT: Record<string, string> = {
 };
 
 export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps) {
-  const [picks] = useState(() => shuffle(quickstarts).slice(0, 8));
+  const [picks] = useState(() => shuffle(quickstarts).slice(0, 6));
 
   return (
-    <div className="w-full max-w-xs overflow-x-auto no-scrollbar">
-      <ul className="flex gap-2 px-1 py-1" aria-label="Themenvorschläge">
+    <div className="w-full">
+      <p className="mb-3 text-center text-xs text-ink-tertiary">Themenvorschläge</p>
+      <ul className="flex flex-wrap justify-center gap-2 px-1" aria-label="Themenvorschläge">
         {picks.map((q, i) => {
           const dotClass = q.category
             ? (CATEGORY_DOT[q.category] ?? "bg-ink-tertiary")

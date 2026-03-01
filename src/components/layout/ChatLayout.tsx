@@ -45,16 +45,13 @@ export function ChatLayout({
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <div className="flex items-center gap-2">
-              <BrandWordmark
-                className="h-5 w-auto text-ink-primary"
-                intensity={logoIntensity}
-                motionMode="header"
-                state={logoState}
-                data-testid="brand-logo"
-              />
-              <span className="sr-only">Disa AI</span>
-            </div>
+            <BrandWordmark
+              className="h-5 w-auto text-ink-primary"
+              intensity={logoIntensity}
+              motionMode="header"
+              state={logoState}
+              data-testid="brand-logo"
+            />
             {title && (
               <p className="max-w-[44vw] truncate text-sm font-medium tracking-tight text-ink-primary sm:max-w-[60vw] sm:text-base">
                 {title}
