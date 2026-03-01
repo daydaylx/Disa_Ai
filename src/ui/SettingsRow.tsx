@@ -9,6 +9,7 @@ interface SettingsRowProps {
   description?: string;
   children?: React.ReactNode;
   className?: string;
+  labelId?: string;
 }
 
 /**
@@ -17,7 +18,13 @@ interface SettingsRowProps {
  * Use for: toggle rows, select rows, info rows
  * Layout: Label + description on left, control on right
  */
-export function SettingsRow({ label, description, children, className }: SettingsRowProps) {
+export function SettingsRow({
+  label,
+  description,
+  children,
+  className,
+  labelId,
+}: SettingsRowProps) {
   return (
     <div
       className={cn(
@@ -26,7 +33,9 @@ export function SettingsRow({ label, description, children, className }: Setting
       )}
     >
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-ink-primary">{label}</p>
+        <p id={labelId} className="text-sm font-medium text-ink-primary">
+          {label}
+        </p>
         {description && (
           <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{description}</p>
         )}
@@ -56,9 +65,16 @@ export function SettingsToggleRow({
   disabled,
   className,
 }: SettingsToggleRowProps) {
+  const labelId = React.useId();
+
   return (
-    <SettingsRow label={label} description={description} className={className}>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+    <SettingsRow label={label} labelId={labelId} description={description} className={className}>
+      <Switch
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+        aria-labelledby={labelId}
+      />
     </SettingsRow>
   );
 }
@@ -77,7 +93,7 @@ export function SettingsSection({ title, description, children, className }: Set
   return (
     <section className={cn("mb-8", className)}>
       <div className="mb-4">
-        <h3 className="text-base font-semibold text-ink-primary">{title}</h3>
+        <h2 className="text-base font-semibold text-ink-primary">{title}</h2>
         {description && <p className="text-xs text-ink-tertiary mt-1">{description}</p>}
       </div>
       <div className="bg-surface-1 rounded-2xl border border-white/5 px-4">{children}</div>

@@ -126,51 +126,31 @@ function safeInitialize(): void {
     safeWarn("[INIT] Theme controller failed:", error);
   }
 
-  // Initialize service worker + persistent storage
+  // Keep persistent storage request here; service worker registration is handled by useServiceWorker.
   if (!import.meta.env.VITE_PWA_DISABLED) {
-    // Register service worker if available
-    if ("serviceWorker" in navigator) {
-      // Simplified Service Worker registration - ONE strategy per environment
-      const registerServiceWorker = async () => {
-        try {
-          // Request persistent storage
-          if ("storage" in navigator && "persist" in navigator.storage) {
-            const isPersistent = await navigator.storage.persist();
-            safeWarn("Storage persistent:", isPersistent);
-          }
+    if ("storage" in navigator && "persist" in navigator.storage) {
+      void navigator.storage
+        .persist()
+        .then((isPersistent) => {
+          safeWarn("Storage persistent:", isPersistent);
+        })
+        .catch((error) => {
+          safeWarn("Storage persistence request failed:", error);
+        });
+    }
 
-          // Development: Try dev-sw.js, fallback to no SW
-          if (import.meta.env.DEV) {
-            try {
-              const registration = await navigator.serviceWorker.register(
-                withBasePath("dev-sw.js"),
-                {
-                  scope: normalizedBasePath,
-                },
-              );
-              safeWarn("Dev SW registered:", registration);
-              return registration;
-            } catch (devError) {
-              safeWarn("Dev SW not available, running without service worker:", devError);
-              return null;
-            }
-          }
-
-          // Production: Use production SW
-          const registration = await navigator.serviceWorker.register(withBasePath("sw.js"), {
-            scope: normalizedBasePath,
-          });
-          safeWarn("Production SW registered:", registration);
-          return registration;
-        } catch (error) {
-          console.warn("SW registration failed:", error);
-          return null;
-        }
-      };
-
-      // Register immediately and on load (for reliability)
-      void registerServiceWorker();
-      window.addEventListener("load", () => void registerServiceWorker());
+    // Development-only service worker for local testing; production SW is handled in app hooks.
+    if (import.meta.env.DEV && "serviceWorker" in navigator) {
+      void navigator.serviceWorker
+        .register(withBasePath("dev-sw.js"), {
+          scope: normalizedBasePath,
+        })
+        .then((registration) => {
+          safeWarn("Dev SW registered:", registration);
+        })
+        .catch((devError) => {
+          safeWarn("Dev SW not available, running without service worker:", devError);
+        });
     }
   }
 
@@ -367,9 +347,7 @@ function installPreloadErrorHandler(): void {
       errorName === "CSS_CHUNK_LOAD_FAILED";
 
     const isAssetElementError =
-      target instanceof HTMLScriptElement ||
-      target instanceof HTMLLinkElement ||
-      target instanceof HTMLImageElement;
+      target instanceof HTMLScriptElement || target instanceof HTMLLinkElement;
 
     return matchesChunkFailure || isAssetElementError;
   };

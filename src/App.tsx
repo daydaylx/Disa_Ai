@@ -16,7 +16,7 @@ import { RolesProvider } from "./contexts/RolesContext";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { useServiceWorker } from "./hooks/useServiceWorker";
 import { useSettings } from "./hooks/useSettings";
-import { analytics, setAnalyticsEnabled } from "./lib/analytics";
+import { setAnalyticsEnabled } from "./lib/analytics";
 import { syncMetadataFromConversations } from "./lib/conversation-manager-modern";
 import { SentryErrorBoundary } from "./lib/monitoring/sentry";
 
@@ -26,11 +26,13 @@ declare global {
   }
 }
 
-const FeatureFlagPanel = lazy(() =>
-  import("./components/dev/FeatureFlagPanel").then((module) => ({
-    default: module.FeatureFlagPanel,
-  })),
-);
+const FeatureFlagPanel = import.meta.env.DEV
+  ? lazy(() =>
+      import("./components/dev/FeatureFlagPanel").then((module) => ({
+        default: module.FeatureFlagPanel,
+      })),
+    )
+  : null;
 
 // AppContent component that runs inside the providers
 function AppContent() {
@@ -42,38 +44,55 @@ function AppContent() {
     setAnalyticsEnabled(settings.enableAnalytics);
   }, [settings.enableAnalytics]);
 
-  // Apply notification preference (best-effort)
-  useEffect(() => {
-    if (!settings.enableNotifications) return;
-    if (typeof window === "undefined" || typeof Notification === "undefined") return;
-    if (Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  }, [settings.enableNotifications]);
-
-  // Track route-level page view when analytics enabled
-  useEffect(() => {
-    if (typeof window !== "undefined" && settings.enableAnalytics) {
-      analytics.trackPageView(window.location.pathname);
-    }
-  }, [settings.enableAnalytics]);
-
   // Sync metadata from conversations on startup to fix any missing metadata entries
   useEffect(() => {
-    void syncMetadataFromConversations()
-      .then((result) => {
-        if (result.synced > 0) {
-          console.warn(
-            `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
-          );
-        }
-        if (result.errors.length > 0) {
-          console.warn("[Storage] Sync errors:", result.errors);
-        }
-      })
-      .catch((error) => {
-        console.error("[Storage] Failed to sync metadata:", error);
+    let cancelled = false;
+    let idleCallbackId: number | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const runSync = () => {
+      if (cancelled) return;
+      void syncMetadataFromConversations()
+        .then((result) => {
+          if (cancelled) return;
+          if (result.synced > 0) {
+            console.warn(
+              `[Storage] Synced ${result.synced} missing metadata entries (${result.alreadySynced} already synced)`,
+            );
+          }
+          if (result.errors.length > 0) {
+            console.warn("[Storage] Sync errors:", result.errors);
+          }
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          console.error("[Storage] Failed to sync metadata:", error);
+        });
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      idleCallbackId = window.requestIdleCallback(() => {
+        runSync();
       });
+    } else {
+      timeoutId = setTimeout(() => {
+        runSync();
+      }, 0);
+    }
+
+    return () => {
+      cancelled = true;
+      if (
+        idleCallbackId !== null &&
+        typeof window !== "undefined" &&
+        "cancelIdleCallback" in window
+      ) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   return (
@@ -138,18 +157,18 @@ function AppContent() {
           <NekoLayer />
           <PWAInstallModal />
         </SentryErrorBoundary>
-        <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
-          <FeatureFlagPanel />
-        </Suspense>
+        {FeatureFlagPanel ? (
+          <Suspense fallback={<FullPageLoader message="Einstellungen werden geladen" />}>
+            <FeatureFlagPanel />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );
 }
 
 export default function App() {
-  // Initialize viewport height with optimized throttling for scroll performance and fix overflow
-  const prevBodyOverflowRef = useRef<string>("");
-  const prevDocOverflowRef = useRef<string>("");
+  // Initialize viewport height with optimized throttling for scroll performance
   const rafIdRef = useRef<number | null>(null);
   const lastHeightRef = useRef(0);
 
@@ -178,12 +197,6 @@ export default function App() {
       setTimeout(scheduleViewportHeight, 100);
     };
 
-    // Apply initial styles to prevent horizontal scrolling
-    prevBodyOverflowRef.current = document.body.style.overflowX;
-    prevDocOverflowRef.current = document.documentElement.style.overflowX;
-    document.body.style.overflowX = "hidden";
-    document.documentElement.style.overflowX = "hidden";
-
     window.__disaSetViewportHeight = scheduleViewportHeight;
     scheduleViewportHeight();
     window.addEventListener("resize", scheduleViewportHeight, { passive: true });
@@ -203,8 +216,6 @@ export default function App() {
       if (window.__disaSetViewportHeight === scheduleViewportHeight) {
         delete window.__disaSetViewportHeight;
       }
-      document.body.style.overflowX = prevBodyOverflowRef.current;
-      document.documentElement.style.overflowX = prevDocOverflowRef.current;
     };
   }, []);
 

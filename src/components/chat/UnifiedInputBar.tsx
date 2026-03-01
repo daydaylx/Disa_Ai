@@ -16,6 +16,7 @@ export interface UnifiedInputBarProps {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
+  onInputFocus?: () => void;
   isLoading?: boolean;
   className?: string;
 }
@@ -24,6 +25,7 @@ export function UnifiedInputBar({
   value,
   onChange,
   onSend,
+  onInputFocus,
   isLoading = false,
   className,
 }: UnifiedInputBarProps) {
@@ -123,6 +125,7 @@ export function UnifiedInputBar({
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            onFocus={onInputFocus}
             onKeyDown={handleKeyDown}
             placeholder="Nachricht an Disa..."
             className="h-11 max-h-[160px] min-h-[44px] w-full flex-1 resize-none bg-transparent px-0 py-2.5 text-[16px] leading-relaxed text-ink-primary placeholder:text-ink-muted/50 focus:outline-none textarea-resize-transition"
@@ -138,7 +141,7 @@ export function UnifiedInputBar({
             variant="primary"
             size="icon"
             className={cn(
-              "mb-1 h-10 w-10 flex-shrink-0 rounded-xl border border-white/5 transition-all duration-200",
+              "mb-0.5 h-11 w-11 flex-shrink-0 rounded-xl border border-white/5 transition-all duration-200",
               !value.trim() && !isLoading && "bg-white/5 text-ink-muted/30 shadow-none opacity-40",
               value.trim() &&
                 !isLoading &&
@@ -175,9 +178,9 @@ export function UnifiedInputBar({
             <SelectTrigger
               aria-label="Rolle auswählen"
               className={cn(
-                "flex h-7.5 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
+                "flex h-11 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
                 activeRole
-                  ? "bg-brand-primary/15 text-brand-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
+                  ? "bg-brand-primary/15 text-ink-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
                   : "bg-white/5 text-ink-secondary border border-transparent hover:bg-white/10",
               )}
             >
@@ -198,7 +201,7 @@ export function UnifiedInputBar({
           <Select value={settings.preferredModelId} onValueChange={(id) => setPreferredModel(id)}>
             <SelectTrigger
               aria-label="Modell auswählen"
-              className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10 hover:text-ink-secondary"
+              className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10 hover:text-ink-secondary"
             >
               <Cpu className="h-3 w-3 opacity-70" />
               <span className="max-w-[80px] truncate">{modelLabel}</span>
@@ -220,11 +223,12 @@ export function UnifiedInputBar({
             type="button"
             onClick={() => setShowExtraControls((prev) => !prev)}
             className={cn(
-              "relative flex h-7.5 w-7.5 items-center justify-center rounded-full transition-all",
+              "relative flex h-11 w-11 min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full transition-all",
               showExtraControls
                 ? "bg-brand-primary text-white"
                 : "bg-white/5 text-ink-tertiary hover:bg-white/10",
             )}
+            aria-label={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
             title={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
           >
             <Palette className="h-3 w-3" />
@@ -248,7 +252,7 @@ export function UnifiedInputBar({
               >
                 <SelectTrigger
                   aria-label="Stil auswählen"
-                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
+                  className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
                   <Sparkles className="h-3 w-3 opacity-70" />
                   <span className="whitespace-nowrap">{discussionPresetLabel}</span>
@@ -268,7 +272,7 @@ export function UnifiedInputBar({
               >
                 <SelectTrigger
                   aria-label="Kreativität auswählen"
-                  className="flex h-7.5 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
+                  className="flex h-11 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-[11px] font-semibold text-ink-tertiary border border-transparent transition-all hover:bg-white/10"
                 >
                   <span className="text-[10px] font-bold opacity-70">%</span>
                   <span className="whitespace-nowrap">{creativityShortLabel}</span>

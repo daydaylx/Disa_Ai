@@ -29,11 +29,13 @@ export function initializeCSSFeatureDetection() {
     hasColorMixSupport ? "true" : "false",
   );
 
-  console.warn("CSS Feature Detection initialized:", {
-    "color-mix": hasColorMixSupport,
-    "backdrop-filter": hasBackdropFilterSupport,
-    subgrid: hasModernGridSupport,
-  });
+  if (import.meta.env.DEV) {
+    console.warn("CSS Feature Detection initialized:", {
+      "color-mix": hasColorMixSupport,
+      "backdrop-filter": hasBackdropFilterSupport,
+      subgrid: hasModernGridSupport,
+    });
+  }
 }
 
 // Initialize on DOM ready

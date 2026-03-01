@@ -65,7 +65,12 @@ function AppShellLayout({
 
   const resolvedPageTitle = pageHeaderTitle ?? pageTitle;
 
-  const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
+  const isChatMode = location.pathname === "/" || location.pathname === "/chat";
+  const shouldRenderShellHeadingAsH1 =
+    !location.pathname.startsWith("/settings") &&
+    location.pathname !== "/feedback" &&
+    location.pathname !== "/impressum" &&
+    location.pathname !== "/datenschutz";
 
   return (
     <div className="relative h-full min-h-screen-mobile bg-bg-app text-text-primary">
@@ -170,9 +175,15 @@ function AppShellLayout({
                     {resolvedPageTitle ? (
                       <div className="flex items-center gap-2">
                         <BrandWordmark className="text-sm text-text-secondary lg:hidden" />
-                        <p className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
-                          {resolvedPageTitle}
-                        </p>
+                        {shouldRenderShellHeadingAsH1 ? (
+                          <h1 className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                            {resolvedPageTitle}
+                          </h1>
+                        ) : (
+                          <p className="text-lg font-semibold leading-tight text-text-primary sm:text-xl">
+                            {resolvedPageTitle}
+                          </p>
+                        )}
                       </div>
                     ) : null}
                     {pageHeaderActions ? (

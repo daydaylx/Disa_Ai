@@ -279,7 +279,7 @@ export function MenuIcon({ onClick, className, badge }: MenuIconProps) {
     <button
       onClick={onClick}
       className={cn(
-        "group relative flex items-center justify-center w-10 h-10 rounded-lg",
+        "group relative flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg",
         "text-text-primary hover:bg-surface-2 transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
         className,

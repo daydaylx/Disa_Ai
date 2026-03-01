@@ -1,8 +1,7 @@
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { BookNavigationState, ChatSession } from "../types/BookNavigation";
-import { useSettings } from "./useSettings";
 
 const MAX_STACK_SIZE = 5;
 const STORAGE_KEY = "disa_book_state";
@@ -16,16 +15,17 @@ const INITIAL_STATE: BookNavigationState = {
 export function useBookNavigation() {
   const [state, setState] = useState<BookNavigationState>(INITIAL_STATE);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [transitionTimer, setTransitionTimer] = useState<NodeJS.Timeout | null>(null);
-  const { settings } = useSettings();
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Cleanup transition timer on unmount
   useEffect(() => {
     return () => {
-      if (transitionTimer) clearTimeout(transitionTimer);
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
     };
-  }, [transitionTimer]);
+  }, []);
 
   // Initialize: Load from storage
   useEffect(() => {
@@ -96,8 +96,13 @@ export function useBookNavigation() {
     if (animate) {
       // Trigger transition logic here (or return a flag)
       setIsTransitioning(true);
-      const timer = setTimeout(() => setIsTransitioning(false), 300);
-      setTransitionTimer(timer);
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+      transitionTimerRef.current = setTimeout(() => {
+        setIsTransitioning(false);
+        transitionTimerRef.current = null;
+      }, 300);
     }
   }, []);
 
@@ -194,6 +199,5 @@ export function useBookNavigation() {
     updateChatId,
     isTransitioning,
     isInitialized, // Expose initialization status for tests
-    settings, // Just to avoid unused var warning for now
   };
 }

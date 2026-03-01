@@ -28,6 +28,7 @@ class LocalAnalytics {
   private sessionId: string;
   private events: AnalyticsEvent[] = [];
   private session: AnalyticsSession;
+  private resizeDebounceTimeout: ReturnType<typeof setTimeout> | null = null;
   public isEnabled = true;
 
   constructor() {
@@ -69,12 +70,19 @@ class LocalAnalytics {
       this.endSession();
     });
 
-    // Track viewport changes
+    // Track viewport changes with debounce to avoid excessive localStorage writes
     window.addEventListener("resize", () => {
-      this.track("viewport_change", {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+      if (this.resizeDebounceTimeout !== null) {
+        clearTimeout(this.resizeDebounceTimeout);
+      }
+
+      this.resizeDebounceTimeout = setTimeout(() => {
+        this.resizeDebounceTimeout = null;
+        this.track("viewport_change", {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }, 200);
     });
   }
 
@@ -105,7 +113,7 @@ class LocalAnalytics {
     this.persistEvents();
 
     // Log for development
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.log("Analytics Event:", event);
     }
@@ -341,10 +349,8 @@ export function setAnalyticsEnabled(enabled: boolean): void {
   analytics.setEnabled(enabled);
 }
 
-// Auto-track page loads
+// Install global error listeners
 if (typeof window !== "undefined") {
-  analytics.trackPageView(window.location.pathname);
-
   // Track unhandled errors
   window.addEventListener("error", (event) => {
     analytics.trackError(new Error(event.message), "unhandled_error");
