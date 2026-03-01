@@ -250,7 +250,7 @@ export function SettingsApiDataView() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <KeyRound className="h-4 w-4 text-accent-settings" />
-              <h3 className="text-sm font-semibold text-ink-primary">Schlüssel & Verbindung</h3>
+              <h2 className="text-sm font-semibold text-ink-primary">Schlüssel & Verbindung</h2>
             </div>
 
             {hasApiKey && (
@@ -277,7 +277,7 @@ export function SettingsApiDataView() {
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-2 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:bg-accent-settings-dim/40 hover:text-accent-settings"
+                  className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:bg-accent-settings-dim/40 hover:text-accent-settings"
                   aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
                 >
                   {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -324,7 +324,7 @@ export function SettingsApiDataView() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <HardDrive className="h-4 w-4 text-accent-settings" />
-              <h3 className="text-sm font-semibold text-ink-primary">Speicherstatistiken</h3>
+              <h2 className="text-sm font-semibold text-ink-primary">Speicherstatistiken</h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
@@ -359,7 +359,7 @@ export function SettingsApiDataView() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <Download className="h-4 w-4 text-accent-settings" />
-              <h3 className="text-sm font-semibold text-ink-primary">Export</h3>
+              <h2 className="text-sm font-semibold text-ink-primary">Export</h2>
             </div>
             <Button
               onClick={handleExportConversations}
@@ -381,7 +381,7 @@ export function SettingsApiDataView() {
           <section className="space-y-4">
             <div className="flex items-center gap-2">
               <Upload className="h-4 w-4 text-accent-settings" />
-              <h3 className="text-sm font-semibold text-ink-primary">Import</h3>
+              <h2 className="text-sm font-semibold text-ink-primary">Import</h2>
             </div>
             <Button
               variant="secondary"
@@ -408,7 +408,7 @@ export function SettingsApiDataView() {
         <Card variant="surface" className="border-white/[0.08]">
           <section className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-sm font-semibold text-ink-primary">Migration & Recovery</h3>
+              <h2 className="text-sm font-semibold text-ink-primary">Migration & Recovery</h2>
               <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
                 {showMigration ? "Schließen" : "Öffnen"}
               </Button>

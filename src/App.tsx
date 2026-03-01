@@ -168,9 +168,7 @@ function AppContent() {
 }
 
 export default function App() {
-  // Initialize viewport height with optimized throttling for scroll performance and fix overflow
-  const prevBodyOverflowRef = useRef<string>("");
-  const prevDocOverflowRef = useRef<string>("");
+  // Initialize viewport height with optimized throttling for scroll performance
   const rafIdRef = useRef<number | null>(null);
   const lastHeightRef = useRef(0);
 
@@ -199,12 +197,6 @@ export default function App() {
       setTimeout(scheduleViewportHeight, 100);
     };
 
-    // Apply initial styles to prevent horizontal scrolling
-    prevBodyOverflowRef.current = document.body.style.overflowX;
-    prevDocOverflowRef.current = document.documentElement.style.overflowX;
-    document.body.style.overflowX = "hidden";
-    document.documentElement.style.overflowX = "hidden";
-
     window.__disaSetViewportHeight = scheduleViewportHeight;
     scheduleViewportHeight();
     window.addEventListener("resize", scheduleViewportHeight, { passive: true });
@@ -224,8 +216,6 @@ export default function App() {
       if (window.__disaSetViewportHeight === scheduleViewportHeight) {
         delete window.__disaSetViewportHeight;
       }
-      document.body.style.overflowX = prevBodyOverflowRef.current;
-      document.documentElement.style.overflowX = prevDocOverflowRef.current;
     };
   }, []);
 

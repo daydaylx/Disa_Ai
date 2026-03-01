@@ -73,7 +73,7 @@ export function ListRow({
         </div>
       ) : null}
 
-      <div className={cn("relative z-content flex items-center gap-4", topRight && "pr-[5.5rem]")}>
+      <div className={cn("relative flex items-center gap-4", topRight && "pr-[5.5rem]")}>
         {leading ? <div className="shrink-0">{leading}</div> : null}
 
         <div className="min-w-0 flex-1">

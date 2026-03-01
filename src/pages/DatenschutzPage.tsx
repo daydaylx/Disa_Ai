@@ -28,62 +28,98 @@ export default function DatenschutzPage() {
             </p>
             <ul className="mt-2 space-y-1.5 text-sm text-ink-secondary">
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-1">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-1"
+                >
                   1. Verantwortlicher
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-2">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-2"
+                >
                   2. Allgemeines zur Datenverarbeitung
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-3">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-3"
+                >
                   3. Bereitstellung der Website und Server-Logfiles
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-4">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-4"
+                >
                   4. Nutzung der KI-Funktion
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-5">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-5"
+                >
                   5. Lokale Speicherung im Browser
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-6">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-6"
+                >
                   6. Cookies und Tracking
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-7">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-7"
+                >
                   7. Kontaktaufnahme per E-Mail
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-8">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-8"
+                >
                   8. Speicherdauer
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-9">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-9"
+                >
                   9. Rechtsgrundlagen im Überblick
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-10">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-10"
+                >
                   10. Deine Rechte als betroffene Person
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-11">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-11"
+                >
                   11. Beschwerderecht bei einer Aufsichtsbehörde
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#ds-12">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#ds-12"
+                >
                   12. Änderungen dieser Datenschutzerklärung
                 </a>
               </li>

@@ -65,7 +65,7 @@ function AppShellLayout({
 
   const resolvedPageTitle = pageHeaderTitle ?? pageTitle;
 
-  const isChatMode = location.pathname === "/" || location.pathname.startsWith("/chat");
+  const isChatMode = location.pathname === "/" || location.pathname === "/chat";
   const shouldRenderShellHeadingAsH1 =
     !location.pathname.startsWith("/settings") &&
     location.pathname !== "/feedback" &&

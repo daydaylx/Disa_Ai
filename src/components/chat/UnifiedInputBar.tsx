@@ -180,7 +180,7 @@ export function UnifiedInputBar({
               className={cn(
                 "flex h-11 items-center gap-1.5 rounded-full px-2.5 text-[11px] font-semibold transition-all",
                 activeRole
-                  ? "bg-brand-primary/15 text-brand-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
+                  ? "bg-brand-primary/15 text-ink-primary border border-brand-primary/20 shadow-sm shadow-brand-primary/5"
                   : "bg-white/5 text-ink-secondary border border-transparent hover:bg-white/10",
               )}
             >
@@ -223,11 +223,12 @@ export function UnifiedInputBar({
             type="button"
             onClick={() => setShowExtraControls((prev) => !prev)}
             className={cn(
-              "relative flex h-11 w-11 items-center justify-center rounded-full transition-all",
+              "relative flex h-11 w-11 min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full transition-all",
               showExtraControls
                 ? "bg-brand-primary text-white"
                 : "bg-white/5 text-ink-tertiary hover:bg-white/10",
             )}
+            aria-label={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
             title={showExtraControls ? "Weniger Optionen" : "Mehr Optionen"}
           >
             <Palette className="h-3 w-3" />

@@ -38,12 +38,18 @@ export function SettingsExtrasView() {
                   <Cat className="h-6 w-6" />
                 </div>
               }
-              trailing={<Switch checked={settings.enableNeko} onCheckedChange={handleToggleNeko} />}
+              trailing={
+                <Switch
+                  checked={settings.enableNeko}
+                  onCheckedChange={handleToggleNeko}
+                  aria-label="Neko-Katze anzeigen"
+                />
+              }
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <Badge
                   variant="settings"
-                  className="h-5 px-2 text-[10px] font-semibold uppercase tracking-wider"
+                  className="h-5 border-accent-settings/40 bg-accent-settings/20 px-2 text-[10px] font-semibold uppercase tracking-wider text-ink-primary"
                 >
                   Deko
                 </Badge>

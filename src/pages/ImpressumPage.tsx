@@ -26,18 +26,24 @@ export default function ImpressumPage() {
             </p>
             <ul className="mt-2 space-y-1.5 text-sm text-ink-secondary">
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#impressum-angaben">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#impressum-angaben"
+                >
                   Angaben gemäß § 5 TMG
                 </a>
               </li>
               <li>
-                <a className="transition-colors hover:text-ink-primary" href="#impressum-kontakt">
+                <a
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+                  href="#impressum-kontakt"
+                >
                   Kontakt
                 </a>
               </li>
               <li>
                 <a
-                  className="transition-colors hover:text-ink-primary"
+                  className="flex min-h-[44px] items-center rounded-md py-2 transition-colors hover:text-ink-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
                   href="#impressum-verantwortlich"
                 >
                   Verantwortlich für den Inhalt

@@ -158,7 +158,7 @@ export default function ChatHistoryPage() {
               Starte einen neuen Chat, um ihn hier zu sehen.
             </p>
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               className="mt-4"
               onClick={() => void navigate("/chat")}

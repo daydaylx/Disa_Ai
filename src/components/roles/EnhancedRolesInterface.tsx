@@ -301,23 +301,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
             <div className="relative">
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-                <div
+                <button
+                  type="button"
                   onClick={() =>
                     setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
                   }
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setFilters((prev) => ({
-                        ...prev,
-                        showFavoritesOnly: !prev.showFavoritesOnly,
-                      }));
-                    }
-                  }}
+                  aria-pressed={filters.showFavoritesOnly}
                   className={cn(
-                    "flex items-center gap-1.5 px-2xspy-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
+                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
                     filters.showFavoritesOnly
                       ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                       : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -327,7 +318,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")}
                   />
                   Favoriten
-                </div>
+                </button>
 
                 <div className="w-px h-4 bg-white/10 flex-shrink-0" />
 
@@ -335,26 +326,20 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   const isSelected = selectedCategory === cat;
                   const catTheme = getCategoryStyle(cat);
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={cat}
                       onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          setSelectedCategory((prev) => (prev === cat ? null : cat));
-                        }
-                      }}
+                      aria-pressed={isSelected}
                       className={cn(
-                        "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer",
+                        "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
                         isSelected
                           ? cn(catTheme.bg, catTheme.border, catTheme.text, catTheme.glow)
                           : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
                       )}
                     >
                       {cat}
-                    </div>
+                    </button>
                   );
                 })}
               </div>
