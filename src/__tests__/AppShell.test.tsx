@@ -33,7 +33,9 @@ describe("AppShell Layout", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getAllByText("Settings").length).toBeGreaterThan(0);
+    const banner = screen.getByRole("banner");
+    expect(within(banner).getByText("Settings")).toBeInTheDocument();
+    expect(within(screen.getByTestId("app-main")).getByText("Settings")).toBeInTheDocument();
   });
 
   it("hides header on chat routes", () => {
@@ -76,7 +78,7 @@ describe("AppShell Layout", () => {
   });
 
   it("uses pageHeaderTitle in the mobile header", () => {
-    const { container } = render(
+    render(
       <MemoryRouter initialEntries={["/feedback"]}>
         <AppShell pageHeaderTitle="Feedback">
           <div>Feedback Content</div>
@@ -84,13 +86,12 @@ describe("AppShell Layout", () => {
       </MemoryRouter>,
     );
 
-    const mobileHeader = container.querySelector("header");
-    expect(mobileHeader).not.toBeNull();
-    expect(within(mobileHeader as HTMLElement).getByText("Feedback")).toBeInTheDocument();
+    const banner = screen.getByRole("banner");
+    expect(within(banner).getByText("Feedback")).toBeInTheDocument();
   });
 
   it("resolves settings sub-routes to Einstellungen title", () => {
-    const { container } = render(
+    render(
       <MemoryRouter initialEntries={["/settings/memory"]}>
         <AppShell>
           <div>Settings Memory Content</div>
@@ -98,9 +99,8 @@ describe("AppShell Layout", () => {
       </MemoryRouter>,
     );
 
-    const mobileHeader = container.querySelector("header");
-    expect(mobileHeader).not.toBeNull();
-    expect(within(mobileHeader as HTMLElement).getByText("Einstellungen")).toBeInTheDocument();
+    const banner = screen.getByRole("banner");
+    expect(within(banner).getByText("Einstellungen")).toBeInTheDocument();
     expect(within(screen.getByTestId("app-main")).getByText("Einstellungen")).toBeInTheDocument();
   });
 });

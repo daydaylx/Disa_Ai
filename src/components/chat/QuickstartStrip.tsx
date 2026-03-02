@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useState } from "react";
 
 import { type Quickstart } from "@/config/quickstarts";
 import { cn } from "@/lib/utils";
@@ -28,10 +28,7 @@ const CATEGORY_DOT: Record<string, string> = {
 };
 
 export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps) {
-  const picks = useMemo(
-    () => shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length)),
-    [quickstarts],
-  );
+  const [picks] = useState(() => shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length)));
 
   return (
     <div className="w-full">
