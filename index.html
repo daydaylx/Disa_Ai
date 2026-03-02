@@ -59,21 +59,15 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/app-icons/icon-180.png" />
 
     <!-- PWA Manifest -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap"
     />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
-    />
-    <link
-      rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
-      rel="stylesheet"
     />
     <link rel="manifest" href="/manifest.webmanifest?v=2" />
 
@@ -88,7 +82,13 @@
         }
       }
     </style>
-    <style id="nojs-fallback-style">
+    <style>
+      #nojs-shell {
+        display: none;
+      }
+    </style>
+    <noscript>
+      <style id="nojs-fallback-style">
       :root {
         --nojs-bg: radial-gradient(circle at 18% 20%, #131a2f, #060a17 55%, #03050c 100%);
         --nojs-surface: rgba(255, 255, 255, 0.04);
@@ -582,7 +582,8 @@
           padding: 1.15rem;
         }
       }
-    </style>
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root">
@@ -828,6 +829,6 @@
         container.appendChild(warning);
       });
     </script>
-    <script src="/viewport-height.js"></script>
+    <script defer src="/viewport-height.js"></script>
   </body>
 </html>

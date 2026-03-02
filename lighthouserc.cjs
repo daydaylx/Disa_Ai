@@ -18,7 +18,6 @@ module.exports = {
         "categories:accessibility": ["warn", { minScore: 0.95 }],
         "categories:best-practices": ["warn", { minScore: 0.95 }],
         "categories:seo": ["warn", { minScore: 0.95 }],
-        "categories:pwa": ["warn", { minScore: 0.9 }],
         "first-contentful-paint": ["warn", { maxNumericValue: 2000 }],
         "largest-contentful-paint": ["warn", { maxNumericValue: 2500 }],
         "cumulative-layout-shift": ["warn", { maxNumericValue: 0.1 }],

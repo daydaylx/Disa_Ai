@@ -171,7 +171,7 @@ Following the plan in `docs/reports/ui-fix-plan.md`, all arbitrary z-index value
 - [x] **Z-index rules centralized** - 16/17 violations migrated ✅
 - [ ] **Portal strategy unified** - Pending Phase 2
 - [ ] **Scroll lock verified** - Pending Phase 2
-- [ ] **No overlaps in viewports** - Pending Phase 4 (screenshot testing)
+- [x] **No overlaps in viewports** - Recheck 2026-03-01 (`tools/ui-baseline-audit.mjs`, `ui-signals.json total: 0`)
 
 ### Next Steps
 

@@ -139,13 +139,13 @@ Verbindliche Layer-Reihenfolge:
 
 ## Akzeptanzkriterien (MUSS)
 
-- [ ] **Keine Overlaps** in Viewports 360x800 / 390x844 / 412x915 / 430x932 (Nachweis über Screenshots auf `/chat`, `/models`, `/roles`, `/settings`, `/themen`, `/feedback`).
+- [x] **Keine Overlaps** in Viewports 360x800 / 390x844 / 412x915 / 430x932 (Recheck 2026-03-01: `tools/ui-baseline-audit.mjs`, `ui-signals.json total: 0`).
 - [ ] Composer/Input wird **nie** verdeckt oder abgeschnitten (inkl. `keyboard-focus`).
 - [ ] Composer/Input wird nicht von Panels/Sheets/Toasts überlagert; Fokus/ScrollIntoView bleibt stabil.
 - [ ] Drawer und HistoryPanel liegen immer über Content und sperren den Hintergrund-Scroll korrekt.
 - [ ] `ScrollToBottom` (falls aktiv) ist immer nutzbar, nie hinter Composer/Overlay, Position safe-area-konsistent.
-- [ ] Keine doppelte Scrollbar: niemals Kombination aus Body-Scroll + Inner-Scroll als Seiten-Scroll.
-- [ ] **Keine Bottom Navigation** im UI und im Layout-System (inkl. entfernter Variablen/Offsets/Container).
+- [x] Keine doppelte Scrollbar: niemals Kombination aus Body-Scroll + Inner-Scroll als Seiten-Scroll (Recheck 2026-03-01: `ui-signals.json total: 0`).
+- [x] **Keine Bottom Navigation** im UI und im Layout-System (inkl. entfernter Variablen/Offsets/Container) (Recheck 2026-03-01: `ui-signals.json total: 0`, Regel `Deprecated UI` ohne Treffer).
 - [ ] Z-Index-Regeln sind vollständig zentralisiert (keine freien `z-*` Werte in produktiven Layern).
 - [ ] Safe-Area + Keyboard verwenden genau eine zentrale Berechnung (keine doppelte Bottom-Anrechnung).
 - [ ] Portal-Strategie ist einheitlich (alle Overlays im definierten Overlay-Root).

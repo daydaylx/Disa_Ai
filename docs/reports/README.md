@@ -15,6 +15,7 @@ docs/reports/
 ├── design-system-improvements.md     # Design-System Verbesserungen
 ├── test-expansion-summary.md         # Test-Abdeckung Erweiterung
 ├── test-coverage-improvement-summary.md
+├── audit-cleanup-backlog.md          # Zentrale offene Audit-Punkte + Abarbeitungsstatus
 ├── cache-fix-anleitung.md            # Cache-Problem Behebung
 └── mobile-ui-on-desktop.md           # Mobile-UI auf Desktop Implementierung
 ```

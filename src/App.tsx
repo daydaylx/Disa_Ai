@@ -172,7 +172,7 @@ export default function App() {
   const rafIdRef = useRef<number | null>(null);
   const lastHeightRef = useRef(0);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (typeof window === "undefined") return;
 
     const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
