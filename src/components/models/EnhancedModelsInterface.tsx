@@ -9,19 +9,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { ChevronDown, Search, Star, Zap } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
-import {
-  Badge,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  FilterChip,
-  Input,
-  Skeleton,
-  useToasts,
-} from "@/ui";
+import { Badge, BottomSheet, Button, FilterChip, Input, Skeleton, useToasts } from "@/ui";
 
 import { MODEL_POLICY } from "../../config/modelPolicy";
 import { loadModelCatalog, type ModelEntry } from "../../config/models";
@@ -270,14 +258,14 @@ function PerformanceBar({
   // Material Design Performance Bar - Inset container with raised fill
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs text-text-meta min-w-[70px]">{label}</span>
-      <div className="flex-1 h-2.5 bg-surface-inset rounded-full overflow-hidden shadow-inset">
+      <span className="text-xs text-ink-muted min-w-[70px]">{label}</span>
+      <div className="flex-1 h-2.5 bg-surface-2/50 rounded-full overflow-hidden">
         <div
-          className={`h-full ${colorClasses[color]} transition-all duration-300 shadow-raise`}
+          className={`h-full ${colorClasses[color]} transition-all duration-300`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs font-medium min-w-[35px] text-right text-text-primary">
+      <span className="text-xs font-medium min-w-[35px] text-right text-ink-primary">
         {Math.round(value)}
       </span>
     </div>
@@ -431,9 +419,19 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             <Skeleton className="h-9 w-24 rounded-sm" />
             <Skeleton className="h-9 w-24 rounded-sm" />
           </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="space-y-2">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-full rounded-md" /> // Model card skeleton
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-2xl border border-white/[0.08] p-3"
+              >
+                <Skeleton className="h-12 w-12 flex-shrink-0 rounded-2xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-2/3 rounded-md" />
+                  <Skeleton className="h-3 w-1/3 rounded-md" />
+                </div>
+                <Skeleton className="h-8 w-8 rounded-lg" />
+              </div>
             ))}
           </div>
         </div>
@@ -444,7 +442,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
   return (
     <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
       {/* Sticky Filter Header */}
-      <div className="sticky top-0 z-header bg-surface-1 border-b border-white/[0.06]">
+      <div className="sticky top-0 z-header bg-surface-1 border-b border-white/[0.06] shadow-sm">
         <div className="p-4 space-y-3">
           {/* Search Input */}
           <div className="relative">
@@ -577,7 +575,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     onClick={() => handleToggleFavorite(model)}
                     aria-label={isFav ? "Von Favoriten entfernen" : "Zu Favoriten hinzufügen"}
                     className={cn(
-                      "flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
+                      "flex h-11 w-11 items-center justify-center rounded-lg transition-colors",
                       isFav ? "text-status-warning" : "text-ink-tertiary hover:text-ink-primary",
                     )}
                   >
@@ -593,7 +591,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     type="button"
                     onClick={() => setDetailsModel(model)}
                     aria-label="Modelldetails anzeigen"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:text-ink-primary"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:text-ink-primary"
                   >
                     <ChevronDown className="w-4 h-4" />
                   </button>
@@ -604,7 +602,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
           {/* Empty State */}
           {filteredModels.length === 0 && !modelLoadError && (
-            <div className="text-center py-16">
+            <div className="mx-4 rounded-2xl border border-white/[0.05] bg-surface-1/30 py-12 text-center backdrop-blur-sm">
               <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-surface-2 border border-white/[0.08] flex items-center justify-center">
                 <Search className="w-6 h-6 text-ink-tertiary" />
               </div>
@@ -621,7 +619,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
           {/* Error State */}
           {modelLoadError && (
-            <div className="text-center py-16">
+            <div className="mx-4 rounded-2xl border border-white/[0.05] bg-surface-1/30 py-12 text-center backdrop-blur-sm">
               <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-surface-2 border border-white/[0.08] flex items-center justify-center">
                 <Search className="w-6 h-6 text-status-error" />
               </div>
@@ -634,55 +632,64 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         </div>
       </div>
 
-      {/* Details Dialog */}
-      <Dialog open={!!detailsModel} onOpenChange={(isOpen) => !isOpen && setDetailsModel(null)}>
+      {/* Details Sheet */}
+      <BottomSheet
+        open={!!detailsModel}
+        onClose={() => setDetailsModel(null)}
+        title={detailsModel?.label ?? ""}
+        description={detailsModel?.description ?? ""}
+      >
         {detailsModel && (
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{detailsModel.label}</DialogTitle>
-              <DialogDescription>{detailsModel.description}</DialogDescription>
-            </DialogHeader>
-            <div className="py-4 space-y-4">
-              <div className="space-y-2">
-                <PerformanceBar
-                  label="Qualität"
-                  value={detailsModel.qualityScore ?? 70}
-                  color="primary"
-                />
-                <PerformanceBar
-                  label="Kontext"
-                  value={detailsModel.contextScore ?? 0}
-                  color="success"
-                />
-                <PerformanceBar
-                  label="Offenheit"
-                  value={(detailsModel.openness ?? 0) * 100}
-                  color="warning"
-                />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <PerformanceBar
+                label="Qualität"
+                value={detailsModel.qualityScore ?? 70}
+                color="primary"
+              />
+              <PerformanceBar
+                label="Kontext"
+                value={detailsModel.contextScore ?? 0}
+                color="success"
+              />
+              <PerformanceBar
+                label="Offenheit"
+                value={(detailsModel.openness ?? 0) * 100}
+                color="warning"
+              />
+            </div>
+            <div className="space-y-1 text-sm text-ink-secondary">
+              <div>
+                Provider: <span className="text-ink-primary">{detailsModel.provider}</span>
               </div>
-              <div className="space-y-1 text-sm text-ink-secondary">
+              <div>
+                Kontext:{" "}
+                <span className="text-ink-primary">
+                  {formatContext(detailsModel.context.maxTokens)}
+                </span>
+              </div>
+              {!detailsModel.pricing.isFree && (
                 <div>
-                  Provider: <span className="text-ink-primary">{detailsModel.provider}</span>
-                </div>
-                <div>
-                  Kontext:{" "}
+                  Preis:{" "}
                   <span className="text-ink-primary">
-                    {formatContext(detailsModel.context.maxTokens)}
+                    {formatPricePerK(detailsModel.pricing.inputPrice)}
                   </span>
                 </div>
-                {!detailsModel.pricing.isFree && (
-                  <div>
-                    Preis:{" "}
-                    <span className="text-ink-primary">
-                      {formatPricePerK(detailsModel.pricing.inputPrice)}
-                    </span>
-                  </div>
-                )}
-              </div>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex-1"
+                onClick={() => setDetailsModel(null)}
+              >
+                Schließen
+              </Button>
               <Button
                 variant="primary"
                 size="sm"
-                className="w-full"
+                className="flex-1"
                 disabled={settings.preferredModelId === detailsModel.id}
                 onClick={() => {
                   handleActivateModel(detailsModel);
@@ -692,9 +699,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                 {settings.preferredModelId === detailsModel.id ? "Aktives Modell" : "Aktivieren"}
               </Button>
             </div>
-          </DialogContent>
+          </div>
         )}
-      </Dialog>
+      </BottomSheet>
     </div>
   );
 }

@@ -21,20 +21,20 @@ export function SettingsAccordion({
   children,
 }: SettingsAccordionProps) {
   return (
-    <div className="rounded-xl bg-surface-1 border border-surface-2 overflow-hidden">
+    <div className="rounded-xl bg-surface-card border border-white/[0.08] overflow-hidden">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 bg-surface-2 hover:bg-surface-3 transition-colors"
+        className="w-full flex items-center justify-between p-4 bg-surface-card hover:bg-surface-2/80 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <Icon className="w-5 h-5 text-brand" />
+          <Icon className="w-5 h-5 text-accent-settings" />
           <div className="text-left">
-            <p className="font-semibold text-text-primary">{title}</p>
-            <p className="text-xs text-text-secondary">{description}</p>
+            <p className="font-semibold text-ink-primary">{title}</p>
+            <p className="text-xs text-ink-secondary">{description}</p>
           </div>
         </div>
         <ChevronDown
-          className={`w-5 h-5 text-text-secondary transition-transform duration-200 ${
+          className={`w-5 h-5 text-ink-tertiary transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
