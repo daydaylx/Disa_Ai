@@ -199,9 +199,9 @@ export function TabbedSettingsView({
                       event.stopPropagation();
                       setSelectedSectionId(section.id);
                     }}
-                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                    aria-label="Details"
+                    className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                   >
-                    Details
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 }

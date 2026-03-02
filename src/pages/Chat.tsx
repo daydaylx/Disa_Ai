@@ -313,7 +313,7 @@ export default function Chat() {
                       className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, rgba(56, 189, 248, 0.06) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(56, 189, 248, 0.03) 50%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />
@@ -329,7 +329,7 @@ export default function Chat() {
                     {/* Noise overlay – subtle film-grain texture for premium depth */}
                     <div className="hero-noise" aria-hidden="true" />
                     <AnimatedBrandmark
-                      className="relative mx-auto"
+                      className="relative mx-auto scale-75"
                       intensity="premium"
                       mode="hero"
                       playIntro={chatLogic.isEmpty}
