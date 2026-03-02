@@ -125,7 +125,7 @@ function AppShellLayout({
                   <div className="flex items-center gap-2 truncate">
                     <BrandWordmark className="text-sm lg:hidden" data-testid="brand-logo" />
                     <span className="text-sm font-semibold text-text-primary truncate">
-                      {pageTitle}
+                      {resolvedPageTitle}
                     </span>
                   </div>
                 </div>

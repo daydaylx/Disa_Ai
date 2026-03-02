@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -33,8 +33,7 @@ describe("AppShell Layout", () => {
       </MemoryRouter>,
     );
 
-    const title = screen.getByText("Settings");
-    expect(title).toBeInTheDocument();
+    expect(screen.getAllByText("Settings").length).toBeGreaterThan(0);
   });
 
   it("hides header on chat routes", () => {
@@ -74,5 +73,34 @@ describe("AppShell Layout", () => {
     );
 
     expect(screen.queryByTestId("mobile-bottom-nav")).not.toBeInTheDocument();
+  });
+
+  it("uses pageHeaderTitle in the mobile header", () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={["/feedback"]}>
+        <AppShell pageHeaderTitle="Feedback">
+          <div>Feedback Content</div>
+        </AppShell>
+      </MemoryRouter>,
+    );
+
+    const mobileHeader = container.querySelector("header");
+    expect(mobileHeader).not.toBeNull();
+    expect(within(mobileHeader as HTMLElement).getByText("Feedback")).toBeInTheDocument();
+  });
+
+  it("resolves settings sub-routes to Einstellungen title", () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={["/settings/memory"]}>
+        <AppShell>
+          <div>Settings Memory Content</div>
+        </AppShell>
+      </MemoryRouter>,
+    );
+
+    const mobileHeader = container.querySelector("header");
+    expect(mobileHeader).not.toBeNull();
+    expect(within(mobileHeader as HTMLElement).getByText("Einstellungen")).toBeInTheDocument();
+    expect(within(screen.getByTestId("app-main")).getByText("Einstellungen")).toBeInTheDocument();
   });
 });
