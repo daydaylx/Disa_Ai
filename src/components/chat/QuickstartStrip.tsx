@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 
 import { type Quickstart } from "@/config/quickstarts";
 import { cn } from "@/lib/utils";
@@ -27,21 +27,11 @@ const CATEGORY_DOT: Record<string, string> = {
   verschwörungstheorien: "bg-accent-verschwörung",
 };
 
-function pickQuickstarts(quickstarts: Quickstart[]): Quickstart[] {
-  return shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length));
-}
-
 export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps) {
-  const [picks, setPicks] = useState(() => pickQuickstarts(quickstarts));
-  const signatureRef = useRef(quickstarts.map((quickstart) => quickstart.id).join("|"));
-
-  useEffect(() => {
-    const nextSignature = quickstarts.map((quickstart) => quickstart.id).join("|");
-    if (signatureRef.current === nextSignature) return;
-
-    signatureRef.current = nextSignature;
-    setPicks(pickQuickstarts(quickstarts));
-  }, [quickstarts]);
+  const picks = useMemo(
+    () => shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length)),
+    [quickstarts],
+  );
 
   return (
     <div className="w-full">
