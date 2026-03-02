@@ -164,10 +164,16 @@ export default function ThemenPage() {
         </div>
 
         {/* Expanded Details - animated via CSS grid height technique */}
-        <div className="accordion-panel" data-open={isExpanded ? "true" : "false"}>
+        <div
+          className="accordion-panel"
+          data-open={isExpanded ? "true" : "false"}
+          aria-hidden={!isExpanded}
+        >
           <div className="accordion-inner">
             <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0">
-              <div className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}>
+              <div
+                className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}
+              >
                 {/* Full Description */}
                 <div>
                   <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>

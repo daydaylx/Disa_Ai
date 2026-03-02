@@ -175,11 +175,15 @@
       grid-template-rows 220ms var(--disa-ease-emphasized, cubic-bezier(0.16, 1, 0.3, 1)),
       opacity 180ms ease;
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .accordion-panel[data-open="true"] {
     grid-template-rows: 1fr;
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .accordion-inner {

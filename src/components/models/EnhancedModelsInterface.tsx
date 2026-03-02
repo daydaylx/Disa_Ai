@@ -445,8 +445,8 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
         <div className="p-4 space-y-3">
           {/* Search Input */}
           <div className="relative group">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-[120ms] group-focus-within:text-accent-models">
-              <Search className="w-4 h-4 text-ink-tertiary" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <Search className="w-4 h-4 text-ink-tertiary transition-colors duration-[120ms] group-focus-within:text-accent-models" />
             </div>
             <Input
               placeholder="Modelle durchsuchen..."
@@ -545,11 +545,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     {isActive && (
                       <Badge
                         size="sm"
-                        className={cn(
-                          "flex-shrink-0",
-                          theme.badge,
-                          theme.badgeText,
-                        )}
+                        className={cn("flex-shrink-0", theme.badge, theme.badgeText)}
                       >
                         Aktiv
                       </Badge>

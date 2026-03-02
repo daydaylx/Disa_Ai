@@ -41,10 +41,8 @@ export function SettingsAccordion({
       </button>
 
       {/* Animated via CSS grid height technique */}
-      <div className="accordion-panel" data-open={isOpen ? "true" : "false"}>
-        <div className="accordion-inner border-t border-white/[0.06]">
-          {children}
-        </div>
+      <div className="accordion-panel" data-open={isOpen ? "true" : "false"} aria-hidden={!isOpen}>
+        <div className="accordion-inner border-t border-white/[0.06]">{children}</div>
       </div>
     </div>
   );

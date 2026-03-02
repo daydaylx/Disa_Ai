@@ -377,7 +377,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <ListRow
                   key={role.id}
-                  className="stagger-item"
+                  className={cn(
+                    "stagger-item",
+                    isActive
+                      ? cn("border-white/[0.14]", theme.border)
+                      : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                  )}
                   style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
                   data-testid="role-card"
                   aria-label={role.name}
@@ -388,11 +393,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   pressLabel={`Rolle ${role.name} auswählen`}
                   pressed={isActive}
                   accentClassName={theme.textBg}
-                  className={cn(
-                    isActive
-                      ? cn("border-white/[0.14]", theme.border)
-                      : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
-                  )}
                   leading={
                     <div
                       className={cn(
@@ -408,14 +408,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   topRight={
                     <div className="flex items-center gap-2">
                       {isActive ? (
-                        <Badge
-                          size="sm"
-                          className={cn(
-                            "shadow-sm",
-                            theme.badge,
-                            theme.badgeText,
-                          )}
-                        >
+                        <Badge size="sm" className={cn("shadow-sm", theme.badge, theme.badgeText)}>
                           Aktiv
                         </Badge>
                       ) : null}
