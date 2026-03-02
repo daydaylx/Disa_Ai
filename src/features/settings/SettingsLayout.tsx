@@ -91,7 +91,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                       key={item.id}
                       to={item.to}
                       className={cn(
-                        "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-[120ms]",
+                        "group flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-[120ms]",
                         "min-w-[140px] lg:min-w-0 lg:w-full",
                         "active:scale-[0.97] active:translate-y-px",
                         isActive

@@ -2,11 +2,34 @@ import { cn } from "@/lib/utils";
 
 type AccentColor = "brand" | "models" | "roles" | "settings";
 
-const ACCENT_COLORS: Record<AccentColor, { border: string; text: string; corner: string }> = {
-  brand:    { border: "border-brand-primary/30",    text: "text-brand-primary",    corner: "rgba(139, 92, 246, 0.4)" },
-  models:   { border: "border-accent-models/30",    text: "text-accent-models",    corner: "rgba(6, 182, 212, 0.4)" },
-  roles:    { border: "border-accent-roles/30",     text: "text-accent-roles",     corner: "rgba(244, 114, 182, 0.4)" },
-  settings: { border: "border-accent-settings/30",  text: "text-accent-settings",  corner: "rgba(99, 102, 241, 0.4)" },
+const ACCENT_COLORS: Record<
+  AccentColor,
+  { border: string; text: string; corner: string; focusRing: string }
+> = {
+  brand: {
+    border: "border-brand-primary/30",
+    text: "text-brand-primary",
+    corner: "rgba(139, 92, 246, 0.4)",
+    focusRing: "focus-visible:ring-brand-primary/50",
+  },
+  models: {
+    border: "border-accent-models/30",
+    text: "text-accent-models",
+    corner: "rgba(6, 182, 212, 0.4)",
+    focusRing: "focus-visible:ring-accent-models/50",
+  },
+  roles: {
+    border: "border-accent-roles/30",
+    text: "text-accent-roles",
+    corner: "rgba(244, 114, 182, 0.4)",
+    focusRing: "focus-visible:ring-accent-roles/50",
+  },
+  settings: {
+    border: "border-accent-settings/30",
+    text: "text-accent-settings",
+    corner: "rgba(99, 102, 241, 0.4)",
+    focusRing: "focus-visible:ring-accent-settings/50",
+  },
 };
 
 interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -46,7 +69,8 @@ export function FilterChip({
         "relative inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg",
         "px-4 text-sm font-medium",
         "transition-all duration-[120ms]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 focus-visible:ring-offset-1",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
+        accent.focusRing,
         // Inactive: plain chip
         !isActiveState && [
           "bg-surface-2 text-ink-secondary border border-white/[0.08]",

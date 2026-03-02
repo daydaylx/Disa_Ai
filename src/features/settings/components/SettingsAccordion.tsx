@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 
 import { ChevronDown } from "@/lib/icons";
 
@@ -20,10 +20,14 @@ export function SettingsAccordion({
   onToggle,
   children,
 }: SettingsAccordionProps) {
+  const panelId = useId();
+
   return (
     <div className="rounded-xl bg-surface-card border border-white/[0.10] overflow-hidden">
       <button
         onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
         className="w-full flex items-center justify-between p-4 bg-surface-card hover:bg-surface-2/80 transition-colors"
       >
         <div className="flex items-center gap-3">
@@ -41,7 +45,12 @@ export function SettingsAccordion({
       </button>
 
       {/* Animated via CSS grid height technique */}
-      <div className="accordion-panel" data-open={isOpen ? "true" : "false"} aria-hidden={!isOpen}>
+      <div
+        id={panelId}
+        className="accordion-panel"
+        data-open={isOpen ? "true" : "false"}
+        aria-hidden={!isOpen}
+      >
         <div className="accordion-inner border-t border-white/[0.06]">{children}</div>
       </div>
     </div>
