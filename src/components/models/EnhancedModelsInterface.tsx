@@ -444,15 +444,15 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       <div className="sticky top-0 z-header bg-surface-1 border-b border-white/[0.06] shadow-sm">
         <div className="p-4 space-y-3">
           {/* Search Input */}
-          <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="relative group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-[120ms] group-focus-within:text-accent-models">
               <Search className="w-4 h-4 text-ink-tertiary" />
             </div>
             <Input
               placeholder="Modelle durchsuchen..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-surface-2 border-white/[0.08] rounded-xl text-sm"
+              className="w-full pl-10 pr-4 py-2.5 bg-surface-2 border-white/[0.08] rounded-xl text-sm focus:border-accent-models/40 focus:shadow-sm transition-[border-color,box-shadow] duration-[120ms]"
             />
           </div>
 
@@ -461,6 +461,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
+              accentColor="models"
               leading={<Star className="w-3.5 h-3.5" />}
             >
               Favoriten
@@ -470,6 +471,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               onClick={() =>
                 dispatchFilters({ type: "setShowFreeOnly", value: !filters.showFreeOnly })
               }
+              accentColor="models"
               leading={<Zap className="w-3.5 h-3.5" />}
             >
               Kostenlos
@@ -493,7 +495,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
 
       {/* Compact model list */}
       <div className="flex-1 overflow-auto">
-        <div className="px-4 pb-8 space-y-2">
+        <div className="px-4 pb-8 space-y-2 animate-fade-in">
           {filteredModels.map((model, index) => {
             const isActive = settings.preferredModelId === model.id;
             const isFav = isModelFavorite(model.id);

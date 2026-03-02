@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useMemory } from "@/hooks/useMemory";
@@ -164,7 +164,7 @@ export function TabbedSettingsView({
             className="rounded-2xl border border-white/10 bg-surface-1/40"
           />
         ) : (
-          sections.map((section) => {
+          sections.map((section, index) => {
             const Icon = section.icon;
             const status = statusMap[section.id as keyof typeof statusMap];
 
@@ -179,16 +179,20 @@ export function TabbedSettingsView({
                 pressLabel={`${section.label} öffnen`}
                 accentClassName="bg-accent-settings"
                 className={cn(
-                  "border-white/[0.08]",
+                  "stagger-item border-white/[0.08]",
                   "hover:border-accent-settings-border/60 hover:bg-surface-2/65",
                 )}
+                style={{ "--stagger-i": index } as CSSProperties}
                 leading={
                   <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-settings-surface text-accent-settings transition-colors">
                     <Icon className="h-6 w-6" />
                   </div>
                 }
                 topRight={
-                  <Badge className="h-5 border border-accent-settings-border/50 bg-accent-settings-dim/70 px-2 text-[11px] font-semibold text-ink-primary shadow-sm">
+                  <Badge
+                    size="sm"
+                    className="border border-accent-settings-border/50 bg-accent-settings-dim/70 font-semibold text-ink-primary shadow-sm"
+                  >
                     {status}
                   </Badge>
                 }

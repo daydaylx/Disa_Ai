@@ -367,7 +367,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-2xs">
+          <div className="space-y-2xs animate-fade-in">
             {filteredRoles.map((role, index) => {
               const isActive = activeRole?.id === role.id;
               const isFavorite = isRoleFavorite(role.id);

@@ -91,11 +91,12 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                       key={item.id}
                       to={item.to}
                       className={cn(
-                        "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200",
+                        "flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-[120ms]",
                         "min-w-[140px] lg:min-w-0 lg:w-full",
+                        "active:scale-[0.97] active:translate-y-px",
                         isActive
                           ? "bg-accent-settings-dim border-accent-settings-border text-accent-settings"
-                          : "bg-surface-1/40 border-transparent text-ink-secondary hover:bg-surface-1/60 hover:text-ink-primary hover:border-white/5",
+                          : "bg-surface-1/40 border-transparent text-ink-secondary hover:bg-surface-1/60 hover:text-ink-primary hover:border-white/[0.08]",
                       )}
                     >
                       <Icon
