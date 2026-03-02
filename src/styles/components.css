@@ -225,7 +225,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: var(--color-ink-muted, #71717a);
+    color: var(--color-ink-muted);
   }
 
   /* ========================================================================

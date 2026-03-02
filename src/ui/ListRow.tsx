@@ -34,7 +34,8 @@ export function ListRow({
     <div
       className={cn(
         "relative overflow-hidden rounded-2xl border border-white/[0.10] bg-surface-card px-4 py-4 transition-all duration-200",
-        onPress && "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px",
+        onPress &&
+          "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px",
         active && "border-white/[0.14] bg-surface-2/70 ring-1",
         className,
       )}
