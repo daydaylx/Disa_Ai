@@ -308,13 +308,29 @@ export default function Chat() {
                 )}
                 {chatLogic.isEmpty ? (
                   <div className="relative flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-[14%]">
-                    {/* Atmospheric glow – slightly larger for more warmth */}
+                    {/* Atmospheric glow orb – large, vivid */}
                     <div
-                      className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none"
+                      className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(56, 189, 248, 0.03) 50%, transparent 70%)",
+                          "radial-gradient(circle, rgba(139,92,246,0.55) 0%, rgba(56,189,248,0.25) 45%, transparent 70%)",
                       }}
+                      aria-hidden="true"
+                    />
+                    {/* Pulse ring 1 – inner */}
+                    <div
+                      className="absolute w-44 h-44 rounded-full border-2 border-brand-primary/60 pointer-events-none motion-safe:animate-ping-slow"
+                      aria-hidden="true"
+                    />
+                    {/* Pulse ring 2 – outer, staggered */}
+                    <div
+                      className="absolute w-44 h-44 rounded-full border-2 border-accent-chat/50 pointer-events-none motion-safe:animate-ping-slow"
+                      style={{ animationDelay: "1.5s" }}
+                      aria-hidden="true"
+                    />
+                    {/* Static outer halo for permanent depth */}
+                    <div
+                      className="absolute w-56 h-56 rounded-full border border-brand-primary/20 pointer-events-none"
                       aria-hidden="true"
                     />
                     {/* Vignette – dark edges draw focus toward the logo */}
