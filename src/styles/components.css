@@ -161,6 +161,70 @@
   }
 
   /* ========================================================================
+     ACCORDION HEIGHT ANIMATION (CSS Grid Technique)
+     Animates height without JS using grid-template-rows: 0fr → 1fr
+     Usage: <div class="accordion-panel" data-open="true/false">
+              <div class="accordion-inner">content</div>
+            </div>
+     ======================================================================== */
+
+  .accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+      grid-template-rows 220ms var(--disa-ease-emphasized, cubic-bezier(0.16, 1, 0.3, 1)),
+      opacity 180ms ease;
+    opacity: 0;
+  }
+
+  .accordion-panel[data-open="true"] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .accordion-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .accordion-panel {
+      transition: none;
+    }
+  }
+
+  /* ========================================================================
+     STAGGER ITEM ANIMATION
+     Usage: <div class="stagger-item" style="--stagger-i: 2">
+     ======================================================================== */
+
+  .stagger-item {
+    animation: disa-card-enter var(--disa-duration-medium, 180ms)
+      var(--disa-ease-emphasized, cubic-bezier(0.16, 1, 0.3, 1)) both;
+    animation-delay: calc(var(--stagger-i, 0) * 30ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stagger-item {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ========================================================================
+     SECTION LABEL UTILITY
+     ======================================================================== */
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-ink-muted, #71717a);
+  }
+
+  /* ========================================================================
      CARD SURFACE UTILITIES
      ======================================================================== */
 

@@ -413,19 +413,18 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
     return (
       <div className={`flex flex-col h-full bg-bg-base ${className || ""}`}>
         <div className="p-4 space-y-4">
-          <Skeleton className="h-10 w-full rounded-md" /> {/* Search bar skeleton */}
+          <Skeleton className="h-10 w-full rounded-xl" /> {/* Search bar skeleton */}
           <div className="flex gap-2">
-            <Skeleton className="h-9 w-24 rounded-sm" /> {/* Filter chip skeleton */}
-            <Skeleton className="h-9 w-24 rounded-sm" />
-            <Skeleton className="h-9 w-24 rounded-sm" />
+            <Skeleton className="h-9 w-24 rounded-lg" /> {/* Filter chip skeleton */}
+            <Skeleton className="h-9 w-24 rounded-lg" />
           </div>
           <div className="space-y-2">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 7 }).map((_, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-2xl border border-white/[0.08] p-3"
+                className="flex items-center gap-3 rounded-2xl border border-white/[0.10] p-3"
               >
-                <Skeleton className="h-12 w-12 flex-shrink-0 rounded-2xl" />
+                <Skeleton className="h-11 w-11 flex-shrink-0 rounded-xl" />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-3.5 w-2/3 rounded-md" />
                   <Skeleton className="h-3 w-1/3 rounded-md" />
@@ -458,7 +457,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
           </div>
 
           {/* Filter Chips Row */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5 -mx-1 px-1 flex-nowrap">
             <FilterChip
               selected={filters.showFavoritesOnly}
               onClick={() => dispatchFilters({ type: "toggleFavorites" })}
@@ -495,7 +494,7 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
       {/* Compact model list */}
       <div className="flex-1 overflow-auto">
         <div className="px-4 pb-8 space-y-2">
-          {filteredModels.map((model) => {
+          {filteredModels.map((model, index) => {
             const isActive = settings.preferredModelId === model.id;
             const isFav = isModelFavorite(model.id);
             const theme = getCategoryStyle(model.category);
@@ -505,11 +504,12 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
               <div
                 key={model.id}
                 className={cn(
-                  "relative flex items-center gap-3 rounded-2xl border p-3 transition-all duration-200",
+                  "stagger-item relative flex items-center gap-3 rounded-2xl border p-3 transition-all duration-200 active:scale-[0.98] active:translate-y-px",
                   isActive
                     ? cn("bg-surface-2/70 border-white/[0.14]", theme.border)
-                    : "bg-surface-card border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                    : "bg-surface-card border-white/[0.10] hover:border-white/[0.14] hover:bg-surface-2/65",
                 )}
+                style={{ "--stagger-i": Math.min(index, 5) } as React.CSSProperties}
               >
                 {/* Left accent stripe */}
                 <div
@@ -542,8 +542,9 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                     </span>
                     {isActive && (
                       <Badge
+                        size="sm"
                         className={cn(
-                          "h-5 px-2 text-[10px] flex-shrink-0",
+                          "flex-shrink-0",
                           theme.badge,
                           theme.badgeText,
                         )}
@@ -552,18 +553,18 @@ export function EnhancedModelsInterface({ className }: EnhancedModelsInterfacePr
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-ink-secondary truncate mt-0.5">{model.provider}</p>
+                  <p className="text-xs text-ink-tertiary truncate mt-0.5">{model.provider}</p>
                 </div>
 
                 {/* Meta badges */}
                 <div className="hidden sm:flex items-center gap-1.5 flex-shrink-0">
                   {model.pricing.isFree && (
-                    <Badge variant="secondary" className="text-[10px] h-5 px-1.5">
+                    <Badge variant="secondary" size="sm">
                       <Zap className="w-2.5 h-2.5 mr-0.5" />
                       FREE
                     </Badge>
                   )}
-                  <Badge variant="secondary" className="text-[10px] h-5 px-1.5">
+                  <Badge variant="secondary" size="sm">
                     {formatContext(model.context.maxTokens)}
                   </Badge>
                 </div>

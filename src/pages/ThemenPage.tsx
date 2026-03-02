@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { CATEGORY_LABELS, getQuickstartsWithFallback, type Quickstart } from "@/config/quickstarts";
@@ -80,7 +80,7 @@ export default function ThemenPage() {
     });
   }, []);
 
-  const renderCard = (quickstart: Quickstart) => {
+  const renderCard = (quickstart: Quickstart, index: number) => {
     const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
     const theme = getCategoryStyle(quickstart.category);
     const isExpanded = expandedThemen.has(quickstart.id);
@@ -93,8 +93,9 @@ export default function ThemenPage() {
         notch="none"
         padding="none"
         className={cn(
-          "relative group overflow-hidden border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+          "stagger-item relative group overflow-hidden border-white/[0.10] hover:border-white/[0.14] hover:bg-surface-2/65",
         )}
+        style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
       >
         <div
           className={cn(
@@ -115,12 +116,12 @@ export default function ThemenPage() {
           {/* Icon */}
           <div
             className={cn(
-              "relative flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+              "relative flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
               theme.iconBg,
               theme.iconText,
             )}
           >
-            <Brain className="h-6 w-6" />
+            <Brain className="h-5 w-5" />
           </div>
 
           {/* Info */}
@@ -162,46 +163,48 @@ export default function ThemenPage() {
           </div>
         </div>
 
-        {/* Expanded Details */}
-        {isExpanded && (
-          <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0 animate-fade-in">
-            <div className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}>
-              {/* Full Description */}
-              <div>
-                <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>
-                <p className="text-sm text-ink-secondary leading-relaxed">
-                  {quickstart.description}
-                </p>
-              </div>
-
-              {/* Tags */}
-              {(categoryInfo || quickstart.speculative) && (
-                <div className="flex flex-wrap gap-1.5">
-                  {categoryInfo && (
-                    <Badge className={cn("text-[10px] px-2 h-5", theme.badge, theme.badgeText)}>
-                      {categoryInfo.label}
-                    </Badge>
-                  )}
-                  {quickstart.speculative && (
-                    <Badge variant="warning" className="text-[10px] px-2 h-5">
-                      Hypothese
-                    </Badge>
-                  )}
+        {/* Expanded Details - animated via CSS grid height technique */}
+        <div className="accordion-panel" data-open={isExpanded ? "true" : "false"}>
+          <div className="accordion-inner">
+            <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0">
+              <div className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}>
+                {/* Full Description */}
+                <div>
+                  <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>
+                  <p className="text-sm text-ink-secondary leading-relaxed">
+                    {quickstart.description}
+                  </p>
                 </div>
-              )}
 
-              {/* Start Button */}
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleStartQuickstart(quickstart)}
-                className="w-full"
-              >
-                Diskussion starten
-              </Button>
+                {/* Tags */}
+                {(categoryInfo || quickstart.speculative) && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {categoryInfo && (
+                      <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
+                        {categoryInfo.label}
+                      </Badge>
+                    )}
+                    {quickstart.speculative && (
+                      <Badge variant="warning" size="sm">
+                        Hypothese
+                      </Badge>
+                    )}
+                  </div>
+                )}
+
+                {/* Start Button */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleStartQuickstart(quickstart)}
+                  className="w-full"
+                >
+                  Diskussion starten
+                </Button>
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </Card>
     );
   };
@@ -231,7 +234,7 @@ export default function ThemenPage() {
       <div className="flex-1 overflow-y-auto px-xssm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
         {isLoading ? (
           <section className="space-y-2xs">
-            <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
+            <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
               Diskussionen
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -279,7 +282,7 @@ export default function ThemenPage() {
             {/* Regular Discussions */}
             {regularDiscussions.length > 0 && (
               <section className="space-y-2xs">
-                <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider px-1">
+                <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
                   Diskussionen
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -293,12 +296,13 @@ export default function ThemenPage() {
               <section className="space-y-2xs">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
-                  <h2 className="text-sm font-semibold text-ink-secondary uppercase tracking-wider">
+                  <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest">
                     Verschwörungstheorien
                   </h2>
                   <Badge
                     variant="outline"
-                    className="ml-auto border-status-warning/30 text-status-warning text-[10px] h-5"
+                    className="ml-auto border-status-warning/30 text-status-warning"
+                    size="sm"
                   >
                     Kontrovers
                   </Badge>

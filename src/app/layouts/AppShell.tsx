@@ -118,7 +118,7 @@ function AppShellLayout({
         <div className="flex min-h-0 flex-1 flex-col">
           {/* Header - Hidden in Chat Mode (Chat page provides its own header) */}
           {!isChatMode ? (
-            <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header shadow-sm">
+            <header className="sticky top-0 z-header h-[3.5rem] lg:h-[4rem] lg:hidden glass-header border-b border-white/[0.08] shadow-sm">
               <div className="flex h-full items-center gap-3 px-4 py-3 lg:px-6">
                 <div className="flex flex-1 items-center gap-3 truncate">
                   <MobileBackButton />

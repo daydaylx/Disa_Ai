@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getCategoryStyle } from "@/lib/categoryColors";
@@ -368,7 +368,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           />
         ) : (
           <div className="space-y-2xs">
-            {filteredRoles.map((role) => {
+            {filteredRoles.map((role, index) => {
               const isActive = activeRole?.id === role.id;
               const isFavorite = isRoleFavorite(role.id);
               const theme = getCategoryStyle(role.category);
@@ -377,6 +377,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <ListRow
                   key={role.id}
+                  className="stagger-item"
+                  style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
                   data-testid="role-card"
                   aria-label={role.name}
                   title={role.name}
@@ -407,8 +409,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     <div className="flex items-center gap-2">
                       {isActive ? (
                         <Badge
+                          size="sm"
                           className={cn(
-                            "h-5 px-2 text-[10px] shadow-sm",
+                            "shadow-sm",
                             theme.badge,
                             theme.badgeText,
                           )}
@@ -494,7 +497,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             {selectedRole.tags && selectedRole.tags.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
                 {selectedRole.tags.map((tag) => (
-                  <Badge key={tag} className={cn("h-5 px-2 text-[10px]")}>
+                  <Badge key={tag} size="sm">
                     {tag}
                   </Badge>
                 ))}

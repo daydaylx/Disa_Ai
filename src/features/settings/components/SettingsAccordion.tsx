@@ -21,7 +21,7 @@ export function SettingsAccordion({
   children,
 }: SettingsAccordionProps) {
   return (
-    <div className="rounded-xl bg-surface-card border border-white/[0.08] overflow-hidden">
+    <div className="rounded-xl bg-surface-card border border-white/[0.10] overflow-hidden">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between p-4 bg-surface-card hover:bg-surface-2/80 transition-colors"
@@ -30,7 +30,7 @@ export function SettingsAccordion({
           <Icon className="w-5 h-5 text-accent-settings" />
           <div className="text-left">
             <p className="font-semibold text-ink-primary">{title}</p>
-            <p className="text-xs text-ink-secondary">{description}</p>
+            <p className="text-xs text-ink-tertiary">{description}</p>
           </div>
         </div>
         <ChevronDown
@@ -40,7 +40,12 @@ export function SettingsAccordion({
         />
       </button>
 
-      {isOpen && children}
+      {/* Animated via CSS grid height technique */}
+      <div className="accordion-panel" data-open={isOpen ? "true" : "false"}>
+        <div className="accordion-inner border-t border-white/[0.06]">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

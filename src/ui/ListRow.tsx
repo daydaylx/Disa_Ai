@@ -33,8 +33,8 @@ export function ListRow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-card px-4 py-4 transition-all duration-200",
-        onPress && "hover:border-white/[0.14] hover:bg-surface-2/65",
+        "relative overflow-hidden rounded-2xl border border-white/[0.10] bg-surface-card px-4 py-4 transition-all duration-200",
+        onPress && "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px",
         active && "border-white/[0.14] bg-surface-2/70 ring-1",
         className,
       )}
@@ -78,7 +78,7 @@ export function ListRow({
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-ink-primary">{title}</p>
-          {subtitle ? <p className="mt-1 truncate text-xs text-ink-secondary">{subtitle}</p> : null}
+          {subtitle ? <p className="mt-1 truncate text-xs text-ink-tertiary">{subtitle}</p> : null}
         </div>
 
         {trailing ? (
