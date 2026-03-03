@@ -308,7 +308,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   }
                   aria-pressed={filters.showFavoritesOnly}
                   className={cn(
-                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
                     filters.showFavoritesOnly
                       ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
                       : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -332,7 +332,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
                       aria-pressed={isSelected}
                       className={cn(
-                        "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+                        "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
                         isSelected
                           ? cn(catTheme.bg, catTheme.border, catTheme.text)
                           : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
@@ -367,7 +367,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-2xs animate-fade-in">
+          <div className="space-y-2 animate-fade-in">
             {filteredRoles.map((role, index) => {
               const isActive = activeRole?.id === role.id;
               const isFavorite = isRoleFavorite(role.id);
@@ -484,7 +484,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         }
       >
         {selectedRole ? (
-          <div className="space-y-2xs rounded-xl border px-xspy-4">
+          <div className="space-y-3 rounded-xl border px-3 py-3">
             <p className="text-sm leading-relaxed text-ink-secondary">{selectedRole.description}</p>
 
             {selectedRole.tags && selectedRole.tags.length > 0 ? (

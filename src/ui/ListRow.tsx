@@ -44,7 +44,7 @@ export function ListRow({
       {accentClassName ? (
         <div
           className={cn(
-            "pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl",
+            "pointer-events-none absolute inset-y-0 left-0 w-[3px] rounded-l-2xl",
             accentClassName,
           )}
           aria-hidden

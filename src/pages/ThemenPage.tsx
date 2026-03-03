@@ -99,13 +99,13 @@ export default function ThemenPage() {
       >
         <div
           className={cn(
-            "pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl",
+            "pointer-events-none absolute inset-y-0 left-0 w-[3px] rounded-l-2xl",
             theme.textBg,
           )}
           aria-hidden
         />
         {/* Main Row - Clickable area */}
-        <div className="flex items-center gap-xsp-4 cursor-pointer pointer-events-none">
+        <div className="flex items-center gap-4 cursor-pointer pointer-events-none">
           <button
             type="button"
             className="absolute inset-0 z-content cursor-pointer rounded-none bg-transparent pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 focus-visible:ring-inset"
@@ -171,9 +171,7 @@ export default function ThemenPage() {
         >
           <div className="accordion-inner">
             <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0">
-              <div
-                className={cn("space-y-2xs rounded-xl border px-xspy-4", theme.bg, theme.border)}
-              >
+              <div className={cn("space-y-3 rounded-xl border px-3 py-3", theme.bg, theme.border)}>
                 {/* Full Description */}
                 <div>
                   <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>
@@ -239,7 +237,7 @@ export default function ThemenPage() {
       {/* Content Zone - Scrollable List */}
       <div className="flex-1 overflow-y-auto px-xssm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
         {isLoading ? (
-          <section className="space-y-2xs">
+          <section className="space-y-2">
             <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
               Diskussionen
             </h2>
@@ -287,7 +285,7 @@ export default function ThemenPage() {
 
             {/* Regular Discussions */}
             {regularDiscussions.length > 0 && (
-              <section className="space-y-2xs">
+              <section className="space-y-2">
                 <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
                   Diskussionen
                 </h2>
@@ -299,7 +297,7 @@ export default function ThemenPage() {
 
             {/* Conspiracy Theories Section */}
             {conspiracyDiscussions.length > 0 && (
-              <section className="space-y-2xs">
+              <section className="space-y-2">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
                   <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest">
