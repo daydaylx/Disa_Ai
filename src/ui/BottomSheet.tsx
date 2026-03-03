@@ -37,15 +37,36 @@ export function BottomSheet({
   const sheetRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const closeTimeoutRef = useRef<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = useCallback(() => {
+    if (closeTimeoutRef.current !== null) return;
     setIsClosing(true);
-    setTimeout(() => {
+    closeTimeoutRef.current = window.setTimeout(() => {
+      closeTimeoutRef.current = null;
       setIsClosing(false);
       onClose();
     }, 180);
   }, [onClose]);
+
+  useEffect(() => {
+    if (open) return;
+    if (closeTimeoutRef.current !== null) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsClosing(false);
+  }, [open]);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current !== null) {
+        window.clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;

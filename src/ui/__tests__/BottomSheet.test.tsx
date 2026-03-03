@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -67,6 +67,22 @@ describe("BottomSheet", () => {
     );
 
     await user.keyboard("{Escape}");
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  });
+
+  it("does not trigger onClose multiple times during close animation", async () => {
+    const onClose = vi.fn();
+
+    render(
+      <BottomSheet open onClose={onClose} title="Details">
+        <button type="button">Aktion</button>
+      </BottomSheet>,
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.click(screen.getByRole("button", { name: "Detailansicht schließen" }));
+
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
   });
 });

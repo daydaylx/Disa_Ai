@@ -498,7 +498,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             ) : null}
 
             {selectedRole.systemPrompt ? (
-              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-2xsfont-mono text-xs text-ink-tertiary">
+              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-2xs font-mono text-xs text-ink-tertiary">
                 {selectedRole.systemPrompt.slice(0, 220)}
                 {selectedRole.systemPrompt.length > 220 ? "..." : ""}
               </div>

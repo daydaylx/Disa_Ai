@@ -407,7 +407,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               </div>
             ) : null}
 
-            <div className="rounded-xl border border-white/5 bg-surface-1/50 p-2xsfont-mono text-xs text-ink-tertiary">
+            <div className="rounded-xl border border-white/5 bg-surface-1/50 p-2xs font-mono text-xs text-ink-tertiary">
               {selectedModel.id}
             </div>
           </div>

@@ -216,7 +216,7 @@ export default function ThemenPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Header Zone - Vibrant Glass */}
-      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content pt-3 sm:pt-4 px-xssm:px-6">
+      <div className="flex-none sticky top-[3.5rem] lg:top-[4rem] z-sticky-content px-4 pt-3 sm:px-6 sm:pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
           {/* Ambient tint – subtle category hint, no blur fog */}
           <div
@@ -235,7 +235,7 @@ export default function ThemenPage() {
       </div>
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto px-xssm:px-6 py-5 sm:py-6 space-y-7 sm:space-y-8">
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-7 sm:px-6 sm:py-6 sm:space-y-8">
         {isLoading ? (
           <section className="space-y-2">
             <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
