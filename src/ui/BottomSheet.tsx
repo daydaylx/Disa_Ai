@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { X } from "@/lib/icons";
@@ -37,6 +37,15 @@ export function BottomSheet({
   const sheetRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 180);
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -55,7 +64,7 @@ export function BottomSheet({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        handleClose();
         return;
       }
 
@@ -102,7 +111,7 @@ export function BottomSheet({
       }
       previousFocusRef.current = null;
     };
-  }, [onClose, open]);
+  }, [handleClose, open]);
 
   const overlayRoot = getOverlayRoot();
 
@@ -114,7 +123,7 @@ export function BottomSheet({
         type="button"
         aria-label="Detailansicht schließen"
         className="fixed inset-0 z-bottom-sheet pointer-events-auto bg-black/45 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       <section
@@ -124,11 +133,16 @@ export function BottomSheet({
         aria-label={title || "Details"}
         tabIndex={-1}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-bottom-sheet pointer-events-auto animate-slide-up rounded-t-2xl border-t border-white/10 bg-surface-2/95 px-4 pb-[calc(var(--inset-safe-bottom,0px)+12px)] pt-3 shadow-2xl backdrop-blur-xl",
+          "fixed inset-x-0 bottom-0 z-bottom-sheet pointer-events-auto rounded-t-2xl border-t border-white/10 bg-surface-2/95 px-4 pb-[calc(var(--inset-safe-bottom,0px)+12px)] pt-3 shadow-2xl backdrop-blur-xl",
+          isClosing ? "animate-slide-down" : "animate-slide-up",
           className,
         )}
       >
         <div className="mx-auto w-full max-w-3xl">
+          {/* Drag handle */}
+          <div className="flex justify-center pb-2" aria-hidden>
+            <div className="h-1 w-10 rounded-full bg-white/20" />
+          </div>
           <div className="mb-2 flex items-center justify-between gap-3">
             <div className="min-w-0">
               {title && (
@@ -138,7 +152,7 @@ export function BottomSheet({
             </div>
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               ref={closeButtonRef}
               className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-surface-1 text-ink-secondary transition-colors hover:text-ink-primary"
               aria-label="Schließen"

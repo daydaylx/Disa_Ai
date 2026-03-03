@@ -246,7 +246,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-2xs">
+          <div className="space-y-2">
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);
@@ -370,7 +370,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         {selectedModel ? (
           <div
             className={cn(
-              "space-y-2xs rounded-xl border px-xspy-4",
+              "space-y-3 rounded-xl border px-3 py-3",
               selectedModelTheme.bg,
               selectedModelTheme.border,
             )}

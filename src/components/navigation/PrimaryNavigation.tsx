@@ -28,7 +28,7 @@ export function PrimaryNavigation({ orientation }: PrimaryNavigationProps) {
             key={item.id}
             to={item.path}
             className={cn(
-              "group flex items-center gap-2 rounded-xl text-sm font-medium transition",
+              "group flex items-center gap-2 rounded-xl text-sm font-medium transition active:scale-[0.93] active:opacity-80",
               orientation === "bottom"
                 ? "min-h-[44px] flex-col justify-center gap-1 px-2 py-2"
                 : "flex-row px-3 py-3",

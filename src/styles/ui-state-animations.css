@@ -223,6 +223,23 @@
   animation-fill-mode: forwards;
 }
 
+/* DISA Signature: gentle slide down (sheet close) */
+@keyframes disa-slide-down {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+}
+
+.animate-slide-down {
+  animation: disa-slide-down var(--disa-duration-medium) var(--disa-ease-standard) forwards;
+  will-change: transform, opacity;
+}
+
 /* DISA Signature: gentle slide up */
 @keyframes disa-slide-up {
   from {
@@ -994,7 +1011,8 @@
   .animate-text-shimmer,
   .animate-pulse-slow,
   .animate-smooth-bounce,
-  .animate-copy-feedback {
+  .animate-copy-feedback,
+  .animate-slide-down {
     animation: none;
     opacity: 1;
     transform: none;
