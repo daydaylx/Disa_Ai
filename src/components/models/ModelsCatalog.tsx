@@ -192,9 +192,9 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("flex flex-col h-full", className)}>
       <div className="flex-none pt-3 sm:pt-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-bg-app/80 shadow-lg backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
           <div
-            className="absolute inset-0 opacity-90 pointer-events-none transition-all duration-500"
+            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
             style={{ background: headerTheme.roleGradient }}
           />
           <div className="relative space-y-3 px-4 py-4">

@@ -275,7 +275,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      <div className="flex-none pt-4">
+      <div className="flex-none pt-3 sm:pt-4">
         <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
           <div
             className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
@@ -422,7 +422,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                         }
                         className={cn(
-                          "relative flex h-8 w-8 items-center justify-center rounded-lg text-ink-tertiary transition-colors",
+                          "relative flex h-11 w-11 items-center justify-center rounded-lg text-ink-tertiary transition-colors",
                           isFavorite
                             ? "text-status-warning hover:text-status-warning"
                             : "hover:text-ink-primary",
