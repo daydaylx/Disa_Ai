@@ -197,12 +197,16 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const headerTheme = activeModel
     ? getCategoryStyle(getProviderColorTheme(activeModel.provider))
     : getCategoryStyle("cyan"); // Default to cyan (models accent color)
+  const countLabel =
+    !catalog && loading
+      ? "Modelle werden geladen…"
+      : `${catalog?.length ?? 0} Modelle · ${favorites.models.items.length} Favoriten`;
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
       <CatalogHeader
         title="Modelle"
-        countLabel={`${catalog?.length ?? 0} Modelle · ${favorites.models.items.length} Favoriten`}
+        countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
         action={
           <Button
@@ -222,6 +226,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       {/* Content Zone - Scrollable List */}
       <PullToRefresh
         onRefresh={handleRefresh}
+        disabled={isLoading}
         className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {!catalog && loading ? (
@@ -246,7 +251,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 animate-fade-in">
             {filtered.map((model) => {
               const isActive = activeModelId === model.id;
               const isFavorite = isModelFavorite(model.id);

@@ -320,6 +320,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
       <PullToRefresh
         onRefresh={handleRefresh}
+        disabled={isLoading}
         className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {rolesLoading && roles.length === 0 ? (

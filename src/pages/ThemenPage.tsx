@@ -228,6 +228,7 @@ export default function ThemenPage() {
   );
 
   const isBusy = isLoading || isRefreshing;
+  const sectionHeadingClass = "text-xs font-medium uppercase tracking-widest text-ink-muted";
 
   return (
     <div className="flex flex-col h-full">
@@ -254,15 +255,11 @@ export default function ThemenPage() {
 
       <PullToRefresh
         onRefresh={handleRefresh}
+        disabled={isBusy}
         className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {isLoading && quickstarts.length === 0 ? (
-          <section className="space-y-3">
-            <h2 className="px-1 text-xs font-medium uppercase tracking-widest text-ink-muted">
-              Diskussionen
-            </h2>
-            <CardSkeleton count={6} />
-          </section>
+          <CardSkeleton count={6} />
         ) : loadError && quickstarts.length === 0 ? (
           <EmptyState
             icon={<AlertTriangle className="h-6 w-6" />}
@@ -289,7 +286,7 @@ export default function ThemenPage() {
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {fallbackNotice ? (
               <InfoBanner
                 icon={<AlertTriangle className="h-4 w-4" />}
@@ -302,9 +299,7 @@ export default function ThemenPage() {
 
             {regularDiscussions.length > 0 ? (
               <section className="space-y-2">
-                <h2 className="px-1 text-xs font-medium uppercase tracking-widest text-ink-muted">
-                  Diskussionen
-                </h2>
+                <h2 className={cn("px-1", sectionHeadingClass)}>Diskussionen</h2>
                 <div className="space-y-2 animate-fade-in">
                   {regularDiscussions.map(renderQuickstartRow)}
                 </div>
@@ -315,9 +310,7 @@ export default function ThemenPage() {
               <section className="space-y-2">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
-                  <h2 className="text-xs font-medium uppercase tracking-widest text-ink-muted">
-                    Verschwörungstheorien
-                  </h2>
+                  <h2 className={sectionHeadingClass}>Verschwörungstheorien</h2>
                   <Badge
                     variant="outline"
                     className="ml-auto border-status-warning/30 text-status-warning"
