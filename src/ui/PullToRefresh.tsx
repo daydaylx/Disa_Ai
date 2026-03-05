@@ -51,7 +51,7 @@ export function PullToRefresh({
 
       // Capture initial state
       startY.current = e.touches[0]?.clientY ?? 0;
-      wasAtTopOnStart.current = container.scrollTop === 0;
+      wasAtTopOnStart.current = container.scrollTop <= 1;
       lastScrollTop.current = container.scrollTop;
       scrollVelocity.current = 0;
 
