@@ -221,7 +221,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       {/* Content Zone - Scrollable List */}
       <PullToRefresh
         onRefresh={async () => await refresh(true)}
-        className="flex-1 pb-page-bottom-safe pt-4"
+        className="flex-1 min-h-0 pb-page-bottom-safe pt-4"
       >
         {!catalog && loading ? (
           // Loading skeletons
