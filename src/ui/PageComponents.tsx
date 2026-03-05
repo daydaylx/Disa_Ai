@@ -2,6 +2,60 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+interface CatalogHeaderProps {
+  /** sr-only H1 text — matches the mobile sticky header title for semantics */
+  title: string;
+  /** Summary line shown in the gradient card, e.g. "42 Modelle · 3 Favoriten" */
+  countLabel: string;
+  /** Optional gradient CSS string — use getCategoryStyle(x).roleGradient */
+  gradientStyle?: string;
+  /** Optional right-side action slot — typically a refresh/reset Button */
+  action?: React.ReactNode;
+  /** Optional second row — used for filter chip scrollers (Roles page) */
+  filterRow?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * CatalogHeader - Unified header card for catalog pages (/models, /roles, /themen).
+ *
+ * Provides:
+ * - A screen-reader-only <h1> so each catalog page has exactly one H1
+ *   (AppShell suppresses its own H1 when contentScrollMode="content")
+ * - A gradient-tinted info card consistent across all three catalog pages
+ * - Optional filterRow slot for horizontal chip scrollers (Roles page)
+ */
+export function CatalogHeader({
+  title,
+  countLabel,
+  gradientStyle,
+  action,
+  filterRow,
+  className,
+}: CatalogHeaderProps) {
+  return (
+    <div className={cn("flex-none pt-3 px-4", className)}>
+      <h1 className="sr-only">{title}</h1>
+      <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
+        {gradientStyle ? (
+          <div
+            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
+            style={{ background: gradientStyle }}
+            aria-hidden
+          />
+        ) : null}
+        <div className="relative space-y-3 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-ink-secondary">{countLabel}</div>
+            {action ? <div className="flex items-center gap-2">{action}</div> : null}
+          </div>
+          {filterRow ? <div>{filterRow}</div> : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface PageHeaderProps {
   title: string;
   description?: string;

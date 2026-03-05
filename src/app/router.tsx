@@ -64,7 +64,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/roles",
       element: (
-        <RouteWrapper pageHeaderTitle="Rollen & Personas">
+        <RouteWrapper pageHeaderTitle="Rollen & Personas" contentScrollMode="content">
           <RolesPage />
         </RouteWrapper>
       ),
@@ -83,7 +83,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/themen",
       element: (
-        <RouteWrapper pageHeaderTitle="Themen">
+        <RouteWrapper pageHeaderTitle="Themen" contentScrollMode="content">
           <ThemenPage />
         </RouteWrapper>
       ),
@@ -91,7 +91,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/models",
       element: (
-        <RouteWrapper pageHeaderTitle="Modelle">
+        <RouteWrapper pageHeaderTitle="Modelle" contentScrollMode="content">
           <ModelsPage />
         </RouteWrapper>
       ),

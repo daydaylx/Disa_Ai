@@ -22,7 +22,17 @@ import {
 } from "@/lib/icons";
 import { coercePrice, formatPricePerK } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import { Badge, BottomSheet, Button, CardSkeleton, EmptyState, ListRow, PullToRefresh } from "@/ui";
+import {
+  Badge,
+  BottomSheet,
+  Button,
+  CardSkeleton,
+  CatalogHeader,
+  EmptyState,
+  HeaderSkeleton,
+  ListRow,
+  PullToRefresh,
+} from "@/ui";
 
 interface ModelsCatalogProps {
   className?: string;
@@ -191,41 +201,35 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      <div className="flex-none pt-3 sm:pt-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
-            style={{ background: headerTheme.roleGradient }}
-          />
-          <div className="relative space-y-3 px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-ink-secondary">
-                {catalog?.length ?? 0} Modelle · {favorites.models.items.length} Favoriten
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleRefresh}
-                disabled={isLoading}
-                className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
-                aria-label="Modelle aktualisieren"
-                title="Modelliste aktualisieren"
-              >
-                <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CatalogHeader
+        title="Modelle"
+        countLabel={`${catalog?.length ?? 0} Modelle · ${favorites.models.items.length} Favoriten`}
+        gradientStyle={headerTheme.roleGradient}
+        action={
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleRefresh}
+            disabled={isLoading}
+            className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+            aria-label="Modelle aktualisieren"
+            title="Modelliste aktualisieren"
+          >
+            <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+          </Button>
+        }
+      />
 
       {/* Content Zone - Scrollable List */}
       <PullToRefresh
         onRefresh={async () => await refresh(true)}
-        className="flex-1 min-h-0 pb-page-bottom-safe pt-4"
+        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {!catalog && loading ? (
-          // Loading skeletons
-          <CardSkeleton count={6} />
+          <>
+            <HeaderSkeleton />
+            <CardSkeleton count={6} />
+          </>
         ) : error ? ( // Conditional rendering for error state
           <EmptyState
             icon={<Cpu className="h-8 w-8 text-ink-muted" />}

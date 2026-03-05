@@ -44,6 +44,7 @@ import {
   BottomSheet,
   Button,
   CardSkeleton,
+  CatalogHeader,
   EmptyState,
   FilterSkeleton,
   HeaderSkeleton,
@@ -248,7 +249,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   // Conditional rendering for loading and error states
   if (rolesLoading) {
     return (
-      <div className="flex flex-col h-full p-xsspace-y-xs">
+      <div className="flex flex-col h-full px-4 pt-4 space-y-3">
         <HeaderSkeleton />
         <FilterSkeleton count={4} />
         <CardSkeleton count={6} />
@@ -275,83 +276,73 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
-      <div className="flex-none pt-3 sm:pt-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
-            style={{ background: headerTheme.roleGradient }}
-          />
+      <CatalogHeader
+        title="Rollen & Personas"
+        countLabel={`${filteredRoles.length} von ${roles.length} Rollen verfügbar`}
+        gradientStyle={headerTheme.roleGradient}
+        action={
+          hasActiveFilters ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
+            >
+              <RotateCcw className="h-3 w-3 mr-1" /> Reset
+            </Button>
+          ) : undefined
+        }
+        filterRow={
+          <div className="relative">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+                }
+                aria-pressed={filters.showFavoritesOnly}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
+                  filters.showFavoritesOnly
+                    ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                )}
+              >
+                <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+                Favoriten
+              </button>
 
-          <div className="relative space-y-3 px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-ink-secondary">
-                {filteredRoles.length} von {roles.length} Rollen verfügbar
-              </div>
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
-                >
-                  <RotateCcw className="h-3 w-3 mr-1" /> Reset
-                </Button>
-              )}
+              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+              {CATEGORY_ORDER.map((cat) => {
+                const isSelected = selectedCategory === cat;
+                const catTheme = getCategoryStyle(cat);
+                return (
+                  <button
+                    type="button"
+                    key={cat}
+                    onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
+                      isSelected
+                        ? cn(catTheme.bg, catTheme.border, catTheme.text)
+                        : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                    )}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
             </div>
-
-            <div className="relative">
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
-                  }
-                  aria-pressed={filters.showFavoritesOnly}
-                  className={cn(
-                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
-                    filters.showFavoritesOnly
-                      ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
-                      : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                  )}
-                >
-                  <Star
-                    className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")}
-                  />
-                  Favoriten
-                </button>
-
-                <div className="w-px h-4 bg-white/10 flex-shrink-0" />
-
-                {CATEGORY_ORDER.map((cat) => {
-                  const isSelected = selectedCategory === cat;
-                  const catTheme = getCategoryStyle(cat);
-                  return (
-                    <button
-                      type="button"
-                      key={cat}
-                      onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
-                      aria-pressed={isSelected}
-                      className={cn(
-                        "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
-                        isSelected
-                          ? cn(catTheme.bg, catTheme.border, catTheme.text)
-                          : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
-                      )}
-                    >
-                      {cat}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent lg:hidden" />
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent lg:hidden" />
-            </div>
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent" />
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4">
+      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4 px-4">
         {filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}

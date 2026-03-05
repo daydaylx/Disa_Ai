@@ -11,9 +11,15 @@ interface RouteWrapperProps {
   children: ReactNode;
   pageHeaderTitle?: string;
   pageHeaderActions?: ReactNode;
+  contentScrollMode?: "shell" | "content";
 }
 
-export function RouteWrapper({ children, pageHeaderTitle, pageHeaderActions }: RouteWrapperProps) {
+export function RouteWrapper({
+  children,
+  pageHeaderTitle,
+  pageHeaderActions,
+  contentScrollMode,
+}: RouteWrapperProps) {
   const location = useLocation();
   const { settings } = useSettings();
   const lastTrackedPathRef = useRef<string | null>(null);
@@ -33,7 +39,11 @@ export function RouteWrapper({ children, pageHeaderTitle, pageHeaderActions }: R
   }, [settings.enableAnalytics, location.pathname, location.search, location.hash]);
 
   return (
-    <AppShell pageHeaderTitle={pageHeaderTitle} pageHeaderActions={pageHeaderActions}>
+    <AppShell
+      pageHeaderTitle={pageHeaderTitle}
+      pageHeaderActions={pageHeaderActions}
+      contentScrollMode={contentScrollMode}
+    >
       <ErrorBoundary>
         <Suspense fallback={<FullPageLoader message="Seite wird geladen" />}>{children}</Suspense>
       </ErrorBoundary>

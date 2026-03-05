@@ -19,6 +19,7 @@ interface AppShellProps {
   children: ReactNode;
   pageHeaderTitle?: string;
   pageHeaderActions?: ReactNode;
+  contentScrollMode?: "shell" | "content";
 }
 
 interface AppShellLayoutProps {
@@ -26,15 +27,22 @@ interface AppShellLayoutProps {
   location: ReturnType<typeof useLocation>;
   pageHeaderTitle?: string;
   pageHeaderActions?: ReactNode;
+  contentScrollMode?: "shell" | "content";
 }
 
-export function AppShell({ children, pageHeaderTitle, pageHeaderActions }: AppShellProps) {
+export function AppShell({
+  children,
+  pageHeaderTitle,
+  pageHeaderActions,
+  contentScrollMode,
+}: AppShellProps) {
   const location = useLocation();
   return (
     <AppShellLayout
       location={location}
       pageHeaderTitle={pageHeaderTitle}
       pageHeaderActions={pageHeaderActions}
+      contentScrollMode={contentScrollMode}
     >
       {children}
     </AppShellLayout>
@@ -46,6 +54,7 @@ function AppShellLayout({
   location,
   pageHeaderTitle,
   pageHeaderActions,
+  contentScrollMode = "shell",
 }: AppShellLayoutProps) {
   const menuDrawer = useMenuDrawer();
   const navigate = useNavigate();
@@ -66,6 +75,7 @@ function AppShellLayout({
   const resolvedPageTitle = pageHeaderTitle ?? pageTitle;
 
   const isChatMode = location.pathname === "/" || location.pathname === "/chat";
+  const isCatalogMode = contentScrollMode === "content";
   const shouldRenderShellHeadingAsH1 =
     !location.pathname.startsWith("/settings") &&
     location.pathname !== "/feedback" &&
@@ -165,12 +175,20 @@ function AppShellLayout({
                 "mx-auto flex w-full flex-1 flex-col min-h-0",
                 isChatMode
                   ? "w-full p-0 max-w-none" // Let BookLayout handle constraints
-                  : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",
+                  : isCatalogMode
+                    ? "max-w-4xl overflow-hidden header-compensation" // catalog owns scroll + padding
+                    : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",
               )}
-              data-scroll-owner={!isChatMode ? "active" : undefined}
+              data-scroll-owner={!isChatMode && !isCatalogMode ? "active" : undefined}
             >
-              <div className={cn("flex flex-1 flex-col", isChatMode ? "h-full" : "gap-6")}>
-                {!isChatMode && (resolvedPageTitle || pageHeaderActions) ? (
+              <div
+                className={cn(
+                  "flex flex-1 flex-col min-h-0",
+                  isChatMode ? "h-full" : isCatalogMode ? "h-full" : "gap-6",
+                )}
+              >
+                {/* H1 title: only in shell mode — catalog pages render sr-only H1 via CatalogHeader */}
+                {!isChatMode && !isCatalogMode && (resolvedPageTitle || pageHeaderActions) ? (
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     {resolvedPageTitle ? (
                       shouldRenderShellHeadingAsH1 ? (

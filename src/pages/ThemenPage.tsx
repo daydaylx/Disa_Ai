@@ -5,7 +5,7 @@ import { CATEGORY_LABELS, getQuickstartsWithFallback, type Quickstart } from "@/
 import { getCategoryStyle } from "@/lib/categoryColors";
 import { AlertTriangle, Brain, ChevronDown, RefreshCw } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, CardSkeleton, EmptyState, InfoBanner } from "@/ui";
+import { Badge, Button, Card, CardSkeleton, CatalogHeader, EmptyState, InfoBanner } from "@/ui";
 
 export default function ThemenPage() {
   const navigate = useNavigate();
@@ -215,41 +215,30 @@ export default function ThemenPage() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header Zone */}
-      <div className="flex-none pt-3 sm:pt-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
-            style={{ background: headerTheme.roleGradient }}
-          />
-          <div className="relative px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-ink-secondary">
-                {isLoading
-                  ? "Themen werden geladen…"
-                  : `${quickstarts.length} Themen verfügbar`}
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  setIsLoading(true);
-                  void loadQuickstarts();
-                }}
-                disabled={isLoading}
-                className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
-                aria-label="Themen aktualisieren"
-                title="Themen neu laden"
-              >
-                <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CatalogHeader
+        title="Themen"
+        countLabel={isLoading ? "Themen werden geladen…" : `${quickstarts.length} Themen verfügbar`}
+        gradientStyle={headerTheme.roleGradient}
+        action={
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setIsLoading(true);
+              void loadQuickstarts();
+            }}
+            disabled={isLoading}
+            className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+            aria-label="Themen aktualisieren"
+            title="Themen neu laden"
+          >
+            <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+          </Button>
+        }
+      />
 
       {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4 space-y-6">
+      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4 px-4 space-y-6">
         {isLoading ? (
           <section className="space-y-2">
             <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
