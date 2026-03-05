@@ -170,7 +170,7 @@ Initialisiert React und rendert die App in das DOM.
    │
 2. config/models.ts: loadModelCatalog()
    │  ├─ Parallel: OpenRouter /models API
-   │  └─ Parallel: public/models_metadata.json (kuratierte Metadaten)
+   │  └─ Parallel: public/models_metadata.json (generiert aus src/config/models_metadata.json)
    │
 3. Filtert: Nur kostenlose Modelle (:free oder Preis=0)
    │

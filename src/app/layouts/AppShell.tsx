@@ -163,7 +163,7 @@ function AppShellLayout({
             role={isChatMode ? undefined : "main"}
             data-testid="app-main"
             key={location.pathname}
-            // Remove background handling here for Chat Mode, BookLayout does it
+            // Chat mode manages its own layout constraints and surface styles.
             className={cn(
               "relative flex flex-1 flex-col min-h-0",
               isChatMode ? "bg-transparent" : "bg-bg-app",
@@ -174,7 +174,7 @@ function AppShellLayout({
               className={cn(
                 "mx-auto flex w-full flex-1 flex-col min-h-0",
                 isChatMode
-                  ? "w-full p-0 max-w-none" // Let BookLayout handle constraints
+                  ? "w-full p-0 max-w-none"
                   : isCatalogMode
                     ? "max-w-4xl overflow-hidden header-compensation" // catalog owns scroll + padding
                     : "max-w-4xl overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 header-compensation",

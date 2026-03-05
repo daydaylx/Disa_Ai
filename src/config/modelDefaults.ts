@@ -13,5 +13,6 @@ export function isAllowedModelId(
   return curatedModelIds.has(modelId);
 }
 
-// Kuratiertes Fallback aus public/models_metadata.json; wird auf leer gesetzt, falls entfernt.
+// Kuratierte Fallback-ID; Metadatenquelle ist src/config/models_metadata.json
+// und wird für Runtime-Fetch nach public/models_metadata.json synchronisiert.
 export const FALLBACK_MODEL_ID = "cognitivecomputations/dolphin-mistral-24b-venice-edition:free";

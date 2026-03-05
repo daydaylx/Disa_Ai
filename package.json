@@ -5,10 +5,11 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "predev": "node scripts/sync-models-metadata.mjs",
     "dev": "vite",
     "dev:functions": "wrangler pages dev dist --live-reload",
     "generate-tokens": "node scripts/generate-tokens.mjs",
-    "prebuild": "node scripts/build-info.js && npm run generate-tokens",
+    "prebuild": "node scripts/build-info.js && node scripts/sync-models-metadata.mjs && npm run generate-tokens",
     "build": "vite build",
     "build:debug": "DEBUG_SOURCEMAP=1 vite build --mode development",
     "preview": "node ./scripts/run-preview.mjs",
@@ -42,6 +43,7 @@
     "release:preview": "npm run changeset:status && npm run build",
     "release:prepare": "npm run verify && npm run changeset:version",
     "verify": "npm run typecheck && npm run lint && npm run test:unit",
+    "audit:deadcode": "node scripts/check-runtime-deps.mjs",
     "clean": "rm -rf dist .vite .cache .tmp coverage test-results playwright-report rendered.html",
     "postbuild": "cp public/_headers dist/_headers && cp -r functions dist/functions && node scripts/generate-routes.js && node scripts/verify-dist.mjs",
     "prepare": "node -e \"if (process.env.NODE_ENV !== 'production') process.exit(1)\" || husky install",
@@ -73,7 +75,6 @@
     ]
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.27.1",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.8",

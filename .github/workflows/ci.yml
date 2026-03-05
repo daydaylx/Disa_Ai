@@ -5,9 +5,28 @@ on:
   workflow_dispatch:
 
 jobs:
+  repo-hygiene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate derived metadata
+        run: npm run predev
+      - name: Check repository hygiene
+        run: node scripts/check-repo-hygiene.mjs
+      - name: Deadcode/dependency audit
+        run: npm run audit:deadcode
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: repo-hygiene
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

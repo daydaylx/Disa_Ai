@@ -33,3 +33,9 @@ Diese Dateien dienen als:
 - Reports werden bei relevanten Änderungen aktualisiert
 - Veraltete Reports werden archiviert oder entfernt
 - Neue Audits/Reports sollten hier hinzugefügt werden
+
+## Retention Policy
+
+- Im Repository bleibt nur der neueste UI-Snapshot-Stand (`docs/reports/ui-after-2026-02-23/phase-3-before`).
+- Ältere UI-Snapshot-Stände werden nicht versioniert; sie gehören in CI-Artefakte.
+- Einzelne Report-Dateien über 5 MB sind nicht erlaubt.

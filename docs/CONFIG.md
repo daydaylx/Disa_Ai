@@ -142,7 +142,7 @@ VITE_FF_EXPERIMENTAL_FEATURE=true
 Lädt den Modell-Katalog hybrid:
 
 1. **OpenRouter API**: Live-Liste aller Modelle
-2. **Metadaten-Datei**: `public/models_metadata.json` mit kuratierten Infos
+2. **Metadaten-Datei**: `public/models_metadata.json` (automatisch synchronisiert aus `src/config/models_metadata.json`)
 
 ```typescript
 const catalog = await loadModelCatalog();
@@ -150,7 +150,7 @@ const catalog = await loadModelCatalog();
 // catalog.providers: Set<string>
 ```
 
-### `public/models_metadata.json`
+### `src/config/models_metadata.json` (Source of Truth)
 
 Optionale Metadaten für bessere UX:
 
@@ -164,6 +164,9 @@ Optionale Metadaten für bessere UX:
   }
 }
 ```
+
+Bei `npm run dev` und `npm run build` wird diese Quelle automatisch nach
+`public/models_metadata.json` gespiegelt (`scripts/sync-models-metadata.mjs`).
 
 ### Modell-Filterung
 

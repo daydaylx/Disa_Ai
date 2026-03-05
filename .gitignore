@@ -28,6 +28,7 @@ LOGS/
 logs/
 DOCS/
 docs/screenshots/
+public/models_metadata.json
 screenshots/
 playwright/.cache/
 *.spec.js-snapshots/

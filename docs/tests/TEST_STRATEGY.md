@@ -322,7 +322,7 @@ describe("Model Catalog Fallback", () => {
     const apiError = new Error("500 Internal Server Error");
     chatStreamMock.mockRejectedValue(apiError);
 
-    const fallbackModels = require("../../public/models_metadata.json");
+    const fallbackModels = require("../../src/config/models_metadata.json");
     // UI-Test: Prüfe ob alle Modelle sichtbar sind
   });
 });
