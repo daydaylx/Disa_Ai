@@ -83,7 +83,7 @@ export const appRouter = createBrowserRouter(
     {
       path: "/themen",
       element: (
-        <RouteWrapper>
+        <RouteWrapper pageHeaderTitle="Themen">
           <ThemenPage />
         </RouteWrapper>
       ),
