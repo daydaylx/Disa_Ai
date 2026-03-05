@@ -11,7 +11,7 @@ interface RolesContextType {
   roles: UIRole[];
   rolesLoading: boolean;
   roleLoadError: string | null;
-  refreshRoles: () => void;
+  refreshRoles: () => Promise<void>;
   activeRole: UIRole | null;
   setActiveRole: (role: UIRole | null) => void;
   typographyScale: number;
@@ -36,7 +36,7 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     data: loadedRoles,
     loading: rolesLoading,
     error: roleLoadError,
-    trigger: refreshRoles,
+    trigger: triggerRolesRefresh,
   } = useDeferredFetch({
     fetchFn: loadRoles,
     immediate: true, // Always load immediately
@@ -93,6 +93,10 @@ export const RolesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     },
     [setBorderRadius, setTypographyScale],
   );
+
+  const refreshRoles = useCallback(async () => {
+    await triggerRolesRefresh();
+  }, [triggerRolesRefresh]);
 
   const value = {
     roles,

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -43,9 +43,19 @@ describe("ThemenPage", () => {
     renderThemenPage();
 
     expect(await screen.findByText("Test Diskussion")).toBeInTheDocument();
+
+    const detailsToggle = screen.getByRole("button", {
+      name: "Details zu Test Diskussion ausklappen",
+    });
+    expect(detailsToggle).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(detailsToggle);
+
+    expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Details zu Test Diskussion ausklappen" }),
-    ).toBeInTheDocument();
+      screen.getByRole("button", { name: "Details zu Test Diskussion einklappen" }),
+    ).toHaveAttribute("aria-expanded", "true");
   });
 
   it("zeigt den Empty-State ohne Themen", async () => {

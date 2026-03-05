@@ -23,6 +23,7 @@ import {
   MessageSquare,
   Music,
   Palette,
+  RefreshCw,
   RotateCcw,
   Scale,
   Shield,
@@ -46,9 +47,8 @@ import {
   CardSkeleton,
   CatalogHeader,
   EmptyState,
-  FilterSkeleton,
-  HeaderSkeleton,
   ListRow,
+  PullToRefresh,
 } from "@/ui";
 
 import { useFavorites } from "../../contexts/FavoritesContext";
@@ -63,77 +63,44 @@ interface EnhancedRolesInterfaceProps {
 }
 
 function getRoleIcon(role: EnhancedRole): LucideIcon {
-  // Role-specific mapping for unique visual identity
-  // Each role gets its own icon based on its purpose and characteristics
   const roleIconMap: Record<string, LucideIcon> = {
-    // Standard & General
     neutral: Users,
-
-    // Communication & Business
     email_professional: MessageSquare,
-
-    // Personality & Humor
     sarcastic_direct: Smile,
-
-    // Therapy & Health
     therapist_expert: Heart,
     fitness_nutrition_coach: Activity,
     sexuality_educator: Heart,
-
-    // Legal & Professional
     legal_generalist: Scale,
-
-    // Productivity & Career
     productivity_helper: TrendingUp,
     career_advisor: Briefcase,
     education_guide: GraduationCap,
     personality_trainer: Zap,
-
-    // Sales & Commerce
     ebay_coach: Tag,
-
-    // Education
     language_teacher: BookOpenCheck,
-
-    // Expert & Uncensored
     uncensored_expert: Unlock,
-
-    // Creative & Writing
     nsfw_roleplay: Theater,
     erotic_creative_author: Feather,
     poet_lyricist: Feather,
     songwriter: Music,
     erotic_author: Feather,
     adult_roleplay_open: Theater,
-
-    // Coaching & Support
     coach_life: Zap,
     coach_crisis: Shield,
-
-    // Family & Community
     senior_advisor: Heart,
     parent_advisor: Users,
     neighbor_helper: Home,
-
-    // Food & Lifestyle
     chef_foodie: Utensils,
-
-    // Arts & Entertainment
     movie_tv_expert: Film,
     art_coach: Palette,
-
-    // Relationships & Intimacy
     relationship_advisor_open: HeartHandshake,
     fetish_kink_guide: Lock,
   };
 
-  // Try role-specific icon first
   const specificIcon = roleIconMap[role.id];
   if (specificIcon) {
     return specificIcon;
   }
 
-  // Fallback to category-based mapping for unknown roles
   switch (role.category) {
     case "Creative":
       return Sparkles;
@@ -154,19 +121,20 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
     case "Spezial":
       return Bot;
     default:
-      return Users; // Universal fallback
+      return Users;
   }
 }
 
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
-  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError } = useRoles(); // Added roleLoadError
+  const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError, refreshRoles } =
+    useRoles();
   const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const { settings } = useSettings();
   const navigate = useNavigate();
 
-  // Local state
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
@@ -198,13 +166,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const enhancedRoles = useMemo(() => roles.map(migrateRole), [roles]);
 
   const filterFnCallback = useCallback(
-    (role: EnhancedRole, filters: FilterState, searchQuery: string) =>
-      roleFilterFn(role, filters, searchQuery, isRoleFavorite, usage, selectedCategory),
+    (role: EnhancedRole, currentFilters: FilterState, searchQuery: string) =>
+      roleFilterFn(role, currentFilters, searchQuery, isRoleFavorite, usage, selectedCategory),
     [isRoleFavorite, usage, selectedCategory],
   );
 
   const sortFnCallback = useCallback(
-    (a: EnhancedRole, b: EnhancedRole, filters: FilterState) => roleSortFn(a, b, filters, usage),
+    (a: EnhancedRole, b: EnhancedRole, currentFilters: FilterState) =>
+      roleSortFn(a, b, currentFilters, usage),
     [usage],
   );
 
@@ -235,7 +204,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     [setActiveRole, trackRoleUsage, navigate],
   );
 
-  const hasActiveFilters = selectedCategory || filters.showFavoritesOnly;
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refreshRoles();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refreshRoles]);
+
+  const hasActiveFilters = !!selectedCategory || filters.showFavoritesOnly;
+  const isLoading = rolesLoading || isRefreshing;
+
   const selectedRole = useMemo(
     () => filteredRoles.find((role) => role.id === selectedRoleId) ?? null,
     [filteredRoles, selectedRoleId],
@@ -246,51 +226,48 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     setFilters((prev) => ({ ...prev, showFavoritesOnly: false }));
   };
 
-  // Conditional rendering for loading and error states
-  if (rolesLoading) {
-    return (
-      <div className="flex flex-col h-full px-4 pt-4 space-y-3">
-        <HeaderSkeleton />
-        <FilterSkeleton count={4} />
-        <CardSkeleton count={6} />
-      </div>
-    );
-  }
-
-  if (roleLoadError) {
-    return (
-      <div className={cn("flex flex-col h-full", className)}>
-        <EmptyState
-          icon={<Users className="h-8 w-8 text-ink-muted" />}
-          title="Fehler beim Laden der Rollen"
-          description={roleLoadError}
-          className="bg-status-error/10 border-status-error/20 text-status-error"
-        />
-      </div>
-    );
-  }
-
   const headerTheme = selectedCategory
     ? getCategoryStyle(selectedCategory)
-    : getCategoryStyle("Entertainment"); // Use "Entertainment" (Pink) as default since it matches "accent-roles"
+    : getCategoryStyle("Entertainment");
+
+  const countLabel =
+    rolesLoading && roles.length === 0
+      ? "Rollen werden geladen…"
+      : `${filteredRoles.length} von ${roles.length} Rollen verfügbar`;
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
       <CatalogHeader
         title="Rollen & Personas"
-        countLabel={`${filteredRoles.length} von ${roles.length} Rollen verfügbar`}
+        countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
         action={
-          hasActiveFilters ? (
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="h-7 text-xs text-ink-tertiary hover:text-ink-primary"
+              size="icon"
+              onClick={() => {
+                void handleRefresh();
+              }}
+              disabled={isLoading}
+              className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+              aria-label="Rollen aktualisieren"
+              title="Rollen neu laden"
             >
-              <RotateCcw className="h-3 w-3 mr-1" /> Reset
+              <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
             </Button>
-          ) : undefined
+
+            {hasActiveFilters ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="min-h-[44px] px-3 text-xs text-ink-tertiary hover:text-ink-primary"
+              >
+                <RotateCcw className="mr-1 h-3 w-3" /> Reset
+              </Button>
+            ) : null}
+          </div>
         }
         filterRow={
           <div className="relative">
@@ -341,9 +318,31 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         }
       />
 
-      {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4 px-4">
-        {filteredRoles.length === 0 ? (
+      <PullToRefresh
+        onRefresh={handleRefresh}
+        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+      >
+        {rolesLoading && roles.length === 0 ? (
+          <CardSkeleton count={6} />
+        ) : roleLoadError ? (
+          <EmptyState
+            icon={<Users className="h-8 w-8 text-ink-muted" />}
+            title="Fehler beim Laden der Rollen"
+            description={roleLoadError}
+            className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  void handleRefresh();
+                }}
+              >
+                Erneut versuchen
+              </Button>
+            }
+          />
+        ) : filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}
             title="Keine Rollen gefunden"
@@ -371,7 +370,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   className={cn(
                     "stagger-item",
                     isActive
-                      ? cn("border-white/[0.14]", theme.border)
+                      ? cn("border-white/[0.14]", theme.border, theme.glow)
                       : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
                   )}
                   style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
@@ -399,7 +398,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   topRight={
                     <div className="flex items-center gap-2">
                       {isActive ? (
-                        <Badge size="sm" className={cn("shadow-sm", theme.badge, theme.badgeText)}>
+                        <Badge
+                          className={cn(
+                            "h-5 px-2 text-[10px] shadow-sm",
+                            theme.badge,
+                            theme.badgeText,
+                          )}
+                        >
                           Aktiv
                         </Badge>
                       ) : null}
@@ -413,10 +418,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                         }
                         className={cn(
-                          "relative flex h-11 w-11 items-center justify-center rounded-lg text-ink-tertiary transition-colors",
+                          "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
                           isFavorite
-                            ? "text-status-warning hover:text-status-warning"
-                            : "hover:text-ink-primary",
+                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
                         )}
                       >
                         <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
@@ -431,9 +436,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         setSelectedRoleId(role.id);
                       }}
                       aria-label="Details"
-                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                     >
-                      <ChevronDown className="h-4 w-4" />
+                      Details
+                      <ChevronDown className="h-3.5 w-3.5" />
                     </button>
                   }
                 />
@@ -441,7 +447,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
             })}
           </div>
         )}
-      </div>
+      </PullToRefresh>
 
       <BottomSheet
         open={!!selectedRole}

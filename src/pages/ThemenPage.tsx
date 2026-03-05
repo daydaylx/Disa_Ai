@@ -5,14 +5,25 @@ import { CATEGORY_LABELS, getQuickstartsWithFallback, type Quickstart } from "@/
 import { getCategoryStyle } from "@/lib/categoryColors";
 import { AlertTriangle, Brain, ChevronDown, RefreshCw } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, CardSkeleton, CatalogHeader, EmptyState, InfoBanner } from "@/ui";
+import {
+  Badge,
+  Button,
+  CardSkeleton,
+  CatalogHeader,
+  EmptyState,
+  InfoBanner,
+  ListRow,
+  PullToRefresh,
+} from "@/ui";
 
 export default function ThemenPage() {
   const navigate = useNavigate();
   const headerTheme = getCategoryStyle("Spezial");
+
   const [expandedThemen, setExpandedThemen] = useState<Set<string>>(new Set());
   const [quickstarts, setQuickstarts] = useState<Quickstart[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
@@ -25,11 +36,19 @@ export default function ThemenPage() {
     [quickstarts],
   );
 
-  const handleStartQuickstart = (quickstart: Quickstart) => {
-    void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
-  };
+  const handleStartQuickstart = useCallback(
+    (quickstart: Quickstart) => {
+      void navigate(`/chat?quickstart=${quickstart.id}&title=Diskussion: ${quickstart.title}`);
+    },
+    [navigate],
+  );
 
-  const loadQuickstarts = useCallback(async () => {
+  const loadQuickstarts = useCallback(async (options?: { showLoadingState?: boolean }) => {
+    const shouldShowLoading = options?.showLoadingState ?? true;
+    if (shouldShowLoading) {
+      setIsLoading(true);
+    }
+
     setLoadError(null);
     setFallbackNotice(null);
 
@@ -71,147 +90,144 @@ export default function ThemenPage() {
     void loadQuickstarts();
   }, [loadQuickstarts]);
 
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await loadQuickstarts({ showLoadingState: false });
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [loadQuickstarts]);
+
   const toggleThemaExpansion = useCallback((themaId: string) => {
     setExpandedThemen((prev) => {
       const next = new Set(prev);
-      if (next.has(themaId)) next.delete(themaId);
-      else next.add(themaId);
+      if (next.has(themaId)) {
+        next.delete(themaId);
+      } else {
+        next.add(themaId);
+      }
       return next;
     });
   }, []);
 
-  const renderCard = (quickstart: Quickstart, index: number) => {
-    const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
-    const theme = getCategoryStyle(quickstart.category);
-    const isExpanded = expandedThemen.has(quickstart.id);
+  const renderQuickstartRow = useCallback(
+    (quickstart: Quickstart, index: number) => {
+      const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
+      const theme = getCategoryStyle(quickstart.category);
+      const isExpanded = expandedThemen.has(quickstart.id);
+      const detailsId = `thema-details-${quickstart.id}`;
 
-    return (
-      <Card
-        key={quickstart.id}
-        variant="surface"
-        interactive
-        notch="none"
-        padding="none"
-        className={cn(
-          "stagger-item relative group overflow-hidden border-white/[0.10] hover:border-white/[0.14] hover:bg-surface-2/65",
-        )}
-        style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
-      >
-        <div
-          className={cn(
-            "pointer-events-none absolute inset-y-0 left-0 w-[3px] rounded-l-2xl",
-            theme.textBg,
-          )}
-          aria-hidden
-        />
-        {/* Main Row - Clickable area */}
-        <div className="flex items-center gap-4 cursor-pointer pointer-events-none">
-          <button
-            type="button"
-            className="absolute inset-0 z-content cursor-pointer rounded-none bg-transparent pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 focus-visible:ring-inset"
-            onClick={() => handleStartQuickstart(quickstart)}
-            aria-label={`Thema ${quickstart.title} starten`}
+      return (
+        <div key={quickstart.id} className="space-y-2">
+          <ListRow
+            className={cn(
+              "stagger-item",
+              "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+            )}
+            style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
+            title={quickstart.title}
+            subtitle={categoryInfo?.label || "Diskussion"}
+            onPress={() => handleStartQuickstart(quickstart)}
+            pressLabel={`Thema ${quickstart.title} starten`}
+            accentClassName={theme.textBg}
+            leading={
+              <div
+                className={cn(
+                  "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+                  theme.iconBg,
+                  theme.iconText,
+                )}
+              >
+                <Brain className="h-6 w-6" />
+              </div>
+            }
+            topRight={
+              quickstart.speculative ? (
+                <Badge variant="warning" className="h-5 px-2 text-[10px] shadow-sm">
+                  Hypothese
+                </Badge>
+              ) : undefined
+            }
+            trailing={
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleThemaExpansion(quickstart.id);
+                }}
+                aria-expanded={isExpanded}
+                aria-controls={detailsId}
+                aria-label={
+                  isExpanded
+                    ? `Details zu ${quickstart.title} einklappen`
+                    : `Details zu ${quickstart.title} ausklappen`
+                }
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+              >
+                Details
+                <ChevronDown
+                  className={cn("h-3.5 w-3.5 transition-transform", isExpanded && "rotate-180")}
+                />
+              </button>
+            }
           />
 
-          {/* Icon */}
-          <div
-            className={cn(
-              "relative flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-colors",
-              theme.iconBg,
-              theme.iconText,
-            )}
-          >
-            <Brain className="h-5 w-5" />
-          </div>
-
-          {/* Info */}
-          <div className="relative flex-1 min-w-0">
-            <span
-              className={cn(
-                "font-semibold text-sm truncate block",
-                "text-ink-primary group-hover:text-ink-primary",
-              )}
+          {isExpanded ? (
+            <div
+              id={detailsId}
+              className={cn("space-y-3 rounded-xl border px-3 py-3", theme.bg, theme.border)}
             >
-              {quickstart.title}
-            </span>
-            <p className="text-xs text-ink-secondary truncate mt-1">
-              {categoryInfo?.label || "Diskussion"}
-            </p>
-          </div>
-
-          {/* Actions */}
-          <div className="flex flex-col items-end gap-2 pr-10 relative z-sticky-header pointer-events-auto">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleThemaExpansion(quickstart.id);
-              }}
-              aria-expanded={isExpanded}
-              aria-controls={`thema-details-${quickstart.id}`}
-              aria-label={
-                isExpanded
-                  ? `Details zu ${quickstart.title} einklappen`
-                  : `Details zu ${quickstart.title} ausklappen`
-              }
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border-none bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
-            >
-              <ChevronDown
-                className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Expanded Details - animated via CSS grid height technique */}
-        <div
-          className="accordion-panel"
-          data-open={isExpanded ? "true" : "false"}
-          aria-hidden={!isExpanded}
-        >
-          <div className="accordion-inner">
-            <div id={`thema-details-${quickstart.id}`} className="px-4 pb-4 pt-0">
-              <div className={cn("space-y-3 rounded-xl border px-3 py-3", theme.bg, theme.border)}>
-                {/* Full Description */}
-                <div>
-                  <p className="text-xs text-ink-tertiary font-medium mb-1">Beschreibung</p>
-                  <p className="text-sm text-ink-secondary leading-relaxed">
-                    {quickstart.description}
-                  </p>
-                </div>
-
-                {/* Tags */}
-                {(categoryInfo || quickstart.speculative) && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {categoryInfo && (
-                      <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
-                        {categoryInfo.label}
-                      </Badge>
-                    )}
-                    {quickstart.speculative && (
-                      <Badge variant="warning" size="sm">
-                        Hypothese
-                      </Badge>
-                    )}
-                  </div>
-                )}
-
-                {/* Start Button */}
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => handleStartQuickstart(quickstart)}
-                  className="w-full"
-                >
-                  Diskussion starten
-                </Button>
+              <div>
+                <p className="mb-1 text-xs font-medium text-ink-tertiary">Beschreibung</p>
+                <p className="text-sm leading-relaxed text-ink-secondary">
+                  {quickstart.description}
+                </p>
               </div>
+
+              {(categoryInfo ||
+                quickstart.speculative ||
+                quickstart.category === "verschwörungstheorien") && (
+                <div className="flex flex-wrap gap-1.5">
+                  {categoryInfo ? (
+                    <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
+                      {categoryInfo.label}
+                    </Badge>
+                  ) : null}
+                  {quickstart.speculative ? (
+                    <Badge variant="warning" size="sm">
+                      Hypothese
+                    </Badge>
+                  ) : null}
+                  {quickstart.category === "verschwörungstheorien" ? (
+                    <Badge
+                      variant="outline"
+                      size="sm"
+                      className="border-status-warning/30 text-status-warning"
+                    >
+                      Kontrovers
+                    </Badge>
+                  ) : null}
+                </div>
+              )}
+
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handleStartQuickstart(quickstart)}
+                className="w-full"
+              >
+                Diskussion starten
+              </Button>
             </div>
-          </div>
+          ) : null}
         </div>
-      </Card>
-    );
-  };
+      );
+    },
+    [expandedThemen, handleStartQuickstart, toggleThemaExpansion],
+  );
+
+  const isBusy = isLoading || isRefreshing;
 
   return (
     <div className="flex flex-col h-full">
@@ -224,43 +240,41 @@ export default function ThemenPage() {
             variant="ghost"
             size="icon"
             onClick={() => {
-              setIsLoading(true);
-              void loadQuickstarts();
+              void handleRefresh();
             }}
-            disabled={isLoading}
+            disabled={isBusy}
             className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
             aria-label="Themen aktualisieren"
             title="Themen neu laden"
           >
-            <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+            <RefreshCw className={cn("h-5 w-5", isBusy && "animate-spin")} />
           </Button>
         }
       />
 
-      {/* Content Zone - Scrollable List */}
-      <div className="flex-1 overflow-y-auto pb-page-bottom-safe pt-4 px-4 space-y-6">
-        {isLoading ? (
-          <section className="space-y-2">
-            <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
+      <PullToRefresh
+        onRefresh={handleRefresh}
+        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+      >
+        {isLoading && quickstarts.length === 0 ? (
+          <section className="space-y-3">
+            <h2 className="px-1 text-xs font-medium uppercase tracking-widest text-ink-muted">
               Diskussionen
             </h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <CardSkeleton count={6} />
-            </div>
+            <CardSkeleton count={6} />
           </section>
         ) : loadError && quickstarts.length === 0 ? (
           <EmptyState
             icon={<AlertTriangle className="h-6 w-6" />}
             title="Themen konnten nicht geladen werden"
             description={loadError}
-            className="rounded-2xl border border-status-error/25 bg-status-error/10"
+            className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
             action={
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setIsLoading(true);
-                  void loadQuickstarts();
+                  void handleRefresh();
                 }}
               >
                 Erneut versuchen
@@ -272,10 +286,10 @@ export default function ThemenPage() {
             icon={<Brain className="h-6 w-6" />}
             title="Keine Themen verfügbar"
             description="Derzeit sind keine Diskussionsthemen hinterlegt."
-            className="rounded-2xl border border-white/10 bg-surface-1/40"
+            className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <>
+          <div className="space-y-6">
             {fallbackNotice ? (
               <InfoBanner
                 icon={<AlertTriangle className="h-4 w-4" />}
@@ -286,24 +300,22 @@ export default function ThemenPage() {
               </InfoBanner>
             ) : null}
 
-            {/* Regular Discussions */}
-            {regularDiscussions.length > 0 && (
+            {regularDiscussions.length > 0 ? (
               <section className="space-y-2">
-                <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest px-1">
+                <h2 className="px-1 text-xs font-medium uppercase tracking-widest text-ink-muted">
                   Diskussionen
                 </h2>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {regularDiscussions.map(renderCard)}
+                <div className="space-y-2 animate-fade-in">
+                  {regularDiscussions.map(renderQuickstartRow)}
                 </div>
               </section>
-            )}
+            ) : null}
 
-            {/* Conspiracy Theories Section */}
-            {conspiracyDiscussions.length > 0 && (
+            {conspiracyDiscussions.length > 0 ? (
               <section className="space-y-2">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
-                  <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest">
+                  <h2 className="text-xs font-medium uppercase tracking-widest text-ink-muted">
                     Verschwörungstheorien
                   </h2>
                   <Badge
@@ -314,25 +326,16 @@ export default function ThemenPage() {
                     Kontrovers
                   </Badge>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {conspiracyDiscussions.map(renderCard)}
+                <div className="space-y-2 animate-fade-in">
+                  {conspiracyDiscussions.map((quickstart, index) =>
+                    renderQuickstartRow(quickstart, regularDiscussions.length + index),
+                  )}
                 </div>
               </section>
-            )}
-
-            {/* Back to Chat Action */}
-            <div className="pt-8 pb-4 flex justify-center">
-              <Button
-                variant="ghost"
-                onClick={() => void navigate("/")}
-                className="text-ink-secondary hover:text-ink-primary"
-              >
-                ← Zurück zum Chat
-              </Button>
-            </div>
-          </>
+            ) : null}
+          </div>
         )}
-      </div>
+      </PullToRefresh>
     </div>
   );
 }

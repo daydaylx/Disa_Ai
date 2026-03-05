@@ -70,7 +70,7 @@ function depsAreEqual(
  */
 export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredFetchState<T> & {
   /** Manuell Fetch triggern */
-  trigger: () => void;
+  trigger: () => Promise<void>;
   /** Daten zurücksetzen */
   reset: () => void;
 } {
@@ -153,8 +153,10 @@ export function useDeferredFetch<T>(options: DeferredFetchOptions<T>): DeferredF
     }
   }, []);
 
-  const trigger = useCallback(() => {
-    void executeFetch("trigger");
+  const trigger = useCallback(async () => {
+    // Manual triggers should always allow an explicit refetch.
+    hasTriggeredRef.current = false;
+    await executeFetch("trigger");
   }, [executeFetch]);
 
   const reset = useCallback(() => {

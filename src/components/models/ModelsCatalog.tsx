@@ -29,7 +29,6 @@ import {
   CardSkeleton,
   CatalogHeader,
   EmptyState,
-  HeaderSkeleton,
   ListRow,
   PullToRefresh,
 } from "@/ui";
@@ -222,20 +221,17 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
 
       {/* Content Zone - Scrollable List */}
       <PullToRefresh
-        onRefresh={async () => await refresh(true)}
+        onRefresh={handleRefresh}
         className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {!catalog && loading ? (
-          <>
-            <HeaderSkeleton />
-            <CardSkeleton count={6} />
-          </>
+          <CardSkeleton count={6} />
         ) : error ? ( // Conditional rendering for error state
           <EmptyState
             icon={<Cpu className="h-8 w-8 text-ink-muted" />}
             title="Fehler beim Laden der Modelle" // More specific error title
             description={error} // Display the actual error message
-            className="bg-status-error/10 border-status-error/20 text-status-error" // Error styling
+            className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error" // Error styling
             action={
               <Button onClick={() => handleRefresh()} variant="outline" size="sm">
                 Erneut versuchen
