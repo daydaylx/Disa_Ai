@@ -25,6 +25,16 @@ const SAMPLE_QUICKSTART: Quickstart = {
   category: "wissenschaft",
 };
 
+const CONTROVERSIAL_QUICKSTART: Quickstart = {
+  id: "discussion-controversial",
+  title: "Kontroverses Thema",
+  description: "Ein kontroverses Testthema",
+  icon: null,
+  system: "system prompt",
+  user: "user prompt",
+  category: "verschwörungstheorien",
+};
+
 function renderThemenPage() {
   return render(
     <MemoryRouter>
@@ -43,6 +53,7 @@ describe("ThemenPage", () => {
     renderThemenPage();
 
     expect(await screen.findByText("Test Diskussion")).toBeInTheDocument();
+    expect(screen.getByText("1 Themen · 0 Kontrovers")).toBeInTheDocument();
 
     const detailsToggle = screen.getByRole("button", {
       name: "Details zu Test Diskussion ausklappen",
@@ -91,5 +102,17 @@ describe("ThemenPage", () => {
         "Externe Themen konnten nicht geladen werden. Standardthemen werden angezeigt.",
       ),
     ).toBeInTheDocument();
+  });
+
+  it("zeigt die Header-Summary mit Kontrovers-Zähler", async () => {
+    mockedGetQuickstartsWithFallback.mockResolvedValue([
+      SAMPLE_QUICKSTART,
+      CONTROVERSIAL_QUICKSTART,
+    ]);
+
+    renderThemenPage();
+
+    expect(await screen.findByText("2 Themen · 1 Kontrovers")).toBeInTheDocument();
+    expect(screen.getByText("Kontroverses Thema")).toBeInTheDocument();
   });
 });

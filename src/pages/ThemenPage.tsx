@@ -215,7 +215,7 @@ export default function ThemenPage() {
                 variant="secondary"
                 size="sm"
                 onClick={() => handleStartQuickstart(quickstart)}
-                className="w-full"
+                className="min-h-[44px] w-full"
               >
                 Diskussion starten
               </Button>
@@ -228,13 +228,17 @@ export default function ThemenPage() {
   );
 
   const isBusy = isLoading || isRefreshing;
+  const countLabel =
+    isLoading && quickstarts.length === 0
+      ? "Themen werden geladen…"
+      : `${quickstarts.length} Themen · ${conspiracyDiscussions.length} Kontrovers`;
   const sectionHeadingClass = "text-xs font-medium uppercase tracking-widest text-ink-muted";
 
   return (
     <div className="flex flex-col h-full">
       <CatalogHeader
         title="Themen"
-        countLabel={isLoading ? "Themen werden geladen…" : `${quickstarts.length} Themen verfügbar`}
+        countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
         action={
           <Button
@@ -262,7 +266,7 @@ export default function ThemenPage() {
           <CardSkeleton count={6} />
         ) : loadError && quickstarts.length === 0 ? (
           <EmptyState
-            icon={<AlertTriangle className="h-6 w-6" />}
+            icon={<AlertTriangle className="h-8 w-8 text-ink-muted" />}
             title="Themen konnten nicht geladen werden"
             description={loadError}
             className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
@@ -280,13 +284,13 @@ export default function ThemenPage() {
           />
         ) : quickstarts.length === 0 ? (
           <EmptyState
-            icon={<Brain className="h-6 w-6" />}
+            icon={<Brain className="h-8 w-8 text-ink-muted" />}
             title="Keine Themen verfügbar"
             description="Derzeit sind keine Diskussionsthemen hinterlegt."
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5">
             {fallbackNotice ? (
               <InfoBanner
                 icon={<AlertTriangle className="h-4 w-4" />}
@@ -298,7 +302,7 @@ export default function ThemenPage() {
             ) : null}
 
             {regularDiscussions.length > 0 ? (
-              <section className="space-y-2">
+              <section className="space-y-3">
                 <h2 className={cn("px-1", sectionHeadingClass)}>Diskussionen</h2>
                 <div className="space-y-2 animate-fade-in">
                   {regularDiscussions.map(renderQuickstartRow)}
@@ -307,7 +311,7 @@ export default function ThemenPage() {
             ) : null}
 
             {conspiracyDiscussions.length > 0 ? (
-              <section className="space-y-2">
+              <section className="space-y-3">
                 <div className="flex items-center gap-2 px-1">
                   <AlertTriangle className="h-4 w-4 text-status-warning" />
                   <h2 className={sectionHeadingClass}>Verschwörungstheorien</h2>
