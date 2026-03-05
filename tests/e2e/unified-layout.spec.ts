@@ -86,8 +86,12 @@ test.describe("Unified Layout Tests", () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 812 }); // iPhone X dimensions
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    // Avoid networkidle flakiness from background requests (analytics, workers, dev tooling).
+    await expect(page.locator("header").or(page.getByRole("banner"))).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.getByTestId("composer-input")).toBeVisible({ timeout: 30000 });
 
     // Check that elements don't overlap with safe area indicators
     const header = page.locator("header").or(page.getByRole("banner"));
