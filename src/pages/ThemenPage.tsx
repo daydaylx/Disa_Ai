@@ -3,10 +3,20 @@ import { useNavigate } from "react-router-dom";
 
 import { CATEGORY_LABELS, getQuickstartsWithFallback, type Quickstart } from "@/config/quickstarts";
 import { getCategoryStyle } from "@/lib/categoryColors";
-import { AlertTriangle, Brain, ChevronDown, RefreshCw } from "@/lib/icons";
+import {
+  AlertTriangle,
+  Brain,
+  ChevronDown,
+  Landmark,
+  Microscope,
+  RefreshCw,
+  Sparkles,
+  Theater,
+} from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import {
   Badge,
+  BottomSheet,
   Button,
   CardSkeleton,
   CatalogHeader,
@@ -16,16 +26,36 @@ import {
   PullToRefresh,
 } from "@/ui";
 
+type ThemaCategory = Quickstart["category"];
+
+function getThemaIcon(category: ThemaCategory) {
+  switch (category) {
+    case "realpolitik":
+      return Landmark;
+    case "hypothetisch":
+      return Sparkles;
+    case "wissenschaft":
+      return Microscope;
+    case "kultur":
+      return Theater;
+    case "verschwörungstheorien":
+      return AlertTriangle;
+    default:
+      return Brain;
+  }
+}
+
 export default function ThemenPage() {
   const navigate = useNavigate();
-  const headerTheme = getCategoryStyle("Spezial");
 
-  const [expandedThemen, setExpandedThemen] = useState<Set<string>>(new Set());
+  const [selectedThema, setSelectedThema] = useState<Quickstart | null>(null);
   const [quickstarts, setQuickstarts] = useState<Quickstart[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
+
+  const headerTheme = getCategoryStyle(selectedThema?.category ?? "Spezial");
 
   const regularDiscussions = useMemo(
     () => quickstarts.filter((q) => q.category !== "verschwörungstheorien"),
@@ -99,133 +129,59 @@ export default function ThemenPage() {
     }
   }, [loadQuickstarts]);
 
-  const toggleThemaExpansion = useCallback((themaId: string) => {
-    setExpandedThemen((prev) => {
-      const next = new Set(prev);
-      if (next.has(themaId)) {
-        next.delete(themaId);
-      } else {
-        next.add(themaId);
-      }
-      return next;
-    });
-  }, []);
+  const renderQuickstartRow = useCallback((quickstart: Quickstart, index: number) => {
+    const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
+    const theme = getCategoryStyle(quickstart.category);
+    const ThemaIcon = getThemaIcon(quickstart.category);
 
-  const renderQuickstartRow = useCallback(
-    (quickstart: Quickstart, index: number) => {
-      const categoryInfo = quickstart.category ? CATEGORY_LABELS[quickstart.category] : null;
-      const theme = getCategoryStyle(quickstart.category);
-      const isExpanded = expandedThemen.has(quickstart.id);
-      const detailsId = `thema-details-${quickstart.id}`;
-
-      return (
-        <div key={quickstart.id} className="space-y-2">
-          <ListRow
+    return (
+      <ListRow
+        key={quickstart.id}
+        className={cn(
+          "stagger-item",
+          "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+        )}
+        style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
+        title={quickstart.title}
+        subtitle={categoryInfo?.label || "Diskussion"}
+        onPress={() => setSelectedThema(quickstart)}
+        pressLabel={`Details zu ${quickstart.title} anzeigen`}
+        accentClassName={theme.textBg}
+        leading={
+          <div
             className={cn(
-              "stagger-item",
-              "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+              "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+              theme.iconBg,
+              theme.iconText,
             )}
-            style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
-            title={quickstart.title}
-            subtitle={categoryInfo?.label || "Diskussion"}
-            onPress={() => handleStartQuickstart(quickstart)}
-            pressLabel={`Thema ${quickstart.title} starten`}
-            accentClassName={theme.textBg}
-            leading={
-              <div
-                className={cn(
-                  "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
-                  theme.iconBg,
-                  theme.iconText,
-                )}
-              >
-                <Brain className="h-6 w-6" />
-              </div>
-            }
-            topRight={
-              quickstart.speculative ? (
-                <Badge variant="warning" className="h-5 px-2 text-[10px] shadow-sm">
-                  Hypothese
-                </Badge>
-              ) : undefined
-            }
-            trailing={
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  toggleThemaExpansion(quickstart.id);
-                }}
-                aria-expanded={isExpanded}
-                aria-controls={detailsId}
-                aria-label={
-                  isExpanded
-                    ? `Details zu ${quickstart.title} einklappen`
-                    : `Details zu ${quickstart.title} ausklappen`
-                }
-                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
-              >
-                Details
-                <ChevronDown
-                  className={cn("h-3.5 w-3.5 transition-transform", isExpanded && "rotate-180")}
-                />
-              </button>
-            }
-          />
-
-          {isExpanded ? (
-            <div
-              id={detailsId}
-              className={cn("space-y-3 rounded-xl border px-3 py-3", theme.bg, theme.border)}
-            >
-              <div>
-                <p className="mb-1 text-xs font-medium text-ink-tertiary">Beschreibung</p>
-                <p className="text-sm leading-relaxed text-ink-secondary">
-                  {quickstart.description}
-                </p>
-              </div>
-
-              {(categoryInfo ||
-                quickstart.speculative ||
-                quickstart.category === "verschwörungstheorien") && (
-                <div className="flex flex-wrap gap-1.5">
-                  {categoryInfo ? (
-                    <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
-                      {categoryInfo.label}
-                    </Badge>
-                  ) : null}
-                  {quickstart.speculative ? (
-                    <Badge variant="warning" size="sm">
-                      Hypothese
-                    </Badge>
-                  ) : null}
-                  {quickstart.category === "verschwörungstheorien" ? (
-                    <Badge
-                      variant="outline"
-                      size="sm"
-                      className="border-status-warning/30 text-status-warning"
-                    >
-                      Kontrovers
-                    </Badge>
-                  ) : null}
-                </div>
-              )}
-
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleStartQuickstart(quickstart)}
-                className="min-h-[44px] w-full"
-              >
-                Diskussion starten
-              </Button>
-            </div>
-          ) : null}
-        </div>
-      );
-    },
-    [expandedThemen, handleStartQuickstart, toggleThemaExpansion],
-  );
+          >
+            <ThemaIcon className="h-6 w-6" />
+          </div>
+        }
+        topRight={
+          quickstart.speculative ? (
+            <Badge variant="warning" className="h-5 px-2 text-[10px] shadow-sm">
+              Hypothese
+            </Badge>
+          ) : undefined
+        }
+        trailing={
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setSelectedThema(quickstart);
+            }}
+            aria-label={`Details zu ${quickstart.title} anzeigen`}
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+          >
+            Details
+            <ChevronDown className="h-3.5 w-3.5" />
+          </button>
+        }
+      />
+    );
+  }, []);
 
   const isBusy = isLoading || isRefreshing;
   const countLabel =
@@ -233,6 +189,11 @@ export default function ThemenPage() {
       ? "Themen werden geladen…"
       : `${quickstarts.length} Themen · ${conspiracyDiscussions.length} Kontrovers`;
   const sectionHeadingClass = "text-xs font-medium uppercase tracking-widest text-ink-muted";
+
+  const selectedThemaInfo = selectedThema?.category
+    ? CATEGORY_LABELS[selectedThema.category]
+    : null;
+  const selectedThemaTheme = getCategoryStyle(selectedThema?.category);
 
   return (
     <div className="flex flex-col h-full">
@@ -333,6 +294,77 @@ export default function ThemenPage() {
           </div>
         )}
       </PullToRefresh>
+
+      <BottomSheet
+        open={selectedThema !== null}
+        onClose={() => setSelectedThema(null)}
+        title={selectedThema?.title}
+        description={selectedThemaInfo?.label || "Diskussion"}
+        className={selectedThema ? selectedThemaTheme.bg : undefined}
+        footer={
+          selectedThema ? (
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setSelectedThema(null)}
+                className="min-h-[44px] flex-1"
+              >
+                Schließen
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  const thema = selectedThema;
+                  setSelectedThema(null);
+                  handleStartQuickstart(thema);
+                }}
+                className="min-h-[44px] flex-1"
+              >
+                Diskussion starten
+              </Button>
+            </div>
+          ) : null
+        }
+      >
+        {selectedThema ? (
+          <div className="space-y-3">
+            <p className="text-sm leading-relaxed text-ink-secondary">
+              {selectedThema.description}
+            </p>
+
+            {(selectedThemaInfo ||
+              selectedThema.speculative ||
+              selectedThema.category === "verschwörungstheorien") && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedThemaInfo ? (
+                  <Badge
+                    size="sm"
+                    className={cn(selectedThemaTheme.badge, selectedThemaTheme.badgeText)}
+                  >
+                    {selectedThemaInfo.label}
+                  </Badge>
+                ) : null}
+                {selectedThema.speculative ? (
+                  <Badge variant="warning" size="sm">
+                    Hypothese
+                  </Badge>
+                ) : null}
+                {selectedThema.category === "verschwörungstheorien" ? (
+                  <Badge
+                    variant="outline"
+                    size="sm"
+                    className="border-status-warning/30 text-status-warning"
+                  >
+                    Kontrovers
+                  </Badge>
+                ) : null}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </BottomSheet>
     </div>
   );
 }

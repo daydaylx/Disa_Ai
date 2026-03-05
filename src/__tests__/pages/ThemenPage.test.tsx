@@ -55,18 +55,18 @@ describe("ThemenPage", () => {
     expect(await screen.findByText("Test Diskussion")).toBeInTheDocument();
     expect(screen.getByText("1 Themen · 0 Kontrovers")).toBeInTheDocument();
 
-    const detailsToggle = screen.getByRole("button", {
-      name: "Details zu Test Diskussion ausklappen",
+    // Both the ListRow overlay and the trailing button share the same aria-label;
+    // click the first match (the row overlay) to open the BottomSheet.
+    const [detailsButton] = screen.getAllByRole("button", {
+      name: "Details zu Test Diskussion anzeigen",
     });
-    expect(detailsToggle).toHaveAttribute("aria-expanded", "false");
 
-    fireEvent.click(detailsToggle);
+    fireEvent.click(detailsButton!);
 
     expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Details zu Test Diskussion einklappen" }),
-    ).toHaveAttribute("aria-expanded", "true");
+    // BottomSheet has both an icon X-button (aria-label) and a text "Schließen" button
+    expect(screen.getAllByRole("button", { name: "Schließen" }).length).toBeGreaterThan(0);
   });
 
   it("zeigt den Empty-State ohne Themen", async () => {

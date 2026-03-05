@@ -60,6 +60,7 @@ export {
   Image,
   Info,
   KeyRound,
+  Landmark, // Added for ThemenPage (Realpolitik)
   Link2,
   Loader2,
   Lock,
@@ -67,6 +68,7 @@ export {
   MessageCircle,
   MessageSquare,
   Mic,
+  Microscope, // Added for ThemenPage (Wissenschaft)
   Moon,
   MoreHorizontal,
   Music, // Added for role icons
