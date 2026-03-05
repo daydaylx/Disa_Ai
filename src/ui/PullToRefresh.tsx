@@ -13,6 +13,8 @@ interface PullToRefreshProps {
   className?: string;
 }
 
+type Status = "idle" | "pulling" | "ready" | "refreshing";
+
 /**
  * Pull-to-Refresh Komponente für Mobile
  *
@@ -32,15 +34,30 @@ export function PullToRefresh({
   disabled = false,
   className,
 }: PullToRefreshProps) {
-  const [pullDistance, setPullDistance] = useState(0);
+  const [pullDistance, _setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [status, setStatus] = useState<"idle" | "pulling" | "ready" | "refreshing">("idle");
+  const [status, _setStatus] = useState<Status>("idle");
+
+  // Fix 1: Refs spiegeln State damit Event-Callbacks stabil bleiben
+  // (kein Re-Attach des passive:false touchmove-Listeners mitten in einer Geste)
+  const statusRef = useRef<Status>("idle");
+  const pullDistanceRef = useRef(0);
+
+  const setStatus = useCallback((s: Status) => {
+    statusRef.current = s;
+    _setStatus(s);
+  }, []);
+
+  const setPullDistance = useCallback((d: number) => {
+    pullDistanceRef.current = d;
+    _setPullDistance(d);
+  }, []);
 
   const startY = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wasAtTopOnStart = useRef(false); // Track if we started at top
-  const lastScrollTop = useRef(0); // Track scroll position
-  const scrollVelocity = useRef(0); // Track scroll velocity
+  const wasAtTopOnStart = useRef(false);
+  const lastScrollTop = useRef(0);
+  const scrollVelocity = useRef(0);
 
   const handleTouchStart = useCallback(
     (e: TouchEvent) => {
@@ -49,25 +66,22 @@ export function PullToRefresh({
       const container = containerRef.current;
       if (!container) return;
 
-      // Capture initial state
       startY.current = e.touches[0]?.clientY ?? 0;
       wasAtTopOnStart.current = container.scrollTop <= 1;
       lastScrollTop.current = container.scrollTop;
       scrollVelocity.current = 0;
 
-      // Only activate pulling if we're actually at top
       if (wasAtTopOnStart.current) {
         setStatus("pulling");
       }
     },
-    [disabled],
+    [disabled, setStatus],
   );
 
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
-      if (disabled || status === "refreshing") return;
+      if (disabled || statusRef.current === "refreshing") return;
 
-      // Only allow pull-to-refresh if we started at top
       if (!wasAtTopOnStart.current) return;
 
       const container = containerRef.current;
@@ -76,56 +90,48 @@ export function PullToRefresh({
       const currentY = e.touches[0]?.clientY ?? 0;
       const deltaY = currentY - startY.current;
 
-      // Track scroll velocity to detect active scrolling
       const currentScrollTop = container.scrollTop;
       scrollVelocity.current = Math.abs(currentScrollTop - lastScrollTop.current);
       lastScrollTop.current = currentScrollTop;
 
-      // If user has scrolled down (not at top anymore) or is actively scrolling, cancel pull
       if (currentScrollTop > 5 || scrollVelocity.current > 2) {
-        // User scrolled away from top - cancel pull gesture
-        if (status === "pulling" || status === "ready") {
+        const s = statusRef.current;
+        if (s === "pulling" || s === "ready") {
           setStatus("idle");
           setPullDistance(0);
         }
         return;
       }
 
-      // Add hysteresis: require minimum 10px pull before activating
-      const HYSTERESIS = 10;
+      // Fix 2: HYSTERESIS 10→24px — verhindert Fehlauslöser nach Scroll-Momentum
+      const HYSTERESIS = 24;
 
-      // Nur pull-down erlauben (with hysteresis)
       if (deltaY > HYSTERESIS) {
-        // Prevent default scroll only when actively pulling
         e.preventDefault();
 
-        // Rubber-band effect (langsamer bei größerer Distanz)
         const rubberBand = Math.min((deltaY - HYSTERESIS) * 0.5, maxPullDistance);
         setPullDistance(rubberBand);
 
-        // Status update
         if (rubberBand >= threshold) {
-          if (status !== "ready") {
+          if (statusRef.current !== "ready") {
             setStatus("ready");
-            hapticFeedback("light"); // Feedback beim Threshold
+            hapticFeedback("light");
           }
-        } else if (status === "ready") {
+        } else if (statusRef.current === "ready") {
           setStatus("pulling");
         }
       }
     },
-    [disabled, status, threshold, maxPullDistance],
+    [disabled, threshold, maxPullDistance, setStatus, setPullDistance],
   );
 
   const handleTouchEnd = useCallback(async () => {
-    if (disabled || status === "refreshing") return;
+    if (disabled || statusRef.current === "refreshing") return;
 
-    // Reset tracking refs
     wasAtTopOnStart.current = false;
     scrollVelocity.current = 0;
 
-    // Wenn threshold erreicht: Refresh triggern
-    if (pullDistance >= threshold && status === "ready") {
+    if (pullDistanceRef.current >= threshold && statusRef.current === "ready") {
       setStatus("refreshing");
       setIsRefreshing(true);
       hapticFeedback("medium");
@@ -141,13 +147,11 @@ export function PullToRefresh({
         setPullDistance(0);
       }
     } else {
-      // Zurück zu idle
       setStatus("idle");
       setPullDistance(0);
     }
-  }, [disabled, status, pullDistance, threshold, onRefresh]);
+  }, [disabled, threshold, onRefresh, setStatus, setPullDistance]);
 
-  // Attach listeners
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return undefined;
@@ -163,12 +167,12 @@ export function PullToRefresh({
     };
   }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
-  // Berechne Rotation für Spinner (0-360deg basierend auf pullDistance)
   const spinnerRotation = Math.min((pullDistance / threshold) * 360, 360);
   const opacity = Math.min(pullDistance / threshold, 1);
 
   return (
-    <div ref={containerRef} className={cn("relative overflow-auto", className)}>
+    // Fix 4: overscroll-contain isoliert Custom-Pull von nativem iOS-Rubber-Band
+    <div ref={containerRef} className={cn("relative overflow-auto overscroll-contain", className)}>
       {/* Pull-Indicator */}
       <div
         className="absolute top-0 left-0 right-0 flex items-center justify-center pointer-events-none z-popover"
@@ -179,7 +183,6 @@ export function PullToRefresh({
         }}
       >
         <div className="flex flex-col items-center gap-2 pb-4">
-          {/* Spinner */}
           <RefreshCw
             className={cn(
               "h-6 w-6 text-accent-primary transition-transform",
@@ -190,7 +193,6 @@ export function PullToRefresh({
             }}
           />
 
-          {/* Text */}
           {status !== "idle" && (
             <p className="text-xs text-ink-secondary font-medium">
               {status === "refreshing" && "Aktualisiere..."}
@@ -205,7 +207,12 @@ export function PullToRefresh({
       <div
         style={{
           transform: `translateY(${pullDistance}px)`,
-          transition: status === "idle" || isRefreshing ? "transform 0.3s ease" : "none",
+          // Fix 3: Transition nur bei aktivem Snap-Back — im echten Idle (pullDistance=0)
+          // keine Transition, damit der Browser den Layer sauber komposieren kann
+          transition:
+            (status === "idle" || isRefreshing) && pullDistance > 0
+              ? "transform 0.3s ease"
+              : "none",
         }}
       >
         {children}

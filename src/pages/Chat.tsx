@@ -351,6 +351,9 @@ export default function Chat() {
                       playIntro={chatLogic.isEmpty}
                       state={logoState}
                     />
+                    <p className="relative text-sm text-ink-secondary text-center">
+                      Womit kann ich dir heute helfen?
+                    </p>
                     <QuickstartStrip
                       quickstarts={quickstarts}
                       onSelect={(q) =>

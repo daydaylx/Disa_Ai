@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { type Quickstart } from "@/config/quickstarts";
+import { CATEGORY_LABELS, type Quickstart } from "@/config/quickstarts";
 import { cn } from "@/lib/utils";
 
 interface QuickstartStripProps {
@@ -19,14 +19,6 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const CATEGORY_DOT: Record<string, string> = {
-  realpolitik: "bg-accent-realpolitik",
-  hypothetisch: "bg-accent-hypothetisch",
-  wissenschaft: "bg-accent-wissenschaft",
-  kultur: "bg-accent-kultur",
-  verschwörungstheorien: "bg-accent-verschwörung",
-};
-
 export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps) {
   const picks = useMemo(
     () => shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length)),
@@ -35,34 +27,41 @@ export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps)
 
   return (
     <div className="w-full">
-      <p className="mb-3 text-center text-xs text-ink-tertiary">Themenvorschläge</p>
-      <ul className="flex flex-wrap justify-center gap-2 px-1" aria-label="Themenvorschläge">
+      <ul className="grid grid-cols-2 gap-2 px-1" aria-label="Themenvorschläge">
         {picks.map((q, i) => {
-          const dotClass = q.category
-            ? (CATEGORY_DOT[q.category] ?? "bg-ink-tertiary")
-            : "bg-ink-tertiary";
+          const categoryMeta = q.category ? CATEGORY_LABELS[q.category] : null;
           return (
-            <li key={q.id} className="shrink-0">
+            <li key={q.id}>
               <button
                 type="button"
                 onClick={() => onSelect(q)}
                 className={cn(
                   "animate-fade-in-slide-up",
-                  "flex items-center gap-1.5",
-                  "h-11 rounded-full px-3",
-                  "text-xs text-ink-secondary",
+                  "flex w-full flex-col items-start gap-1.5",
+                  "rounded-2xl px-3 py-2.5",
+                  "text-left",
                   "bg-white/5 border border-white/[0.08]",
-                  "hover:bg-white/10 hover:text-ink-primary",
+                  "hover:bg-white/10",
                   "transition-colors duration-150",
                   "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary/50",
                 )}
                 style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both" }}
               >
-                <span
-                  aria-hidden="true"
-                  className={cn("h-1.5 w-1.5 shrink-0 rounded-full", dotClass)}
-                />
-                {q.title}
+                {categoryMeta && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center rounded-full px-1.5 py-0.5",
+                      "text-[10px] font-medium border",
+                      categoryMeta.color,
+                    )}
+                  >
+                    {categoryMeta.label}
+                  </span>
+                )}
+                <span className="text-xs font-medium text-ink-primary leading-snug">{q.title}</span>
+                <span className="text-[11px] text-ink-tertiary leading-snug line-clamp-2">
+                  {q.description}
+                </span>
               </button>
             </li>
           );
