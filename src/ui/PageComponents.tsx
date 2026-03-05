@@ -36,7 +36,7 @@ export function CatalogHeader({
   return (
     <div className={cn("flex-none pt-3 px-4", className)}>
       <h1 className="sr-only">{title}</h1>
-      <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl border border-white/[0.10] bg-surface-1/70 shadow-sm backdrop-blur-md">
         {gradientStyle ? (
           <div
             className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"

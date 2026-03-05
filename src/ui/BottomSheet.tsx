@@ -162,7 +162,7 @@ export function BottomSheet({
         <div className="mx-auto w-full max-w-3xl">
           {/* Drag handle */}
           <div className="flex justify-center pb-2" aria-hidden>
-            <div className="h-1 w-10 rounded-full bg-white/20" />
+            <div className="h-1 w-10 rounded-full bg-brand-primary/30" />
           </div>
           <div className="mb-2 flex items-center justify-between gap-3">
             <div className="min-w-0">

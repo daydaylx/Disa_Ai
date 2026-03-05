@@ -137,6 +137,7 @@ export default function ThemenPage() {
     return (
       <ListRow
         key={quickstart.id}
+        surfaceVariant="catalogGlass"
         className={cn(
           "stagger-item",
           "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
@@ -196,8 +197,18 @@ export default function ThemenPage() {
   const selectedThemaTheme = getCategoryStyle(selectedThema?.category);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="relative isolate flex flex-col h-full overflow-hidden">
+      <div
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(56,189,248,0.10) 50%, transparent 70%)",
+          opacity: 0.35,
+        }}
+        aria-hidden="true"
+      />
       <CatalogHeader
+        className="relative z-10"
         title="Themen"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
@@ -221,7 +232,7 @@ export default function ThemenPage() {
       <PullToRefresh
         onRefresh={handleRefresh}
         disabled={isBusy}
-        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+        className="relative z-10 flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {isLoading && quickstarts.length === 0 ? (
           <CardSkeleton count={6} />

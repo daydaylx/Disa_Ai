@@ -203,8 +203,18 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       : `${catalog?.length ?? 0} Modelle · ${favorites.models.items.length} Favoriten`;
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
+    <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
+      <div
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(6,182,212,0.20) 0%, rgba(139,92,246,0.08) 50%, transparent 70%)",
+          opacity: 0.35,
+        }}
+        aria-hidden="true"
+      />
       <CatalogHeader
+        className="relative z-10"
         title="Modelle"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
@@ -227,7 +237,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
       <PullToRefresh
         onRefresh={handleRefresh}
         disabled={isLoading}
-        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+        className="relative z-10 flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {!catalog && loading ? (
           <CardSkeleton count={6} />
@@ -261,6 +271,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               return (
                 <ListRow
                   key={model.id}
+                  surfaceVariant="catalogGlass"
                   data-testid="model-card"
                   aria-label={model.label ?? model.id}
                   title={model.label ?? model.id}

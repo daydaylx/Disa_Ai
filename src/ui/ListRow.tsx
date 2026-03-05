@@ -9,6 +9,7 @@ interface ListRowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title
   trailing?: React.ReactNode;
   topRight?: React.ReactNode;
   accentClassName?: string;
+  surfaceVariant?: "default" | "catalogGlass";
   active?: boolean;
   onPress?: () => void;
   pressLabel?: string;
@@ -22,6 +23,7 @@ export function ListRow({
   trailing,
   topRight,
   accentClassName,
+  surfaceVariant = "default",
   active = false,
   onPress,
   pressLabel,
@@ -33,10 +35,16 @@ export function ListRow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/[0.10] bg-surface-card px-4 py-4 transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-white/[0.10] px-4 py-4 transition-all duration-200",
+        surfaceVariant === "catalogGlass"
+          ? "bg-surface-card/60 backdrop-blur-sm"
+          : "bg-surface-card",
         onPress &&
           "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px",
-        active && "border-white/[0.14] bg-surface-2/70 ring-1",
+        active &&
+          (surfaceVariant === "catalogGlass"
+            ? "border-white/[0.14] bg-surface-2/60 backdrop-blur-md ring-1"
+            : "border-white/[0.14] bg-surface-2/70 ring-1"),
         className,
       )}
       {...props}

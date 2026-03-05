@@ -236,8 +236,18 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       : `${filteredRoles.length} von ${roles.length} Rollen verfügbar`;
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
+    <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
+      <div
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(244,114,182,0.20) 0%, rgba(139,92,246,0.10) 50%, transparent 70%)",
+          opacity: 0.35,
+        }}
+        aria-hidden="true"
+      />
       <CatalogHeader
+        className="relative z-10"
         title="Rollen & Personas"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
@@ -321,7 +331,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
       <PullToRefresh
         onRefresh={handleRefresh}
         disabled={isLoading}
-        className="flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+        className="relative z-10 flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
       >
         {rolesLoading && roles.length === 0 ? (
           <CardSkeleton count={6} />
@@ -368,6 +378,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               return (
                 <ListRow
                   key={role.id}
+                  surfaceVariant="catalogGlass"
                   className={cn(
                     "stagger-item",
                     isActive
