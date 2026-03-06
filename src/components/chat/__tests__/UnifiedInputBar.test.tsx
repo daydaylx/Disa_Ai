@@ -10,9 +10,14 @@
  */
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRef } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { UnifiedInputBar, type UnifiedInputBarProps } from "../UnifiedInputBar";
+import {
+  UnifiedInputBar,
+  type UnifiedInputBarHandle,
+  type UnifiedInputBarProps,
+} from "../UnifiedInputBar";
 
 // Mock der Abhängigkeiten
 vi.mock("@/contexts/ModelCatalogContext", () => ({
@@ -94,14 +99,16 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert den Zufallsfrage-Button und den 18+-Toggle", async () => {
+    it("rendert keinen Zufallsfrage-Button mehr im Composer, aber den 18+-Toggle", async () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       expect(
         screen.queryByRole("button", { name: "Zufallsfrage einfügen" }),
       ).not.toBeInTheDocument();
       await openMoreOptions();
-      expect(screen.getByRole("button", { name: "Zufallsfrage einfügen" })).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Zufallsfrage einfügen" }),
+      ).not.toBeInTheDocument();
       expect(screen.getByRole("button", { name: "18+ einbeziehen" })).toBeInTheDocument();
     });
 
@@ -225,14 +232,14 @@ describe("UnifiedInputBar", () => {
       expect(onSend).not.toHaveBeenCalled();
     });
 
-    it("fügt per Zufallsfrage Text ein, ohne automatisch zu senden", async () => {
+    it("fügt per imperative Zufallsfrage-Action Text ein, ohne automatisch zu senden", async () => {
       const onChange = vi.fn();
       const onSend = vi.fn();
-      render(<UnifiedInputBar {...defaultProps} onChange={onChange} onSend={onSend} />);
+      const ref = createRef<UnifiedInputBarHandle>();
+      render(<UnifiedInputBar ref={ref} {...defaultProps} onChange={onChange} onSend={onSend} />);
 
-      await openMoreOptions();
-      const randomButton = screen.getByRole("button", { name: "Zufallsfrage einfügen" });
-      await userEvent.click(randomButton);
+      ref.current?.insertRandomPrompt();
+      await Promise.resolve();
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(typeof onChange.mock.calls[0]?.[0]).toBe("string");

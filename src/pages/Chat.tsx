@@ -5,13 +5,15 @@ import { getChatLogoState } from "@/app/components/logoState";
 import { DRAWER_NAV_ITEMS } from "@/config/navigation";
 import { type ChatApiStatus } from "@/hooks/useChat";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
+import { RefreshCw } from "@/lib/icons";
 import { AnimatedBrandmark } from "@/ui/AnimatedBrandmark";
+import { Button } from "@/ui/Button";
 import { HistoryFAB } from "@/ui/HistoryFAB";
 import { ScrollToBottom } from "@/ui/ScrollToBottom";
 
 import { ChatStatusBanner } from "../components/chat/ChatStatusBanner";
 import { QuickstartStrip } from "../components/chat/QuickstartStrip";
-import { UnifiedInputBar } from "../components/chat/UnifiedInputBar";
+import { UnifiedInputBar, type UnifiedInputBarHandle } from "../components/chat/UnifiedInputBar";
 import { VirtualizedMessageList } from "../components/chat/VirtualizedMessageList";
 import { AppMenuDrawer } from "../components/layout/AppMenuDrawer";
 import { ChatLayout } from "../components/layout/ChatLayout";
@@ -135,6 +137,7 @@ export default function Chat() {
   const [newMessageCount, setNewMessageCount] = useState(0);
   const lastMessageCountRef = useRef(0);
   const composerRef = useRef<HTMLDivElement>(null);
+  const inputBarRef = useRef<UnifiedInputBarHandle>(null);
   const [composerHeight, setComposerHeight] = useState(0);
 
   // Preset handler will be defined after chatLogic
@@ -195,6 +198,10 @@ export default function Chat() {
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     setNewMessageCount(0);
+  }, []);
+
+  const handleInsertRandomPrompt = useCallback(() => {
+    inputBarRef.current?.insertRandomPrompt();
   }, []);
 
   // Track scroll position to show/hide scroll-to-bottom button
@@ -362,6 +369,20 @@ export default function Chat() {
                         })
                       }
                     />
+                    <div className="w-full px-1">
+                      <Button
+                        type="button"
+                        onClick={handleInsertRandomPrompt}
+                        variant="glass"
+                        size="default"
+                        className="h-11 w-full gap-2 rounded-2xl text-xs font-semibold text-ink-primary hover:text-ink-primary"
+                        aria-label="Zufallsfrage einfügen"
+                        data-testid="quickstart-random-prompt"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        <span>Zufallsfrage</span>
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <VirtualizedMessageList
@@ -391,6 +412,7 @@ export default function Chat() {
           >
             <div className="max-w-3xl mx-auto px-4 pt-2 pb-4 pointer-events-auto">
               <UnifiedInputBar
+                ref={inputBarRef}
                 value={chatLogic.input}
                 onChange={chatLogic.setInput}
                 onSend={chatLogic.handleSend}
