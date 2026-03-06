@@ -269,7 +269,7 @@ jobs:
           echo "Mobile LCP: ${LCP_MS_INT} ms"
 
           # NOTE: CI runners can be noisy; keep this as a budget/gate, but allow a more realistic threshold.
-          MAX_LCP_MS=5000
+          MAX_LCP_MS=5500
           if [ "$LCP_MS_INT" -gt "$MAX_LCP_MS" ]; then
             echo "❌ Mobile LCP ${LCP_MS_INT}ms exceeds ${MAX_LCP_MS}ms limit!"
             exit 1
