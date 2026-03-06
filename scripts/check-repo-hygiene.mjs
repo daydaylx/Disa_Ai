@@ -25,7 +25,9 @@ async function listFilesRecursively(dirPath) {
 
 async function checkReportStructure(errors) {
   const entries = await readdir(reportsRoot, { withFileTypes: true });
-  const snapshotRoots = entries.filter((entry) => entry.isDirectory() && entry.name.startsWith("ui-"));
+  const snapshotRoots = entries.filter(
+    (entry) => entry.isDirectory() && entry.name.startsWith("ui-"),
+  );
 
   for (const entry of snapshotRoots) {
     if (entry.name !== allowedSnapshotRoot) {
@@ -97,10 +99,14 @@ async function checkModelsMetadataSync(errors) {
     );
   }
 
-  const trackedCheck = spawnSync("git", ["ls-files", "--error-unmatch", "public/models_metadata.json"], {
-    cwd: projectRoot,
-    stdio: "ignore",
-  });
+  const trackedCheck = spawnSync(
+    "git",
+    ["ls-files", "--error-unmatch", "public/models_metadata.json"],
+    {
+      cwd: projectRoot,
+      stdio: "ignore",
+    },
+  );
   if (trackedCheck.status === 0) {
     errors.push("public/models_metadata.json must not be tracked in git.");
   }
