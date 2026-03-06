@@ -68,6 +68,11 @@ const defaultProps: UnifiedInputBarProps = {
 };
 
 describe("UnifiedInputBar", () => {
+  const openMoreOptions = async () => {
+    const toggle = screen.getByRole("button", { name: /Mehr Optionen/i });
+    await userEvent.click(toggle);
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
@@ -89,9 +94,13 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert den Zufallsfrage-Button und den 18+-Toggle", () => {
+    it("rendert den Zufallsfrage-Button und den 18+-Toggle", async () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
+      expect(
+        screen.queryByRole("button", { name: "Zufallsfrage einfügen" }),
+      ).not.toBeInTheDocument();
+      await openMoreOptions();
       expect(screen.getByRole("button", { name: "Zufallsfrage einfügen" })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "18+ einbeziehen" })).toBeInTheDocument();
     });
@@ -221,6 +230,7 @@ describe("UnifiedInputBar", () => {
       const onSend = vi.fn();
       render(<UnifiedInputBar {...defaultProps} onChange={onChange} onSend={onSend} />);
 
+      await openMoreOptions();
       const randomButton = screen.getByRole("button", { name: "Zufallsfrage einfügen" });
       await userEvent.click(randomButton);
 
