@@ -270,45 +270,6 @@ export function UnifiedInputBar({
             </SelectContent>
           </Select>
 
-          <Button
-            type="button"
-            onClick={handleInsertRandomPrompt}
-            variant="ghost"
-            size="sm"
-            className="h-11 gap-1.5 rounded-full px-3 text-[11px] font-semibold text-ink-secondary hover:text-ink-primary"
-            aria-label="Zufallsfrage einfügen"
-            data-testid="composer-random-prompt"
-          >
-            <RefreshCw className="h-3 w-3" />
-            <span className="whitespace-nowrap">Zufallsfrage</span>
-          </Button>
-
-          <Button
-            type="button"
-            onClick={toggleIncludeSpicy18}
-            variant={effectiveIncludeSpicy18 ? "secondary" : "ghost"}
-            size="sm"
-            disabled={!spicy18Available}
-            className={cn(
-              "h-11 rounded-full px-3 text-[11px] font-semibold",
-              "whitespace-nowrap",
-              effectiveIncludeSpicy18
-                ? "border-accent-roles/35 bg-accent-roles/15 text-ink-primary"
-                : "text-ink-tertiary",
-              !spicy18Available && "opacity-40",
-            )}
-            aria-pressed={effectiveIncludeSpicy18}
-            aria-label="18+ einbeziehen"
-            title={
-              spicy18Available
-                ? "Provokante Trivia-Fragen einbeziehen"
-                : "18+-Fragen sind durch Jugendschutz deaktiviert"
-            }
-            data-testid="composer-spicy-toggle"
-          >
-            {spicy18Available ? "18+ einbeziehen" : "18+ gesperrt"}
-          </Button>
-
           {/* Spacer */}
           <div className="flex-1" />
 
@@ -379,6 +340,45 @@ export function UnifiedInputBar({
                   ))}
                 </SelectContent>
               </Select>
+
+              <Button
+                type="button"
+                onClick={handleInsertRandomPrompt}
+                variant="ghost"
+                size="sm"
+                className="h-11 gap-1.5 rounded-full px-3 text-[11px] font-semibold text-ink-secondary hover:text-ink-primary"
+                aria-label="Zufallsfrage einfügen"
+                data-testid="composer-random-prompt"
+              >
+                <RefreshCw className="h-3 w-3" />
+                <span className="whitespace-nowrap">Zufallsfrage</span>
+              </Button>
+
+              <Button
+                type="button"
+                onClick={toggleIncludeSpicy18}
+                variant={effectiveIncludeSpicy18 ? "secondary" : "ghost"}
+                size="sm"
+                disabled={!spicy18Available}
+                className={cn(
+                  "h-11 rounded-full px-3 text-[11px] font-semibold",
+                  "whitespace-nowrap",
+                  effectiveIncludeSpicy18
+                    ? "border-accent-roles/35 bg-accent-roles/15 text-ink-primary"
+                    : "text-ink-tertiary",
+                  !spicy18Available && "opacity-40",
+                )}
+                aria-pressed={effectiveIncludeSpicy18}
+                aria-label="18+ einbeziehen"
+                title={
+                  spicy18Available
+                    ? "Provokante Trivia-Fragen einbeziehen"
+                    : "18+-Fragen sind durch Jugendschutz deaktiviert"
+                }
+                data-testid="composer-spicy-toggle"
+              >
+                {spicy18Available ? "18+ einbeziehen" : "18+ gesperrt"}
+              </Button>
             </div>
           </div>
         )}
