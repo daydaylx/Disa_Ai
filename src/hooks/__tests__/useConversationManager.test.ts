@@ -4,7 +4,7 @@
  * Dieser Hook ist zentral für die Verwaltung von Konversationen:
  * - Auto-Save bei neuen Nachrichten
  * - Konversation laden/löschen/erstellen
- * - localStorage Persistierung der letzten Konversation
+ * - kein Auto-Restore der letzten Konversation beim Start
  * - Toast-Benachrichtigungen
  */
 import { act, renderHook, waitFor } from "@testing-library/react";
@@ -83,7 +83,6 @@ describe("useConversationManager", () => {
     setCurrentSystemPrompt: mockSetCurrentSystemPrompt,
     onNewConversation: mockOnNewConversation,
     saveEnabled: true,
-    restoreEnabled: true,
   };
 
   beforeEach(() => {
@@ -372,68 +371,24 @@ describe("useConversationManager", () => {
     });
   });
 
-  describe("localStorage Persistierung", () => {
-    it("speichert letzte Konversations-ID bei Auswahl", async () => {
+  describe("Startverhalten", () => {
+    it("lädt letzte Konversation aus localStorage nicht beim Start", async () => {
+      localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, "conv-123");
+
+      renderHook(() => useConversationManager(defaultProps));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(getConversation).not.toHaveBeenCalledWith("conv-123");
+    });
+
+    it("persistiert keine last-conversation-ID bei Auswahl", async () => {
       const { result } = renderHook(() => useConversationManager(defaultProps));
 
       await act(async () => {
         await result.current.selectConversation("conv-123");
       });
 
-      expect(localStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION)).toBe("conv-123");
-    });
-
-    it("entfernt ID bei neuer Konversation", () => {
-      localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, "conv-123");
-
-      const { result } = renderHook(() => useConversationManager(defaultProps));
-
-      act(() => {
-        result.current.newConversation();
-      });
-
       expect(localStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION)).toBeNull();
-    });
-  });
-
-  describe("Auto-Restore", () => {
-    it("lädt letzte Konversation aus localStorage beim Start", async () => {
-      localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, "conv-123");
-
-      renderHook(() => useConversationManager(defaultProps));
-
-      await waitFor(() => {
-        expect(getConversation).toHaveBeenCalledWith("conv-123");
-      });
-    });
-
-    it("lädt nicht wenn messages bereits vorhanden sind", async () => {
-      localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, "conv-123");
-
-      renderHook(() =>
-        useConversationManager({
-          ...defaultProps,
-          messages: [{ id: "msg-1", role: "user", content: "Test", timestamp: Date.now() }],
-        }),
-      );
-
-      // Kurz warten und prüfen dass nichts geladen wurde
-      await new Promise((r) => setTimeout(r, 50));
-      expect(getConversation).not.toHaveBeenCalled();
-    });
-
-    it("lädt nicht wenn restoreEnabled=false", async () => {
-      localStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, "conv-123");
-
-      renderHook(() =>
-        useConversationManager({
-          ...defaultProps,
-          restoreEnabled: false,
-        }),
-      );
-
-      await new Promise((r) => setTimeout(r, 50));
-      expect(getConversation).not.toHaveBeenCalled();
     });
   });
 

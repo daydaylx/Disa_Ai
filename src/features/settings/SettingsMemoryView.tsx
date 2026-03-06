@@ -5,14 +5,12 @@ import { SettingsRow, SettingsSection, SettingsToggleRow } from "@/ui/SettingsRo
 
 import { useConversationStats } from "../../hooks/use-storage";
 import { useMemory } from "../../hooks/useMemory";
-import { useSettings } from "../../hooks/useSettings";
 import { History, Shield, Trash2 } from "../../lib/icons";
 import { SettingsLayout } from "./SettingsLayout";
 
 export function SettingsMemoryView() {
   const toasts = useToasts();
   const { isEnabled, globalMemory, toggleMemory, updateGlobalMemory, clearAllMemory } = useMemory();
-  const { settings, toggleRestoreLastConversation } = useSettings();
   const { stats, refresh } = useConversationStats();
 
   // Local form state
@@ -69,18 +67,6 @@ export function SettingsMemoryView() {
         message: "Alle gespeicherten Informationen wurden entfernt",
       });
     }
-  };
-
-  const handleToggleRestore = () => {
-    if (!isEnabled) {
-      toasts.push({
-        kind: "warning",
-        title: "Gedächtnis aus",
-        message: "Aktiviere das Gedächtnis, um den Verlauf automatisch zu laden.",
-      });
-      return;
-    }
-    toggleRestoreLastConversation();
   };
 
   useEffect(() => {
@@ -153,13 +139,6 @@ export function SettingsMemoryView() {
         {/* History Section */}
         {isEnabled && (
           <SettingsSection title="Verlauf">
-            <SettingsToggleRow
-              label="Letzte Unterhaltung laden"
-              description="Beim Start die letzte Session automatisch öffnen"
-              checked={settings.restoreLastConversation}
-              onCheckedChange={handleToggleRestore}
-            />
-
             {stats && (
               <div className="py-4 flex gap-6">
                 <div className="flex items-center gap-2">

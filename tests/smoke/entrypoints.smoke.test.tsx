@@ -92,7 +92,6 @@ vi.mock("../../src/hooks/useSettings", () => ({
       discussionStrict: false,
       discussionMaxSentences: 8,
       creativity: 45,
-      restoreLastConversation: true,
       fontSize: 16,
       reduceMotion: false,
       hapticFeedback: false,

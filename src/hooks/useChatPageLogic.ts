@@ -109,7 +109,6 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
         setInput("");
       },
       saveEnabled: memoryEnabled,
-      restoreEnabled: settings.restoreLastConversation && memoryEnabled,
     });
 
   // Handle send

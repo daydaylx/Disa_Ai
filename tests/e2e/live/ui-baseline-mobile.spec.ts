@@ -21,7 +21,6 @@ const VIEWPORTS = [
 const ROUTES = ["/chat", "/models", "/roles", "/settings", "/themen", "/feedback"];
 
 const SETTINGS_KEY = "disa-ai-settings";
-const LAST_CONVERSATION_KEY = "disa:last-conversation-id";
 
 function routeLabel(route: string): string {
   const normalized = route.replace(/^\/+|\/+$/g, "");
@@ -139,12 +138,10 @@ async function seedLongChatConversation(page: Page) {
   await page.evaluate(
     async ({
       settingsKey,
-      lastConversationKey,
       conversation,
       metadata,
     }: {
       settingsKey: string;
-      lastConversationKey: string;
       conversation: {
         id: string;
         title: string;
@@ -187,7 +184,6 @@ async function seedLongChatConversation(page: Page) {
           enableAnalytics: false,
         }),
       );
-      localStorage.setItem(lastConversationKey, conversation.id);
 
       await new Promise<void>((resolve, reject) => {
         const openRequest = indexedDB.open("DisaAI");
@@ -224,7 +220,6 @@ async function seedLongChatConversation(page: Page) {
     },
     {
       settingsKey: SETTINGS_KEY,
-      lastConversationKey: LAST_CONVERSATION_KEY,
       conversation: {
         id: conversationId,
         title: "QA Baseline Long History",
@@ -244,6 +239,15 @@ async function seedLongChatConversation(page: Page) {
       },
     },
   );
+}
+
+async function openConversationFromHistory(page: Page, title: string) {
+  const isOpen = await openHistoryPanel(page);
+  expect(isOpen).toBe(true);
+  const entry = page.getByRole("button", { name: new RegExp(title, "i") }).first();
+  await expect(entry).toBeVisible({ timeout: 10_000 });
+  await entry.click();
+  await page.waitForTimeout(500);
 }
 
 async function forceScrollableState(page: Page) {
@@ -334,6 +338,7 @@ test.describe("Live UI Baseline (mobile-first)", () => {
             if (!isControlViewport) {
               await seedLongChatConversation(page);
               await waitForSettled(page, route);
+              await openConversationFromHistory(page, "QA Baseline Long History");
 
               const chatLog = page.locator('div[role="log"][aria-label="Chat messages"]');
               await expect(chatLog).toBeVisible({ timeout: 10_000 });

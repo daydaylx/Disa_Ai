@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useToasts } from "@/ui";
 
-import { STORAGE_KEYS } from "../config/storageKeys";
 import {
   deleteConversation as deleteFromDb,
   getAllConversations,
@@ -11,7 +10,6 @@ import {
   saveConversation,
   updateConversation,
 } from "../lib/conversation-manager-modern";
-import { safeStorage } from "../lib/safeStorage";
 import { debounceWithCancel } from "../lib/utils/debounce";
 import { safeError } from "../lib/utils/production-logger";
 import type { ChatMessageType, Conversation } from "../types";
@@ -23,7 +21,6 @@ interface ConversationManagerProps {
   setCurrentSystemPrompt: (prompt: string | undefined) => void;
   onNewConversation: () => void;
   saveEnabled?: boolean;
-  restoreEnabled?: boolean;
 }
 
 export function useConversationManager({
@@ -33,7 +30,6 @@ export function useConversationManager({
   setCurrentSystemPrompt,
   onNewConversation,
   saveEnabled = true,
-  restoreEnabled = true,
 }: ConversationManagerProps) {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -42,19 +38,6 @@ export function useConversationManager({
   const navigate = useNavigate();
   const location = useLocation();
   const lastSavedSignatureRef = useRef<string | null>(null);
-  const hydratedFromStorageRef = useRef(false);
-
-  const persistLastConversationId = useCallback((id: string | null) => {
-    if (id) {
-      safeStorage.setItem(STORAGE_KEYS.LAST_CONVERSATION, id);
-    } else {
-      safeStorage.removeItem(STORAGE_KEYS.LAST_CONVERSATION);
-    }
-  }, []);
-
-  const readLastConversationId = useCallback((): string | null => {
-    return safeStorage.getItem(STORAGE_KEYS.LAST_CONVERSATION);
-  }, []);
 
   const refreshConversations = useCallback(async () => {
     try {
@@ -66,7 +49,6 @@ export function useConversationManager({
         !conversations.some((conv) => conv.id === activeConversationId)
       ) {
         setActiveConversationId(null);
-        persistLastConversationId(null);
       }
     } catch (error) {
       safeError("Failed to refresh conversations", error);
@@ -76,7 +58,7 @@ export function useConversationManager({
         message: "Konversationen konnten nicht geladen werden",
       });
     }
-  }, [activeConversationId, persistLastConversationId, toasts]);
+  }, [activeConversationId, toasts]);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -163,7 +145,6 @@ export function useConversationManager({
             setActiveConversationId(conversationId);
           }
 
-          persistLastConversationId(conversationId ?? null);
           lastSavedSignatureRef.current = signature;
           await refreshConversations();
         } catch (error) {
@@ -175,7 +156,7 @@ export function useConversationManager({
           });
         }
       }, 500),
-    [saveEnabled, setActiveConversationId, persistLastConversationId, refreshConversations, toasts],
+    [saveEnabled, setActiveConversationId, refreshConversations, toasts],
   );
 
   // Trigger debounced save when messages or loading state changes
@@ -235,7 +216,6 @@ export function useConversationManager({
 
         setMessages(chatMessages);
         setActiveConversationId(id);
-        persistLastConversationId(id);
         onNewConversation(); // Resets discussion context etc.
 
         const systemMessage = chatMessages.find((msg) => msg.role === "system");
@@ -265,30 +245,8 @@ export function useConversationManager({
         }
       }
     },
-    [setMessages, setCurrentSystemPrompt, onNewConversation, persistLastConversationId, toasts],
+    [setMessages, setCurrentSystemPrompt, onNewConversation, toasts],
   );
-
-  useEffect(() => {
-    if (!saveEnabled || !restoreEnabled) return;
-    if (hydratedFromStorageRef.current) return;
-    if (messages.length > 0 || isLoading) return;
-
-    const lastId = readLastConversationId();
-    if (!lastId) return;
-
-    hydratedFromStorageRef.current = true;
-    void handleSelectConversation(lastId, { silent: true }).catch(() => {
-      persistLastConversationId(null);
-    });
-  }, [
-    handleSelectConversation,
-    isLoading,
-    messages.length,
-    persistLastConversationId,
-    readLastConversationId,
-    saveEnabled,
-    restoreEnabled,
-  ]);
 
   const handleDeleteConversation = useCallback(
     async (id: string) => {
@@ -304,7 +262,6 @@ export function useConversationManager({
       await refreshConversations();
       if (activeConversationId === id) {
         setActiveConversationId(null);
-        persistLastConversationId(null);
         setCurrentSystemPrompt(undefined);
         setMessages([]);
         onNewConversation();
@@ -321,7 +278,6 @@ export function useConversationManager({
       setMessages,
       setCurrentSystemPrompt,
       onNewConversation,
-      persistLastConversationId,
       toasts,
     ],
   );
@@ -330,14 +286,13 @@ export function useConversationManager({
     onNewConversation();
     setMessages([]);
     setActiveConversationId(null);
-    persistLastConversationId(null);
     setCurrentSystemPrompt(undefined);
     toasts.push({
       kind: "info",
       title: "Neue Unterhaltung",
       message: "Bereit für eine neue Unterhaltung",
     });
-  }, [onNewConversation, persistLastConversationId, setMessages, setCurrentSystemPrompt, toasts]);
+  }, [onNewConversation, setMessages, setCurrentSystemPrompt, toasts]);
 
   // Effect to load conversation from URL
   useEffect(() => {
