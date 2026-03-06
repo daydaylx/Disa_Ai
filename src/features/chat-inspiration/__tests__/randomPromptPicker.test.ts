@@ -9,26 +9,35 @@ describe("randomPromptPicker", () => {
     expect(RANDOM_PROMPTS).toHaveLength(100);
   });
 
-  it("keeps category distribution balanced (25 each)", () => {
+  it("keeps configured category distribution", () => {
     const counts = countPromptCategories(RANDOM_PROMPTS);
 
-    expect(counts.alltag).toBe(25);
-    expect(counts.wissen).toBe(25);
-    expect(counts.kurios).toBe(25);
-    expect(counts.spicy18).toBe(25);
+    expect(counts.alltag).toBe(10);
+    expect(counts.wissen).toBe(10);
+    expect(counts.kurios).toBe(30);
+    expect(counts.spicy18).toBe(50);
+  });
+
+  it("uses sequential q-style ids from q001 to q100", () => {
+    const ids = RANDOM_PROMPTS.map((item) => item.id);
+
+    expect(ids[0]).toBe("q001");
+    expect(ids.at(-1)).toBe("q100");
+    expect(new Set(ids).size).toBe(100);
+    expect(ids.every((id) => /^q\d{3}$/.test(id))).toBe(true);
   });
 
   it("excludes spicy18 prompts when local spicy toggle is off", () => {
     const pool = buildPromptPool({ includeSpicy18: false, nsfwAllowed: true });
 
-    expect(pool).toHaveLength(75);
+    expect(pool).toHaveLength(50);
     expect(pool.some((item) => item.category === "spicy18")).toBe(false);
   });
 
   it("excludes spicy18 prompts when global NSFW setting is off", () => {
     const pool = buildPromptPool({ includeSpicy18: true, nsfwAllowed: false });
 
-    expect(pool).toHaveLength(75);
+    expect(pool).toHaveLength(50);
     expect(pool.some((item) => item.category === "spicy18")).toBe(false);
   });
 

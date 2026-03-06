@@ -24,6 +24,7 @@
     "useUnknownInCatchVariables": true,
     "forceConsistentCasingInFileNames": true,
     "resolvePackageJsonExports": true,
+    "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
     "allowJs": false,
     "checkJs": false,

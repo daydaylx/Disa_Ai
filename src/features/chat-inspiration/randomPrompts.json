@@ -1,0 +1,502 @@
+[
+  {
+    "id": "q001",
+    "category": "alltag",
+    "text": "Hilf mir, meinen Tag mit drei realistischen Prioritäten zu planen."
+  },
+  {
+    "id": "q002",
+    "category": "wissen",
+    "text": "Welche Länder haben in den letzten Jahren besonders erfolgreich Bürokratie digitalisiert?"
+  },
+  {
+    "id": "q003",
+    "category": "kurios",
+    "text": "Welche absurden Berufe gab es früher wirklich, und was machten diese Menschen?"
+  },
+  {
+    "id": "q004",
+    "category": "spicy18",
+    "text": "Welche Mythen über Penisgröße sind wissenschaftlich besonders klar widerlegt?"
+  },
+  {
+    "id": "q005",
+    "category": "alltag",
+    "text": "Welche kleine Gewohnheit spart im Alltag am meisten Stress?"
+  },
+  {
+    "id": "q006",
+    "category": "wissen",
+    "text": "Warum erinnern wir uns an manche Gerüche stärker als an Bilder?"
+  },
+  {
+    "id": "q007",
+    "category": "kurios",
+    "text": "Welche kuriosen Gesetze gelten in manchen Ländern heute noch?"
+  },
+  {
+    "id": "q008",
+    "category": "spicy18",
+    "text": "Welche Länder gelten in Umfragen als sexuell offen, und wie belastbar sind solche Daten?"
+  },
+  {
+    "id": "q009",
+    "category": "alltag",
+    "text": "Wie kann ich heute Abend abschalten, ohne stundenlang am Handy zu hängen?"
+  },
+  {
+    "id": "q010",
+    "category": "wissen",
+    "text": "Welche historischen Irrtümer gelten bis heute oft als Fakten?"
+  },
+  {
+    "id": "q011",
+    "category": "kurios",
+    "text": "Welche berühmten Erfindungen wurden eigentlich durch Zufall entdeckt?"
+  },
+  {
+    "id": "q012",
+    "category": "spicy18",
+    "text": "Seit wann sind Kondome historisch belegt, und wie haben sie sich verändert?"
+  },
+  {
+    "id": "q013",
+    "category": "alltag",
+    "text": "Was ist eine gute 15-Minuten-Routine für mehr Ordnung zu Hause?"
+  },
+  {
+    "id": "q014",
+    "category": "wissen",
+    "text": "Wie entsteht Inflation konkret im Alltag von Unternehmen und Haushalten?"
+  },
+  {
+    "id": "q015",
+    "category": "kurios",
+    "text": "Welche historischen Verbote wirken aus heutiger Sicht völlig absurd?"
+  },
+  {
+    "id": "q016",
+    "category": "spicy18",
+    "text": "Welche skurrilen Sex-Gesetze gab oder gibt es weltweit?"
+  },
+  {
+    "id": "q017",
+    "category": "alltag",
+    "text": "Wie sage ich freundlich Nein, ohne die Beziehung zu belasten?"
+  },
+  {
+    "id": "q018",
+    "category": "wissen",
+    "text": "Welche Städte gelten in Rankings als besonders lebenswert und warum?"
+  },
+  {
+    "id": "q019",
+    "category": "kurios",
+    "text": "Welche Tiere haben Fähigkeiten, die wie Science-Fiction klingen?"
+  },
+  {
+    "id": "q020",
+    "category": "spicy18",
+    "text": "Welche Faktoren beeinflussen laut Forschung die Libido am stärksten?"
+  },
+  {
+    "id": "q021",
+    "category": "alltag",
+    "text": "Wie kann ich meinen Wocheneinkauf günstiger und gesünder planen?"
+  },
+  {
+    "id": "q022",
+    "category": "wissen",
+    "text": "Was unterscheidet Korrelation und Kausalität in einfachen Worten?"
+  },
+  {
+    "id": "q023",
+    "category": "kurios",
+    "text": "Welche peinlichen Übersetzungsfehler hatten echte politische Folgen?"
+  },
+  {
+    "id": "q024",
+    "category": "spicy18",
+    "text": "Welche historischen Kulturen gingen überraschend offen mit Sexualität um?"
+  },
+  {
+    "id": "q025",
+    "category": "alltag",
+    "text": "Welche Mikro-Pausen helfen im Homeoffice wirklich gegen Erschöpfung?"
+  },
+  {
+    "id": "q026",
+    "category": "wissen",
+    "text": "Warum sind manche Sprachen tonal und andere nicht?"
+  },
+  {
+    "id": "q027",
+    "category": "kurios",
+    "text": "Welche skurrilen Rekorde sind bis heute ungebrochen?"
+  },
+  {
+    "id": "q028",
+    "category": "spicy18",
+    "text": "Welche weit verbreiteten Annahmen über Masturbation sind wissenschaftlich fragwürdig?"
+  },
+  {
+    "id": "q029",
+    "category": "alltag",
+    "text": "Wie kann ich einen schlechten Tag retten, ohne alles umzuwerfen?"
+  },
+  {
+    "id": "q030",
+    "category": "wissen",
+    "text": "Wie zuverlässig sind große Umfragen, wenn es um gesellschaftliche Trends geht?"
+  },
+  {
+    "id": "q031",
+    "category": "kurios",
+    "text": "Welche Alltagsobjekte wurden ursprünglich für einen ganz anderen Zweck erfunden?"
+  },
+  {
+    "id": "q032",
+    "category": "spicy18",
+    "text": "Wie stark unterscheiden sich Sexualaufklärungskonzepte international?"
+  },
+  {
+    "id": "q033",
+    "category": "alltag",
+    "text": "Welche einfache Abendroutine verbessert meinen Schlaf messbar?"
+  },
+  {
+    "id": "q034",
+    "category": "wissen",
+    "text": "Welche Rolle spielte Kaffee in der europäischen Aufklärung?"
+  },
+  {
+    "id": "q035",
+    "category": "kurios",
+    "text": "Welche Städte haben besonders seltsame, aber echte lokale Traditionen?"
+  },
+  {
+    "id": "q036",
+    "category": "spicy18",
+    "text": "Welche Dating-Statistiken werden in Medien besonders oft falsch interpretiert?"
+  },
+  {
+    "id": "q037",
+    "category": "alltag",
+    "text": "Wie strukturiere ich meine To-do-Liste, damit sie nicht überfordert?"
+  },
+  {
+    "id": "q038",
+    "category": "wissen",
+    "text": "Was passiert im Gehirn, wenn wir prokrastinieren?"
+  },
+  {
+    "id": "q039",
+    "category": "kurios",
+    "text": "Welche ungewöhnlichen Feiertage werden irgendwo offiziell gefeiert?"
+  },
+  {
+    "id": "q040",
+    "category": "spicy18",
+    "text": "Seit wann gibt es archäologische Belege für Sexspielzeug?"
+  },
+  {
+    "id": "q041",
+    "category": "kurios",
+    "text": "Welche Nischenmuseen ziehen überraschend viele Besucher an?"
+  },
+  {
+    "id": "q042",
+    "category": "spicy18",
+    "text": "Welche Länder berichten hohe STI-Testquoten, und welche Gründe werden diskutiert?"
+  },
+  {
+    "id": "q043",
+    "category": "kurios",
+    "text": "Welche kuriosen Irrtümer über das Mittelalter halten sich hartnäckig?"
+  },
+  {
+    "id": "q044",
+    "category": "spicy18",
+    "text": "Welche typischen Klischees über Männer und Frauen beim Sex gelten als überholt?"
+  },
+  {
+    "id": "q045",
+    "category": "kurios",
+    "text": "Welche merkwürdigen Sportarten haben internationale Verbände?"
+  },
+  {
+    "id": "q046",
+    "category": "spicy18",
+    "text": "Wie verlässlich sind Umfragen zur Anzahl von Sexualpartnern?"
+  },
+  {
+    "id": "q047",
+    "category": "kurios",
+    "text": "Welche historischen Fälschungen waren lange Zeit überzeugend?"
+  },
+  {
+    "id": "q048",
+    "category": "spicy18",
+    "text": "Welche Rolle spielen Hormone bei Anziehung laut aktueller Forschung?"
+  },
+  {
+    "id": "q049",
+    "category": "kurios",
+    "text": "Welche Speisen galten früher ernsthaft als Medizin?"
+  },
+  {
+    "id": "q050",
+    "category": "spicy18",
+    "text": "Welche verbreiteten Mythen über den weiblichen Orgasmus sind wissenschaftlich nicht haltbar?"
+  },
+  {
+    "id": "q051",
+    "category": "kurios",
+    "text": "Welche skurrilen Steuern wurden in der Geschichte tatsächlich erhoben?"
+  },
+  {
+    "id": "q052",
+    "category": "spicy18",
+    "text": "Welche kulturellen Tabus rund um Sexualität haben sich in den letzten Jahrzehnten gelockert?"
+  },
+  {
+    "id": "q053",
+    "category": "kurios",
+    "text": "Welche kuriosen Fakten gibt es über Schlafgewohnheiten in verschiedenen Kulturen?"
+  },
+  {
+    "id": "q054",
+    "category": "spicy18",
+    "text": "Welche historischen Verhütungsmethoden wurden tatsächlich genutzt, obwohl sie fragwürdig waren?"
+  },
+  {
+    "id": "q055",
+    "category": "kurios",
+    "text": "Welche wissenschaftlichen Fehltritte waren am Ende trotzdem nützlich?"
+  },
+  {
+    "id": "q056",
+    "category": "spicy18",
+    "text": "Welche Mythen über sexuelle Leistungsfähigkeit werden in der Popkultur ständig übertrieben?"
+  },
+  {
+    "id": "q057",
+    "category": "kurios",
+    "text": "Welche ungewöhnlichen Architekturideen wurden wirklich gebaut?"
+  },
+  {
+    "id": "q058",
+    "category": "spicy18",
+    "text": "Welche Länder haben besonders strenge Regeln für Sexspielzeug und warum?"
+  },
+  {
+    "id": "q059",
+    "category": "kurios",
+    "text": "Welche kuriosen Regeln gab es früher in Schulen oder Universitäten?"
+  },
+  {
+    "id": "q060",
+    "category": "spicy18",
+    "text": "Welche verbreiteten Irrtümer gibt es über Erektionsstörungen?"
+  },
+  {
+    "id": "q061",
+    "category": "kurios",
+    "text": "Welche absurden Produktideen wurden tatsächlich millionenfach verkauft?"
+  },
+  {
+    "id": "q062",
+    "category": "spicy18",
+    "text": "Welche Rolle spielen Stress und Schlaf bei sexueller Zufriedenheit?"
+  },
+  {
+    "id": "q063",
+    "category": "kurios",
+    "text": "Welche berühmten Marken starteten mit einem völlig anderen Geschäftsmodell?"
+  },
+  {
+    "id": "q064",
+    "category": "spicy18",
+    "text": "Welche Fakten zur Menopause und Sexualität werden häufig missverstanden?"
+  },
+  {
+    "id": "q065",
+    "category": "kurios",
+    "text": "Welche kuriosen Sprachregeln überraschen selbst Muttersprachler?"
+  },
+  {
+    "id": "q066",
+    "category": "spicy18",
+    "text": "Welche Aussagen über Fruchtbarkeit in den Zwanzigern und Dreißigern sind verkürzt?"
+  },
+  {
+    "id": "q067",
+    "category": "kurios",
+    "text": "Welche historischen Gerüchte haben reale Paniken ausgelöst?"
+  },
+  {
+    "id": "q068",
+    "category": "spicy18",
+    "text": "Welche Daten zeigen Unterschiede zwischen Wunsch und Realität beim Dating?"
+  },
+  {
+    "id": "q069",
+    "category": "kurios",
+    "text": "Welche skurrilen Modeverbote gab es in verschiedenen Epochen?"
+  },
+  {
+    "id": "q070",
+    "category": "spicy18",
+    "text": "Welche historischen Debatten gab es über Aufklärung in Schulen?"
+  },
+  {
+    "id": "q071",
+    "category": "kurios",
+    "text": "Welche kuriosen Gerichtsfälle wirken heute fast satirisch?"
+  },
+  {
+    "id": "q072",
+    "category": "spicy18",
+    "text": "Welche Mythen über Jungfräulichkeit sind medizinisch nicht sinnvoll?"
+  },
+  {
+    "id": "q073",
+    "category": "kurios",
+    "text": "Welche seltsamen Aberglauben hatten in der Geschichte echte Folgen?"
+  },
+  {
+    "id": "q074",
+    "category": "spicy18",
+    "text": "Welche Länder gelten in Studien als besonders zufrieden mit ihrem Liebesleben?"
+  },
+  {
+    "id": "q075",
+    "category": "kurios",
+    "text": "Welche ungewöhnlichen Transportideen wurden ernsthaft getestet?"
+  },
+  {
+    "id": "q076",
+    "category": "spicy18",
+    "text": "Welche Irrtümer über Verhütung halten sich trotz guter Aufklärung?"
+  },
+  {
+    "id": "q077",
+    "category": "kurios",
+    "text": "Welche kuriosen Fakten über Zeitmessung kennen die wenigsten?"
+  },
+  {
+    "id": "q078",
+    "category": "spicy18",
+    "text": "Welche Rolle spielen soziale Normen bei der Bewertung sexueller Offenheit?"
+  },
+  {
+    "id": "q079",
+    "category": "kurios",
+    "text": "Welche skurrilen Stadtplanungsprojekte wurden wirklich umgesetzt?"
+  },
+  {
+    "id": "q080",
+    "category": "spicy18",
+    "text": "Welche kuriosen Fakten gibt es zur Geschichte von Eheverträgen und Sexualmoral?"
+  },
+  {
+    "id": "q081",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse über sexuell übertragbare Infektionen sind besonders verbreitet?"
+  },
+  {
+    "id": "q082",
+    "category": "spicy18",
+    "text": "Welche Unterschiede zeigen Studien zwischen Generationen beim Thema Sexualmoral?"
+  },
+  {
+    "id": "q083",
+    "category": "spicy18",
+    "text": "Welche Länder haben Gesetze zu Ehebruch, die heute kontrovers diskutiert werden?"
+  },
+  {
+    "id": "q084",
+    "category": "spicy18",
+    "text": "Welche Mythen über Testosteron und Verhalten sind wissenschaftlich wackelig?"
+  },
+  {
+    "id": "q085",
+    "category": "spicy18",
+    "text": "Welche historischen Quellen zeigen, wie sich Schamgrenzen verändert haben?"
+  },
+  {
+    "id": "q086",
+    "category": "spicy18",
+    "text": "Welche Daten gibt es zu der Frage, wie ehrlich Menschen in Sex-Umfragen antworten?"
+  },
+  {
+    "id": "q087",
+    "category": "spicy18",
+    "text": "Welche Annahmen über sexuelle Orientierung sind gesellschaftlich verbreitet, aber wissenschaftlich ungenau?"
+  },
+  {
+    "id": "q088",
+    "category": "spicy18",
+    "text": "Welche Rolle spielten Religion und Staat historisch bei der Regulierung von Sexualität?"
+  },
+  {
+    "id": "q089",
+    "category": "spicy18",
+    "text": "Welche verbreiteten Aussagen über den Einfluss von Verhütung auf den Körper sind missverständlich?"
+  },
+  {
+    "id": "q090",
+    "category": "spicy18",
+    "text": "Welche Länder haben besonders progressive Regeln zur sexuellen Gesundheit?"
+  },
+  {
+    "id": "q091",
+    "category": "spicy18",
+    "text": "Welche kuriosen Fakten gibt es zur Geschichte von Aufklärungsbroschüren?"
+  },
+  {
+    "id": "q092",
+    "category": "spicy18",
+    "text": "Welche Fehlschlüsse entstehen, wenn man einzelne Sex-Studien überinterpretiert?"
+  },
+  {
+    "id": "q093",
+    "category": "spicy18",
+    "text": "Welche Mythen über den Zusammenhang von Attraktivität und Erfolg sind fragwürdig?"
+  },
+  {
+    "id": "q094",
+    "category": "spicy18",
+    "text": "Welche gesellschaftlichen Doppelmoral-Muster beim Thema Sexualität werden oft kritisiert?"
+  },
+  {
+    "id": "q095",
+    "category": "spicy18",
+    "text": "Welche historischen Skandale haben Gesetze zur öffentlichen Moral verändert?"
+  },
+  {
+    "id": "q096",
+    "category": "spicy18",
+    "text": "Welche Unterschiede zeigen internationale Daten beim Alter des ersten Sexualkontakts?"
+  },
+  {
+    "id": "q097",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse gibt es über die Sicherheit verschiedener Verhütungsmethoden?"
+  },
+  {
+    "id": "q098",
+    "category": "spicy18",
+    "text": "Welche Rolle spielen Medienbilder bei unrealistischen Erwartungen an Sexualität?"
+  },
+  {
+    "id": "q099",
+    "category": "spicy18",
+    "text": "Welche oft wiederholten Aussagen über Libido im Alter sind zu pauschal?"
+  },
+  {
+    "id": "q100",
+    "category": "spicy18",
+    "text": "Welche wissenschaftlich fragwürdigen Sex-Mythen tauchen in Social Media immer wieder auf?"
+  }
+]
