@@ -71,7 +71,7 @@ jobs:
         run: npm run e2e:smoke
       - name: Upload Smoke Artifacts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: smoke-test-results
           path: |
@@ -106,7 +106,7 @@ jobs:
 
       - name: Upload Coverage Report
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report-node-${{ matrix.node-version }}
           path: coverage/
@@ -183,7 +183,7 @@ jobs:
           echo "✅ Bundle size budget respected"
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
@@ -229,7 +229,7 @@ jobs:
         run: npm run e2e
 
       - name: Upload E2E Reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
@@ -252,7 +252,7 @@ jobs:
         run: npm ci
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: .
@@ -278,7 +278,7 @@ jobs:
           fi
 
       - name: Upload Lighthouse Reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-reports
