@@ -22,11 +22,10 @@ interface Settings {
   oledMode: boolean; // OLED Dark Theme
   batterySaver: boolean; // Battery Saving Mode
   hapticFeedback: boolean;
-  restoreLastConversation: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
-  showNSFWContent: false,
+  showNSFWContent: true,
   enableAnalytics: true,
   enableNotifications: true,
   enableNeko: false,
@@ -42,7 +41,6 @@ const DEFAULT_SETTINGS: Settings = {
   oledMode: false,
   batterySaver: false,
   hapticFeedback: false,
-  restoreLastConversation: true,
 };
 
 type SettingsUpdater = Partial<Settings> | ((previous: Settings) => Partial<Settings>);
@@ -167,7 +165,6 @@ interface SettingsContextType {
   setOledMode: (val: boolean) => void;
   setBatterySaver: (val: boolean) => void;
   setHapticFeedback: (val: boolean) => void;
-  toggleRestoreLastConversation: () => void;
   resetSettings: () => void;
 }
 
@@ -319,10 +316,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     [saveSettings],
   );
 
-  const toggleRestoreLastConversation = useCallback(() => {
-    saveSettings((prev) => ({ restoreLastConversation: !prev.restoreLastConversation }));
-  }, [saveSettings]);
-
   const resetSettings = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -383,7 +376,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setOledMode,
     setBatterySaver,
     setHapticFeedback,
-    toggleRestoreLastConversation,
     resetSettings,
   };
 

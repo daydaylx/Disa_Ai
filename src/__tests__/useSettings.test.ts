@@ -22,8 +22,7 @@ describe("useSettings", () => {
     const { result } = renderHook(() => useSettings(), { wrapper });
 
     expect(result.current.settings.language).toBe("de");
-    expect(result.current.settings.showNSFWContent).toBe(false);
-    expect(result.current.settings.restoreLastConversation).toBe(true);
+    expect(result.current.settings.showNSFWContent).toBe(true);
   });
 
   it("liest fehlende Felder aus Legacy-Keys", () => {
@@ -47,14 +46,14 @@ describe("useSettings", () => {
   it("persistiert den Jugendschutz-Toggle konsistent", () => {
     const { result } = renderHook(() => useSettings(), { wrapper });
 
-    expect(result.current.settings.showNSFWContent).toBe(false);
+    expect(result.current.settings.showNSFWContent).toBe(true);
 
     act(() => {
       result.current.toggleNSFWContent();
     });
 
-    expect(result.current.settings.showNSFWContent).toBe(true);
+    expect(result.current.settings.showNSFWContent).toBe(false);
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    expect(saved.showNSFWContent).toBe(true);
+    expect(saved.showNSFWContent).toBe(false);
   });
 });
