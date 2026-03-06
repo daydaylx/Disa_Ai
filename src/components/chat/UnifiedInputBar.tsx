@@ -1,11 +1,13 @@
 import * as React from "react";
 
+import { STORAGE_KEYS } from "@/config/storageKeys";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
+import { pickRandomPrompt } from "@/features/chat-inspiration/randomPromptPicker";
 import { useSettings } from "@/hooks/useSettings";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 import { MAX_PROMPT_LENGTH } from "@/lib/chat/validation";
-import { Cpu, Palette, Send, Sparkles, User } from "@/lib/icons";
+import { Cpu, Palette, RefreshCw, Send, Sparkles, User } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { type DiscussionPresetKey, discussionPresetOptions } from "@/prompts/discussion/presets";
 import { BrandCard } from "@/ui/BrandCard";
@@ -21,6 +23,16 @@ export interface UnifiedInputBarProps {
   className?: string;
 }
 
+function readIncludeSpicy18Preference(): boolean {
+  if (typeof window === "undefined") return false;
+
+  try {
+    return localStorage.getItem(STORAGE_KEYS.RANDOM_PROMPT_INCLUDE_SPICY18) === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function UnifiedInputBar({
   value,
   onChange,
@@ -34,6 +46,20 @@ export function UnifiedInputBar({
   const { activeRole, setActiveRole, roles } = useRoles();
   const { models } = useModelCatalog();
   const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
+  const [includeSpicy18, setIncludeSpicy18] = React.useState<boolean>(readIncludeSpicy18Preference);
+
+  const spicy18Available = settings.showNSFWContent;
+  const effectiveIncludeSpicy18 = spicy18Available && includeSpicy18;
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      localStorage.setItem(STORAGE_KEYS.RANDOM_PROMPT_INCLUDE_SPICY18, String(includeSpicy18));
+    } catch {
+      // Ignore storage errors; this preference is non-critical.
+    }
+  }, [includeSpicy18]);
 
   // Auto-resize logic
   React.useEffect(() => {
@@ -105,6 +131,35 @@ export function UnifiedInputBar({
   const selectedModel = models?.find((m) => m.id === settings.preferredModelId);
   const modelLabel =
     selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
+
+  const handleInsertRandomPrompt = React.useCallback(() => {
+    const randomPrompt = pickRandomPrompt({
+      includeSpicy18,
+      nsfwAllowed: settings.showNSFWContent,
+    });
+    onChange(randomPrompt.text);
+    onInputFocus?.();
+
+    const focusComposer = () => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      textarea.focus();
+      const end = randomPrompt.text.length;
+      textarea.setSelectionRange(end, end);
+    };
+
+    if (typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(focusComposer);
+    } else {
+      focusComposer();
+    }
+  }, [includeSpicy18, onChange, onInputFocus, settings.showNSFWContent]);
+
+  const toggleIncludeSpicy18 = React.useCallback(() => {
+    if (!spicy18Available) return;
+    setIncludeSpicy18((previous) => !previous);
+  }, [spicy18Available]);
 
   return (
     <div className={cn("w-full", className)}>
@@ -214,6 +269,45 @@ export function UnifiedInputBar({
               ))}
             </SelectContent>
           </Select>
+
+          <Button
+            type="button"
+            onClick={handleInsertRandomPrompt}
+            variant="ghost"
+            size="sm"
+            className="h-11 gap-1.5 rounded-full px-3 text-[11px] font-semibold text-ink-secondary hover:text-ink-primary"
+            aria-label="Zufallsfrage einfügen"
+            data-testid="composer-random-prompt"
+          >
+            <RefreshCw className="h-3 w-3" />
+            <span className="whitespace-nowrap">Zufallsfrage</span>
+          </Button>
+
+          <Button
+            type="button"
+            onClick={toggleIncludeSpicy18}
+            variant={effectiveIncludeSpicy18 ? "secondary" : "ghost"}
+            size="sm"
+            disabled={!spicy18Available}
+            className={cn(
+              "h-11 rounded-full px-3 text-[11px] font-semibold",
+              "whitespace-nowrap",
+              effectiveIncludeSpicy18
+                ? "border-accent-roles/35 bg-accent-roles/15 text-ink-primary"
+                : "text-ink-tertiary",
+              !spicy18Available && "opacity-40",
+            )}
+            aria-pressed={effectiveIncludeSpicy18}
+            aria-label="18+ einbeziehen"
+            title={
+              spicy18Available
+                ? "Provokante Trivia-Fragen einbeziehen"
+                : "18+-Fragen sind durch Jugendschutz deaktiviert"
+            }
+            data-testid="composer-spicy-toggle"
+          >
+            {spicy18Available ? "18+ einbeziehen" : "18+ gesperrt"}
+          </Button>
 
           {/* Spacer */}
           <div className="flex-1" />

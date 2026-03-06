@@ -56,6 +56,7 @@ export const STORAGE_KEYS = {
   // Context & UI Settings
   CONTEXT_RESERVE: "disa:ctxReserve",
   COMPOSER_OFFSET: "disa:composerOffset",
+  RANDOM_PROMPT_INCLUDE_SPICY18: "disa:random-prompt:include-spicy18",
 
   // Models Cache
   MODELS_CACHE: "disa:or:models:v1",

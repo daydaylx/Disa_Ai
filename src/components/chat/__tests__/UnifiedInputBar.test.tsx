@@ -41,6 +41,7 @@ vi.mock("@/contexts/RolesContext", () => ({
 vi.mock("@/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
+      showNSFWContent: true,
       preferredModelId: "gpt-4o-mini",
       creativity: 45,
       discussionPreset: "locker_neugierig",
@@ -69,6 +70,7 @@ const defaultProps: UnifiedInputBarProps = {
 describe("UnifiedInputBar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   describe("Rendering", () => {
@@ -85,6 +87,13 @@ describe("UnifiedInputBar", () => {
 
       const sendButton = screen.getByRole("button", { name: "Senden" });
       expect(sendButton).toBeInTheDocument();
+    });
+
+    it("rendert den Zufallsfrage-Button und den 18+-Toggle", () => {
+      render(<UnifiedInputBar {...defaultProps} />);
+
+      expect(screen.getByRole("button", { name: "Zufallsfrage einfügen" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "18+ einbeziehen" })).toBeInTheDocument();
     });
 
     it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität) nach Entfaltung", async () => {
@@ -204,6 +213,20 @@ describe("UnifiedInputBar", () => {
       const input = screen.getByTestId("composer-input");
       fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
+      expect(onSend).not.toHaveBeenCalled();
+    });
+
+    it("fügt per Zufallsfrage Text ein, ohne automatisch zu senden", async () => {
+      const onChange = vi.fn();
+      const onSend = vi.fn();
+      render(<UnifiedInputBar {...defaultProps} onChange={onChange} onSend={onSend} />);
+
+      const randomButton = screen.getByRole("button", { name: "Zufallsfrage einfügen" });
+      await userEvent.click(randomButton);
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(typeof onChange.mock.calls[0]?.[0]).toBe("string");
+      expect((onChange.mock.calls[0]?.[0] as string).length).toBeGreaterThan(0);
       expect(onSend).not.toHaveBeenCalled();
     });
   });
