@@ -20,7 +20,6 @@ const SETTINGS_PAGES = {
   "/settings": "Übersicht",
   "/settings/memory": "Gedächtnis",
   "/settings/behavior": "KI Verhalten",
-  "/settings/youth": "Jugendschutz",
   "/settings/api-data": "API & Daten",
   "/settings/extras": "Extras",
   "/settings/appearance": "Darstellung",

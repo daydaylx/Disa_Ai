@@ -27,32 +27,17 @@ describe("randomPromptPicker", () => {
     expect(ids.every((id) => /^q\d{3}$/.test(id))).toBe(true);
   });
 
-  it("excludes spicy18 prompts when local spicy toggle is off", () => {
-    const pool = buildPromptPool({ includeSpicy18: false, nsfwAllowed: true });
-
-    expect(pool).toHaveLength(50);
-    expect(pool.some((item) => item.category === "spicy18")).toBe(false);
-  });
-
-  it("excludes spicy18 prompts when global NSFW setting is off", () => {
-    const pool = buildPromptPool({ includeSpicy18: true, nsfwAllowed: false });
-
-    expect(pool).toHaveLength(50);
-    expect(pool.some((item) => item.category === "spicy18")).toBe(false);
-  });
-
-  it("includes spicy18 prompts only when both controls allow it", () => {
-    const pool = buildPromptPool({ includeSpicy18: true, nsfwAllowed: true });
-
+  it("always exposes the full prompt pool including spicy18 entries", () => {
+    const pool = buildPromptPool();
     expect(pool).toHaveLength(100);
     expect(pool.some((item) => item.category === "spicy18")).toBe(true);
   });
 
   it("returns deterministic prompt selection using provided random source", () => {
-    const first = pickRandomPrompt({ includeSpicy18: false, nsfwAllowed: true }, () => 0);
-    const last = pickRandomPrompt({ includeSpicy18: true, nsfwAllowed: true }, () => 0.9999);
+    const first = pickRandomPrompt(() => 0);
+    const last = pickRandomPrompt(() => 0.9999);
 
-    expect(first.category).not.toBe("spicy18");
+    expect(first.id).toBe("q001");
     expect(last.category).toBe("spicy18");
   });
 });

@@ -14,7 +14,6 @@ const RolesPage = lazy(() => import("../pages/RolesPage"));
 const SettingsOverviewPage = lazy(() => import("../pages/SettingsOverviewPage"));
 const SettingsMemoryPage = lazy(() => import("../pages/SettingsMemory"));
 const SettingsBehaviorPage = lazy(() => import("../pages/SettingsBehavior"));
-const SettingsYouthFilterPage = lazy(() => import("../pages/SettingsYouthFilter"));
 const SettingsApiDataPage = lazy(() => import("../pages/SettingsApiData"));
 const SettingsExtrasPage = lazy(() => import("../pages/SettingsExtras")); // New Page
 const SettingsAppearancePage = lazy(() => import("../pages/SettingsAppearance"));
@@ -132,24 +131,12 @@ export const appRouter = createBrowserRouter(
       ),
     },
     {
-      path: "/settings/youth",
-      element: (
-        <RouteWrapper pageHeaderTitle="Einstellungen">
-          <SettingsYouthFilterPage />
-        </RouteWrapper>
-      ),
-    },
-    {
       path: "/settings/api-data",
       element: (
         <RouteWrapper pageHeaderTitle="Einstellungen">
           <SettingsApiDataPage />
         </RouteWrapper>
       ),
-    },
-    {
-      path: "/settings/filters",
-      element: <Navigate to="/settings/youth" replace />,
     },
     {
       path: "/settings/extras",

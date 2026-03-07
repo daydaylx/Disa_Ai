@@ -12,7 +12,6 @@ import {
   ChevronRight,
   Database,
   Palette,
-  Shield,
   SlidersHorizontal,
 } from "../../lib/icons";
 import { SettingsLayout } from "./SettingsLayout";
@@ -38,13 +37,6 @@ const SECTIONS = [
     description: "Theme & Schrift",
     icon: Palette,
     to: "/settings/appearance",
-  },
-  {
-    id: "youth",
-    label: "Jugendschutz",
-    description: "Filter & Sicherheit",
-    icon: Shield,
-    to: "/settings/youth",
   },
   {
     id: "extras",
@@ -113,7 +105,6 @@ export function TabbedSettingsView({
       memory: memoryEnabled ? "Aktiv" : "Aus",
       behavior: settings.creativity ? `${settings.creativity}%` : "Standard",
       appearance: settings.theme ?? "System",
-      youth: settings.showNSFWContent ? "Offen" : "Filter aktiv",
       extras: settings.enableNeko ? "An" : "Aus",
       "api-data": settings.enableAnalytics ? "Analytics an" : "Analytics aus",
     }),
@@ -122,7 +113,6 @@ export function TabbedSettingsView({
       settings.creativity,
       settings.enableAnalytics,
       settings.enableNeko,
-      settings.showNSFWContent,
       settings.theme,
     ],
   );

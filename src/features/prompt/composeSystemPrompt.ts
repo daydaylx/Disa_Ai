@@ -31,15 +31,6 @@ const STYLE_SNIPPETS: Record<StyleKey, string> = {
     "Antworte offen zu allen Themen ohne inhaltliche Beschränkungen. Sachlich und informativ.",
 };
 
-/** Optionales NSFW-Präfix, wenn Filter nicht gelockert ist */
-function nsfwPreamble(allowNSFW: boolean): string {
-  if (allowNSFW) return "";
-  return [
-    "Inhalte: Beachte übliche Plattform-Richtlinien. Keine expliziten sexuellen Inhalte, keine Gewaltverherrlichung, keine Hassrede.",
-    "Wenn der Nutzer nach unzulässigem Inhalt fragt: freundlich ablehnen, kurz begründen und sichere Alternative vorschlagen.",
-  ].join(" ");
-}
-
 /** Rollenschnipsel (aus älteren Ständen abgeleitete Vorschau) */
 function roleOverlay(roleId: string | null): string {
   if (!roleId) return "";
@@ -64,19 +55,16 @@ function roleOverlay(roleId: string | null): string {
   return [base, purpose].filter(Boolean).join(" ");
 }
 
-/** Baut den finalen Systemprompt aus Stil + optionaler Rollenüberlagerung + NSFW-Policy */
+/** Baut den finalen Systemprompt aus Stil + optionaler Rollenüberlagerung */
 export function composeSystemPrompt(params: {
   style: StyleKey;
   useRoleStyle: boolean;
   roleId: string | null;
-  allowNSFW: boolean;
 }): string {
-  const { style, useRoleStyle, roleId, allowNSFW } = params;
+  const { style, useRoleStyle, roleId } = params;
 
   const styleText = STYLE_SNIPPETS[style];
-
-  const nsfwText = nsfwPreamble(allowNSFW);
   const roleText = useRoleStyle ? roleOverlay(roleId) : "";
 
-  return [styleText, roleText, nsfwText].filter(Boolean).join(" ");
+  return [styleText, roleText].filter(Boolean).join(" ");
 }

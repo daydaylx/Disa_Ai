@@ -16,7 +16,6 @@ vi.mock("@/hooks/useSettings", () => ({
     settings: {
       creativity: 45,
       theme: "auto",
-      showNSFWContent: false,
       enableNeko: false,
       enableAnalytics: true,
     },

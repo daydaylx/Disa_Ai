@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { createElement, type ReactNode } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -22,7 +22,6 @@ describe("useSettings", () => {
     const { result } = renderHook(() => useSettings(), { wrapper });
 
     expect(result.current.settings.language).toBe("de");
-    expect(result.current.settings.showNSFWContent).toBe(true);
   });
 
   it("liest fehlende Felder aus Legacy-Keys", () => {
@@ -41,19 +40,5 @@ describe("useSettings", () => {
     expect(result.current.settings.fontSize).toBe(20);
     expect(result.current.settings.reduceMotion).toBe(true);
     expect(result.current.settings.hapticFeedback).toBe(true);
-  });
-
-  it("persistiert den Jugendschutz-Toggle konsistent", () => {
-    const { result } = renderHook(() => useSettings(), { wrapper });
-
-    expect(result.current.settings.showNSFWContent).toBe(true);
-
-    act(() => {
-      result.current.toggleNSFWContent();
-    });
-
-    expect(result.current.settings.showNSFWContent).toBe(false);
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    expect(saved.showNSFWContent).toBe(false);
   });
 });

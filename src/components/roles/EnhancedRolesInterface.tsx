@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getCategoryStyle } from "@/lib/categoryColors";
@@ -54,7 +54,6 @@ import {
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
 import { useFilteredList } from "../../hooks/useFilteredList";
-import { useSettings } from "../../hooks/useSettings";
 import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
 import { CATEGORY_ORDER, roleFilterFn, roleSortFn } from "./roles-filter";
 
@@ -129,7 +128,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError, refreshRoles } =
     useRoles();
   const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
-  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -144,7 +142,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     showFavoritesOnly: false,
     showRecentlyUsed: false,
     showBuiltInOnly: false,
-    hideMatureContent: !settings.showNSFWContent,
+    hideMatureContent: false,
     models: {
       showFreeOnly: false,
       showPremiumOnly: false,
@@ -155,13 +153,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortBy: "category",
     sortDirection: "asc",
   });
-
-  useEffect(() => {
-    setFilters((prev) => ({
-      ...prev,
-      hideMatureContent: !settings.showNSFWContent,
-    }));
-  }, [settings.showNSFWContent]);
 
   const enhancedRoles = useMemo(() => roles.map(migrateRole), [roles]);
 

@@ -46,7 +46,6 @@ vi.mock("@/contexts/RolesContext", () => ({
 vi.mock("@/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
-      showNSFWContent: true,
       preferredModelId: "gpt-4o-mini",
       creativity: 45,
       discussionPreset: "locker_neugierig",
@@ -99,7 +98,7 @@ describe("UnifiedInputBar", () => {
       expect(sendButton).toBeInTheDocument();
     });
 
-    it("rendert keinen Zufallsfrage-Button mehr im Composer, aber den 18+-Toggle", async () => {
+    it("rendert keinen Zufallsfrage-Button und keinen 18+-Toggle im Composer", async () => {
       render(<UnifiedInputBar {...defaultProps} />);
 
       expect(
@@ -109,7 +108,7 @@ describe("UnifiedInputBar", () => {
       expect(
         screen.queryByRole("button", { name: "Zufallsfrage einfügen" }),
       ).not.toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "18+ einbeziehen" })).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "18+ einbeziehen" })).not.toBeInTheDocument();
     });
 
     it("rendert die Kontext-Selektoren (Rolle, Stil, Kreativität) nach Entfaltung", async () => {

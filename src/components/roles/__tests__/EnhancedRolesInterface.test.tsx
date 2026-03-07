@@ -32,7 +32,7 @@ vi.mock("../../../contexts/SettingsContext", async () => {
   return {
     ...actual,
     useSettingsContext: () => ({
-      settings: { showNSFWContent: true },
+      settings: {},
       setSettings: vi.fn(),
     }),
   };

@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { STORAGE_KEYS } from "@/config/storageKeys";
 import { useModelCatalog } from "@/contexts/ModelCatalogContext";
 import { useRoles } from "@/contexts/RolesContext";
 import { pickRandomPrompt } from "@/features/chat-inspiration/randomPromptPicker";
@@ -27,16 +26,6 @@ export interface UnifiedInputBarHandle {
   insertRandomPrompt: () => void;
 }
 
-function readIncludeSpicy18Preference(): boolean {
-  if (typeof window === "undefined") return false;
-
-  try {
-    return localStorage.getItem(STORAGE_KEYS.RANDOM_PROMPT_INCLUDE_SPICY18) === "true";
-  } catch {
-    return false;
-  }
-}
-
 export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedInputBarProps>(
   (
     { value, onChange, onSend, onInputFocus, isLoading = false, className }: UnifiedInputBarProps,
@@ -47,22 +36,6 @@ export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedIn
     const { activeRole, setActiveRole, roles } = useRoles();
     const { models } = useModelCatalog();
     const { settings, setCreativity, setDiscussionPreset, setPreferredModel } = useSettings();
-    const [includeSpicy18, setIncludeSpicy18] = React.useState<boolean>(
-      readIncludeSpicy18Preference,
-    );
-
-    const spicy18Available = settings.showNSFWContent;
-    const effectiveIncludeSpicy18 = spicy18Available && includeSpicy18;
-
-    React.useEffect(() => {
-      if (typeof window === "undefined") return;
-
-      try {
-        localStorage.setItem(STORAGE_KEYS.RANDOM_PROMPT_INCLUDE_SPICY18, String(includeSpicy18));
-      } catch {
-        // Ignore storage errors; this preference is non-critical.
-      }
-    }, [includeSpicy18]);
 
     // Auto-resize logic
     React.useEffect(() => {
@@ -136,10 +109,7 @@ export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedIn
       selectedModel?.label?.split("/").pop() || selectedModel?.id?.split("/").pop() || "Modell";
 
     const handleInsertRandomPrompt = React.useCallback(() => {
-      const randomPrompt = pickRandomPrompt({
-        includeSpicy18,
-        nsfwAllowed: settings.showNSFWContent,
-      });
+      const randomPrompt = pickRandomPrompt();
       onChange(randomPrompt.text);
       onInputFocus?.();
 
@@ -157,7 +127,7 @@ export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedIn
       } else {
         focusComposer();
       }
-    }, [includeSpicy18, onChange, onInputFocus, settings.showNSFWContent]);
+    }, [onChange, onInputFocus]);
 
     React.useImperativeHandle(
       ref,
@@ -166,11 +136,6 @@ export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedIn
       }),
       [handleInsertRandomPrompt],
     );
-
-    const toggleIncludeSpicy18 = React.useCallback(() => {
-      if (!spicy18Available) return;
-      setIncludeSpicy18((previous) => !previous);
-    }, [spicy18Available]);
 
     return (
       <div className={cn("w-full", className)}>
@@ -353,32 +318,6 @@ export const UnifiedInputBar = React.forwardRef<UnifiedInputBarHandle, UnifiedIn
                     ))}
                   </SelectContent>
                 </Select>
-
-                <Button
-                  type="button"
-                  onClick={toggleIncludeSpicy18}
-                  variant={effectiveIncludeSpicy18 ? "secondary" : "ghost"}
-                  size="sm"
-                  disabled={!spicy18Available}
-                  className={cn(
-                    "h-11 rounded-full px-3 text-[11px] font-semibold",
-                    "whitespace-nowrap",
-                    effectiveIncludeSpicy18
-                      ? "border-accent-roles/35 bg-accent-roles/15 text-ink-primary"
-                      : "text-ink-tertiary",
-                    !spicy18Available && "opacity-40",
-                  )}
-                  aria-pressed={effectiveIncludeSpicy18}
-                  aria-label="18+ einbeziehen"
-                  title={
-                    spicy18Available
-                      ? "Provokante Trivia-Fragen einbeziehen"
-                      : "18+-Fragen sind durch Jugendschutz deaktiviert"
-                  }
-                  data-testid="composer-spicy-toggle"
-                >
-                  {spicy18Available ? "18+ einbeziehen" : "18+ gesperrt"}
-                </Button>
               </div>
             </div>
           )}

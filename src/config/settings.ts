@@ -8,7 +8,6 @@ import type { DiscussionPresetKey } from "@/prompts/discussion/presets";
 
 const LS = {
   style: "disa:style",
-  nsfw: "disa:nsfw",
   model: "disa:modelId",
   template: "disa:templateId",
   useRoleStyle: "disa:useRoleStyle",

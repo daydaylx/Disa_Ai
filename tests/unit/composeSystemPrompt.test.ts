@@ -8,10 +8,8 @@ describe("composeSystemPrompt", () => {
       style: "concise" as any,
       useRoleStyle: false,
       roleId: null,
-      allowNSFW: false,
     });
     expect(s).toMatch(/sachlicher/);
-    expect(s).toMatch(/Richtlinien/);
   });
 
   it("includes role overlay when enabled", () => {
@@ -19,7 +17,6 @@ describe("composeSystemPrompt", () => {
       style: "minimal" as any,
       useRoleStyle: true,
       roleId: "any-role",
-      allowNSFW: true,
     });
     expect(s).toMatch(/Feintuning:/);
   });

@@ -1,17 +1,10 @@
 import { type DiscussionPresetKey, discussionPresets } from "../../prompts/discussion/presets";
 
 interface PromptSettings {
-  showNSFWContent: boolean;
   language: string;
   discussionPreset: DiscussionPresetKey;
   discussionStrict: boolean;
   discussionMaxSentences: number;
-}
-
-export function buildSafetyPrompt(showNSFWContent: boolean): string {
-  return showNSFWContent
-    ? ""
-    : "Content-Safety: Keine sexualisierten, verstörenden oder jugendgefährdenden Inhalte. Bleibe sachlich, respektvoll und filtere NSFW-Anfragen.";
 }
 
 export function buildDiscussionPrompt(settings: PromptSettings): string {
@@ -38,9 +31,8 @@ export function buildSystemPrompt(
   settings: PromptSettings,
   activeRole: { systemPrompt: string } | null | undefined,
 ): string {
-  const safetyPrompt = buildSafetyPrompt(settings.showNSFWContent);
   const discussionPrompt = buildDiscussionPrompt(settings);
   const rolePrompt = activeRole?.systemPrompt || "";
 
-  return [safetyPrompt, discussionPrompt, rolePrompt].filter(Boolean).join("\n\n");
+  return [discussionPrompt, rolePrompt].filter(Boolean).join("\n\n");
 }

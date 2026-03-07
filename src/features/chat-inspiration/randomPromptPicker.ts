@@ -1,20 +1,9 @@
 import { RANDOM_PROMPTS, type RandomPromptCategory, type RandomPromptItem } from "./randomPrompts";
 
-interface RandomPromptPickerOptions {
-  includeSpicy18: boolean;
-  nsfwAllowed: boolean;
-}
-
 type RandomValueSource = () => number;
 
-export function buildPromptPool({ includeSpicy18, nsfwAllowed }: RandomPromptPickerOptions) {
-  const allowSpicy18 = includeSpicy18 && nsfwAllowed;
-
-  return RANDOM_PROMPTS.filter((item) => allowSpicy18 || item.category !== "spicy18");
-}
-
-function nonSpicyFallbackPool(): RandomPromptItem[] {
-  return RANDOM_PROMPTS.filter((item) => item.category !== "spicy18");
+export function buildPromptPool() {
+  return RANDOM_PROMPTS;
 }
 
 function clampRandomIndex(length: number, randomSource: RandomValueSource): number {
@@ -26,19 +15,15 @@ function clampRandomIndex(length: number, randomSource: RandomValueSource): numb
   return Math.floor(normalized * length);
 }
 
-export function pickRandomPrompt(
-  options: RandomPromptPickerOptions,
-  randomSource: RandomValueSource = Math.random,
-): RandomPromptItem {
-  const pool = buildPromptPool(options);
-  const safePool = pool.length > 0 ? pool : nonSpicyFallbackPool();
+export function pickRandomPrompt(randomSource: RandomValueSource = Math.random): RandomPromptItem {
+  const pool = buildPromptPool();
 
-  if (safePool.length === 0) {
+  if (pool.length === 0) {
     throw new Error("No prompts available for random picker.");
   }
 
-  const index = clampRandomIndex(safePool.length, randomSource);
-  return safePool[index] as RandomPromptItem;
+  const index = clampRandomIndex(pool.length, randomSource);
+  return pool[index] as RandomPromptItem;
 }
 
 export function countPromptCategories(items: RandomPromptItem[]) {

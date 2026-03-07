@@ -10,13 +10,12 @@ import {
   Database,
   MessageSquare,
   Palette,
-  Shield,
   SlidersHorizontal,
 } from "../../lib/icons";
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
-  activeTab?: "overview" | "memory" | "behavior" | "youth" | "extras" | "api-data" | "appearance";
+  activeTab?: "overview" | "memory" | "behavior" | "extras" | "api-data" | "appearance";
   title?: string;
   description?: string;
 }
@@ -39,12 +38,6 @@ const NAV_ITEMS = [
     label: "Darstellung",
     icon: Palette,
     to: "/settings/appearance",
-  },
-  {
-    id: "youth",
-    label: "Jugendschutz",
-    icon: Shield,
-    to: "/settings/youth",
   },
   {
     id: "extras",

@@ -16,7 +16,6 @@ const NAV_HIERARCHY = {
   // Settings pages go back to settings overview
   "/settings/memory": "/settings",
   "/settings/behavior": "/settings",
-  "/settings/youth": "/settings",
   "/settings/api-data": "/settings",
   "/settings/extras": "/settings",
   "/settings/appearance": "/settings",

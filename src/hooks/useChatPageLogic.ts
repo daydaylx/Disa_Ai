@@ -27,7 +27,7 @@ interface ChatPageLogicOptions {
 export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   const toasts = useToasts();
   const navigate = useNavigate();
-  const { activeRole, setActiveRole } = useRoles();
+  const { activeRole } = useRoles();
   const { settings } = useSettings();
   const { isEnabled: memoryEnabled } = useMemory();
   const { models: modelCatalog } = useModelCatalog();
@@ -79,24 +79,6 @@ export function useChatPageLogic({ onStartWithPreset }: ChatPageLogicOptions) {
   useEffect(() => {
     setRequestOptions(requestOptions);
   }, [requestOptions, setRequestOptions]);
-
-  // NSFW filter: Deactivate mature roles if NSFW is disabled
-  useEffect(() => {
-    if (!settings.showNSFWContent && activeRole) {
-      const isMature =
-        activeRole.category === "erwachsene" ||
-        activeRole.tags?.some((t) => ["nsfw", "adult", "18+", "erotic"].includes(t.toLowerCase()));
-
-      if (isMature) {
-        setActiveRole(null);
-        toasts.push({
-          kind: "warning",
-          title: "Rolle deaktiviert",
-          message: "Diese Rolle ist aufgrund deiner Jugendschutz-Einstellungen nicht verfügbar.",
-        });
-      }
-    }
-  }, [activeRole, settings.showNSFWContent, setActiveRole, toasts]);
 
   // Conversation manager
   const { activeConversationId, newConversation, conversations, selectConversation } =

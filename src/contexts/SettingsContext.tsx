@@ -6,7 +6,6 @@ import { STORAGE_KEYS } from "../config/storageKeys";
 import type { DiscussionPresetKey } from "../prompts/discussion/presets";
 
 interface Settings {
-  showNSFWContent: boolean;
   enableAnalytics: boolean;
   enableNotifications: boolean;
   enableNeko: boolean; // New Neko Feature
@@ -25,7 +24,6 @@ interface Settings {
 }
 
 const DEFAULT_SETTINGS: Settings = {
-  showNSFWContent: true,
   enableAnalytics: true,
   enableNotifications: true,
   enableNeko: false,
@@ -148,7 +146,6 @@ function normalizeSettings(raw: Partial<Settings>): Settings {
 
 interface SettingsContextType {
   settings: Settings;
-  toggleNSFWContent: () => void;
   toggleAnalytics: () => void;
   toggleNotifications: () => void;
   toggleNeko: () => void;
@@ -215,10 +212,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       console.error("Failed to save settings:", error);
     }
   }, []);
-
-  const toggleNSFWContent = useCallback(() => {
-    saveSettings((prev) => ({ showNSFWContent: !prev.showNSFWContent }));
-  }, [saveSettings]);
 
   const toggleAnalytics = useCallback(() => {
     saveSettings((prev) => ({ enableAnalytics: !prev.enableAnalytics }));
@@ -359,7 +352,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     settings,
-    toggleNSFWContent,
     toggleAnalytics,
     toggleNotifications,
     toggleNeko,
