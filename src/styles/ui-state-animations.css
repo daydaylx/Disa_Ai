@@ -307,7 +307,7 @@
   transform-origin: center;
   will-change: opacity, transform;
   isolation: isolate;
-  animation: presence-idle-luxe 8.6s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+  animation: presence-idle-luxe 6.5s cubic-bezier(0.33, 1, 0.68, 1) infinite;
 }
 
 .presence-mark__core,
@@ -354,6 +354,14 @@
   --presence-halo-opacity: 0.26;
 }
 
+.presence-mark[data-intensity="premium"] {
+  --presence-opacity-min: 0.8;
+  --presence-opacity-max: 0.98;
+  --presence-core-opacity: 0.68;
+  --presence-halo-opacity: 0.38;
+  --presence-size: 126%;
+}
+
 .presence-mark[data-intensity="accent"] {
   --presence-opacity-min: 0.9;
   --presence-opacity-max: 1.06;
@@ -370,7 +378,7 @@
   }
   52% {
     opacity: var(--presence-opacity-max);
-    transform: translate3d(-50%, -50%, 0) scale(1.028);
+    transform: translate3d(-50%, -50%, 0) scale(1.034);
   }
 }
 
@@ -390,11 +398,11 @@
   0%,
   100% {
     opacity: calc(var(--presence-opacity-min) + 0.12);
-    transform: translate3d(-50%, -50%, 0) scale(0.994);
+    transform: translate3d(-50%, -50%, 0) scale(0.99);
   }
   52% {
     opacity: calc(var(--presence-opacity-max) + 0.08);
-    transform: translate3d(-50%, -50%, 0) scale(1.058);
+    transform: translate3d(-50%, -50%, 0) scale(1.072);
   }
 }
 
@@ -414,7 +422,7 @@
 }
 
 .presence-mark[data-state="typing"] {
-  animation: presence-typing-luxe 5.4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+  animation: presence-typing-luxe 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
 }
 
 .presence-mark[data-state="typing"] .presence-mark__core {
@@ -429,7 +437,7 @@
 
 .presence-mark[data-state="thinking"],
 .presence-mark[data-state="loading"] {
-  animation: presence-thinking-luxe 2.8s cubic-bezier(0.25, 1, 0.3, 1) infinite;
+  animation: presence-thinking-luxe 2.2s cubic-bezier(0.25, 1, 0.3, 1) infinite;
   --presence-core-opacity: 0.78;
   --presence-halo-opacity: 0.48;
 }
