@@ -498,5 +498,505 @@
     "id": "q100",
     "category": "spicy18",
     "text": "Welche wissenschaftlich fragwürdigen Sex-Mythen tauchen in Social Media immer wieder auf?"
+  },
+  {
+    "id": "q101",
+    "category": "alltag",
+    "text": "Wie führe ich ein schwieriges Gespräch, ohne aggressiv zu wirken?"
+  },
+  {
+    "id": "q102",
+    "category": "alltag",
+    "text": "Welche Apps oder Tools helfen wirklich beim Sparen ohne viel Aufwand?"
+  },
+  {
+    "id": "q103",
+    "category": "alltag",
+    "text": "Wie gehe ich mit Perfektionismus um, ohne Qualität aufzugeben?"
+  },
+  {
+    "id": "q104",
+    "category": "alltag",
+    "text": "Welche einfachen Kochstrategien sparen Zeit unter der Woche?"
+  },
+  {
+    "id": "q105",
+    "category": "alltag",
+    "text": "Wie baue ich eine Lesegewohnheit auf, auch wenn ich wenig Zeit habe?"
+  },
+  {
+    "id": "q106",
+    "category": "alltag",
+    "text": "Was hilft gegen das ständige Aufschieben von unangenehmen Aufgaben?"
+  },
+  {
+    "id": "q107",
+    "category": "alltag",
+    "text": "Wie gestalte ich meine Wohnung mit wenig Budget gemütlicher?"
+  },
+  {
+    "id": "q108",
+    "category": "alltag",
+    "text": "Welche Anzeichen zeigen, dass ich wirklich eine Pause brauche?"
+  },
+  {
+    "id": "q109",
+    "category": "alltag",
+    "text": "Wie finde ich heraus, welche Gewohnheiten mir wirklich schaden?"
+  },
+  {
+    "id": "q110",
+    "category": "alltag",
+    "text": "Was kann ich tun, wenn ich mich sozial isoliert fühle?"
+  },
+  {
+    "id": "q111",
+    "category": "wissen",
+    "text": "Wie funktioniert Quantenverschränkung in einfachen Worten?"
+  },
+  {
+    "id": "q112",
+    "category": "wissen",
+    "text": "Warum schläft fast jedes Tier, und was passiert im Gehirn dabei?"
+  },
+  {
+    "id": "q113",
+    "category": "wissen",
+    "text": "Was ist der Unterschied zwischen einer Theorie und einer Hypothese in der Wissenschaft?"
+  },
+  {
+    "id": "q114",
+    "category": "wissen",
+    "text": "Wie entstehen Dialekte innerhalb einer Sprache?"
+  },
+  {
+    "id": "q115",
+    "category": "wissen",
+    "text": "Was weiß man über dunkle Materie, und warum ist sie so schwer nachzuweisen?"
+  },
+  {
+    "id": "q116",
+    "category": "wissen",
+    "text": "Wie hat die Erfindung des Buchdrucks die Gesellschaft konkret verändert?"
+  },
+  {
+    "id": "q117",
+    "category": "wissen",
+    "text": "Warum sind manche Krankheiten trotz Impfung noch nicht ausgerottet?"
+  },
+  {
+    "id": "q118",
+    "category": "wissen",
+    "text": "Was unterscheidet ein Klimamodell vom echten Klimasystem?"
+  },
+  {
+    "id": "q119",
+    "category": "wissen",
+    "text": "Wie hat sich das Konzept der Privatsphäre historisch entwickelt?"
+  },
+  {
+    "id": "q120",
+    "category": "wissen",
+    "text": "Welche mathematischen Konzepte stecken hinter modernen Empfehlungsalgorithmen?"
+  },
+  {
+    "id": "q121",
+    "category": "kurios",
+    "text": "Welche tierischen Verhaltensweisen wirken fast menschlich?"
+  },
+  {
+    "id": "q122",
+    "category": "kurios",
+    "text": "Welche Sprachen haben keine direkte Übersetzung für alltägliche Konzepte?"
+  },
+  {
+    "id": "q123",
+    "category": "kurios",
+    "text": "Welche kuriosen Bräuche bei Hochzeiten gibt es weltweit?"
+  },
+  {
+    "id": "q124",
+    "category": "kurios",
+    "text": "Welche Alltagsdinge haben überraschend komplizierte Physik dahinter?"
+  },
+  {
+    "id": "q125",
+    "category": "kurios",
+    "text": "Welche historischen Persönlichkeiten hatten skurrile Hobbys?"
+  },
+  {
+    "id": "q126",
+    "category": "kurios",
+    "text": "Welche Pflanzenkommunikation würde man früher nicht für möglich halten?"
+  },
+  {
+    "id": "q127",
+    "category": "kurios",
+    "text": "Welche Länder haben besonders unerwartete Nationalgerichte?"
+  },
+  {
+    "id": "q128",
+    "category": "kurios",
+    "text": "Welche kuriosen Rekorde wurden bei Olympischen Spielen aufgestellt?"
+  },
+  {
+    "id": "q129",
+    "category": "kurios",
+    "text": "Welche merkwürdigen Diäten wurden in der Geschichte populär?"
+  },
+  {
+    "id": "q130",
+    "category": "kurios",
+    "text": "Welche bekannten Gebäude haben skurrile Baufehler oder Planungsirrtümer?"
+  },
+  {
+    "id": "q131",
+    "category": "kurios",
+    "text": "Welche Tiere haben das komplizierteste Sozialleben?"
+  },
+  {
+    "id": "q132",
+    "category": "kurios",
+    "text": "Welche unerwarteten Dinge kann Schimmel alles befallen?"
+  },
+  {
+    "id": "q133",
+    "category": "kurios",
+    "text": "Welche kuriosen Erfindungen aus der Sowjetunion gerieten in Vergessenheit?"
+  },
+  {
+    "id": "q134",
+    "category": "kurios",
+    "text": "Welche Phänomene in der Natur sehen aus wie optische Täuschungen?"
+  },
+  {
+    "id": "q135",
+    "category": "kurios",
+    "text": "Welche seltsamen Gesetze gelten noch in US-Bundesstaaten?"
+  },
+  {
+    "id": "q136",
+    "category": "kurios",
+    "text": "Welche Farbwahrnehmung haben verschiedene Tierarten im Vergleich zum Menschen?"
+  },
+  {
+    "id": "q137",
+    "category": "kurios",
+    "text": "Welche berühmten Kunstwerke haben eine kuriose Entstehungsgeschichte?"
+  },
+  {
+    "id": "q138",
+    "category": "kurios",
+    "text": "Welche Science-Fiction-Ideen aus den 1950ern wurden tatsächlich Realität?"
+  },
+  {
+    "id": "q139",
+    "category": "kurios",
+    "text": "Welche kuriosen Fakten gibt es über menschliche Körpergeräusche?"
+  },
+  {
+    "id": "q140",
+    "category": "kurios",
+    "text": "Welche historischen Stadtpläne sahen auf dem Papier faszinierend aus, funktionierten aber kaum?"
+  },
+  {
+    "id": "q141",
+    "category": "kurios",
+    "text": "Welche merkwürdigen Krankheitsnamen klingen wie erfunden, existieren aber wirklich?"
+  },
+  {
+    "id": "q142",
+    "category": "kurios",
+    "text": "Welche kleinen Sprachunterschiede verursachen regelmäßig peinliche Missverständnisse?"
+  },
+  {
+    "id": "q143",
+    "category": "kurios",
+    "text": "Welche Sternbilder haben in verschiedenen Kulturen ganz andere Bedeutungen?"
+  },
+  {
+    "id": "q144",
+    "category": "kurios",
+    "text": "Welche kuriosen Fakten gibt es über die Entwicklung von Fußball-Regeln?"
+  },
+  {
+    "id": "q145",
+    "category": "kurios",
+    "text": "Welche Alltagsmaterialien haben überraschende Ursprünge aus Kriegszeiten?"
+  },
+  {
+    "id": "q146",
+    "category": "kurios",
+    "text": "Welche Insekten haben Fähigkeiten, die Ingenieure heute nachahmen?"
+  },
+  {
+    "id": "q147",
+    "category": "kurios",
+    "text": "Welche historischen Expeditions-Katastrophen wurden zu Legenden?"
+  },
+  {
+    "id": "q148",
+    "category": "kurios",
+    "text": "Welche kuriosen Fakten gibt es über die menschliche Nase und Geruchswahrnehmung?"
+  },
+  {
+    "id": "q149",
+    "category": "kurios",
+    "text": "Welche Länder haben ihre Hauptstadt schon mehrfach verlegt?"
+  },
+  {
+    "id": "q150",
+    "category": "kurios",
+    "text": "Welche skurrilen Dinge wurden in Tresoren oder Zeitkapseln vergraben und später gefunden?"
+  },
+  {
+    "id": "q151",
+    "category": "spicy18",
+    "text": "Welche historischen Texte gelten als früheste erotische Literatur?"
+  },
+  {
+    "id": "q152",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse gibt es über Asexualität als sexuelle Orientierung?"
+  },
+  {
+    "id": "q153",
+    "category": "spicy18",
+    "text": "Wie unterscheiden sich kulturelle Normen zu Nacktheit weltweit?"
+  },
+  {
+    "id": "q154",
+    "category": "spicy18",
+    "text": "Welche Mythen über sexuelle Kompatibilität in Partnerschaften halten sich hartnäckig?"
+  },
+  {
+    "id": "q155",
+    "category": "spicy18",
+    "text": "Welche überraschenden Fakten zeigen Studien zur Häufigkeit von Sex in Langzeitbeziehungen?"
+  },
+  {
+    "id": "q156",
+    "category": "spicy18",
+    "text": "Welche historischen Werke wurden wegen sexueller Inhalte verboten?"
+  },
+  {
+    "id": "q157",
+    "category": "spicy18",
+    "text": "Welche verbreiteten Annahmen über den Zusammenhang von Sport und Libido sind korrekt?"
+  },
+  {
+    "id": "q158",
+    "category": "spicy18",
+    "text": "Welche kuriosen Sexualaufklärungsbroschüren aus der Vergangenheit sind heute Zeitdokumente?"
+  },
+  {
+    "id": "q159",
+    "category": "spicy18",
+    "text": "Welche kulturellen Unterschiede gibt es beim Umgang mit Eifersucht in Beziehungen?"
+  },
+  {
+    "id": "q160",
+    "category": "spicy18",
+    "text": "Welche wissenschaftlich belegten Fakten zum menschlichen Paarungsverhalten überraschen die meisten?"
+  },
+  {
+    "id": "q161",
+    "category": "spicy18",
+    "text": "Welche Klischees über sexuelle Wünsche von Männern und Frauen sind empirisch schwach belegt?"
+  },
+  {
+    "id": "q162",
+    "category": "spicy18",
+    "text": "Welche historischen Gesellschaften hatten formalisierte Polyamorie-Strukturen?"
+  },
+  {
+    "id": "q163",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse gibt es über den Einfluss von Alkohol auf sexuelle Entscheidungen?"
+  },
+  {
+    "id": "q164",
+    "category": "spicy18",
+    "text": "Welche Fehler passieren häufig bei der Erstanwendung von Kondomen laut Studien?"
+  },
+  {
+    "id": "q165",
+    "category": "spicy18",
+    "text": "Welche Daten gibt es zu sexueller Aktivität bei Menschen über 60?"
+  },
+  {
+    "id": "q166",
+    "category": "spicy18",
+    "text": "Welche gesellschaftlichen Faktoren beeinflussen das Schamgefühl rund um Körperbilder?"
+  },
+  {
+    "id": "q167",
+    "category": "spicy18",
+    "text": "Welche historischen Debatten gab es über das Konzept der Monogamie?"
+  },
+  {
+    "id": "q168",
+    "category": "spicy18",
+    "text": "Welche kuriosen Fakten hat die Forschung über Aphrodisiaka ergeben?"
+  },
+  {
+    "id": "q169",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse über BDSM und Einwilligung halten sich in populären Darstellungen?"
+  },
+  {
+    "id": "q170",
+    "category": "spicy18",
+    "text": "Welche Unterschiede in der Sexualaufklärung gibt es zwischen europäischen Ländern?"
+  },
+  {
+    "id": "q171",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse hat die Sexualforschung über Fetische?"
+  },
+  {
+    "id": "q172",
+    "category": "spicy18",
+    "text": "Welche kulturellen Rituale rund um Pubertät und Erwachsenwerden gibt es weltweit?"
+  },
+  {
+    "id": "q173",
+    "category": "spicy18",
+    "text": "Welche Fakten zur Häufigkeit sexueller Dysfunktionen werden in der Öffentlichkeit unterschätzt?"
+  },
+  {
+    "id": "q174",
+    "category": "spicy18",
+    "text": "Welche Geschichte hat das Konzept des Orgasmus in der medizinischen Literatur?"
+  },
+  {
+    "id": "q175",
+    "category": "spicy18",
+    "text": "Welche Mythen über die Verhütungspille und Gewichtszunahme sind wissenschaftlich umstritten?"
+  },
+  {
+    "id": "q176",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse gibt es über den Zusammenhang von Schlafdauer und Sexualleben?"
+  },
+  {
+    "id": "q177",
+    "category": "spicy18",
+    "text": "Welche historischen Meinungsverschiedenheiten gab es in der Sexualforschung über Kinsey hinaus?"
+  },
+  {
+    "id": "q178",
+    "category": "spicy18",
+    "text": "Welche kuriosen Fakten hat die Forschung über menschliche Pheromone ergeben?"
+  },
+  {
+    "id": "q179",
+    "category": "spicy18",
+    "text": "Welche gesellschaftlichen Tabus rund um Menstruation wirken sich auf den Alltag aus?"
+  },
+  {
+    "id": "q180",
+    "category": "spicy18",
+    "text": "Welche Daten zeigen die Entwicklung des Heiratsverhaltens in den letzten 50 Jahren?"
+  },
+  {
+    "id": "q181",
+    "category": "spicy18",
+    "text": "Welche verbreiteten Annahmen über sexuelle Attraktivität widerlegt die Forschung?"
+  },
+  {
+    "id": "q182",
+    "category": "spicy18",
+    "text": "Welche historischen Debatten gab es über das Konzept der weiblichen Lust?"
+  },
+  {
+    "id": "q183",
+    "category": "spicy18",
+    "text": "Welche Faktoren erhöhen laut Forschung die Beziehungszufriedenheit langfristig?"
+  },
+  {
+    "id": "q184",
+    "category": "spicy18",
+    "text": "Welche Mythen über männliche Empfindsamkeit beim Sex halten sich in der Popkultur?"
+  },
+  {
+    "id": "q185",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse gibt es zur Sexualität von Menschen mit Behinderungen?"
+  },
+  {
+    "id": "q186",
+    "category": "spicy18",
+    "text": "Welche Sexualnormen der Antike klingen aus heutiger Sicht besonders fremd?"
+  },
+  {
+    "id": "q187",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse gibt es über den G-Punkt in der wissenschaftlichen Literatur?"
+  },
+  {
+    "id": "q188",
+    "category": "spicy18",
+    "text": "Welche internationalen Unterschiede gibt es bei der rechtlichen Definition von Einwilligung?"
+  },
+  {
+    "id": "q189",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse zeigt die Forschung über Sexualität und Selbstwertgefühl?"
+  },
+  {
+    "id": "q190",
+    "category": "spicy18",
+    "text": "Welchen verbreiteten Aussagen über sexuelle Fantasien widerspricht die Forschung?"
+  },
+  {
+    "id": "q191",
+    "category": "spicy18",
+    "text": "Welche Daten gibt es zu Hookup-Kultur und psychischem Wohlbefinden?"
+  },
+  {
+    "id": "q192",
+    "category": "spicy18",
+    "text": "Welche historischen Versuche gab es, sexuelle Orientierung zu klassifizieren?"
+  },
+  {
+    "id": "q193",
+    "category": "spicy18",
+    "text": "Welche Fakten zum Thema Schmerz bei Sex werden oft tabuisiert?"
+  },
+  {
+    "id": "q194",
+    "category": "spicy18",
+    "text": "Welche gesellschaftlichen Normen rund um Pornografie haben sich in 30 Jahren gewandelt?"
+  },
+  {
+    "id": "q195",
+    "category": "spicy18",
+    "text": "Welche Erkenntnisse gibt es über die Wirkung von Medikamenten auf die Sexualität?"
+  },
+  {
+    "id": "q196",
+    "category": "spicy18",
+    "text": "Welche Missverständnisse zum Thema sexuelles Einverständnis tauchen in Umfragen auf?"
+  },
+  {
+    "id": "q197",
+    "category": "spicy18",
+    "text": "Welche kuriosen Fakten gibt es zur Geschichte des Bikinis und Bademodennormen?"
+  },
+  {
+    "id": "q198",
+    "category": "spicy18",
+    "text": "Welche Mythen über sexuelle Ausdauer werden in Werbung und Unterhaltung verbreitet?"
+  },
+  {
+    "id": "q199",
+    "category": "spicy18",
+    "text": "Welche Unterschiede zeigen Studien zwischen städtischen und ländlichen Einstellungen zur Sexualität?"
+  },
+  {
+    "id": "q200",
+    "category": "spicy18",
+    "text": "Welche überraschenden Erkenntnisse hat die Evolutionsbiologie über menschliche Sexualität?"
   }
 ]
