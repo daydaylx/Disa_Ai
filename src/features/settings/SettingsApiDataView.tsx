@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button, Card, Input, Label, useToasts } from "@/ui";
 
-import { StorageMigration } from "../../components/StorageMigration";
 import { STORAGE_KEYS } from "../../config/storageKeys";
 import { useConversationStats } from "../../hooks/use-storage";
 import { Download, Eye, EyeOff, HardDrive, KeyRound, Upload } from "../../lib/icons";
@@ -36,7 +35,6 @@ export function SettingsApiDataView() {
   const [showKey, setShowKey] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const [showMigration, setShowMigration] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout>();
 
@@ -402,25 +400,6 @@ export function SettingsApiDataView() {
             <p className="text-xs text-ink-secondary">
               Unterstützt JSON-Dateien im Disa AI Format. Bestehende Gespräche bleiben erhalten.
             </p>
-          </section>
-        </Card>
-
-        <Card variant="surface" className="border-white/[0.08]">
-          <section className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold text-ink-primary">Migration & Recovery</h2>
-              <Button variant="secondary" size="sm" onClick={() => setShowMigration((v) => !v)}>
-                {showMigration ? "Schließen" : "Öffnen"}
-              </Button>
-            </div>
-            {showMigration && (
-              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 p-2">
-                <StorageMigration
-                  onMigrationComplete={refresh}
-                  onClose={() => setShowMigration(false)}
-                />
-              </div>
-            )}
           </section>
         </Card>
 

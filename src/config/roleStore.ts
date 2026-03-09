@@ -89,18 +89,8 @@ async function tryLoadRoles(signal?: AbortSignal): Promise<RoleTemplate[] | null
 
 /* -------------------- Public API -------------------- */
 
-export function getRoleTemplates(): RoleTemplate[] {
-  return _roles;
-}
 export function getRoleState(): { state: RoleState; error: string | null } {
   return { state: _state, error: _error };
-}
-/* Kompatibilitäts-Exporte für bestehenden Code */
-export function listRoleTemplates(): RoleTemplate[] {
-  return getRoleTemplates();
-}
-export function getRoleLoadStatus(): { state: RoleState; error: string | null } {
-  return getRoleState();
 }
 
 export async function fetchRoleTemplates(

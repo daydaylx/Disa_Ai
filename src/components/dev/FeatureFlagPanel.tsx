@@ -150,24 +150,3 @@ export function FeatureFlagPanel() {
     </div>
   );
 }
-
-/**
- * Feature-Flag Indicator für Header/Navigation
- * Kleinere Variante für permanente Anzeige
- */
-export function FeatureFlagIndicator() {
-  const debug = useFeatureFlagDebug();
-
-  if (!debug.isDev || !debug.hasAnyActive) {
-    return null;
-  }
-
-  return (
-    <span
-      className={cn(CHIP_BASE_STYLES, "text-yellow-400")}
-      title={`Aktive Feature-Flags: ${debug.activeFlags.map((f) => f.key).join(", ")}`}
-    >
-      FF: {debug.activeCount}
-    </span>
-  );
-}

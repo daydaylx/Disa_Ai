@@ -1,4 +1,4 @@
-import { getRoleById } from "../../config/promptTemplates";
+import { getRoleById } from "../../config/roleStore";
 import type { StyleKey } from "../../config/settings";
 
 /** Style-Mapping für alle StyleKey-Werte. */

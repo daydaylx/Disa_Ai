@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useState } from "react";
 
 import {
-  bulkDeleteConversations,
   type Conversation,
   type ConversationMetadata,
   type ConversationStats,
@@ -10,13 +9,11 @@ import {
   getAllConversations,
   getConversation,
   getConversationStats,
-  isStorageReady,
   saveConversation,
   searchConversations,
   toggleFavorite,
   updateConversation,
 } from "../lib/conversation-manager-modern";
-import { storageMigration } from "../lib/storage-migration";
 
 export interface UseConversationsOptions {
   autoRefresh?: boolean;
@@ -236,193 +233,5 @@ export function useConversationStats() {
     loading,
     error,
     refresh,
-  };
-}
-
-export interface UseStorageMigrationReturn {
-  migrationStatus: {
-    hasLocalStorageData: boolean;
-    hasIndexedDBData: boolean;
-    needsMigration: boolean;
-  } | null;
-  migrationInProgress: boolean;
-  loading: boolean;
-  error: string | null;
-  checkMigrationStatus: () => Promise<void>;
-  migrate: (options?: any) => Promise<any>;
-  estimateMigrationTime: () => Promise<any>;
-  createBackup: () => Promise<string | null>;
-  restoreFromBackup: (backupData: string) => Promise<any>;
-}
-
-export function useStorageMigration() {
-  const [migrationStatus, setMigrationStatus] = useState<{
-    hasLocalStorageData: boolean;
-    hasIndexedDBData: boolean;
-    needsMigration: boolean;
-  } | null>(null);
-  const [migrationInProgress, setMigrationInProgress] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const checkMigrationStatus = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const status = await storageMigration.checkMigrationStatus();
-      setMigrationStatus(status);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to check migration status");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const migrate = useCallback(
-    async (options?: any) => {
-      try {
-        setMigrationInProgress(true);
-        setError(null);
-
-        const result = await storageMigration.migrateFromLocalStorage(options);
-        await checkMigrationStatus(); // Refresh status after migration
-
-        return result;
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "Migration failed";
-        setError(errorMsg);
-        throw new Error(errorMsg);
-      } finally {
-        setMigrationInProgress(false);
-      }
-    },
-    [checkMigrationStatus],
-  );
-
-  const estimateMigrationTime = useCallback(async () => {
-    try {
-      return await storageMigration.estimateMigrationTime();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to estimate migration time");
-      return null;
-    }
-  }, []);
-
-  const createBackup = useCallback(async () => {
-    try {
-      return await storageMigration.createBackup();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create backup");
-      return null;
-    }
-  }, []);
-
-  const restoreFromBackup = useCallback(
-    async (backupData: string) => {
-      try {
-        setMigrationInProgress(true);
-        setError(null);
-
-        const result = await storageMigration.restoreFromBackup(backupData);
-        await checkMigrationStatus(); // Refresh status after restore
-
-        return result;
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "Restore failed";
-        setError(errorMsg);
-        throw new Error(errorMsg);
-      } finally {
-        setMigrationInProgress(false);
-      }
-    },
-    [checkMigrationStatus],
-  );
-
-  useEffect(() => {
-    void checkMigrationStatus();
-  }, [checkMigrationStatus]);
-
-  return {
-    migrationStatus,
-    migrationInProgress,
-    loading,
-    error,
-    checkMigrationStatus,
-    migrate,
-    estimateMigrationTime,
-    createBackup,
-    restoreFromBackup,
-  };
-}
-
-export interface UseStorageHealthReturn {
-  isReady: boolean;
-  loading: boolean;
-  error: string | null;
-  checkHealth: () => Promise<void>;
-}
-
-export function useStorageHealth() {
-  const [isReady, setIsReady] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const checkHealth = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const ready = await isStorageReady();
-      setIsReady(ready);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Storage health check failed");
-      setIsReady(false);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void checkHealth();
-  }, [checkHealth]);
-
-  return {
-    isReady,
-    loading,
-    error,
-    checkHealth,
-  };
-}
-
-// Utility hook for bulk operations
-export function useBulkOperations() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const bulkDelete = useCallback(async (ids: string[]) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const result = await bulkDeleteConversations(ids);
-      if (result.errors.length > 0) {
-        setError(result.errors.join(", "));
-      }
-
-      return result;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Bulk delete failed";
-      setError(errorMsg);
-      throw new Error(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  return {
-    bulkDelete,
-    loading,
-    error,
   };
 }

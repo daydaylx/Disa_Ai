@@ -48,6 +48,7 @@ import {
   CatalogHeader,
   EmptyState,
   ListRow,
+  PageHeroStat,
   PullToRefresh,
 } from "@/ui";
 
@@ -219,12 +220,14 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
 
   const headerTheme = selectedCategory
     ? getCategoryStyle(selectedCategory)
-    : getCategoryStyle("Entertainment");
+    : getCategoryStyle(activeRole?.category ?? "Entertainment");
 
   const countLabel =
     rolesLoading && roles.length === 0
       ? "Rollen werden geladen…"
       : `${filteredRoles.length} von ${roles.length} Rollen verfügbar`;
+  const highlightedRole = selectedRole ?? (activeRole ? migrateRole(activeRole) : null);
+  const HighlightedRoleIcon = highlightedRole ? getRoleIcon(highlightedRole) : Users;
 
   return (
     <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
@@ -242,7 +245,39 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         title="Rollen & Personas"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
+        eyebrow="Ton & Persönlichkeit"
+        icon={<HighlightedRoleIcon className="h-5 w-5" />}
+        description="Lege fest, wie Disa antwortet: sachlich, kreativ, direkt oder empathisch. Die aktive Rolle gibt neuen Gesprächen sofort einen klaren Stil."
+        meta={
+          <>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+              Rollen prägen Stil, Tiefe und Tonfall
+            </Badge>
+            {activeRole?.category ? (
+              <Badge
+                className={cn(
+                  "rounded-full border-white/10 bg-white/[0.06]",
+                  getCategoryStyle(activeRole.category).badgeText,
+                )}
+              >
+                Aktiv: {activeRole.category}
+              </Badge>
+            ) : null}
+          </>
+        }
         action={
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              void navigate("/chat");
+            }}
+            className="flex-1 sm:flex-none"
+          >
+            Mit Rolle chatten
+          </Button>
+        }
+        secondaryAction={
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
@@ -268,6 +303,37 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 <RotateCcw className="mr-1 h-3 w-3" /> Reset
               </Button>
             ) : null}
+          </div>
+        }
+        highlights={
+          <div className="grid gap-2 sm:grid-cols-3">
+            <PageHeroStat
+              label="Aktiv"
+              value={activeRole?.name ?? "Noch keine Rolle aktiv"}
+              helper={
+                activeRole?.description ??
+                "Wähle unten eine Persona, um neue Chats sofort in diesem Stil zu starten."
+              }
+              icon={<HighlightedRoleIcon className="h-4 w-4" />}
+            />
+            <PageHeroStat
+              label="Fokus"
+              value={selectedCategory ?? "Alle Kategorien"}
+              helper={
+                filters.showFavoritesOnly
+                  ? "Favoritenfilter ist aktiv."
+                  : "Filter helfen dir, schneller den passenden Stil zu finden."
+              }
+              icon={
+                selectedCategory ? <Tag className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />
+              }
+            />
+            <PageHeroStat
+              label="Favoriten"
+              value={`${enhancedRoles.filter((role) => isRoleFavorite(role.id)).length}`}
+              helper="Merke dir starke Personas für spätere Gespräche."
+              icon={<Star className="h-4 w-4" />}
+            />
           </div>
         }
         filterRow={
@@ -445,7 +511,31 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                       <ChevronDown className="h-3.5 w-3.5" />
                     </button>
                   }
-                />
+                >
+                  <div className="space-y-3">
+                    <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+                      Kurzprofil: {role.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
+                      {role.tags?.length ? (
+                        <span
+                          className={cn(
+                            "rounded-full border px-2 py-1",
+                            theme.border,
+                            theme.badgeText,
+                          )}
+                        >
+                          Stichworte: {role.tags.slice(0, 3).join(" · ")}
+                        </span>
+                      ) : null}
+                      {role.allowedModels?.length ? (
+                        <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
+                          {role.allowedModels[0] === "*" ? "Alle Modelle" : "Modelle begrenzt"}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </ListRow>
               );
             })}
           </div>

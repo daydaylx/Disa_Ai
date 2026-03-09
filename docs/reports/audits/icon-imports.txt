@@ -34,7 +34,7 @@
 /home/d/Schreibtisch/Disa_Ai/src/components/common/EnhancedListInterface.tsx:import { Filter, Search, Settings, Star } from "lucide-react";
 /home/d/Schreibtisch/Disa_Ai/src/components/Header.tsx:import { Menu } from "lucide-react";
 /home/d/Schreibtisch/Disa_Ai/src/components/studio/RoleCard.tsx:import { Info } from "lucide-react";
-/home/d/Schreibtisch/Disa_Ai/src/components/models/EnhancedModelsInterface.tsx:} from "lucide-react";
+/home/d/Schreibtisch/Disa_Ai/src/components/models/ModelsCatalog.tsx:} from "@/lib/icons";
 /home/d/Schreibtisch/Disa_Ai/src/components/memory/MemoryPanel.tsx:import { Brain, ChevronDown, ChevronRight, Plus, X } from "lucide-react";
 /home/d/Schreibtisch/Disa_Ai/src/features/settings/SettingsOverview.tsx:import { BookOpenCheck, KeyRound, Palette, Shield, Upload, Waves } from "lucide-react";
 /home/d/Schreibtisch/Disa_Ai/src/features/settings/SettingsView.tsx:} from "lucide-react";

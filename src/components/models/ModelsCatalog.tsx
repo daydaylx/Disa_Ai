@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { type ModelEntry } from "@/config/models";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -30,6 +31,7 @@ import {
   CatalogHeader,
   EmptyState,
   ListRow,
+  PageHeroStat,
   PullToRefresh,
 } from "@/ui";
 
@@ -156,6 +158,7 @@ function getPriceLabel(entry: ModelEntry) {
 }
 
 export function ModelsCatalog({ className }: ModelsCatalogProps) {
+  const navigate = useNavigate();
   const { settings, setPreferredModel } = useSettings();
   const { favorites, toggleModelFavorite, isModelFavorite } = useFavorites();
   const { models: catalog, loading, error, refresh } = useModelCatalog();
@@ -201,6 +204,8 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
     !catalog && loading
       ? "Modelle werden geladen…"
       : `${catalog?.length ?? 0} Modelle · ${favorites.models.items.length} Favoriten`;
+  const highlightedModel = activeModel ?? filtered[0] ?? null;
+  const HighlightedModelIcon = highlightedModel ? getProviderIcon(highlightedModel.provider) : Cpu;
 
   return (
     <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
@@ -218,7 +223,39 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         title="Modelle"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
+        eyebrow="Gesprächs-Setup"
+        icon={<HighlightedModelIcon className="h-5 w-5" />}
+        description="Wähle das Modell, das neue Chats standardmäßig nutzt. So weißt du vor dem Start sofort, mit welcher Stärke, Geschwindigkeit und Preisstufe du arbeitest."
+        meta={
+          <>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+              Neue Chats übernehmen dein aktives Modell
+            </Badge>
+            {highlightedModel?.provider ? (
+              <Badge
+                className={cn(
+                  "rounded-full border-white/10 bg-white/[0.06]",
+                  headerTheme.badgeText,
+                )}
+              >
+                Anbieter: {highlightedModel.provider}
+              </Badge>
+            ) : null}
+          </>
+        }
         action={
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              void navigate("/chat");
+            }}
+            className="flex-1 sm:flex-none"
+          >
+            Im Chat nutzen
+          </Button>
+        }
+        secondaryAction={
           <Button
             variant="ghost"
             size="icon"
@@ -230,6 +267,32 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
           >
             <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
           </Button>
+        }
+        highlights={
+          <div className="grid gap-2 sm:grid-cols-3">
+            <PageHeroStat
+              label="Aktiv"
+              value={highlightedModel ? "Bereit für neue Chats" : "Noch nicht gewählt"}
+              helper={
+                highlightedModel
+                  ? `Aktuelles Modell: ${highlightedModel.label} · ${getContextTokens(highlightedModel).toLocaleString()} Tokens`
+                  : "Tippe unten auf ein Modell, um es zu aktivieren."
+              }
+              icon={<HighlightedModelIcon className="h-4 w-4" />}
+            />
+            <PageHeroStat
+              label="Favoriten"
+              value={`${favorites.models.items.length}`}
+              helper="Favoriten bleiben oben und sind schneller wiederzufinden."
+              icon={<Star className="h-4 w-4" />}
+            />
+            <PageHeroStat
+              label="Preisgefühl"
+              value={highlightedModel ? getPriceLabel(highlightedModel) : "—"}
+              helper="Input / Output pro 1K Tokens"
+              icon={<Sparkles className="h-4 w-4" />}
+            />
+          </div>
         }
       />
 
@@ -344,7 +407,33 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                       <ChevronDown className="h-3.5 w-3.5" />
                     </button>
                   }
-                />
+                >
+                  <div className="space-y-3">
+                    {model.description ? (
+                      <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+                        {model.description}
+                      </p>
+                    ) : null}
+
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
+                      <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
+                        {getContextTokens(model).toLocaleString()} Tokens
+                      </span>
+                      <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
+                        {getPriceLabel(model)}
+                      </span>
+                      {model.tags?.slice(0, 2).map((tag) => (
+                        <Badge
+                          key={tag}
+                          size="sm"
+                          className={cn(providerTheme.badge, providerTheme.badgeText)}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </ListRow>
               );
             })}
           </div>

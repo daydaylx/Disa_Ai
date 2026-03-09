@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { hapticFeedback } from "@/lib/haptics";
 
@@ -182,32 +182,4 @@ export function useSwipeGesture(config: SwipeConfig) {
     isDragging,
     dragOffset,
   };
-}
-
-/**
- * Alternative: Swipe-Gesture mit Ref (für bestehende Components)
- */
-export function useSwipeGestureRef(config: SwipeConfig) {
-  const elementRef = useRef<HTMLElement>(null);
-  const { handlers } = useSwipeGesture(config);
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (!element) return undefined;
-
-    // Attach event listeners
-    element.addEventListener("touchstart", handlers.onTouchStart);
-    element.addEventListener("touchmove", handlers.onTouchMove);
-    element.addEventListener("touchend", handlers.onTouchEnd);
-    element.addEventListener("touchcancel", handlers.onTouchCancel);
-
-    return () => {
-      element.removeEventListener("touchstart", handlers.onTouchStart);
-      element.removeEventListener("touchmove", handlers.onTouchMove);
-      element.removeEventListener("touchend", handlers.onTouchEnd);
-      element.removeEventListener("touchcancel", handlers.onTouchCancel);
-    };
-  }, [handlers]);
-
-  return elementRef;
 }

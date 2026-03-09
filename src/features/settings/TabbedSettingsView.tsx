@@ -124,8 +124,8 @@ export function TabbedSettingsView({
   return (
     <SettingsLayout
       activeTab="overview"
-      title="Einstellungen"
-      description="Passe Disa an deine Bedürfnisse an."
+      title="Disa anpassen"
+      description="Lege Verhalten, Darstellung, Speicher und Zusatzfunktionen so fest, wie sie für dich im Alltag am sinnvollsten sind."
     >
       <div className="space-y-3 pb-4xl">
         {isLoading ? (
@@ -199,7 +199,19 @@ export function TabbedSettingsView({
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 }
-              />
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm leading-relaxed text-ink-secondary">
+                    Aktueller Stand: <span className="font-medium text-ink-primary">{status}</span>
+                  </p>
+                  <Badge
+                    size="sm"
+                    className="rounded-full border-accent-settings-border/40 bg-accent-settings-dim/50"
+                  >
+                    Schnell erreichbar
+                  </Badge>
+                </div>
+              </ListRow>
             );
           })
         )}

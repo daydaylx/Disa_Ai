@@ -130,16 +130,3 @@ export function useLongPress(config: LongPressConfig) {
     isLongPressing: isLongPressRef.current,
   };
 }
-
-/**
- * Wrapper für einfachere Nutzung ohne onClick
- */
-export function useLongPressOnly(
-  onLongPress: (event: React.TouchEvent | React.MouseEvent) => void,
-  delay?: number,
-) {
-  return useLongPress({
-    onLongPress,
-    delay,
-  });
-}

@@ -67,12 +67,3 @@ export const STORAGE_KEYS = {
   // Bookmark Animation
   BOOKMARK_ANIMATION: "disa:bookmark-animation-shown",
 } as const;
-
-// Session Storage Keys
-export const SESSION_STORAGE_KEYS = {
-  // PWA Update Status
-  PWA_UPDATE_SHOWN: "disa-pwa-update-shown",
-
-  // API Key (should only be in session storage)
-  API_KEY: "openrouter-key",
-} as const;

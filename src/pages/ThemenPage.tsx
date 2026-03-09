@@ -23,12 +23,13 @@ import {
   EmptyState,
   InfoBanner,
   ListRow,
+  PageHeroStat,
   PullToRefresh,
 } from "@/ui";
 
 type ThemaCategory = Quickstart["category"];
 
-function getThemaIcon(category: ThemaCategory) {
+function getThemaIcon(category?: ThemaCategory) {
   switch (category) {
     case "realpolitik":
       return Landmark;
@@ -54,8 +55,6 @@ export default function ThemenPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
-
-  const headerTheme = getCategoryStyle(selectedThema?.category ?? "Spezial");
 
   const regularDiscussions = useMemo(
     () => quickstarts.filter((q) => q.category !== "verschwörungstheorien"),
@@ -180,7 +179,30 @@ export default function ThemenPage() {
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
         }
-      />
+      >
+        <div className="space-y-3">
+          <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+            Impuls: {quickstart.description}
+          </p>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
+            {categoryInfo ? (
+              <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
+                {categoryInfo.label}
+              </Badge>
+            ) : null}
+            {quickstart.speculative ? (
+              <Badge variant="warning" size="sm">
+                Hypothese
+              </Badge>
+            ) : null}
+            {quickstart.category === "verschwörungstheorien" ? (
+              <span className="rounded-full border border-status-warning/25 bg-status-warning/10 px-2 py-1 text-status-warning">
+                Kontrovers
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </ListRow>
     );
   }, []);
 
@@ -195,6 +217,9 @@ export default function ThemenPage() {
     ? CATEGORY_LABELS[selectedThema.category]
     : null;
   const selectedThemaTheme = getCategoryStyle(selectedThema?.category);
+  const featuredQuickstart = selectedThema ?? regularDiscussions[0] ?? quickstarts[0] ?? null;
+  const headerTheme = getCategoryStyle(featuredQuickstart?.category ?? "Spezial");
+  const FeaturedQuickstartIcon = getThemaIcon(featuredQuickstart?.category);
 
   return (
     <div className="relative isolate flex flex-col h-full overflow-hidden">
@@ -212,7 +237,42 @@ export default function ThemenPage() {
         title="Themen"
         countLabel={countLabel}
         gradientStyle={headerTheme.roleGradient}
+        eyebrow="Gesprächsanstöße"
+        icon={<FeaturedQuickstartIcon className="h-5 w-5" />}
+        description="Starte ohne leere Eingabe direkt in ein vorbereitetes Gespräch. Themen geben dir sofort einen klaren Aufhänger für Diskussion, Analyse oder kreative Exploration."
+        meta={
+          <>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+              Themen öffnen direkt einen passenden Chat
+            </Badge>
+            {featuredQuickstart?.category ? (
+              <Badge
+                className={cn(
+                  "rounded-full border-white/10 bg-white/[0.06]",
+                  getCategoryStyle(featuredQuickstart.category).badgeText,
+                )}
+              >
+                Fokus: {CATEGORY_LABELS[featuredQuickstart.category]?.label ?? "Diskussion"}
+              </Badge>
+            ) : null}
+          </>
+        }
         action={
+          <Button
+            variant="primary"
+            size="sm"
+            disabled={!featuredQuickstart}
+            onClick={() => {
+              if (featuredQuickstart) {
+                handleStartQuickstart(featuredQuickstart);
+              }
+            }}
+            className="flex-1 sm:flex-none"
+          >
+            Direkt loslegen
+          </Button>
+        }
+        secondaryAction={
           <Button
             variant="ghost"
             size="icon"
@@ -226,6 +286,32 @@ export default function ThemenPage() {
           >
             <RefreshCw className={cn("h-5 w-5", isBusy && "animate-spin")} />
           </Button>
+        }
+        highlights={
+          <div className="grid gap-2 sm:grid-cols-3">
+            <PageHeroStat
+              label="Empfohlen"
+              value={featuredQuickstart ? "Bereit zum Start" : "Noch kein Thema gewählt"}
+              helper={
+                featuredQuickstart
+                  ? `Aktuell empfohlen: ${featuredQuickstart.title}`
+                  : "Wähle unten ein Thema und starte direkt in eine neue Unterhaltung."
+              }
+              icon={<FeaturedQuickstartIcon className="h-4 w-4" />}
+            />
+            <PageHeroStat
+              label="Diskussionen"
+              value={`${regularDiscussions.length}`}
+              helper="Allgemeine Themen für Analyse, Debatte und neue Ideen."
+              icon={<Brain className="h-4 w-4" />}
+            />
+            <PageHeroStat
+              label="Kontrovers"
+              value={`${conspiracyDiscussions.length}`}
+              helper="Bewusst markiert, damit du den Charakter des Themas sofort erkennst."
+              icon={<AlertTriangle className="h-4 w-4" />}
+            />
+          </div>
         }
       />
 

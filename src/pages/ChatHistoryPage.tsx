@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import { ConversationCard } from "@/components/conversation/ConversationCard";
 import { AlertCircle, Edit2, MessageSquare, Share2, Trash2 } from "@/lib/icons";
-import { ContextMenu, EmptyState, PullToRefresh, useToasts } from "@/ui";
+import {
+  Badge,
+  ContextMenu,
+  EmptyState,
+  PageHero,
+  PageHeroStat,
+  PullToRefresh,
+  useToasts,
+} from "@/ui";
 import { Button } from "@/ui/Button";
 import type { ContextMenuItem } from "@/ui/ContextMenu";
 
@@ -116,16 +124,89 @@ export default function ChatHistoryPage() {
     }
   };
 
-  return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto h-full">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-bold text-ink-primary">Gespeicherte Unterhaltungen</h2>
-          <p className="text-sm text-ink-secondary mt-1">Deine vergangenen Chats im Überblick.</p>
-        </div>
-      </div>
+  const latestConversation = conversations[0];
+  const latestTimestamp = latestConversation?.updatedAt || latestConversation?.createdAt;
+  const latestLabel = latestTimestamp
+    ? new Date(latestTimestamp).toLocaleString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "Noch keine Chats";
 
-      <PullToRefresh onRefresh={loadConversations} className="flex-1">
+  return (
+    <div className="relative isolate flex h-full w-full max-w-3xl flex-col gap-4">
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(56,189,248,0.14) 0%, rgba(139,92,246,0.08) 55%, transparent 72%)",
+          opacity: 0.45,
+        }}
+        aria-hidden="true"
+      />
+
+      <PageHero
+        title="Gespeicherte Unterhaltungen"
+        titleAs="h2"
+        eyebrow="Verlauf"
+        description="Hier findest du deine letzten Gespräche wieder. Öffne sie erneut, springe zurück in den Kontext oder räume ältere Chats auf."
+        countLabel={
+          loading && conversations.length === 0
+            ? "Verlauf wird geladen…"
+            : `${conversations.length} Chats gespeichert`
+        }
+        icon={<MessageSquare className="h-5 w-5" />}
+        gradientStyle="linear-gradient(135deg, rgba(56,189,248,0.14) 0%, rgba(139,92,246,0.08) 55%, rgba(15,23,42,0.18) 100%)"
+        action={
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              void navigate("/chat");
+            }}
+            className="flex-1 sm:flex-none"
+          >
+            Neuen Chat starten
+          </Button>
+        }
+        meta={
+          <>
+            <Badge variant="chat">Alle Gespräche bleiben lokal</Badge>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-secondary">
+              Langdruck öffnet weitere Aktionen
+            </Badge>
+          </>
+        }
+      >
+        <div className="grid gap-2 sm:grid-cols-3">
+          <PageHeroStat
+            label="Chats"
+            value={`${conversations.length}`}
+            helper="Gespeicherte Unterhaltungen in deinem Verlauf."
+            icon={<MessageSquare className="h-4 w-4" />}
+          />
+          <PageHeroStat
+            label="Zuletzt aktiv"
+            value={latestLabel}
+            helper={
+              latestConversation?.title
+                ? `Letzter Chat: ${latestConversation.title}`
+                : "Sobald du chattest, erscheint hier dein letzter Eintrag."
+            }
+            icon={<Share2 className="h-4 w-4" />}
+          />
+          <PageHeroStat
+            label="Geöffnete Vorschauen"
+            value={`${expandedConvs.size}`}
+            helper="Praktisch, wenn du kurz in ältere Antworten reinschauen willst."
+            icon={<Edit2 className="h-4 w-4" />}
+          />
+        </div>
+      </PageHero>
+
+      <PullToRefresh onRefresh={loadConversations} className="flex-1 pb-4">
         {loading && (
           <div className="space-y-3 animate-pulse">
             <div className="h-24 bg-surface-1 rounded-2xl w-full" />
@@ -149,23 +230,16 @@ export default function ChatHistoryPage() {
         )}
 
         {!loading && !loadError && conversations.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-white/10 rounded-2xl bg-surface-1/30">
-            <div className="h-12 w-12 bg-surface-2 rounded-full flex items-center justify-center mb-4 text-ink-tertiary">
-              <MessageSquare className="h-6 w-6" />
-            </div>
-            <p className="text-ink-primary font-medium">Noch keine Unterhaltungen</p>
-            <p className="text-sm text-ink-secondary mt-1">
-              Starte einen neuen Chat, um ihn hier zu sehen.
-            </p>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="mt-4"
-              onClick={() => void navigate("/chat")}
-            >
-              Neuen Chat starten
-            </Button>
-          </div>
+          <EmptyState
+            icon={<MessageSquare className="h-6 w-6" />}
+            title="Noch keine Unterhaltungen"
+            description="Starte einen neuen Chat, um ihn hier wiederzufinden."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void navigate("/chat")}>
+                Neuen Chat starten
+              </Button>
+            }
+          />
         )}
 
         {!loading && !loadError && (

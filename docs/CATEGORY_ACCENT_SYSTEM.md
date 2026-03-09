@@ -172,7 +172,7 @@ const categoryAccent = getRoleCategoryAccent(role.category);
 - Expanded-Details mit Kategorie-Surface
 - Hover-States mit Kategorie-Glow
 
-### ✅ Modelle Cards (`EnhancedModelsInterface.tsx`)
+### ✅ Modelle Cards (`ModelsCatalog.tsx`)
 
 - Linker Border-Akzent in `accent-models`
 - Performance-Bars mit Accent-Farben

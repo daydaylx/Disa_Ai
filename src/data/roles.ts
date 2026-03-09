@@ -200,14 +200,3 @@ export function getRoleById(id: string): UIRole | undefined {
   if (id === STANDARD_ROLE.id) return STANDARD_ROLE;
   return cachedCombinedRoles.find((p) => p.id === id);
 }
-
-export function getRolesByCategory(category: string): UIRole[] {
-  return cachedCombinedRoles.filter((p) => p.category === category);
-}
-
-export function getCategories(): string[] {
-  const categories = new Set(
-    cachedCombinedRoles.map((p) => p.category).filter((c): c is string => Boolean(c)),
-  );
-  return Array.from(categories);
-}

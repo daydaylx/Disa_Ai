@@ -449,21 +449,6 @@ export function useFavoritesManager(): FavoritesManagerState {
 // HELPER FUNCTIONS
 // ============================================================================
 
-/**
- * Lightweight hook for components that only need to check favorite status
- * Performance optimized - doesn't trigger re-renders on usage changes
- */
-export function useFavoriteStatus() {
-  const [favorites] = useState<FavoritesState>(() => loadFavorites());
-
-  return {
-    isRoleFavorite: (roleId: string) => favorites.roles?.items?.includes?.(roleId) ?? false,
-    isModelFavorite: (modelId: string) => favorites.models?.items?.includes?.(modelId) ?? false,
-    favoriteRoles: favorites.roles?.items || [],
-    favoriteModels: favorites.models?.items || [],
-  };
-}
-
 function loadFavorites(): FavoritesState {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.FAVORITES);

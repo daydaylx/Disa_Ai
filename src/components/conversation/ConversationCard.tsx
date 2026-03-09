@@ -40,6 +40,7 @@ export function ConversationCard({
     onMouseUp: (e: React.MouseEvent) => longPressHandlers.onMouseUp(e),
     onMouseLeave: () => longPressHandlers.onMouseLeave(),
   };
+  const lastPreviewMessage = conversation.messages?.[conversation.messages.length - 1];
 
   return (
     <Card
@@ -49,10 +50,14 @@ export function ConversationCard({
       notch="none"
       padding="none"
       className={cn(
-        "relative group overflow-hidden border-white/[0.08]",
+        "relative group overflow-hidden border-white/[0.08] bg-surface-card/65 shadow-surface-subtle ring-1 ring-inset ring-white/[0.03] backdrop-blur-sm",
         "hover:border-white/[0.14] hover:bg-surface-2/65",
       )}
     >
+      <div
+        className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        aria-hidden
+      />
       <div
         className="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-accent-chat"
         aria-hidden
@@ -60,7 +65,7 @@ export function ConversationCard({
       {/* Main Row */}
       <div className="flex items-center gap-4 p-4">
         {/* Icon */}
-        <div className="flex-shrink-0 h-12 w-12 rounded-2xl bg-accent-chat-surface flex items-center justify-center text-accent-chat">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-accent-chat-border/40 bg-accent-chat-surface text-accent-chat shadow-inner">
           <MessageSquare className="h-6 w-6" />
         </div>
 
@@ -97,6 +102,12 @@ export function ConversationCard({
               {conversation.messageCount ?? conversation.messages?.length ?? 0} Nachrichten
             </span>
           </div>
+          {lastPreviewMessage?.content ? (
+            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+              Zuletzt {lastPreviewMessage.role === "user" ? "von dir" : "von Disa"}:{" "}
+              {lastPreviewMessage.content}
+            </p>
+          ) : null}
         </div>
 
         {/* Actions */}
@@ -132,7 +143,7 @@ export function ConversationCard({
       {/* Expanded Details */}
       {isExpanded && conversation.messages && conversation.messages.length > 0 && (
         <div className="px-4 pb-4 pt-0 animate-fade-in">
-          <div className="space-y-2 rounded-xl border border-white/10 px-4 py-3 bg-surface-1/30">
+          <div className="space-y-2 rounded-xl border border-white/10 bg-black/[0.18] px-4 py-3 backdrop-blur-sm">
             <p className="text-xs text-ink-tertiary font-medium mb-2">
               Nachrichten-Vorschau (letzte 3):
             </p>

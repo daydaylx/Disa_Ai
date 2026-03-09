@@ -35,9 +35,9 @@ export function ListRow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/[0.10] px-4 py-4 transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-white/[0.10] px-4 py-4 shadow-surface-subtle transition-all duration-200",
         surfaceVariant === "catalogGlass"
-          ? "bg-surface-card/60 backdrop-blur-sm"
+          ? "bg-surface-card/60 ring-1 ring-inset ring-white/[0.03] backdrop-blur-sm"
           : "bg-surface-card",
         onPress &&
           "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px",
@@ -49,6 +49,11 @@ export function ListRow({
       )}
       {...props}
     >
+      <div
+        className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        aria-hidden
+      />
+
       {accentClassName ? (
         <div
           className={cn(
@@ -95,7 +100,9 @@ export function ListRow({
         ) : null}
       </div>
 
-      {children ? <div className="relative z-content mt-3">{children}</div> : null}
+      {children ? (
+        <div className="relative z-content mt-3 border-t border-white/[0.06] pt-3">{children}</div>
+      ) : null}
     </div>
   );
 }

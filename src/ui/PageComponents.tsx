@@ -2,6 +2,162 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import { Badge } from "./Badge";
+import { Card } from "./Card";
+
+type HeroTitleTag = "h1" | "h2" | "p";
+
+interface PageHeroProps {
+  title: string;
+  titleAs?: HeroTitleTag;
+  eyebrow?: string;
+  description?: string;
+  countLabel?: string;
+  icon?: React.ReactNode;
+  action?: React.ReactNode;
+  secondaryAction?: React.ReactNode;
+  meta?: React.ReactNode;
+  gradientStyle?: string;
+  className?: string;
+  contentClassName?: string;
+  children?: React.ReactNode;
+}
+
+export function PageHero({
+  title,
+  titleAs = "h1",
+  eyebrow,
+  description,
+  countLabel,
+  icon,
+  action,
+  secondaryAction,
+  meta,
+  gradientStyle,
+  className,
+  contentClassName,
+  children,
+}: PageHeroProps) {
+  const TitleTag = titleAs;
+
+  return (
+    <div className={cn("relative flex-none px-4 pt-3", className)}>
+      <Card
+        variant="hero"
+        padding="none"
+        className="relative overflow-hidden rounded-[28px] border-white/[0.12] bg-surface-1/75 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.75)] ring-1 ring-inset ring-white/[0.04] backdrop-blur-xl"
+      >
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -top-24 right-[-6rem] h-52 w-52 rounded-full bg-white/10 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-[-6rem] left-[-4rem] h-44 w-44 rounded-full bg-white/[0.05] blur-3xl"
+          aria-hidden
+        />
+        {gradientStyle ? (
+          <div
+            className="pointer-events-none absolute inset-0 opacity-70 transition-all duration-500"
+            style={{ background: gradientStyle }}
+            aria-hidden
+          />
+        ) : null}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_24%,rgba(0,0,0,0.14)_100%)]" />
+
+        <div className={cn("relative space-y-4 px-4 py-4 sm:px-5 sm:py-5", contentClassName)}>
+          <div className="flex flex-wrap items-start gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                {eyebrow ? (
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ink-tertiary">
+                    {eyebrow}
+                  </span>
+                ) : null}
+                {countLabel ? (
+                  <Badge
+                    size="sm"
+                    className="rounded-full border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] text-ink-secondary"
+                  >
+                    {countLabel}
+                  </Badge>
+                ) : null}
+              </div>
+
+              <div className="mt-3 flex items-start gap-3">
+                {icon ? (
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.08] text-ink-primary shadow-inner">
+                    {icon}
+                  </div>
+                ) : null}
+
+                <div className="min-w-0 space-y-2">
+                  <TitleTag className="text-balance text-xl font-semibold tracking-tight text-ink-primary sm:text-2xl">
+                    {title}
+                  </TitleTag>
+                  {description ? (
+                    <p className="max-w-2xl text-sm leading-relaxed text-ink-secondary sm:text-[15px]">
+                      {description}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
+            {(secondaryAction || action) && (
+              <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end sm:pt-1">
+                {secondaryAction}
+                {action}
+              </div>
+            )}
+          </div>
+
+          {meta ? <div className="flex flex-wrap gap-2">{meta}</div> : null}
+
+          {children ? (
+            <div className="border-t border-white/[0.08] pt-4">
+              <div className="rounded-[22px] border border-white/[0.05] bg-black/[0.16] p-3 shadow-inner">
+                {children}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+interface PageHeroStatProps {
+  label: string;
+  value: string;
+  helper?: string;
+  icon?: React.ReactNode;
+  className?: string;
+}
+
+export function PageHeroStat({ label, value, helper, icon, className }: PageHeroStatProps) {
+  return (
+    <div
+      className={cn(
+        "min-w-0 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-3 py-3 shadow-inner backdrop-blur-sm",
+        className,
+      )}
+    >
+      <div className="flex items-center gap-2">
+        {icon ? <div className="text-ink-tertiary">{icon}</div> : null}
+        <p className="truncate text-[11px] font-medium uppercase tracking-[0.18em] text-ink-muted">
+          {label}
+        </p>
+      </div>
+      <p className="mt-2 text-sm font-semibold text-ink-primary">{value}</p>
+      {helper ? <p className="mt-1 text-xs leading-relaxed text-ink-tertiary">{helper}</p> : null}
+    </div>
+  );
+}
+
 interface CatalogHeaderProps {
   /** sr-only H1 text — matches the mobile sticky header title for semantics */
   title: string;
@@ -13,6 +169,12 @@ interface CatalogHeaderProps {
   action?: React.ReactNode;
   /** Optional second row — used for filter chip scrollers (Roles page) */
   filterRow?: React.ReactNode;
+  description?: string;
+  eyebrow?: string;
+  icon?: React.ReactNode;
+  secondaryAction?: React.ReactNode;
+  meta?: React.ReactNode;
+  highlights?: React.ReactNode;
   className?: string;
 }
 
@@ -31,28 +193,35 @@ export function CatalogHeader({
   gradientStyle,
   action,
   filterRow,
+  description,
+  eyebrow,
+  icon,
+  secondaryAction,
+  meta,
+  highlights,
   className,
 }: CatalogHeaderProps) {
   return (
-    <div className={cn("flex-none pt-3 px-4", className)}>
-      <h1 className="sr-only">{title}</h1>
-      <div className="relative overflow-hidden rounded-2xl border border-white/[0.10] bg-surface-1/70 shadow-sm backdrop-blur-md">
-        {gradientStyle ? (
-          <div
-            className="absolute inset-0 opacity-40 pointer-events-none transition-all duration-500"
-            style={{ background: gradientStyle }}
-            aria-hidden
-          />
-        ) : null}
-        <div className="relative space-y-3 px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-ink-secondary">{countLabel}</div>
-            {action ? <div className="flex items-center gap-2">{action}</div> : null}
-          </div>
+    <PageHero
+      title={title}
+      titleAs="h1"
+      eyebrow={eyebrow}
+      description={description}
+      countLabel={countLabel}
+      icon={icon}
+      action={action}
+      secondaryAction={secondaryAction}
+      meta={meta}
+      gradientStyle={gradientStyle}
+      className={className}
+    >
+      {highlights || filterRow ? (
+        <div className="space-y-4">
+          {highlights ? <div>{highlights}</div> : null}
           {filterRow ? <div>{filterRow}</div> : null}
         </div>
-      </div>
-    </div>
+      ) : null}
+    </PageHero>
   );
 }
 
@@ -94,10 +263,18 @@ interface EmptyStateProps {
 export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
     <div
-      className={cn("flex flex-col items-center justify-center py-16 px-4 text-center", className)}
+      className={cn(
+        "relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-surface-card/70 px-4 py-16 text-center shadow-surface-subtle backdrop-blur-md",
+        "flex flex-col items-center justify-center",
+        className,
+      )}
     >
+      <div
+        className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+        aria-hidden
+      />
       {icon && (
-        <div className="h-14 w-14 rounded-2xl bg-surface-2 flex items-center justify-center text-ink-tertiary mb-4">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.06] text-ink-tertiary shadow-inner">
           {icon}
         </div>
       )}
@@ -136,7 +313,7 @@ export function InfoBanner({
   return (
     <div
       className={cn(
-        "flex items-start gap-3 p-4 rounded-xl border",
+        "flex items-start gap-3 rounded-2xl border p-4 backdrop-blur-sm",
         variantStyles[variant],
         className,
       )}

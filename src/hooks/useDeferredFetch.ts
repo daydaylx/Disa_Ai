@@ -344,15 +344,3 @@ export function useDeferredCachedFetch<T>(
     deps,
   });
 }
-
-/**
- * Status-Debugging für Development
- */
-export function getDeferredFetchStatus() {
-  const browserAvailable = typeof window !== "undefined";
-  return {
-    featureFlagEnabled: isFeatureEnabled("deferredDataFetch"),
-    supportsRequestIdleCallback: browserAvailable && "requestIdleCallback" in window,
-    timestamp: new Date().toISOString(),
-  };
-}

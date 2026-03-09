@@ -20,7 +20,7 @@ import {
   X,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Button, Card, InfoBanner, useToasts } from "@/ui";
+import { Badge, Button, Card, InfoBanner, PageHero, PageHeroStat, useToasts } from "@/ui";
 
 const FEEDBACK_TYPES = [
   { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-settings" },
@@ -282,15 +282,59 @@ export default function FeedbackPage() {
       : null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-full p-4 overflow-y-auto">
-      <Card className="w-full max-w-lg" padding="lg">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-ink-primary">Deine Meinung zählt</h1>
-          <p className="text-sm text-ink-secondary mt-2">
-            Hilf uns, Disa AI besser zu machen. Was funktioniert gut? Was fehlt dir?
-          </p>
-        </div>
+    <div className="relative isolate mx-auto flex min-h-full w-full max-w-3xl flex-col gap-4 overflow-y-auto pb-4">
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.16) 0%, rgba(236,72,153,0.08) 55%, transparent 72%)",
+          opacity: 0.45,
+        }}
+        aria-hidden="true"
+      />
 
+      <PageHero
+        title="Deine Meinung zählt"
+        titleAs="h2"
+        eyebrow="Feedback"
+        description="Sag uns einfach, was gut läuft, wo es hakt oder was dir noch fehlt. Du kannst anonym bleiben und bei Bedarf Screenshots mitsenden."
+        countLabel="Direkt an das Team"
+        icon={<MessageSquare className="h-5 w-5" />}
+        gradientStyle="linear-gradient(135deg, rgba(251,191,36,0.14) 0%, rgba(236,72,153,0.08) 55%, rgba(15,23,42,0.18) 100%)"
+        meta={
+          <>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+              Anonym möglich
+            </Badge>
+            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-secondary">
+              Screenshots erlaubt
+            </Badge>
+          </>
+        }
+      >
+        <div className="grid gap-2 sm:grid-cols-3">
+          <PageHeroStat
+            label="Dauer"
+            value="~1 Minute"
+            helper="Kurze Hinweise reichen völlig aus."
+            icon={<Send className="h-4 w-4" />}
+          />
+          <PageHeroStat
+            label="Antwort"
+            value="E-Mail optional"
+            helper="Nur angeben, wenn du Rückmeldung möchtest."
+            icon={<MessageSquare className="h-4 w-4" />}
+          />
+          <PageHeroStat
+            label="Anhänge"
+            value={`${attachments.length}/${IMAGE_CONFIG.MAX_FILES}`}
+            helper="Bilder werden automatisch verkleinert und optimiert."
+            icon={<ImageIcon className="h-4 w-4" />}
+          />
+        </div>
+      </PageHero>
+
+      <Card className="w-full rounded-[28px]" padding="lg">
         {submitError ? (
           <InfoBanner variant="error" title="Senden fehlgeschlagen" className="mb-5 rounded-xl">
             {submitError}

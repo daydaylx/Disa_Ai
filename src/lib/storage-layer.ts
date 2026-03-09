@@ -506,75 +506,6 @@ export class ModernStorageLayer {
     }
   }
 
-  async bulkUpdateConversations(
-    updates: Array<{ id: string; updates: Partial<Conversation> }>,
-  ): Promise<{ updated: number; errors: string[] }> {
-    const db = await this.ensureDB();
-    const errors: string[] = [];
-
-    if (!db) {
-      let updated = 0;
-      for (const { id, updates: convUpdates } of updates) {
-        const existing = fallbackStore.conversations.get(id);
-        if (!existing) {
-          errors.push(`Conversation ${id} not found`);
-          continue;
-        }
-        const merged: Conversation = {
-          ...existing,
-          ...convUpdates,
-          updatedAt: new Date().toISOString(),
-        };
-        fallbackStore.conversations.set(id, merged);
-        fallbackStore.metadata.set(id, {
-          id: merged.id,
-          title: merged.title,
-          createdAt: merged.createdAt,
-          updatedAt: merged.updatedAt,
-          model: merged.model,
-          messageCount: merged.messageCount,
-        });
-        updated++;
-      }
-      if (updated > 0) {
-        persistFallbackStore();
-      }
-      return { updated, errors };
-    }
-
-    try {
-      await db.transaction("rw", db.conversations, db.metadata, async () => {
-        for (const { id, updates: convUpdates } of updates) {
-          const existing = await db.conversations.get(id);
-          if (!existing) {
-            errors.push(`Conversation ${id} not found`);
-            continue;
-          }
-          const merged: Conversation = {
-            ...existing,
-            ...convUpdates,
-            updatedAt: new Date().toISOString(),
-          };
-          await db.conversations.put(merged);
-          await db.metadata.put({
-            id: merged.id,
-            title: merged.title,
-            createdAt: merged.createdAt,
-            updatedAt: merged.updatedAt,
-            model: merged.model,
-            messageCount: merged.messageCount,
-          });
-        }
-      });
-      const successful = updates.length - errors.length;
-      return { updated: successful, errors };
-    } catch (error) {
-      errors.push(String(error));
-      console.error("Failed bulk update conversations:", error);
-      return { updated: 0, errors };
-    }
-  }
-
   async deleteConversation(id: string): Promise<void> {
     const db = await this.ensureDB();
     if (!db) {
@@ -927,12 +858,8 @@ export class ModernStorageLayer {
 
 let modernStorageInstance = new ModernStorageLayer();
 
-export function setModernStorageInstance(instance: ModernStorageLayer): void {
+function setModernStorageInstance(instance: ModernStorageLayer): void {
   modernStorageInstance = instance;
-}
-
-export function getModernStorageInstance(): ModernStorageLayer {
-  return modernStorageInstance;
 }
 
 function registerModernStorageOverride(instance: ModernStorageLayer): void {

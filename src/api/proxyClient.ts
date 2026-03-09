@@ -301,15 +301,3 @@ export async function chatOnceViaProxy(
     throw mapError(error);
   }
 }
-
-/**
- * Check if proxy is available (has shared secret configured)
- */
-export function isProxyAvailable(): boolean {
-  try {
-    getProxySharedSecret();
-    return true;
-  } catch {
-    return false;
-  }
-}
