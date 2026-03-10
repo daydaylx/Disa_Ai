@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -84,7 +84,8 @@ describe("ThemenPage", () => {
       }),
     );
 
-    expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
+    const detailsDialog = screen.getByRole("dialog", { name: "Test Diskussion" });
+    expect(within(detailsDialog).getByText("Ein Testthema")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
     expect(screen.getByTestId("location-display")).toHaveTextContent("/themen");
     expect(screen.getAllByRole("button", { name: "Schließen" }).length).toBeGreaterThan(0);
@@ -99,7 +100,8 @@ describe("ThemenPage", () => {
       }),
     );
 
-    expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
+    const detailsDialog = screen.getByRole("dialog", { name: "Test Diskussion" });
+    expect(within(detailsDialog).getByText("Ein Testthema")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
     expect(screen.getByTestId("location-display")).toHaveTextContent("/themen");
   });

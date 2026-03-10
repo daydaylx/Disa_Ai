@@ -345,9 +345,20 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     pressed={isActive}
                     accentClassName={providerTheme.textBg}
                     className={cn(
+                      "stagger-item",
                       isActive
-                        ? cn("border-white/[0.14]", providerTheme.border, providerTheme.glow)
-                        : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                        ? cn(
+                            "border-white/[0.18]",
+                            providerTheme.border,
+                            providerTheme.bg,
+                            providerTheme.glow,
+                          )
+                        : cn(
+                            "border-white/[0.08]",
+                            providerTheme.hoverBorder,
+                            providerTheme.hoverBg,
+                            providerTheme.hoverGlow,
+                          ),
                     )}
                     leading={
                       <div
@@ -355,7 +366,12 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                           "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
                           isActive
                             ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
-                            : cn(providerTheme.iconBg, providerTheme.iconText),
+                            : cn(
+                                providerTheme.iconBg,
+                                providerTheme.iconText,
+                                providerTheme.groupHoverIconBg,
+                                providerTheme.groupHoverIconText,
+                              ),
                         )}
                       >
                         <ProviderIcon className="h-6 w-6" />
@@ -366,9 +382,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         {isActive ? (
                           <Badge
                             className={cn(
-                              "h-5 px-2 text-[10px] shadow-sm",
+                              "h-6 rounded-full border px-2.5 text-[10px] font-semibold shadow-[0_14px_28px_-20px_rgba(255,255,255,0.55)] backdrop-blur-sm",
                               providerTheme.badge,
                               providerTheme.badgeText,
+                              providerTheme.border,
                             )}
                           >
                             Aktiv
@@ -384,10 +401,10 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                             isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                           }
                           className={cn(
-                            "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                            "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary shadow-inner backdrop-blur-sm transition-colors",
                             isFavorite
                               ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                              : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                              : "border-white/[0.06] bg-black/20 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-ink-primary",
                           )}
                         >
                           <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
@@ -401,7 +418,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                           event.stopPropagation();
                           setSelectedModelId(model.id);
                         }}
-                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.05] px-3 text-[11px] font-medium text-ink-secondary shadow-inner backdrop-blur-sm transition-colors hover:bg-white/[0.09] hover:text-ink-primary"
                       >
                         Details
                         <ChevronDown className="h-3.5 w-3.5" />
@@ -410,7 +427,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                   >
                     <div className="space-y-3">
                       {model.description ? (
-                        <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+                        <p className="line-clamp-2 text-sm font-medium leading-relaxed text-ink-secondary">
                           {model.description}
                         </p>
                       ) : null}
@@ -422,15 +439,6 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
                           {getPriceLabel(model)}
                         </span>
-                        {model.tags?.slice(0, 2).map((tag) => (
-                          <Badge
-                            key={tag}
-                            size="sm"
-                            className={cn(providerTheme.badge, providerTheme.badgeText)}
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
                       </div>
                     </div>
                   </ListRow>

@@ -129,29 +129,21 @@ describe("EnhancedRolesInterface", () => {
     expect(scrollContainer).toContainElement(screen.getAllByTestId("role-card")[0]!);
   });
 
-  it("should display role cards", async () => {
+  it("should display role cards", () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
     // Check for role names
     expect(screen.getByText("Kreativer Assistent")).toBeInTheDocument();
     expect(screen.getByText("Code Experte")).toBeInTheDocument();
 
-    // Expand the first role card to see its description
     const creativeAssistantCard = screen
       .getByText("Kreativer Assistent")
       .closest('[data-testid="role-card"]');
-    expect(creativeAssistantCard).toBeInTheDocument(); // Ensure card is found
-
-    if (creativeAssistantCard) {
-      const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
-        "button",
-        { name: "Details", hidden: true },
-      ); // Use within
-      fireEvent.click(detailsButton);
-    }
-    // Check for role descriptions (now visible)
+    expect(creativeAssistantCard).toBeInTheDocument();
     expect(
-      screen.getByText("Hilft bei kreativen Projekten und Ideenentwicklung."),
+      within(creativeAssistantCard as HTMLElement).getByText(
+        "Hilft bei kreativen Projekten und Ideenentwicklung.",
+      ),
     ).toBeInTheDocument();
   });
 

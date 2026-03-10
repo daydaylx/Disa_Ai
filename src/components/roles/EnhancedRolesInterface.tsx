@@ -449,8 +449,13 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     className={cn(
                       "stagger-item",
                       isActive
-                        ? cn("border-white/[0.14]", theme.border, theme.glow)
-                        : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                        ? cn("border-white/[0.18]", theme.border, theme.bg, theme.glow)
+                        : cn(
+                            "border-white/[0.08]",
+                            theme.hoverBorder,
+                            theme.hoverBg,
+                            theme.hoverGlow,
+                          ),
                     )}
                     style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
                     data-testid="role-card"
@@ -468,7 +473,12 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
                           isActive
                             ? cn(theme.iconBg, theme.iconText, "shadow-inner")
-                            : cn(theme.iconBg, theme.iconText),
+                            : cn(
+                                theme.iconBg,
+                                theme.iconText,
+                                theme.groupHoverIconBg,
+                                theme.groupHoverIconText,
+                              ),
                         )}
                       >
                         <RoleIcon className="h-6 w-6" />
@@ -479,9 +489,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         {isActive ? (
                           <Badge
                             className={cn(
-                              "h-5 px-2 text-[10px] shadow-sm",
+                              "h-6 rounded-full border px-2.5 text-[10px] font-semibold shadow-[0_14px_28px_-20px_rgba(255,255,255,0.55)] backdrop-blur-sm",
                               theme.badge,
                               theme.badgeText,
+                              theme.border,
                             )}
                           >
                             Aktiv
@@ -497,10 +508,10 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
                           }
                           className={cn(
-                            "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                            "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary shadow-inner backdrop-blur-sm transition-colors",
                             isFavorite
                               ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                              : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
+                              : "border-white/[0.06] bg-black/20 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-ink-primary",
                           )}
                         >
                           <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
@@ -515,7 +526,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           setSelectedRoleId(role.id);
                         }}
                         aria-label="Details"
-                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.05] px-3 text-[11px] font-medium text-ink-secondary shadow-inner backdrop-blur-sm transition-colors hover:bg-white/[0.09] hover:text-ink-primary"
                       >
                         Details
                         <ChevronDown className="h-3.5 w-3.5" />
@@ -523,8 +534,8 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     }
                   >
                     <div className="space-y-3">
-                      <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
-                        Kurzprofil: {role.description}
+                      <p className="line-clamp-2 text-sm font-medium leading-relaxed text-ink-secondary">
+                        {role.description}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
                         {role.tags?.length ? (
@@ -535,7 +546,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                               theme.badgeText,
                             )}
                           >
-                            Stichworte: {role.tags.slice(0, 3).join(" · ")}
+                            {role.tags.slice(0, 2).join(" · ")}
                           </span>
                         ) : null}
                         {role.allowedModels?.length ? (

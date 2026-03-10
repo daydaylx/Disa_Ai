@@ -139,7 +139,10 @@ export default function ThemenPage() {
         surfaceVariant="catalogGlass"
         className={cn(
           "stagger-item",
-          "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+          "border-white/[0.08]",
+          theme.hoverBorder,
+          theme.hoverBg,
+          theme.hoverGlow,
         )}
         style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
         title={quickstart.title}
@@ -153,6 +156,8 @@ export default function ThemenPage() {
               "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
               theme.iconBg,
               theme.iconText,
+              theme.groupHoverIconBg,
+              theme.groupHoverIconText,
             )}
           >
             <ThemaIcon className="h-6 w-6" />
@@ -173,7 +178,7 @@ export default function ThemenPage() {
               setSelectedThema(quickstart);
             }}
             aria-label={`Details zu ${quickstart.title} anzeigen`}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.05] px-3 text-[11px] font-medium text-ink-secondary shadow-inner backdrop-blur-sm transition-colors hover:bg-white/[0.09] hover:text-ink-primary"
           >
             Details
             <ChevronDown className="h-3.5 w-3.5" />
@@ -181,26 +186,23 @@ export default function ThemenPage() {
         }
       >
         <div className="space-y-3">
-          <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
-            Impuls: {quickstart.description}
+          <p className="line-clamp-2 text-sm font-medium leading-relaxed text-ink-secondary">
+            {quickstart.description}
           </p>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
-            {categoryInfo ? (
-              <Badge size="sm" className={cn(theme.badge, theme.badgeText)}>
-                {categoryInfo.label}
-              </Badge>
-            ) : null}
-            {quickstart.speculative ? (
-              <Badge variant="warning" size="sm">
-                Hypothese
-              </Badge>
-            ) : null}
-            {quickstart.category === "verschwörungstheorien" ? (
-              <span className="rounded-full border border-status-warning/25 bg-status-warning/10 px-2 py-1 text-status-warning">
-                Kontrovers
-              </span>
-            ) : null}
-          </div>
+          {quickstart.speculative || quickstart.category === "verschwörungstheorien" ? (
+            <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
+              {quickstart.speculative ? (
+                <Badge variant="warning" size="sm">
+                  Hypothese
+                </Badge>
+              ) : null}
+              {quickstart.category === "verschwörungstheorien" ? (
+                <span className="rounded-full border border-status-warning/25 bg-status-warning/10 px-2 py-1 text-status-warning">
+                  Kontrovers
+                </span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </ListRow>
     );
