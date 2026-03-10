@@ -43,7 +43,7 @@ describe("TabbedSettingsView", () => {
     renderTabbedSettingsView();
 
     expect(await screen.findByText("Gedächtnis")).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: "Details" }).length).toBeGreaterThan(0);
+    expect((await screen.findAllByRole("button", { name: "Details" })).length).toBeGreaterThan(0);
   });
 
   it("zeigt den Empty-State wenn keine Bereiche verfügbar sind", async () => {
