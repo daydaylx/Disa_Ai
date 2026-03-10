@@ -89,7 +89,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
         {(title || description) && (
           <PageHero
             title={title || ""}
-            titleAs="h2"
+            titleAs="h1"
             eyebrow="Einstellungen"
             description={description}
             icon={<ActiveIcon className="h-5 w-5" />}

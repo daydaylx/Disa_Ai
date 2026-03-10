@@ -223,9 +223,11 @@ test.describe("Touch Target Compliance", () => {
   test("all interactive buttons meet 44px minimum", async ({ page }) => {
     await skipOnboarding(page);
     await page.goto("/");
+    await expect(page.locator('button[aria-label="Menü öffnen"]:visible').first()).toBeVisible();
+    await expect(page.getByTestId("composer-input")).toBeVisible();
 
-    // Get all buttons
-    const buttons = page.locator("button");
+    // Only inspect rendered, visible controls after the shell has mounted.
+    const buttons = page.locator("button:visible");
     const buttonCount = await buttons.count();
 
     expect(buttonCount).toBeGreaterThan(0);

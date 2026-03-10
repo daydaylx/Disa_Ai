@@ -63,16 +63,15 @@ test.describe("Unified Layout Tests", () => {
     ];
 
     for (const { path } of nonChatPages) {
-      await page.goto(path);
-      await page.waitForLoadState("networkidle");
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+
+      // Wait for the standard content shell instead of relying on network idle.
+      const main = page.locator("main").or(page.getByRole("main"));
+      await expect(main).toBeVisible({ timeout: 30000 });
 
       // Check for page header with title
       const pageHeader = page.getByRole("heading", { level: 1 });
       await expect(pageHeader).toBeVisible();
-
-      // Check for scrollable content area
-      const main = page.locator("main").or(page.getByRole("main"));
-      await expect(main).toBeVisible();
 
       // Should have some padding on standard pages (measure the header itself)
       const headerBox = await pageHeader.boundingBox();
