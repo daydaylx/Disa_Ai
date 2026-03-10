@@ -78,7 +78,9 @@ const reports = reportFiles.map((filePath) => {
 });
 
 const directAudits = new Set(
-  reports.filter((report) => report.requestedPath === report.finalPath).map((report) => report.finalPath),
+  reports
+    .filter((report) => report.requestedPath === report.finalPath)
+    .map((report) => report.finalPath),
 );
 
 const selectedReports = reports.filter((report) => {
@@ -102,7 +104,9 @@ for (const report of selectedReports) {
 
 const summaries = [...groupedReports.entries()]
   .map(([route, bucket]) => {
-    const lcpValues = bucket.map((report) => report.lcpMs).filter((value) => Number.isFinite(value));
+    const lcpValues = bucket
+      .map((report) => report.lcpMs)
+      .filter((value) => Number.isFinite(value));
     const scoreValues = bucket
       .map((report) => report.performanceScore)
       .filter((value) => Number.isFinite(value));
@@ -125,10 +129,9 @@ if (summaries.length === 0) {
 console.log("Lighthouse mobile budget summary:");
 
 for (const summary of summaries) {
-  const formattedScore =
-    Number.isFinite(summary.medianPerformanceScore)
-      ? summary.medianPerformanceScore.toFixed(2)
-      : "n/a";
+  const formattedScore = Number.isFinite(summary.medianPerformanceScore)
+    ? summary.medianPerformanceScore.toFixed(2)
+    : "n/a";
   console.log(
     `- ${summary.route}: median LCP ${summary.medianLcpMs.toFixed(0)}ms, median performance ${formattedScore}, runs [${summary.lcpValues.map((value) => value.toFixed(0)).join(", ")}]`,
   );
@@ -146,9 +149,7 @@ if (violations.length > 0) {
   console.error(`❌ Mobile Lighthouse median LCP exceeded ${maxLcpMs}ms.`);
 
   for (const violation of violations) {
-    console.error(
-      `  - ${violation.route}: ${violation.medianLcpMs.toFixed(0)}ms > ${maxLcpMs}ms`,
-    );
+    console.error(`  - ${violation.route}: ${violation.medianLcpMs.toFixed(0)}ms > ${maxLcpMs}ms`);
   }
 
   process.exit(1);
