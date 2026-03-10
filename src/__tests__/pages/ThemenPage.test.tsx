@@ -56,33 +56,62 @@ describe("ThemenPage", () => {
   });
 
   it("zeigt den Daten-State mit Themenliste", async () => {
-    renderThemenPage();
+    const { container } = renderThemenPage();
 
     expect(await screen.findByText("Test Diskussion")).toBeInTheDocument();
     expect(screen.getByText("1 Themen · 0 Kontrovers")).toBeInTheDocument();
 
-    // Both the ListRow overlay and the trailing button share the same aria-label;
-    // click the first match (the row overlay) to open the BottomSheet.
-    const [detailsButton] = screen.getAllByRole("button", {
-      name: "Details zu Test Diskussion anzeigen",
-    });
+    const scrollContainer = container.querySelector(".overflow-auto.overscroll-contain");
+    expect(scrollContainer).not.toBeNull();
+    expect(scrollContainer).toContainElement(
+      screen.getByRole("heading", { level: 1, name: "Themen" }),
+    );
+    expect(scrollContainer).toContainElement(
+      screen.getByRole("button", {
+        name: "Thema Test Diskussion öffnen",
+      }),
+    );
 
-    fireEvent.click(detailsButton!);
+    expect(
+      screen.getByRole("button", {
+        name: "Details zu Test Diskussion anzeigen",
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Thema Test Diskussion öffnen",
+      }),
+    );
 
     expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
     expect(screen.getByTestId("location-display")).toHaveTextContent("/themen");
-    // BottomSheet has both an icon X-button (aria-label) and a text "Schließen" button
     expect(screen.getAllByRole("button", { name: "Schließen" }).length).toBeGreaterThan(0);
+  });
+
+  it("öffnet Details auch über den separaten Detail-Button", async () => {
+    renderThemenPage();
+
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Details zu Test Diskussion anzeigen",
+      }),
+    );
+
+    expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/themen");
   });
 
   it("startet den Chat erst über eine explizite Themen-Aktion", async () => {
     renderThemenPage();
 
-    const [detailsButton] = await screen.findAllByRole("button", {
-      name: "Details zu Test Diskussion anzeigen",
-    });
-    fireEvent.click(detailsButton!);
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Thema Test Diskussion öffnen",
+      }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Diskussion starten" }));
 
     await waitFor(() => {

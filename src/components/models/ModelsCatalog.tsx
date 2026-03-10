@@ -208,7 +208,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   const HighlightedModelIcon = highlightedModel ? getProviderIcon(highlightedModel.provider) : Cpu;
 
   return (
-    <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
+    <div className={cn("relative isolate flex h-full min-h-0 flex-col overflow-hidden", className)}>
       <div
         className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
         style={{
@@ -218,226 +218,227 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         }}
         aria-hidden="true"
       />
-      <CatalogHeader
-        className="relative z-10"
-        title="Modelle"
-        countLabel={countLabel}
-        gradientStyle={headerTheme.roleGradient}
-        eyebrow="Gesprächs-Setup"
-        icon={<HighlightedModelIcon className="h-5 w-5" />}
-        description="Wähle das Modell, das neue Chats standardmäßig nutzt. So weißt du vor dem Start sofort, mit welcher Stärke, Geschwindigkeit und Preisstufe du arbeitest."
-        meta={
-          <>
-            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
-              Neue Chats übernehmen dein aktives Modell
-            </Badge>
-            {highlightedModel?.provider ? (
-              <Badge
-                className={cn(
-                  "rounded-full border-white/10 bg-white/[0.06]",
-                  headerTheme.badgeText,
-                )}
-              >
-                Anbieter: {highlightedModel.provider}
-              </Badge>
-            ) : null}
-          </>
-        }
-        action={
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => {
-              void navigate("/chat");
-            }}
-            className="flex-1 sm:flex-none"
-          >
-            Im Chat nutzen
-          </Button>
-        }
-        secondaryAction={
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleRefresh}
-            disabled={isLoading}
-            className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
-            aria-label="Modelle aktualisieren"
-            title="Modelliste aktualisieren"
-          >
-            <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
-          </Button>
-        }
-        highlights={
-          <div className="grid gap-2 sm:grid-cols-3">
-            <PageHeroStat
-              label="Aktiv"
-              value={highlightedModel ? "Bereit für neue Chats" : "Noch nicht gewählt"}
-              helper={
-                highlightedModel
-                  ? `Aktuelles Modell: ${highlightedModel.label} · ${getContextTokens(highlightedModel).toLocaleString()} Tokens`
-                  : "Tippe unten auf ein Modell, um es zu aktivieren."
-              }
-              icon={<HighlightedModelIcon className="h-4 w-4" />}
-            />
-            <PageHeroStat
-              label="Favoriten"
-              value={`${favorites.models.items.length}`}
-              helper="Favoriten bleiben oben und sind schneller wiederzufinden."
-              icon={<Star className="h-4 w-4" />}
-            />
-            <PageHeroStat
-              label="Preisgefühl"
-              value={highlightedModel ? getPriceLabel(highlightedModel) : "—"}
-              helper="Input / Output pro 1K Tokens"
-              icon={<Sparkles className="h-4 w-4" />}
-            />
-          </div>
-        }
-      />
-
-      {/* Content Zone - Scrollable List */}
       <PullToRefresh
         onRefresh={handleRefresh}
         disabled={isLoading}
-        className="relative z-10 flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+        className="relative z-10 flex-1 min-h-0"
       >
-        {!catalog && loading ? (
-          <CardSkeleton count={6} />
-        ) : error ? ( // Conditional rendering for error state
-          <EmptyState
-            icon={<Cpu className="h-8 w-8 text-ink-muted" />}
-            title="Fehler beim Laden der Modelle" // More specific error title
-            description={error} // Display the actual error message
-            className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error" // Error styling
+        <div className="flex min-h-full flex-col gap-4 px-4 pb-page-bottom-safe pt-4">
+          <CatalogHeader
+            className="shrink-0"
+            title="Modelle"
+            countLabel={countLabel}
+            gradientStyle={headerTheme.roleGradient}
+            eyebrow="Gesprächs-Setup"
+            icon={<HighlightedModelIcon className="h-5 w-5" />}
+            description="Wähle das Modell, das neue Chats standardmäßig nutzt. So weißt du vor dem Start sofort, mit welcher Stärke, Geschwindigkeit und Preisstufe du arbeitest."
+            meta={
+              <>
+                <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+                  Neue Chats übernehmen dein aktives Modell
+                </Badge>
+                {highlightedModel?.provider ? (
+                  <Badge
+                    className={cn(
+                      "rounded-full border-white/10 bg-white/[0.06]",
+                      headerTheme.badgeText,
+                    )}
+                  >
+                    Anbieter: {highlightedModel.provider}
+                  </Badge>
+                ) : null}
+              </>
+            }
             action={
-              <Button onClick={() => handleRefresh()} variant="outline" size="sm">
-                Erneut versuchen
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  void navigate("/chat");
+                }}
+                className="flex-1 sm:flex-none"
+              >
+                Im Chat nutzen
               </Button>
             }
-          />
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={<Cpu className="h-8 w-8 text-ink-muted" />}
-            title="Keine Modelle gefunden"
-            description="Versuche es mit anderen Suchbegriffen."
-            className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
-          />
-        ) : (
-          <div className="space-y-2 animate-fade-in">
-            {filtered.map((model) => {
-              const isActive = activeModelId === model.id;
-              const isFavorite = isModelFavorite(model.id);
-              const providerTheme = getCategoryStyle(getProviderColorTheme(model.provider));
-              const ProviderIcon = getProviderIcon(model.provider);
-
-              return (
-                <ListRow
-                  key={model.id}
-                  surfaceVariant="catalogGlass"
-                  data-testid="model-card"
-                  aria-label={model.label ?? model.id}
-                  title={model.label ?? model.id}
-                  subtitle={model.provider || "Unknown"}
-                  active={isActive}
-                  onPress={() => setPreferredModel(model.id)}
-                  pressLabel={`Modell ${model.label ?? model.id} auswählen`}
-                  pressed={isActive}
-                  accentClassName={providerTheme.textBg}
-                  className={cn(
-                    isActive
-                      ? cn("border-white/[0.14]", providerTheme.border, providerTheme.glow)
-                      : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
-                  )}
-                  leading={
-                    <div
-                      className={cn(
-                        "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
-                        isActive
-                          ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
-                          : cn(providerTheme.iconBg, providerTheme.iconText),
-                      )}
-                    >
-                      <ProviderIcon className="h-6 w-6" />
-                    </div>
+            secondaryAction={
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+                aria-label="Modelle aktualisieren"
+                title="Modelliste aktualisieren"
+              >
+                <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+              </Button>
+            }
+            highlights={
+              <div className="grid gap-2 sm:grid-cols-3">
+                <PageHeroStat
+                  label="Aktiv"
+                  value={highlightedModel ? "Bereit für neue Chats" : "Noch nicht gewählt"}
+                  helper={
+                    highlightedModel
+                      ? `Aktuelles Modell: ${highlightedModel.label} · ${getContextTokens(highlightedModel).toLocaleString()} Tokens`
+                      : "Tippe unten auf ein Modell, um es zu aktivieren."
                   }
-                  topRight={
-                    <div className="flex items-center gap-2">
-                      {isActive ? (
-                        <Badge
+                  icon={<HighlightedModelIcon className="h-4 w-4" />}
+                />
+                <PageHeroStat
+                  label="Favoriten"
+                  value={`${favorites.models.items.length}`}
+                  helper="Favoriten bleiben oben und sind schneller wiederzufinden."
+                  icon={<Star className="h-4 w-4" />}
+                />
+                <PageHeroStat
+                  label="Preisgefühl"
+                  value={highlightedModel ? getPriceLabel(highlightedModel) : "—"}
+                  helper="Input / Output pro 1K Tokens"
+                  icon={<Sparkles className="h-4 w-4" />}
+                />
+              </div>
+            }
+          />
+
+          {!catalog && loading ? (
+            <CardSkeleton count={6} />
+          ) : error ? (
+            <EmptyState
+              icon={<Cpu className="h-8 w-8 text-ink-muted" />}
+              title="Fehler beim Laden der Modelle"
+              description={error}
+              className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
+              action={
+                <Button onClick={() => handleRefresh()} variant="outline" size="sm">
+                  Erneut versuchen
+                </Button>
+              }
+            />
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              icon={<Cpu className="h-8 w-8 text-ink-muted" />}
+              title="Keine Modelle gefunden"
+              description="Versuche es mit anderen Suchbegriffen."
+              className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
+            />
+          ) : (
+            <div className="space-y-2 animate-fade-in">
+              {filtered.map((model) => {
+                const isActive = activeModelId === model.id;
+                const isFavorite = isModelFavorite(model.id);
+                const providerTheme = getCategoryStyle(getProviderColorTheme(model.provider));
+                const ProviderIcon = getProviderIcon(model.provider);
+
+                return (
+                  <ListRow
+                    key={model.id}
+                    surfaceVariant="catalogGlass"
+                    data-testid="model-card"
+                    aria-label={model.label ?? model.id}
+                    title={model.label ?? model.id}
+                    subtitle={model.provider || "Unknown"}
+                    active={isActive}
+                    onPress={() => setPreferredModel(model.id)}
+                    pressLabel={`Modell ${model.label ?? model.id} auswählen`}
+                    pressed={isActive}
+                    accentClassName={providerTheme.textBg}
+                    className={cn(
+                      isActive
+                        ? cn("border-white/[0.14]", providerTheme.border, providerTheme.glow)
+                        : "border-white/[0.08] hover:border-white/[0.14] hover:bg-surface-2/65",
+                    )}
+                    leading={
+                      <div
+                        className={cn(
+                          "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+                          isActive
+                            ? cn(providerTheme.iconBg, providerTheme.iconText, "shadow-inner")
+                            : cn(providerTheme.iconBg, providerTheme.iconText),
+                        )}
+                      >
+                        <ProviderIcon className="h-6 w-6" />
+                      </div>
+                    }
+                    topRight={
+                      <div className="flex items-center gap-2">
+                        {isActive ? (
+                          <Badge
+                            className={cn(
+                              "h-5 px-2 text-[10px] shadow-sm",
+                              providerTheme.badge,
+                              providerTheme.badgeText,
+                            )}
+                          >
+                            Aktiv
+                          </Badge>
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleModelFavorite(model.id);
+                          }}
+                          aria-label={
+                            isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
+                          }
                           className={cn(
-                            "h-5 px-2 text-[10px] shadow-sm",
-                            providerTheme.badge,
-                            providerTheme.badgeText,
+                            "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
+                            isFavorite
+                              ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                              : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
                           )}
                         >
-                          Aktiv
-                        </Badge>
-                      ) : null}
+                          <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
+                        </button>
+                      </div>
+                    }
+                    trailing={
                       <button
                         type="button"
                         onClick={(event) => {
                           event.stopPropagation();
-                          toggleModelFavorite(model.id);
+                          setSelectedModelId(model.id);
                         }}
-                        aria-label={
-                          isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"
-                        }
-                        className={cn(
-                          "relative flex h-11 w-11 items-center justify-center rounded-full border text-ink-tertiary transition-colors",
-                          isFavorite
-                            ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
-                            : "border-white/5 bg-surface-2/80 hover:border-white/10 hover:text-ink-primary",
-                        )}
+                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                       >
-                        <Star className={cn("h-4 w-4", isFavorite && "fill-current")} />
+                        Details
+                        <ChevronDown className="h-3.5 w-3.5" />
                       </button>
-                    </div>
-                  }
-                  trailing={
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setSelectedModelId(model.id);
-                      }}
-                      className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg bg-transparent px-2 text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
-                    >
-                      Details
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                  }
-                >
-                  <div className="space-y-3">
-                    {model.description ? (
-                      <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
-                        {model.description}
-                      </p>
-                    ) : null}
+                    }
+                  >
+                    <div className="space-y-3">
+                      {model.description ? (
+                        <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+                          {model.description}
+                        </p>
+                      ) : null}
 
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
-                      <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
-                        {getContextTokens(model).toLocaleString()} Tokens
-                      </span>
-                      <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
-                        {getPriceLabel(model)}
-                      </span>
-                      {model.tags?.slice(0, 2).map((tag) => (
-                        <Badge
-                          key={tag}
-                          size="sm"
-                          className={cn(providerTheme.badge, providerTheme.badgeText)}
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
+                        <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
+                          {getContextTokens(model).toLocaleString()} Tokens
+                        </span>
+                        <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1">
+                          {getPriceLabel(model)}
+                        </span>
+                        {model.tags?.slice(0, 2).map((tag) => (
+                          <Badge
+                            key={tag}
+                            size="sm"
+                            className={cn(providerTheme.badge, providerTheme.badgeText)}
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </ListRow>
-              );
-            })}
-          </div>
-        )}
+                  </ListRow>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </PullToRefresh>
 
       <BottomSheet

@@ -97,6 +97,20 @@ describe("ModelsCatalog", () => {
     expect(screen.getByText(/2 Modelle · 0 Favoriten/i)).toBeInTheDocument();
   });
 
+  it("keeps hero and model list in the same scroll container", async () => {
+    const { container } = renderWithProviders(<ModelsCatalog />);
+
+    await screen.findByText("GPT-4o Mini");
+
+    const scrollContainer = container.querySelector(".overflow-auto.overscroll-contain");
+
+    expect(scrollContainer).not.toBeNull();
+    expect(scrollContainer).toContainElement(
+      screen.getByRole("heading", { level: 1, name: "Modelle" }),
+    );
+    expect(scrollContainer).toContainElement(screen.getAllByTestId("model-card")[0]!);
+  });
+
   it("should display model cards", async () => {
     renderWithProviders(<ModelsCatalog />);
 

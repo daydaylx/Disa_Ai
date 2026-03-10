@@ -13,6 +13,7 @@ test.describe("Visual Audit", () => {
     { path: "/settings", name: "settings" },
     { path: "/roles", name: "roles" },
     { path: "/models", name: "models" },
+    { path: "/themen", name: "themen" },
     { path: "/feedback", name: "feedback" },
   ];
 

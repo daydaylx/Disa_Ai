@@ -193,7 +193,7 @@ export function TabbedSettingsView({
                       event.stopPropagation();
                       setSelectedSectionId(section.id);
                     }}
-                    aria-label="Details"
+                    aria-label={`Details zu ${section.label}`}
                     className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-transparent text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
                   >
                     <ChevronRight className="h-4 w-4" />

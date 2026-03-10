@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TabbedSettingsView } from "../TabbedSettingsView";
@@ -30,8 +30,14 @@ function renderTabbedSettingsView(
   return render(
     <MemoryRouter initialEntries={["/settings"]}>
       <TabbedSettingsView loadSections={options.loadSections as never} />
+      <LocationProbe />
     </MemoryRouter>,
   );
+}
+
+function LocationProbe() {
+  const location = useLocation();
+  return <div data-testid="location-display">{location.pathname}</div>;
 }
 
 describe("TabbedSettingsView", () => {
@@ -43,7 +49,53 @@ describe("TabbedSettingsView", () => {
     renderTabbedSettingsView();
 
     expect(await screen.findByText("Gedächtnis")).toBeInTheDocument();
-    expect((await screen.findAllByRole("button", { name: "Details" })).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Aktueller Stand:/i).length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", {
+        name: "Gedächtnis öffnen",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Details zu Gedächtnis",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("öffnet einen Bereich direkt über die Primäraktion", async () => {
+    const user = userEvent.setup();
+    renderTabbedSettingsView();
+
+    await user.click(
+      await screen.findByRole("button", {
+        name: "Gedächtnis öffnen",
+      }),
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/settings/memory");
+    });
+  });
+
+  it("zeigt Details getrennt an und öffnet den Bereich erst über den CTA", async () => {
+    const user = userEvent.setup();
+    renderTabbedSettingsView();
+
+    await user.click(
+      await screen.findByRole("button", {
+        name: "Details zu Gedächtnis",
+      }),
+    );
+
+    expect(screen.getByText(/Aktueller Status:/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Öffnen" })).toBeInTheDocument();
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/settings");
+
+    await user.click(screen.getByRole("button", { name: "Öffnen" }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/settings/memory");
+    });
   });
 
   it("zeigt den Empty-State wenn keine Bereiche verfügbar sind", async () => {

@@ -145,7 +145,7 @@ export default function ThemenPage() {
         title={quickstart.title}
         subtitle={categoryInfo?.label || "Diskussion"}
         onPress={() => setSelectedThema(quickstart)}
-        pressLabel={`Details zu ${quickstart.title} anzeigen`}
+        pressLabel={`Thema ${quickstart.title} öffnen`}
         accentClassName={theme.textBg}
         leading={
           <div
@@ -222,7 +222,7 @@ export default function ThemenPage() {
   const FeaturedQuickstartIcon = getThemaIcon(featuredQuickstart?.category);
 
   return (
-    <div className="relative isolate flex flex-col h-full overflow-hidden">
+    <div className="relative isolate flex h-full min-h-0 flex-col overflow-hidden">
       <div
         className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
         style={{
@@ -232,164 +232,166 @@ export default function ThemenPage() {
         }}
         aria-hidden="true"
       />
-      <CatalogHeader
-        className="relative z-10"
-        title="Themen"
-        countLabel={countLabel}
-        gradientStyle={headerTheme.roleGradient}
-        eyebrow="Gesprächsanstöße"
-        icon={<FeaturedQuickstartIcon className="h-5 w-5" />}
-        description="Starte ohne leere Eingabe direkt in ein vorbereitetes Gespräch. Themen geben dir sofort einen klaren Aufhänger für Diskussion, Analyse oder kreative Exploration."
-        meta={
-          <>
-            <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
-              Themen öffnen direkt einen passenden Chat
-            </Badge>
-            {featuredQuickstart?.category ? (
-              <Badge
-                className={cn(
-                  "rounded-full border-white/10 bg-white/[0.06]",
-                  getCategoryStyle(featuredQuickstart.category).badgeText,
-                )}
-              >
-                Fokus: {CATEGORY_LABELS[featuredQuickstart.category]?.label ?? "Diskussion"}
-              </Badge>
-            ) : null}
-          </>
-        }
-        action={
-          <Button
-            variant="primary"
-            size="sm"
-            disabled={!featuredQuickstart}
-            onClick={() => {
-              if (featuredQuickstart) {
-                handleStartQuickstart(featuredQuickstart);
-              }
-            }}
-            className="flex-1 sm:flex-none"
-          >
-            Direkt loslegen
-          </Button>
-        }
-        secondaryAction={
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              void handleRefresh();
-            }}
-            disabled={isBusy}
-            className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
-            aria-label="Themen aktualisieren"
-            title="Themen neu laden"
-          >
-            <RefreshCw className={cn("h-5 w-5", isBusy && "animate-spin")} />
-          </Button>
-        }
-        highlights={
-          <div className="grid gap-2 sm:grid-cols-3">
-            <PageHeroStat
-              label="Empfohlen"
-              value={featuredQuickstart ? "Bereit zum Start" : "Noch kein Thema gewählt"}
-              helper={
-                featuredQuickstart
-                  ? `Aktuell empfohlen: ${featuredQuickstart.title}`
-                  : "Wähle unten ein Thema und starte direkt in eine neue Unterhaltung."
-              }
-              icon={<FeaturedQuickstartIcon className="h-4 w-4" />}
-            />
-            <PageHeroStat
-              label="Diskussionen"
-              value={`${regularDiscussions.length}`}
-              helper="Allgemeine Themen für Analyse, Debatte und neue Ideen."
-              icon={<Brain className="h-4 w-4" />}
-            />
-            <PageHeroStat
-              label="Kontrovers"
-              value={`${conspiracyDiscussions.length}`}
-              helper="Bewusst markiert, damit du den Charakter des Themas sofort erkennst."
-              icon={<AlertTriangle className="h-4 w-4" />}
-            />
-          </div>
-        }
-      />
-
       <PullToRefresh
         onRefresh={handleRefresh}
         disabled={isBusy}
-        className="relative z-10 flex-1 min-h-0 pb-page-bottom-safe pt-4 px-4"
+        className="relative z-10 flex-1 min-h-0"
       >
-        {isLoading && quickstarts.length === 0 ? (
-          <CardSkeleton count={6} />
-        ) : loadError && quickstarts.length === 0 ? (
-          <EmptyState
-            icon={<AlertTriangle className="h-8 w-8 text-ink-muted" />}
-            title="Themen konnten nicht geladen werden"
-            description={loadError}
-            className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
+        <div className="flex min-h-full flex-col gap-4 px-4 pb-page-bottom-safe pt-4">
+          <CatalogHeader
+            className="shrink-0"
+            title="Themen"
+            countLabel={countLabel}
+            gradientStyle={headerTheme.roleGradient}
+            eyebrow="Gesprächsanstöße"
+            icon={<FeaturedQuickstartIcon className="h-5 w-5" />}
+            description="Starte ohne leere Eingabe direkt in ein vorbereitetes Gespräch. Themen geben dir sofort einen klaren Aufhänger für Diskussion, Analyse oder kreative Exploration."
+            meta={
+              <>
+                <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
+                  Themen führen schnell in einen passenden Chat
+                </Badge>
+                {featuredQuickstart?.category ? (
+                  <Badge
+                    className={cn(
+                      "rounded-full border-white/10 bg-white/[0.06]",
+                      getCategoryStyle(featuredQuickstart.category).badgeText,
+                    )}
+                  >
+                    Fokus: {CATEGORY_LABELS[featuredQuickstart.category]?.label ?? "Diskussion"}
+                  </Badge>
+                ) : null}
+              </>
+            }
             action={
               <Button
-                variant="outline"
+                variant="primary"
                 size="sm"
+                disabled={!featuredQuickstart}
+                onClick={() => {
+                  if (featuredQuickstart) {
+                    handleStartQuickstart(featuredQuickstart);
+                  }
+                }}
+                className="flex-1 sm:flex-none"
+              >
+                Direkt loslegen
+              </Button>
+            }
+            secondaryAction={
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => {
                   void handleRefresh();
                 }}
+                disabled={isBusy}
+                className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+                aria-label="Themen aktualisieren"
+                title="Themen neu laden"
               >
-                Erneut versuchen
+                <RefreshCw className={cn("h-5 w-5", isBusy && "animate-spin")} />
               </Button>
             }
+            highlights={
+              <div className="grid gap-2 sm:grid-cols-3">
+                <PageHeroStat
+                  label="Empfohlen"
+                  value={featuredQuickstart ? "Bereit zum Start" : "Noch kein Thema gewählt"}
+                  helper={
+                    featuredQuickstart
+                      ? `Aktuell empfohlen: ${featuredQuickstart.title}`
+                      : "Wähle unten ein Thema und starte direkt in eine neue Unterhaltung."
+                  }
+                  icon={<FeaturedQuickstartIcon className="h-4 w-4" />}
+                />
+                <PageHeroStat
+                  label="Diskussionen"
+                  value={`${regularDiscussions.length}`}
+                  helper="Allgemeine Themen für Analyse, Debatte und neue Ideen."
+                  icon={<Brain className="h-4 w-4" />}
+                />
+                <PageHeroStat
+                  label="Kontrovers"
+                  value={`${conspiracyDiscussions.length}`}
+                  helper="Bewusst markiert, damit du den Charakter des Themas sofort erkennst."
+                  icon={<AlertTriangle className="h-4 w-4" />}
+                />
+              </div>
+            }
           />
-        ) : quickstarts.length === 0 ? (
-          <EmptyState
-            icon={<Brain className="h-8 w-8 text-ink-muted" />}
-            title="Keine Themen verfügbar"
-            description="Derzeit sind keine Diskussionsthemen hinterlegt."
-            className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
-          />
-        ) : (
-          <div className="space-y-5">
-            {fallbackNotice ? (
-              <InfoBanner
-                icon={<AlertTriangle className="h-4 w-4" />}
-                variant="warning"
-                className="rounded-2xl"
-              >
-                {fallbackNotice}
-              </InfoBanner>
-            ) : null}
 
-            {regularDiscussions.length > 0 ? (
-              <section className="space-y-3">
-                <h2 className={cn("px-1", sectionHeadingClass)}>Diskussionen</h2>
-                <div className="space-y-2 animate-fade-in">
-                  {regularDiscussions.map(renderQuickstartRow)}
-                </div>
-              </section>
-            ) : null}
+          {isLoading && quickstarts.length === 0 ? (
+            <CardSkeleton count={6} />
+          ) : loadError && quickstarts.length === 0 ? (
+            <EmptyState
+              icon={<AlertTriangle className="h-8 w-8 text-ink-muted" />}
+              title="Themen konnten nicht geladen werden"
+              description={loadError}
+              className="rounded-2xl border border-status-error/25 bg-status-error/10 text-status-error"
+              action={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    void handleRefresh();
+                  }}
+                >
+                  Erneut versuchen
+                </Button>
+              }
+            />
+          ) : quickstarts.length === 0 ? (
+            <EmptyState
+              icon={<Brain className="h-8 w-8 text-ink-muted" />}
+              title="Keine Themen verfügbar"
+              description="Derzeit sind keine Diskussionsthemen hinterlegt."
+              className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
+            />
+          ) : (
+            <div className="space-y-5">
+              {fallbackNotice ? (
+                <InfoBanner
+                  icon={<AlertTriangle className="h-4 w-4" />}
+                  variant="warning"
+                  className="rounded-2xl"
+                >
+                  {fallbackNotice}
+                </InfoBanner>
+              ) : null}
 
-            {conspiracyDiscussions.length > 0 ? (
-              <section className="space-y-3">
-                <div className="flex items-center gap-2 px-1">
-                  <AlertTriangle className="h-4 w-4 text-status-warning" />
-                  <h2 className={sectionHeadingClass}>Verschwörungstheorien</h2>
-                  <Badge
-                    variant="outline"
-                    className="ml-auto border-status-warning/30 text-status-warning"
-                    size="sm"
-                  >
-                    Kontrovers
-                  </Badge>
-                </div>
-                <div className="space-y-2 animate-fade-in">
-                  {conspiracyDiscussions.map((quickstart, index) =>
-                    renderQuickstartRow(quickstart, regularDiscussions.length + index),
-                  )}
-                </div>
-              </section>
-            ) : null}
-          </div>
-        )}
+              {regularDiscussions.length > 0 ? (
+                <section className="space-y-3">
+                  <h2 className={cn("px-1", sectionHeadingClass)}>Diskussionen</h2>
+                  <div className="space-y-2 animate-fade-in">
+                    {regularDiscussions.map(renderQuickstartRow)}
+                  </div>
+                </section>
+              ) : null}
+
+              {conspiracyDiscussions.length > 0 ? (
+                <section className="space-y-3">
+                  <div className="flex items-center gap-2 px-1">
+                    <AlertTriangle className="h-4 w-4 text-status-warning" />
+                    <h2 className={sectionHeadingClass}>Verschwörungstheorien</h2>
+                    <Badge
+                      variant="outline"
+                      className="ml-auto border-status-warning/30 text-status-warning"
+                      size="sm"
+                    >
+                      Kontrovers
+                    </Badge>
+                  </div>
+                  <div className="space-y-2 animate-fade-in">
+                    {conspiracyDiscussions.map((quickstart, index) =>
+                      renderQuickstartRow(quickstart, regularDiscussions.length + index),
+                    )}
+                  </div>
+                </section>
+              ) : null}
+            </div>
+          )}
+        </div>
       </PullToRefresh>
 
       <BottomSheet

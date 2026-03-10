@@ -115,6 +115,20 @@ describe("EnhancedRolesInterface", () => {
     expect(screen.getByText(/2 von 2 Rollen verfügbar/i)).toBeInTheDocument();
   });
 
+  it("keeps hero and role list in the same scroll container", async () => {
+    const { container } = renderWithProviders(<EnhancedRolesInterface />);
+
+    await screen.findByText("Kreativer Assistent");
+
+    const scrollContainer = container.querySelector(".overflow-auto.overscroll-contain");
+
+    expect(scrollContainer).not.toBeNull();
+    expect(scrollContainer).toContainElement(
+      screen.getByRole("heading", { level: 1, name: "Rollen & Personas" }),
+    );
+    expect(scrollContainer).toContainElement(screen.getAllByTestId("role-card")[0]!);
+  });
+
   it("should display role cards", async () => {
     renderWithProviders(<EnhancedRolesInterface />);
 

@@ -1,13 +1,105 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 
 import { skipOnboarding } from "./utils";
+
+const SETTINGS_STORAGE_KEY = "disa-ai-settings";
+const PERSISTABLE_MODELS = [
+  { id: "deepseek/deepseek-r1:free", label: "DeepSeek R1 (Reasoning)" },
+  { id: "google/gemini-2.0-flash-exp:free", label: "Gemini 2.0 Flash (Experimental)" },
+  { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B Instruct" },
+  {
+    id: "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    label: "Dolphin Mistral 24B",
+  },
+] as const;
+
+function getSelectionNameFromLabel(label: string, prefix: "Modell" | "Rolle") {
+  return label
+    .replace(new RegExp(`^${prefix}\\s+`, "i"), "")
+    .replace(/\s+auswählen$/i, "")
+    .trim();
+}
+
+async function expectCatalogScrollsFromHero(page: Page, title: string) {
+  const scrollContainer = page.locator("div.overflow-auto.overscroll-contain").first();
+  await expect(scrollContainer).toBeVisible();
+
+  const heroHeading = page.getByRole("heading", { level: 1, name: title });
+  await expect(heroHeading).toBeVisible();
+
+  const box = await heroHeading.boundingBox();
+  if (!box) {
+    throw new Error(`Unable to determine hero position for ${title}`);
+  }
+
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, 1200);
+
+  await expect
+    .poll(async () => scrollContainer.evaluate((element) => element.scrollTop))
+    .toBeGreaterThan(0);
+}
+
+async function findPersistableModelButton(page: Page): Promise<{
+  button: Locator;
+  modelId: string;
+  modelName: string;
+}> {
+  for (const candidate of PERSISTABLE_MODELS) {
+    const button = page
+      .getByRole("button", { name: `Modell ${candidate.label} auswählen` })
+      .first();
+
+    if ((await button.count()) > 0) {
+      return {
+        button,
+        modelId: candidate.id,
+        modelName: candidate.label,
+      };
+    }
+  }
+
+  throw new Error("No persistable model button found on /models");
+}
+
+async function expectPersistedModelSelection(page: Page, modelId: string, modelName: string) {
+  await expect
+    .poll(async () => {
+      const raw = await page.evaluate(({ storageKey }) => window.localStorage.getItem(storageKey), {
+        storageKey: SETTINGS_STORAGE_KEY,
+      });
+      const parsed = raw ? (JSON.parse(raw) as { preferredModelId?: string }) : {};
+      return parsed.preferredModelId ?? "";
+    })
+    .toBe(modelId);
+
+  const modelTrigger = page.locator('button[aria-label="Modell auswählen"]');
+  await expect(modelTrigger).toBeVisible();
+  await expect
+    .poll(async () => ((await modelTrigger.textContent()) ?? "").trim())
+    .toContain(modelName);
+}
 
 test.describe("Models & Roles Pages", () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
   });
 
-  test("should display and interact with Models page", async ({ page }) => {
+  test("should scroll catalog pages from the hero area", async ({ page }) => {
+    await page.goto("/models");
+    await page.waitForLoadState("networkidle");
+    await expectCatalogScrollsFromHero(page, "Modelle");
+
+    await page.goto("/roles");
+    await page.waitForLoadState("networkidle");
+    await expectCatalogScrollsFromHero(page, "Rollen & Personas");
+
+    await page.goto("/themen");
+    await page.waitForLoadState("networkidle");
+    await expectCatalogScrollsFromHero(page, "Themen");
+  });
+
+  test("should persist a selected model from the Models page into chat", async ({ page }) => {
     await page.goto("/models");
     await page.waitForLoadState("networkidle");
 
@@ -48,11 +140,18 @@ test.describe("Models & Roles Pages", () => {
       await page.waitForTimeout(250);
     }
 
-    // Check that clicking a model shows details or selects it
-    const firstModel = modelCards.first();
-    await firstModel.click();
-    // After clicking, it might navigate or show details - we'll just check it doesn't error
-    await page.waitForTimeout(1000);
+    const {
+      button: persistableModelButton,
+      modelId,
+      modelName,
+    } = await findPersistableModelButton(page);
+    await expect(persistableModelButton).toBeVisible();
+
+    await persistableModelButton.click();
+    await page.goto("/chat");
+    await page.waitForLoadState("networkidle");
+
+    await expectPersistedModelSelection(page, modelId, modelName);
   });
 
   test("should display and interact with Roles page", async ({ page }) => {
@@ -91,7 +190,10 @@ test.describe("Models & Roles Pages", () => {
 
     await expect(page.getByRole("heading", { level: 1, name: /Themen/i })).toBeVisible();
 
-    const detailTrigger = page.getByRole("button", { name: /Details zu .* anzeigen/i }).first();
+    const detailButton = page.getByRole("button", { name: /Details zu .* anzeigen/i }).first();
+    await expect(detailButton).toBeVisible();
+
+    const detailTrigger = page.getByRole("button", { name: /Thema .* öffnen/i }).first();
     await expect(detailTrigger).toBeVisible();
 
     await detailTrigger.click();
@@ -162,34 +264,39 @@ test.describe("Models & Roles Pages", () => {
   });
 
   test("should maintain selected role and model state", async ({ page }) => {
-    // Set up a role selection
     await page.goto("/roles");
     await page.waitForLoadState("networkidle");
 
     const firstRole = page.getByRole("button", { name: /Rolle .* auswählen/i }).first();
     await expect(firstRole).toBeVisible();
 
-    const ariaLabel = (await firstRole.getAttribute("aria-label")) ?? "";
-    const roleName = ariaLabel
-      .replace(/^Rolle\s+/i, "")
-      .replace(/\s+auswählen$/i, "")
-      .trim();
+    const roleLabel = (await firstRole.getAttribute("aria-label")) ?? "";
+    const roleName = getSelectionNameFromLabel(roleLabel, "Rolle");
     await firstRole.click({ force: true });
     await expect(page).toHaveURL(/\/chat/);
 
-    // Go to settings and check something there
+    await page.goto("/models");
+    await page.waitForLoadState("networkidle");
+
+    const {
+      button: persistableModelButton,
+      modelId,
+      modelName,
+    } = await findPersistableModelButton(page);
+    await expect(persistableModelButton).toBeVisible();
+    await persistableModelButton.click();
+
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
 
-    // Navigate back to chat - role should still be selected
     await page.goto("/chat");
     await page.waitForLoadState("networkidle");
 
-    // Check if the role persisted (this might depend on implementation)
     const roleTrigger = page.locator('button[aria-label="Rolle auswählen"]');
     await expect(roleTrigger).toBeVisible();
     if (roleName) {
       await expect(roleTrigger).toContainText(roleName);
     }
+    await expectPersistedModelSelection(page, modelId, modelName);
   });
 });
