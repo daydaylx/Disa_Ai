@@ -144,8 +144,8 @@ export default function ThemenPage() {
         style={{ "--stagger-i": Math.min(index, 5) } as CSSProperties}
         title={quickstart.title}
         subtitle={categoryInfo?.label || "Diskussion"}
-        onPress={() => setSelectedThema(quickstart)}
-        pressLabel={`Details zu ${quickstart.title} anzeigen`}
+        onPress={() => handleStartQuickstart(quickstart)}
+        pressLabel={`Diskussion zu ${quickstart.title} starten`}
         accentClassName={theme.textBg}
         leading={
           <div
