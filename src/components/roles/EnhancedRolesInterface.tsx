@@ -24,6 +24,7 @@ import {
   Music,
   Palette,
   RefreshCw,
+  RotateCcw,
   Scale,
   Shield,
   Smile,
@@ -53,8 +54,9 @@ import {
 
 import { useFavorites } from "../../contexts/FavoritesContext";
 import { useRoles } from "../../contexts/RolesContext";
-import { type EnhancedRole, migrateRole } from "../../types/enhanced-interfaces";
-import { CATEGORY_ORDER } from "./roles-filter";
+import { useFilteredList } from "../../hooks/useFilteredList";
+import { type EnhancedRole, type FilterState, migrateRole } from "../../types/enhanced-interfaces";
+import { CATEGORY_ORDER, roleFilterFn, roleSortFn } from "./roles-filter";
 
 interface EnhancedRolesInterfaceProps {
   className?: string;
@@ -95,7 +97,9 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
   };
 
   const specificIcon = roleIconMap[role.id];
-  if (specificIcon) return specificIcon;
+  if (specificIcon) {
+    return specificIcon;
+  }
 
   switch (role.category) {
     case "Creative":
@@ -124,47 +128,72 @@ function getRoleIcon(role: EnhancedRole): LucideIcon {
 export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProps) {
   const { roles, activeRole, setActiveRole, rolesLoading, roleLoadError, refreshRoles } =
     useRoles();
-  const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage } = useFavorites();
+  const { isRoleFavorite, toggleRoleFavorite, trackRoleUsage, usage } = useFavorites();
   const navigate = useNavigate();
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const [filters, setFilters] = useState<FilterState>({
+    searchQuery: "",
+    searchHistory: [],
+    selectedCategories: [],
+    excludedCategories: [],
+    showFavoritesOnly: false,
+    showRecentlyUsed: false,
+    showBuiltInOnly: false,
+    hideMatureContent: false,
+    models: {
+      showFreeOnly: false,
+      showPremiumOnly: false,
+      minPerformanceScore: 0,
+      requiredCapabilities: [],
+      maxPriceRange: [0, 1],
+    },
+    sortBy: "category",
+    sortDirection: "asc",
+  });
+
   const enhancedRoles = useMemo(() => roles.map(migrateRole), [roles]);
 
-  // Sort all roles by category order, then alphabetically — no filtering
-  const sortedRoles = useMemo(() => {
-    return enhancedRoles.slice().sort((a, b) => {
-      const catOrder = CATEGORY_ORDER as readonly string[];
-      const ia = catOrder.indexOf(a.category ?? "Spezial");
-      const ib = catOrder.indexOf(b.category ?? "Spezial");
-      const normA = ia === -1 ? 99 : ia;
-      const normB = ib === -1 ? 99 : ib;
-      if (normA !== normB) return normA - normB;
-      return a.name.localeCompare(b.name);
-    });
-  }, [enhancedRoles]);
-
-  const buildLegacyRole = useCallback(
-    (role: EnhancedRole) => ({
-      id: role.id,
-      name: role.name,
-      description: role.description,
-      systemPrompt: role.systemPrompt,
-      allowedModels: role.allowedModels,
-      tags: role.tags,
-      category: role.category,
-      styleHints: role.styleHints,
-    }),
-    [],
+  const filterFnCallback = useCallback(
+    (role: EnhancedRole, currentFilters: FilterState, searchQuery: string) =>
+      roleFilterFn(role, currentFilters, searchQuery, isRoleFavorite, usage, selectedCategory),
+    [isRoleFavorite, usage, selectedCategory],
   );
 
-  const handleSelectRole = useCallback(
+  const sortFnCallback = useCallback(
+    (a: EnhancedRole, b: EnhancedRole, currentFilters: FilterState) =>
+      roleSortFn(a, b, currentFilters, usage),
+    [usage],
+  );
+
+  const filteredRoles = useFilteredList<EnhancedRole>(
+    enhancedRoles,
+    filters,
+    "",
+    filterFnCallback,
+    sortFnCallback,
+  );
+
+  const handleActivateRole = useCallback(
     (role: EnhancedRole) => {
-      setActiveRole(buildLegacyRole(role));
+      const legacyRole = {
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        systemPrompt: role.systemPrompt,
+        allowedModels: role.allowedModels,
+        tags: role.tags,
+        category: role.category,
+        styleHints: role.styleHints,
+      };
+      setActiveRole(legacyRole);
       trackRoleUsage(role.id);
+      void navigate("/chat");
     },
-    [setActiveRole, buildLegacyRole, trackRoleUsage],
+    [setActiveRole, trackRoleUsage, navigate],
   );
 
   const handleRefresh = useCallback(async () => {
@@ -176,21 +205,29 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     }
   }, [refreshRoles]);
 
+  const hasActiveFilters = !!selectedCategory || filters.showFavoritesOnly;
   const isLoading = rolesLoading || isRefreshing;
 
   const selectedRole = useMemo(
-    () => sortedRoles.find((role) => role.id === selectedRoleId) ?? null,
-    [sortedRoles, selectedRoleId],
+    () => filteredRoles.find((role) => role.id === selectedRoleId) ?? null,
+    [filteredRoles, selectedRoleId],
   );
 
-  const headerTheme = getCategoryStyle(activeRole?.category ?? "Entertainment");
-  const highlightedRole = selectedRole ?? (activeRole ? migrateRole(activeRole) : null);
-  const HighlightedRoleIcon = highlightedRole ? getRoleIcon(highlightedRole) : Users;
+  const clearFilters = () => {
+    setSelectedCategory(null);
+    setFilters((prev) => ({ ...prev, showFavoritesOnly: false }));
+  };
+
+  const headerTheme = selectedCategory
+    ? getCategoryStyle(selectedCategory)
+    : getCategoryStyle(activeRole?.category ?? "Entertainment");
 
   const countLabel =
     rolesLoading && roles.length === 0
       ? "Rollen werden geladen…"
-      : `${roles.length} Rollen verfügbar`;
+      : `${filteredRoles.length} von ${roles.length} Rollen verfügbar`;
+  const highlightedRole = selectedRole ?? (activeRole ? migrateRole(activeRole) : null);
+  const HighlightedRoleIcon = highlightedRole ? getRoleIcon(highlightedRole) : Users;
 
   return (
     <div className={cn("relative isolate flex flex-col h-full overflow-hidden", className)}>
@@ -241,37 +278,109 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
           </Button>
         }
         secondaryAction={
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              void handleRefresh();
-            }}
-            disabled={isLoading}
-            className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
-            aria-label="Rollen aktualisieren"
-            title="Rollen neu laden"
-          >
-            <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                void handleRefresh();
+              }}
+              disabled={isLoading}
+              className="text-ink-tertiary hover:text-ink-primary hover:bg-surface-2"
+              aria-label="Rollen aktualisieren"
+              title="Rollen neu laden"
+            >
+              <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
+            </Button>
+
+            {hasActiveFilters ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="min-h-[44px] px-3 text-xs text-ink-tertiary hover:text-ink-primary"
+              >
+                <RotateCcw className="mr-1 h-3 w-3" /> Reset
+              </Button>
+            ) : null}
+          </div>
         }
         highlights={
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-3">
             <PageHeroStat
               label="Aktiv"
               value={activeRole?.name ?? "Noch keine Rolle aktiv"}
               helper={
                 activeRole?.description ??
-                "Tippe unten auf eine Persona, um neue Chats sofort in diesem Stil zu starten."
+                "Wähle unten eine Persona, um neue Chats sofort in diesem Stil zu starten."
               }
               icon={<HighlightedRoleIcon className="h-4 w-4" />}
             />
             <PageHeroStat
-              label="Gesamt"
-              value={`${roles.length} Rollen`}
-              helper="Alle Personas — sortiert nach Kategorie."
-              icon={<Sparkles className="h-4 w-4" />}
+              label="Fokus"
+              value={selectedCategory ?? "Alle Kategorien"}
+              helper={
+                filters.showFavoritesOnly
+                  ? "Favoritenfilter ist aktiv."
+                  : "Filter helfen dir, schneller den passenden Stil zu finden."
+              }
+              icon={
+                selectedCategory ? <Tag className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />
+              }
             />
+            <PageHeroStat
+              label="Favoriten"
+              value={`${enhancedRoles.filter((role) => isRoleFavorite(role.id)).length}`}
+              helper="Merke dir starke Personas für spätere Gespräche."
+              icon={<Star className="h-4 w-4" />}
+            />
+          </div>
+        }
+        filterRow={
+          <div className="relative">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, showFavoritesOnly: !prev.showFavoritesOnly }))
+                }
+                aria-pressed={filters.showFavoritesOnly}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
+                  filters.showFavoritesOnly
+                    ? "bg-status-warning/10 border-status-warning/30 text-status-warning"
+                    : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                )}
+              >
+                <Star className={cn("h-3.5 w-3.5", filters.showFavoritesOnly && "fill-current")} />
+                Favoriten
+              </button>
+
+              <div className="w-px h-4 bg-white/10 flex-shrink-0" />
+
+              {CATEGORY_ORDER.map((cat) => {
+                const isSelected = selectedCategory === cat;
+                const catTheme = getCategoryStyle(cat);
+                return (
+                  <button
+                    type="button"
+                    key={cat}
+                    onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      "inline-flex min-h-[44px] items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap active:scale-[0.96] active:translate-y-px",
+                      isSelected
+                        ? cn(catTheme.bg, catTheme.border, catTheme.text)
+                        : "bg-surface-1 border-white/5 text-ink-secondary hover:border-white/10",
+                    )}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-bg-app/90 to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-bg-app/90 to-transparent" />
           </div>
         }
       />
@@ -301,16 +410,23 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </Button>
             }
           />
-        ) : sortedRoles.length === 0 ? (
+        ) : filteredRoles.length === 0 ? (
           <EmptyState
             icon={<Users className="h-8 w-8 text-ink-muted" />}
-            title="Keine Rollen verfügbar"
-            description="Rollen konnten nicht geladen werden."
+            title="Keine Rollen gefunden"
+            description="Versuche es mit anderen Suchbegriffen oder Filtern."
+            action={
+              hasActiveFilters ? (
+                <Button variant="secondary" size="sm" onClick={clearFilters}>
+                  Filter zurücksetzen
+                </Button>
+              ) : undefined
+            }
             className="bg-surface-1/30 rounded-2xl border border-white/5 backdrop-blur-sm py-12"
           />
         ) : (
           <div className="space-y-2 animate-fade-in">
-            {sortedRoles.map((role, index) => {
+            {filteredRoles.map((role, index) => {
               const isActive = activeRole?.id === role.id;
               const isFavorite = isRoleFavorite(role.id);
               const theme = getCategoryStyle(role.category);
@@ -332,7 +448,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   title={role.name}
                   subtitle={role.category || "Spezial"}
                   active={isActive}
-                  onPress={() => handleSelectRole(role)}
+                  onPress={() => handleActivateRole(role)}
                   pressLabel={`Rolle ${role.name} auswählen`}
                   pressed={isActive}
                   accentClassName={theme.textBg}
@@ -398,7 +514,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 >
                   <div className="space-y-3">
                     <p className="line-clamp-2 text-sm leading-relaxed text-ink-secondary">
-                      {role.description}
+                      Kurzprofil: {role.description}
                     </p>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-ink-tertiary">
                       {role.tags?.length ? (
@@ -409,7 +525,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                             theme.badgeText,
                           )}
                         >
-                          {role.tags.slice(0, 3).join(" · ")}
+                          Stichworte: {role.tags.slice(0, 3).join(" · ")}
                         </span>
                       ) : null}
                       {role.allowedModels?.length ? (
@@ -447,7 +563,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 size="sm"
                 className="flex-1"
                 onClick={() => {
-                  handleSelectRole(selectedRole);
+                  handleActivateRole(selectedRole);
                   setSelectedRoleId(null);
                 }}
               >
