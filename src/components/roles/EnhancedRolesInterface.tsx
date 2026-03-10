@@ -177,24 +177,28 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
     sortFnCallback,
   );
 
-  const handleActivateRole = useCallback(
-    (role: EnhancedRole) => {
-      const legacyRole = {
-        id: role.id,
-        name: role.name,
-        description: role.description,
-        systemPrompt: role.systemPrompt,
-        allowedModels: role.allowedModels,
-        tags: role.tags,
-        category: role.category,
-        styleHints: role.styleHints,
-      };
-      setActiveRole(legacyRole);
-      trackRoleUsage(role.id);
-      void navigate("/chat");
-    },
-    [setActiveRole, trackRoleUsage, navigate],
+  const buildLegacyRole = useCallback(
+    (role: EnhancedRole) => ({
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      systemPrompt: role.systemPrompt,
+      allowedModels: role.allowedModels,
+      tags: role.tags,
+      category: role.category,
+      styleHints: role.styleHints,
+    }),
+    [],
   );
+
+  const handleSelectRole = useCallback(
+    (role: EnhancedRole) => {
+      setActiveRole(buildLegacyRole(role));
+      trackRoleUsage(role.id);
+    },
+    [setActiveRole, buildLegacyRole, trackRoleUsage],
+  );
+
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -448,7 +452,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                   title={role.name}
                   subtitle={role.category || "Spezial"}
                   active={isActive}
-                  onPress={() => handleActivateRole(role)}
+                  onPress={() => handleSelectRole(role)}
                   pressLabel={`Rolle ${role.name} auswählen`}
                   pressed={isActive}
                   accentClassName={theme.textBg}
@@ -563,7 +567,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                 size="sm"
                 className="flex-1"
                 onClick={() => {
-                  handleActivateRole(selectedRole);
+                  handleSelectRole(selectedRole);
                   setSelectedRoleId(null);
                 }}
               >
