@@ -1,7 +1,7 @@
 {
-  "buildId": "v1.0.2-ccb8cc7",
-  "buildTime": "2026-03-02T01:58:18.145Z",
-  "gitSha": "ccb8cc7832227f28f46d24a17aa76e0413b2d9a5",
-  "gitBranch": "main",
+  "buildId": "v1.0.2-d06cfbb",
+  "buildTime": "2026-03-10T07:05:37.542Z",
+  "gitSha": "d06cfbbde7c13d7edde9ac857d3caa0aff20e900",
+  "gitBranch": "claude/fix-page-selection-76STI",
   "version": "1.0.2"
 }
