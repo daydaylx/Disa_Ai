@@ -125,7 +125,7 @@ export function TabbedSettingsView({
     <SettingsLayout
       activeTab="overview"
       title="Disa anpassen"
-      description="Lege Verhalten, Darstellung, Speicher und Zusatzfunktionen so fest, wie sie für dich im Alltag am sinnvollsten sind."
+      description="Lege Verhalten, Darstellung, Speicher und Zusatzfunktionen so fest, dass Disa im Alltag direkt zu dir passt."
     >
       <div className="space-y-3 pb-4xl">
         {isLoading ? (

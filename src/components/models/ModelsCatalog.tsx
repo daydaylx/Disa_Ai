@@ -31,7 +31,6 @@ import {
   CatalogHeader,
   EmptyState,
   ListRow,
-  PageHeroStat,
   PullToRefresh,
 } from "@/ui";
 
@@ -210,7 +209,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
   return (
     <div className={cn("relative isolate flex h-full min-h-0 flex-col overflow-hidden", className)}>
       <div
-        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 hidden h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(6,182,212,0.20) 0%, rgba(139,92,246,0.08) 50%, transparent 70%)",
@@ -231,7 +230,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             gradientStyle={headerTheme.roleGradient}
             eyebrow="Gesprächs-Setup"
             icon={<HighlightedModelIcon className="h-5 w-5" />}
-            description="Wähle das Modell, das neue Chats standardmäßig nutzt. So weißt du vor dem Start sofort, mit welcher Stärke, Geschwindigkeit und Preisstufe du arbeitest."
+            description="Wähle das Modell, das neue Chats standardmäßig nutzt, damit Stärke, Tempo und Preisstufe sofort klar sind."
             meta={
               <>
                 <Badge className="rounded-full border-white/10 bg-white/[0.06] text-ink-primary">
@@ -273,32 +272,6 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
               >
                 <RefreshCw className={cn("h-5 w-5", isLoading && "animate-spin")} />
               </Button>
-            }
-            highlights={
-              <div className="grid gap-2 sm:grid-cols-3">
-                <PageHeroStat
-                  label="Aktiv"
-                  value={highlightedModel ? "Bereit für neue Chats" : "Noch nicht gewählt"}
-                  helper={
-                    highlightedModel
-                      ? `Aktuelles Modell: ${highlightedModel.label} · ${getContextTokens(highlightedModel).toLocaleString()} Tokens`
-                      : "Tippe unten auf ein Modell, um es zu aktivieren."
-                  }
-                  icon={<HighlightedModelIcon className="h-4 w-4" />}
-                />
-                <PageHeroStat
-                  label="Favoriten"
-                  value={`${favorites.models.items.length}`}
-                  helper="Favoriten bleiben oben und sind schneller wiederzufinden."
-                  icon={<Star className="h-4 w-4" />}
-                />
-                <PageHeroStat
-                  label="Preisgefühl"
-                  value={highlightedModel ? getPriceLabel(highlightedModel) : "—"}
-                  helper="Input / Output pro 1K Tokens"
-                  icon={<Sparkles className="h-4 w-4" />}
-                />
-              </div>
             }
           />
 
@@ -418,7 +391,9 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                           event.stopPropagation();
                           setSelectedModelId(model.id);
                         }}
-                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.05] px-3 text-[11px] font-medium text-ink-secondary shadow-inner backdrop-blur-sm transition-colors hover:bg-white/[0.09] hover:text-ink-primary"
+                        aria-label={`Details zu ${model.label ?? model.id} anzeigen`}
+                        title={`Details zu ${model.label ?? model.id} anzeigen`}
+                        className="inline-flex min-h-[48px] min-w-[120px] shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
                       >
                         Details
                         <ChevronDown className="h-3.5 w-3.5" />
@@ -484,12 +459,23 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         {selectedModel ? (
           <div
             className={cn(
-              "space-y-3 rounded-xl border px-3 py-3",
+              "space-y-4 rounded-2xl border px-4 py-4",
               selectedModelTheme.bg,
               selectedModelTheme.border,
             )}
           >
-            <div className="grid grid-cols-2 gap-2xs">
+            {selectedModel.description ? (
+              <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Überblick
+                </p>
+                <p className="text-sm leading-relaxed text-ink-secondary">
+                  {selectedModel.description}
+                </p>
+              </div>
+            ) : null}
+
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <p className="text-xs font-medium text-ink-tertiary">Context Window</p>
                 <p className="text-sm font-semibold text-ink-primary">
@@ -505,19 +491,24 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
             </div>
 
             {selectedModel.tags && selectedModel.tags.length > 0 ? (
-              <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
-                {selectedModel.tags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    className={cn(
-                      "h-5 px-2 text-[10px]",
-                      selectedModelTheme.badge,
-                      selectedModelTheme.badgeText,
-                    )}
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Tags
+                </p>
+                <div className="flex flex-wrap gap-2 text-ink-tertiary">
+                  {selectedModel.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      className={cn(
+                        "min-h-[28px] rounded-full px-2.5 text-[11px]",
+                        selectedModelTheme.badge,
+                        selectedModelTheme.badgeText,
+                      )}
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             ) : null}
 

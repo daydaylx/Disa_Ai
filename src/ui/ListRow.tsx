@@ -39,15 +39,15 @@ export function ListRow({
       className={cn(
         "group relative overflow-hidden border px-4 py-4 transition-all duration-200",
         isCatalogGlass
-          ? "rounded-[26px] border-white/[0.12] bg-surface-1/70 shadow-[0_18px_50px_-38px_rgba(0,0,0,0.78)] ring-1 ring-inset ring-white/[0.04] backdrop-blur-xl"
+          ? "rounded-[24px] border-white/[0.10] bg-surface-1/82 shadow-[0_14px_36px_-28px_rgba(0,0,0,0.72)] ring-1 ring-inset ring-white/[0.04] sm:rounded-[26px] sm:border-white/[0.12] sm:bg-surface-1/70 sm:shadow-[0_18px_50px_-38px_rgba(0,0,0,0.78)] sm:backdrop-blur-xl"
           : "rounded-2xl border-white/[0.10] bg-surface-card shadow-surface-subtle",
         onPress &&
           (isCatalogGlass
-            ? "hover:-translate-y-0.5 hover:border-white/[0.18] hover:bg-surface-2/72 hover:shadow-[0_24px_60px_-40px_rgba(0,0,0,0.84)] active:translate-y-px"
+            ? "hover:-translate-y-0.5 hover:border-white/[0.16] hover:bg-surface-2/78 hover:shadow-[0_18px_44px_-34px_rgba(0,0,0,0.76)] sm:hover:border-white/[0.18] sm:hover:bg-surface-2/72 sm:hover:shadow-[0_24px_60px_-40px_rgba(0,0,0,0.84)] active:translate-y-px"
             : "hover:border-white/[0.14] hover:bg-surface-2/65 active:scale-[0.98] active:translate-y-px"),
         active &&
           (isCatalogGlass
-            ? "border-white/[0.18] bg-surface-2/76 shadow-[0_24px_60px_-40px_rgba(0,0,0,0.86)] ring-1 ring-inset ring-white/[0.06]"
+            ? "border-white/[0.16] bg-surface-2/80 shadow-[0_18px_44px_-34px_rgba(0,0,0,0.8)] ring-1 ring-inset ring-white/[0.06] sm:border-white/[0.18] sm:bg-surface-2/76 sm:shadow-[0_24px_60px_-40px_rgba(0,0,0,0.86)]"
             : "border-white/[0.14] bg-surface-2/70 ring-1"),
         className,
       )}
@@ -64,7 +64,7 @@ export function ListRow({
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute -right-8 top-0 h-24 w-24 rounded-full bg-white/[0.05] blur-3xl"
+            className="pointer-events-none absolute -right-8 top-0 hidden h-24 w-24 rounded-full bg-white/[0.05] blur-3xl sm:block"
             aria-hidden
           />
         </>
@@ -137,7 +137,7 @@ export function ListRow({
       {children ? (
         isCatalogGlass ? (
           <div className="relative z-content mt-4">
-            <div className="rounded-[20px] border border-white/[0.06] bg-black/[0.16] p-3 shadow-inner">
+            <div className="rounded-[18px] border border-white/[0.06] bg-black/[0.10] p-3 shadow-inner sm:rounded-[20px] sm:bg-black/[0.16]">
               {children}
             </div>
           </div>

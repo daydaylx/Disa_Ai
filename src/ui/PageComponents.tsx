@@ -45,30 +45,35 @@ export function PageHero({
       <Card
         variant="hero"
         padding="none"
-        className="relative overflow-hidden rounded-[28px] border-white/[0.12] bg-surface-1/75 shadow-[0_18px_60px_-40px_rgba(0,0,0,0.75)] ring-1 ring-inset ring-white/[0.04] backdrop-blur-xl"
+        className="relative overflow-hidden rounded-[24px] border-white/[0.10] bg-surface-1/82 shadow-[0_14px_40px_-30px_rgba(0,0,0,0.7)] ring-1 ring-inset ring-white/[0.04] sm:rounded-[28px] sm:border-white/[0.12] sm:bg-surface-1/75 sm:shadow-[0_18px_60px_-40px_rgba(0,0,0,0.75)] sm:backdrop-blur-xl"
       >
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -top-24 right-[-6rem] h-52 w-52 rounded-full bg-white/10 blur-3xl"
+          className="pointer-events-none absolute -top-24 right-[-6rem] hidden h-52 w-52 rounded-full bg-white/10 blur-3xl sm:block"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute bottom-[-6rem] left-[-4rem] h-44 w-44 rounded-full bg-white/[0.05] blur-3xl"
+          className="pointer-events-none absolute bottom-[-6rem] left-[-4rem] hidden h-44 w-44 rounded-full bg-white/[0.05] blur-3xl sm:block"
           aria-hidden
         />
         {gradientStyle ? (
           <div
-            className="pointer-events-none absolute inset-0 opacity-70 transition-all duration-500"
+            className="pointer-events-none absolute inset-0 opacity-55 transition-all duration-500 sm:opacity-70"
             style={{ background: gradientStyle }}
             aria-hidden
           />
         ) : null}
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_24%,rgba(0,0,0,0.14)_100%)]" />
 
-        <div className={cn("relative space-y-4 px-4 py-4 sm:px-5 sm:py-5", contentClassName)}>
+        <div
+          className={cn(
+            "relative space-y-3 px-4 py-4 sm:space-y-4 sm:px-5 sm:py-5",
+            contentClassName,
+          )}
+        >
           <div className="flex flex-wrap items-start gap-3">
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
@@ -89,7 +94,7 @@ export function PageHero({
 
               <div className="mt-3 flex items-start gap-3">
                 {icon ? (
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.08] text-ink-primary shadow-inner">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.08] text-ink-primary shadow-inner sm:h-12 sm:w-12">
                     {icon}
                   </div>
                 ) : null}
@@ -118,8 +123,8 @@ export function PageHero({
           {meta ? <div className="flex flex-wrap gap-2">{meta}</div> : null}
 
           {children ? (
-            <div className="border-t border-white/[0.08] pt-4">
-              <div className="rounded-[22px] border border-white/[0.05] bg-black/[0.16] p-3 shadow-inner">
+            <div className="border-t border-white/[0.08] pt-3 sm:pt-4">
+              <div className="rounded-[20px] border border-white/[0.05] bg-black/[0.10] p-3 shadow-inner sm:rounded-[22px] sm:bg-black/[0.16]">
                 {children}
               </div>
             </div>
@@ -142,7 +147,7 @@ export function PageHeroStat({ label, value, helper, icon, className }: PageHero
   return (
     <div
       className={cn(
-        "min-w-0 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-3 py-3 shadow-inner backdrop-blur-sm",
+        "min-w-0 rounded-2xl border border-white/[0.08] bg-white/[0.05] px-3 py-3 shadow-inner sm:bg-white/[0.04] sm:backdrop-blur-sm",
         className,
       )}
     >

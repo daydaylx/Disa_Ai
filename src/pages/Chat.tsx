@@ -139,6 +139,7 @@ export default function Chat() {
   const composerRef = useRef<HTMLDivElement>(null);
   const inputBarRef = useRef<UnifiedInputBarHandle>(null);
   const [composerHeight, setComposerHeight] = useState(0);
+  const [showHeroActions, setShowHeroActions] = useState(false);
 
   // Preset handler will be defined after chatLogic
   const startWithPreset = useRef<(system: string, user?: string) => void>(() => {});
@@ -244,6 +245,47 @@ export default function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!chatLogic.isEmpty) {
+      setShowHeroActions(false);
+      return;
+    }
+
+    let timeoutId: number | undefined;
+    let idleId: number | undefined;
+    const idleWindow = window as Window &
+      typeof globalThis & {
+        requestIdleCallback?: (
+          callback: IdleRequestCallback,
+          options?: IdleRequestOptions,
+        ) => number;
+        cancelIdleCallback?: (handle: number) => void;
+      };
+    const revealActions = () => {
+      setShowHeroActions(true);
+    };
+
+    if (typeof idleWindow.requestIdleCallback === "function") {
+      idleId = idleWindow.requestIdleCallback(
+        () => {
+          revealActions();
+        },
+        { timeout: 600 },
+      );
+    } else {
+      timeoutId = window.setTimeout(revealActions, 180);
+    }
+
+    return () => {
+      if (idleId !== undefined && typeof idleWindow.cancelIdleCallback === "function") {
+        idleWindow.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [chatLogic.isEmpty]);
+
   // Track new messages while user is scrolled up
   useEffect(() => {
     if (chatLogic.isEmpty) {
@@ -315,45 +357,52 @@ export default function Chat() {
                 )}
                 {chatLogic.isEmpty ? (
                   <div className="relative flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-[14%]">
-                    {/* Atmospheric glow orb – large, vivid */}
                     <div
-                      className="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none motion-safe:animate-pulse-glow"
+                      className="pointer-events-none absolute h-52 w-52 rounded-full blur-3xl sm:h-80 sm:w-80 sm:motion-safe:animate-pulse-glow"
                       style={{
                         background:
                           "radial-gradient(circle, rgba(139,92,246,0.55) 0%, rgba(56,189,248,0.25) 45%, transparent 70%)",
                       }}
                       aria-hidden="true"
                     />
-                    {/* Pulse ring 1 – inner */}
                     <div
-                      className="absolute w-44 h-44 rounded-full border-2 border-brand-primary/60 pointer-events-none motion-safe:animate-ping-slow"
+                      className="pointer-events-none absolute hidden h-44 w-44 rounded-full border-2 border-brand-primary/60 motion-safe:animate-ping-slow sm:block"
                       aria-hidden="true"
                     />
-                    {/* Pulse ring 2 – outer, staggered */}
                     <div
-                      className="absolute w-44 h-44 rounded-full border-2 border-accent-chat/50 pointer-events-none motion-safe:animate-ping-slow"
+                      className="pointer-events-none absolute hidden h-44 w-44 rounded-full border-2 border-accent-chat/50 motion-safe:animate-ping-slow sm:block"
                       style={{ animationDelay: "1.5s" }}
                       aria-hidden="true"
                     />
-                    {/* Static outer halo for permanent depth */}
                     <div
-                      className="absolute w-56 h-56 rounded-full border border-brand-primary/20 pointer-events-none"
+                      className="pointer-events-none absolute h-44 w-44 rounded-full border border-brand-primary/20 sm:h-56 sm:w-56"
                       aria-hidden="true"
                     />
-                    {/* Vignette – dark edges draw focus toward the logo */}
                     <div
-                      className="absolute inset-0 pointer-events-none"
+                      className="pointer-events-none absolute inset-0 hidden sm:block"
                       style={{
                         background:
                           "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.18) 100%)",
                       }}
                       aria-hidden="true"
                     />
-                    {/* Noise overlay – subtle film-grain texture for premium depth */}
-                    <div className="hero-noise" aria-hidden="true" />
+                    <div className="hero-noise hidden sm:block" aria-hidden="true" />
+                    <div className="relative text-center sm:hidden">
+                      <h1
+                        className="text-5xl font-bold tracking-tight text-ink-primary"
+                        style={{ fontWeight: 750 }}
+                      >
+                        <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent">
+                          Disa
+                        </span>{" "}
+                        <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent">
+                          AI
+                        </span>
+                      </h1>
+                    </div>
                     <AnimatedBrandmark
-                      className="relative mx-auto scale-75"
-                      intensity="premium"
+                      className="relative mx-auto hidden scale-75 sm:block"
+                      intensity="subtle"
                       mode="hero"
                       playIntro={chatLogic.isEmpty}
                       state={logoState}
@@ -361,27 +410,33 @@ export default function Chat() {
                     <p className="relative text-sm text-ink-secondary text-center">
                       Womit kann ich dir heute helfen?
                     </p>
-                    <QuickstartStrip
-                      quickstarts={quickstarts}
-                      onSelect={(q) =>
-                        void chatLogic.append({ role: "user", content: q.user }, undefined, {
-                          systemPrompt: q.system,
-                        })
-                      }
-                    />
-                    <div className="w-full px-1">
-                      <Button
-                        type="button"
-                        onClick={handleInsertRandomPrompt}
-                        variant="glass"
-                        size="default"
-                        className="h-11 w-full gap-2 rounded-2xl text-xs font-semibold text-ink-primary hover:text-ink-primary"
-                        aria-label="Zufallsfrage einfügen"
-                        data-testid="quickstart-random-prompt"
-                      >
-                        <RefreshCw className="h-3.5 w-3.5" />
-                        <span>Zufallsfrage</span>
-                      </Button>
+                    <div className="w-full min-h-[15.5rem] px-1 sm:min-h-[14rem]">
+                      {showHeroActions ? (
+                        <div className="space-y-3">
+                          <QuickstartStrip
+                            quickstarts={quickstarts}
+                            limit={4}
+                            animate={false}
+                            onSelect={(q) =>
+                              void chatLogic.append({ role: "user", content: q.user }, undefined, {
+                                systemPrompt: q.system,
+                              })
+                            }
+                          />
+                          <Button
+                            type="button"
+                            onClick={handleInsertRandomPrompt}
+                            variant="glass"
+                            size="default"
+                            className="h-11 w-full gap-2 rounded-2xl text-xs font-semibold text-ink-primary hover:text-ink-primary"
+                            aria-label="Zufallsfrage einfügen"
+                            data-testid="quickstart-random-prompt"
+                          >
+                            <RefreshCw className="h-3.5 w-3.5" />
+                            <span>Zufallsfrage</span>
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : (

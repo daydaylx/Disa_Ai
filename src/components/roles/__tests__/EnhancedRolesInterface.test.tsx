@@ -115,6 +115,18 @@ describe("EnhancedRolesInterface", () => {
     expect(screen.getByText(/2 von 2 Rollen verfügbar/i)).toBeInTheDocument();
   });
 
+  it("renders a slimmer header without the old context tiles", () => {
+    renderWithProviders(<EnhancedRolesInterface />);
+
+    expect(screen.queryByText("Fokus")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Filter helfen dir, schneller den passenden Stil zu finden."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Merke dir starke Personas für spätere Gespräche."),
+    ).not.toBeInTheDocument();
+  });
+
   it("keeps hero and role list in the same scroll container", async () => {
     const { container } = renderWithProviders(<EnhancedRolesInterface />);
 
@@ -221,12 +233,14 @@ describe("EnhancedRolesInterface", () => {
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
+        { name: /Details zu Kreativer Assistent anzeigen/i, hidden: true },
       );
       fireEvent.click(detailsButton);
     }
 
     expect(screen.getByRole("button", { name: "Aktivieren" })).toBeInTheDocument();
+    expect(screen.getByText("System Prompt")).toBeInTheDocument();
+    expect(screen.getByText("You are a creative assistant...")).toBeInTheDocument();
     expect(screen.getByTestId("location-display")).toHaveTextContent("/roles");
     expect(mockSetActiveRole).not.toHaveBeenCalled();
   });
@@ -243,7 +257,9 @@ describe("EnhancedRolesInterface", () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
     // The active role should have a distinct visual state
-    const activeRoleCard = await screen.findByRole("button", { name: /Kreativer Assistent/i });
+    const activeRoleCard = await screen.findByRole("button", {
+      name: /Rolle Kreativer Assistent auswählen/i,
+    });
     expect(activeRoleCard).toHaveAttribute("aria-pressed", "true");
   });
 
@@ -259,7 +275,7 @@ describe("EnhancedRolesInterface", () => {
     if (creativeAssistantCard) {
       const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
         "button",
-        { name: "Details", hidden: true },
+        { name: /Details zu Kreativer Assistent anzeigen/i, hidden: true },
       ); // Use within
       fireEvent.click(detailsButton);
     }
@@ -276,7 +292,7 @@ describe("EnhancedRolesInterface", () => {
 
     if (codeExpertCard) {
       const detailsButton = await within(codeExpertCard as HTMLElement).findByRole("button", {
-        name: "Details",
+        name: /Details zu Code Experte anzeigen/i,
         hidden: true,
       });
       fireEvent.click(detailsButton);

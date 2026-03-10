@@ -76,7 +76,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
   return (
     <div className="relative isolate flex h-full w-full flex-col overflow-y-auto">
       <div
-        className="pointer-events-none absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 hidden h-64 w-64 -translate-x-1/2 rounded-full blur-3xl sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(251,191,36,0.16) 0%, rgba(56,189,248,0.08) 50%, transparent 72%)",
@@ -120,7 +120,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
                         key={item.id}
                         to={item.to}
                         className={cn(
-                          "group flex min-h-[52px] flex-shrink-0 items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-[120ms]",
+                          "group flex min-h-[52px] flex-shrink-0 items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-150",
                           "min-w-[152px] lg:min-w-0 lg:w-full",
                           "active:scale-[0.97] active:translate-y-px",
                           isActive
@@ -156,7 +156,7 @@ export function SettingsLayout({ children, activeTab, title, description }: Sett
 
           {/* Main Content */}
           <div className="flex-1 min-w-0">
-            <div className="space-y-6 animate-fade-in">{children}</div>
+            <div className="space-y-6 sm:animate-fade-in">{children}</div>
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 interface QuickstartStripProps {
   quickstarts: Quickstart[];
   onSelect: (q: Quickstart) => void;
+  limit?: number;
+  animate?: boolean;
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -19,10 +21,15 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps) {
+export function QuickstartStrip({
+  quickstarts,
+  onSelect,
+  limit = 6,
+  animate = true,
+}: QuickstartStripProps) {
   const picks = useMemo(
-    () => shuffle(quickstarts).slice(0, Math.min(6, quickstarts.length)),
-    [quickstarts],
+    () => shuffle(quickstarts).slice(0, Math.min(limit, quickstarts.length)),
+    [limit, quickstarts],
   );
 
   return (
@@ -36,7 +43,6 @@ export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps)
                 type="button"
                 onClick={() => onSelect(q)}
                 className={cn(
-                  "animate-fade-in-slide-up",
                   "flex w-full flex-col items-start gap-1.5",
                   "rounded-2xl px-3 py-2.5",
                   "text-left",
@@ -44,8 +50,11 @@ export function QuickstartStrip({ quickstarts, onSelect }: QuickstartStripProps)
                   "hover:bg-white/10",
                   "transition-colors duration-150",
                   "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary/50",
+                  animate && "animate-fade-in-slide-up",
                 )}
-                style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both" }}
+                style={
+                  animate ? { animationDelay: `${i * 60}ms`, animationFillMode: "both" } : undefined
+                }
               >
                 {categoryMeta && (
                   <span

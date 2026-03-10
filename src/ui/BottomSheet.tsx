@@ -182,7 +182,7 @@ export function BottomSheet({
             </button>
           </div>
 
-          <div className="max-h-[60vh] overflow-y-auto py-2">{children}</div>
+          <div className="max-h-[68vh] overflow-y-auto py-2 sm:max-h-[60vh]">{children}</div>
 
           {footer ? <div className="pt-3">{footer}</div> : null}
         </div>

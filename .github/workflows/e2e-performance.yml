@@ -163,6 +163,7 @@ jobs:
           name: lighthouse-reports
           path: .lighthouseci/
           retention-days: 7
+          include-hidden-files: true
 
   bundle-analysis:
     runs-on: ubuntu-latest

@@ -68,7 +68,7 @@ export function FilterChip({
       className={cn(
         "relative inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg",
         "px-4 text-sm font-medium",
-        "transition-all duration-[120ms]",
+        "transition-all duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
         accent.focusRing,
         // Inactive: plain chip

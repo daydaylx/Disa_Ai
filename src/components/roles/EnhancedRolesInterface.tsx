@@ -48,7 +48,6 @@ import {
   CatalogHeader,
   EmptyState,
   ListRow,
-  PageHeroStat,
   PullToRefresh,
 } from "@/ui";
 
@@ -232,7 +231,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
   return (
     <div className={cn("relative isolate flex h-full min-h-0 flex-col overflow-hidden", className)}>
       <div
-        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 hidden h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(244,114,182,0.20) 0%, rgba(139,92,246,0.10) 50%, transparent 70%)",
@@ -309,41 +308,6 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     <RotateCcw className="mr-1 h-3 w-3" /> Reset
                   </Button>
                 ) : null}
-              </div>
-            }
-            highlights={
-              <div className="grid gap-2 sm:grid-cols-3">
-                <PageHeroStat
-                  label="Aktiv"
-                  value={activeRole?.name ?? "Noch keine Rolle aktiv"}
-                  helper={
-                    activeRole?.description ??
-                    "Wähle unten eine Persona, um neue Chats sofort in diesem Stil zu starten."
-                  }
-                  icon={<HighlightedRoleIcon className="h-4 w-4" />}
-                />
-                <PageHeroStat
-                  label="Fokus"
-                  value={selectedCategory ?? "Alle Kategorien"}
-                  helper={
-                    filters.showFavoritesOnly
-                      ? "Favoritenfilter ist aktiv."
-                      : "Filter helfen dir, schneller den passenden Stil zu finden."
-                  }
-                  icon={
-                    selectedCategory ? (
-                      <Tag className="h-4 w-4" />
-                    ) : (
-                      <Sparkles className="h-4 w-4" />
-                    )
-                  }
-                />
-                <PageHeroStat
-                  label="Favoriten"
-                  value={`${enhancedRoles.filter((role) => isRoleFavorite(role.id)).length}`}
-                  helper="Merke dir starke Personas für spätere Gespräche."
-                  icon={<Star className="h-4 w-4" />}
-                />
               </div>
             }
             filterRow={
@@ -525,8 +489,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                           event.stopPropagation();
                           setSelectedRoleId(role.id);
                         }}
-                        aria-label="Details"
-                        className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.05] px-3 text-[11px] font-medium text-ink-secondary shadow-inner backdrop-blur-sm transition-colors hover:bg-white/[0.09] hover:text-ink-primary"
+                        aria-label={`Details zu ${role.name} anzeigen`}
+                        title={`Details zu ${role.name} anzeigen`}
+                        className="inline-flex min-h-[48px] min-w-[120px] shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
                       >
                         Details
                         <ChevronDown className="h-3.5 w-3.5" />
@@ -596,23 +561,39 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         }
       >
         {selectedRole ? (
-          <div className="space-y-3 rounded-xl border px-3 py-3">
-            <p className="text-sm leading-relaxed text-ink-secondary">{selectedRole.description}</p>
+          <div className="space-y-4 rounded-2xl border px-4 py-4">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                Überblick
+              </p>
+              <p className="text-sm leading-relaxed text-ink-secondary">
+                {selectedRole.description}
+              </p>
+            </div>
 
             {selectedRole.tags && selectedRole.tags.length > 0 ? (
-              <div className="flex flex-wrap gap-1.5 text-ink-tertiary">
-                {selectedRole.tags.map((tag) => (
-                  <Badge key={tag} size="sm">
-                    {tag}
-                  </Badge>
-                ))}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Tags
+                </p>
+                <div className="flex flex-wrap gap-2 text-ink-tertiary">
+                  {selectedRole.tags.map((tag) => (
+                    <Badge key={tag} size="sm" className="min-h-[28px] rounded-full px-2.5">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             ) : null}
 
             {selectedRole.systemPrompt ? (
-              <div className="max-h-28 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 p-2xs font-mono text-xs text-ink-tertiary">
-                {selectedRole.systemPrompt.slice(0, 220)}
-                {selectedRole.systemPrompt.length > 220 ? "..." : ""}
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  System Prompt
+                </p>
+                <div className="max-h-48 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 px-3 py-3 font-mono text-xs leading-relaxed text-ink-secondary whitespace-pre-wrap break-words">
+                  {selectedRole.systemPrompt}
+                </div>
               </div>
             ) : null}
           </div>

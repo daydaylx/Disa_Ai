@@ -97,6 +97,16 @@ describe("ModelsCatalog", () => {
     expect(screen.getByText(/2 Modelle · 0 Favoriten/i)).toBeInTheDocument();
   });
 
+  it("renders a slimmer header without the old context tiles", () => {
+    renderWithProviders(<ModelsCatalog />);
+
+    expect(screen.queryByText("Preisgefühl")).not.toBeInTheDocument();
+    expect(screen.queryByText("Input / Output pro 1K Tokens")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Favoriten bleiben oben und sind schneller wiederzufinden."),
+    ).not.toBeInTheDocument();
+  });
+
   it("keeps hero and model list in the same scroll container", async () => {
     const { container } = renderWithProviders(<ModelsCatalog />);
 
@@ -174,12 +184,20 @@ describe("ModelsCatalog", () => {
   it("opens model details without changing the active model", () => {
     renderWithProviders(<ModelsCatalog />);
 
-    const firstModelCard = screen.getAllByTestId("model-card")[0];
-    const detailsButton = within(firstModelCard!).getByRole("button", { name: "Details" });
+    const gptModelCard = screen.getByText("GPT-4o Mini").closest('[data-testid="model-card"]');
+    expect(gptModelCard).toBeInTheDocument();
+
+    const detailsButton = within(gptModelCard as HTMLElement).getByRole("button", {
+      name: /Details zu GPT-4o Mini anzeigen/i,
+    });
 
     fireEvent.click(detailsButton);
 
+    const dialog = screen.getByRole("dialog", { name: /GPT-4o Mini/i });
+
     expect(screen.getByRole("button", { name: "Als aktiv setzen" })).toBeInTheDocument();
+    expect(within(dialog).getByText("Überblick")).toBeInTheDocument();
+    expect(within(dialog).getByText("A fast and efficient model")).toBeInTheDocument();
     expect(mockSetPreferredModel).not.toHaveBeenCalled();
   });
 

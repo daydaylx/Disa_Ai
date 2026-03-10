@@ -226,7 +226,7 @@ export default function ThemenPage() {
   return (
     <div className="relative isolate flex h-full min-h-0 flex-col overflow-hidden">
       <div
-        className="pointer-events-none absolute -top-16 left-1/2 z-0 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow"
+        className="pointer-events-none absolute -top-16 left-1/2 z-0 hidden h-64 w-64 -translate-x-1/2 rounded-full blur-3xl motion-safe:animate-pulse-glow sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(139,92,246,0.22) 0%, rgba(56,189,248,0.10) 50%, transparent 70%)",
@@ -312,12 +312,14 @@ export default function ThemenPage() {
                   value={`${regularDiscussions.length}`}
                   helper="Allgemeine Themen für Analyse, Debatte und neue Ideen."
                   icon={<Brain className="h-4 w-4" />}
+                  className="hidden sm:block"
                 />
                 <PageHeroStat
                   label="Kontrovers"
                   value={`${conspiracyDiscussions.length}`}
                   helper="Bewusst markiert, damit du den Charakter des Themas sofort erkennst."
                   icon={<AlertTriangle className="h-4 w-4" />}
+                  className="hidden sm:block"
                 />
               </div>
             }

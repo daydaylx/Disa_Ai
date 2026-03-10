@@ -261,21 +261,7 @@ jobs:
         run: npm run lh
 
       - name: Check Mobile Performance Budget
-        run: |
-          # LCP budget check (Lighthouse returns value in milliseconds)
-          LCP_MS=$(jq -r '.audits."largest-contentful-paint".numericValue' .lighthouseci/lhr-*.json | head -1)
-          # Convert to integer for comparison
-          LCP_MS_INT=$(printf "%.0f" "$LCP_MS")
-          echo "Mobile LCP: ${LCP_MS_INT} ms"
-
-          # NOTE: CI runners can be noisy; keep this as a budget/gate, but allow a more realistic threshold.
-          MAX_LCP_MS=5500
-          if [ "$LCP_MS_INT" -gt "$MAX_LCP_MS" ]; then
-            echo "❌ Mobile LCP ${LCP_MS_INT}ms exceeds ${MAX_LCP_MS}ms limit!"
-            exit 1
-          else
-            echo "✅ Mobile LCP ${LCP_MS_INT}ms is within ${MAX_LCP_MS}ms limit"
-          fi
+        run: node ./scripts/check-lighthouse-budget.mjs --max-lcp-ms=5500
 
       - name: Upload Lighthouse Reports
         uses: actions/upload-artifact@v4
@@ -284,3 +270,4 @@ jobs:
           name: lighthouse-reports
           path: .lighthouseci/
           retention-days: 30
+          include-hidden-files: true
