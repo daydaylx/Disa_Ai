@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { RolesProvider } from "../../../contexts/RolesContext";
@@ -7,12 +7,17 @@ import { useRoles } from "../../../contexts/RolesContext";
 import { SettingsProvider } from "../../../contexts/SettingsContext";
 import { EnhancedRolesInterface } from "../EnhancedRolesInterface";
 
+const mockSetActiveRole = vi.fn();
+const mockToggleRoleFavorite = vi.fn();
+const mockTrackRoleUsage = vi.fn();
+const mockRefreshRoles = vi.fn();
+
 // Mock the favorites context
 vi.mock("../../../contexts/FavoritesContext", () => ({
   useFavorites: () => ({
     isRoleFavorite: vi.fn(() => false),
-    toggleRoleFavorite: vi.fn(),
-    trackRoleUsage: vi.fn(),
+    toggleRoleFavorite: mockToggleRoleFavorite,
+    trackRoleUsage: mockTrackRoleUsage,
     usage: {},
   }),
 }));
@@ -69,23 +74,36 @@ const mockRoles = [
   },
 ];
 
+function LocationProbe() {
+  const location = useLocation();
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>;
+}
+
 describe("EnhancedRolesInterface", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSetActiveRole.mockReset();
+    mockToggleRoleFavorite.mockReset();
+    mockTrackRoleUsage.mockReset();
+    mockRefreshRoles.mockReset();
     (useRoles as any).mockReturnValue({
       roles: mockRoles,
       activeRole: null,
-      setActiveRole: vi.fn(),
-      isLoading: false,
-      error: null,
+      setActiveRole: mockSetActiveRole,
+      rolesLoading: false,
+      roleLoadError: null,
+      refreshRoles: mockRefreshRoles,
     });
   });
 
   const renderWithProviders = (component: React.ReactElement) => {
     return render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={["/roles"]}>
         <SettingsProvider>
-          <RolesProvider>{component}</RolesProvider>
+          <RolesProvider>
+            {component}
+            <LocationProbe />
+          </RolesProvider>
         </SettingsProvider>
       </MemoryRouter>,
     );
@@ -171,26 +189,40 @@ describe("EnhancedRolesInterface", () => {
     expect(screen.getByText("Failed to load roles")).toBeInTheDocument();
   });
 
-  it("should handle role selection", () => {
-    const mockSetActiveRole = vi.fn();
-    (useRoles as any).mockReturnValue({
-      roles: mockRoles,
-      activeRole: null,
-      setActiveRole: mockSetActiveRole,
-      isLoading: false,
-      error: null,
-    });
-
+  it("should handle role selection", async () => {
     renderWithProviders(<EnhancedRolesInterface />);
 
-    // Find first role card and click it
-    const firstRoleCard = screen.getByText("Kreativer Assistent").closest('[role="button"]');
-    if (firstRoleCard) {
-      fireEvent.click(firstRoleCard);
+    const firstRoleCard = await screen.findByRole("button", {
+      name: /Rolle Kreativer Assistent auswählen/i,
+    });
+    fireEvent.click(firstRoleCard);
 
-      // Should call setActiveRole
-      expect(mockSetActiveRole).toHaveBeenCalledWith(mockRoles[0]);
+    expect(mockSetActiveRole).toHaveBeenCalledWith(mockRoles[0]);
+    expect(mockTrackRoleUsage).toHaveBeenCalledWith("creative-assistant");
+    await waitFor(() => {
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/chat");
+    });
+  });
+
+  it("opens role details without navigating away", async () => {
+    renderWithProviders(<EnhancedRolesInterface />);
+
+    const creativeAssistantCard = screen
+      .getByText("Kreativer Assistent")
+      .closest('[data-testid="role-card"]');
+    expect(creativeAssistantCard).toBeInTheDocument();
+
+    if (creativeAssistantCard) {
+      const detailsButton = await within(creativeAssistantCard as HTMLElement).findByRole(
+        "button",
+        { name: "Details", hidden: true },
+      );
+      fireEvent.click(detailsButton);
     }
+
+    expect(screen.getByRole("button", { name: "Aktivieren" })).toBeInTheDocument();
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/roles");
+    expect(mockSetActiveRole).not.toHaveBeenCalled();
   });
 
   it("should indicate active role state", async () => {

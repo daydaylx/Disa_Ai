@@ -85,6 +85,25 @@ test.describe("Models & Roles Pages", () => {
     await page.waitForTimeout(1000);
   });
 
+  test("should open theme details first and start chat explicitly", async ({ page }) => {
+    await page.goto("/themen");
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.getByRole("heading", { level: 1, name: /Themen/i })).toBeVisible();
+
+    const detailTrigger = page.getByRole("button", { name: /Details zu .* anzeigen/i }).first();
+    await expect(detailTrigger).toBeVisible();
+
+    await detailTrigger.click();
+    await expect(page).toHaveURL(/\/themen$/);
+
+    const startButton = page.getByRole("button", { name: /Diskussion starten/i });
+    await expect(startButton).toBeVisible();
+    await startButton.click();
+
+    await expect(page).toHaveURL(/\/chat\?quickstart=/);
+  });
+
   test("should select role from chat and apply it", async ({ page }) => {
     await page.goto("/chat");
     await page.waitForLoadState("networkidle");

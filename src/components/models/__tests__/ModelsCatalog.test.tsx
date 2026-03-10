@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -8,6 +8,8 @@ import { ModelCatalogProvider } from "../../../contexts/ModelCatalogContext";
 import { useModelCatalog } from "../../../contexts/ModelCatalogContext";
 import { SettingsProvider } from "../../../contexts/SettingsContext";
 import { ModelsCatalog } from "../ModelsCatalog";
+
+const mockSetPreferredModel = vi.fn();
 
 // Mock the favorites context
 vi.mock("../../../contexts/FavoritesContext", () => ({
@@ -39,7 +41,7 @@ vi.mock("../../../hooks/useSettings", () => ({
   useSettings: () => ({
     settings: { preferredModelId: null },
     setSettings: vi.fn(),
-    setPreferredModel: vi.fn(),
+    setPreferredModel: mockSetPreferredModel,
   }),
 }));
 
@@ -69,6 +71,7 @@ const mockModels = [
 describe("ModelsCatalog", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSetPreferredModel.mockReset();
     (useModelCatalog as any).mockReturnValue({
       models: mockModels,
       loading: false,
@@ -146,14 +149,24 @@ describe("ModelsCatalog", () => {
   it("should handle model selection", async () => {
     renderWithProviders(<ModelsCatalog />);
 
-    // Find the model card by its accessible name (label)
-    const gptModelCard = await screen.findByRole("button", { name: /GPT-4o Mini/i });
+    const gptModelCard = await screen.findByRole("button", {
+      name: /Modell GPT-4o Mini auswählen/i,
+    });
     fireEvent.click(gptModelCard);
 
-    // Assertions related to selection effect
-    // For now, ensure the card is in the document (already implicitly handled by findByRole)
-    // In a real scenario, you'd check for active state or a callback being fired.
-    expect(gptModelCard).toBeInTheDocument();
+    expect(mockSetPreferredModel).toHaveBeenCalledWith("gpt-4o-mini");
+  });
+
+  it("opens model details without changing the active model", () => {
+    renderWithProviders(<ModelsCatalog />);
+
+    const firstModelCard = screen.getAllByTestId("model-card")[0];
+    const detailsButton = within(firstModelCard!).getByRole("button", { name: "Details" });
+
+    fireEvent.click(detailsButton);
+
+    expect(screen.getByRole("button", { name: "Als aktiv setzen" })).toBeInTheDocument();
+    expect(mockSetPreferredModel).not.toHaveBeenCalled();
   });
 
   it("should display provider information", async () => {

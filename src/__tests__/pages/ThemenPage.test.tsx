@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getQuickstartsWithFallback, type Quickstart } from "@/config/quickstarts";
@@ -37,10 +37,16 @@ const CONTROVERSIAL_QUICKSTART: Quickstart = {
 
 function renderThemenPage() {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={["/themen"]}>
       <ThemenPage />
+      <LocationProbe />
     </MemoryRouter>,
   );
+}
+
+function LocationProbe() {
+  const location = useLocation();
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>;
 }
 
 describe("ThemenPage", () => {
@@ -65,8 +71,27 @@ describe("ThemenPage", () => {
 
     expect(screen.getByText("Ein Testthema")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Diskussion starten" })).toBeInTheDocument();
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/themen");
     // BottomSheet has both an icon X-button (aria-label) and a text "Schließen" button
     expect(screen.getAllByRole("button", { name: "Schließen" }).length).toBeGreaterThan(0);
+  });
+
+  it("startet den Chat erst über eine explizite Themen-Aktion", async () => {
+    renderThemenPage();
+
+    const [detailsButton] = await screen.findAllByRole("button", {
+      name: "Details zu Test Diskussion anzeigen",
+    });
+    fireEvent.click(detailsButton!);
+    fireEvent.click(screen.getByRole("button", { name: "Diskussion starten" }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("location-display")).toHaveTextContent("/chat?quickstart=");
+    });
+    expect(screen.getByTestId("location-display")).toHaveTextContent("quickstart=discussion-test");
+    expect(screen.getByTestId("location-display")).toHaveTextContent(
+      "title=Diskussion: Test Diskussion",
+    );
   });
 
   it("zeigt den Empty-State ohne Themen", async () => {
