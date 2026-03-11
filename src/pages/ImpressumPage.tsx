@@ -1,16 +1,38 @@
-import { Card } from "@/ui";
+import { Badge, Card } from "@/ui";
 
 export default function ImpressumPage() {
   return (
-    <div className="mx-auto flex h-full w-full max-w-4xl flex-col overflow-y-auto px-4 py-6 sm:px-6">
-      <Card className="w-full border-white/10 bg-surface-card/95" padding="lg">
-        <article className="space-y-8 text-sm leading-7 text-ink-secondary">
-          <header className="border-b border-white/8 pb-5 text-left sm:text-center">
+    <div className="relative isolate mx-auto flex h-full w-full max-w-4xl flex-col overflow-y-auto pb-6">
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 hidden h-56 w-56 -translate-x-1/2 rounded-full blur-3xl sm:block"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(56,189,248,0.12) 0%, rgba(251,191,36,0.08) 55%, transparent 72%)",
+          opacity: 0.4,
+        }}
+        aria-hidden="true"
+      />
+
+      <Card
+        className="relative w-full overflow-hidden rounded-[28px] border-white/[0.10] bg-surface-1/86 shadow-[0_18px_42px_-32px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl"
+        padding="lg"
+      >
+        <div
+          className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+          aria-hidden
+        />
+        <article className="relative space-y-8 text-sm leading-7 text-ink-secondary">
+          <header className="border-b border-white/8 pb-6 text-left sm:text-center">
+            <div className="mb-3 flex justify-start sm:justify-center">
+              <Badge className="rounded-full border-white/10 bg-white/[0.06] px-3 py-1.5 text-ink-secondary">
+                Rechtliches
+              </Badge>
+            </div>
             <h1 className="text-3xl font-semibold tracking-tight text-ink-primary">Impressum</h1>
             <p className="mt-2 text-sm text-ink-secondary">Verantwortlich für den Inhalt</p>
           </header>
 
-          <div className="rounded-xl border border-white/10 bg-surface-2/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-black/[0.10] p-4 shadow-inner">
             <p className="leading-relaxed text-ink-primary">
               Dies ist eine rein private, nicht geschäftsmäßige Webseite ohne
               Gewinnerzielungsabsicht.
@@ -18,7 +40,7 @@ export default function ImpressumPage() {
           </div>
 
           <nav
-            className="rounded-lg border border-white/10 bg-surface-2/60 p-4"
+            className="rounded-[22px] border border-white/[0.08] bg-black/[0.10] p-4 shadow-inner"
             aria-label="Inhalt"
           >
             <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-tertiary">
@@ -53,7 +75,10 @@ export default function ImpressumPage() {
           </nav>
 
           <section className="space-y-4">
-            <h2 id="impressum-angaben" className="text-xl font-semibold text-ink-primary">
+            <h2
+              id="impressum-angaben"
+              className="text-xl font-semibold tracking-tight text-ink-primary"
+            >
               Angaben gemäß § 5 TMG
             </h2>
             <div className="text-ink-secondary space-y-2 leading-relaxed text-sm">
@@ -69,7 +94,10 @@ export default function ImpressumPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 id="impressum-kontakt" className="text-xl font-semibold text-ink-primary">
+            <h2
+              id="impressum-kontakt"
+              className="text-xl font-semibold tracking-tight text-ink-primary"
+            >
               Kontakt
             </h2>
             <div className="text-ink-secondary text-sm">
@@ -86,7 +114,10 @@ export default function ImpressumPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 id="impressum-verantwortlich" className="text-xl font-semibold text-ink-primary">
+            <h2
+              id="impressum-verantwortlich"
+              className="text-xl font-semibold tracking-tight text-ink-primary"
+            >
               Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">

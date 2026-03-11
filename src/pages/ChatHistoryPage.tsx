@@ -136,9 +136,9 @@ export default function ChatHistoryPage() {
     : "Noch keine Chats";
 
   return (
-    <div className="relative isolate flex h-full w-full max-w-3xl flex-col gap-4">
+    <div className="relative isolate mx-auto flex h-full w-full max-w-3xl flex-col gap-4 pb-4xl">
       <div
-        className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 hidden h-56 w-56 -translate-x-1/2 rounded-full blur-3xl sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(56,189,248,0.14) 0%, rgba(139,92,246,0.08) 55%, transparent 72%)",
@@ -149,7 +149,7 @@ export default function ChatHistoryPage() {
 
       <PageHero
         title="Gespeicherte Unterhaltungen"
-        titleAs="h2"
+        titleAs="h1"
         eyebrow="Verlauf"
         description="Hier findest du deine letzten Gespräche wieder. Öffne sie erneut, springe zurück in den Kontext oder räume ältere Chats auf."
         countLabel={
@@ -196,70 +196,74 @@ export default function ChatHistoryPage() {
                 : "Sobald du chattest, erscheint hier dein letzter Eintrag."
             }
             icon={<Share2 className="h-4 w-4" />}
+            className="hidden sm:block"
           />
           <PageHeroStat
             label="Geöffnete Vorschauen"
             value={`${expandedConvs.size}`}
             helper="Praktisch, wenn du kurz in ältere Antworten reinschauen willst."
             icon={<Edit2 className="h-4 w-4" />}
+            className="hidden sm:block"
           />
         </div>
       </PageHero>
 
-      <PullToRefresh onRefresh={loadConversations} className="flex-1 pb-4">
-        {loading && (
-          <div className="space-y-3 animate-pulse">
-            <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-            <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-            <div className="h-24 bg-surface-1 rounded-2xl w-full" />
-          </div>
-        )}
+      <PullToRefresh onRefresh={loadConversations} className="flex-1 min-h-0">
+        <div className="space-y-4 pb-page-bottom-safe">
+          {loading && (
+            <div className="space-y-3 animate-pulse">
+              <div className="h-28 w-full rounded-[24px] border border-white/[0.08] bg-surface-1/80" />
+              <div className="h-28 w-full rounded-[24px] border border-white/[0.08] bg-surface-1/76" />
+              <div className="h-28 w-full rounded-[24px] border border-white/[0.08] bg-surface-1/72" />
+            </div>
+          )}
 
-        {!loading && loadError && (
-          <EmptyState
-            icon={<AlertCircle className="h-6 w-6" />}
-            title="Verlauf konnte nicht geladen werden"
-            description={loadError}
-            className="rounded-2xl border border-status-error/25 bg-status-error/10"
-            action={
-              <Button variant="secondary" size="sm" onClick={() => void loadConversations()}>
-                Erneut versuchen
-              </Button>
-            }
-          />
-        )}
+          {!loading && loadError && (
+            <EmptyState
+              icon={<AlertCircle className="h-6 w-6" />}
+              title="Verlauf konnte nicht geladen werden"
+              description={loadError}
+              className="rounded-2xl border border-status-error/25 bg-status-error/10"
+              action={
+                <Button variant="secondary" size="sm" onClick={() => void loadConversations()}>
+                  Erneut versuchen
+                </Button>
+              }
+            />
+          )}
 
-        {!loading && !loadError && conversations.length === 0 && (
-          <EmptyState
-            icon={<MessageSquare className="h-6 w-6" />}
-            title="Noch keine Unterhaltungen"
-            description="Starte einen neuen Chat, um ihn hier wiederzufinden."
-            action={
-              <Button variant="secondary" size="sm" onClick={() => void navigate("/chat")}>
-                Neuen Chat starten
-              </Button>
-            }
-          />
-        )}
+          {!loading && !loadError && conversations.length === 0 && (
+            <EmptyState
+              icon={<MessageSquare className="h-6 w-6" />}
+              title="Noch keine Unterhaltungen"
+              description="Starte einen neuen Chat, um ihn hier wiederzufinden."
+              action={
+                <Button variant="secondary" size="sm" onClick={() => void navigate("/chat")}>
+                  Neuen Chat starten
+                </Button>
+              }
+            />
+          )}
 
-        {!loading && !loadError && (
-          <div className="grid gap-3">
-            {conversations.map((conv) => (
-              <ConversationCard
-                key={conv.id}
-                conversation={conv}
-                isExpanded={expandedConvs.has(conv.id)}
-                onOpen={handleOpen}
-                onDelete={handleDelete}
-                onToggleExpansion={toggleConversationExpansion}
-                onLongPress={() => {
-                  setSelectedConvId(conv.id);
-                  setShowContextMenu(true);
-                }}
-              />
-            ))}
-          </div>
-        )}
+          {!loading && !loadError && (
+            <div className="space-y-3">
+              {conversations.map((conv) => (
+                <ConversationCard
+                  key={conv.id}
+                  conversation={conv}
+                  isExpanded={expandedConvs.has(conv.id)}
+                  onOpen={handleOpen}
+                  onDelete={handleDelete}
+                  onToggleExpansion={toggleConversationExpansion}
+                  onLongPress={() => {
+                    setSelectedConvId(conv.id);
+                    setShowContextMenu(true);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </PullToRefresh>
 
       {/* Context Menu (Long-Press) */}

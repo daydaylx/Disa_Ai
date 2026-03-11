@@ -28,19 +28,22 @@ export function SettingsRow({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 py-4 border-b border-white/5 last:border-b-0",
+        "flex flex-col gap-3 py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6",
+        "border-b border-white/[0.06]",
         className,
       )}
     >
       <div className="flex-1 min-w-0">
-        <p id={labelId} className="text-sm font-medium text-ink-primary">
+        <p id={labelId} className="text-sm font-semibold text-ink-primary">
           {label}
         </p>
         {description && (
-          <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{description}</p>
+          <p className="mt-1 text-xs leading-relaxed text-ink-tertiary">{description}</p>
         )}
       </div>
-      <div className="flex-shrink-0">{children}</div>
+      <div className="w-full sm:w-auto sm:min-w-[12rem] sm:max-w-sm sm:flex-shrink-0">
+        {children}
+      </div>
     </div>
   );
 }
@@ -91,12 +94,20 @@ interface SettingsSectionProps {
  */
 export function SettingsSection({ title, description, children, className }: SettingsSectionProps) {
   return (
-    <section className={cn("mb-8", className)}>
-      <div className="mb-4">
-        <h2 className="text-base font-semibold text-ink-primary">{title}</h2>
-        {description && <p className="text-xs text-ink-tertiary mt-1">{description}</p>}
+    <section className={cn("space-y-3", className)}>
+      <div className="px-1">
+        <h2 className="text-base font-semibold tracking-tight text-ink-primary">{title}</h2>
+        {description && (
+          <p className="mt-1 text-sm leading-relaxed text-ink-secondary">{description}</p>
+        )}
       </div>
-      <div className="bg-surface-1 rounded-2xl border border-white/5 px-4">{children}</div>
+      <div className="relative overflow-hidden rounded-[24px] border border-white/[0.10] bg-surface-1/82 px-4 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.72)] ring-1 ring-inset ring-white/[0.04] sm:px-5 sm:backdrop-blur-xl">
+        <div
+          className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/18 to-transparent"
+          aria-hidden
+        />
+        <div className="relative">{children}</div>
+      </div>
     </section>
   );
 }

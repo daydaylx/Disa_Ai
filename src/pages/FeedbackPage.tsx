@@ -20,7 +20,17 @@ import {
   X,
 } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { Badge, Button, Card, InfoBanner, PageHero, PageHeroStat, useToasts } from "@/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  InfoBanner,
+  Input,
+  PageHero,
+  PageHeroStat,
+  Textarea,
+  useToasts,
+} from "@/ui";
 
 const FEEDBACK_TYPES = [
   { id: "idea", label: "Idee", icon: MessageSquare, color: "text-accent-settings" },
@@ -280,11 +290,13 @@ export default function FeedbackPage() {
     : isCompressing
       ? "Bilder werden optimiert."
       : null;
+  const activeType = FEEDBACK_TYPES.find((item) => item.id === type) ?? FEEDBACK_TYPES[0];
+  const attachmentLimitReached = attachments.length >= IMAGE_CONFIG.MAX_FILES;
 
   return (
-    <div className="relative isolate mx-auto flex min-h-full w-full max-w-3xl flex-col gap-4 overflow-y-auto pb-4">
+    <div className="relative isolate mx-auto flex min-h-full w-full max-w-3xl flex-col gap-4 pb-4xl">
       <div
-        className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 hidden h-56 w-56 -translate-x-1/2 rounded-full blur-3xl sm:block"
         style={{
           background:
             "radial-gradient(circle, rgba(251,191,36,0.16) 0%, rgba(236,72,153,0.08) 55%, transparent 72%)",
@@ -295,7 +307,7 @@ export default function FeedbackPage() {
 
       <PageHero
         title="Deine Meinung zählt"
-        titleAs="h2"
+        titleAs="h1"
         eyebrow="Feedback"
         description="Sag uns einfach, was gut läuft, wo es hakt oder was dir noch fehlt. Du kannst anonym bleiben und bei Bedarf Screenshots mitsenden."
         countLabel="Direkt an das Team"
@@ -334,30 +346,40 @@ export default function FeedbackPage() {
         </div>
       </PageHero>
 
-      <Card className="w-full rounded-[28px]" padding="lg">
-        {submitError ? (
-          <InfoBanner variant="error" title="Senden fehlgeschlagen" className="mb-5 rounded-xl">
-            {submitError}
-          </InfoBanner>
-        ) : null}
+      {submitError ? (
+        <InfoBanner variant="error" title="Senden fehlgeschlagen" className="rounded-[24px]">
+          {submitError}
+        </InfoBanner>
+      ) : null}
 
-        {statusMessage ? (
-          <InfoBanner className="mb-5 rounded-xl" title="Status">
-            {statusMessage}
-          </InfoBanner>
-        ) : null}
+      {statusMessage ? (
+        <InfoBanner title="Status" className="rounded-[24px]">
+          {statusMessage}
+        </InfoBanner>
+      ) : null}
 
-        <p className="sr-only" aria-live="polite">
-          {statusMessage ?? (submitError ? `Fehler: ${submitError}` : "")}
-        </p>
+      <p className="sr-only" aria-live="polite">
+        {statusMessage ?? (submitError ? `Fehler: ${submitError}` : "")}
+      </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Feedback Type Selection */}
-          <fieldset className="space-y-3">
-            <legend className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
-              Worum geht es?
-            </legend>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Card className="rounded-[28px] border-white/[0.10] bg-surface-1/82 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl">
+          <fieldset className="space-y-4">
+            <legend className="sr-only">Worum geht es?</legend>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-ink-primary">Worum geht es?</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                  Wähle kurz den Bereich, damit dein Hinweis schneller an der richtigen Stelle
+                  landet.
+                </p>
+              </div>
+              <Badge className="rounded-full border-white/10 bg-white/[0.06] px-3 py-1.5 text-ink-primary">
+                Typ: {activeType.label}
+              </Badge>
+            </div>
+
+            <div className="grid gap-2 sm:grid-cols-2">
               {FEEDBACK_TYPES.map((item) => {
                 const Icon = item.icon;
                 const isSelected = type === item.id;
@@ -368,54 +390,78 @@ export default function FeedbackPage() {
                     onClick={() => setType(item.id)}
                     aria-pressed={isSelected}
                     className={cn(
-                      "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all",
+                      "flex min-h-[88px] items-center gap-3 rounded-[22px] border px-4 py-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary",
                       isSelected
-                        ? "bg-surface-2 border-accent-primary/50 ring-1 ring-accent-primary/20"
-                        : "bg-surface-1 border-white/5 hover:bg-surface-2 hover:border-white/10",
+                        ? "border-accent-primary/45 bg-white/[0.07] shadow-[0_16px_30px_-24px_rgba(251,191,36,0.45)]"
+                        : "border-white/[0.08] bg-black/[0.10] hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.06]",
                     )}
                   >
-                    <Icon
-                      className={cn("h-6 w-6", isSelected ? item.color : "text-ink-tertiary")}
-                    />
-                    <span
+                    <div
                       className={cn(
-                        "text-xs font-medium",
-                        isSelected ? "text-ink-primary" : "text-ink-secondary",
+                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.06] shadow-inner",
+                        isSelected && "border-white/[0.12] bg-white/[0.10]",
                       )}
                     >
-                      {item.label}
-                    </span>
+                      <Icon
+                        className={cn("h-5 w-5", isSelected ? item.color : "text-ink-tertiary")}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-ink-primary">{item.label}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-ink-tertiary">
+                        {item.id === "idea"
+                          ? "Neue Idee oder Verbesserung"
+                          : item.id === "bug"
+                            ? "Fehler, Problem oder Defekt"
+                            : item.id === "ui"
+                              ? "Layout, Lesbarkeit oder Bedienung"
+                              : "Alles, was nicht in die anderen Gruppen passt"}
+                      </p>
+                    </div>
                   </button>
                 );
               })}
             </div>
           </fieldset>
+        </Card>
 
-          {/* Message Textarea */}
-          <div className="space-y-3">
-            <label
-              htmlFor="feedback-message"
-              className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary"
-            >
-              Deine Nachricht
-            </label>
-            <textarea
+        <Card className="rounded-[28px] border-white/[0.10] bg-surface-1/82 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl">
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="feedback-message" className="text-sm font-semibold text-ink-primary">
+                Deine Nachricht
+              </label>
+              <p className="text-sm leading-relaxed text-ink-secondary">
+                Beschreibe knapp, was du beobachtet hast oder was du dir wünschst. Ein paar klare
+                Sätze reichen.
+              </p>
+            </div>
+            <Textarea
               id="feedback-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Beschreibe deine Idee oder das Problem..."
-              className="w-full min-h-[160px] bg-surface-2 border border-white/10 rounded-xl p-4 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 resize-none"
+              className="min-h-[180px] rounded-[22px] border-white/[0.12] bg-black/[0.10] px-4 py-4 text-sm text-ink-primary placeholder:text-ink-tertiary shadow-inner focus-visible:ring-accent-primary/50"
               required
             />
-          </div>
+          </section>
+        </Card>
 
-          {/* Screenshot Attachments */}
-          <div className="space-y-3">
-            <label className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary">
-              Screenshots (optional)
-            </label>
+        <Card className="rounded-[28px] border-white/[0.10] bg-surface-1/82 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl">
+          <section className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-ink-primary">Screenshots</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                  Optional, aber oft hilfreich. Bilder werden vor dem Senden automatisch
+                  verkleinert.
+                </p>
+              </div>
+              <Badge className="rounded-full border-white/10 bg-white/[0.06] px-3 py-1.5 text-ink-secondary">
+                {attachments.length}/{IMAGE_CONFIG.MAX_FILES}
+              </Badge>
+            </div>
 
-            {/* File Input (hidden) */}
             <input
               ref={fileInputRef}
               type="file"
@@ -423,60 +469,53 @@ export default function FeedbackPage() {
               multiple
               onChange={handleFileSelect}
               className="hidden"
-              disabled={isCompressing || attachments.length >= IMAGE_CONFIG.MAX_FILES}
+              disabled={isCompressing || attachmentLimitReached}
             />
 
-            {/* Add Screenshot Button */}
             <Button
               type="button"
-              variant="secondary"
+              variant="glass"
               size="default"
               onClick={() => fileInputRef.current?.click()}
-              disabled={isCompressing || attachments.length >= IMAGE_CONFIG.MAX_FILES}
-              className="w-full"
+              disabled={isCompressing || attachmentLimitReached}
+              className="w-full justify-center gap-2 rounded-2xl"
             >
-              <div className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4" />
-                {isCompressing
-                  ? "Bilder werden optimiert..."
-                  : attachments.length >= IMAGE_CONFIG.MAX_FILES
-                    ? `Maximum erreicht (${IMAGE_CONFIG.MAX_FILES})`
-                    : "Screenshot hinzufügen"}
-              </div>
+              <ImageIcon className="h-4 w-4" />
+              {isCompressing
+                ? "Bilder werden optimiert..."
+                : attachmentLimitReached
+                  ? `Maximum erreicht (${IMAGE_CONFIG.MAX_FILES})`
+                  : "Screenshot hinzufügen"}
             </Button>
 
-            {/* Attachment Previews */}
             {attachments.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-white/10 bg-surface-1/40 px-3 py-3 text-xs text-ink-tertiary">
+              <div className="rounded-[22px] border border-dashed border-white/[0.10] bg-black/[0.08] px-4 py-5 text-sm text-ink-tertiary shadow-inner">
                 Noch keine Screenshots hinzugefügt.
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {attachments.map((attachment) => (
                   <div
                     key={attachment.id}
-                    className="relative group bg-surface-2 border border-white/10 rounded-lg overflow-hidden"
+                    className="group relative overflow-hidden rounded-[22px] border border-white/[0.10] bg-black/[0.12] shadow-[0_12px_26px_-22px_rgba(0,0,0,0.85)]"
                   >
-                    {/* Preview Image */}
                     <img
                       src={attachment.previewUrl}
                       alt={attachment.file.name}
-                      className="w-full h-24 object-cover"
+                      className="h-28 w-full object-cover"
                     />
-
-                    {/* File Info Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
-                      <p className="text-xs text-white truncate">{attachment.file.name}</p>
-                      <p className="text-xs text-white/70">
+                    <div className="space-y-1 px-3 py-3">
+                      <p className="truncate text-xs font-medium text-ink-primary">
+                        {attachment.file.name}
+                      </p>
+                      <p className="text-xs text-ink-tertiary">
                         {formatFileSize(attachment.file.size)}
                       </p>
                     </div>
-
-                    {/* Remove Button */}
                     <button
                       type="button"
                       onClick={() => handleRemoveAttachment(attachment.id)}
-                      className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full bg-status-error/90 text-white shadow-md transition-colors hover:bg-status-error"
+                      className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full border border-status-error/30 bg-status-error/85 text-white shadow-md transition-colors hover:bg-status-error"
                       aria-label="Bild entfernen"
                     >
                       <X className="h-3.5 w-3.5" />
@@ -486,61 +525,55 @@ export default function FeedbackPage() {
               </div>
             )}
 
-            {/* Help Text */}
-            <p className="text-xs text-ink-tertiary">
+            <p className="text-xs leading-relaxed text-ink-tertiary">
               Max. {IMAGE_CONFIG.MAX_FILES} Bilder, je {IMAGE_CONFIG.MAX_FILE_SIZE_MB} MB. Bilder
               werden automatisch optimiert.
             </p>
-          </div>
+          </section>
+        </Card>
 
-          {/* Email Input */}
-          <div className="space-y-3">
-            <label
-              htmlFor="feedback-email"
-              className="text-xs font-semibold uppercase tracking-wider text-ink-tertiary"
-            >
-              E-Mail (optional) 🔒
-            </label>
-            <input
+        <Card className="rounded-[28px] border-white/[0.10] bg-surface-1/82 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl">
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="feedback-email" className="text-sm font-semibold text-ink-primary">
+                E-Mail (optional)
+              </label>
+              <p className="text-sm leading-relaxed text-ink-secondary">
+                Nur eintragen, wenn du eine Rückmeldung möchtest. Ohne E-Mail bleibt dein Feedback
+                anonym.
+              </p>
+            </div>
+            <Input
               id="feedback-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Nur wenn du eine Antwort möchtest..."
-              className="w-full bg-surface-2 border border-white/10 rounded-xl p-4 text-sm text-ink-primary placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
+              className="rounded-[22px] border-white/[0.12] bg-black/[0.10]"
             />
-            <p className="text-xs text-ink-tertiary italic">
-              Ohne E-Mail bleibt dein Feedback komplett anonym.
-            </p>
-          </div>
 
-          {/* Privacy Info */}
-          <div className="rounded-lg bg-surface-2/50 p-3 text-xs text-ink-secondary border border-white/5">
-            <p>
-              Technische Details (Browser, Gerät) werden anonymisiert angehängt, um Fehler schneller
-              zu finden. Screenshots werden sicher übertragen und nicht für andere Zwecke verwendet.
-            </p>
-          </div>
+            <div className="rounded-[22px] border border-white/[0.08] bg-black/[0.10] px-4 py-4 shadow-inner">
+              <p className="text-xs leading-relaxed text-ink-secondary">
+                Technische Details wie Browser und Gerät werden anonymisiert mitgeschickt, damit
+                Fehler schneller nachvollzogen werden können. Screenshots werden nur zur Bearbeitung
+                deines Feedbacks genutzt.
+              </p>
+            </div>
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            disabled={isSending || !message.trim() || isCompressing}
-            aria-busy={isSending}
-            className="w-full"
-          >
-            {isSending ? (
-              "Wird gesendet..."
-            ) : (
-              <div className="flex items-center gap-2">
-                <Send className="h-4 w-4" /> Feedback absenden
-              </div>
-            )}
-          </Button>
-        </form>
-      </Card>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={isSending || !message.trim() || isCompressing}
+              aria-busy={isSending}
+              className="w-full gap-2"
+            >
+              <Send className="h-4 w-4" />
+              {isSending ? "Wird gesendet..." : "Feedback absenden"}
+            </Button>
+          </section>
+        </Card>
+      </form>
     </div>
   );
 }

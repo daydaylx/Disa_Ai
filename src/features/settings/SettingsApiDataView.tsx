@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button, Card, Input, Label, useToasts } from "@/ui";
+import { Badge, Button, Card, Input, Label, useToasts } from "@/ui";
 
 import { STORAGE_KEYS } from "../../config/storageKeys";
 import { useConversationStats } from "../../hooks/use-storage";
@@ -231,6 +231,10 @@ export function SettingsApiDataView() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
+  const panelClassName =
+    "rounded-[26px] border-white/[0.10] bg-surface-1/82 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl";
+  const insetPanelClassName =
+    "rounded-[20px] border border-white/[0.08] bg-black/[0.10] px-4 py-4 shadow-inner";
 
   return (
     <SettingsLayout
@@ -242,17 +246,33 @@ export function SettingsApiDataView() {
         <Card
           variant="surface"
           accent="settings"
-          className="border-white/[0.1]"
+          className={panelClassName}
           data-testid="model-card"
         >
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <KeyRound className="h-4 w-4 text-accent-settings" />
-              <h2 className="text-sm font-semibold text-ink-primary">Schlüssel & Verbindung</h2>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-accent-settings-border/40 bg-accent-settings-surface text-accent-settings shadow-inner">
+                  <KeyRound className="h-4 w-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-ink-primary">Schlüssel & Verbindung</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                    Lege fest, ob Disa den kostenlosen Zugang oder deinen eigenen OpenRouter-Key
+                    nutzt.
+                  </p>
+                </div>
+              </div>
+              <Badge
+                variant={hasApiKey ? "settings" : "secondary"}
+                className="w-fit rounded-full px-3 py-1.5"
+              >
+                {hasApiKey ? "Key aktiv" : "Proxy aktiv"}
+              </Badge>
             </div>
 
             {hasApiKey && (
-              <div className="flex w-fit items-center gap-2 rounded-xl border border-accent-settings-border/40 bg-accent-settings-dim/35 px-3 py-1.5">
+              <div className="flex w-fit items-center gap-2 rounded-full border border-accent-settings-border/40 bg-accent-settings-dim/35 px-3 py-1.5">
                 <div className="h-2 w-2 rounded-full bg-accent-settings" />
                 <span className="text-sm font-medium text-ink-primary">API-Key aktiv</span>
               </div>
@@ -269,13 +289,13 @@ export function SettingsApiDataView() {
                   value={apiKey}
                   onChange={handleApiKeyChange}
                   placeholder="sk-or-..."
-                  className="pr-12"
+                  className="rounded-[20px] border-white/[0.12] bg-black/[0.10] pr-12"
                   autoComplete="off"
                 />
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-ink-tertiary transition-colors hover:bg-accent-settings-dim/40 hover:text-accent-settings"
+                  className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-transparent text-ink-tertiary transition-colors hover:border-white/[0.08] hover:bg-accent-settings-dim/40 hover:text-accent-settings"
                   aria-label={showKey ? "Key verbergen" : "Key anzeigen"}
                 >
                   {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -295,11 +315,12 @@ export function SettingsApiDataView() {
                 placeholder="https://openrouter.ai"
                 autoComplete="off"
                 aria-label="OpenRouter Basis-URL"
+                className="rounded-[20px] border-white/[0.12] bg-black/[0.10]"
               />
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Button onClick={handleSaveKey} variant="primary" className="w-full sm:w-auto">
+              <Button onClick={handleSaveKey} variant="primary" className="w-full gap-2 sm:w-auto">
                 Speichern
               </Button>
               {hasApiKey && (
@@ -309,8 +330,8 @@ export function SettingsApiDataView() {
               )}
             </div>
 
-            <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
-              <p className="text-xs leading-relaxed text-ink-secondary">
+            <div className={insetPanelClassName}>
+              <p className="text-sm leading-relaxed text-ink-secondary">
                 Der API-Key bleibt lokal (Session Storage). Ohne Key nutzt Disa AI den kostenlosen
                 Service. Mit eigenem Key sind eigene Modelle und höhere Limits nutzbar.
               </p>
@@ -318,32 +339,39 @@ export function SettingsApiDataView() {
           </section>
         </Card>
 
-        <Card variant="surface" className="border-white/[0.08]">
+        <Card variant="surface" className={panelClassName}>
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <HardDrive className="h-4 w-4 text-accent-settings" />
-              <h2 className="text-sm font-semibold text-ink-primary">Speicherstatistiken</h2>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-accent-settings-border/40 bg-accent-settings-surface text-accent-settings shadow-inner">
+                <HardDrive className="h-4 w-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-ink-primary">Speicherstatistiken</h2>
+                <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                  Überblick über lokal gespeicherte Chats und das belegte Volumen auf diesem Gerät.
+                </p>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+              <div className={insetPanelClassName}>
                 <div className="text-lg font-bold text-accent-settings">
                   {stats?.totalConversations || 0}
                 </div>
                 <div className="text-xs text-ink-tertiary">Gespräche</div>
               </div>
-              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+              <div className={insetPanelClassName}>
                 <div className="text-lg font-bold text-accent-settings">
                   {stats?.totalMessages || 0}
                 </div>
                 <div className="text-xs text-ink-tertiary">Nachrichten</div>
               </div>
-              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+              <div className={insetPanelClassName}>
                 <div className="text-lg font-bold text-accent-settings">
                   {stats?.averageMessagesPerConversation?.toFixed(1) || "0.0"}
                 </div>
                 <div className="text-xs text-ink-tertiary">Ø Nachrichten</div>
               </div>
-              <div className="rounded-xl border border-white/[0.08] bg-surface-2/35 px-3 py-3">
+              <div className={insetPanelClassName}>
                 <div className="text-lg font-bold text-accent-settings">
                   {formatFileSize(stats?.storageSize || 0)}
                 </div>
@@ -353,39 +381,49 @@ export function SettingsApiDataView() {
           </section>
         </Card>
 
-        <Card variant="surface" className="border-white/[0.08]">
+        <Card variant="surface" className={panelClassName}>
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Download className="h-4 w-4 text-accent-settings" />
-              <h2 className="text-sm font-semibold text-ink-primary">Export</h2>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-accent-settings-border/40 bg-accent-settings-surface text-accent-settings shadow-inner">
+                <Download className="h-4 w-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-ink-primary">Export</h2>
+                <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                  Erstelle eine JSON-Datei mit allen Gesprächen für Backup oder Gerätewechsel.
+                </p>
+              </div>
             </div>
             <Button
               onClick={handleExportConversations}
               disabled={isExporting}
               variant="primary"
-              className="w-full sm:w-auto"
+              className="w-full gap-2 sm:w-auto"
             >
               <Download className="h-4 w-4" />
               <span>{isExporting ? "Exportiere..." : "Alle Gespräche exportieren"}</span>
             </Button>
-            <p className="text-xs text-ink-secondary">
-              Erstellt eine JSON-Datei mit allen Gesprächen. Sicher für Backups oder Umzug auf ein
-              neues Gerät.
-            </p>
           </section>
         </Card>
 
-        <Card variant="surface" className="border-white/[0.08]">
+        <Card variant="surface" className={panelClassName}>
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Upload className="h-4 w-4 text-accent-settings" />
-              <h2 className="text-sm font-semibold text-ink-primary">Import</h2>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-accent-settings-border/40 bg-accent-settings-surface text-accent-settings shadow-inner">
+                <Upload className="h-4 w-4" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-ink-primary">Import</h2>
+                <p className="mt-1 text-sm leading-relaxed text-ink-secondary">
+                  Führe exportierte Gespräche zusammen, ohne bestehende Daten zu überschreiben.
+                </p>
+              </div>
             </div>
             <Button
               variant="secondary"
               onClick={handleImportConversations}
               disabled={isImporting}
-              className="w-full sm:w-auto"
+              className="w-full gap-2 sm:w-auto"
             >
               <Upload className="h-4 w-4" />
               <span>{isImporting ? "Importiere..." : "Gespräche-Datei auswählen"}</span>
@@ -397,14 +435,11 @@ export function SettingsApiDataView() {
               onChange={handleFileSelection}
               className="hidden"
             />
-            <p className="text-xs text-ink-secondary">
-              Unterstützt JSON-Dateien im Disa AI Format. Bestehende Gespräche bleiben erhalten.
-            </p>
           </section>
         </Card>
 
-        <Card variant="surface" padding="sm" className="border-white/[0.08] bg-surface-2/35">
-          <p className="text-xs leading-relaxed text-ink-secondary">
+        <Card variant="surface" padding="sm" className={panelClassName}>
+          <p className="text-sm leading-relaxed text-ink-secondary">
             Exportdateien enthalten Nachrichten, Metadaten und verwendete Modelle. Der Import führt
             neue Gespräche zusammen, ohne bestehende zu überschreiben.
           </p>

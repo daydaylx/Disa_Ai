@@ -46,12 +46,11 @@ export function ConversationCard({
     <Card
       {...longPressReactHandlers}
       variant="surface"
-      interactive
       notch="none"
       padding="none"
       className={cn(
-        "relative group overflow-hidden border-white/[0.08] bg-surface-card/65 shadow-surface-subtle ring-1 ring-inset ring-white/[0.03] backdrop-blur-sm",
-        "hover:border-white/[0.14] hover:bg-surface-2/65",
+        "group relative overflow-hidden rounded-[24px] border-white/[0.10] bg-surface-1/82 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.72)] ring-1 ring-inset ring-white/[0.04] backdrop-blur-sm transition-all duration-200",
+        "hover:-translate-y-0.5 hover:border-white/[0.16] hover:bg-surface-2/76 hover:shadow-[0_18px_44px_-32px_rgba(0,0,0,0.8)]",
       )}
     >
       <div
@@ -59,19 +58,24 @@ export function ConversationCard({
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-accent-chat"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_26%,rgba(0,0,0,0.14)_100%)]"
         aria-hidden
       />
-      {/* Main Row */}
-      <div className="flex items-center gap-4 p-4">
-        {/* Icon */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-[3px] rounded-l-[24px] bg-accent-chat"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -right-8 top-0 hidden h-24 w-24 rounded-full bg-white/[0.05] blur-3xl sm:block"
+        aria-hidden
+      />
+      <div className="relative flex items-start gap-4 p-4 sm:p-5">
         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-accent-chat-border/40 bg-accent-chat-surface text-accent-chat shadow-inner">
           <MessageSquare className="h-6 w-6" />
         </div>
 
-        {/* Info - Clickable */}
         <div
-          className="flex-1 min-w-0 cursor-pointer"
+          className="min-w-0 flex-1 cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-chat/40"
           onClick={() => void onOpen(conversation.id)}
           role="button"
           tabIndex={0}
@@ -82,11 +86,11 @@ export function ConversationCard({
             }
           }}
         >
-          <h3 className="text-base font-semibold text-ink-primary truncate">
+          <h3 className="truncate text-[15px] font-semibold tracking-tight text-ink-primary sm:text-base">
             {conversation.title || "Unbenannte Unterhaltung"}
           </h3>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-surface-2/70 px-2 py-0.5 text-[10px] text-ink-secondary border border-white/5">
+            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-ink-secondary">
               {new Date(conversation.updatedAt || conversation.createdAt || "").toLocaleString(
                 "de-DE",
                 {
@@ -98,19 +102,18 @@ export function ConversationCard({
                 },
               )}
             </span>
-            <span className="rounded-full bg-surface-2/70 px-2 py-0.5 text-[10px] text-ink-secondary border border-white/5">
+            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-ink-secondary">
               {conversation.messageCount ?? conversation.messages?.length ?? 0} Nachrichten
             </span>
           </div>
           {lastPreviewMessage?.content ? (
-            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-secondary">
+            <p className="mt-3 line-clamp-2 text-sm font-medium leading-relaxed text-ink-secondary">
               Zuletzt {lastPreviewMessage.role === "user" ? "von dir" : "von Disa"}:{" "}
               {lastPreviewMessage.content}
             </p>
           ) : null}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -118,7 +121,7 @@ export function ConversationCard({
               e.stopPropagation();
               onToggleExpansion(conversation.id);
             }}
-            className="inline-flex h-11 w-11 items-center justify-center gap-1 rounded-lg border-none bg-transparent text-xs text-ink-tertiary transition-colors hover:bg-surface-2/70 hover:text-ink-primary"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-black/[0.12] text-ink-tertiary shadow-inner transition-colors hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-ink-primary"
             aria-label={isExpanded ? "Verlaufsdetails einklappen" : "Verlaufsdetails ausklappen"}
           >
             <ChevronDown
@@ -128,29 +131,29 @@ export function ConversationCard({
           <Button
             variant="ghost"
             size="icon"
-            className="text-ink-secondary hover:text-status-error hover:bg-status-error/10"
+            className="rounded-full border border-white/[0.08] bg-black/[0.12] text-ink-secondary shadow-inner hover:border-status-error/25 hover:bg-status-error/10 hover:text-status-error"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(conversation.id).catch(console.error);
             }}
             title="Löschen"
+            aria-label="Unterhaltung löschen"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      {/* Expanded Details */}
       {isExpanded && conversation.messages && conversation.messages.length > 0 && (
-        <div className="px-4 pb-4 pt-0 animate-fade-in">
-          <div className="space-y-2 rounded-xl border border-white/10 bg-black/[0.18] px-4 py-3 backdrop-blur-sm">
-            <p className="text-xs text-ink-tertiary font-medium mb-2">
+        <div className="animate-fade-in px-4 pb-4 pt-0 sm:px-5 sm:pb-5">
+          <div className="space-y-3 rounded-[18px] border border-white/[0.06] bg-black/[0.10] px-4 py-4 shadow-inner sm:rounded-[20px] sm:bg-black/[0.16]">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
               Nachrichten-Vorschau (letzte 3):
             </p>
             {conversation.messages.slice(-3).map((msg, idx) => (
               <div
                 key={idx}
-                className="text-xs bg-surface-2/50 rounded-lg p-2 border border-white/5"
+                className="rounded-xl border border-white/[0.06] bg-white/[0.04] p-3 text-xs"
               >
                 <span
                   className={cn(
@@ -160,7 +163,9 @@ export function ConversationCard({
                 >
                   {msg.role === "user" ? "Du" : "Disa"}:
                 </span>
-                <p className="text-ink-secondary mt-1 line-clamp-2">{msg.content}</p>
+                <p className="mt-1 line-clamp-2 leading-relaxed text-ink-secondary">
+                  {msg.content}
+                </p>
               </div>
             ))}
           </div>

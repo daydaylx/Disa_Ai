@@ -1,18 +1,40 @@
-import { Card } from "@/ui";
+import { Badge, Card } from "@/ui";
 
 export default function DatenschutzPage() {
   return (
-    <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-y-auto px-4 py-6 sm:px-6">
-      <Card className="mb-8 w-full border-white/10 bg-surface-card/95" padding="lg">
-        <article className="space-y-8 text-sm leading-7 text-ink-secondary">
-          <header className="border-b border-white/8 pb-5 text-left sm:text-center">
+    <div className="relative isolate mx-auto flex h-full w-full max-w-5xl flex-col overflow-y-auto pb-6">
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 hidden h-56 w-56 -translate-x-1/2 rounded-full blur-3xl sm:block"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(56,189,248,0.12) 0%, rgba(251,191,36,0.08) 55%, transparent 72%)",
+          opacity: 0.4,
+        }}
+        aria-hidden="true"
+      />
+
+      <Card
+        className="relative mb-8 w-full overflow-hidden rounded-[28px] border-white/[0.10] bg-surface-1/86 shadow-[0_18px_42px_-32px_rgba(0,0,0,0.76)] ring-1 ring-inset ring-white/[0.04] sm:backdrop-blur-xl"
+        padding="lg"
+      >
+        <div
+          className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+          aria-hidden
+        />
+        <article className="relative space-y-8 text-sm leading-7 text-ink-secondary">
+          <header className="border-b border-white/8 pb-6 text-left sm:text-center">
+            <div className="mb-3 flex justify-start sm:justify-center">
+              <Badge className="rounded-full border-white/10 bg-white/[0.06] px-3 py-1.5 text-ink-secondary">
+                Rechtliches
+              </Badge>
+            </div>
             <h1 className="text-3xl font-semibold tracking-tight text-ink-primary">
               Datenschutzerklärung
             </h1>
             <p className="mt-2 text-sm text-ink-secondary">Stand: Dezember 2025</p>
           </header>
 
-          <div className="rounded-xl border border-white/10 bg-surface-2/70 p-4">
+          <div className="rounded-[22px] border border-white/[0.08] bg-black/[0.10] p-4 shadow-inner">
             <p>
               Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener
               Daten bei Nutzung dieser Anwendung.
@@ -20,7 +42,7 @@ export default function DatenschutzPage() {
           </div>
 
           <nav
-            className="rounded-lg border border-white/10 bg-surface-2/60 p-4"
+            className="rounded-[22px] border border-white/[0.08] bg-black/[0.10] p-4 shadow-inner"
             aria-label="Inhalt"
           >
             <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-tertiary">
@@ -128,7 +150,7 @@ export default function DatenschutzPage() {
 
           {/* 1. Verantwortlicher */}
           <section className="space-y-3">
-            <h2 id="ds-1" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-1" className="text-xl font-semibold tracking-tight text-ink-primary">
               1. Verantwortlicher
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -163,7 +185,7 @@ export default function DatenschutzPage() {
 
           {/* 2. Allgemeines zur Datenverarbeitung */}
           <section className="space-y-3">
-            <h2 id="ds-2" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-2" className="text-xl font-semibold tracking-tight text-ink-primary">
               2. Allgemeines zur Datenverarbeitung
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -193,7 +215,7 @@ export default function DatenschutzPage() {
 
           {/* 3. Bereitstellung der Website und Server-Logfiles */}
           <section className="space-y-3">
-            <h2 id="ds-3" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-3" className="text-xl font-semibold tracking-tight text-ink-primary">
               3. Bereitstellung der Website und Server-Logfiles
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -245,7 +267,7 @@ export default function DatenschutzPage() {
 
           {/* 4. Nutzung der KI-Funktion */}
           <section className="space-y-3">
-            <h2 id="ds-4" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-4" className="text-xl font-semibold tracking-tight text-ink-primary">
               4. Nutzung der KI-Funktion („Disa AI")
             </h2>
 
@@ -340,7 +362,7 @@ export default function DatenschutzPage() {
 
           {/* 5. Lokale Speicherung im Browser */}
           <section className="space-y-3">
-            <h2 id="ds-5" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-5" className="text-xl font-semibold tracking-tight text-ink-primary">
               5. Lokale Speicherung im Browser (LocalStorage / IndexedDB / PWA)
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -382,7 +404,7 @@ export default function DatenschutzPage() {
 
           {/* 6. Cookies und Tracking */}
           <section className="space-y-3">
-            <h2 id="ds-6" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-6" className="text-xl font-semibold tracking-tight text-ink-primary">
               6. Cookies und Tracking
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -406,7 +428,7 @@ export default function DatenschutzPage() {
 
           {/* 7. Kontaktaufnahme per E-Mail */}
           <section className="space-y-3">
-            <h2 id="ds-7" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-7" className="text-xl font-semibold tracking-tight text-ink-primary">
               7. Kontaktaufnahme per E-Mail
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -429,7 +451,7 @@ export default function DatenschutzPage() {
 
           {/* 8. Speicherdauer */}
           <section className="space-y-3">
-            <h2 id="ds-8" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-8" className="text-xl font-semibold tracking-tight text-ink-primary">
               8. Speicherdauer
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -460,7 +482,7 @@ export default function DatenschutzPage() {
 
           {/* 9. Rechtsgrundlagen im Überblick */}
           <section className="space-y-3">
-            <h2 id="ds-9" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-9" className="text-xl font-semibold tracking-tight text-ink-primary">
               9. Rechtsgrundlagen im Überblick
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -487,7 +509,7 @@ export default function DatenschutzPage() {
 
           {/* 10. Deine Rechte als betroffene Person */}
           <section className="space-y-3">
-            <h2 id="ds-10" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-10" className="text-xl font-semibold tracking-tight text-ink-primary">
               10. Deine Rechte als betroffene Person
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -519,7 +541,7 @@ export default function DatenschutzPage() {
 
           {/* 11. Beschwerderecht bei einer Aufsichtsbehörde */}
           <section className="space-y-3">
-            <h2 id="ds-11" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-11" className="text-xl font-semibold tracking-tight text-ink-primary">
               11. Beschwerderecht bei einer Aufsichtsbehörde
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
@@ -534,7 +556,7 @@ export default function DatenschutzPage() {
 
           {/* 12. Änderungen dieser Datenschutzerklärung */}
           <section className="space-y-3">
-            <h2 id="ds-12" className="text-xl font-semibold text-ink-primary">
+            <h2 id="ds-12" className="text-xl font-semibold tracking-tight text-ink-primary">
               12. Änderungen dieser Datenschutzerklärung
             </h2>
             <div className="text-ink-secondary space-y-2 text-sm">
