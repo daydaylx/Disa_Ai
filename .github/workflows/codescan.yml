@@ -17,9 +17,6 @@ on:
   schedule:
     - cron: "26 22 * * 3"
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 permissions:
   contents: read
 
@@ -33,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.sonar
