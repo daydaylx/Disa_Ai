@@ -213,7 +213,7 @@ export default function ThemenPage() {
     isLoading && quickstarts.length === 0
       ? "Themen werden geladen…"
       : `${quickstarts.length} Themen · ${conspiracyDiscussions.length} Kontrovers`;
-  const sectionHeadingClass = "text-xs font-medium uppercase tracking-widest text-ink-muted";
+  const sectionHeadingClass = "text-xs font-medium uppercase tracking-widest text-ink-secondary";
 
   const selectedThemaInfo = selectedThema?.category
     ? CATEGORY_LABELS[selectedThema.category]
