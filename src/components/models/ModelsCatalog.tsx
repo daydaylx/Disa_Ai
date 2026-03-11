@@ -311,6 +311,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     data-testid="model-card"
                     aria-label={model.label ?? model.id}
                     title={model.label ?? model.id}
+                    wrapTitle={true}
                     subtitle={model.provider || "Unknown"}
                     active={isActive}
                     onPress={() => setPreferredModel(model.id)}
@@ -384,7 +385,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         </button>
                       </div>
                     }
-                    trailing={
+                    actionsRow={
                       <button
                         type="button"
                         onClick={(event) => {
@@ -393,9 +394,9 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                         }}
                         aria-label={`Details zu ${model.label ?? model.id} anzeigen`}
                         title={`Details zu ${model.label ?? model.id} anzeigen`}
-                        className="inline-flex min-h-[48px] min-w-[120px] shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
+                        className="inline-flex w-full min-h-[44px] items-center justify-center gap-1.5 rounded-2xl border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
                       >
-                        Details
+                        Details anzeigen
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     }
@@ -428,6 +429,7 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
         open={!!selectedModel}
         onClose={() => setSelectedModelId(null)}
         title={selectedModel?.label ?? selectedModel?.id}
+        wrapTitle={true}
         description={selectedModel?.provider || "Modell-Details"}
         footer={
           selectedModel ? (
@@ -509,6 +511,24 @@ export function ModelsCatalog({ className }: ModelsCatalogProps) {
                     </Badge>
                   ))}
                 </div>
+              </div>
+            ) : null}
+
+            {typeof selectedModel.qualityScore === "number" ? (
+              <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Qualitäts-Score
+                </p>
+                <p className="text-sm text-ink-secondary">{selectedModel.qualityScore}/100</p>
+              </div>
+            ) : null}
+
+            {selectedModel.notes ? (
+              <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Hinweise
+                </p>
+                <p className="text-sm leading-relaxed text-ink-secondary">{selectedModel.notes}</p>
               </div>
             ) : null}
 
