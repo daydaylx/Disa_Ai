@@ -1,5 +1,13 @@
 # disa-ai
 
+## 1.0.3
+
+### Patch Changes
+
+- [`0c5531a`](https://github.com/daydaylx/Disa_Ai/commit/0c5531a2542b490972c9a3921238af38fcb65201) Thanks [@daydaylx](https://github.com/daydaylx)! - Aligns the main app pages more closely with the chat experience, removes unused legacy UI and storage migration code, and cleans up dead helper exports and low-value tests.
+
+- [`f2eb8d1`](https://github.com/daydaylx/Disa_Ai/commit/f2eb8d1d3e74d4ff86d1839066c1d841daa0a274) Thanks [@daydaylx](https://github.com/daydaylx)! - Aligns the remaining feedback, history, settings, and legal pages with the updated visual system for a more consistent mobile and desktop UI.
+
 ## 1.1.0
 
 ### Minor Changes
