@@ -565,7 +565,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: npm ci
       - run: npm run build
       - name: Check for inline scripts

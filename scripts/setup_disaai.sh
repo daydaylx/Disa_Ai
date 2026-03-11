@@ -203,10 +203,10 @@ jobs:
   test-e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: '18'
+          node-version: '20'
       - name: Install deps
         run: |
           if command -v pnpm >/dev/null 2>&1; then
@@ -249,7 +249,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
