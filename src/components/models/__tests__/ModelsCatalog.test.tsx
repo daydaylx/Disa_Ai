@@ -135,7 +135,7 @@ describe("ModelsCatalog", () => {
     expect(screen.getByText("Anthropic")).toBeInTheDocument();
 
     // Check that Details buttons are present for expanding model information
-    const detailsButtons = screen.getAllByText("Details");
+    const detailsButtons = screen.getAllByText("Details anzeigen");
     expect(detailsButtons.length).toBe(2);
   });
 
@@ -189,6 +189,7 @@ describe("ModelsCatalog", () => {
 
     const detailsButton = within(gptModelCard as HTMLElement).getByRole("button", {
       name: /Details zu GPT-4o Mini anzeigen/i,
+      hidden: true,
     });
 
     fireEvent.click(detailsButton);
@@ -215,7 +216,7 @@ describe("ModelsCatalog", () => {
 
     // Context length is shown in expanded details section
     // Check that Details buttons are present which can expand to show context info
-    const detailsButtons = screen.getAllByText("Details");
+    const detailsButtons = screen.getAllByText("Details anzeigen");
     expect(detailsButtons.length).toBeGreaterThan(0);
 
     // Verify model cards have the data-testid attribute
