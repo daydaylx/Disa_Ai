@@ -483,7 +483,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         </button>
                       </div>
                     }
-                    trailing={
+                    actionsRow={
                       <button
                         type="button"
                         onClick={(event) => {
@@ -492,9 +492,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         }}
                         aria-label={`Details zu ${role.name} anzeigen`}
                         title={`Details zu ${role.name} anzeigen`}
-                        className="inline-flex min-h-[48px] min-w-[120px] shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
+                        className="inline-flex w-full min-h-[44px] items-center justify-center gap-1.5 rounded-2xl border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
                       >
-                        Details
+                        Details anzeigen
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     }
