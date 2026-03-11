@@ -14,6 +14,7 @@ interface ListRowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title
   onPress?: () => void;
   pressLabel?: string;
   pressed?: boolean;
+  wrapTitle?: boolean;
 }
 
 export function ListRow({
@@ -28,6 +29,7 @@ export function ListRow({
   onPress,
   pressLabel,
   pressed,
+  wrapTitle = false,
   className,
   children,
   ...props
@@ -109,7 +111,9 @@ export function ListRow({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "truncate font-semibold text-ink-primary",
+              "font-semibold text-ink-primary",
+              !wrapTitle && "truncate",
+              wrapTitle && "break-words",
               isCatalogGlass ? "text-[15px] tracking-tight" : "text-sm",
             )}
           >

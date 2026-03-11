@@ -13,6 +13,7 @@ interface BottomSheetProps {
   children?: ReactNode;
   footer?: ReactNode;
   className?: string;
+  wrapTitle?: boolean;
 }
 
 const FOCUSABLE_SELECTOR =
@@ -33,6 +34,7 @@ export function BottomSheet({
   children,
   footer,
   className,
+  wrapTitle = false,
 }: BottomSheetProps) {
   const sheetRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -167,7 +169,15 @@ export function BottomSheet({
           <div className="mb-2 flex items-center justify-between gap-3">
             <div className="min-w-0">
               {title && (
-                <h3 className="truncate text-base font-semibold text-ink-primary">{title}</h3>
+                <h3
+                  className={cn(
+                    "text-base font-semibold text-ink-primary",
+                    !wrapTitle && "truncate",
+                    wrapTitle && "break-words",
+                  )}
+                >
+                  {title}
+                </h3>
               )}
               {description && <p className="mt-1 text-xs text-ink-secondary">{description}</p>}
             </div>

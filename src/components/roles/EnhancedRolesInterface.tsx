@@ -425,6 +425,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     data-testid="role-card"
                     aria-label={role.name}
                     title={role.name}
+                    wrapTitle={true}
                     subtitle={role.category || "Spezial"}
                     active={isActive}
                     onPress={() => handleActivateRole(role)}
@@ -533,6 +534,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         open={!!selectedRole}
         onClose={() => setSelectedRoleId(null)}
         title={selectedRole?.name}
+        wrapTitle={true}
         description={selectedRole?.category || "Rollen-Details"}
         footer={
           selectedRole ? (
@@ -571,6 +573,15 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </p>
             </div>
 
+            {selectedRole.category ? (
+              <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Kategorie
+                </p>
+                <p className="text-sm text-ink-secondary">{selectedRole.category}</p>
+              </div>
+            ) : null}
+
             {selectedRole.tags && selectedRole.tags.length > 0 ? (
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
@@ -586,16 +597,33 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </div>
             ) : null}
 
-            {selectedRole.systemPrompt ? (
-              <div className="space-y-2">
+            {selectedRole.allowedModels?.length ? (
+              <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
-                  System Prompt
+                  Verfügbare Modelle
                 </p>
-                <div className="max-h-48 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 px-3 py-3 font-mono text-xs leading-relaxed text-ink-secondary whitespace-pre-wrap break-words">
-                  {selectedRole.systemPrompt}
-                </div>
+                <p className="text-sm text-ink-secondary">
+                  {selectedRole.allowedModels[0] === "*"
+                    ? "Alle Modelle verfügbar"
+                    : `${selectedRole.allowedModels.length} Modell${selectedRole.allowedModels.length !== 1 ? "e" : ""} verfügbar`}
+                </p>
               </div>
             ) : null}
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                System Prompt
+              </p>
+              {selectedRole.systemPrompt ? (
+                <div className="max-h-72 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 px-3 py-3 font-mono text-xs leading-relaxed text-ink-secondary whitespace-pre-wrap break-words">
+                  {selectedRole.systemPrompt}
+                </div>
+              ) : (
+                <p className="text-sm italic text-ink-tertiary">
+                  Für diese Rolle ist kein Systemprompt hinterlegt.
+                </p>
+              )}
+            </div>
           </div>
         ) : null}
       </BottomSheet>
