@@ -8,12 +8,16 @@ interface ListRowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
   topRight?: React.ReactNode;
+  /** Action buttons rendered below children at z-sticky-content so they are
+   *  clickable even when the card has an onPress overlay. */
+  actionsRow?: React.ReactNode;
   accentClassName?: string;
   surfaceVariant?: "default" | "catalogGlass";
   active?: boolean;
   onPress?: () => void;
   pressLabel?: string;
   pressed?: boolean;
+  wrapTitle?: boolean;
 }
 
 export function ListRow({
@@ -22,12 +26,14 @@ export function ListRow({
   leading,
   trailing,
   topRight,
+  actionsRow,
   accentClassName,
   surfaceVariant = "default",
   active = false,
   onPress,
   pressLabel,
   pressed,
+  wrapTitle = false,
   className,
   children,
   ...props
@@ -109,7 +115,9 @@ export function ListRow({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "truncate font-semibold text-ink-primary",
+              "font-semibold text-ink-primary",
+              !wrapTitle && "truncate",
+              wrapTitle && "break-words",
               isCatalogGlass ? "text-[15px] tracking-tight" : "text-sm",
             )}
           >
@@ -146,6 +154,10 @@ export function ListRow({
             {children}
           </div>
         )
+      ) : null}
+
+      {actionsRow ? (
+        <div className="pointer-events-auto relative z-sticky-content mt-3">{actionsRow}</div>
       ) : null}
     </div>
   );

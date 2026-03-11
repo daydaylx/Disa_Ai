@@ -425,6 +425,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                     data-testid="role-card"
                     aria-label={role.name}
                     title={role.name}
+                    wrapTitle={true}
                     subtitle={role.category || "Spezial"}
                     active={isActive}
                     onPress={() => handleActivateRole(role)}
@@ -482,7 +483,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         </button>
                       </div>
                     }
-                    trailing={
+                    actionsRow={
                       <button
                         type="button"
                         onClick={(event) => {
@@ -491,9 +492,9 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
                         }}
                         aria-label={`Details zu ${role.name} anzeigen`}
                         title={`Details zu ${role.name} anzeigen`}
-                        className="inline-flex min-h-[48px] min-w-[120px] shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
+                        className="inline-flex w-full min-h-[44px] items-center justify-center gap-1.5 rounded-2xl border border-white/[0.12] bg-white/[0.07] px-4 text-xs font-semibold text-ink-primary shadow-[0_12px_26px_-20px_rgba(0,0,0,0.82)] backdrop-blur-sm transition-all hover:border-white/[0.18] hover:bg-white/[0.12] active:scale-[0.98] active:translate-y-px"
                       >
-                        Details
+                        Details anzeigen
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     }
@@ -533,6 +534,7 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
         open={!!selectedRole}
         onClose={() => setSelectedRoleId(null)}
         title={selectedRole?.name}
+        wrapTitle={true}
         description={selectedRole?.category || "Rollen-Details"}
         footer={
           selectedRole ? (
@@ -571,6 +573,15 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </p>
             </div>
 
+            {selectedRole.category ? (
+              <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                  Kategorie
+                </p>
+                <p className="text-sm text-ink-secondary">{selectedRole.category}</p>
+              </div>
+            ) : null}
+
             {selectedRole.tags && selectedRole.tags.length > 0 ? (
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
@@ -586,16 +597,33 @@ export function EnhancedRolesInterface({ className }: EnhancedRolesInterfaceProp
               </div>
             ) : null}
 
-            {selectedRole.systemPrompt ? (
-              <div className="space-y-2">
+            {selectedRole.allowedModels?.length ? (
+              <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
-                  System Prompt
+                  Verfügbare Modelle
                 </p>
-                <div className="max-h-48 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 px-3 py-3 font-mono text-xs leading-relaxed text-ink-secondary whitespace-pre-wrap break-words">
-                  {selectedRole.systemPrompt}
-                </div>
+                <p className="text-sm text-ink-secondary">
+                  {selectedRole.allowedModels[0] === "*"
+                    ? "Alle Modelle verfügbar"
+                    : `${selectedRole.allowedModels.length} Modell${selectedRole.allowedModels.length !== 1 ? "e" : ""} verfügbar`}
+                </p>
               </div>
             ) : null}
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-tertiary">
+                System Prompt
+              </p>
+              {selectedRole.systemPrompt ? (
+                <div className="max-h-72 overflow-y-auto rounded-xl border border-white/5 bg-surface-1/50 px-3 py-3 font-mono text-xs leading-relaxed text-ink-secondary whitespace-pre-wrap break-words">
+                  {selectedRole.systemPrompt}
+                </div>
+              ) : (
+                <p className="text-sm italic text-ink-tertiary">
+                  Für diese Rolle ist kein Systemprompt hinterlegt.
+                </p>
+              )}
+            </div>
           </div>
         ) : null}
       </BottomSheet>
