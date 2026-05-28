@@ -387,29 +387,13 @@ export default function Chat() {
                       aria-hidden="true"
                     />
                     <div className="hero-noise hidden sm:block" aria-hidden="true" />
-                    <div className="relative text-center sm:hidden">
-                      <h1
-                        className="text-5xl font-bold tracking-tight text-ink-primary"
-                        style={{ fontWeight: 750 }}
-                      >
-                        <span className="bg-gradient-to-r from-brand-primary via-purple-400 to-brand-primary bg-clip-text text-transparent">
-                          Disa
-                        </span>{" "}
-                        <span className="bg-gradient-to-r from-accent-chat to-purple-400 bg-clip-text text-transparent">
-                          AI
-                        </span>
-                      </h1>
-                    </div>
                     <AnimatedBrandmark
-                      className="relative mx-auto hidden scale-75 sm:block"
+                      className="relative mx-auto"
                       intensity="subtle"
                       mode="hero"
                       playIntro={chatLogic.isEmpty}
                       state={logoState}
                     />
-                    <p className="relative text-sm text-ink-secondary text-center">
-                      Womit kann ich dir heute helfen?
-                    </p>
                     <div className="w-full min-h-[15.5rem] px-1 sm:min-h-[14rem]">
                       {showHeroActions ? (
                         <div className="space-y-3">

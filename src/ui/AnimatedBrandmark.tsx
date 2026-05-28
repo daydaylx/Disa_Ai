@@ -41,12 +41,7 @@ export const AnimatedBrandmark = memo(
       >
         <div aria-hidden="true" className="pointer-events-none select-none">
           <div
-            className={cn(
-              "absolute rounded-full aurora-blur",
-              mode === "hero"
-                ? "hidden sm:block sm:motion-safe:animate-aurora-a"
-                : "motion-safe:animate-aurora-a",
-            )}
+            className="absolute rounded-full aurora-blur motion-safe:animate-aurora-a"
             data-layer="aurora-a"
             style={{
               width: "clamp(110px, 28vw, 168px)",
@@ -57,12 +52,7 @@ export const AnimatedBrandmark = memo(
             }}
           />
           <div
-            className={cn(
-              "absolute rounded-full aurora-blur",
-              mode === "hero"
-                ? "hidden sm:block sm:motion-safe:animate-aurora-b"
-                : "motion-safe:animate-aurora-b",
-            )}
+            className="absolute rounded-full aurora-blur motion-safe:animate-aurora-b"
             data-layer="aurora-b"
             style={{
               width: "clamp(96px, 24vw, 140px)",
@@ -92,23 +82,13 @@ export const AnimatedBrandmark = memo(
         {/* Halo ring – conic-gradient ellipse that slowly rotates behind the logo */}
         <div
           aria-hidden="true"
-          className={cn(
-            "halo-ring",
-            mode === "hero"
-              ? "hidden sm:block sm:motion-safe:animate-halo-ring-spin"
-              : "motion-safe:animate-halo-ring-spin",
-          )}
+          className="halo-ring motion-safe:animate-halo-ring-spin"
           data-layer="halo-ring"
         />
 
         <div
           aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute inset-0 rounded-2xl neon-blur",
-            mode === "hero"
-              ? "hidden sm:block sm:motion-safe:animate-logo-neon-pulse"
-              : "motion-safe:animate-logo-neon-pulse",
-          )}
+          className="pointer-events-none absolute inset-0 rounded-2xl neon-blur motion-safe:animate-logo-neon-pulse"
           data-layer="neon"
           style={{
             background:
@@ -117,22 +97,13 @@ export const AnimatedBrandmark = memo(
         />
 
         <h1
-          className={cn(
-            "relative z-10 text-5xl sm:text-6xl tracking-tight",
-            mode === "hero"
-              ? "sm:motion-safe:animate-brand-breathe"
-              : "motion-safe:animate-brand-breathe",
-          )}
+          className="relative z-10 text-4xl sm:text-5xl tracking-tight motion-safe:animate-brand-breathe"
           style={{ fontWeight: 750 }}
         >
           <span
             className={cn(
               "relative inline-block pr-2",
-              shouldRunIntro
-                ? mode === "hero"
-                  ? "sm:motion-safe:animate-word-reveal"
-                  : "motion-safe:animate-word-reveal"
-                : "opacity-100",
+              shouldRunIntro ? "motion-safe:animate-word-reveal" : "opacity-100",
             )}
           >
             <span className="logo-text-shimmer-disa">Disa</span>
@@ -140,11 +111,7 @@ export const AnimatedBrandmark = memo(
           <span
             className={cn(
               "relative inline-block",
-              shouldRunIntro
-                ? mode === "hero"
-                  ? "sm:motion-safe:animate-word-reveal-delayed"
-                  : "motion-safe:animate-word-reveal-delayed"
-                : "opacity-100",
+              shouldRunIntro ? "motion-safe:animate-word-reveal-delayed" : "opacity-100",
             )}
           >
             <span className="logo-text-shimmer-ai">AI</span>
@@ -154,15 +121,11 @@ export const AnimatedBrandmark = memo(
         <p
           className={cn(
             "mt-3 text-center text-sm tracking-wide text-ink-secondary/70",
-            shouldRunIntro
-              ? mode === "hero"
-                ? "sm:animate-wordmark-intro"
-                : "animate-wordmark-intro"
-              : "opacity-100",
+            shouldRunIntro ? "animate-wordmark-intro" : "opacity-100",
           )}
           style={shouldRunIntro ? { animationDelay: "0.45s" } : undefined}
         >
-          Was möchtest du wissen?
+          Womit kann ich dir heute helfen?
         </p>
       </div>
     );
